@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Vyberte vaši časovou zónu</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Relativní cesta k Contao adresáři</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Relativní cestu k adresáři Contao běžně automaticky nastaví instalační nástroj.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Znaková sada</target>
@@ -397,10 +389,6 @@
         <source>Search engine settings</source>
         <target>Nastavení vyhledávání</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Neaktivní rozšíření</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Doba ukládání</target>
@@ -409,29 +397,9 @@
         <source>Default access rights</source>
         <target>Výchozí přístupová práva</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Zdroj statistik</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Upravit lokální konfiguraci</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Použít cache prohlížeče a serveru</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Použít jen cache serveru</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Použít jen cache prohlížeče</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Vypnout cachování</target>
       </trans-unit>
     </body>
   </file>

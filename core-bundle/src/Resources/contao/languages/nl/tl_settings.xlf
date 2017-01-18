@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Selecteer de server tijdzone.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Relatief pad naar Contao directory</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Het relatieve pad naar de Contao directory wordt gewoonlijk automatisch aangemaakt door het installatie tool.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Karakterset</target>
@@ -397,10 +389,6 @@
         <source>Search engine settings</source>
         <target>Zoekmachine instellingen</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Inactieve extensies</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Timeout waarden</target>
@@ -409,29 +397,9 @@
         <source>Default access rights</source>
         <target>Standaard toegangsrechten</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Statische hulpbronnen</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Wijzig lokale configuratie</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Gebruik de cache van server en browser</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Gebruik alleen de server cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Gebruik alleen de browser cache</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Caching uitschakelen</target>
       </trans-unit>
     </body>
   </file>

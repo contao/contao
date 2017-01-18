@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.3.2 (2017-XX-XX)
+### 4.3.2 (2017-01-18)
 
  * Correctly handle nested public folders when symlinking a folder.
  * Correctly handle SVGZ files in the file manager (see contao/core#8624).

@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>サーバーのタイムゾーンを選択してください。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Contaoのディレクトリの相対パス</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Contaoのディレクトリの相対パスは通常インストールツールが自動的に設定します。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>文字セット</target>
@@ -397,10 +389,6 @@
         <source>Search engine settings</source>
         <target>検索エンジンの設定</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>機能拡張の停止</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>タイムアウトの値</target>
@@ -409,29 +397,9 @@
         <source>Default access rights</source>
         <target>アクセス権の初期設定</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>静的なリソース</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>ローカルな構成を編集</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>サーバーとブラウザーのキャッシュを使用</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>サーバーのキャッシュだけを使用</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>ブラウザーのキャッシュだけを使用</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>キャッシュを無効</target>
       </trans-unit>
     </body>
   </file>

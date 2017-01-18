@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Wybierz twoją strefę czasową.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Ścieżka relatywna do katalogu Contao</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Wprowadź ścieżkę relatywną do katalogu zawierającego pliki Contao (np. jeśli twój panel administracyjny Contao ma adres &lt;em&gt;www.twojadomena.com/twojastrona/contao&lt;/em&gt; relatywną ścieżką będzie &lt;em&gt;/twojastrona&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Kodowania znaków dla Contao</target>
@@ -396,10 +388,6 @@
         <source>Search engine settings</source>
         <target>Ustawienia wyszukiwarki</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Nieaktywne rozszerzenia</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Wartości czasowe</target>
@@ -408,29 +396,9 @@
         <source>Default access rights</source>
         <target>Domyślne prawa dostępu</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Źródła statyczne</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Edytuj konfigurację</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Użyj pamięci serwera i przeglądarki</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Użyj tylko pamięci serwera</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Użyj tylko pamięci przeglądarki</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Wyłącz pamięć podręczną</target>
       </trans-unit>
     </body>
   </file>
