@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### 4.3.2 (2016-01-18)
+
+ * Correctly add new resources to the user/group permissions (see contao/core#8583).
+
 ### 4.3.1 (2016-12-21)
 
  * Show the real name of the newsletter log file.
