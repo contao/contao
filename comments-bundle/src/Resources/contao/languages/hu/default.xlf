@@ -27,6 +27,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_login">
         <source>You need to be logged in to add comments.</source>
+        <target>Be kell jelentkezni a komment írásához.</target>
       </trans-unit>
       <trans-unit id="MSC.com_by">
         <source>Comment by</source>
@@ -60,9 +61,21 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s hozzászólást írt a weboldaladon.
+
+---
+
+%s
+
+---
+
+Megtekint: %s
+Szerkeszt: %s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>Ezt a hozzászólást közzé kell tenni az adminisztrációs felületen, mielőtt megjelenik a honlapon!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
