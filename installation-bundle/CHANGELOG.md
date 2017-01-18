@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.2.3 (2017-01-18)
+
+ * Require version 0.2 of the manager plugin.
+
 ### 1.2.2 (2017-01-05)
 
  * Fix the database.html.twig template (see #39).
