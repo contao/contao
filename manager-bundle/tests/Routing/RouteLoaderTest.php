@@ -34,6 +34,7 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = $this->getMock(LoaderInterface::class);
         $kernel = $this->getMock(KernelInterface::class);
 
+        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
         $pluginLoader = $this->getMockBuilder(PluginLoader::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -64,6 +65,7 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
         $plugin1 = $this->mockRoutePlugin('foo', '/foo/path');
         $plugin2 = $this->mockRoutePlugin('foo2', '/foo2/path2');
 
+        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
         $pluginLoader = $this->getMockBuilder(PluginLoader::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -89,6 +91,50 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($collection->get('foo2'));
         $this->assertInstanceOf(Route::class, $collection->get('foo'));
         $this->assertInstanceOf(Route::class, $collection->get('foo2'));
+    }
+
+    public function testCatchAllIsLast()
+    {
+        $loaderResolver = $this->getMock(LoaderResolverInterface::class);
+        $loader = $this->getMock(LoaderInterface::class);
+
+        $loader
+            ->expects($this->exactly(4))
+            ->method('getResolver')
+            ->willReturn($loaderResolver)
+        ;
+
+        $kernel = $this->getMock(KernelInterface::class);
+
+        $plugin1 = $this->mockRoutePlugin('foo', '/foo/path');
+        $plugin2 = $this->mockRoutePlugin('contao_catch_all', '/foo2/path2');
+        $plugin3 = $this->mockRoutePlugin('foo3', '/foo3/path3');
+        $plugin4 = $this->mockRoutePlugin('foo4', '/foo4/path4');
+
+        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
+        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $pluginLoader
+            ->expects($this->once())
+            ->method('getInstancesOf')
+            ->with(PluginLoader::ROUTING_PLUGINS, true)
+            ->willReturn([$plugin1, $plugin2, $plugin3, $plugin4])
+        ;
+
+        $routeLoader = new RouteLoader(
+            $loader,
+            $pluginLoader,
+            $kernel
+        );
+
+        $routes = $routeLoader->loadFromPlugins()->all();
+
+        $this->assertCount(4, $routes);
+        $this->assertArrayHasKey('contao_catch_all', $routes);
+        $this->assertEquals(3, array_search('contao_catch_all', array_keys($routes)));
     }
 
     private function mockRoutePlugin($routeName, $routePath)

@@ -91,6 +91,40 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $bundles = $this->kernel->registerBundles();
 
         $this->assertArrayHasKey(ContaoManagerBundle::class, $bundles);
+        $this->assertArrayNotHasKey('AppBundle\\AppBundle', $bundles);
+    }
+
+    /**
+     * Tests the registerBundles() method autoloads AppBundle.
+     *
+     * @runInSeparateProcess
+     */
+    public function testRegistersAppBundle()
+    {
+        /** @var BundleLoader|\PHPUnit_Framework_MockObject_MockObject $bundleLoader */
+        $bundleLoader = $this->getMockBuilder(BundleLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $bundleLoader
+            ->expects($this->once())
+            ->method('getBundleConfigs')
+            ->willReturn(
+                [
+                    new BundleConfig(ContaoManagerBundle::class),
+                ]
+            )
+        ;
+
+        $this->kernel->setBundleLoader($bundleLoader);
+
+        include __DIR__ . '/../Fixtures/HttpKernel/AppBundle.php';
+
+        $bundles = $this->kernel->registerBundles();
+
+        $this->assertArrayHasKey(ContaoManagerBundle::class, $bundles);
+        $this->assertArrayHasKey('AppBundle\\AppBundle', $bundles);
     }
 
     /**
