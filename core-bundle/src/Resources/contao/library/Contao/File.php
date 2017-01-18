@@ -242,7 +242,14 @@ class File extends \System
 				break;
 
 			case 'dataUri':
-				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
+				if ($this->extension == 'svgz')
+				{
+					return 'data:' . $this->mime . ';base64,' . base64_encode(gzdecode($this->getContent()));
+				}
+				else
+				{
+					return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
+				}
 				break;
 
 			case 'imageSize':

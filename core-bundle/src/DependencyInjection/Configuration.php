@@ -80,7 +80,7 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(function ($v) {
                             return preg_match(
-                                '@^(app|assets|contao|plugins|share|system|templates|vendor|web)(/|$)@',
+                                '@^(app|assets|bin|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
                                 $v
                             );
                         })

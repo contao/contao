@@ -247,6 +247,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalid">
         <source>Invalid option value!</source>
+        <target>正しくないオプションの値です!</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>

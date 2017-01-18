@@ -1474,7 +1474,7 @@ abstract class Controller extends \System
 			// Subtract the margins before deciding whether to resize (see #6018)
 			if (is_array($arrMargin) && $arrMargin['unit'] == 'px')
 			{
-				$intMargin = $arrMargin['left'] + $arrMargin['right'];
+				$intMargin = (int) $arrMargin['left'] + (int) $arrMargin['right'];
 
 				// Reset the margin if it exceeds the maximum width (see #7245)
 				if ($intMaxWidth - $intMargin < 1)
@@ -1511,8 +1511,8 @@ abstract class Controller extends \System
 
 			$picture = array
 			(
-				'img' => $picture->getImg(TL_ROOT),
-				'sources' => $picture->getSources(TL_ROOT)
+				'img' => $picture->getImg(TL_ROOT, TL_FILES_URL),
+				'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL)
 			);
 
 			if ($src !== $arrItem['singleSRC'])

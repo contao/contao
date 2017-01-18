@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Выберите часовой пояс сервера.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Относительный путь к каталогу Contao</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Относительный путь к каталогу Contao, обычно устанавливается автоматически при помощи мастера установки Contao.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Кодировка символов</target>
@@ -397,10 +389,6 @@
         <source>Search engine settings</source>
         <target>Настройки поисковой системы</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Неактивные расширения</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Время ожидания</target>
@@ -409,29 +397,9 @@
         <source>Default access rights</source>
         <target>Права доступа по умолчанию</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Статические ресурсы</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Редактировать локальную конфигурацию</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Использовать кэш сервера и кэш браузера</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Использовать только кэш сервера</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Использовать только кэш браузера</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Отключить кэширование</target>
       </trans-unit>
     </body>
   </file>

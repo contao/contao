@@ -352,12 +352,10 @@ abstract class Frontend extends \Controller
 
 					static::redirect($strUrl, 301);
 				}
-				else
+				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null)
 				{
-					$objPage = \PageModel::findFirstPublishedByPid($objRootPage->id);
-
-					// Redirect if it is not the language fall back page and the alias is "index" (see #8498)
-					if ($objPage !== null && (!$objRootPage->fallback || $objPage->alias != 'index'))
+					// Redirect if the page is not the language fall back or the alias is not "index" or "/" (see #8498 and #8560)
+					if (!$objRootPage->fallback || !in_array($objPage->alias, array('index', '/')))
 					{
 						static::redirect($objPage->getFrontendUrl(), 302);
 					}
@@ -563,6 +561,11 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getMetaData($strData, $strLanguage)
 	{
+		if (empty($strLanguage))
+		{
+			return array();
+		}
+
 		$arrData = \StringUtil::deserialize($strData);
 
 		// Convert the language to a locale (see #5678)

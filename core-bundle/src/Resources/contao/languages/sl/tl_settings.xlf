@@ -49,14 +49,6 @@
         <source>Please select the server time zone.</source>
         <target>Prosimo, izberite časovni pas strežnika.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.websitePath.0">
-        <source>Relative path to the Contao directory</source>
-        <target>Relativna pot do Contao imenika.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websitePath.1">
-        <source>The relative path to the Contao directory is usually set automatically by the install tool.</source>
-        <target>Relativno pot do Contao imenika praviloma samodejno nastavi orodje za namestitev.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.characterSet.0">
         <source>Character set</source>
         <target>Nabor znakov.</target>
@@ -388,10 +380,6 @@
         <source>Search engine settings</source>
         <target>Nastavitve iskanja</target>
       </trans-unit>
-      <trans-unit id="tl_settings.modules_legend">
-        <source>Inactive extensions</source>
-        <target>Neaktivne razširitve</target>
-      </trans-unit>
       <trans-unit id="tl_settings.timeout_legend">
         <source>Timeout values</source>
         <target>Določitev časovnih vrednosti</target>
@@ -400,29 +388,9 @@
         <source>Default access rights</source>
         <target>Privzete pravice dostopa</target>
       </trans-unit>
-      <trans-unit id="tl_settings.static_legend">
-        <source>Static resources</source>
-        <target>Statični viri</target>
-      </trans-unit>
       <trans-unit id="tl_settings.edit">
         <source>Edit the local configuration</source>
         <target>Uredi krajevne nastavitve</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.both">
-        <source>Use the server and the browser cache</source>
-        <target>Uporabi medpomnilnik strežnika in brskalnika</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.server">
-        <source>Use only the server cache</source>
-        <target>Uporabi le medpomnilnik strežnika</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.browser">
-        <source>Use only the browser cache</source>
-        <target>Uporabi le medpomnilnik brskalnika</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.none">
-        <source>Disable caching</source>
-        <target>Onemogoči medpomnenje</target>
       </trans-unit>
     </body>
   </file>

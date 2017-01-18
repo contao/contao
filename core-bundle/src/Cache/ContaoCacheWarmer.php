@@ -321,7 +321,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Returns the DCA files.
      *
-     * @return Finder|SplFileInfo[]
+     * @return Finder|SplFileInfo[]|array
      */
     private function findDcaFiles()
     {
@@ -337,7 +337,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      *
      * @param string $language
      *
-     * @return Finder|SplFileInfo[]
+     * @return Finder|SplFileInfo[]|array
      */
     private function findLanguageFiles($language)
     {
@@ -351,7 +351,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * Returns the template files.
      *
-     * @return Finder|SplFileInfo[]
+     * @return Finder|SplFileInfo[]|array
      */
     private function findTemplateFiles()
     {

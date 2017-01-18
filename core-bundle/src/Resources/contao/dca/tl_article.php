@@ -32,6 +32,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'onload_callback' => array
 		(
 			array('tl_article', 'checkPermission'),
+			array('tl_article', 'addCustomLayoutSectionReferences'),
 			array('tl_page', 'addBreadcrumb')
 		),
 		'sql' => array
@@ -649,17 +650,6 @@ class tl_article extends Backend
 					continue;
 				}
 
-				$arrCustom = StringUtil::deserialize($objLayout->sections);
-
-				// Add the custom layout sections
-				if (!empty($arrCustom) && is_array($arrCustom))
-				{
-					foreach ($arrCustom as $v)
-					{
-						$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
-					}
-				}
-
 				$arrModules = StringUtil::deserialize($objLayout->modules);
 
 				if (empty($arrModules) || !is_array($arrModules))
@@ -693,23 +683,16 @@ class tl_article extends Backend
 				{
 					foreach ($arrCustom as $v)
 					{
-						$arrSections[] = $v['id'];
-						$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
+						if (!empty($v['id']))
+						{
+							$arrSections[] = $v['id'];
+						}
 					}
 				}
 			}
 		}
 
-		$arrSections = array_flip(array_values(array_unique($arrSections)));
-
-		foreach (array_keys($arrSections) as $k)
-		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
-		}
-
-		asort($arrSections);
-
-		return $arrSections;
+		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
 

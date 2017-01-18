@@ -11,9 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
+        <target>Pot</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
+        <target>Relativna pot do datoteke ali direktorija</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
