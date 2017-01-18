@@ -1,5 +1,9 @@
 # Contao calendar bundle change log
 
+### 4.3.3 (2016-01-18)
+
+ * Correctly add new resources to the user/group permissions (see contao/core#8583).
+
 ### 4.3.2 (2016-12-22)
 
  * Correctly show running repeated events in the event list (see #7).
