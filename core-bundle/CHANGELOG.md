@@ -3,6 +3,7 @@
 ### 4.3.2 (2017-XX-XX)
 
  * Correctly handle nested public folders when symlinking a folder.
+ * Correctly handle SVGZ files in the file manager (see contao/core#8624).
  * Prevent an endless redirect loop if the page alias is "/" (see contao/core#8560).
  * Correctly parse German dates with two digit years in MooTools (see contao/core#8593).
  * Correctly add new resources to the user/group permissions (see contao/core#8583).

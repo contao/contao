@@ -141,14 +141,7 @@ class ContentDownloads extends \ContentElement
 					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 				}
 
-				if ($objPage instanceof \PageModel)
-				{
-					$strHref = $objPage->getFrontendUrl() . (Environment::get('queryString') ? '?' . Environment::get('queryString') : '');
-				}
-				else
-				{
-					$strHref = \Environment::get('request');
-				}
+				$strHref = \Environment::get('request');
 
 				// Remove an existing file parameter (see #5683)
 				if (preg_match('/(&(amp;)?|\?)file=/', $strHref))
@@ -224,14 +217,7 @@ class ContentDownloads extends \ContentElement
 						$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
 					}
 
-					if ($objPage instanceof \PageModel)
-					{
-						$strHref = $objPage->getFrontendUrl() . (Environment::get('queryString') ? '?' . Environment::get('queryString') : '');
-					}
-					else
-					{
-						$strHref = \Environment::get('request');
-					}
+					$strHref = \Environment::get('request');
 
 					// Remove an existing file parameter (see #5683)
 					if (preg_match('/(&(amp;)?|\?)file=/', $strHref))
