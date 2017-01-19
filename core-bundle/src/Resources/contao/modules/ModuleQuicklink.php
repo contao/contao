@@ -72,6 +72,9 @@ class ModuleQuicklink extends \Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
+		global $objPage;
+
 		// Get all active pages
 		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
 
@@ -104,20 +107,20 @@ class ModuleQuicklink extends \Module
 		$arrPages = array_values(array_filter($arrPages));
 
 		/** @var PageModel[] $arrPages */
-		foreach ($arrPages as $objPage)
+		foreach ($arrPages as $objSubpage)
 		{
-			$objPage->title = \StringUtil::stripInsertTags($objPage->title);
-			$objPage->pageTitle = \StringUtil::stripInsertTags($objPage->pageTitle);
+			$objSubpage->title = \StringUtil::stripInsertTags($objSubpage->title);
+			$objSubpage->pageTitle = \StringUtil::stripInsertTags($objSubpage->pageTitle);
 
 			// Get href
-			switch ($objPage->type)
+			switch ($objSubpage->type)
 			{
 				case 'redirect':
-					$href = $objPage->url;
+					$href = $objSubpage->url;
 					break;
 
 				case 'forward':
-					if (($objNext = $objPage->getRelated('jumpTo')) instanceof PageModel || ($objNext = \PageModel::findFirstPublishedRegularByPid($objPage->id)) instanceof PageModel)
+					if (($objNext = $objSubpage->getRelated('jumpTo')) instanceof PageModel || ($objNext = \PageModel::findFirstPublishedRegularByPid($objSubpage->id)) instanceof PageModel)
 					{
 						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
@@ -126,15 +129,16 @@ class ModuleQuicklink extends \Module
 					// DO NOT ADD A break; STATEMENT
 
 				default:
-					$href = $objPage->getFrontendUrl();
+					$href = $objSubpage->getFrontendUrl();
 					break;
 			}
 
 			$items[] = array
 			(
 				'href' => $href,
-				'title' => \StringUtil::specialchars($objPage->pageTitle ?: $objPage->title),
-				'link' => $objPage->title
+				'title' => \StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
+				'link' => $objSubpage->title,
+				'active' => ($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)
 			);
 		}
 
