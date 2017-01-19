@@ -10,6 +10,8 @@
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\StringUtil;
+
 /**
  * Runs the version 4.3.0 update.
  *
@@ -41,7 +43,7 @@ class Version430Update extends AbstractVersionUpdate
         $statement = $this->connection->query("SELECT id, sections, sPosition FROM tl_layout WHERE sections!=''");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $sections = \StringUtil::trimsplit(',', $layout->sections);
+            $sections = StringUtil::trimsplit(',', $layout->sections);
 
             if (!empty($sections) && is_array($sections)) {
                 $set = [];
