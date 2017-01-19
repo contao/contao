@@ -9,6 +9,7 @@
  * @license LGPL-3.0+
  */
 
+use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -29,6 +30,7 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 $loader = require $vendorRoot.'/autoload.php';
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+ManagerBundlePlugin::autoloadModules($vendorRoot.'/../system/modules');
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'prod');
