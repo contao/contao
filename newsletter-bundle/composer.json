@@ -15,11 +15,11 @@
         "contao/core-bundle": "^4.3"
     },
     "require-dev": {
-        "contao/manager-plugin": "^0.2"
+        "contao/manager-plugin": "^2.0"
     },
     "conflict": {
         "contao/core": "*",
-        "contao/manager-plugin": "!=0.2"
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {
