@@ -15,4 +15,4 @@ This bundle adds manager functionality to Contao core. It provides a
 
 [1]: https://contao.org
 [2]: https://symfony.com
-[3]: https://github.com/contao/package-manager
+[3]: https://github.com/contao/contao-manager
