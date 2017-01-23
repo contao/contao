@@ -57,10 +57,19 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('root_dir')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->resolveRootDir($this->rootDir.'/..'))
+                    ->defaultValue($this->resolvePath($this->rootDir.'/..'))
                     ->validate()
                         ->always(function ($value) {
-                            return $this->resolveRootDir($value);
+                            return $this->resolvePath($value);
+                        })
+                    ->end()
+                ->end()
+                ->scalarNode('web_dir')
+                    ->cannotBeEmpty()
+                    ->defaultValue($this->resolvePath($this->rootDir.'/../web'))
+                    ->validate()
+                        ->always(function ($value) {
+                            return $this->resolvePath($value);
                         })
                     ->end()
                 ->end()
@@ -142,7 +151,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Resolves the Contao root directory.
+     * Resolves a path.
      *
      * @param string $value
      *
@@ -150,7 +159,7 @@ class Configuration implements ConfigurationInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function resolveRootDir($value)
+    private function resolvePath($value)
     {
         $path = realpath($value);
 

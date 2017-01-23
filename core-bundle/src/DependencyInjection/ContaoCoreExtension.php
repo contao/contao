@@ -69,6 +69,7 @@ class ContaoCoreExtension extends ConfigurableExtension
         }
 
         $container->setParameter('contao.root_dir', $mergedConfig['root_dir']);
+        $container->setParameter('contao.web_dir', $mergedConfig['web_dir']);
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
