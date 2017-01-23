@@ -43,7 +43,7 @@ class CombinerTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = $this->getRootDir().'/tmp';
+        self::$rootDir = __DIR__.'/../Fixtures/tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
