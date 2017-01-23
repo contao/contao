@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Leafo\ScssPhp\Compiler;
+use Symfony\Component\Filesystem\Filesystem;
 
 
 /**
@@ -73,12 +74,29 @@ class Combiner extends \System
 	 */
 	protected $arrFiles = array();
 
+	/**
+	 * Web dir relative to TL_ROOT
+	 * @var string
+	 */
+	protected $strWebDir;
+
 
 	/**
 	 * Public constructor required
 	 */
 	public function __construct()
 	{
+		$fs = new Filesystem();
+		$container = \System::getContainer();
+		$strWebDir = rtrim($fs->makePathRelative($container->getParameter('contao.web_dir'), TL_ROOT), '/');
+
+		if (strncmp($strWebDir, '../', 3) === 0 || $strWebDir == '..')
+		{
+			throw new \RuntimeException(sprintf('Web dir "%s" is not inside TL_ROOT', $container->getParameter('contao.web_dir')));
+		}
+
+		$this->strWebDir = $strWebDir . '/';
+
 		parent::__construct();
 	}
 
@@ -115,24 +133,25 @@ class Combiner extends \System
 			throw new \LogicException('You cannot mix different file types. Create another Combiner object instead.');
 		}
 
-		// Prevent duplicates
-		if (isset($this->arrFiles[$strFile]))
-		{
-			return;
-		}
-
 		// Check the source file
 		if (!file_exists(TL_ROOT . '/' . $strFile))
 		{
-			// Handle public bundle resources
-			if (file_exists(TL_ROOT . '/web/' . $strFile))
+			// Handle public bundle resources in web/
+			if (file_exists(TL_ROOT . '/' . $this->strWebDir . $strFile))
 			{
-				$strFile = 'web/' . $strFile;
+				@trigger_error('Paths relative to the webdir are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				$strFile = $this->strWebDir . $strFile;
 			}
 			else
 			{
 				return;
 			}
+		}
+
+		// Prevent duplicates
+		if (isset($this->arrFiles[$strFile]))
+		{
+			return;
 		}
 
 		// Default version
@@ -212,9 +231,9 @@ class Combiner extends \System
 				$name = $arrFile['name'];
 
 				// Strip the web/ prefix (see #328)
-				if (strncmp($name, 'web/', 4) === 0)
+				if (strncmp($name, $this->strWebDir, strlen($this->strWebDir)) === 0)
 				{
-					$name = substr($name, 4);
+					$name = substr($name, strlen($this->strWebDir));
 				}
 
 				// Add the media query (see #7070)
