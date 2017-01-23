@@ -28,7 +28,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false, $this->getRootDir());
+        $this->configuration = new Configuration(false, $this->getRootDir().'/app');
     }
 
     /**
@@ -75,11 +75,13 @@ class ConfigurationTest extends TestCase
             [''],
             ['app'],
             ['assets'],
+            ['bin'],
             ['contao'],
             ['plugins'],
             ['share'],
             ['system'],
             ['templates'],
+            ['var'],
             ['vendor'],
             ['web'],
         ];

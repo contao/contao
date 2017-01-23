@@ -43,7 +43,7 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/system/modules/.gitignore');
         $fs->remove($this->getRootDir().'/system/tmp');
         $fs->remove($this->getRootDir().'/templates');
-        $fs->remove($this->getRootDir().'/web');
+        $fs->remove($this->getRootDir().'/web/share');
     }
 
     /**

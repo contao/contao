@@ -40,7 +40,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
-                'kernel.root_dir' => $this->getRootDir(),
+                'kernel.root_dir' => $this->getRootDir().'/app',
             ])
         );
 
