@@ -173,9 +173,9 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Forces the router to add the host if necessary.
      *
-     * @param ScopeMatcher $context
-     * @param array        $parameters
-     * @param int          $referenceType
+     * @param RequestContext $context
+     * @param array          $parameters
+     * @param int            $referenceType
      */
     private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType)
     {
@@ -193,9 +193,9 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Sets the context from the domain.
      *
-     * @param ScopeMatcher $context
-     * @param array        $parameters
-     * @param string       $referenceType
+     * @param RequestContext $context
+     * @param array          $parameters
+     * @param string         $referenceType
      */
     private function addHostToContext(RequestContext $context, array $parameters, &$referenceType)
     {
