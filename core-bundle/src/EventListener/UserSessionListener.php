@@ -11,10 +11,11 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -30,8 +31,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class UserSessionListener
 {
-    use ScopeAwareTrait;
-
     /**
      * @var SessionInterface
      */
@@ -53,19 +52,26 @@ class UserSessionListener
     private $authenticationTrustResolver;
 
     /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
      * Constructor.
      *
      * @param SessionInterface                     $session
      * @param Connection                           $connection
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
+     * @param ScopeMatcher                         $scopeMatcher
      */
-    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver)
+    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
     {
         $this->session = $session;
         $this->connection = $connection;
         $this->tokenStorage = $tokenStorage;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -75,7 +81,7 @@ class UserSessionListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
         }
 
@@ -94,7 +100,7 @@ class UserSessionListener
         $session = $user->session;
 
         if (is_array($session)) {
-            $this->getSessionBag()->replace($session);
+            $this->getSessionBag($event->getRequest())->replace($session);
         }
     }
 
@@ -105,7 +111,7 @@ class UserSessionListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
         }
 
@@ -123,7 +129,7 @@ class UserSessionListener
 
         $this->connection->update(
             $user->getTable(),
-            ['session' => serialize($this->getSessionBag()->all())],
+            ['session' => serialize($this->getSessionBag($event->getRequest())->all())],
             ['id' => $user->id]
         );
     }
@@ -141,11 +147,13 @@ class UserSessionListener
     /**
      * Returns the session bag.
      *
+     * @param Request $request
+     *
      * @return AttributeBagInterface
      */
-    private function getSessionBag()
+    private function getSessionBag(Request $request)
     {
-        if ($this->isBackendScope()) {
+        if ($this->scopeMatcher->isBackendRequest($request)) {
             $name = 'contao_backend';
         } else {
             $name = 'contao_frontend';

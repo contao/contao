@@ -76,6 +76,7 @@ class InsertTagsControllerTest extends TestCase
                 $container->get('request_stack'),
                 $this->mockRouter('/index.html'),
                 $this->mockSession(),
+                $this->mockScopeMatcher(),
                 $this->getRootDir().'/app',
                 error_reporting(),
             ])

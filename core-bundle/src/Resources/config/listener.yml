@@ -78,10 +78,9 @@ services:
         class: Contao\CoreBundle\EventListener\LocaleListener
         factory: [Contao\CoreBundle\EventListener\LocaleListener, createWithLocales]
         arguments:
+            - "@contao.routing.scope_matcher"
             - "%kernel.default_locale%"
             - "%kernel.root_dir%"
-        calls:
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
 
@@ -107,8 +106,7 @@ services:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:
             - "@contao.referer_id.manager"
-        calls:
-            - ["setContainer", ["@service_container"]]
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
 
@@ -123,8 +121,7 @@ services:
             - "@session"
             - "@security.token_storage"
             - "@security.authentication.trust_resolver"
-        calls:
-            - ["setContainer", ["@service_container"]]
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
@@ -132,8 +129,7 @@ services:
         class: Contao\CoreBundle\EventListener\ToggleViewListener
         arguments:
             - "@contao.framework"
-        calls:
-            - ["setContainer", ["@service_container"]]
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -144,8 +140,7 @@ services:
             - "@database_connection"
             - "@security.token_storage"
             - "@security.authentication.trust_resolver"
-        calls:
-            - ["setContainer", ["@service_container"]]
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

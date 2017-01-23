@@ -39,7 +39,6 @@ services:
             - "%kernel.packages%"
         calls:
             - ["setFramework", ["@contao.framework"]]
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
@@ -64,6 +63,7 @@ services:
             - "@request_stack"
             - "@router"
             - "@session"
+            - "@contao.routing.scope_matcher"
             - "%contao.root_dir%"
             - "%contao.error_level%"
         calls:
@@ -86,8 +86,7 @@ services:
         arguments:
             - "@request_stack"
             - "@security.token_storage"
-        calls:
-            - ["setContainer", ["@service_container"]]
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: monolog.processor }
 
@@ -126,6 +125,24 @@ services:
             - "@router"
             - "@contao.framework"
             - "%contao.prepend_locale%"
+
+    contao.routing.scope_matcher:
+        class: Contao\CoreBundle\Routing\ScopeMatcher
+        arguments:
+            - "@contao.routing.backend_matcher"
+            - "@contao.routing.frontend_matcher"
+
+    contao.routing.backend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        public: false
+        calls:
+            - ["matchAttribute", ["_scope", "backend"]]
+
+    contao.routing.frontend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        public: false
+        calls:
+            - ["matchAttribute", ["_scope", "frontend"]]
 
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator

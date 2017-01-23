@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +23,10 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  */
 class LocaleListener
 {
-    use ScopeAwareTrait;
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
 
     /**
      * @var array
@@ -33,10 +36,12 @@ class LocaleListener
     /**
      * Constructor.
      *
-     * @param array $availableLocales
+     * @param ScopeMatcher $scopeMatcher
+     * @param array        $availableLocales
      */
-    public function __construct($availableLocales)
+    public function __construct(ScopeMatcher $scopeMatcher, $availableLocales)
     {
+        $this->scopeMatcher = $scopeMatcher;
         $this->availableLocales = $availableLocales;
     }
 
@@ -47,7 +52,7 @@ class LocaleListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (!$this->isContaoScope()) {
+        if (!$this->scopeMatcher->isContaoRequest($event->getRequest())) {
             return;
         }
 
@@ -109,12 +114,13 @@ class LocaleListener
     /**
      * Creates a new instance with the installed languages.
      *
-     * @param string $defaultLocale
-     * @param string $rootDir
+     * @param ScopeMatcher $scopeMatcher
+     * @param string       $defaultLocale
+     * @param string       $rootDir
      *
      * @return static
      */
-    public static function createWithLocales($defaultLocale, $rootDir)
+    public static function createWithLocales(ScopeMatcher $scopeMatcher, $defaultLocale, $rootDir)
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
@@ -137,6 +143,6 @@ class LocaleListener
         // The default locale must be the first supported language (see contao/core#6533)
         array_unshift($languages, $defaultLocale);
 
-        return new static(array_unique($languages));
+        return new static($scopeMatcher, array_unique($languages));
     }
 }

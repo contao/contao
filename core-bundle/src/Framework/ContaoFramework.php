@@ -15,10 +15,13 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -35,14 +38,19 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
  */
-class ContaoFramework implements ContaoFrameworkInterface
+class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
 {
-    use ScopeAwareTrait;
+    use ContainerAwareTrait;
 
     /**
      * @var bool
      */
     private static $initialized = false;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @var RouterInterface
@@ -55,6 +63,11 @@ class ContaoFramework implements ContaoFrameworkInterface
     private $session;
 
     /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
      * @var string
      */
     private $rootDir;
@@ -63,11 +76,6 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @var int
      */
     private $errorLevel;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
 
     /**
      * @var Request
@@ -96,16 +104,18 @@ class ContaoFramework implements ContaoFrameworkInterface
      * @param RequestStack     $requestStack
      * @param RouterInterface  $router
      * @param SessionInterface $session
+     * @param ScopeMatcher     $scopeMatcher
      * @param string           $rootDir
      * @param int              $errorLevel
      */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, $rootDir, $errorLevel)
+    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, $rootDir, $errorLevel)
     {
+        $this->requestStack = $requestStack;
         $this->router = $router;
         $this->session = $session;
+        $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
-        $this->requestStack = $requestStack;
     }
 
     /**
@@ -187,7 +197,7 @@ class ContaoFramework implements ContaoFrameworkInterface
         }
 
         // Define the login status constants in the back end (see #4099, #5279)
-        if (!$this->isFrontendScope()) {
+        if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
             define('BE_USER_LOGGED_IN', false);
             define('FE_USER_LOGGED_IN', false);
         }
@@ -203,11 +213,15 @@ class ContaoFramework implements ContaoFrameworkInterface
      */
     private function getMode()
     {
-        if ($this->isBackendScope()) {
+        if (null === $this->request) {
+            return null;
+        }
+
+        if ($this->scopeMatcher->isBackendRequest($this->request)) {
             return 'BE';
         }
 
-        if ($this->isFrontendScope()) {
+        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
             return 'FE';
         }
 

@@ -48,7 +48,7 @@ class StoreRefererListenerTest extends TestCase
      *
      * @dataProvider refererStoredOnKernelResponseProvider
      */
-    public function testRefererStoredOnKernelResponse($scope, Request $request, $currentReferer, $expectedReferer)
+    public function testRefererStoredOnKernelResponse(Request $request, $currentReferer, $expectedReferer)
     {
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
@@ -69,14 +69,11 @@ class StoreRefererListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $container = $this->mockContainerWithContaoScopes($scope);
-
         // Set the current referer URLs
         $session = $this->mockSession();
         $session->set('referer', $currentReferer);
 
         $listener = $this->getListener($session, $tokenStorage);
-        $listener->setContainer($container);
         $listener->onKernelResponse($responseEvent);
 
         $this->assertSame($expectedReferer, $session->get('referer'));
@@ -91,9 +88,12 @@ class StoreRefererListenerTest extends TestCase
      */
     public function testListenerSkipIfNoUserOnKernelResponse(AnonymousToken $noUserReturn = null)
     {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
         );
@@ -116,7 +116,6 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $tokenStorage);
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -125,9 +124,12 @@ class StoreRefererListenerTest extends TestCase
      */
     public function testListenerSkipUponSubRequestOnKernelResponse()
     {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::SUB_REQUEST,
             new Response()
         );
@@ -140,7 +142,6 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session);
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -149,14 +150,16 @@ class StoreRefererListenerTest extends TestCase
      */
     public function testListenerSkipIfBackendSessionNotModifiable()
     {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
         );
 
-        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
 
         $session
@@ -177,7 +180,6 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $listener = $this->getListener($session, $tokenStorage);
-        $listener->setContainer($container);
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -191,23 +193,26 @@ class StoreRefererListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend');
         $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
         $requestFrontend = clone $request;
         $requestFrontend->attributes->set('_route', 'contao_frontend');
+        $requestFrontend->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $requestWithRefInUrl = new Request();
         $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
         $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
+        $requestWithRefInUrl->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
         $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');
 
         $requestWithRefInUrlFrontend = clone $requestWithRefInUrl;
         $requestWithRefInUrlFrontend->attributes->set('_route', 'contao_frontend');
+        $requestWithRefInUrlFrontend->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         return [
             'Test current referer null returns correct new referer for back end scope' => [
-                ContaoCoreBundle::SCOPE_BACKEND,
                 $request,
                 null,
                 [
@@ -218,7 +223,6 @@ class StoreRefererListenerTest extends TestCase
                 ],
             ],
             'Test referer returns correct new referer for back end scope' => [
-                ContaoCoreBundle::SCOPE_BACKEND,
                 $requestWithRefInUrl,
                 [
                     'dummyTestRefererId' => [
@@ -234,13 +238,11 @@ class StoreRefererListenerTest extends TestCase
                 ],
             ],
             'Test current referer null returns null for front end scope' => [
-                ContaoCoreBundle::SCOPE_FRONTEND,
                 $requestFrontend,
                 null,
                 null,
             ],
             'Test referer returns correct new referer for front end scope' => [
-                ContaoCoreBundle::SCOPE_FRONTEND,
                 $requestWithRefInUrlFrontend,
                 [
                     'last' => '',
@@ -252,7 +254,6 @@ class StoreRefererListenerTest extends TestCase
                 ],
             ],
             'Test referers are correctly added to the referers array (see #143)' => [
-                ContaoCoreBundle::SCOPE_BACKEND,
                 $requestWithRefInUrl,
                 [
                     'dummyTestRefererId' => [
@@ -315,6 +316,6 @@ class StoreRefererListenerTest extends TestCase
 
         $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
 
-        return new StoreRefererListener($session, $tokenStorage, $trustResolver);
+        return new StoreRefererListener($session, $tokenStorage, $trustResolver, $this->mockScopeMatcher());
     }
 }

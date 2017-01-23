@@ -11,11 +11,13 @@
 namespace Contao\CoreBundle\Test;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\PictureGenerator;
@@ -27,6 +29,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -186,6 +189,19 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Mocks a request scope matcher.
+     *
+     * @return ScopeMatcher
+     */
+    protected function mockScopeMatcher()
+    {
+        return new ScopeMatcher(
+            new RequestMatcher(null, null, null, null, ['_scope' => 'backend']),
+            new RequestMatcher(null, null, null, null, ['_scope' => 'frontend'])
+        );
+    }
+
+    /**
      * Mocks a container with scopes.
      *
      * @param string|null $scope
@@ -233,6 +249,24 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->set('session', $this->mockSession());
         $container->set('monolog.logger.contao', new NullLogger());
 
+        $container->set(
+            'contao.routing.backend_matcher',
+            new RequestMatcher(null, null, null, null, ['_scope' => ContaoCoreBundle::SCOPE_BACKEND])
+        );
+
+        $container->set(
+            'contao.routing.frontend_matcher',
+            new RequestMatcher(null, null, null, null, ['_scope' => ContaoCoreBundle::SCOPE_FRONTEND])
+        );
+
+        $container->set(
+            'contao.routing.scope_matcher',
+            new ScopeMatcher(
+                $container->get('contao.routing.backend_matcher'),
+                $container->get('contao.routing.frontend_matcher')
+            )
+        );
+
         return $container;
     }
 
@@ -277,6 +311,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
                 $requestStack,
                 $router,
                 $this->mockSession(),
+                $this->mockScopeMatcher(),
                 $this->getRootDir(),
                 error_reporting(),
             ])

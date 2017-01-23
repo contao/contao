@@ -30,7 +30,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = new RefererIdListener($this->mockTokenManager());
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\RefererIdListener', $listener);
     }
@@ -48,8 +48,7 @@ class RefererIdListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager());
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
@@ -69,8 +68,7 @@ class RefererIdListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager());
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
@@ -89,8 +87,7 @@ class RefererIdListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager());
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));

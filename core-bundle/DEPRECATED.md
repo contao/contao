@@ -212,20 +212,27 @@ Use the `contao.root_dir` instead of `TL_ROOT`:
 $rootDir = System::getContainer()->getParameter('contao.root_dir');
 ```
 
-Use the `ScopeAwareTrait` trait instead of using `TL_MODE`:
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
 
 ```php
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Test {
-    use ScopeAwareTrait;
+    private $requestStack;
+    private $scopeMatcher;
+ 
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {    
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
 
     public function isBackend() {
-        return $this->isBackendScope();
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
     }
 
     public function isFrontend() {
-        return $this->isFrontendScope();
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
     }
 }
 ```

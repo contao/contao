@@ -15,7 +15,6 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\Test\TestCase;
 use Monolog\Logger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -102,15 +101,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testIpOnEmptyRequest()
     {
-        $requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack');
-
-        $requestStack
-            ->expects($this->any())
-            ->method('getCurrentRequest')
-            ->willReturn(null)
-        ;
-
-        $processor = $this->createContaoTableProcessor($requestStack);
+        $processor = $this->createContaoTableProcessor();
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
@@ -221,16 +212,24 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * Tests that the source is added.
      *
-     * @param ContainerInterface $container
-     * @param string|null        $contextSource
-     * @param string|null        $expectedSource
+     * @param string $scope
+     * @param string $contextSource
+     * @param string $expectedSource
      *
      * @dataProvider sourceProvider
      */
-    public function testSource($container, $contextSource, $expectedSource)
+    public function testSource($scope, $contextSource, $expectedSource)
     {
-        $processor = $this->createContaoTableProcessor();
-        $processor->setContainer($container);
+        $requestStack = new RequestStack();
+
+        if (null !== $scope) {
+            $request = new Request();
+            $request->attributes->set('_scope', $scope);
+
+            $requestStack->push($request);
+        }
+
+        $processor = $this->createContaoTableProcessor($requestStack);
 
         $result = $processor(
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, null, null, null, $contextSource)]]
@@ -294,40 +293,14 @@ class ContaoTableProcessorTest extends TestCase
             [null, 'BE', 'BE'],
             [null, null, 'FE'],
 
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_FRONTEND), 'FE', 'FE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_FRONTEND), 'BE', 'BE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_FRONTEND), null, 'FE'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'FE', 'FE'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'BE', 'BE'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, null, 'FE'],
 
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_BACKEND), 'FE', 'FE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_BACKEND), 'BE', 'BE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_BACKEND), null, 'BE'],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'],
+            [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'],
         ];
-    }
-
-    /**
-     * Mocks a Symfony container with scope.
-     *
-     * @param string $scope
-     *
-     * @return ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockContainerWithScope($scope)
-    {
-        $request = new Request([], [], ['_scope' => $scope]);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->with('request_stack')
-            ->willReturn($requestStack)
-        ;
-
-        return $container;
     }
 
     /**
@@ -351,6 +324,6 @@ class ContaoTableProcessorTest extends TestCase
             );
         }
 
-        return new ContaoTableProcessor($requestStack, $tokenStorage, $anonymizeIp);
+        return new ContaoTableProcessor($requestStack, $tokenStorage, $this->mockScopeMatcher(), $anonymizeIp);
     }
 }
