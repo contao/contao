@@ -28,10 +28,12 @@
         {% endif %}
         <div class="sf-toolbar-info-group">
             <div class="sf-toolbar-info-piece">
+                <b>Contao core</b>
+                <span>{{ collector.summary.version }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
                 <b>Resources</b>
-                <span>
-                    <a href="https://docs.contao.org/" target="_blank" rel="help">Read the Contao docs</a>
-                </span>
+                <span><a href="https://docs.contao.org/" target="_blank" rel="help">Read the Contao docs</a></span>
             </div>
         </div>
     {% endset %}
@@ -50,7 +52,7 @@
     <div class="metrics">
         <div class="metric">
             <span class="value">{{ collector.summary.version }}</span>
-            <span class="label">Contao version</span>
+            <span class="label">Contao core version</span>
         </div>
 
         <div class="metric">
