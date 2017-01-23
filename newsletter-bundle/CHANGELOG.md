@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### 4.3.3 (2016-01-23)
+
+ * Fix the version contraints of the manager plugin.
+
 ### 4.3.2 (2016-01-18)
 
  * Correctly add new resources to the user/group permissions (see contao/core#8583).
