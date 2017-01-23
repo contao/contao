@@ -40,7 +40,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         $configs = $parser->parse(__DIR__.'/../Resources/contao-manager/bundles.json');
 
-        if (null !== static::$autoloadModules) {
+        if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
             /** @var Finder $modules */
             $modules = (new Finder())
                 ->directories()
