@@ -3,7 +3,7 @@
 ### 4.3.3 (2016-01-23)
 
  * Fix removing the pagination limit in the back end (see #675).
- * Fix the version contraints of the manager plugin.
+ * Fix the version constraints of the manager plugin.
 
 ### 4.3.2 (2017-01-18)
 
