@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+    <file datatype="php" original="contao/languages/en/default.php" source-language="en">
+        <body>
+            <trans-unit id="MSC.empty">
+            </trans-unit>
+            <trans-unit id="MSC.first">
+                <source>This is the first source</source>
+                <target>This is the first target</target>
+            </trans-unit>
+            <trans-unit id="MSC.second.0">
+                <source>This is the second source</source>
+                <target>This is the second target</target>
+            </trans-unit>
+            <trans-unit id="MSC.third.with.1">
+                <source>This is the third source</source>
+                <target>This is the third target</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
