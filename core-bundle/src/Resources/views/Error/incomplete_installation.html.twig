@@ -1,0 +1,13 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.incomplete }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.incompleteInstallation }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.incompleteFix|raw }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ error.incompleteExplain|raw }}</p>
+{% endblock %}
