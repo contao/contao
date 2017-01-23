@@ -18,6 +18,7 @@ use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -157,9 +158,15 @@ class ContaoKernel extends Kernel
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
 
-        if (file_exists($this->getRootDir().'/config/config.yml')) {
-            $loader->load($this->getRootDir().'/config/config.yml');
-        }
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
+            $environment = $container->getParameter('kernel.environment');
+
+            if (file_exists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
+                $loader->load($this->getRootDir().'/config/config_'.$environment.'.yml');
+            } elseif (file_exists($this->getRootDir().'/config/config.yml')) {
+                $loader->load($this->getRootDir().'/config/config.yml');
+            }
+        });
     }
 
     /**
