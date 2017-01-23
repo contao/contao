@@ -15,7 +15,7 @@
         "contao/core-bundle": "^4.3.2"
     },
     "require-dev": {
-        "contao/manager-plugin": "^0.2",
+        "contao/manager-plugin": "^2.0",
         "friendsofphp/php-cs-fixer": "^1.8",
         "phpunit/phpunit": "^4.5",
         "satooshi/php-coveralls": "^1.0",
@@ -23,7 +23,7 @@
     },
     "conflict": {
         "contao/core": "*",
-        "contao/manager-plugin": "!=0.2"
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {
