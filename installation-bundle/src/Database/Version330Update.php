@@ -10,6 +10,8 @@
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\StringUtil;
+
 /**
  * Runs the version 3.3.0 update.
  *
@@ -42,7 +44,7 @@ class Version330Update extends AbstractVersionUpdate
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $framework = '';
-            $tmp = \StringUtil::deserialize($layout->framework);
+            $tmp = StringUtil::deserialize($layout->framework);
 
             if (!empty($tmp) && is_array($tmp)) {
                 if (false !== ($key = array_search('layout.css', $tmp))) {

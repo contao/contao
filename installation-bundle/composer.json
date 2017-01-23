@@ -18,12 +18,12 @@
         "sensiolabs/ansi-to-html": "^1.1"
     },
     "require-dev": {
-        "contao/manager-plugin": "^0.2",
+        "contao/manager-plugin": "^2.0",
         "friendsofphp/php-cs-fixer": "^1.8"
     },
     "conflict": {
         "contao/core": "*",
-        "contao/manager-plugin": "!=0.2"
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {

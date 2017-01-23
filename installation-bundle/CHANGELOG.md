@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 1.2.4 (2016-01-23)
+
+ * Fix the version contraints of the manager plugin.
+
 ### 1.2.3 (2017-01-18)
 
  * Require version 0.2 of the manager plugin.
