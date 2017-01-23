@@ -5430,7 +5430,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$blnIsMaxResultsPerPage = false;
 
 			// Overall limit
-			if ($this->total > \Config::get('maxResultsPerPage') && ($this->limit === null || preg_replace('/^.*,/', '', $this->limit) == \Config::get('maxResultsPerPage')))
+			if (\Config::get('maxResultsPerPage') > 0 && $this->total > \Config::get('maxResultsPerPage') && ($this->limit === null || preg_replace('/^.*,/', '', $this->limit) == \Config::get('maxResultsPerPage')))
 			{
 				if ($this->limit === null)
 				{
