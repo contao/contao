@@ -106,7 +106,7 @@ class Automator extends \System
 	 */
 	public function purgeImageCache()
 	{
-		$strTargetPath = \System::getContainer()->getParameter('contao.image.target_path');
+		$strTargetPath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir'));
 
 		// Walk through the subfolders
 		foreach (scan(TL_ROOT . '/' . $strTargetPath) as $dir)

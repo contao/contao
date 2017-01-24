@@ -217,7 +217,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->setParameter('contao.root_dir', $this->getRootDir());
         $container->setParameter('contao.web_dir', $this->getRootDir().'/web');
         $container->setParameter('contao.image.bypass_cache', false);
-        $container->setParameter('contao.image.target_path', 'assets/images');
+        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images');
         $container->setParameter('contao.image.valid_extensions', ['jpg', 'svg', 'svgz']);
 
         $container->setParameter('contao.image.imagine_options', [
@@ -469,11 +469,13 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $framework = $this->mockContaoFramework();
 
         if ($rootDir) {
+            $container->setParameter('contao.root_dir', $rootDir);
             $container->setParameter('contao.web_dir', $rootDir.'/web');
+            $container->setParameter('contao.image.target_dir', $rootDir.'/assets/images');
         }
 
         $resizer = new LegacyResizer(
-            ($rootDir ?: $this->getRootDir()).'/'.$container->getParameter('contao.image.target_path'),
+            $container->getParameter('contao.image.target_dir'),
             $calculator
         );
 

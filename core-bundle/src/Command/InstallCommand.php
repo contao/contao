@@ -146,7 +146,7 @@ class InstallCommand extends AbstractLockedCommand
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
-        $this->addIgnoredDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.image.target_path'));
+        $this->addIgnoredDir($this->getContainer()->getParameter('contao.image.target_dir'));
     }
 
     /**

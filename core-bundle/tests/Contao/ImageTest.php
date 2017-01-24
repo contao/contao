@@ -38,7 +38,7 @@ class ImageTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = __DIR__.'/../../tmp';
+        self::$rootDir = dirname(dirname(__DIR__)).'/tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);

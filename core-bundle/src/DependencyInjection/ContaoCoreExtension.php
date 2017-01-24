@@ -78,7 +78,7 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);
         $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
-        $container->setParameter('contao.image.target_path', $mergedConfig['image']['target_path']);
+        $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
         $container->setParameter('contao.security.disable_ip_check', $mergedConfig['security']['disable_ip_check']);
@@ -86,5 +86,30 @@ class ContaoCoreExtension extends ConfigurableExtension
         if (isset($mergedConfig['localconfig'])) {
             $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
         }
+
+        $this->overwriteImageTargetDir($mergedConfig, $container);
+    }
+
+    /**
+     * Reads the old contao.image.target_path parameter.
+     *
+     * @param array            $mergedConfig
+     * @param ContainerBuilder $container
+     *
+     * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5; use the
+     *             contao.image.target_dir parameter instead
+     */
+    private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container)
+    {
+        if (!isset($mergedConfig['image']['target_path'])) {
+            return;
+        }
+
+        $container->setParameter(
+            'contao.image.target_dir',
+            $mergedConfig['root_dir'].'/'.$mergedConfig['image']['target_path']
+        );
+
+        @trigger_error('Using the contao.image.target_path parameter has been deprecated and will no longer work in Contao 5. Use the contao.image.target_dir parameter instead.', E_USER_DEPRECATED);
     }
 }

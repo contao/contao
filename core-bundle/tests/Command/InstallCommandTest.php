@@ -66,7 +66,7 @@ class InstallCommandTest extends TestCase
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.root_dir', $this->getRootDir());
         $container->setParameter('contao.upload_path', 'files');
-        $container->setParameter('contao.image.target_path', 'assets/images');
+        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images');
 
         $command = new InstallCommand('contao:install');
         $command->setContainer($container);
@@ -96,7 +96,7 @@ class InstallCommandTest extends TestCase
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.root_dir', $this->getRootDir());
         $container->setParameter('contao.upload_path', 'files_test');
-        $container->setParameter('contao.image.target_path', 'assets/images_test');
+        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images_test');
 
         $command = new InstallCommand('contao:install');
         $command->setContainer($container);

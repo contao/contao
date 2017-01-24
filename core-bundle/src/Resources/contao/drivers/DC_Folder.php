@@ -2203,7 +2203,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Remove potentially existing thumbnails (see #6641)
 			if (in_array(substr($this->strExtension, 1), $arrImageTypes))
 			{
-				foreach (glob(TL_ROOT . '/' . \System::getContainer()->getParameter('contao.image.target_path') . '/*/' . $this->varValue . '-*' . $this->strExtension) as $strThumbnail)
+				foreach (glob(\System::getContainer()->getParameter('contao.image.target_dir') . '/*/' . $this->varValue . '-*' . $this->strExtension) as $strThumbnail)
 				{
 					$this->Files->delete(\StringUtil::stripRootDir($strThumbnail));
 				}
