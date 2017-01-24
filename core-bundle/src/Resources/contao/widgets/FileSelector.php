@@ -450,7 +450,7 @@ class FileSelector extends \Widget
 		for ($f=0, $c=count($folders); $f<$c; $f++)
 		{
 			$content = scan($folders[$f]);
-			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
+			$currentFolder = \StringUtil::stripRootDir($folders[$f]);
 			$countFiles = count($content);
 
 			// Check whether there are subfolders or files
@@ -478,7 +478,7 @@ class FileSelector extends \Widget
 			$tid = md5($folders[$f]);
 			$folderAttribute = 'style="margin-left:20px"';
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
-			$currentFolder = str_replace(TL_ROOT . '/', '', $folders[$f]);
+			$currentFolder = \StringUtil::stripRootDir($folders[$f]);
 			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
 			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
@@ -537,7 +537,7 @@ class FileSelector extends \Widget
 			for ($h=0, $c=count($files); $h<$c; $h++)
 			{
 				$thumbnail = '';
-				$currentFile = str_replace(TL_ROOT . '/', '', $files[$h]);
+				$currentFile = \StringUtil::stripRootDir($files[$h]);
 				$currentEncoded = $this->urlEncode($currentFile);
 
 				$objFile = new \File($currentFile);

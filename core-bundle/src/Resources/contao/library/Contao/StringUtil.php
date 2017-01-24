@@ -1115,4 +1115,30 @@ class StringUtil
 
 		return $arrFragments;
 	}
+
+	/**
+	 * Strip the Contao root dir from the given absolute path
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public static function stripRootDir($path)
+	{
+		static $length = null;
+
+		if ($length === null)
+		{
+			$length = strlen(TL_ROOT);
+		}
+
+		if (strncmp($path, TL_ROOT, $length) !== 0 || strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		{
+			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir', $path));
+		}
+
+		return substr($path, $length + 1);
+	}
 }

@@ -39,6 +39,10 @@ class StringUtilTest extends TestCase
      */
     protected function setUp()
     {
+        if (!defined('TL_ROOT')) {
+            define('TL_ROOT', $this->getRootDir());
+        }
+
         System::setContainer($this->mockContainerWithContaoScopes());
     }
 
@@ -459,5 +463,60 @@ class StringUtilTest extends TestCase
             'Unknown operator (====)' => ['{if foo===="bar"}{endif}'],
             'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'],
         ];
+    }
+
+    /**
+     * Tests the stripRootDir() method.
+     */
+    public function testStripRootDir()
+    {
+        $this->assertEquals('', StringUtil::stripRootDir($this->getRootDir().'/'));
+        $this->assertEquals('', StringUtil::stripRootDir($this->getRootDir().'\\'));
+        $this->assertEquals('foo', StringUtil::stripRootDir($this->getRootDir().'/foo'));
+        $this->assertEquals('foo', StringUtil::stripRootDir($this->getRootDir().'\foo'));
+        $this->assertEquals('foo/', StringUtil::stripRootDir($this->getRootDir().'/foo/'));
+        $this->assertEquals('foo\\', StringUtil::stripRootDir($this->getRootDir().'\foo\\'));
+        $this->assertEquals('foo/bar', StringUtil::stripRootDir($this->getRootDir().'/foo/bar'));
+        $this->assertEquals('foo\bar', StringUtil::stripRootDir($this->getRootDir().'\foo\bar'));
+    }
+
+    /**
+     * Tests the stripRootDir() method.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testStripRootDirDifferentPath()
+    {
+        StringUtil::stripRootDir('/foo');
+    }
+
+    /**
+     * Tests the stripRootDir() method.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testStripRootDirParentPath()
+    {
+        StringUtil::stripRootDir(dirname($this->getRootDir()).'/');
+    }
+
+    /**
+     * Tests the stripRootDir() method.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testStripRootDirSuffix()
+    {
+        StringUtil::stripRootDir($this->getRootDir().'foo/');
+    }
+
+    /**
+     * Tests the stripRootDir() method.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testStripRootDirNoSlash()
+    {
+        StringUtil::stripRootDir($this->getRootDir());
     }
 }

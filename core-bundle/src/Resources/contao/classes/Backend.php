@@ -267,7 +267,7 @@ abstract class Backend extends \Controller
 			}
 			catch (\Exception $e) {}
 
-			$strRelpath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', $file);
+			$strRelpath = \StringUtil::stripRootDir($file);
 
 			if (!unlink($file))
 			{

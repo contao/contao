@@ -42,8 +42,8 @@ class InsecureInstallationListener
             return;
         }
 
-        // The document root does not contain /web
-        if ('/web' !== substr($request->getBasePath(), -4)) {
+        // The document root is not in a subdirectory
+        if ('' === $request->getBasePath()) {
             return;
         }
 
