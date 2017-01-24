@@ -95,9 +95,6 @@ class ContaoCoreExtension extends ConfigurableExtension
      *
      * @param array            $mergedConfig
      * @param ContainerBuilder $container
-     *
-     * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5; use the
-     *             contao.image.target_dir parameter instead
      */
     private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container)
     {
