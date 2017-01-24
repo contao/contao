@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -29,18 +30,25 @@ class ContaoTemplateExtension extends \Twig_Extension
     /**
      * @var ContaoFrameworkInterface
      */
-    private $contaoFramework;
+    private $framework;
+
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
 
     /**
      * Constructor.
      *
      * @param RequestStack             $requestStack
-     * @param ContaoFrameworkInterface $contaoFramework
+     * @param ContaoFrameworkInterface $framework
+     * @param ScopeMatcher             $scopeMatcher
      */
-    public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $contaoFramework)
+    public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -62,14 +70,12 @@ class ContaoTemplateExtension extends \Twig_Extension
      */
     public function renderContaoBackendTemplate(array $blocks = [])
     {
-        $scope = $this->requestStack->getCurrentRequest()->attributes->get('_scope');
-
-        if ('backend' !== $scope) {
+        if (!$this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest())) {
             return '';
         }
 
         /** @var BackendCustom $controller */
-        $controller = $this->contaoFramework->createInstance(BackendCustom::class);
+        $controller = $this->framework->createInstance(BackendCustom::class);
         $template = $controller->getTemplateObject();
 
         foreach ($blocks as $key => $content) {

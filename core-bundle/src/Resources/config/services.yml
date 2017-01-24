@@ -226,5 +226,6 @@ services:
         arguments:
             - "@request_stack"
             - "@contao.framework"
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: twig.extension }
