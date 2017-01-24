@@ -70,7 +70,9 @@ class ContaoTemplateExtension extends \Twig_Extension
      */
     public function renderContaoBackendTemplate(array $blocks = [])
     {
-        if (!$this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest())) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request || !$this->scopeMatcher->isBackendRequest($request)) {
             return '';
         }
 
