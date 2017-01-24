@@ -188,8 +188,10 @@ class Automator extends \System
 	 */
 	public function purgeInternalCache()
 	{
-		$command = new ContaoCacheClearer(\System::getContainer()->get('filesystem'));
-		$command->clear(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$container = \System::getContainer();
+
+		$clearer = $container->get('contao.cache.clear_internal');
+		$clearer->clear($container->getParameter('kernel.cache_dir'));
 
 		// Add a log entry
 		$this->log('Purged the internal cache', __METHOD__, TL_CRON);
@@ -418,17 +420,8 @@ class Automator extends \System
 	{
 		$container = \System::getContainer();
 
-		$command = new ContaoCacheWarmer
-		(
-			$container->get('filesystem'),
-			$container->get('contao.resource_finder'),
-			$container->get('contao.resource_locator'),
-			$container->getParameter('kernel.root_dir'),
-			$container->get('database_connection'),
-			$container->get('contao.framework')
-		);
-
-		$command->warmUp(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$warmer = $container->get('contao.cache.warm_internal');
+		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
 
 		// Add a log entry
 		$this->log('Generated the internal cache', __METHOD__, TL_CRON);
