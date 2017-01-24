@@ -43,7 +43,7 @@ class ContaoInstallationExtension extends Extension implements PrependExtensionI
     {
         $rootDir = $container->getParameter('kernel.root_dir');
 
-        if (file_exists($rootDir.'/config/parameters.yml')) {
+        if (file_exists($rootDir.'/config/parameters.yml') || !file_exists($rootDir.'/config/parameters.yml.dist')) {
             return;
         }
 
