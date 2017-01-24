@@ -24,7 +24,7 @@
         "symfony/yaml": "^3.2",
         "sensio/framework-extra-bundle": "^3.0.2",
         "psr/log": "^1.0",
-        "twig/twig": "^1.20",
+        "twig/twig": "^1.26",
         "doctrine/dbal": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.3",

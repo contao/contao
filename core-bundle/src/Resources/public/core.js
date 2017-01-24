@@ -23,12 +23,13 @@ var AjaxRequest =
 	/**
 	 * Toggle the navigation menu
 	 *
-	 * @param {object} el The DOM element
-	 * @param {string} id The ID of the menu item
+	 * @param {object} el  The DOM element
+	 * @param {string} id  The ID of the menu item
+	 * @param {string} url The Ajax URL
 	 *
 	 * @returns {boolean}
 	 */
-	toggleNavigation: function(el, id) {
+	toggleNavigation: function(el, id, url) {
 		el.blur();
 
 		var item = $(id),
@@ -39,17 +40,18 @@ var AjaxRequest =
 				item.setStyle('display', null);
 				parent.removeClass('node-collapsed').addClass('node-expanded');
 				$(el).store('tip:title', Contao.lang.collapse);
-				new Request.Contao().post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 				parent.removeClass('node-expanded').addClass('node-collapsed');
 				$(el).store('tip:title', Contao.lang.expand);
-				new Request.Contao().post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
 		}
 
 		new Request.Contao({
+			url: url,
 			evalScripts: true,
 			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
 			onSuccess: function(txt) {

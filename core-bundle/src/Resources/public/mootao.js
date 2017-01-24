@@ -36,7 +36,7 @@ Request.Contao = new Class(
 	},
 
 	initialize: function(options) {
-		if (options) {
+		if (options && !options.url) {
 			// Try to replace the URL with the form action
 			try	{
 				this.options.url = options.field.getParent('form').getAttribute('action');
