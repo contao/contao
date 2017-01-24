@@ -34,7 +34,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testInstantiation()
     {
-        $authenticator = new ContaoAuthenticator();
+        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 
         $this->assertInstanceOf('Contao\CoreBundle\Security\ContaoAuthenticator', $authenticator);
     }
@@ -44,7 +44,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testCreateToken()
     {
-        $authenticator = new ContaoAuthenticator();
+        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $token = $authenticator->createToken(new Request(), 'frontend');
 
         $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', $token);
@@ -57,7 +57,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateToken()
     {
-        $authenticator = new ContaoAuthenticator();
+        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
         $provider = $this->mockUserProvider();
@@ -85,7 +85,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateInvalidToken()
     {
-        $authenticator = new ContaoAuthenticator();
+        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
         $authenticator->authenticateToken(
@@ -100,7 +100,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testAuthenticateTokenWithoutContainer()
     {
-        $authenticator = new ContaoAuthenticator();
+        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 
         $authenticator->authenticateToken(
             new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend'
@@ -112,7 +112,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     public function testSupportsToken()
     {
-        $authenticator = new ContaoAuthenticator();
+        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 
         $this->assertTrue($authenticator->supportsToken(new ContaoToken($this->mockUser()), 'frontend'));
         $this->assertTrue($authenticator->supportsToken(new AnonymousToken('anon.', 'foo'), 'frontend'));
