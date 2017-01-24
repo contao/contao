@@ -24,7 +24,7 @@ class MergeHttpHeadersListener
     /**
      * @var ContaoFrameworkInterface
      */
-    private $contaoFramework;
+    private $framework;
 
     /**
      * @var array
@@ -45,11 +45,11 @@ class MergeHttpHeadersListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $contaoFramework
+     * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(ContaoFrameworkInterface $contaoFramework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
         $this->setHeaders(headers_list());
     }
 
@@ -126,7 +126,7 @@ class MergeHttpHeadersListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->contaoFramework->isInitialized()) {
+        if (!$this->framework->isInitialized()) {
             return;
         }
 
