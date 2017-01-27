@@ -40,6 +40,13 @@ services:
         arguments:
             - "@contao.framework"
 
+    contao.cors_website_roots_config_provider:
+        class: Contao\CoreBundle\Cors\WebsiteRootsConfigProvider
+        arguments:
+            - "@database_connection"
+        tags:
+            - { name: nelmio_cors.options_provider }
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
