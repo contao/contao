@@ -64,6 +64,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Contao\CoreBundle\ContaoCoreBundle(),
         );
     }
@@ -88,11 +89,34 @@ ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
-Import the Contao `security.yml` file in your `app/config/security.yml` file:
+Edit your `app/config/security.yml` file:
 
 ```yml
-imports:
-    - { resource: "@ContaoCoreBundle/Resources/config/security.yml" }
+security:
+    providers:
+        contao.security.user_provider:
+            id: contao.security.user_provider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+
+        install:
+            pattern: ^/(contao/install|install\.php)
+            security: false
+
+        backend:
+            request_matcher: contao.routing.backend_matcher
+            stateless: true
+            simple_preauth:
+                authenticator: contao.security.authenticator
+
+        frontend:
+            request_matcher: contao.routing.frontend_matcher
+            stateless: true
+            simple_preauth:
+                authenticator: contao.security.authenticator
 ```
 
 Edit your `app/config/config.yml` file and add the following:
