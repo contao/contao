@@ -54,6 +54,5 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new AddImagineClassPass());
         $container->addCompilerPass(new DoctrineMigrationsPass());
-        $container->addCompilerPass(new DoctrineTypesPass());
     }
 }
