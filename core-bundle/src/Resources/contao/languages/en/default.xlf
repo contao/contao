@@ -665,6 +665,12 @@
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
       </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
+      </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
       </trans-unit>

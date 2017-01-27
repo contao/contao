@@ -210,6 +210,10 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'exclude'                 => true,
 			'inputType'               => 'optionWizard',
 			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true),
+			'xlabel' => array
+			(
+				array('tl_form_field', 'optionImportWizard')
+			),
 			'sql'                     => "blob NULL"
 		),
 		'mandatory' => array
@@ -591,6 +595,17 @@ class tl_form_field extends Backend
 
 		return $strType . StringUtil::insertTagToSrc($strWidget) . '
 </div>' . "\n";
+	}
+
+
+	/**
+	 * Add a link to the option items import wizard
+	 *
+	 * @return string
+	 */
+	public function optionImportWizard()
+	{
+		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.gif', $GLOBALS['TL_LANG']['MSC']['ow_import'][0], 'style="vertical-align:text-bottom"') . '</a>';
 	}
 
 

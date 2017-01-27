@@ -11,7 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Database\Result;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -415,7 +418,18 @@ abstract class Backend extends \Controller
 		elseif (\Input::get('key') && isset($arrModule[\Input::get('key')]))
 		{
 			$objCallback = \System::importStatic($arrModule[\Input::get('key')][0]);
-			$this->Template->main .= $objCallback->{$arrModule[\Input::get('key')][1]}($dc);
+			$response = $objCallback->{$arrModule[\Input::get('key')][1]}($dc);
+
+			if ($response instanceof RedirectResponse)
+			{
+				throw new ResponseException($response);
+			}
+			elseif ($response instanceof Response)
+			{
+				$response = $response->getContent();
+			}
+
+			$this->Template->main .= $response;
 
 			// Add the name of the parent element
 			if (isset($_GET['table']) && in_array(\Input::get('table'), $arrTables) && \Input::get('table') != $arrTables[0])
