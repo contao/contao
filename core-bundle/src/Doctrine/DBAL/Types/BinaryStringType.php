@@ -10,8 +10,8 @@
 
 namespace Contao\CoreBundle\Doctrine\DBAL\Types;
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Type that maps a PHP string to a binary database field.

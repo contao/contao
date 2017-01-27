@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
 use Contao\FileUpload;
+use Contao\Message;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -157,7 +158,7 @@ class BackendCsvImportController
      *
      * @throws InternalServerErrorException
      */
-    protected function importFromTemplate(callable $callback, $table, $field, $id, $submitLabel = null, $allowLinebreak = false)
+    private function importFromTemplate(callable $callback, $table, $field, $id, $submitLabel = null, $allowLinebreak = false)
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -178,7 +179,7 @@ class BackendCsvImportController
             try {
                 $data = $this->fetchData($uploader, $request->request->get('separator'), $callback);
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add($e->getMessage());
+                Message::addError($e->getMessage());
 
                 return new RedirectResponse($request->getUri(), 303);
             }
@@ -285,7 +286,7 @@ class BackendCsvImportController
      *
      * @param bool $allowLinebreak
      *
-     * @return array
+     * @return array<string,array>
      */
     private function getSeparators($allowLinebreak = false)
     {
