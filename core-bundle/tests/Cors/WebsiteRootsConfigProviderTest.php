@@ -27,6 +27,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this
             ->getMockBuilder(Connection::class)
             ->disableOriginalConstructor()
@@ -39,12 +40,47 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that a configuration is provided if the host matches.
+     */
+    public function testConfigProvidedIfHostMatches()
+    {
+        $request = Request::create('https://foobar.com');
+        $request->headers->set('Origin', 'http://origin.com');
+        $statement = $this->getMock(Statement::class);
+
+        $statement
+            ->expects($this->at(1))
+            ->method('bindValue')
+            ->with('dns', 'origin.com')
+        ;
+
+        $statement
+            ->expects($this->once())
+            ->method('rowCount')
+            ->willReturn(1)
+        ;
+
+        $connection = $this->getConnection($statement);
+        $configProvider = new WebsiteRootsConfigProvider($connection);
+        $result = $configProvider->getOptions($request);
+
+        $this->assertEquals(
+            [
+                'allow_origin' => true,
+                'allow_methods' => ['HEAD', 'GET'],
+                'allow_headers' => ['x-requested-with'],
+            ],
+            $result
+        );
+    }
+
+    /**
      * Tests that no configuration is provided if the host does not match.
      */
     public function testNoConfigProvidedIfHostDoesNotMatch()
     {
         $request = Request::create('https://foobar.com');
-        $request->headers->set('origin', 'http://origin.com');
+        $request->headers->set('Origin', 'https://origin.com');
         $statement = $this->getMock(Statement::class);
 
         $statement
@@ -67,38 +103,55 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that a configuration is provided if the host matches.
+     * Tests that no configuration is provided if there is no origin header.
      */
-    public function testConfigProvidedIfHostMatches()
+    public function testNoConfigProvidedIfNoOrigin()
     {
-        $request = Request::create('https://foobar.com');
-        $request->headers->set('origin', 'https://origin.com');
-        $statement = $this->getMock(Statement::class);
+        $request = Request::create('http://foobar.com');
+        $request->headers->remove('Origin');
 
-        $statement
-            ->expects($this->at(1))
-            ->method('bindValue')
-            ->with('dns', 'origin.com')
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock()
         ;
 
-        $statement
-            ->expects($this->once())
-            ->method('rowCount')
-            ->willReturn(1)
+        $connection
+            ->expects($this->never())
+            ->method('prepare')
         ;
 
-        $connection = $this->getConnection($statement);
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
-        $this->assertEquals(
-            [
-                'allow_methods' => ['HEAD', 'GET'],
-                'allow_headers' => ['x-requested-with'],
-                'allow_origin' => true
-            ],
-            $result
-        );
+        $this->assertCount(0, $result);
+    }
+
+    /**
+     * Tests that no configuration is provided if the origin is empty.
+     */
+    public function testNoConfigProvidedIfOriginEmpty()
+    {
+        $request = Request::create('https://foobar.com');
+        $request->headers->set('Origin', '');
+
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $connection
+            ->expects($this->never())
+            ->method('prepare')
+        ;
+
+        $configProvider = new WebsiteRootsConfigProvider($connection);
+        $result = $configProvider->getOptions($request);
+
+        $this->assertCount(0, $result);
     }
 
     /**
