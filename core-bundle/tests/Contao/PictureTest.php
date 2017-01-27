@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
- * @group legacy
+ * @group contao3
  */
 class PictureTest extends TestCase
 {

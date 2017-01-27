@@ -32,7 +32,7 @@ class DoctrineTypesPass implements CompilerPassInterface
 
         $types[BinaryStringType::NAME] = [
             'class' => BinaryStringType::class,
-            'commented' => true
+            'commented' => true,
         ];
 
         $container->setParameter('doctrine.dbal.connection_factory.types', $types);

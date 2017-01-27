@@ -21,7 +21,7 @@ matrix:
     - php: 7.0
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
     - php: 7.0
-      env: COVERAGE='--exclude-group legacy --coverage-clover build/logs/clover.xml'
+      env: COVERAGE='--exclude-group contao3 --coverage-clover build/logs/clover.xml'
     - php: 7.1
   fast_finish: true
 

@@ -19,7 +19,7 @@ use Contao\Validator;
  *
  * @author Christian Schiffler <https://github.com/discordier>
  *
- * @group legacy
+ * @group contao3
  */
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {

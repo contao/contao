@@ -279,7 +279,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param array                $adapters
      * @param array                $instances
      *
-     * @return ContaoFramework The object instance
+     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject The object instance
      */
     public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = [])
     {
@@ -392,6 +392,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
                     case 'minPasswordLength':
                         return $minPasswordLength;
+
+                    case 'disableCron':
+                        return false;
 
                     default:
                         return null;

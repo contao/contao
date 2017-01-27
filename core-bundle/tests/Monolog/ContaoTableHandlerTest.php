@@ -48,6 +48,9 @@ class ContaoTableHandlerTest extends TestCase
 
     /**
      * Tests the handle() method.
+     *
+     * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
+     * @group legacy
      */
     public function testHandle()
     {
@@ -94,7 +97,31 @@ class ContaoTableHandlerTest extends TestCase
             ->willReturnCallback(function ($key) use ($connection) {
                 switch ($key) {
                     case 'contao.framework':
-                        return $this->mockContaoFramework();
+                        $system = $this
+                            ->getMockBuilder('Contao\System')
+                            ->disableOriginalConstructor()
+                            ->getMockForAbstractClass()
+                        ;
+
+                        $framework = $this
+                            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+                            ->disableOriginalConstructor()
+                            ->getMock()
+                        ;
+
+                        $framework
+                            ->expects($this->any())
+                            ->method('isInitialized')
+                            ->willReturn(true)
+                        ;
+
+                        $framework
+                            ->expects($this->any())
+                            ->method('getAdapter')
+                            ->willReturn($system)
+                        ;
+
+                        return $framework;
 
                     case 'doctrine.dbal.default_connection':
                         return $connection;
@@ -102,10 +129,20 @@ class ContaoTableHandlerTest extends TestCase
             })
         ;
 
+        $GLOBALS['TL_HOOKS']['addLogEntry'][] = [get_class($this), 'addLogEntry'];
+
         $handler = new ContaoTableHandler();
         $handler->setContainer($container);
 
         $this->assertFalse($handler->handle($record));
+    }
+
+    /**
+     * Dummy method to test the addLogEntry hook.
+     */
+    public function addLogEntry()
+    {
+        // ignore
     }
 
     /**

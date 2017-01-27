@@ -19,7 +19,7 @@ use Contao\System;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @group legacy
+ * @group contao3
  */
 class EnvironmentTest extends TestCase
 {

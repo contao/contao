@@ -20,7 +20,7 @@ use Contao\Input;
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
- * @group legacy
+ * @group contao3
  */
 class WidgetTest extends \PHPUnit_Framework_TestCase
 {

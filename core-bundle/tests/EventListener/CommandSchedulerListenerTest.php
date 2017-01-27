@@ -96,10 +96,17 @@ class CommandSchedulerListenerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $controller = $this->getMock('Contao\FrontendCron', ['run']);
+
+        $controller
+            ->expects($this->once())
+            ->method('run')
+        ;
+
         $this->framework
             ->expects($this->any())
             ->method('createInstance')
-            ->willReturn($this->getMock('Contao\FrontendCron', ['run']))
+            ->willReturn($controller)
         ;
 
         $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
@@ -236,11 +243,17 @@ class CommandSchedulerListenerTest extends TestCase
 
         $connection = $this->getMock(
             'Doctrine\DBAL\Connection',
-            ['getSchemaManager'],
+            ['isConnected', 'getSchemaManager'],
             [],
             '',
             false
         );
+
+        $connection
+            ->expects($this->any())
+            ->method('isConnected')
+            ->willReturn(true)
+        ;
 
         $connection
             ->expects($this->any())
