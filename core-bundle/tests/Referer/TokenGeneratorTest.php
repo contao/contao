@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Referer;
+namespace Contao\CoreBundle\Tests\Referer;
 
 use Contao\CoreBundle\Referer\TokenGenerator;
 

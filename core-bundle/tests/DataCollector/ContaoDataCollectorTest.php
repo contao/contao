@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\DataCollector;
+namespace Contao\CoreBundle\Tests\DataCollector;
 
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

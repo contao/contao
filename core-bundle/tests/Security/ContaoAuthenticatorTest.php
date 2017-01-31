@@ -8,12 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security;
+namespace Contao\CoreBundle\Tests\Security;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Security\ContaoAuthenticator;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;

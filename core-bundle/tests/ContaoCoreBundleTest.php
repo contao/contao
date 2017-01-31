@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test;
+namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

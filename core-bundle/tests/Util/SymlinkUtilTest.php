@@ -8,9 +8,9 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Util;
+namespace Contao\CoreBundle\Tests\Util;
 
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\SymlinkUtil;
 
 /**

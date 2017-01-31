@@ -8,12 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Image;
+namespace Contao\CoreBundle\Tests\Image;
 
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\Image;
 use Contao\Image\ImportantPart;
 use Contao\Image\ResizeCalculator;

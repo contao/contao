@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Routing;
+namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;

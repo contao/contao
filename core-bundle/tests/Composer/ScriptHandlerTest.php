@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Composer;
+namespace Contao\CoreBundle\Tests\Composer;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;

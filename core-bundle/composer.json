@@ -94,15 +94,16 @@
             "Contao\\CoreBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao"
+            "src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config",
-            "src/Resources/contao/dca",
-            "src/Resources/contao/helper",
-            "src/Resources/contao/languages",
-            "src/Resources/contao/templates",
-            "src/Resources/contao/themes"
+            "tests/",
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/helper/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/",
+            "src/Resources/contao/themes/"
         ],
         "files": [
             "src/Resources/functions/utf8_bootup.php"
@@ -110,7 +111,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\CoreBundle\\Test\\": "tests/",
+            "Contao\\CoreBundle\\Tests\\": "tests/",
             "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
     },

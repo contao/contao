@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security\Authentication;
+namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;

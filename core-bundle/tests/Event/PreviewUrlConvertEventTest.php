@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Event;
+namespace Contao\CoreBundle\Tests\Event;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 

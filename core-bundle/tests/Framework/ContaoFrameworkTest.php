@@ -8,13 +8,13 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Framework;
+namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -500,7 +500,7 @@ class ContaoFrameworkTest extends TestCase
         $reflection = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
         $framework = $reflection->newInstanceWithoutConstructor();
 
-        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
+        $class = 'Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass';
         $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
@@ -515,7 +515,7 @@ class ContaoFrameworkTest extends TestCase
         $reflection = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
         $framework = $reflection->newInstanceWithoutConstructor();
 
-        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacySingletonClass';
+        $class = 'Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass';
         $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
@@ -527,7 +527,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $class = 'Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass';
+        $class = 'Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass';
 
         $adapter = $this
             ->mockContaoFramework(

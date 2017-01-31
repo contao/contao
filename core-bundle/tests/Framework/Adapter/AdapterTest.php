@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Framework\Adapter;
+namespace Contao\CoreBundle\Tests\Framework\Adapter;
 
 use Contao\CoreBundle\Framework\Adapter;
 
@@ -34,7 +34,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testMagicCall()
     {
-        $adapter = new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass');
+        $adapter = new Adapter('Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass');
 
         $this->assertEquals(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
     }
@@ -46,7 +46,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testMagicCallMissingMethod()
     {
-        $adapter = new Adapter('Contao\CoreBundle\Test\Fixtures\Adapter\LegacyClass');
+        $adapter = new Adapter('Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass');
 
         $adapter->missingMethod();
     }

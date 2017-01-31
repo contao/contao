@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Command;
+namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand;
 

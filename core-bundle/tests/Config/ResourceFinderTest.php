@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Config;
+namespace Contao\CoreBundle\Tests\Config;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the ResourceFinder class.

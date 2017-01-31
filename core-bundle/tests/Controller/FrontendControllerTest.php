@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Controller;
+namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**

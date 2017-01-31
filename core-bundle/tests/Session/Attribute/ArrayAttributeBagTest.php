@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Session\Attribute;
+namespace Contao\CoreBundle\Tests\Session\Attribute;
 
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
