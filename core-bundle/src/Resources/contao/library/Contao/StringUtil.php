@@ -354,7 +354,7 @@ class StringUtil
 		}
 
 		// Find all mailto: addresses
-		preg_match_all('/mailto:(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $matches);
+		preg_match_all('/mailto:(?:[^\x00-\x20\x22\x40\x7F]{1,64}+|\x22[^\x00-\x1F\x7F]{1,64}?\x22)@(?:\[(?:IPv)?[a-f0-9.:]{1,47}\]|[\w.-]{1,252}\.[a-z]{2,63}\b)/u', $strString, $matches);
 
 		foreach ($matches[0] as &$strEmail)
 		{
@@ -378,7 +378,7 @@ class StringUtil
 		}, $strString);
 
 		// Find all addresses in the plain text
-		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', strip_tags($strString), $matches);
+		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]{1,64}|\x22[^\x00-\x1F\x7F]{1,64}?\x22)@(?:\[(?:IPv)?[a-f0-9.:]{1,47}\]|[\w.-]{1,252}\.[a-z]{2,63}\b)/u', strip_tags($strString), $matches);
 
 		foreach ($matches[0] as &$strEmail)
 		{
