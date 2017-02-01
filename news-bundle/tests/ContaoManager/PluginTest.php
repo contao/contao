@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\NewsBundle\Test\ContaoManager;
+namespace Contao\NewsBundle\Tests\ContaoManager;
 
 use Contao\NewsBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;

@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\NewsBundle\Test\DependencyInjection;
+namespace Contao\NewsBundle\Tests\DependencyInjection;
 
 use Contao\NewsBundle\DependencyInjection\ContaoNewsExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\NewsBundle\Test;
+namespace Contao\NewsBundle\Tests;
 
 use Contao\NewsBundle\ContaoNewsBundle;
 

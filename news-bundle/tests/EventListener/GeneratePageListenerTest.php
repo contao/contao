@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\NewsBundle\Test\EventListener;
+namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
