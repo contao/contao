@@ -86,7 +86,7 @@ checks:
             interface_name: '^[A-Z][a-zA-Z0-9]*Interface$'
             type_name: '^[A-Z][a-zA-Z0-9]*$'
             exception_name: '^[A-Z][a-zA-Z0-9]*Exception$'
-            isser_method_name: '^(?:is|can|has|grants|should|may|supports)'
+            isser_method_name: '^(?:is|can|has|grants|should|may|requires|supports)'
         more_specific_types_in_doc_comments: true
         missing_arguments: true
         method_calls_on_non_object: true

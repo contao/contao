@@ -15,8 +15,8 @@ for more information.
 Installation
 ------------
 
-The module comes bundled with the [Contao core distribution][2].
+See the documentation of the [Contao core bundle][2].
 
 
 [1]: https://contao.org
-[2]: https://github.com/contao/contao
+[2]: https://github.com/contao/core-bundle
