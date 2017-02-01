@@ -21,6 +21,7 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
 return Symfony\CS\Config\Config::create()
     ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
     ->fixers([
+        '-psr0',
         'header_comment',
         'short_array_syntax',
         '-empty_return',
