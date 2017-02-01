@@ -43,7 +43,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\ManagerBundle\\Test\\": "tests/"
+            "Contao\\ManagerBundle\\Tests\\": "tests/"
         }
     },
     "bin": [

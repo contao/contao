@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\HttpKernel;
+namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
