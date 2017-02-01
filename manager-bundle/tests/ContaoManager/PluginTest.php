@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\ContaoManager;
+namespace Contao\ManagerBundle\Tests\ContaoManager;
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -50,7 +50,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $this->plugin);
 
-        $tmpdir = sys_get_temp_dir() . '/' . uniqid('PluginTest_', false);
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('PluginTest_', false);
 
         (new Filesystem())->mkdir([$tmpdir.'/foo1', $tmpdir.'/foo2', $tmpdir.'/foo3']);
         touch($tmpdir.'/foo3/.skip');

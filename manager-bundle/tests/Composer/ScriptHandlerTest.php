@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\Composer;
+namespace Contao\ManagerBundle\Tests\Composer;
 
 use Contao\ManagerBundle\Composer\ScriptHandler;
 
