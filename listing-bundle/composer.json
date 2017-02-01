@@ -26,13 +26,13 @@
             "Contao\\ListingBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao"
+            "src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config",
-            "src/Resources/contao/dca",
-            "src/Resources/contao/languages",
-            "src/Resources/contao/templates"
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
         ]
     },
     "config": {
