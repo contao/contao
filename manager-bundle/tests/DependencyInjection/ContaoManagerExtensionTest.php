@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Tests\DependencyInjection;
+namespace Contao\ManagerBundle\Test\DependencyInjection;
 
 use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

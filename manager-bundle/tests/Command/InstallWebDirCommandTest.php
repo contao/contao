@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Tests\Command;
+namespace Contao\ManagerBundle\Test\Command;
 
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
 use Symfony\Component\Console\Tester\CommandTester;

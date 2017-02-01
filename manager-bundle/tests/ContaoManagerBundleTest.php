@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Tests;
+namespace Contao\ManagerBundle\Test;
 
 use Contao\ManagerBundle\ContaoManagerBundle;
 
