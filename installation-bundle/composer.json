@@ -13,9 +13,9 @@
         "php": ">=5.5.0",
         "symfony/filesystem": "^3.2",
         "symfony/framework-bundle": "^3.2",
-        "contao/core-bundle": "dev-develop",
         "sensio/distribution-bundle": "^5.0",
-        "sensiolabs/ansi-to-html": "^1.1"
+        "sensiolabs/ansi-to-html": "^1.1",
+        "contao/core-bundle": "dev-develop"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
