@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Test\EventListener;
+namespace Contao\CalendarBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;

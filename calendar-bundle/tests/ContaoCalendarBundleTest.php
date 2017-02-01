@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Test;
+namespace Contao\CalendarBundle\Tests;
 
 use Contao\CalendarBundle\ContaoCalendarBundle;
 

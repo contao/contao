@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Test\DependencyInjection;
+namespace Contao\CalendarBundle\Tests\DependencyInjection;
 
 use Contao\CalendarBundle\DependencyInjection\ContaoCalendarExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
