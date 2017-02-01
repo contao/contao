@@ -2,6 +2,7 @@
 
 ### 4.3.3 (2016-01-23)
 
+ * Correctly generate the front end URLs in the article module (see #673).
  * Fix removing the pagination limit in the back end (see #675).
  * Fix the version constraints of the manager plugin.
 
