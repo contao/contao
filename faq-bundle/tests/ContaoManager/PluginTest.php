@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\FaqBundle\Test\ContaoManager;
+namespace Contao\FaqBundle\Tests\ContaoManager;
 
 use Contao\FaqBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;

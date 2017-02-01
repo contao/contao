@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\FaqBundle\Test\EventListener;
+namespace Contao\FaqBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;

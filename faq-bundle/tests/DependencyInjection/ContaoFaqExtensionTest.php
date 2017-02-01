@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\FaqBundle\Test\DependencyInjection;
+namespace Contao\FaqBundle\Tests\DependencyInjection;
 
 use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

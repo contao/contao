@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\FaqBundle\Test;
+namespace Contao\FaqBundle\Tests;
 
 use Contao\FaqBundle\ContaoFaqBundle;
 

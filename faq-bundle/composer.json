@@ -30,18 +30,19 @@
             "Contao\\FaqBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao"
+            "src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config",
-            "src/Resources/contao/dca",
-            "src/Resources/contao/languages",
-            "src/Resources/contao/templates"
+            "tests/",
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\FaqBundle\\Test\\": "tests/"
+            "Contao\\FaqBundle\\Tests\\": "tests/"
         }
     },
     "config": {
