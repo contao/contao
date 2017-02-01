@@ -96,7 +96,7 @@ class FrontendIndex extends \Frontend
 		$objPage = $pageModel;
 
 		// Check the URL and language of each page if there are multiple results
-		if ($objPage !== null && $objPage->count() > 1)
+		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
 		{
 			$objNewPage = null;
 			$arrPages = array();
