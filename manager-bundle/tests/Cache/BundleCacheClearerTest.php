@@ -18,7 +18,7 @@ class BundleCacheClearerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $clearer = new BundleCacheClearer(new Filesystem());
+        $clearer = new BundleCacheClearer();
 
         $this->assertInstanceOf('Contao\ManagerBundle\Cache\BundleCacheClearer', $clearer);
     }

@@ -21,11 +21,25 @@ use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 class BundleCacheClearer implements CacheClearerInterface
 {
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * Constructor.
+     *
+     * @param Filesystem $filesystem
+     */
+    public function __construct(Filesystem $filesystem = null)
+    {
+        $this->filesystem = $filesystem ?: new Filesystem();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function clear($cacheDir)
     {
-        $filesystem = new Filesystem();
-        $filesystem->remove($cacheDir.'/bundles.map');
+        $this->filesystem->remove($cacheDir.'/bundles.map');
     }
 }
