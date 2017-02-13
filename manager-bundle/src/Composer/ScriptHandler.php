@@ -42,7 +42,7 @@ class ScriptHandler
     }
 
     /**
-     * Purge the cache folder
+     * Purges the cache folder.
      */
     public static function purgeCacheFolder()
     {
