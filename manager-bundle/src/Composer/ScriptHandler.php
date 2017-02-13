@@ -29,6 +29,8 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event)
     {
+        static::purgeCacheFolder();
+
         static::addAppDirectory();
         static::addWebEntryPoints($event);
 
@@ -37,6 +39,15 @@ class ScriptHandler
 
         static::executeCommand('contao:install', $event);
         static::executeCommand('contao:symlinks', $event);
+    }
+
+    /**
+     * Purges the cache folder.
+     */
+    public static function purgeCacheFolder()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->removeDirectory(getcwd().'/var/cache/prod');
     }
 
     /**
