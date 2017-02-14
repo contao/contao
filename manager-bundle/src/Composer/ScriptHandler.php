@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -29,6 +29,8 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event)
     {
+        static::purgeCacheFolder();
+
         static::addAppDirectory();
         static::addWebEntryPoints($event);
 
@@ -37,6 +39,15 @@ class ScriptHandler
 
         static::executeCommand('contao:install', $event);
         static::executeCommand('contao:symlinks', $event);
+    }
+
+    /**
+     * Purges the cache folder.
+     */
+    public static function purgeCacheFolder()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->removeDirectory(getcwd().'/var/cache/prod');
     }
 
     /**
