@@ -71,6 +71,7 @@
         "contao/manager-plugin": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
+        "friendsofphp/php-cs-fixer": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "monolog/monolog": "^1.11",
         "phpunit/phpunit": "^4.5",
