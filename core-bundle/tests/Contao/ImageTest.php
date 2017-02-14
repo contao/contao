@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -728,7 +728,6 @@ class ImageTest extends TestCase
     public function getComputeResizeDataWithImportantPart()
     {
         return [
-
             'No dimensions zoom 0' => [
                 [null, null, 100, 100, null, 0, ['x' => 20, 'y' => 20, 'width' => 60, 'height' => 60]],
                 [

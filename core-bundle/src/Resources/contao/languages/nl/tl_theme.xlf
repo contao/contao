@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_theme.defaultImageDensities.0">
         <source>Default image pixel densities</source>
+        <target>Standaard pixel dichtheid van afbeeldingen</target>
       </trans-unit>
       <trans-unit id="tl_theme.defaultImageDensities.1">
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>Definiëren van standaard pixel dichtheid, b.v. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>

@@ -6,8 +6,12 @@
         <span class="sf-toolbar-value">{{ collector.summary.version }}</span>
     {% endset %}
     {% set text %}
-        {% if collector.summary.frontend %}
-            <div class="sf-toolbar-info-group">
+        <div class="sf-toolbar-info-group">
+            <div class="sf-toolbar-info-piece">
+                <b>Contao</b>
+                <span>{{ collector.summary.version }}</span>
+            </div>
+            {% if collector.summary.frontend %}
                 <div class="sf-toolbar-info-piece">
                     <b>Page layout</b>
                     <span>{{ collector.summary.layout }}</span>
@@ -17,20 +21,14 @@
                     <span>{{ collector.summary.template|default('n/a') }}</span>
                 </div>
                 <div class="sf-toolbar-info-piece">
-                    <b>Frontend preview</b>
+                    <b>FE preview</b>
                     {% if collector.summary.preview %}
                         <span class="sf-toolbar-status sf-toolbar-status-yellow">enabled</span>
                     {% else %}
                         <span>disabled</span>
                     {% endif %}
                 </div>
-            </div>
-        {% endif %}
-        <div class="sf-toolbar-info-group">
-            <div class="sf-toolbar-info-piece">
-                <b>Contao core</b>
-                <span>{{ collector.summary.version }}</span>
-            </div>
+            {% endif %}
             <div class="sf-toolbar-info-piece">
                 <b>Resources</b>
                 <span><a href="https://docs.contao.org/" target="_blank" rel="help">Read the Contao docs</a></span>
@@ -52,7 +50,7 @@
     <div class="metrics">
         <div class="metric">
             <span class="value">{{ collector.summary.version }}</span>
-            <span class="label">Contao core version</span>
+            <span class="label">Contao version</span>
         </div>
 
         <div class="metric">

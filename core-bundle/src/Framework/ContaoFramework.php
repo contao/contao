@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -377,7 +377,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function validateInstallation()
     {
-        if (null === $this->request) {
+        if (null === $this->request || 'contao_install' === $this->request->attributes->get('_route')) {
             return;
         }
 

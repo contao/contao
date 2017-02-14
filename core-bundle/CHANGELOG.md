@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### 4.4.0-beta1 (2017-XX-XX)
+### DEV
 
  * Support importing form field options from a CSV file (see #444).
  * Add a Doctrine DBAL field type for UUIDs (see #415).
