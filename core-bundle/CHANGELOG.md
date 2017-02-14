@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Skip the incomplete installation test in the install tool.
  * Correctly generate the front end URLs in the article module (see #673).
 
 ### 4.3.3 (2016-01-23)
