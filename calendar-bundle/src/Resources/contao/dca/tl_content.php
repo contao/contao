@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -25,7 +25,7 @@ if (Input::get('do') == 'calendar')
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property Contao\Calendar $Calendar
- * 
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_content_calendar extends Backend
