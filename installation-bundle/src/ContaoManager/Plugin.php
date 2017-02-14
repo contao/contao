@@ -10,6 +10,11 @@
 
 namespace Contao\InstallationBundle\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\InstallationBundle\ContaoInstallationBundle;
+use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -19,8 +24,19 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class Plugin implements RoutingPluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getBundles(ParserInterface $parser)
+    {
+        return [
+            BundleConfig::create(ContaoInstallationBundle::class)
+                ->setLoadAfter([ContaoCoreBundle::class]),
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
