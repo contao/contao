@@ -1,5 +1,5 @@
 # Contao manager bundle change log
 
-### 4.3.1 (2017-01-??)
+### DEV
 
  * Fix the maintenance lock file path.
