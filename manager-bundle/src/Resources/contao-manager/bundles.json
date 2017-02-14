@@ -6,33 +6,9 @@
     "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
     "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
     "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
-    "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
     "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
     "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
     "Contao\\ManagerBundle\\ContaoManagerBundle",
-    {
-        "bundle": "Contao\\CoreBundle\\ContaoCoreBundle",
-        "replace": ["core"],
-        "load-after": [
-            "Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle",
-            "Symfony\\Bundle\\SecurityBundle\\SecurityBundle",
-            "Symfony\\Bundle\\TwigBundle\\TwigBundle",
-            "Symfony\\Bundle\\MonologBundle\\MonologBundle",
-            "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
-            "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
-            "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
-            "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
-            "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
-            "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
-            "Contao\\ManagerBundle\\ContaoManagerBundle"
-        ]
-    },
-    {
-        "bundle": "Contao\\InstallationBundle\\ContaoInstallationBundle",
-        "load-after": [
-            "Contao\\CoreBundle\\ContaoCoreBundle"
-        ]
-    },
     {
         "bundle": "Symfony\\Bundle\\DebugBundle\\DebugBundle",
         "development": true
