@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.3.5 (2017-02-14)
 
  * Fix the path to the log file (see #41).
 

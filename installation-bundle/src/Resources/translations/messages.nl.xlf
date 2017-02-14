@@ -353,6 +353,7 @@
       </trans-unit>
       <trans-unit id="71">
         <source>console_explanation</source>
+        <target>Een installatie opdracht kan niet worden voltooid!</target>
         
       </trans-unit>
     </body>
