@@ -1,0 +1,24 @@
+services:
+    contao.install_tool:
+        class: Contao\InstallationBundle\InstallTool
+        arguments:
+            - "@database_connection"
+            - "%kernel.root_dir%"
+
+    contao.install_tool_user:
+        class: Contao\InstallationBundle\InstallToolUser
+        arguments:
+            - "@session"
+
+    contao.installer:
+        class: Contao\InstallationBundle\Database\Installer
+        arguments:
+            - "@database_connection"
+            - "@contao.resource_finder"
+            - "@translator.default"
+
+    contao.install_tool_twig_extension:
+        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
+        public: false
+        tags:
+            - { name: twig.extension }

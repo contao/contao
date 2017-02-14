@@ -1,0 +1,202 @@
+services:
+    contao.cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - "%kernel.cache_dir%/contao/cache"
+            - ""
+            - 0022
+
+    contao.cache.clear_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_clearer }
+
+    contao.cache.warm_internal:
+        class: Contao\CoreBundle\Cache\ContaoCacheWarmer
+        arguments:
+            - "@filesystem"
+            - "@contao.resource_finder"
+            - "@contao.resource_locator"
+            - "%kernel.root_dir%"
+            - "@database_connection"
+            - "@contao.framework"
+        tags:
+            - { name: kernel.cache_warmer }
+
+    contao.controller.insert_tags:
+        class: Contao\CoreBundle\Controller\InsertTagsController
+        arguments:
+            - "@contao.framework"
+
+    contao.data_collector:
+        class: Contao\CoreBundle\DataCollector\ContaoDataCollector
+        public: false
+        arguments:
+            - "%kernel.packages%"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+
+    contao.doctrine.dca_schema_provider:
+        class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
+        arguments:
+            - "@service_container"
+
+    contao.doctrine.schema_provider:
+        alias: contao.doctrine.dca_schema_provider
+
+    contao.image.image_sizes:
+        class: Contao\CoreBundle\Image\ImageSizes
+        arguments:
+            - "@database_connection"
+            - "@event_dispatcher"
+            - "@contao.framework"
+
+    contao.framework:
+        class: Contao\CoreBundle\Framework\ContaoFramework
+        arguments:
+            - "@request_stack"
+            - "@router"
+            - "@session"
+            - "%kernel.root_dir%"
+            - "%contao.error_level%"
+        calls:
+            - ["setContainer", ["@service_container"]]
+
+    contao.monolog.handler:
+        class: Contao\CoreBundle\Monolog\ContaoTableHandler
+        public: false
+        arguments:
+            - debug
+            - false
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.logger, channel: contao }
+
+    contao.monolog.processor:
+        class: Contao\CoreBundle\Monolog\ContaoTableProcessor
+        public: false
+        arguments:
+            - "@request_stack"
+            - "@security.token_storage"
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.processor }
+
+    contao.referer_id.manager:
+         class: Symfony\Component\Security\Csrf\CsrfTokenManager
+         public: false
+         arguments:
+            - "@contao.referer_id.token_generator"
+            - "@security.csrf.token_storage"
+
+    contao.referer_id.token_generator:
+         class: Contao\CoreBundle\Referer\TokenGenerator
+         public: false
+
+    contao.resource_finder:
+        class: Contao\CoreBundle\Config\ResourceFinder
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.resource_locator:
+        class: Symfony\Component\Config\FileLocator
+        arguments:
+            - "%contao.resources_paths%"
+
+    contao.routing.frontend_loader:
+        class: Contao\CoreBundle\Routing\FrontendLoader
+        public: false
+        arguments:
+            - "%contao.prepend_locale%"
+        tags:
+            - { name: routing.loader }
+
+    contao.routing.url_generator:
+        class: Contao\CoreBundle\Routing\UrlGenerator
+        arguments:
+            - "@router"
+            - "@contao.framework"
+            - "%contao.prepend_locale%"
+
+    contao.security.authenticator:
+        class: Contao\CoreBundle\Security\ContaoAuthenticator
+        public: false
+        calls:
+            - ["setContainer", ["@service_container"]]
+
+    contao.security.user_provider:
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
+        public: false
+        arguments:
+            - "@contao.framework"
+        calls:
+            - ["setContainer", ["@service_container"]]
+
+    contao.image.imagine:
+        class: Imagine\Gd\Imagine
+
+    contao.image.imagine_svg:
+        class: Contao\ImagineSvg\Imagine
+
+    contao.image.resize_calculator:
+        class: Contao\Image\ResizeCalculator
+        public: false
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\LegacyResizer
+        public: false
+        arguments:
+            - "%kernel.root_dir%/../%contao.image.target_path%"
+            - "@contao.image.resize_calculator"
+            - "@filesystem"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+
+    contao.image.image_factory:
+        class: Contao\CoreBundle\Image\ImageFactory
+        arguments:
+            - "@contao.image.resizer"
+            - "@contao.image.imagine"
+            - "@contao.image.imagine_svg"
+            - "@filesystem"
+            - "@contao.framework"
+            - "%contao.image.bypass_cache%"
+            - "%contao.image.imagine_options%"
+            - "%contao.image.valid_extensions%"
+
+    contao.image.picture_generator:
+        class: Contao\Image\PictureGenerator
+        arguments:
+            - "@contao.image.resizer"
+
+    contao.image.picture_factory:
+        class: Contao\CoreBundle\Image\PictureFactory
+        arguments:
+            - "@contao.image.picture_generator"
+            - "@contao.image.image_factory"
+            - "@contao.framework"
+            - "%contao.image.bypass_cache%"
+            - "%contao.image.imagine_options%"
+
+    contao.session.contao_backend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_be_attributes"
+        calls:
+            - ["setName", ["contao_backend"]]
+
+    contao.session.contao_frontend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        public: false
+        arguments:
+            - "_contao_fe_attributes"
+        calls:
+            - ["setName", ["contao_frontend"]]
