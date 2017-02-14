@@ -15,7 +15,8 @@
         "contao/core-bundle": "^4.3"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0"
+        "contao/manager-plugin": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.0"
     },
     "conflict": {
         "contao/core": "*",
@@ -26,13 +27,13 @@
             "Contao\\ListingBundle\\": "src/"
         },
         "classmap": [
-            "src/Resources/contao"
+            "src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config",
-            "src/Resources/contao/dca",
-            "src/Resources/contao/languages",
-            "src/Resources/contao/templates"
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
         ]
     },
     "config": {
