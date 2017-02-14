@@ -12,7 +12,6 @@ namespace Contao\InstallationBundle\Controller;
 
 use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Command\SymlinksCommand;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\Encryption;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
@@ -68,11 +67,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         if ($this->container->has('contao.framework')) {
-            try {
-                $this->container->get('contao.framework')->initialize();
-            } catch (IncompleteInstallationException $e) {
-                // ignore
-            }
+            $this->container->get('contao.framework')->initialize();
         }
 
         $installTool = $this->container->get('contao.install_tool');
@@ -376,7 +371,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      *
-     * @return Response|RedirectResponse|null
+     * @return RedirectResponse|null
      */
     private function adjustDatabaseTables()
     {
@@ -406,7 +401,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      *
-     * @return Response|RedirectResponse|null
+     * @return RedirectResponse|null
      */
     private function importExampleWebsite()
     {
@@ -452,7 +447,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Creates an admin user.
      *
-     * @return Response|RedirectResponse|null
+     * @return RedirectResponse|null
      */
     private function createAdminUser()
     {
