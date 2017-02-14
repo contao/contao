@@ -134,7 +134,6 @@ class DcaSchemaProviderTest extends TestCase
     public function createSchemaProvider()
     {
         return [
-
             // Test table fields SQL string from DCA file
             [
                 [

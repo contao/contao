@@ -122,7 +122,7 @@ class AutomatorCommand extends AbstractLockedCommand
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
-            if ($method->getDeclaringClass() == $class && !$method->isConstructor()) {
+            if ($method->getDeclaringClass()->getName() === $class->getName() && !$method->isConstructor()) {
                 $commands[] = $method->name;
             }
         }

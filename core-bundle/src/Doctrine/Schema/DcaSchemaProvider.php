@@ -36,7 +36,9 @@ class DcaSchemaProvider
     }
 
     /**
-     * {@inheritdoc}
+     * Creates a schema.
+     *
+     * @return Schema
      */
     public function createSchema()
     {

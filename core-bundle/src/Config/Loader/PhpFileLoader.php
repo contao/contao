@@ -48,7 +48,7 @@ class PhpFileLoader extends Loader
         );
 
         // Closing tag
-        if (substr($code, -2) == '?>') {
+        if (substr($code, -2) === '?>') {
             $code = substr($code, 0, -2);
         }
 
