@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### DEV
+
+ * Fix the path to the log file (see #41).
+
 ### 1.2.4 (2016-01-23)
 
  * Fix the version contraints of the manager plugin.

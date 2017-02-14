@@ -392,7 +392,7 @@ class InstallTool
                 $e->getTraceAsString()
             ),
             3,
-            $this->rootDir.'/logs/prod-'.date('Y-m-d').'.log'
+            $this->rootDir.'/../var/logs/prod-'.date('Y-m-d').'.log'
         );
     }
 }
