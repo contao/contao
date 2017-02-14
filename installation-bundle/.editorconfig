@@ -12,3 +12,6 @@ trim_trailing_whitespace = true
 [*.{php,twig,yml}]
 indent_style = space
 indent_size = 4
+
+[*.min.{css,js}]
+insert_final_newline = false
