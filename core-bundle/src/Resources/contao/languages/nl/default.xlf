@@ -247,6 +247,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalid">
         <source>Invalid option value!</source>
+        <target>Ongeldige keuze optie!</target>
       </trans-unit>
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
@@ -1030,6 +1031,7 @@
       </trans-unit>
       <trans-unit id="MSC.sw_template">
         <source>Template</source>
+        <target>Template</target>
       </trans-unit>
       <trans-unit id="MSC.sw_position">
         <source>Position</source>
@@ -1249,6 +1251,7 @@
       </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop or the up and down keys</source>
+        <target>Het item verplaatsen met drag en drop of met omhoog en omlaag toetsen</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1354,6 +1357,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
+        <target>Lid</target>
       </trans-unit>
       <trans-unit id="MSC.backToTop">
         <source>Back to top</source>
@@ -1373,6 +1377,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
+        <target>Navigatie omschakelen</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1488,6 +1493,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.saveNduplicate">
         <source>Save and duplicate</source>
+        <target>Opslaan en kopiëren</target>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1863,6 +1869,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>Het lijkt erop dat JavaScript staat uitgeschakeld in uw browser. Het Contao back end zal niet goed werken zonder JavaScript. </target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2354,6 +2361,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
+        <target>Handmatige uitvoer</target>
       </trans-unit>
     </body>
   </file>

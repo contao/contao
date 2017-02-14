@@ -59,9 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.0">
         <source>CSS classes</source>
+        <target>CSS classes</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be applied to the image tag.</source>
+        <target>De CSS classes worden toegevoegd aan de afbeelding tag.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

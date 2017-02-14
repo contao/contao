@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.3.5 (2017-02-14)
 
  * Skip the incomplete installation test in the install tool.
  * Correctly generate the front end URLs in the article module (see #673).
