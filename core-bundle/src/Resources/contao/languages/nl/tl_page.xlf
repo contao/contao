@@ -203,21 +203,27 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
+        <target>Cache time-out waarde toewijzen</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Stel cache time-out waardes in voor de pagina en subpagina's.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Server cache timeout</source>
+        <target>Server cache timeout</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>Het aantal seconden waarna de pagina niet meer als vers wordt beschouwd door gedeelde caches.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
+        <target>Client cache timeout</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>Het aantal seconden waarna de pagina niet meer als vers wordt beschouwd door de browser.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

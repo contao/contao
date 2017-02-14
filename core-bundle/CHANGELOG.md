@@ -1,9 +1,14 @@
 # Contao core bundle change log
 
+### 4.3.5 (2017-02-14)
+
+ * Skip the incomplete installation test in the install tool.
+ * Correctly generate the front end URLs in the article module (see #673).
+
 ### 4.3.3 (2016-01-23)
 
  * Fix removing the pagination limit in the back end (see #675).
- * Fix the version contraints of the manager plugin.
+ * Fix the version constraints of the manager plugin.
 
 ### 4.3.2 (2017-01-18)
 

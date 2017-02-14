@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -1279,12 +1279,12 @@ abstract class Controller extends \System
 	 * Redirect to a front end page
 	 *
 	 * @param integer $intPage    The page ID
-	 * @param mixed   $varArticle An optional article alias
+	 * @param string  $strArticle An optional article alias
 	 * @param boolean $blnReturn  If true, return the URL and don't redirect
 	 *
 	 * @return string The URL of the target page
 	 */
-	protected function redirectToFrontendPage($intPage, $varArticle=null, $blnReturn=false)
+	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
 		if (($intPage = intval($intPage)) <= 0)
 		{
@@ -1293,12 +1293,20 @@ abstract class Controller extends \System
 
 		$objPage = \PageModel::findWithDetails($intPage);
 
-		if ($varArticle !== null)
+		if ($objPage === null)
 		{
-			$varArticle = '/articles/' . $varArticle;
+			return '';
 		}
 
-		$strUrl = $objPage->getFrontendUrl($varArticle);
+		$strParams = null;
+
+		// Add the /article/ fragment (see #673)
+		if ($strArticle !== null && ($objArticle = \ArticleModel::findByAlias($strArticle)) !== null)
+		{
+			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
+		}
+
+		$strUrl = $objPage->getFrontendUrl($strParams);
 
 		// Make sure the URL is absolute (see #4332)
 		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)

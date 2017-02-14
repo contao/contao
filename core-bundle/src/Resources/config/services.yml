@@ -8,7 +8,6 @@ services:
 
     contao.cache.clear_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
-        public: false
         arguments:
             - "@filesystem"
         tags:
@@ -16,7 +15,6 @@ services:
 
     contao.cache.warm_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
-        public: false
         arguments:
             - "@filesystem"
             - "@contao.resource_finder"

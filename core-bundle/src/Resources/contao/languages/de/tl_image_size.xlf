@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.zoom.1">
         <source>0 = the whole image is visible, 100 = only the important part of the image is visible.</source>
-        <target>0 = das ganze Bild is sichtbar, 100 = nur der wichtige Teil des Bildes ist sichtbar.</target>
+        <target>0 = das ganze Bild ist sichtbar, 100 = nur der wichtige Teil des Bildes ist sichtbar.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.0">
         <source>Sizes attribute</source>

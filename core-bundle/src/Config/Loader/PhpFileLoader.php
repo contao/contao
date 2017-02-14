@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -48,7 +48,7 @@ class PhpFileLoader extends Loader
         );
 
         // Closing tag
-        if (substr($code, -2) == '?>') {
+        if (substr($code, -2) === '?>') {
             $code = substr($code, 0, -2);
         }
 
