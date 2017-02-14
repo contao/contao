@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_table.1">
         <source>Please choose the source table.</source>
-        <target>Por favor introduce el nombre de la talba que quieres utilizar.</target>
+        <target>Por favor, seleccione su tabla principal.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_fields.0">
         <source>Fields</source>

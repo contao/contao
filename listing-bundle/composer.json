@@ -15,7 +15,8 @@
         "contao/core-bundle": "^4.3"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0"
+        "contao/manager-plugin": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.0"
     },
     "conflict": {
         "contao/core": "*",
