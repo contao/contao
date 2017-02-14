@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -17,7 +17,7 @@ use Patchwork\Utf8;
  * Class ModuleFaqPage
  *
  * @property array $faq_categories
- * 
+ *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqPage extends \Module
