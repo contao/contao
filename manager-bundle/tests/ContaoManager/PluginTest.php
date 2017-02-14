@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -50,7 +50,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $this->plugin);
 
-        $tmpdir = sys_get_temp_dir() . '/' . uniqid('PluginTest_', false);
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('PluginTest_', false);
 
         (new Filesystem())->mkdir([$tmpdir.'/foo1', $tmpdir.'/foo2', $tmpdir.'/foo3']);
         touch($tmpdir.'/foo3/.skip');
