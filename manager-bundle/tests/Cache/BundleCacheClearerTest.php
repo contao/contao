@@ -35,15 +35,19 @@ class BundleCacheClearerTest extends \PHPUnit_Framework_TestCase
      */
     public function testClear()
     {
-        $fs = new Filesystem();
         $cacheDir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
 
-        $fs->touch("$cacheDir/bundles.map");
-        $this->assertFileExists("$cacheDir/bundles.map");
+        $fs = new Filesystem();
+        $fs->mkdir($cacheDir);
+        $fs->touch($cacheDir.'/bundles.map');
+
+        $this->assertFileExists($cacheDir.'/bundles.map');
 
         $clearer = new BundleCacheClearer($fs);
         $clearer->clear($cacheDir);
 
-        $this->assertFileNotExists("$cacheDir/bundles.map");
+        $this->assertFileNotExists($cacheDir.'/bundles.map');
+
+        $fs->remove($cacheDir);
     }
 }

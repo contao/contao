@@ -50,9 +50,10 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $this->plugin);
 
+        $fs = new Filesystem();
         $tmpdir = sys_get_temp_dir().'/'.uniqid('PluginTest_', false);
 
-        (new Filesystem())->mkdir([$tmpdir.'/foo1', $tmpdir.'/foo2', $tmpdir.'/foo3']);
+        $fs->mkdir([$tmpdir.'/foo1', $tmpdir.'/foo2', $tmpdir.'/foo3']);
         touch($tmpdir.'/foo3/.skip');
 
         Plugin::autoloadModules($tmpdir);
@@ -74,6 +75,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
+
+        $fs->remove($tmpdir);
     }
 
     public function testRegisterContainerConfiguration()

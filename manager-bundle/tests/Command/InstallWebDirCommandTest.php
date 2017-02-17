@@ -67,6 +67,14 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function tearDown()
+    {
+        $this->filesystem->remove($this->tmpdir);
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
