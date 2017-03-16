@@ -890,7 +890,7 @@ var Backend =
 	 */
 	openModalIframe: function(options) {
 		var opt = options || {};
-		var max = (window.getSize().y - 186).toInt();
+		var max = (window.getSize().y - 137).toInt();
 		if (!opt.height || opt.height > max) opt.height = max;
 		var M = new SimpleModal({
 			'width': opt.width,
@@ -913,7 +913,7 @@ var Backend =
 	 */
 	openModalSelector: function(options) {
 		var opt = options || {},
-			max = (window.getSize().y - 186).toInt();
+			max = (window.getSize().y - 192).toInt();
 		if (!opt.height || opt.height > max) opt.height = max;
 		var M = new SimpleModal({
 			'width': opt.width,
@@ -1023,7 +1023,7 @@ var Backend =
 		});
 		M.show({
 			'title': win.document.getElement('div.mce-title').get('text'),
-			'contents': '<iframe src="' + document.location.pathname + file + '?table=tl_content&amp;field=singleSRC&amp;value=' + url + swtch + '" name="simple-modal-iframe" width="100%" height="' + (window.getSize().y-180).toInt() + '" frameborder="0"></iframe>',
+			'contents': '<iframe src="' + document.location.pathname + file + '?table=tl_content&amp;field=singleSRC&amp;value=' + url + swtch + '" name="simple-modal-iframe" width="100%" height="' + (window.getSize().y-192).toInt() + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
 	},
