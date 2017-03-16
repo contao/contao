@@ -10,11 +10,8 @@
 
 namespace Contao\InstallationBundle\Database;
 
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\System;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles the database installation.
@@ -42,8 +39,8 @@ class Installer
     /**
      * Constructor.
      *
-     * @param Connection          $connection
-     * @param DcaSchemaProvider   $schemaProvider
+     * @param Connection        $connection
+     * @param DcaSchemaProvider $schemaProvider
      */
     public function __construct(Connection $connection, DcaSchemaProvider $schemaProvider)
     {
@@ -104,7 +101,6 @@ class Installer
 
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
-
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
@@ -132,7 +128,7 @@ class Installer
                     $sql = substr($sql, strlen($prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
 
-                    for ($i=0, $count=count($parts); $i<$count; $i++) {
+                    for ($i = 0, $count = count($parts); $i < $count; ++$i) {
                         $part = $parts[$i];
                         $command = $prefix.' '.$part;
 
@@ -151,7 +147,7 @@ class Installer
                                 break;
 
                             default:
-                                $parts[$i+1] = $parts[$i+1] . ',' . $part;
+                                $parts[$i + 1] = $parts[$i + 1].','.$part;
                                 break;
                         }
                     }

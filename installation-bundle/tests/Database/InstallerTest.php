@@ -17,9 +17,13 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * Tests the Installer class.
+ *
+ * @author Andreas Schempp <https://github.com/aschempp>
+ */
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * Tests the object instantiation.
      */
@@ -30,6 +34,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\InstallationBundle\Database\Installer', $installer);
     }
 
+    /**
+     * Tests two identical schemes.
+     */
     public function testIdenticalSchema()
     {
         $fromSchema = new Schema();
@@ -44,6 +51,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($commands);
     }
 
+    /**
+     * Tests dropping a column.
+     */
     public function testAlterTableDropColumn()
     {
         $fromSchema = new Schema();
@@ -60,6 +70,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ALTER TABLE tl_foobar DROP bar', reset($commands['ALTER_DROP']));
     }
 
+    /**
+     * Tests adding a column.
+     */
     public function testAlterTableAddColumn()
     {
         $fromSchema = new Schema();
@@ -79,6 +92,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ALTER TABLE tl_foobar ADD bar VARCHAR(255) NOT NULL', $commands[0]);
     }
 
+    /**
+     * Tests adding a decimal column.
+     */
     public function testAlterTableWithDecimal()
     {
         $fromSchema = new Schema();
@@ -97,6 +113,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ALTER TABLE tl_foobar ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
     }
 
+    /**
+     * Tests adding a default value with a comma.
+     */
     public function testAlterTableWithCommaDefaultValue()
     {
         $fromSchema = new Schema();
@@ -115,6 +134,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("ALTER TABLE tl_foobar ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
     }
 
+    /**
+     * Tests adding various columns.
+     */
     public function testAlterTableAddMixedColumns()
     {
         $fromSchema = new Schema();
@@ -140,16 +162,34 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains("ALTER TABLE tl_foobar ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL", $commands);
     }
 
+    /**
+     * Creates an installer.
+     *
+     * @param Schema|null $fromSchema
+     * @param Schema|null $toSchema
+     *
+     * @return Installer
+     */
     private function createInstaller(Schema $fromSchema = null, Schema $toSchema = null)
     {
-        $schemaManager = $this->getMockBuilder(AbstractSchemaManager::class)->disableOriginalConstructor()->getMock();
-        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
-        $dcaSchema = $this->getMockBuilder(DcaSchemaProvider::class)->disableOriginalConstructor()->getMock();
+        /** @var AbstractSchemaManager|\PHPUnit_Framework_MockObject_MockObject $schemaManager */
+        $schemaManager = $this
+            ->getMockBuilder(AbstractSchemaManager::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         $schemaManager
             ->expects($this->any())
             ->method('createSchema')
             ->willReturn($fromSchema)
+        ;
+
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock()
         ;
 
         $connection
@@ -164,12 +204,19 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(new MySqlPlatform())
         ;
 
-        $dcaSchema
+        /** @var DcaSchemaProvider|\PHPUnit_Framework_MockObject_MockObject $schemaProvider */
+        $schemaProvider = $this
+            ->getMockBuilder(DcaSchemaProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $schemaProvider
             ->expects($this->any())
             ->method('createSchema')
             ->willReturn($toSchema)
         ;
 
-        return new Installer($connection, $dcaSchema);
+        return new Installer($connection, $schemaProvider);
     }
 }
