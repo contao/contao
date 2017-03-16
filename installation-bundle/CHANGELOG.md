@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### DEV
+
+ * Correctly parse column definitions with comma (see #47).
+
 ### 4.3.5 (2017-02-14)
 
  * Fix the path to the log file (see #41).
