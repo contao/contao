@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### DEV
+
+ * Correctly regenerate the news feeds (see #8).
+
 ### 4.3.2 (2016-01-23)
 
  * Fix the version contraints of the manager plugin.
