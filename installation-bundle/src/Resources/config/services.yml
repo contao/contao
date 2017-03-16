@@ -14,8 +14,7 @@ services:
         class: Contao\InstallationBundle\Database\Installer
         arguments:
             - "@database_connection"
-            - "@contao.resource_finder"
-            - "@translator.default"
+            - "@contao.doctrine.schema_provider"
 
     contao.install_tool_twig_extension:
         class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension

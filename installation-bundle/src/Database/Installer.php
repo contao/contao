@@ -11,6 +11,7 @@
 namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -29,32 +30,25 @@ class Installer
     private $connection;
 
     /**
-     * @var ResourceFinder
-     */
-    private $finder;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var array
      */
     private $commands;
 
     /**
+     * @var DcaSchemaProvider
+     */
+    private $schemaProvider;
+
+    /**
      * Constructor.
      *
      * @param Connection          $connection
-     * @param ResourceFinder      $finder
-     * @param TranslatorInterface $translator
+     * @param DcaSchemaProvider   $schemaProvider
      */
-    public function __construct(Connection $connection, ResourceFinder $finder, TranslatorInterface $translator)
+    public function __construct(Connection $connection, DcaSchemaProvider $schemaProvider)
     {
         $this->connection = $connection;
-        $this->finder = $finder;
-        $this->translator = $translator;
+        $this->schemaProvider = $schemaProvider;
     }
 
     /**
@@ -109,7 +103,7 @@ class Installer
         ];
 
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
-        $toSchema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
+        $toSchema = $this->schemaProvider->createSchema();
 
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
@@ -136,9 +130,10 @@ class Installer
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
                     $prefix = $matches[1];
                     $sql = substr($sql, strlen($prefix));
-                    $parts = array_map('trim', explode(',', $sql));
+                    $parts = array_reverse(array_map('trim', explode(',', $sql)));
 
-                    foreach ($parts as $part) {
+                    for ($i=0, $count=count($parts); $i<$count; $i++) {
+                        $part = $parts[$i];
                         $command = $prefix.' '.$part;
 
                         switch (true) {
@@ -156,7 +151,8 @@ class Installer
                                 break;
 
                             default:
-                                throw new \RuntimeException(sprintf('Unsupported SQL schema diff: %s', $command));
+                                $parts[$i+1] = $parts[$i+1] . ',' . $part;
+                                break;
                         }
                     }
                     break;
