@@ -149,11 +149,20 @@ abstract class System
 	{
 		$strKey = $strKey ?: $strClass;
 
+		if (is_object($strKey))
+		{
+			$strKey = get_class($strClass);
+		}
+
 		if ($blnForce || !isset($this->arrObjects[$strKey]))
 		{
 			$container = static::getContainer();
 
-			if (!class_exists($strClass) && $container->has($strClass))
+			if (is_object($strClass))
+			{
+				$this->arrObjects[$strKey] = $strClass;
+			}
+			elseif (!class_exists($strClass) && $container->has($strClass))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
@@ -182,11 +191,20 @@ abstract class System
 	{
 		$strKey = $strKey ?: $strClass;
 
+		if (is_object($strKey))
+		{
+			$strKey = get_class($strClass);
+		}
+
 		if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
 		{
 			$container = static::getContainer();
 
-			if (!class_exists($strClass) && $container->has($strClass))
+			if (is_object($strClass))
+			{
+				static::$arrStaticObjects[$strKey] = $strClass;
+			}
+			elseif (!class_exists($strClass) && $container->has($strClass))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}

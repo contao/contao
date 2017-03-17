@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Support using objects in callback arrays (see #699).
  * Support importing form field options from a CSV file (see #444).
  * Add a Doctrine DBAL field type for UUIDs (see #415).
  * Support custom backend routes (see #512).
