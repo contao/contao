@@ -1096,11 +1096,14 @@ ul.sgallery li {
 	font-family:"Architects Daughter",cursive;
 	font-size:1rem;
 	color:#838990;
-	top:-48px;
-	left:200px;
+	top:-50px;
+	left:160px;
 	padding:0 6px 24px 42px;
 	background:url("icons/arrow_left.svg") 6px bottom no-repeat;
 	transform:rotate(-2deg);
+}
+.widget + .widget .sort_hint {
+	left:320px;
 }
 
 /* Ajax box */
