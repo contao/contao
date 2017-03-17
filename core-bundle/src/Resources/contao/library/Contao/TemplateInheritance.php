@@ -109,7 +109,8 @@ trait TemplateInheritance
 			}
 			finally
 			{
-				for ($i = 0; $i < $this->intBufferLevel; $i++) {
+				for ($i=0; $i<$this->intBufferLevel; $i++)
+				{
 					ob_end_clean();
 				}
 			}

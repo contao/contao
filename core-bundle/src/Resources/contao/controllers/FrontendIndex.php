@@ -288,6 +288,7 @@ class FrontendIndex extends \Frontend
 					if (!method_exists($objHandler, 'getResponse'))
 					{
 						ob_start();
+
 						try
 						{
 							$objHandler->generate($objPage, true);

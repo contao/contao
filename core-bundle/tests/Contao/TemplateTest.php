@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
 use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -61,11 +60,9 @@ class TemplateTest extends TestCase
             $this->getRootDir().'/templates/test_template.html5',
             '<?= $this->value ?>'
         );
-        $template = new BackendTemplate('test_template');
 
-        $template->setData([
-            'value' => 'test',
-        ]);
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
 
         $obLevel = ob_get_level();
         $this->assertEquals('test', $template->parse());
