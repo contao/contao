@@ -912,8 +912,15 @@ class InsertTags extends \Controller
 					if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && file_exists(TL_ROOT . '/templates/' . $strFile))
 					{
 						ob_start();
-						include TL_ROOT . '/templates/' . $strFile;
-						$arrCache[$strTag] = ob_get_clean();
+						try
+						{
+							include TL_ROOT . '/templates/' . $strFile;
+							$arrCache[$strTag] = ob_get_contents();
+						}
+						finally
+						{
+							ob_end_clean();
+						}
 					}
 
 					$_GET = $arrGet;

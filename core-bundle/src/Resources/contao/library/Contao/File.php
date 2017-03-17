@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Image\Image as ContaoImage;
 use Contao\Image\ImageDimensions;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
@@ -776,8 +775,6 @@ class File extends \System
 	 */
 	public function sendToBrowser($filename='')
 	{
-		Response::closeOutputBuffers(0, false); // see #698
-
 		$response = new BinaryFileResponse(TL_ROOT . '/' . $this->strFile);
 
 		$response->setContentDisposition
