@@ -1,5 +1,9 @@
 # Contao calendar bundle change log
 
+### DEV
+
+ * Correctly add the author name in the Atom feeds (contao/news-bundle#9)
+
 ### 4.3.4 (2016-01-23)
 
  * Fix the version contraints of the manager plugin.
