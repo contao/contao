@@ -181,7 +181,11 @@ class News extends \Frontend
 				$objItem->title = $objArticle->headline;
 				$objItem->link = $this->getLink($objArticle, $strUrl);
 				$objItem->published = $objArticle->date;
-				$objItem->author = $objArticle->authorName;
+
+				if (($objAuthor = $objArticle->getRelated('author')) !== null)
+				{
+					$objItem->author = $objAuthor->name;
+				}
 
 				// Prepare the description
 				if ($arrFeed['source'] == 'source_text')

@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly add the author name in the Atom feeds (see #9).
  * Correctly regenerate the news feeds (see #8).
 
 ### 4.3.2 (2016-01-23)
