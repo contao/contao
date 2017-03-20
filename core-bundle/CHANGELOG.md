@@ -2,7 +2,15 @@
 
 ### DEV
 
+ * Use the selected template for custom sections (see #703).
  * Only prefix an all numeric string when standardizing (see #707).
+ * Handle absolute URLs in Environment::requestUri() (see contao/core#8661).
+ * Correctly store numbers with leading zero in the Config class (see contao/core#4035).
+ * Delete an old search entry if the new URL is more canonical (see contao/core#8647).
+ * Also make Folder::$dirname an absolute path again (see contao/core#8325).
+ * Reduce the meta description length to 160 characters (see #706).
+ * Do not add empty author tags to an Atom feed (see contao/news-bundle#9).
+ * Fix the position of the sort hint if the widget is not the first one (see #722).
 
 ### 4.3.5 (2017-02-14)
 
