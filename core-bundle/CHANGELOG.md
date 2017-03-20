@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly parse Doctrine SQL arrays in DCA files (see #721).
  * Also apply the tree view filter settings to the child table (see #716).
  * Also delete the symlink if a public folder is deleted (see #710).
  * Use the selected template for custom sections (see #703).

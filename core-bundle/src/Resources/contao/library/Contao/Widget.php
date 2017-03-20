@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Doctrine\DBAL\Types\Type;
 use Patchwork\Utf8;
 
 
@@ -1379,6 +1380,19 @@ abstract class Widget extends \Controller
 			}
 		}
 
+		if (is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
+		{
+			if (isset($arrAttributes['sql']['length']) && !isset($arrAttributes['maxlength']))
+			{
+				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
+			}
+
+			if (isset($arrAttributes['sql']['customSchemaOptions']['unique']) && !isset($arrAttributes['unique']))
+			{
+				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
+			}
+		}
+
 		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
 
 		// Convert timestamps
@@ -1438,9 +1452,36 @@ abstract class Widget extends \Controller
 	 */
 	public static function getEmptyValueByFieldType($sql)
 	{
-		if ($sql == '')
+		if (empty($sql))
 		{
 			return '';
+		}
+
+		if (is_array($sql))
+		{
+			if (isset($sql['columnDefinition']))
+			{
+				$sql = $sql['columnDefinition'];
+			}
+			else
+			{
+				if (isset($sql['default']))
+				{
+					return $sql['default'];
+				}
+
+				if (isset($sql['notnull']) && !$sql['notnull'])
+				{
+					return null;
+				}
+
+				if (in_array($sql['type'], array(Type::BIGINT, Type::DECIMAL, Type::INTEGER, Type::SMALLINT, Type::FLOAT)))
+				{
+					return 0;
+				}
+
+				return '';
+			}
 		}
 
 		if (stripos($sql, 'NOT NULL') === false)
@@ -1484,20 +1525,12 @@ abstract class Widget extends \Controller
 	 */
 	public static function getEmptyStringOrNullByFieldType($sql)
 	{
-		if ($sql == '')
+		if (empty($sql))
 		{
 			return '';
 		}
 
-		// Strip the field type definition
-		list(, $def) = explode(' ', $sql, 2);
-
-		if (strpos($def, 'NULL') !== false && strpos($def, 'NOT NULL') === false)
-		{
-			return null;
-		}
-
-		return '';
+		return static::getEmptyValueByFieldType($sql) === null ? null : '';
 	}
 
 
