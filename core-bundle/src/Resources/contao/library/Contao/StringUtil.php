@@ -279,6 +279,12 @@ class StringUtil
 		$strString = static::restoreBasicEntities($strString);
 		$strString = static::standardize(strip_tags($strString));
 
+		// Remove the prefix if the alias is not numeric (see #707)
+		if (strncmp($strString, 'id-', 3) === 0 && !is_numeric($strSubstr = substr($strString, 3)))
+		{
+			$strString = $strSubstr;
+		}
+
 		return $strString;
 	}
 
@@ -1006,8 +1012,7 @@ class StringUtil
 		$strString = Utf8::toAscii($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
-		// Prefix numeric values (see #707)
-		if (is_numeric($strString))
+		if (is_numeric(substr($strString, 0, 1)))
 		{
 			$strString = 'id-' . $strString;
 		}
