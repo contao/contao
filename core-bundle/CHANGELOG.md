@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Also apply the tree view filter settings to the child table (see #716).
  * Also delete the symlink if a public folder is deleted (see #710).
  * Use the selected template for custom sections (see #703).
  * Only prefix an all numeric string when standardizing (see #707).
