@@ -1006,7 +1006,8 @@ class StringUtil
 		$strString = Utf8::toAscii($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
-		if (is_numeric(substr($strString, 0, 1)))
+		// Prefix numeric values (see #707)
+		if (is_numeric($strString))
 		{
 			$strString = 'id-' . $strString;
 		}

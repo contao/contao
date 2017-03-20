@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Only prefix an all numeric string when standardizing (see #707).
+
 ### 4.3.5 (2017-02-14)
 
  * Skip the incomplete installation test in the install tool.
