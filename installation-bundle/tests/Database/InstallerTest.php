@@ -14,7 +14,7 @@ use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -172,9 +172,9 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
      */
     private function createInstaller(Schema $fromSchema = null, Schema $toSchema = null)
     {
-        /** @var AbstractSchemaManager|\PHPUnit_Framework_MockObject_MockObject $schemaManager */
+        /** @var MySqlSchemaManager|\PHPUnit_Framework_MockObject_MockObject $schemaManager */
         $schemaManager = $this
-            ->getMockBuilder(AbstractSchemaManager::class)
+            ->getMockBuilder(MySqlSchemaManager::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
