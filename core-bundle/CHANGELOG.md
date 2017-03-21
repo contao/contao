@@ -1,7 +1,8 @@
 # Contao core bundle change log
 
 ### DEV
-
+ 
+ * Only prefix an all numeric alias when standardizing (see #707).
  * Support using objects in callback arrays (see #699).
  * Support importing form field options from a CSV file (see #444).
  * Add a Doctrine DBAL field type for UUIDs (see #415).
