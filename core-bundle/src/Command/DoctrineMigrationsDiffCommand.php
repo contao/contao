@@ -25,6 +25,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DoctrineMigrationsDiffCommand extends DiffCommand
 {
+    const COMMAND_ID = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
+
     /**
      * {@inheritdoc}
      */

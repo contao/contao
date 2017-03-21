@@ -12,8 +12,7 @@ namespace Contao\CoreBundle\Test\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
-use Contao\CoreBundle\Test\TestCase;
-use Contao\Database\Installer;
+use Contao\CoreBundle\Test\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -26,14 +25,16 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DoctrineSchemaListenerTest extends TestCase
+class DoctrineSchemaListenerTest extends DoctrineTestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $provider = new DcaSchemaProvider($this->mockContainerWithContaoScopes());
+        /** @var DcaSchemaProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
+        $provider = $this->getMockBuilder(DcaSchemaProvider::class)->disableOriginalConstructor()->getMock();
+
         $listener = new DoctrineSchemaListener($provider);
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\DoctrineSchemaListener', $listener);
@@ -44,7 +45,7 @@ class DoctrineSchemaListenerTest extends TestCase
      */
     public function testPostGenerateSchema()
     {
-        $provider = $this->getProvider(
+        $framework = $this->mockContaoFrameworkWithInstaller(
             [
                 'tl_files' => [
                     'TABLE_FIELDS' => [
@@ -52,6 +53,11 @@ class DoctrineSchemaListenerTest extends TestCase
                     ],
                 ],
             ]
+        );
+
+        $provider = new DcaSchemaProvider(
+            $framework,
+            $this->mockDoctrineRegistry()
         );
 
         $schema = new Schema();
@@ -136,7 +142,7 @@ class DoctrineSchemaListenerTest extends TestCase
         ;
 
         $listener = new DoctrineSchemaListener(
-            $this->getMock('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', [], [], '', false)
+            $this->getMockBuilder(DcaSchemaProvider::class)->disableOriginalConstructor()->getMock()
         );
 
         $listener->onSchemaIndexDefinition($event);
@@ -211,7 +217,7 @@ class DoctrineSchemaListenerTest extends TestCase
         ;
 
         $listener = new DoctrineSchemaListener(
-            $this->getMock('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', [], [], '', false)
+            $this->getMockBuilder(DcaSchemaProvider::class)->disableOriginalConstructor()->getMock()
         );
 
         $listener->onSchemaIndexDefinition($event);
@@ -257,7 +263,7 @@ class DoctrineSchemaListenerTest extends TestCase
         ;
 
         $listener = new DoctrineSchemaListener(
-            $this->getMock('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', [], [], '', false)
+            $this->getMockBuilder(DcaSchemaProvider::class)->disableOriginalConstructor()->getMock()
         );
 
         $listener->onSchemaIndexDefinition($event);
@@ -302,62 +308,15 @@ class DoctrineSchemaListenerTest extends TestCase
             ->method('setIndex')
         ;
 
-        $listener = new DoctrineSchemaListener(
-            $this->getMock('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', [], [], '', false)
-        );
+        /** @var DcaSchemaProvider|\PHPUnit_Framework_MockObject_MockObject $schemaProvider */
+        $schemaProvider = $this
+            ->getMockBuilder(DcaSchemaProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
+        $listener = new DoctrineSchemaListener($schemaProvider);
         $listener->onSchemaIndexDefinition($event);
-    }
-
-    /**
-     * Returns a DCA schema provider.
-     *
-     * @param array $dca
-     * @param array $file
-     *
-     * @return DcaSchemaProvider
-     */
-    protected function getProvider(array $dca = [], array $file = [])
-    {
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $event */
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['getDatabasePlatform'], [], '', false);
-
-        $connection
-            ->expects($this->any())
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
-        ;
-
-        /** @var Installer|\PHPUnit_Framework_MockObject_MockObject $event */
-        $installer = $this->getMock('Contao\Database\Installer', ['getFromDca', 'getFromFile']);
-
-        $installer
-            ->expects($this->any())
-            ->method('getFromDca')
-            ->willReturn($dca)
-        ;
-
-        $installer
-            ->expects($this->any())
-            ->method('getFromFile')
-            ->willReturn($file)
-        ;
-
-        $container = $this->mockContainerWithContaoScopes();
-
-        $container->set(
-            'contao.framework',
-            $this->mockContaoFramework(
-                null,
-                null,
-                [],
-                ['Contao\Database\Installer' => $installer]
-            )
-        );
-
-        $container->set('database_connection', $connection);
-
-        return new DcaSchemaProvider($container);
     }
 
     /**
