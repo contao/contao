@@ -38,7 +38,7 @@ class DcaSchemaProvider
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
-     * @param Registry                 $doctrine
+     * @param Registry|null            $doctrine
      */
     public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine = null)
     {
