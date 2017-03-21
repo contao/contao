@@ -39,10 +39,7 @@
     "autoload": {
         "psr-4": {
             "Contao\\ManagerBundle\\": "src/"
-        },
-        "exclude-from-classmap": [
-            "tests/"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
