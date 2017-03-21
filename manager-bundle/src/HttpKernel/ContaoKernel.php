@@ -146,6 +146,10 @@ class ContaoKernel extends Kernel
         if (file_exists($this->getRootDir().'/config/parameters.yml')) {
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
+        
+        if (file_exists($this->getRootDir().'/config/security.yml')) {
+            $loader->load($this->getRootDir().'/config/security.yml');
+        }
 
         /** @var ConfigPluginInterface[] $plugins */
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
