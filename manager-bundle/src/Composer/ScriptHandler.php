@@ -30,9 +30,7 @@ class ScriptHandler
     public static function initializeApplication(Event $event)
     {
         static::purgeCacheFolder();
-
         static::addAppDirectory();
-        static::addWebEntryPoints($event);
 
         static::executeCommand('cache:clear', $event);
         static::executeCommand('assets:install --symlink --relative', $event);
