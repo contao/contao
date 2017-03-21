@@ -19,7 +19,6 @@ use Contao\System;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Martin Auswöger <martin@auswoeger.com>
- * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @group legacy
  */
@@ -41,25 +40,6 @@ class StringUtilTest extends TestCase
     protected function setUp()
     {
         System::setContainer($this->mockContainerWithContaoScopes());
-    }
-
-    /**
-     * Tests the generateAlias() method.
-     */
-    public function testGenerateAlias()
-    {
-        $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
-
-        $this->assertEquals('foo', StringUtil::generateAlias('foo'));
-        $this->assertEquals('foo', StringUtil::generateAlias('FOO'));
-        $this->assertEquals('foo-bar', StringUtil::generateAlias('foo bar'));
-        $this->assertEquals('foo-bar', StringUtil::generateAlias('%foo&bar~'));
-        $this->assertEquals('foo-bar', StringUtil::generateAlias('foo&amp;bar'));
-        $this->assertEquals('foo-bar', StringUtil::generateAlias('foo-{{link::12}}-bar'));
-        $this->assertEquals('foo-bar', StringUtil::generateAlias('föö-bär'));
-        $this->assertEquals('id-123', StringUtil::generateAlias('123'));
-        $this->assertEquals('123foo', StringUtil::generateAlias('123foo'));
-        $this->assertEquals('foo123', StringUtil::generateAlias('foo123'));
     }
 
     /**

@@ -279,12 +279,6 @@ class StringUtil
 		$strString = static::restoreBasicEntities($strString);
 		$strString = static::standardize(strip_tags($strString));
 
-		// Remove the prefix if the alias is not numeric (see #707)
-		if (strncmp($strString, 'id-', 3) === 0 && !is_numeric($strSubstr = substr($strString, 3)))
-		{
-			$strString = $strSubstr;
-		}
-
 		return $strString;
 	}
 

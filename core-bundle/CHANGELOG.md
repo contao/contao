@@ -6,7 +6,6 @@
  * Also apply the tree view filter settings to the child table (see #716).
  * Also delete the symlink if a public folder is deleted (see #710).
  * Use the selected template for custom sections (see #703).
- * Only prefix an all numeric alias when standardizing (see #707).
  * Handle absolute URLs in Environment::requestUri() (see contao/core#8661).
  * Correctly store numbers with leading zero in the Config class (see contao/core#4035).
  * Delete an old search entry if the new URL is more canonical (see contao/core#8647).
