@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly initialize custom entry points (see #713).
  * Correctly parse Doctrine SQL arrays in DCA files (see #721).
  * Also apply the tree view filter settings to the child table (see #716).
  * Also delete the symlink if a public folder is deleted (see #710).
