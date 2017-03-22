@@ -19,7 +19,10 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.0"
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "^4.5",
+        "satooshi/php-coveralls": "^1.0",
+        "symfony/phpunit-bridge": "^2.8|^3.0"
     },
     "conflict": {
         "contao/core": "*",
@@ -28,6 +31,11 @@
     "autoload": {
         "psr-4": {
             "Contao\\InstallationBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\InstallationBundle\\Test\\": "tests/"
         }
     },
     "config": {
