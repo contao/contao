@@ -33,5 +33,6 @@ class ContaoManagerExtension extends Extension
         );
 
         $loader->load('services.yml');
+        $loader->load('listener.yml');
     }
 }
