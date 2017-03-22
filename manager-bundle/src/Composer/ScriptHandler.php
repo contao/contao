@@ -30,9 +30,7 @@ class ScriptHandler
     public static function initializeApplication(Event $event)
     {
         static::purgeCacheFolder();
-
         static::addAppDirectory();
-        static::addWebEntryPoints($event);
 
         static::executeCommand('cache:clear', $event);
         static::executeCommand('assets:install --symlink --relative', $event);
@@ -120,14 +118,14 @@ class ScriptHandler
         $io = $event->getIO();
 
         switch (true) {
-            case $io->isVerbose():
-                return ' -v';
+            case $io->isDebug():
+                return ' -vvv';
 
             case $io->isVeryVerbose():
                 return ' -vv';
 
-            case $io->isDebug():
-                return ' -vvv';
+            case $io->isVerbose():
+                return ' -v';
 
             default:
                 return '';

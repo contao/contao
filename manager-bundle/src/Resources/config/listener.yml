@@ -1,0 +1,8 @@
+
+services:
+    contao_manager.listener.install_command:
+        class: Contao\ManagerBundle\EventListener\InstallCommandListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: console.terminate }
