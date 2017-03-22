@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### DEV
+### 4.3.6 (2017-03-22)
 
  * Correctly add the author name in the Atom feeds (contao/news-bundle#9)
 
