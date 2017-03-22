@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.3.6 (2017-03-22)
 
  * Correctly parse column definitions with comma (see #47).
 

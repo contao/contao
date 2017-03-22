@@ -353,6 +353,7 @@
       </trans-unit>
       <trans-unit id="71">
         <source>console_explanation</source>
+        <target>¡No se pudo completar una tarea posterior a la instalación!</target>
         
       </trans-unit>
     </body>
