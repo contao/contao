@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\InstallationBundle\Test;
+namespace Contao\InstallationBundle\Tests;
 
 use Contao\InstallationBundle\ContaoInstallationBundle;
 
