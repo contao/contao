@@ -33,7 +33,6 @@
             "src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "tests/",
             "src/Resources/contao/config/",
             "src/Resources/contao/dca/",
             "src/Resources/contao/languages/",
