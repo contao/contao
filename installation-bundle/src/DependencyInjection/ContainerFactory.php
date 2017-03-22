@@ -12,10 +12,8 @@ namespace Contao\InstallationBundle\DependencyInjection;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\InstallationBundle\Database\ConnectionFactory;
-use Contao\InstallationBundle\Database\Installer;
 use Contao\InstallationBundle\InstallTool;
 use Contao\InstallationBundle\InstallToolUser;
 use Contao\InstallationBundle\Translation\LanguageResolver;
@@ -166,21 +164,6 @@ class ContainerFactory
         $container->set(
             'contao.cache',
             new FilesystemCache($cacheDir.'/contao/cache', '', 0022)
-        );
-
-        // Add the DCA schema provider
-        $container->set(
-            'contao.doctrine.schema_provider',
-            new DcaSchemaProvider($container)
-        );
-
-        // Add the installer services
-        $container->set(
-            'contao.installer',
-            new Installer(
-                $container->get('database_connection'),
-                $container->get('contao.doctrine.schema_provider')
-            )
         );
 
         $container->set(
