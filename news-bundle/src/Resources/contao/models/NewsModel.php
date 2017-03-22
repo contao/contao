@@ -46,7 +46,6 @@ namespace Contao;
  * @property boolean $published
  * @property string  $start
  * @property string  $stop
- * @property string  $authorName
  *
  * @method static NewsModel|null findById($id, $opt=array())
  * @method static NewsModel|null findByPk($id, $opt=array())

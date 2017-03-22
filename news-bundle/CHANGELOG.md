@@ -1,5 +1,10 @@
 # Contao news bundle change log
 
+### 4.3.6 (2017-03-22)
+
+ * Correctly add the author name in the Atom feeds (see #9).
+ * Correctly regenerate the news feeds (see #8).
+
 ### 4.3.2 (2016-01-23)
 
  * Fix the version contraints of the manager plugin.
