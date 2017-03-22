@@ -228,9 +228,13 @@ class Calendar extends \Frontend
 					$objItem->title = $event['title'];
 					$objItem->link = $event['link'];
 					$objItem->published = $event['tstamp'];
-					$objItem->begin = $event['begin'];
-					$objItem->end = $event['end'];
-					$objItem->author = $event['authorName'];
+					$objItem->begin = $event['startTime'];
+					$objItem->end = $event['endTime'];
+
+					if (($objAuthor = \UserModel::findById($event['author'])) !== null)
+					{
+						$objItem->author = $objAuthor->name;
+					}
 
 					// Prepare the description
 					if ($arrFeed['source'] == 'source_text')
