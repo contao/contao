@@ -11,6 +11,8 @@
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * Tests the DcaSchemaProvider class.
@@ -25,7 +27,8 @@ class MigrationsSchemaProviderTest extends DcaSchemaProviderTest
     public function testInstantiation()
     {
         $provider = new MigrationsSchemaProvider(
-            $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface')
+            $this->getMock(ContaoFrameworkInterface::class),
+            $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock()
         );
 
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider', $provider);

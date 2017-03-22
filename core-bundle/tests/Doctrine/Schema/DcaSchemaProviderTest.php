@@ -11,23 +11,27 @@
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Test\DoctrineTestCase;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Tests the DcaSchemaProvider class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DcaSchemaProviderTest extends TestCase
+class DcaSchemaProviderTest extends DoctrineTestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $provider = new DcaSchemaProvider($this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'));
+        $provider = new DcaSchemaProvider(
+            $this->getMock(ContaoFrameworkInterface::class),
+            $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock()
+        );
 
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $provider);
     }
@@ -409,41 +413,8 @@ class DcaSchemaProviderTest extends TestCase
     protected function getProvider(array $dca = [], array $file = [])
     {
         return new DcaSchemaProvider(
-            $this->mockContainerWithDatabaseInstaller($dca, $file)
+            $this->mockContaoFrameworkWithInstaller($dca, $file),
+            $this->mockDoctrineRegistry()
         );
-    }
-
-    /**
-     * Returns a container with database installer.
-     *
-     * @param array $dca
-     * @param array $file
-     *
-     * @return Container|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockContainerWithDatabaseInstaller(array $dca = [], array $file = [])
-    {
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['getDatabasePlatform'], [], '', false);
-        $connection->expects($this->any())->method('getDatabasePlatform')->willReturn(new MySqlPlatform());
-
-        $installer = $this->getMock('Contao\Database\Installer', ['getFromDca', 'getFromFile']);
-        $installer->expects($this->any())->method('getFromDca')->willReturn($dca);
-        $installer->expects($this->any())->method('getFromFile')->willReturn($file);
-
-        $container = $this->mockContainerWithContaoScopes();
-
-        $container->set(
-            'contao.framework',
-            $this->mockContaoFramework(
-                null,
-                null,
-                [],
-                ['Contao\Database\Installer' => $installer]
-            )
-        );
-
-        $container->set('database_connection', $connection);
-
-        return $container;
     }
 }

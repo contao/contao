@@ -59,7 +59,7 @@ services:
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
-            - "@contao.doctrine.dca_schema_provider"
+            - "@contao.doctrine.schema_provider"
         tags:
             - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
             - { name: doctrine.event_listener, event: postGenerateSchema }

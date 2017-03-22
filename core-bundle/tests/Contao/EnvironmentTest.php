@@ -26,8 +26,10 @@ class EnvironmentTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setupBeforeClass()
+    protected function setUp()
     {
+        parent::setUp();
+
         Environment::reset();
         Environment::set('path', '/core');
 
@@ -131,7 +133,7 @@ class EnvironmentTest extends TestCase
             'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'QUERY_STRING' => 'do=test',
-            'REQUEST_URI' => '/core/en/academy.html?do=test',
+            'REQUEST_URI' => 'http://localhost/core/en/academy.html?do=test', // see #8661
             'SCRIPT_NAME' => '/core/index.php',
             'PHP_SELF' => '/core/index.php',
             'GATEWAY_INTERFACE' => 'CGI/1.1',

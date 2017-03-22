@@ -328,9 +328,6 @@ input[type=search]::-webkit-search-decoration {
 .tl_xpl {
 	padding:0 18px;
 }
-.popup .tl_formbody_edit {
-	padding-bottom:52px;
-}
 .tl_tbox {
 	padding:0 0 26px;
 }
@@ -375,14 +372,6 @@ input[type=search]::-webkit-search-decoration {
 }
 .tl_formbody_submit {
 	border-top:1px solid #ddd;
-}
-.popup .tl_formbody_submit {
-	z-index:5;
-	position:fixed;
-	left:0;
-	bottom:0;
-	width:100%;
-	max-height:52px;
 }
 .tl_submit_container {
 	padding:8px 2%;
@@ -1096,11 +1085,14 @@ ul.sgallery li {
 	font-family:"Architects Daughter",cursive;
 	font-size:1rem;
 	color:#838990;
-	top:-48px;
-	left:200px;
+	top:-50px;
+	left:160px;
 	padding:0 6px 24px 42px;
 	background:url("icons/arrow_left.svg") 6px bottom no-repeat;
 	transform:rotate(-2deg);
+}
+.widget + .widget .sort_hint {
+	left:320px;
 }
 
 /* Ajax box */

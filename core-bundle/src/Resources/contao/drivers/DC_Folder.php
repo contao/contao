@@ -965,6 +965,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		if (is_dir(TL_ROOT . '/' . $source))
 		{
 			$this->Files->rrdir($source);
+
+			// Also delete the symlink (see #710)
+			if (is_link(TL_ROOT . '/web/' . $source))
+			{
+				$this->Files->delete('web/' . $source);
+			}
 		}
 		else
 		{

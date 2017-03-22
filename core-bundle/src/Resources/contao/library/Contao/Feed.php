@@ -216,7 +216,11 @@ class Feed
 			$xml .= '<link rel="alternate" href="' . \StringUtil::specialchars($objItem->link) . '" />';
 			$xml .= '<updated>' . preg_replace('/00$/', ':00', date('Y-m-d\TH:i:sO', $objItem->published)) . '</updated>';
 			$xml .= '<id>' . ($objItem->guid ? $objItem->guid : \StringUtil::specialchars($objItem->link)) . '</id>';
-			$xml .= '<author><name>' . $objItem->author . '</name></author>';
+
+			if ($objItem->author)
+			{
+				$xml .= '<author><name>' . $objItem->author . '</name></author>';
+			}
 
 			// Enclosures
 			if (is_array($objItem->enclosure))

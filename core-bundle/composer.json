@@ -61,7 +61,7 @@
         "contao-components/mediaelement": "^2.21.1",
         "contao-components/mootools": "^1.6.0.1",
         "contao-components/respimage": "^1.4",
-        "contao-components/simplemodal": "^1.2.3",
+        "contao-components/simplemodal": "^1.2.4",
         "contao-components/swipe": "^2.0.3",
         "contao-components/tablesort": "^3.4.5",
         "contao-components/tablesorter": "^2.0.5.3",
@@ -97,7 +97,6 @@
             "src/Resources/contao/"
         ],
         "exclude-from-classmap": [
-            "tests/",
             "src/Resources/contao/config/",
             "src/Resources/contao/dca/",
             "src/Resources/contao/helper/",

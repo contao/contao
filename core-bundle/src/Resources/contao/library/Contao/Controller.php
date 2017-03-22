@@ -1004,20 +1004,7 @@ abstract class Controller extends \System
 	 */
 	public static function reload()
 	{
-		if (headers_sent())
-		{
-			exit;
-		}
-
-		$strLocation = \Environment::get('uri');
-
-		// Ajax request
-		if (\Environment::get('isAjaxRequest'))
-		{
-			throw new AjaxRedirectResponseException($strLocation);
-		}
-
-		throw new RedirectResponseException($strLocation);
+		static::redirect(\Environment::get('uri'));
 	}
 
 
@@ -1052,6 +1039,7 @@ abstract class Controller extends \System
 		throw new RedirectResponseException($strLocation, $intStatus);
 	}
 
+
 	/**
 	 * Replace the old back end paths
 	 *
@@ -1083,6 +1071,7 @@ abstract class Controller extends \System
 
 		return str_replace(array_keys($arrMapper), array_values($arrMapper), $strContext);
 	}
+
 
 	/**
 	 * Generate a front end URL
@@ -1511,7 +1500,7 @@ abstract class Controller extends \System
 			if ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && $imgSize[0] > $intMaxWidth))
 			{
 				// See #2268 (thanks to Thyon)
-				$ratio = ($size[0] && $size[1]) ? $size[1] / $size[0] : $imgSize[1] / $imgSize[0];
+				$ratio = ($size[0] && $size[1]) ? $size[1] / $size[0] : (($imgSize[0] && $imgSize[1]) ? $imgSize[1] / $imgSize[0] : 0);
 
 				$size[0] = $intMaxWidth;
 				$size[1] = floor($intMaxWidth * $ratio);

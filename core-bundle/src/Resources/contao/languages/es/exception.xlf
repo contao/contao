@@ -27,6 +27,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; or &lt;code&gt;app/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Abra el archivo de registro actual en el directorio &lt;code&gt;var/logs&lt;/ code&gt; o &lt;code&gt;app/logs&lt;/ code&gt; y busque el mensaje de error asociado (generalmente el último).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>

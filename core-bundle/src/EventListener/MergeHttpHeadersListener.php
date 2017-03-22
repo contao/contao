@@ -145,7 +145,7 @@ class MergeHttpHeadersListener
         foreach ($this->getHeaders() as $header) {
             list($name, $content) = explode(':', $header, 2);
 
-            if ('cli' !== PHP_SAPI) {
+            if ('cli' !== PHP_SAPI && !headers_sent()) {
                 header_remove($name);
             }
 
