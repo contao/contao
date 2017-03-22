@@ -8,6 +8,7 @@
     "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
     "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
     "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
+    "Nelmio\\CorsBundle\\NelmioCorsBundle",
     "Contao\\ManagerBundle\\ContaoManagerBundle",
     {
         "bundle": "Symfony\\Bundle\\DebugBundle\\DebugBundle",

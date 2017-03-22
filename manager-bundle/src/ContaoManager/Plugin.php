@@ -73,6 +73,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/swiftmailer.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/monolog.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/lexik_maintenance.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/nelmio_cors.yml');
 
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             if ('dev' === $container->getParameter('kernel.environment')) {
