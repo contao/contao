@@ -775,6 +775,7 @@
       </trans-unit>
       <trans-unit id="LNG.nb">
         <source>Norwegian Bokmål</source>
+        <target>Bokmål noruego</target>
       </trans-unit>
       <trans-unit id="LNG.nd">
         <source>North Ndebele</source>

@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the displayed image width(s), e.g. &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
-        <target>Aquí puedes definir el ancho (o los anchos) de la imagen mostrada, por ejemplo &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+        <target>Aquí puede definir el ancho (o los anchos) de la imagen mostrada, por ejemplo &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -59,9 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.0">
         <source>CSS classes</source>
+        <target>Clases CSS</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be applied to the image tag.</source>
+        <target>Las clases CSS se aplicarán a la etiqueta de imagen.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

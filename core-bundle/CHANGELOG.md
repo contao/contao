@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.3.6 (2017-03-22)
 
  * Correctly initialize custom entry points (see #713).
  * Correctly parse Doctrine SQL arrays in DCA files (see #721).
