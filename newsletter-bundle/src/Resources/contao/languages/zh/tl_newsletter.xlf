@@ -111,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>如果发送进程被种种，可以在这里输入特定收件人的位置偏移量以便从该位置后继续发送，你可以在&lt;em&gt;newsletter_%s.log&lt;/em&gt; 文件中检查已发送多少邮件。如：如果已经发送120封邮件，输入“120”程序可以从第121位收件人开始发送 (从0开始计数)。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
