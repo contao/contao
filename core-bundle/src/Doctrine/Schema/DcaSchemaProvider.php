@@ -10,10 +10,14 @@
 
 namespace Contao\CoreBundle\Doctrine\Schema;
 
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Database\Installer;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -21,18 +25,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DcaSchemaProvider
 {
     /**
-     * @var ContainerInterface
+     * @var ContaoFrameworkInterface
      */
-    private $container;
+    private $framework;
+
+    /**
+     * @var Registry
+     */
+    private $doctrine;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
+     * @param ContaoFrameworkInterface $framework
+     * @param Registry|null            $doctrine
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine = null)
     {
-        $this->container = $container;
+        $this->framework = $framework;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -41,6 +52,40 @@ class DcaSchemaProvider
      * @return Schema
      */
     public function createSchema()
+    {
+        if (0 !== count($this->doctrine->getManagerNames())) {
+            return $this->createSchemaFromOrm();
+        }
+
+        return $this->createSchemaFromDca();
+    }
+
+    /**
+     * Creates a Schema instance from Doctrine ORM metadata.
+     *
+     * @return Schema
+     */
+    private function createSchemaFromOrm()
+    {
+        /** @var EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+        $metadata = $manager->getMetadataFactory()->getAllMetadata();
+
+        if (empty($metadata)) {
+            return $this->createSchemaFromDca();
+        }
+
+        $tool = new SchemaTool($manager);
+
+        return $tool->getSchemaFromMetadata($metadata);
+    }
+
+    /**
+     * Creates a Schema instance and adds DCA metadata.
+     *
+     * @return Schema
+     */
+    private function createSchemaFromDca()
     {
         $schema = new Schema();
 
@@ -113,7 +158,7 @@ class DcaSchemaProvider
 
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
-        $type = $this->container->get('database_connection')->getDatabasePlatform()->getDoctrineTypeMapping($type);
+        $type = $this->doctrine->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping($type);
         $length = (0 === (int) $length) ? null : (int) $length;
 
         if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
@@ -262,10 +307,10 @@ class DcaSchemaProvider
      */
     private function getSqlDefinitions()
     {
-        $framework = $this->container->get('contao.framework');
-        $framework->initialize();
+        $this->framework->initialize();
 
-        $installer = $framework->createInstance('Contao\Database\Installer');
+        /** @var Installer $installer */
+        $installer = $this->framework->createInstance('Contao\Database\Installer');
 
         $sqlTarget = $installer->getFromDca();
         $sqlLegacy = $installer->getFromFile();

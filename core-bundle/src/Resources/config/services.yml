@@ -30,6 +30,13 @@ services:
         arguments:
             - "@contao.framework"
 
+    contao.cors_website_roots_config_provider:
+        class: Contao\CoreBundle\Cors\WebsiteRootsConfigProvider
+        arguments:
+            - "@database_connection"
+        tags:
+            - { name: nelmio_cors.options_provider }
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         public: false
@@ -41,13 +48,11 @@ services:
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
-    contao.doctrine.dca_schema_provider:
+    contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
         arguments:
-            - "@service_container"
-
-    contao.doctrine.schema_provider:
-        alias: contao.doctrine.dca_schema_provider
+            - "@contao.framework"
+            - "@doctrine"
 
     contao.image.image_sizes:
         class: Contao\CoreBundle\Image\ImageSizes
