@@ -12,7 +12,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Test\DoctrineTestCase;
+use Contao\CoreBundle\Tests\DoctrineTestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
