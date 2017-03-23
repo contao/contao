@@ -4,6 +4,12 @@ API changes
 Version 4.* to 4.3
 ------------------
 
+### Image upscaling
+
+The image service no longer supports upscaling images for reasons of bandwidth
+and storage consumption. Images should be upscaled via CSS if needed.
+
+
 ### Form template
 
 The form template `form.html5` has been renamed to `form_wrapper.html5`, so it
