@@ -1,0 +1,10 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.noActive }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.noActivePages }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.noActiveFix|format(adminEmail)|raw }}</p>
+{% endblock %}

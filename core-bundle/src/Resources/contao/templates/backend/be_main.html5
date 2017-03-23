@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="<?= $this->language ?>">
+<head>
+
+  <meta charset="<?= $this->charset ?>">
+  <title><?= $this->title ?> - Contao Open Source CMS <?= VERSION ?></title>
+  <base href="<?= $this->base ?>">
+  <meta name="generator" content="Contao Open Source CMS">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+  <meta name="referrer" content="origin">
+
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/colorpicker/css/mooRainbow.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/chosen/css/chosen.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/simplemodal/css/simplemodal.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/datepicker/css/datepicker.min.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
+  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/main.css">
+  <?= $this->stylesheets ?>
+
+  <script><?= $this->getLocaleString() ?></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/colorpicker/js/mooRainbow.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/chosen/js/chosen.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/simplemodal/js/simplemodal.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>assets/datepicker/js/datepicker.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/mootao.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/core.min.js"></script>
+  <script src="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/hover.js"></script>
+  <script><?= $this->getDateString() ?></script>
+  <?= $this->javascripts ?>
+
+</head>
+<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup) echo ' popup'; ?>">
+
+  <?php if (!$this->isPopup): ?>
+    <div id="header"<?php if ($this->pageOffset) echo ' class="down"'; ?>>
+      <div class="inner">
+        <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
+        <ul id="tmenu">
+          <?php if ($this->systemMessagesCount > 0): ?>
+            <li><?php if ($this->systemErrorMessagesCount > 0) echo '<sup>' . $this->systemErrorMessagesCount . '</sup>'; ?><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'width':768,'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?></a></li>
+          <?php endif; ?>
+          <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>TL_REFERER_ID]) ?>" class="icon-profile" title="<?= StringUtil::specialchars($this->username) ?>"><?= $this->username ?></a></li>
+          <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= StringUtil::specialchars($this->preview) ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
+          <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" title="<?= StringUtil::specialchars($this->logout) ?>" accesskey="q"><?= $this->logout ?></a></li>
+          <li class="burger"><button type="button" title="<?= StringUtil::specialchars($this->burger) ?>" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
+        </ul>
+      </div>
+    </div>
+  <?php endif; ?>
+
+  <div id="container" class="cf">
+    <?php if (!$this->isPopup): ?>
+      <div id="left">
+        <nav id="tl_navigation" role="navigation">
+          <a href="<?= $this->request ?>#skipNavigation" class="invisible"><?= $this->skipNavigation ?></a>
+          <ul class="tl_level_1">
+            <?php foreach ($this->modules as $strGroup=>$arrModules): ?>
+              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" title="<?= $arrModules['title']; ?>" class="group-<?= $strGroup ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>')"><?= $arrModules['label'] ?></a></li>
+              <?php if ($arrModules['modules']): ?>
+                <li class="tl_parent" id="<?= $strGroup ?>">
+                  <ul class="tl_level_2">
+                    <?php foreach ($arrModules['modules'] as $arrConfig): ?>
+                      <li><a href="<?= $arrConfig['href'] ?>" class="<?= $arrConfig['class'] ?>" title="<?= $arrConfig['title'] ?>"><?= $arrConfig['label'] ?></a></li>
+                    <?php endforeach; ?>
+                  </ul>
+                </li>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </ul>
+          <a id="skipNavigation" class="invisible">&nbsp;</a>
+        </nav>
+      </div>
+    <?php endif; ?>
+
+    <div id="main">
+      <h1 class="main_headline"><?= $this->headline ?></h1>
+      <?php if ($this->managerHref): ?>
+        <div id="manager">
+          <a href="<?= $this->managerHref ?>" class="close" title="<?= StringUtil::specialchars($this->manager) ?>"><?= $this->manager ?></a>
+        </div>
+      <?php endif; ?>
+      <?php if ($this->error): ?>
+        <p class="tl_gerror"><?= $this->error ?></p>
+      <?php endif; ?>
+      <?= $this->main ?>
+    </div>
+  </div>
+
+  <?php if (!$this->isPopup): ?>
+    <div id="footer">
+      <div>
+        <span class="footer_top_container"><a href="<?= $this->request ?>#top" class="footer_top" title="<?= $this->backToTop ?>" accesskey="t"><?= $this->top ?></a></span>
+        <span class="footer_preview_container"><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" target="_blank" class="footer_preview" title="<?= $this->previewTitle ?>"><?= $this->preview ?></a></span>
+      </div>
+    </div>
+    <?php if ($this->pageOffset): ?>
+      <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 20 ?> : <?= $this->pageOffset ?>)</script>
+      <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
+    <?php endif; ?>
+  <?php endif; ?>
+
+  <?= $this->mootools ?>
+
+</body>
+</html>
