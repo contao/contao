@@ -2,6 +2,7 @@
 
 ### 4.3.7 (2017-03-23)
 
+ * Check the database connection in the WebsiteRootsConfigProvider class.
  * Fix the %2B conversion in the Controller::addToUrl() method.
 
 ### 4.3.6 (2017-03-22)
