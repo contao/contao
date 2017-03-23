@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.3.7 (2017-03-23)
 
  * Fix the %2B conversion in the Controller::addToUrl() method.
 
