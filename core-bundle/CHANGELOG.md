@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Fix the %2B conversion in the Controller::addToUrl() method.
+
 ### 4.3.6 (2017-03-22)
 
  * Correctly initialize custom entry points (see #713).

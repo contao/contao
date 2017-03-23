@@ -975,7 +975,7 @@ abstract class Controller extends \System
 		$query = $query->without(array_merge(array('rt', 'ref'), $arrUnset));
 
 		// Merge the request string to be added
-		$query = $query->merge(new Query(str_replace('&amp;', '&', $strRequest)));
+		$query = $query->merge(str_replace('&amp;', '&', $strRequest));
 
 		// Add the referer ID
 		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
@@ -983,7 +983,15 @@ abstract class Controller extends \System
 			$query = $query->merge('ref=' . TL_REFERER_ID);
 		}
 
-		return TL_SCRIPT . $query->getUriComponent();
+		$uri = $query->getUriComponent();
+
+		// The query parser automatically converts %2B to +, so re-convert it here
+		if (strpos($strRequest, '%2B') !== false)
+		{
+			$uri = str_replace('+', '%2B', $uri);
+		}
+
+		return TL_SCRIPT . $uri;
 	}
 
 
