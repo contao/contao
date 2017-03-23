@@ -41,7 +41,11 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     public function getOptions(Request $request)
     {
-        if (!$request->headers->has('Origin') || '' === $request->headers->get('Origin')) {
+        if (!$request->headers->has('Origin')
+            || '' === $request->headers->get('Origin')
+            || !$this->connection->isConnected()
+            || !$this->connection->getSchemaManager()->tablesExist(['tl_page'])
+        ) {
             return [];
         }
 
