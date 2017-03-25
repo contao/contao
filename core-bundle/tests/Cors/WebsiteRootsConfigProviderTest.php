@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Test;
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -49,7 +50,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $statement = $this->getMock(Statement::class);
 
         $statement
-            ->expects($this->at(1))
+            ->expects($this->at(0))
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
@@ -84,7 +85,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $statement = $this->getMock(Statement::class);
 
         $statement
-            ->expects($this->at(1))
+            ->expects($this->at(0))
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
@@ -155,6 +156,88 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that no configuration is provided if the database is not connected.
+     */
+    public function testNoConfigProvidedIfDatabaseNotConnected()
+    {
+        $request = Request::create('https://foobar.com');
+        $request->headers->set('Origin', 'https://origin.com');
+
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $connection
+            ->expects($this->any())
+            ->method('isConnected')
+            ->willReturn(false)
+        ;
+
+        $connection
+            ->expects($this->never())
+            ->method('prepare')
+        ;
+
+        $configProvider = new WebsiteRootsConfigProvider($connection);
+        $result = $configProvider->getOptions($request);
+
+        $this->assertCount(0, $result);
+    }
+
+    /**
+     * Tests that no configuration is provided if the table does not exist.
+     */
+    public function testNoConfigProvidedIfTableDoesNotExist()
+    {
+        $request = Request::create('https://foobar.com');
+        $request->headers->set('Origin', 'https://origin.com');
+
+        $schemaManager = $this
+            ->getMockBuilder(MySqlSchemaManager::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $schemaManager
+            ->expects($this->once())
+            ->method('tablesExist')
+            ->willReturn(false)
+        ;
+
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $connection
+            ->expects($this->any())
+            ->method('isConnected')
+            ->willReturn(true)
+        ;
+
+        $connection
+            ->expects($this->any())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $connection
+            ->expects($this->never())
+            ->method('prepare')
+        ;
+
+        $configProvider = new WebsiteRootsConfigProvider($connection);
+        $result = $configProvider->getOptions($request);
+
+        $this->assertCount(0, $result);
+    }
+
+    /**
      * Mocks a database connection object.
      *
      * @param string $statement
@@ -163,18 +246,42 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getConnection($statement)
     {
-        $mock = $this
+        $schemaManager = $this
+            ->getMockBuilder(MySqlSchemaManager::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $schemaManager
+            ->expects($this->once())
+            ->method('tablesExist')
+            ->willReturn(true)
+        ;
+
+        $connection = $this
             ->getMockBuilder(Connection::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $mock
+        $connection
+            ->expects($this->once())
+            ->method('isConnected')
+            ->willReturn(true)
+        ;
+
+        $connection
             ->expects($this->once())
             ->method('prepare')
             ->willReturn($statement)
         ;
 
-        return $mock;
+        $connection
+            ->expects($this->once())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        return $connection;
     }
 }
