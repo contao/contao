@@ -92,7 +92,7 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
             ->method('getPost')
         ;
 
-        /** @var Widget $widget */
+        /* @var Widget $widget */
         $widget
             ->setInputCallback(function () { return 'foobar'; })
             ->validate()
@@ -100,7 +100,7 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('foobar', $widget->value);
 
-        /** @var Widget $widget */
+        /* @var Widget $widget */
         $widget
             ->setInputCallback(function () { return null; })
             ->validate()
@@ -108,7 +108,7 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($widget->value);
 
-        /** @var Widget $widget */
+        /* @var Widget $widget */
         $widget
             ->setInputCallback(null)
             ->validate() // getPost() should be called once here

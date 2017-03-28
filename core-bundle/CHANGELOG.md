@@ -2,6 +2,7 @@
 
 ### DEV
  
+ * Allow to manually pass a value to any widget (see #674).
  * Only prefix an all numeric alias when standardizing (see #707).
  * Support using objects in callback arrays (see #699).
  * Support importing form field options from a CSV file (see #444).
