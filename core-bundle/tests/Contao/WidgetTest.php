@@ -11,12 +11,14 @@
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Input;
+use Contao\Widget;
 
 /**
  * Tests the Widget class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Yanick Witschi <https://github.com/toflar>
  *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -64,6 +66,53 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
 
         // Restore the error reporting level
         error_reporting($errorReporting);
+    }
+
+    /**
+     * Tests the validate() method.
+     */
+    public function testValidate()
+    {
+        $widget = $this
+            ->getMockBuilder('Contao\Widget')
+            ->disableOriginalConstructor()
+            ->setMethods(['validator', 'getPost', 'generate'])
+            ->getMock()
+        ;
+
+        $widget
+            ->expects($this->exactly(3))
+            ->method('validator')
+            ->withAnyParameters()
+            ->willReturnArgument(0)
+        ;
+
+        $widget
+            ->expects($this->once())
+            ->method('getPost')
+        ;
+
+        /** @var Widget $widget */
+        $widget
+            ->setInputCallback(function () { return 'foobar'; })
+            ->validate()
+        ;
+
+        $this->assertSame('foobar', $widget->value);
+
+        /** @var Widget $widget */
+        $widget
+            ->setInputCallback(function () { return null; })
+            ->validate()
+        ;
+
+        $this->assertNull($widget->value);
+
+        /** @var Widget $widget */
+        $widget
+            ->setInputCallback(null)
+            ->validate() // getPost() should be called once here
+        ;
     }
 
     /**
