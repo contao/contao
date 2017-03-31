@@ -926,24 +926,27 @@ var Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.addButton(Contao.lang.close, 'btn', function() {
+			if (this.buttons[0].hasClass('btn-disabled')) {
+				return;
+			}
 			this.hide();
 		});
 		M.addButton(Contao.lang.apply, 'btn primary', function() {
+			if (this.buttons[1].hasClass('btn-disabled')) {
+				return;
+			}
 			var frm = window.frames['simple-modal-iframe'],
 				val = [], ul, inp, field, act, it, i;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
 			}
-			if (frm.document.location.href.indexOf('/contao?') != -1) {
-				alert(Contao.lang.picker);
-				return; // see #5704
-			}
 			ul = frm.document.getElementById(opt.id);
 			inp = ul.getElementsByTagName('input');
 			for (i=0; i<inp.length; i++) {
-				if (!inp[i].checked || inp[i].id.match(/^check_all_/)) continue;
-				if (!inp[i].id.match(/^reset_/)) val.push(inp[i].get('value'));
+				if (inp[i].checked && !inp[i].id.match(/^(check_all_|reset_)/)) {
+					val.push(inp[i].get('value'));
+				}
 			}
 			if (opt.tag && (field = $(opt.tag))) {
 				field.value = val.join(',');

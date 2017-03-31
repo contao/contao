@@ -88,7 +88,11 @@
     </div>
   </div>
 
-  <?php if (!$this->isPopup): ?>
+  <?php if ($this->isPopup): ?>
+    <script>
+      parent.document.getElements('.simple-modal-footer a').addClass('btn-disabled');
+    </script>
+  <?php else: ?>
     <div id="footer">
       <div>
         <span class="footer_top_container"><a href="<?= $this->request ?>#top" class="footer_top" title="<?= $this->backToTop ?>" accesskey="t"><?= $this->top ?></a></span>
