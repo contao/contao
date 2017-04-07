@@ -24,7 +24,7 @@ class AddImagineClassPass implements CompilerPassInterface
     /**
      * @var array
      */
-    private $magicks = ['Imagick', 'Gmagick'];
+    private $magicks = ['Gmagick', 'Imagick'];
 
     /**
      * {@inheritdoc}
