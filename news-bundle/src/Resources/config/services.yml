@@ -1,0 +1,11 @@
+services:
+    contao_news.listener.news_picker_provider:
+        class: Contao\NewsBundle\Menu\NewsPickerProvider
+        arguments:
+            - "@router"
+            - "@security.token_storage"
+            - "@request_stack"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+        tags:
+            - { name: contao.picker_menu_provider }

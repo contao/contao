@@ -45,6 +45,15 @@ $GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('News', 'generateFeeds
 
 
 /**
+ * Style sheet
+ */
+if (TL_MODE == 'BE')
+{
+	$GLOBALS['TL_CSS'][] = 'bundles/contaonews/style.css|static';
+}
+
+
+/**
  * Register hooks
  */
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('News', 'purgeOldFeeds');
