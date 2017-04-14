@@ -14,6 +14,7 @@ use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Test\TestCase;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,14 +40,7 @@ class UserPasswordCommandTest extends TestCase
      */
     public function setUp()
     {
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [
-                'Contao\Encryption' => $this->mockEncryptionAdapter(),
-            ]
-        );
-
+        $framework = $this->mockContaoFramework(null, null, ['Contao\Encryption' => $this->mockEncryptionAdapter()]);
         $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
 
         $this->container = $this->mockContainerWithContaoScopes();
@@ -78,6 +72,72 @@ class UserPasswordCommandTest extends TestCase
 
         $this->assertTrue($definition->hasArgument('username'));
         $this->assertTrue($definition->hasOption('password'));
+    }
+
+    /**
+     * Tests the execution with a password argument.
+     */
+    public function testExecutionWithPasswordArgument()
+    {
+        $code = (new CommandTester($this->command))
+            ->execute(
+                [
+                    'username' => 'foobar',
+                    '--password' => '12345678'
+                ]
+            )
+        ;
+
+        $this->assertEquals(0, $code);
+    }
+
+    /**
+     * Tests the execution with the password dialog.
+     */
+    public function testExecutionWithPasswordDialog()
+    {
+        /** @var HelperInterface|\PHPUnit_Framework_MockObject_MockObject $question */
+        $question = $this->getMock('Symfony\Component\Console\Helper\QuestionHelper', ['ask']);
+
+        $question
+            ->expects($this->any())
+            ->method('ask')
+            ->willReturn('12345678')
+        ;
+
+        $this->command->getHelperSet()->set($question, 'question');
+
+        $code = (new CommandTester($this->command))->execute(['username' => 'foobar']);
+
+        $this->assertEquals(0, $code);
+    }
+
+    /**
+     * Tests the execution with differing passwords.
+     *
+     * @expectedException \Symfony\Component\Console\Exception\RuntimeException
+     * @expectedExceptionMessage The passwords do not match.
+     */
+    public function testExecutionWithDifferingPasswords()
+    {
+        /** @var HelperInterface|\PHPUnit_Framework_MockObject_MockObject $question */
+        $question = $this->getMock('Symfony\Component\Console\Helper\QuestionHelper', ['ask']);
+
+        $question
+            ->expects($this->at(0))
+            ->method('ask')
+            ->willReturn('12345678')
+        ;
+
+        $question
+            ->expects($this->at(1))
+            ->method('ask')
+            ->willReturn('87654321')
+        ;
+
+        $this->command->getHelperSet()->set($question, 'question');
+
+        (new CommandTester($this->command))->execute(['username' => 'foobar']);
     }
 
     /**
@@ -171,6 +231,7 @@ class UserPasswordCommandTest extends TestCase
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject $connection */
         $connection = $this->container->get('database_connection');
+
         $connection
             ->expects($this->once())
             ->method('update')
