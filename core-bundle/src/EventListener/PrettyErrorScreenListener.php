@@ -180,6 +180,8 @@ class PrettyErrorScreenListener
      */
     private function getResponseFromPageHandler($type)
     {
+        $this->framework->initialize();
+
         $type = 'error_'.$type;
 
         if (!isset($GLOBALS['TL_PTY'][$type]) || !class_exists($GLOBALS['TL_PTY'][$type])) {
