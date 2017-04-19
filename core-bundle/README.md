@@ -52,7 +52,7 @@ ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
-Add the following entries to your `app/config/security.yml` file:
+Replace the content of your `app/config/security.yml` file with the following:
 
 ```yml
 imports:
