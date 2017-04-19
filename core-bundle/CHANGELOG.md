@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Update the Punycode library to version 2 (see #748).
  * Fix the "delete file" button for non-admin users (see #764).
 
 ### 4.3.7 (2017-03-23)
