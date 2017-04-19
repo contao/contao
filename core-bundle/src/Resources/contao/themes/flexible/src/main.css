@@ -429,7 +429,6 @@ input[type=search]::-webkit-search-decoration {
 	border:1px solid #ddd;
 	background:#fff;
 	box-shadow:0 1px 3px #ddd;
-	box-sizing:border-box;
 }
 .tl_edit_preview_enabled {
 	position:relative;
