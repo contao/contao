@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Fix the "delete file" button for non-admin users (see #764).
+
 ### 4.3.7 (2017-03-23)
 
  * Check the database connection in the WebsiteRootsConfigProvider class.
