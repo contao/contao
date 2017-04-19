@@ -75,7 +75,7 @@ class Database
 
 			$arrParams = array
 			(
-				'driver'    => \System::getContainer()->getParameter('database_driver'),
+				'driver'    => 'pdo_mysql',
 				'host'      => $arrConfig['dbHost'],
 				'port'      => $arrConfig['dbPort'],
 				'user'      => $arrConfig['dbUser'],
