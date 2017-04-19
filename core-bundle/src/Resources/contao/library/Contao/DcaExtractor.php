@@ -401,6 +401,12 @@ class DcaExtractor extends \Controller
 			return;
 		}
 
+		// Return if the DC type is "Folder" and the DC is not database assisted
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		{
+			return;
+		}
+
 		$blnFromFile = false;
 		$arrRelations = array();
 
