@@ -194,7 +194,7 @@ class Versions extends \Controller
 		}
 		elseif (!empty($objRecord->headline))
 		{
-			$chunks = deserialize($objRecord->headline);
+			$chunks = \StringUtil::deserialize($objRecord->headline);
 
 			if (is_array($chunks) && isset($chunks['value']))
 			{
