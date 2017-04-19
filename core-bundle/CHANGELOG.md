@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly encode the URL in the DataContainer::switchToEdit() method (see #762).
  * Fix the parent view drag and drop in Firefox (see #666).
  * Correctly display the search results in the extended tree view (see #739).
  * Update the Punycode library to version 2 (see #748).
