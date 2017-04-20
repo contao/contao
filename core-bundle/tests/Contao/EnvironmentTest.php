@@ -62,6 +62,7 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
         $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
@@ -90,6 +91,7 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
         $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
@@ -122,6 +124,7 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
         $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
@@ -142,8 +145,14 @@ class EnvironmentTest extends TestCase
      */
     protected function runTests()
     {
-        // Environment::get('ip') needs the request stack
-        System::setContainer($this->mockContainerWithContaoScopes());
+        $container = $this->mockContainerWithContaoScopes();
+        $request = $container->get('request_stack')->getCurrentRequest();
+
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+        $request->server->set('SCRIPT_NAME', '/core/index.php');
+        $request->server->set('HTTPS', 'on');
+
+        System::setContainer($container);
 
         $agent = Environment::get('agent');
 
@@ -167,15 +176,15 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('localhost', Environment::get('httpHost'));
         $this->assertEmpty(Environment::get('httpXForwardedHost'));
 
-        $this->assertFalse(Environment::get('ssl'));
-        $this->assertEquals('http://localhost', Environment::get('url'));
-        $this->assertEquals('http://localhost/core/en/academy.html?do=test', Environment::get('uri'));
+        $this->assertTrue(Environment::get('ssl'));
+        $this->assertEquals('https://localhost', Environment::get('url'));
+        $this->assertEquals('https://localhost/core/en/academy.html?do=test', Environment::get('uri'));
         $this->assertEquals('123.456.789.0', Environment::get('ip'));
         $this->assertEquals('127.0.0.1', Environment::get('server'));
         $this->assertEquals('index.php', Environment::get('script'));
         $this->assertEquals('en/academy.html?do=test', Environment::get('request'));
         $this->assertEquals('en/academy.html?do=test', Environment::get('indexFreeRequest'));
-        $this->assertEquals('http://localhost'.Environment::get('path').'/', Environment::get('base'));
+        $this->assertEquals('https://localhost'.Environment::get('path').'/', Environment::get('base'));
         $this->assertFalse(Environment::get('isAjaxRequest'));
     }
 

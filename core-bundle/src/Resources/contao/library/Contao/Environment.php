@@ -333,12 +333,14 @@ class Environment
 	 */
 	protected static function ssl()
 	{
-		if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && in_array($_SERVER['REMOTE_ADDR'], trimsplit(',', \Config::get('proxyServerIps'))))
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
 		{
-		    return $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+			return false;
 		}
 
-		return (@$_SERVER['SSL_SESSION_ID'] || @$_SERVER['HTTPS'] == 'on' || @$_SERVER['HTTPS'] == 1);
+		return $request->isSecure();
 	}
 
 
