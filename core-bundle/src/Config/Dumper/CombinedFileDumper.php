@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Config\Dumper;
 
+use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -83,19 +84,11 @@ class CombinedFileDumper implements DumperInterface
      */
     public function dump($files, $cacheFile, array $options = [])
     {
-        $type = isset($options['type']) ? $options['type'] : null;
         $buffer = $this->header;
+        $type = $this->addNamespace ? PhpFileLoader::NAMESPACED : null;
 
         foreach ((array) $files as $file) {
-            if ($this->addNamespace) {
-                $buffer .= "\nnamespace {";
-            }
-
             $buffer .= $this->loader->load($file, $type);
-
-            if ($this->addNamespace) {
-                $buffer .= "\n}\n";
-            }
         }
 
         $this->filesystem->dumpFile($this->cacheDir.'/'.$cacheFile, $buffer);
