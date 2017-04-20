@@ -878,8 +878,6 @@ class tl_news extends Backend
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
 	 *
-	 * @return string
-	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
 	public function toggleFeatured($intId, $blnVisible, DataContainer $dc=null)
