@@ -800,6 +800,7 @@ abstract class Widget extends \Controller
 		{
 			/** @var Request $request */
 			$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
 			return $request->request->get($strKey);
 		}
 

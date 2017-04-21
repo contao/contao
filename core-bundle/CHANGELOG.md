@@ -2,6 +2,8 @@
 
 ### DEV
  
+ * Allow to disable input encoding for a whole DCA (see #708).
+ * Add the DCA picker (see #755).
  * Allow to manually pass a value to any widget (see #674).
  * Only prefix an all numeric alias when standardizing (see #707).
  * Support using objects in callback arrays (see #699).

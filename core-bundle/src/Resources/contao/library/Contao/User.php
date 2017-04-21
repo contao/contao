@@ -323,6 +323,7 @@ abstract class User extends \System
 	{
 		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		\System::loadLanguageFile('default');
 
 		// Do not continue if username or password are missing
