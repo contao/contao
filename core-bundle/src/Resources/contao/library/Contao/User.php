@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 
@@ -320,6 +321,8 @@ abstract class User extends \System
 	 */
 	public function login()
 	{
+		/** @var Request $request */
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		\System::loadLanguageFile('default');
 
 		// Do not continue if username or password are missing
@@ -339,7 +342,7 @@ abstract class User extends \System
 				foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 				{
 					$this->import($callback[0], 'objImport', true);
-					$blnLoaded = $this->objImport->{$callback[1]}(\Input::post('username', true), \Input::postUnsafeRaw('password'), $this->strTable);
+					$blnLoaded = $this->objImport->{$callback[1]}(\Input::post('username', true), $request->request->get('password'), $this->strTable);
 
 					// Load successfull
 					if ($blnLoaded === true)
@@ -399,17 +402,17 @@ abstract class User extends \System
 		// The password has been generated with crypt()
 		if (\Encryption::test($this->password))
 		{
-			$blnAuthenticated = \Encryption::verify(\Input::postUnsafeRaw('password'), $this->password);
+			$blnAuthenticated = \Encryption::verify($request->request->get('password'), $this->password);
 		}
 		else
 		{
 			list($strPassword, $strSalt) = explode(':', $this->password);
-			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1(\Input::postUnsafeRaw('password'))) : ($strPassword === sha1($strSalt . \Input::postUnsafeRaw('password')));
+			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1($request->request->get('password'))) : ($strPassword === sha1($strSalt . $request->request->get('password')));
 
 			// Store a SHA-512 encrpyted version of the password
 			if ($blnAuthenticated)
 			{
-				$this->password = \Encryption::hash(\Input::postUnsafeRaw('password'));
+				$this->password = \Encryption::hash($request->request->get('password'));
 			}
 		}
 
@@ -419,7 +422,7 @@ abstract class User extends \System
 			foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback)
 			{
 				$this->import($callback[0], 'objAuth', true);
-				$blnAuthenticated = $this->objAuth->{$callback[1]}(\Input::post('username', true), \Input::postUnsafeRaw('password'), $this);
+				$blnAuthenticated = $this->objAuth->{$callback[1]}(\Input::post('username', true), $request->request->get('password'), $this);
 
 				// Authentication successfull
 				if ($blnAuthenticated === true)

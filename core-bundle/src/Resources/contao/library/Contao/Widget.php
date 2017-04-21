@@ -12,6 +12,7 @@ namespace Contao;
 
 use Doctrine\DBAL\Types\Type;
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /**
@@ -83,6 +84,7 @@ use Patchwork\Utf8;
  * @property string                  $slabel            The submit button label
  * @property boolean                 $preserveTags      Preserve HTML tags
  * @property boolean                 $decodeEntities    Decode HTML entities
+ * @property boolean                 useRawRequestData  Use the raw request data from the Symfony request
  * @property integer                 $minlength         The minimum length
  * @property integer                 $maxlength         The maximum length
  * @property integer                 $minval            The minimum value
@@ -340,6 +342,7 @@ abstract class Widget extends \Controller
 			case 'trailingSlash':
 			case 'spaceToUnderscore':
 			case 'doNotTrim':
+			case 'useRawRequestData':
 				$this->arrConfiguration[$strKey] = $varValue ? true : false;
 				break;
 
@@ -793,6 +796,13 @@ abstract class Widget extends \Controller
 	 */
 	protected function getPost($strKey)
 	{
+		if ($this->useRawRequestData === true)
+		{
+			/** @var Request $request */
+			$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+			return $request->request->get($strKey);
+		}
+
 		$strMethod = $this->allowHtml ? 'postHtml' : 'post';
 
 		if ($this->preserveTags)
