@@ -2703,8 +2703,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$arrPublicFolders = array();
-
 		// Process files
 		for ($h=0, $c=count($files); $h<$c; $h++)
 		{
@@ -2755,15 +2753,8 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 					{
-						if (!isset($arrPublicFolders[$objFile->dirname]))
-						{
-							$arrPublicFolders[$objFile->dirname] = file_exists($objFile->dirname . '/.public');
-						}
-
-						$blnIsPublic = $arrPublicFolders[$objFile->dirname];
-
-						// Inline the image if the folder is not public and no preview image will be generated (see #636)
-						if (!$blnIsPublic && ($objFile->height !== null && $objFile->height <= 50 || $objFile->width !== null && $objFile->width <= 400))
+						// Inline the image if no preview image will be generated (see #636)
+						if ($objFile->height !== null && $objFile->height <= 50 || $objFile->width !== null && $objFile->width <= 400)
 						{
 							$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" style="margin:0 0 2px -19px">';
 						}
