@@ -526,7 +526,7 @@ a.tl_submit {
 
 /* Row highlighting */
 .hover-div:hover, .hover-row:hover td {
-	background:#ebfdd7 !important;
+	background-color:#ebfdd7 !important;
 }
 
 /* Handheld */

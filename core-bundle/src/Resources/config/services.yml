@@ -80,6 +80,56 @@ services:
         calls:
             - ["setContainer", ["@service_container"]]
 
+    contao.menu.matcher:
+        class: Knp\Menu\Matcher\Matcher
+        public: false
+
+    contao.menu.picker_menu_builder:
+        class: Contao\CoreBundle\Menu\PickerMenuBuilder
+        arguments:
+            - "@knp_menu.factory"
+            - "@contao.menu.renderer"
+            - "@router"
+        tags:
+            - { name: knp_menu.menu_builder, method: createMenu, alias: picker }
+
+    contao.menu.page_picker_provider:
+        class: Contao\CoreBundle\Menu\PagePickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@security.token_storage"
+            - "@request_stack"
+        tags:
+            - { name: contao.picker_menu_provider }
+
+    contao.menu.file_picker_provider:
+        class: Contao\CoreBundle\Menu\FilePickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@security.token_storage"
+            - "@request_stack"
+            - "%contao.upload_path%"
+        tags:
+            - { name: contao.picker_menu_provider }
+
+    contao.menu.article_picker_provider:
+        class: Contao\CoreBundle\Menu\ArticlePickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@security.token_storage"
+            - "@request_stack"
+        tags:
+            - { name: contao.picker_menu_provider }
+
+    contao.menu.renderer:
+        class: Knp\Menu\Renderer\ListRenderer
+        public: false
+        arguments:
+            - "@contao.menu.matcher"
+
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
         public: false

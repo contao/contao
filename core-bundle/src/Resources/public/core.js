@@ -478,7 +478,7 @@ var AjaxRequest =
 		// Backwards compatibility
 		if (image.get('data-state') === null) {
 			published = (image.src.indexOf('invisible') == -1);
-			console.warn('Using a visibility toggle without a "data-state" attribute is deprecated. Please adjust your Contao DCA file.');
+			window.console && console.warn('Using a visibility toggle without a "data-state" attribute is deprecated. Please adjust your Contao DCA file.');
 		}
 
 		// Find the icon depending on the view (tree view, list view, parent view)
@@ -512,11 +512,11 @@ var AjaxRequest =
 					// Backwards compatibility
 					if (icon === null) {
 						icon = img.src.replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)$/, '$1/$2.$3');
-						console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
+						window.console && console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
 					}
 					if (icond === null) {
 						icond = img.src.replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)$/, '$1/$2_.$3');
-						console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
+						window.console && console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
 					}
 
 					// Prepend the theme path
@@ -546,12 +546,12 @@ var AjaxRequest =
 					if (icon === null) {
 						index = img.src.replace(/.*_([0-9])\.(gif|png|jpe?g|svg)/, '$1');
 						icon = img.src.replace(/_[0-9]\.(gif|png|jpe?g|svg)/, ((index.toInt() == 1) ? '' : '_' + (index.toInt() - 1)) + '.$1').split(/[\\/]/).pop();
-						console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
+						window.console && console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
 					}
 					if (icond === null) {
 						index = img.src.replace(/.*_([0-9])\.(gif|png|jpe?g|svg)/, '$1');
 						icond = img.src.replace(/(_[0-9])?\.(gif|png|jpe?g|svg)/, ((index == img.src) ? '_1' : '_' + (index.toInt() + 1)) + '.$2').split(/[\\/]/).pop();
-						console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
+						window.console && console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
 					}
 
 					// Prepend the theme path
@@ -583,11 +583,11 @@ var AjaxRequest =
 				// Backwards compatibility
 				if (icon === null) {
 					icon = img.getStyle('background-image').replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)\);?$/, '$1/$2.$2');
-					console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
+					window.console && console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
 				}
 				if (icond === null) {
 					icond = img.getStyle('background-image').replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)\);?$/, '$1/$2_.$3');
-					console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
+					window.console && console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
 				}
 
 				// Prepend the theme path
@@ -638,7 +638,7 @@ var AjaxRequest =
 		// Backwards compatibility
 		if (image.get('data-state') === null) {
 			featured = (image.src.indexOf('featured_') == -1);
-			console.warn('Using a featured toggle without a "data-state" attribute is deprecated. Please adjust your Contao DCA file.');
+			window.console && console.warn('Using a featured toggle without a "data-state" attribute is deprecated. Please adjust your Contao DCA file.');
 		}
 
 		// Send the request
@@ -916,6 +916,7 @@ var Backend =
 	openModalSelector: function(options) {
 		var opt = options || {},
 			max = (window.getSize().y - 192).toInt();
+		if (!opt.id) opt.id = 'tl_select';
 		if (!opt.height || opt.height > max) opt.height = max;
 		var M = new SimpleModal({
 			'width': opt.width,
@@ -948,13 +949,17 @@ var Backend =
 					val.push(inp[i].get('value'));
 				}
 			}
-			if (opt.tag && (field = $(opt.tag))) {
+			if (opt.callback) {
+				opt.callback(ul.get('data-table'), val);
+			} else if (opt.tag && (field = $(opt.tag))) {
+				window.console && console.warn('Using the modal selector without a callback function is deprecated. Please adjust your Contao DCA file.');
 				field.value = val.join(',');
 				if (it = ul.get('data-inserttag')) {
 					field.value = '{{' + it + '::' + field.value + '}}';
 				}
 				opt.self.set('href', opt.self.get('href').replace(/&value=[^&]*/, '&value=' + val.join(',')));
 			} else if (opt.id && (field = $('ctrl_' + opt.id)) && (act = ul.get('data-callback'))) {
+				window.console && console.warn('Using the modal selector without a callback function is deprecated. Please adjust your Contao DCA file.');
 				field.value = val.join("\t");
 				new Request.Contao({
 					field: field,
@@ -986,50 +991,18 @@ var Backend =
 	 * @param {object} win        The window object
 	 */
 	openModalBrowser: function(field_name, url, type, win) {
-		var file = '/file',
-			swtch = (type == 'file' ? '&amp;switch=1' : ''),
-			isLink = (url.indexOf('{{link_url::') != -1);
-		if (type == 'file' && (url == '' || isLink)) {
-			file = '/page';
-		}
-		if (isLink) {
-			url = url.replace(/^\{\{link_url::([0-9]+)}}$/, '$1');
-		}
-		var M = new SimpleModal({
+		Backend.openModalSelector({
 			'width': 768,
-			'btn_ok': Contao.lang.close,
-			'draggable': false,
-			'overlayOpacity': .5,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
-		});
-		M.addButton(Contao.lang.close, 'btn', function() {
-			this.hide();
-		});
-		M.addButton(Contao.lang.apply, 'btn primary', function() {
-			var frm = window.frames['simple-modal-iframe'],
-				val, inp, i;
-			if (frm === undefined) {
-				alert('Could not find the SimpleModal frame');
-				return;
-			}
-			inp = frm.document.getElementById('tl_select').getElementsByTagName('input');
-			for (i=0; i<inp.length; i++) {
-				if (inp[i].checked && !inp[i].id.match(/^reset_/)) {
-					val = inp[i].get('value');
-					break;
-				}
-			}
-			if (!isNaN(val)) {
-				val = '{{link_url::' + val + '}}';
-			}
-			win.document.getElementById(field_name).value = val;
-			this.hide();
-		});
-		M.show({
 			'title': win.document.getElement('div.mce-title').get('text'),
-			'contents': '<iframe src="' + document.location.pathname + file + '?table=tl_content&amp;field=singleSRC&amp;value=' + url + swtch + '" name="simple-modal-iframe" width="100%" height="' + (window.getSize().y-192).toInt() + '" frameborder="0"></iframe>',
-			'model': 'modal'
+			'url': document.location.pathname.replace('/contao', '/_contao') + '/picker?target=tl_content.singleSRC&amp;value=' + url + (type == 'file' ? '&amp;switch=1' : '&amp;do=files') + '&amp;popup=1',
+			'callback': function(table, value) {
+				new Request.Contao({
+					evalScripts: false,
+					onSuccess: function(txt, json) {
+						win.document.getElementById(field_name).value = json.content;
+					}
+				}).post({'action':'processPickerSelection', 'table':table, 'value':value.join(','), 'REQUEST_TOKEN':Contao.request_token});
+			}
 		});
 	},
 
@@ -2341,7 +2314,7 @@ var Backend =
 				startIndex = checkboxes.indexOf(start);
 				from = Math.min(thisIndex, startIndex);
 				to = Math.max(thisIndex, startIndex);
-				status = checkboxes[startIndex].checked ? true : false;
+				status = !!checkboxes[startIndex].checked;
 
 				for (from; from<=to; from++) {
 					checkboxes[from].checked = status;

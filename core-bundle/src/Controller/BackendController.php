@@ -23,6 +23,8 @@ use Contao\BackendPreview;
 use Contao\BackendSwitch;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -31,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Andreas Schempp <https://github.com/aschempp>
  * @author Leo Feyer <https://github.com/leofeyer>
  *
- * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route(defaults={"_scope" = "backend", "_token_check" = true})
  */
 class BackendController extends Controller
 {
@@ -40,7 +42,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("", name="contao_backend")
+     * @Route("/contao", name="contao_backend")
      */
     public function mainAction()
     {
@@ -56,7 +58,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/login", name="contao_backend_login")
+     * @Route("/contao/login", name="contao_backend_login")
      */
     public function loginAction()
     {
@@ -72,7 +74,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/password", name="contao_backend_password")
+     * @Route("/contao/password", name="contao_backend_password")
      */
     public function passwordAction()
     {
@@ -88,7 +90,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/preview", name="contao_backend_preview")
+     * @Route("/contao/preview", name="contao_backend_preview")
      */
     public function previewAction()
     {
@@ -104,7 +106,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/confirm", name="contao_backend_confirm")
+     * @Route("/contao/confirm", name="contao_backend_confirm")
      */
     public function confirmAction()
     {
@@ -120,7 +122,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/file", name="contao_backend_file")
+     * @Route("/contao/file", name="contao_backend_file")
      */
     public function fileAction()
     {
@@ -136,7 +138,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/help", name="contao_backend_help")
+     * @Route("/contao/help", name="contao_backend_help")
      */
     public function helpAction()
     {
@@ -152,7 +154,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/page", name="contao_backend_page")
+     * @Route("/contao/page", name="contao_backend_page")
      */
     public function pageAction()
     {
@@ -168,7 +170,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/popup", name="contao_backend_popup")
+     * @Route("/contao/popup", name="contao_backend_popup")
      */
     public function popupAction()
     {
@@ -184,7 +186,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/switch", name="contao_backend_switch")
+     * @Route("/contao/switch", name="contao_backend_switch")
      */
     public function switchAction()
     {
@@ -200,7 +202,7 @@ class BackendController extends Controller
      *
      * @return Response
      *
-     * @Route("/alerts", name="contao_backend_alerts")
+     * @Route("/contao/alerts", name="contao_backend_alerts")
      */
     public function alertsAction()
     {
@@ -209,5 +211,21 @@ class BackendController extends Controller
         $controller = new BackendAlerts();
 
         return $controller->run();
+    }
+
+    /**
+     * Handles the picker redirect.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     *
+     * @Route("/_contao/picker", name="contao_backend_picker")
+     */
+    public function pickerAction(Request $request)
+    {
+        $pickerBuilder = $this->container->get('contao.menu.picker_menu_builder');
+
+        return new RedirectResponse($pickerBuilder->getPickerUrl($request));
     }
 }

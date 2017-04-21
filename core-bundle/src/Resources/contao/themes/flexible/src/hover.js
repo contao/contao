@@ -30,7 +30,7 @@ var Theme = {
 				items[i].setStyle('background-color', (state ? '#ebfdd7' : ''));
 			}
 		}
-		console.info('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
+		window.console && console.warn('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
 	},
 
 	/**
@@ -47,7 +47,7 @@ var Theme = {
 			el.removeAttribute('data-visited');
 		}
 		$(el).setStyle('background-color', (state ? '#ebfdd7' : ''));
-		console.info('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
+		window.console && console.warn('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
 	},
 
 	/**

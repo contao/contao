@@ -191,8 +191,8 @@ class BackendUser extends \User
 	/**
 	 * Check whether the current user has a certain access right
 	 *
-	 * @param string $field
-	 * @param array  $array
+	 * @param string       $field
+	 * @param array|string $array
 	 *
 	 * @return boolean
 	 */

@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Tests;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
@@ -17,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Image\ResizeCalculator;
@@ -36,6 +38,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
@@ -517,5 +521,67 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $container->set('contao.image.image_factory', $imageFactory);
         $container->set('contao.image.picture_generator', $pictureGenerator);
         $container->set('contao.image.picture_factory', $pictureFactory);
+    }
+
+    /**
+     * Mocks a picker provider.
+     *
+     * @param string $class
+     *
+     * @return PickerMenuProviderInterface
+     */
+    protected function mockPickerProvider($class)
+    {
+        $router = $this->getMock(RouterInterface::class);
+
+        $router
+            ->expects($this->any())
+            ->method('generate')
+            ->willReturnCallback(function ($name, $params) {
+                $url = $name;
+
+                foreach ($params as $key => $value) {
+                    $url .= ':'.$key.'='.$value;
+                }
+
+                return $url;
+            })
+        ;
+
+        $user = $this
+            ->getMockBuilder(BackendUser::class)
+            ->setMethods(['hasAccess'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $user
+            ->expects($this->any())
+            ->method('hasAccess')
+            ->willReturn(true)
+        ;
+
+        $token = $this->getMock(TokenInterface::class);
+
+        $token
+            ->expects($this->any())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $tokenStorage = $this->getMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->any())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $request = new Request();
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        return new $class($router, $tokenStorage, $requestStack, 'files');
     }
 }

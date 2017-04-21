@@ -130,4 +130,28 @@ class ContaoUserProviderTest extends TestCase
 
         $this->assertTrue($provider->supportsClass('Contao\FrontendUser'));
     }
+
+    /**
+     * Tests loading the user "backend" without a container.
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testBackendUserWithoutContainer()
+    {
+        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
+
+        $provider->loadUserByUsername('backend');
+    }
+
+    /**
+     * Tests loading the user "frontend" without a container.
+     *
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testFrontendUserWithoutContainer()
+    {
+        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
+
+        $provider->loadUserByUsername('frontend');
+    }
 }

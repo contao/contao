@@ -76,9 +76,9 @@
 
     <div id="main">
       <h1 class="main_headline"><?= $this->headline ?></h1>
-      <?php if ($this->managerHref): ?>
+      <?php if ($this->pickerMenu): ?>
         <div id="manager">
-          <a href="<?= $this->managerHref ?>" class="close" title="<?= StringUtil::specialchars($this->manager) ?>"><?= $this->manager ?></a>
+          <?= $this->pickerMenu ?>
         </div>
       <?php endif; ?>
       <?php if ($this->error): ?>
@@ -90,7 +90,11 @@
 
   <?php if ($this->isPopup): ?>
     <script>
-      parent.document.getElements('.simple-modal-footer a').addClass('btn-disabled');
+      if ($$('.tl_tree_checkbox,.tl_tree_radio').length > 0) {
+        parent.document.getElements('.simple-modal-footer a').removeClass('btn-disabled');
+      } else {
+        parent.document.getElements('.simple-modal-footer a').addClass('btn-disabled');
+      }
     </script>
   <?php else: ?>
     <div id="footer">

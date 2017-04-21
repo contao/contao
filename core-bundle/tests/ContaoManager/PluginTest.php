@@ -10,7 +10,12 @@
 
 namespace Contao\CoreBundle\Tests\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
+use Knp\Bundle\TimeBundle\KnpTimeBundle;
 
 /**
  * Tests the Plugin class.
@@ -27,6 +32,47 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin = new Plugin();
 
         $this->assertInstanceOf('Contao\CoreBundle\ContaoManager\Plugin', $plugin);
+    }
+
+    /**
+     * Tests the getBundles() method.
+     */
+    public function testGetBundles()
+    {
+        $plugin = new Plugin();
+
+        /** @var BundleConfig[] $bundles */
+        $bundles = $plugin->getBundles(new DelegatingParser());
+
+        $this->assertCount(3, $bundles);
+
+        $this->assertEquals(KnpMenuBundle::class, $bundles[0]->getName());
+        $this->assertEquals([], $bundles[0]->getReplace());
+        $this->assertEquals([], $bundles[0]->getLoadAfter());
+
+        $this->assertEquals(KnpTimeBundle::class, $bundles[1]->getName());
+        $this->assertEquals([], $bundles[1]->getReplace());
+        $this->assertEquals([], $bundles[1]->getLoadAfter());
+
+        $this->assertEquals(ContaoCoreBundle::class, $bundles[2]->getName());
+        $this->assertEquals(['core'], $bundles[2]->getReplace());
+
+        $this->assertEquals(
+            [
+                'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
+                'Symfony\Bundle\SecurityBundle\SecurityBundle',
+                'Symfony\Bundle\TwigBundle\TwigBundle',
+                'Symfony\Bundle\MonologBundle\MonologBundle',
+                'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle',
+                'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
+                'Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle',
+                'Knp\Bundle\TimeBundle\KnpTimeBundle',
+                'Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle',
+                'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle',
+                'Contao\ManagerBundle\ContaoManagerBundle',
+            ],
+            $bundles[2]->getLoadAfter()
+        );
     }
 
     /**

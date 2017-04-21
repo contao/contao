@@ -519,6 +519,15 @@ table.tl_listing {
 .tl_listing_container .tl_content ul li > * {
 	vertical-align:middle;
 }
+.tl_listing.picker .tl_file,.tl_listing.picker .tl_folder,.tl_listing.picker .tl_right_nowrap,.tl_listing_container.picker .tl_content_header,.tl_listing_container.picker .tl_content {
+	background-image:linear-gradient(90deg, transparent calc(100% - 26px), #ffce42 26px);
+}
+.tl_listing.picker .tl_tree_checkbox,.tl_listing.picker .tl_tree_radio,.tl_listing_container.picker .tl_tree_checkbox,.tl_listing_container.picker .tl_tree_radio {
+	margin-left:8px;
+}
+.tl_listing.picker .tl_tree_checkbox:disabled,.tl_listing.picker .tl_tree_radio:disabled,.tl_listing_container.picker .tl_tree_checkbox:disabled,.tl_listing_container.picker .tl_tree_radio:disabled {
+	visibility:hidden;
+}
 
 /* List view */
 .tl_listing tr.odd td {
@@ -559,6 +568,7 @@ table.tl_listing {
 	margin:0 0 -1px;
 }
 .tl_select_trigger {
+	margin-top:-9px;
 	padding:0 6px 3px 0;
 	text-align:right;
 }
@@ -668,7 +678,7 @@ table.tl_listing {
 }
 .tl_content_left {
 	float:left;
-	width:calc(100% - 180px);
+	width:calc(100% - 200px);
 }
 .tl_content_right {
 	float:right;
@@ -1162,17 +1172,44 @@ ul.sortable button[disabled]:hover {
 	background:rgba(255,255,255,.7);
 }
 #manager {
-	padding:7px 12px;
-	background:#f9f9f9;
+	padding:9px 6px 0;
 	border-bottom:1px solid #ddd;
 }
-#manager .open {
-	padding:3px 15px 3px 21px;
-	background:url("icons/manager.svg") left center no-repeat;
+#manager.legacy {
+	padding:6px 0;
+	background-color:#f9f9f9;
 }
-#manager .close {
-	padding:3px 15px 3px 21px;
-	background:url("icons/back.svg") left center no-repeat;
+#manager li {
+	display:inline-block;
+	padding:8px 0;
+	background-color:#f9f9f9;
+	border:1px solid #ddd;
+	border-radius:2px 2px 0 0;
+	position:relative;
+	top:1px;
+}
+#manager li.current {
+	background-color:#f3f3f3;
+	border-bottom-color:#f3f3f3;
+}
+#manager a {
+	padding:3px 12px 3px 32px;
+	background:url("icons/manager.svg") 12px center no-repeat;
+}
+#manager a.pagemounts {
+	background-image:url("icons/pagemounts.svg");
+	background-size:16px;
+}
+#manager a.filemounts {
+	background-image:url("icons/filemounts.svg");
+	background-size:14px;
+}
+#manager a.articles {
+	background-image:url("icons/articles.svg");
+	background-size:16px;
+}
+#manager a.close {
+	background-image:url("icons/back.svg");
 }
 .ace_editor {
 	padding:3px;

@@ -28,7 +28,7 @@
   <div id="container" class="cf">
     <div id="main">
       <?php if ($this->managerHref || $this->switchHref): ?>
-        <div id="manager">
+        <div id="manager" class="legacy">
           <?php if ($this->switchHref): ?>
             <a href="<?= $this->switchHref ?>" class="open"><?= $this->switch ?></a>
           <?php endif; ?>

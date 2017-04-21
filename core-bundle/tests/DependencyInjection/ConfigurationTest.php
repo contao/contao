@@ -38,9 +38,34 @@ class ConfigurationTest extends TestCase
     {
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Configuration', $this->configuration);
 
-        $this->assertInstanceOf(
-            'Symfony\Component\Config\Definition\Builder\TreeBuilder',
-            $this->configuration->getConfigTreeBuilder()
+        $treeBuilder = $this->configuration->getConfigTreeBuilder();
+
+        $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $treeBuilder);
+    }
+
+    /**
+     * Tests the path resolving.
+     */
+    public function testPathResolving()
+    {
+        $params = [
+            'contao' => [
+                'root_dir' => $this->getRootDir().'/foo',
+                'web_dir' => $this->getRootDir().'/foo/../web',
+                'image' => [
+                    'target_dir' => $this->getRootDir().'/foo/../assets/images',
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertEquals(strtr($this->getRootDir().'/foo', '/', DIRECTORY_SEPARATOR), $configuration['root_dir']);
+        $this->assertEquals(strtr($this->getRootDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
+
+        $this->assertEquals(
+            strtr($this->getRootDir().'/assets/images', '/', DIRECTORY_SEPARATOR),
+            $configuration['image']['target_dir']
         );
     }
 
@@ -54,14 +79,14 @@ class ConfigurationTest extends TestCase
      */
     public function testInvalidUploadPath($uploadPath)
     {
-        $processor = new Processor();
-
-        $processor->processConfiguration($this->configuration, [
+        $params = [
             'contao' => [
                 'encryption_key' => 's3cr3t',
                 'upload_path' => $uploadPath,
             ],
-        ]);
+        ];
+
+        (new Processor())->processConfiguration($this->configuration, $params);
     }
 
     /**

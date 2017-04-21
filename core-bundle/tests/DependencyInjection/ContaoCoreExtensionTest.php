@@ -33,6 +33,16 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
+     * Tests the getAlias() method.
+     */
+    public function testGetAlias()
+    {
+        $extension = new ContaoCoreExtension();
+
+        $this->assertEquals('contao', $extension->getAlias());
+    }
+
+    /**
      * Tests adding the bundle services to the container.
      */
     public function testLoad()
@@ -80,30 +90,18 @@ class ContaoCoreExtensionTest extends TestCase
             $container->getParameter('contao.image.target_dir')
         );
 
-        $extension = new ContaoCoreExtension();
-
-        $extension->load(
-            [
-                'contao' => [
-                    'image' => ['target_path' => 'my/custom/dir'],
-                ],
+        $params = [
+            'contao' => [
+                'image' => ['target_path' => 'my/custom/dir'],
             ],
-            $container
-        );
+        ];
+
+        $extension = new ContaoCoreExtension();
+        $extension->load($params, $container);
 
         $this->assertEquals(
             str_replace('/', DIRECTORY_SEPARATOR, $this->getRootDir()).'/my/custom/dir',
             $container->getParameter('contao.image.target_dir')
         );
-    }
-
-    /**
-     * Tests the getAlias() method.
-     */
-    public function testGetAlias()
-    {
-        $extension = new ContaoCoreExtension();
-
-        $this->assertEquals('contao', $extension->getAlias());
     }
 }
