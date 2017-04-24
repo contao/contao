@@ -206,7 +206,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			{
 				return Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'sendText' => array
 		(
