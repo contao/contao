@@ -572,7 +572,7 @@ class Versions extends \Controller
 <select name="version" class="tl_select">'.$versions.'
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">'.$GLOBALS['TL_LANG']['MSC']['restore'].'</button>
-<a href="'.\Backend::addToUrl('versions=1&amp;popup=1').'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))).'\',\'url\':this.href});return false">'.\Image::getHtml('diff.svg').'</a>
+<a href="'.\Backend::addToUrl('versions=1&amp;popup=1').'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))).'\',\'url\':this.href});return false">'.\Image::getHtml('diff.svg').'</a>
 </div>
 </form>
 

@@ -2,6 +2,7 @@
 
 ### DEV
  
+ * Remove the popupWidth and popupHeight parameters in the file manager (see #727).
  * Remove the cron.txt file (see #753).
  * Allow to disable input encoding for a whole DCA (see #708).
  * Add the DCA picker (see #755).

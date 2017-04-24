@@ -127,8 +127,8 @@ class BackendPopup extends \Backend
 			if ($objFile->isImage)
 			{
 				$objTemplate->isImage = true;
-				$objTemplate->width = $objFile->width;
-				$objTemplate->height = $objFile->height;
+				$objTemplate->width = $objFile->viewWidth;
+				$objTemplate->height = $objFile->viewHeight;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
 			}

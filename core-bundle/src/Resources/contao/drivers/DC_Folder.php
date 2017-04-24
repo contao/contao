@@ -2694,7 +2694,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				// Do not display buttons for mounted folders
 				if ($this->User->isAdmin || !in_array($currentFolder, $this->User->filemounts))
 				{
-					$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'popupWidth'=>600, 'popupHeight'=>160, 'fileNameEncoded'=>$strFolderNameEncoded), $this->strTable);
+					$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'fileNameEncoded'=>$strFolderNameEncoded), $this->strTable);
 				}
 
 				// Upload button
@@ -2724,8 +2724,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		for ($h=0, $c=count($files); $h<$c; $h++)
 		{
 			$thumbnail = '';
-			$popupWidth = 600;
-			$popupHeight = 192;
 			$currentFile = \StringUtil::stripRootDir($files[$h]);
 
 			$objFile = new \File($currentFile);
@@ -2757,17 +2755,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				if ($objFile->viewHeight > 0)
 				{
-					if ($objFile->width && $objFile->height)
-					{
-						$popupWidth = ($objFile->width > 600) ? ($objFile->width + 61) : 661;
-						$popupHeight = ($objFile->height + 236);
-					}
-					else
-					{
-						$popupWidth = 661;
-						$popupHeight = 625 / $objFile->viewWidth * $objFile->viewHeight + 236;
-					}
-
 					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 					{
 						// Inline the image if no preview image will be generated (see #636)
@@ -2787,10 +2774,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 						}
 					}
-				}
-				else
-				{
-					$popupHeight = 386; // dimensionless SVGs are rendered at 300x150px, so the popup needs to be 150px + 236px high
 				}
 			}
 
@@ -2813,7 +2796,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$_buttons = (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'popupWidth'=>$popupWidth, 'popupHeight'=>$popupHeight, 'fileNameEncoded'=>$strFileNameEncoded), $this->strTable);
+				$_buttons = (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'fileNameEncoded'=>$strFileNameEncoded), $this->strTable);
 
 				if ($this->strPickerField)
 				{

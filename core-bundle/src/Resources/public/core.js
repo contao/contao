@@ -870,7 +870,9 @@ var Backend =
 	 * @param {object} options An optional options object
 	 */
 	openModalImage: function(options) {
-		var opt = options || {};
+		var opt = options || {},
+			maxWidth = (window.getSize().x - 20).toInt();
+		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 768);
 		var M = new SimpleModal({
 			'width': opt.width,
 			'hideFooter': true,
@@ -891,9 +893,11 @@ var Backend =
 	 * @param {object} options An optional options object
 	 */
 	openModalIframe: function(options) {
-		var opt = options || {};
-		var max = (window.getSize().y - 137).toInt();
-		if (!opt.height || opt.height > max) opt.height = max;
+		var opt = options || {},
+			maxWidth = (window.getSize().x - 20).toInt(),
+			maxHeight = (window.getSize().y - 137).toInt();
+		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 768);
+		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,
 			'hideFooter': true,
@@ -915,9 +919,11 @@ var Backend =
 	 */
 	openModalSelector: function(options) {
 		var opt = options || {},
-			max = (window.getSize().y - 192).toInt();
+			maxWidth = (window.getSize().x - 20).toInt(),
+			maxHeight = (window.getSize().y - 192).toInt();
 		if (!opt.id) opt.id = 'tl_select';
-		if (!opt.height || opt.height > max) opt.height = max;
+		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 768);
+		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,
 			'btn_ok': Contao.lang.close,
@@ -992,7 +998,6 @@ var Backend =
 	 */
 	openModalBrowser: function(field_name, url, type, win) {
 		Backend.openModalSelector({
-			'width': 768,
 			'title': win.document.getElement('div.mce-title').get('text'),
 			'url': document.location.pathname.replace('/contao', '/_contao') + '/picker?target=tl_content.singleSRC&amp;value=' + url + (type == 'file' ? '&amp;switch=1' : '&amp;do=files') + '&amp;popup=1',
 			'callback': function(table, value) {

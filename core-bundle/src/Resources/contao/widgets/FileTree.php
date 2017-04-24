@@ -312,7 +312,6 @@ class FileTree extends \Widget
       $("ft_' . $this->strField . '").addEvent("click", function(e) {
         e.preventDefault();
         Backend.openModalSelector({
-          "width": 768,
           "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
           "url": this.href,
           "callback": function(table, value) {

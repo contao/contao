@@ -32,19 +32,16 @@ body {
 	background-size:30px 30px;
 	background-position:0 0,15px 15px;
 }
+#preview .checkerbox,#preview .checkerbox img {
+	max-width:100%;
+	height:auto !important;
+}
 #download {
 	margin:12px 18px;
 }
 #download img {
 	position:relative;
 	top:-1px;
-}
-
-@media (max-width:767px) {
-	#preview .checkerbox,#preview .checkerbox img {
-		max-width:100%;
-		height:auto !important;
-	}
 }
 
 @media (max-width:459px) {
