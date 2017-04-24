@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### DEV
+### 4.3.8 (2017-04-24)
 
  * Correctly use the en dash in the calendar modules (see contao/core#8690).
  * Correctly support 64 character template names everywhere (see contao/core#6819).

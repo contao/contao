@@ -19,19 +19,19 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
         <source>Allowed RSS feeds</source>
-        <target>Дозволи RSS Feed-ове</target>
+        <target>Дозволи RSS сажетке</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
-        <target>Овде можете дозволити приступ једном или више RSS Feed-ова.</target>
+        <target>Овде можете дозволити приступ једном или више RSS сажетака.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>RSS feed permissions</source>
-        <target>Подешавања RSS приказивача</target>
+        <target>Подешавања RSS сажетка</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>
-        <target>Овде можете дефинисати подешавања Feed-a календара.</target>
+        <target>Овде можете дефинисати подешавања сажетка календара.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Calendar permissions</source>

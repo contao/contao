@@ -13,6 +13,9 @@
         <source>&amp;gt;</source>
         <target>&gt;</target>
       </trans-unit>
+      <trans-unit id="MSC.cal_timeSeparator">
+        <source>–</source>
+      </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
         <target>Der er ingen begivenheder denne dag.</target>
