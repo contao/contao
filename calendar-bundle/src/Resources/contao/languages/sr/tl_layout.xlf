@@ -3,15 +3,15 @@
     <body>
       <trans-unit id="tl_layout.calendarfeeds.0">
         <source>Calendar feeds</source>
-        <target>Приказивачи календара</target>
+        <target>Сажеци календара</target>
       </trans-unit>
       <trans-unit id="tl_layout.calendarfeeds.1">
         <source>Please select the calendar feeds you want to add to the layout.</source>
-        <target>Изаберите приказивач календара који желите придружити Изгледу.</target>
+        <target>Изаберите сажетак календара који желите придружити распореду.</target>
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
         <source>RSS/Atom feeds</source>
-        <target>RSS/Atom приказивачи</target>
+        <target>RSS/Atom сажеци</target>
       </trans-unit>
     </body>
   </file>

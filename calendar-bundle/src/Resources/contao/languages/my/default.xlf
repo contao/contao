@@ -13,6 +13,9 @@
         <source>&amp;gt;</source>
         <target>&amp;gt;</target>
       </trans-unit>
+      <trans-unit id="MSC.cal_timeSeparator">
+        <source>–</source>
+      </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
         <target>ယနေ့တွင်အဖြစ်အပျက်မရှိ။</target>

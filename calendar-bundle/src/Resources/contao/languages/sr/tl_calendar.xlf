@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify.0">
         <source>Notify</source>
-        <target>Обавести</target>
+        <target>Обавештења</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.1">
         <source>Please choose who to notify when comments are added.</source>
@@ -51,15 +51,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.0">
         <source>Moderate comments</source>
-        <target>Модерација коментара</target>
+        <target>Управљање коментарима</target>
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Одобравање коментара прије него што постану видљиви на сајту.</target>
+        <target>Одобри коментаре прије него што постану видљиви на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Дозволи BBCode</target>
+        <target>Дозволи употребу BBCode</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Потребна пријава ради коментарисања</target>
+        <target>Захтевај пријаву ради коментарисања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected.1">
         <source>Show events to certain member groups only.</source>
-        <target>Прикажи дешавање само одређеним групама корисника.</target>
+        <target>Прикажи догађаје само одређеним групама корисника.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.groups.0">
         <source>Allowed member groups</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.groups.1">
         <source>These groups will be able to see the events in this calendar.</source>
-        <target>Ове групе ће моћи да виде дешавања у овом календару.</target>
+        <target>Ове групе ће моћи да виде догађаје у овом календару.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feed_legend">
         <source>RSS/Atom feed</source>
-        <target>RSS/Atom feed</target>
+        <target>RSS/Atom сажетак</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify_admin">
         <source>System administrator</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
-        <target>Најављивач дешавања</target>
+        <target>Тизер догађаја</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_text">
         <source>Full articles</source>
@@ -191,11 +191,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
-        <target>RSS приказивач садржаја</target>
+        <target>RSS сажетак</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>
-        <target>Управљај RSS приказивачем садржаја</target>
+        <target>Управљај RSS сажецима</target>
       </trans-unit>
     </body>
   </file>

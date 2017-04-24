@@ -23,15 +23,15 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Овде можете изабрати којим даном почиње седмица.</target>
+        <target>Овде можете изабрати којим даном почиње недеља.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
-        <target>Формат листе дешавања</target>
+        <target>Формат листе догађаја</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Овде можете изабрати формат листе дешавања.</target>
+        <target>Овде можете изабрати формат листе догађаја.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
@@ -51,47 +51,47 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
-        <target>Модул читача дешавања</target>
+        <target>Модул читача догађаја</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.1">
         <source>Automatically switch to the event reader if an event has been selected.</source>
-        <target>Аутоматски пређи на читач дешавања ако је одабрано дешавање.</target>
+        <target>Аутоматски пређи на читач догађаја ако је одабран догађај.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.0">
         <source>Number of events</source>
-        <target>Број дешавања</target>
+        <target>Број догађаја</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.1">
         <source>Here you can limit the number of events. Enter 0 to show all.</source>
-        <target>Овде можете ограничити приказани број дешавања. Поставите 0 за приказивање свих дешавања.</target>
+        <target>Овде можете ограничити приказани број догађаја. Поставите 0 за приказивање свих догађаја.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
-        <target>Образац за дешавање</target>
+        <target>Шаблон за догађај</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select the event template.</source>
-        <target>Овде можете одабрати образац дешавања.</target>
+        <target>Овде можете одабрати шаблон догађаја.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
-        <target>Обрасци календара</target>
+        <target>Шаблон календара</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
         <source>Here you can select the calendar template.</source>
-        <target>Овде можете одабрати образац за календар.</target>
+        <target>Овде можете одабрати шаблон за календар.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
-        <target>Прикажи број дешавања</target>
+        <target>Прикажи број догађаја</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.1">
         <source>Show the number of events of each month in the menu.</source>
-        <target>Прикажи број дешавања сваког месеца у оквиру менија.</target>
+        <target>Прикажи број догађаја сваког месеца у оквиру менија.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
-        <target>Листа дешавања</target>
+        <target>Листа догађаја</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_day">
         <source>Day</source>
@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_all">
         <source>All events</source>
-        <target>Сва дешавања</target>
+        <target>Сви догађаји</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_upcoming">
         <source>Upcoming events</source>
-        <target>Предстојећа дешавања</target>
+        <target>Предстојећи догађаји</target>
       </trans-unit>
       <trans-unit id="tl_module.next_7">
         <source>+ 1 week</source>
@@ -159,11 +159,11 @@
       </trans-unit>
       <trans-unit id="tl_module.next_all">
         <source>All upcoming events</source>
-        <target>Сва предстојећа дешавања</target>
+        <target>Сви предстојећи догађаји</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_past">
         <source>Past events</source>
-        <target>Претходна дешавања</target>
+        <target>Претходни догађаји</target>
       </trans-unit>
       <trans-unit id="tl_module.past_7">
         <source>- 1 week</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
-        <target>Сва претходна дешавања</target>
+        <target>Сви претходни догађаји</target>
       </trans-unit>
     </body>
   </file>
