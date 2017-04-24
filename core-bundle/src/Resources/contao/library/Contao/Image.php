@@ -468,14 +468,7 @@ class Image
 			)
 		;
 
-		$this->resizedPath = $image->getPath();
-
-		if (strpos($this->resizedPath, TL_ROOT . '/') === 0 || strpos($this->resizedPath, TL_ROOT . '\\') === 0)
-		{
-			$this->resizedPath = substr($this->resizedPath, strlen(TL_ROOT) + 1);
-		}
-
-		$this->resizedPath = \System::urlEncode($this->resizedPath);
+		$this->resizedPath = $image->getUrl(TL_ROOT);
 
 		return $this;
 	}

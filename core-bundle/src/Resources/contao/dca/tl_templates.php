@@ -138,7 +138,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			(
 				array('tl_templates', 'addFileLocation')
 			),
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>32, 'spaceToUnderscore'=>true)
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'spaceToUnderscore'=>true)
 		)
 	)
 );

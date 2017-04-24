@@ -265,6 +265,7 @@ Class.refactor(Sortables,
 {
 	initialize: function(lists, options) {
 		options.dragOptions = Object.merge(options.dragOptions || {}, { preventDefault: (options.dragOptions && options.dragOptions.preventDefault) || Browser.Features.Touch });
+		options.dragOptions.unDraggableTags = ['input', 'a', 'textarea', 'select', 'option'];
 		return this.previous.apply(this, arguments);
 	},
 

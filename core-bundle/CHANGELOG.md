@@ -1,5 +1,20 @@
 # Contao core bundle change log
 
+### 4.3.8 (2017-04-24)
+
+ * Inline small images in protected folders in the file manager (see #636).
+ * Correctly encode the URL in the DataContainer::switchToEdit() method (see #762).
+ * Fix the parent view drag and drop in Firefox (see #666).
+ * Correctly display the search results in the extended tree view (see #739).
+ * Update the Punycode library to version 2 (see #748).
+ * Fix the "delete file" button for non-admin users (see #764).
+ * Prevent endless loops in the book navigation module (see contao/core#8665).
+ * Limit the maximum size of dimensionless SVGs in the back end (see contao/core#8684).
+ * Correctly support 64 character template names everywhere (see contao/core#6819).
+ * Remove the UTF-8 BOM when combining files (see contao/core#8689).
+ * Correctly move folders with an "@" in their name (see contao/core#8674).
+ * Correctly redirect to the last page visited upon login (see contao/core#8632).
+
 ### 4.3.7 (2017-03-23)
 
  * Check the database connection in the WebsiteRootsConfigProvider class.

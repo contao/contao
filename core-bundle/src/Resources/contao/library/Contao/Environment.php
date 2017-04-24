@@ -333,7 +333,14 @@ class Environment
 	 */
 	protected static function ssl()
 	{
-		return (@$_SERVER['SSL_SESSION_ID'] || @$_SERVER['HTTPS'] == 'on' || @$_SERVER['HTTPS'] == 1);
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			return false;
+		}
+
+		return $request->isSecure();
 	}
 
 

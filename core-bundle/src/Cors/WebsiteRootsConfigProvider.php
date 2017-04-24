@@ -41,16 +41,11 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     public function getOptions(Request $request)
     {
-        if (!$request->headers->has('Origin')
-            || '' === $request->headers->get('Origin')
-            || !$this->connection->isConnected()
-            || !$this->connection->getSchemaManager()->tablesExist(['tl_page'])
-        ) {
+        if (!$this->hasOrigin($request) || !$this->canRunDbQuery()) {
             return [];
         }
 
-        $stmt = $this->connection->prepare('SELECT id FROM tl_page WHERE type=:type AND dns=:dns');
-        $stmt->bindValue('type', 'root');
+        $stmt = $this->connection->prepare("SELECT id FROM tl_page WHERE type='root' AND dns=:dns");
         $stmt->bindValue('dns', preg_replace('@^https?://@', '', $request->headers->get('origin')));
         $stmt->execute();
 
@@ -63,5 +58,27 @@ class WebsiteRootsConfigProvider implements ProviderInterface
             'allow_methods' => ['HEAD', 'GET'],
             'allow_headers' => ['x-requested-with'],
         ];
+    }
+
+    /**
+     * Checks if the request has an Origin header.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function hasOrigin(Request $request)
+    {
+        return $request->headers->has('Origin') && '' !== $request->headers->get('Origin');
+    }
+
+    /**
+     * Checks if the database connection and the table exist.
+     *
+     * @return bool
+     */
+    private function canRunDbQuery()
+    {
+        return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_page']);
     }
 }

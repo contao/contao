@@ -236,11 +236,17 @@ class CommandSchedulerListenerTest extends TestCase
 
         $connection = $this->getMock(
             'Doctrine\DBAL\Connection',
-            ['getSchemaManager'],
+            ['isConnected', 'getSchemaManager'],
             [],
             '',
             false
         );
+
+        $connection
+            ->expects($this->any())
+            ->method('isConnected')
+            ->willReturn(true)
+        ;
 
         $connection
             ->expects($this->any())

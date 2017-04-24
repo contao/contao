@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Image\Image as ContaoImage;
 use Contao\Image\ImageDimensions;
+use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -784,7 +785,7 @@ class File extends \System
 		(
 			ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 			$filename,
-			$this->basename
+			Utf8::toAscii($this->basename)
 		);
 
 		$response->headers->addCacheControlDirective('must-revalidate');

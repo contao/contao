@@ -218,8 +218,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         );
 
         $request = new Request();
-        $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('SCRIPT_NAME', '/core/index.php');
 
         if (null !== $scope) {
             $request->attributes->set('_scope', $scope);
