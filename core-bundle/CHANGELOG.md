@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.3.8 (2017-04-24)
 
  * Inline small images in protected folders in the file manager (see #636).
  * Correctly encode the URL in the DataContainer::switchToEdit() method (see #762).
