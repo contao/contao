@@ -13,6 +13,10 @@
         <source>&amp;gt;</source>
         <target>&gt;</target>
       </trans-unit>
+      <trans-unit id="MSC.cal_timeSeparator">
+        <source>–</source>
+        <target>–</target>
+      </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
         <target>Non ci sono eventi per questo giorno.</target>
