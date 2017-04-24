@@ -1,0 +1,30 @@
+<?php
+
+$date = date('Y');
+
+$header = <<<EOF
+This file is part of Contao.
+
+Copyright (c) 2005-$date Leo Feyer
+
+@license LGPL-3.0+
+EOF;
+
+$finder = PhpCsFixer\Finder::create()
+    ->exclude('Resources')
+    ->exclude('Fixtures')
+    ->in([__DIR__.'/src', __DIR__.'/tests'])
+;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        'psr0' => false,
+        'array_syntax' => ['syntax' => 'short'],
+        'header_comment' => ['header' => $header],
+        'strict_comparison' => true,
+    ])
+    ->setFinder($finder)
+    ->setRiskyAllowed(true)
+    ->setUsingCache(false)
+;
