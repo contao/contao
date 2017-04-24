@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### 4.3.8 (2017-04-24)
+
+ * Correctly support 64 character template names everywhere (see contao/core#6819).
+
 ### 4.3.6 (2017-03-22)
 
  * Correctly add the author name in the Atom feeds (see #9).
