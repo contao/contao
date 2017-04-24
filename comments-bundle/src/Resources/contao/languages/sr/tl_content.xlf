@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.0">
         <source>Moderate</source>
-        <target>Модерирај</target>
+        <target>Управљај</target>
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
