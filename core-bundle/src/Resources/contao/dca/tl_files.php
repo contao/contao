@@ -369,10 +369,12 @@ class tl_files extends Backend
 
 				case 'delete':
 					$strFile = Input::get('id', true);
+
 					if (is_dir(TL_ROOT . '/' . $strFile))
 					{
-						$files = scan(TL_ROOT . '/' . $strFile);
-						if (!empty($files) && !$canDeleteRecursive)
+						$finder = Symfony\Component\Finder\Finder::create()->in(TL_ROOT . '/' . $strFile);
+
+						if ($finder->count() > 0 && !$canDeleteRecursive)
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
@@ -567,9 +569,18 @@ class tl_files extends Backend
 	 */
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (is_dir(TL_ROOT . '/' . $row['id']) && count(scan(TL_ROOT . '/' . $row['id'])) > 0)
+		if (is_dir(TL_ROOT . '/' . $row['id']))
 		{
-			return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			$finder = Symfony\Component\Finder\Finder::create()->in(TL_ROOT . '/' . $row['id']);
+
+			if ($finder->count() > 0)
+			{
+				return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			}
+			else
+			{
+				return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			}
 		}
 		else
 		{

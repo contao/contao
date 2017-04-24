@@ -54,25 +54,24 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('apache');
 
-        $_SERVER = [
-            'SERVER_PORT' => 80,
-            'HTTP_HOST' => 'localhost',
-            'HTTP_CONNECTION' => 'keep-alive',
-            'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36',
-            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate,sdch',
-            'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4',
-            'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
-            'SERVER_NAME' => 'localhost',
-            'SERVER_ADDR' => '127.0.0.1',
-            'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
-            'SERVER_PROTOCOL' => 'HTTP/1.1',
-            'QUERY_STRING' => 'do=test',
-            'REQUEST_URI' => '/core/en/academy.html?do=test',
-            'SCRIPT_NAME' => '/core/index.php',
-            'PHP_SELF' => '/core/index.php',
-        ];
+        $_SERVER['SERVER_PORT'] = 80;
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_CONNECTION'] = 'keep-alive';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_ADDR'] = '127.0.0.1';
+        $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
+        $_SERVER['SCRIPT_FILENAME'] = $this->getRootDir().'/core/index.php';
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+        $_SERVER['QUERY_STRING'] = 'do=test';
+        $_SERVER['REQUEST_URI'] = '/core/en/academy.html?do=test';
+        $_SERVER['SCRIPT_NAME'] = '/core/index.php';
+        $_SERVER['PHP_SELF'] = '/core/index.php';
 
         $this->runTests();
     }
@@ -84,29 +83,28 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('cgi_fcgi');
 
-        $_SERVER = [
-            'SERVER_PORT' => 80,
-            'HTTP_HOST' => 'localhost',
-            'HTTP_CONNECTION' => 'close',
-            'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36',
-            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate,sdch',
-            'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4',
-            'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
-            'SERVER_NAME' => 'localhost',
-            'SERVER_ADDR' => '127.0.0.1',
-            'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
-            'SERVER_PROTOCOL' => 'HTTP/1.1',
-            'QUERY_STRING' => 'do=test',
-            'REQUEST_URI' => '/core/en/academy.html?do=test',
-            'SCRIPT_NAME' => '/core/index.php',
-            'PHP_SELF' => '/core/index.php',
-            'GATEWAY_INTERFACE' => 'CGI/1.1',
-            'PATH_INFO' => '/en/academy.html',
-            'SCRIPT_URI' => 'http://localhost/core/en/academy.html',
-            'SCRIPT_URL' => '/core/en/academy.html',
-        ];
+        $_SERVER['SERVER_PORT'] = 80;
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_CONNECTION'] = 'close';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_ADDR'] = '127.0.0.1';
+        $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
+        $_SERVER['SCRIPT_FILENAME'] = $this->getRootDir().'/core/index.php';
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+        $_SERVER['QUERY_STRING'] = 'do=test';
+        $_SERVER['REQUEST_URI'] = '/core/en/academy.html?do=test';
+        $_SERVER['SCRIPT_NAME'] = '/core/index.php';
+        $_SERVER['PHP_SELF'] = '/core/index.php';
+        $_SERVER['GATEWAY_INTERFACE'] = 'CGI/1.1';
+        $_SERVER['PATH_INFO'] = '/en/academy.html';
+        $_SERVER['SCRIPT_URI'] = 'http://localhost/core/en/academy.html';
+        $_SERVER['SCRIPT_URL'] = '/core/en/academy.html';
 
         $this->runTests();
     }
@@ -118,27 +116,26 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('fpm_fcgi');
 
-        $_SERVER = [
-            'SERVER_PORT' => 80,
-            'HTTP_HOST' => 'localhost',
-            'HTTP_CONNECTION' => 'close',
-            'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36',
-            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate,sdch',
-            'HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4',
-            'HTTP_X_FORWARDED_FOR' => '123.456.789.0',
-            'SERVER_NAME' => 'localhost',
-            'SERVER_ADDR' => '127.0.0.1',
-            'DOCUMENT_ROOT' => $this->getRootDir(),
-            'SCRIPT_FILENAME' => $this->getRootDir().'/core/index.php',
-            'SERVER_PROTOCOL' => 'HTTP/1.1',
-            'QUERY_STRING' => 'do=test',
-            'REQUEST_URI' => 'http://localhost/core/en/academy.html?do=test', // see #8661
-            'SCRIPT_NAME' => '/core/index.php',
-            'PHP_SELF' => '/core/index.php',
-            'GATEWAY_INTERFACE' => 'CGI/1.1',
-            'PATH_INFO' => '/en/academy.html',
-        ];
+        $_SERVER['SERVER_PORT'] = 80;
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $_SERVER['HTTP_CONNECTION'] = 'close';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8';
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_ADDR'] = '127.0.0.1';
+        $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
+        $_SERVER['SCRIPT_FILENAME'] = $this->getRootDir().'/core/index.php';
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+        $_SERVER['QUERY_STRING'] = 'do=test';
+        $_SERVER['REQUEST_URI'] = 'http://localhost/core/en/academy.html?do=test'; // see #8661
+        $_SERVER['SCRIPT_NAME'] = '/core/index.php';
+        $_SERVER['PHP_SELF'] = '/core/index.php';
+        $_SERVER['GATEWAY_INTERFACE'] = 'CGI/1.1';
+        $_SERVER['PATH_INFO'] = '/en/academy.html';
 
         $this->runTests();
     }
@@ -148,8 +145,14 @@ class EnvironmentTest extends TestCase
      */
     protected function runTests()
     {
-        // Environment::get('ip') needs the request stack
-        System::setContainer($this->mockContainerWithContaoScopes());
+        $container = $this->mockContainerWithContaoScopes();
+        $request = $container->get('request_stack')->getCurrentRequest();
+
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+        $request->server->set('SCRIPT_NAME', '/core/index.php');
+        $request->server->set('HTTPS', 'on');
+
+        System::setContainer($container);
 
         $agent = Environment::get('agent');
 
@@ -173,15 +176,15 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('localhost', Environment::get('httpHost'));
         $this->assertEmpty(Environment::get('httpXForwardedHost'));
 
-        $this->assertFalse(Environment::get('ssl'));
-        $this->assertEquals('http://localhost', Environment::get('url'));
-        $this->assertEquals('http://localhost/core/en/academy.html?do=test', Environment::get('uri'));
+        $this->assertTrue(Environment::get('ssl'));
+        $this->assertEquals('https://localhost', Environment::get('url'));
+        $this->assertEquals('https://localhost/core/en/academy.html?do=test', Environment::get('uri'));
         $this->assertEquals('123.456.789.0', Environment::get('ip'));
         $this->assertEquals('127.0.0.1', Environment::get('server'));
         $this->assertEquals('index.php', Environment::get('script'));
         $this->assertEquals('en/academy.html?do=test', Environment::get('request'));
         $this->assertEquals('en/academy.html?do=test', Environment::get('indexFreeRequest'));
-        $this->assertEquals('http://localhost'.Environment::get('path').'/', Environment::get('base'));
+        $this->assertEquals('https://localhost'.Environment::get('path').'/', Environment::get('base'));
         $this->assertFalse(Environment::get('isAjaxRequest'));
     }
 

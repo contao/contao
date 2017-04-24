@@ -719,7 +719,7 @@ abstract class DataContainer extends \Backend
 
 		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
 
-		return $strUrl . (!empty($arrKeys) ? '&' : '') . (\Input::get('table') ? 'table='.\Input::get('table').'&amp;' : '').'act=edit&amp;id='.$id;
+		return $strUrl . (!empty($arrKeys) ? '&' : '') . (\Input::get('table') ? 'table='.\Input::get('table').'&amp;' : '').'act=edit&amp;id='.rawurlencode($id);
 	}
 
 

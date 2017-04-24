@@ -1505,7 +1505,7 @@ abstract class Controller extends \System
 				}
 			}
 
-			if ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && $imgSize[0] > $intMaxWidth))
+			if ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && (!$imgSize[0] || $imgSize[0] > $intMaxWidth)))
 			{
 				// See #2268 (thanks to Thyon)
 				$ratio = ($size[0] && $size[1]) ? $size[1] / $size[0] : (($imgSize[0] && $imgSize[1]) ? $imgSize[1] / $imgSize[0] : 0);
@@ -1902,8 +1902,6 @@ abstract class Controller extends \System
 	 * Remove old XML files from the share directory
 	 *
 	 * @param boolean $blnReturn If true, only return the finds and don't delete
-	 *
-	 * @return array An array of old XML files
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Automator::purgeXmlFiles() instead.

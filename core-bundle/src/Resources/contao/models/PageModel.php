@@ -889,8 +889,8 @@ class PageModel extends \Model
 					// Cache
 					if ($objParentPage->includeCache)
 					{
-						$this->cache = $this->cache ?: $objParentPage->cache;
-						$this->clientCache = $this->clientCache ?: $objParentPage->clientCache;
+						$this->cache = $this->cache !== false ? $this->cache : $objParentPage->cache;
+						$this->clientCache = $this->clientCache !== false ? $this->clientCache : $objParentPage->clientCache;
 					}
 
 					// Layout

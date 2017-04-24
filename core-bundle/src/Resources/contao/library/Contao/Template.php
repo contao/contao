@@ -12,6 +12,7 @@ namespace Contao;
 
 use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\VarDumper;
 
 
 /**
@@ -237,21 +238,24 @@ abstract class Template extends \Controller
 
 	/**
 	 * Print all template variables to the screen using print_r
+	 *
+	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.
+	 *             Use Template::dumpTemplateVars() instead.
 	 */
 	public function showTemplateVars()
 	{
-		echo "<pre>\n";
-		print_r($this->arrData);
-		echo "</pre>\n";
+		@trigger_error('Using Template::showTemplateVars() has been deprecated and will no longer work in Contao 5.0. Use Template::dumpTemplateVars() instead.', E_USER_DEPRECATED);
+
+		$this->dumpTemplateVars();
 	}
 
 
 	/**
-	 * Print all template variables to the screen using var_dump
+	 * Print all template variables to the screen using the Symfony VarDumper component
 	 */
 	public function dumpTemplateVars()
 	{
-		dump($this->arrData);
+		VarDumper::dump($this->arrData);
 	}
 
 
