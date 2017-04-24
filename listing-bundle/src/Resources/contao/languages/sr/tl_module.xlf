@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_fields.1">
         <source>Please enter a comma separated list of the fields you want to list.</source>
-        <target>Унесите, зарезом раздвојена, поља која желите излистати.</target>
+        <target>Унесите, запетом раздвојена, поља која желите излистати.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_where.0">
         <source>Condition</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_search.1">
         <source>Here you can enter a comma seperated list of fields that you want to be searchable.</source>
-        <target>Унесите, зарезом раздвојена, поља за која желите да буду претражива.</target>
+        <target>Унесите, запетом раздвојена, поља за која желите да буду претражива.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_sort.0">
         <source>Order by</source>
@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_module.list_sort.1">
         <source>Here you can enter a comma seperated list of fields to sort the results by.</source>
-        <target>Унесите, зарезом раздвојена, поља по којима желите вршити сортирање.</target>
+        <target>Унесите, запетом раздвојена, поља по којима желите вршити сортирање.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.0">
         <source>Details page fields</source>
-        <target>Поља са детаљима</target>
+        <target>Поља на страници са детаљима</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.1">
         <source>Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.</source>
-        <target>Унесите, зарезом раздвојена, поља за која желите да прикажете детаље. Оставите празно да бисте онемогућили приказ детаља.</target>
+        <target>Унесите, запетом раздвојена, поља која желите да прикажете на страници са детаљима. Оставите празно да бисте онемогућили приказ детаља.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_where.0">
         <source>Details page condition</source>
@@ -59,11 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_module.list_layout.0">
         <source>List template</source>
-        <target>Шаблон листања</target>
+        <target>Шаблон листе</target>
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
         <source>Here you can select the list template.</source>
-        <target>Овде можете одабрати шаблон листинга.</target>
+        <target>Овде можете одабрати шаблон листе.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>

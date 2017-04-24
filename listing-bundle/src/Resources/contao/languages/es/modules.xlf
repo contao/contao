@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.listing.1">
         <source>List the records of any table</source>
-        <target>Este módulo permite mostrar una lista de los registros de una tabla en el front end.</target>
+        <target>Listado de los registros de cualquier tabla</target>
       </trans-unit>
       <trans-unit id="FMD.listing.0">
         <source>Listing</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="FMD.listing.1">
         <source>Lists the records of any table</source>
-        <target>Utiliza este módulo para mostrar una lista de los registros de una tabla en el front end.</target>
+        <target>Lista los registros de cualquier tabla</target>
       </trans-unit>
     </body>
   </file>

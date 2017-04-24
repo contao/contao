@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.listing.1">
         <source>List the records of any table</source>
-        <target>Dette modul giver dig mulighed for at lave en oversigt i frontend-delen af TYPOlight over posterne i en bestemt tabel.</target>
+        <target>Vis registreringer i enhver tabeller</target>
       </trans-unit>
       <trans-unit id="FMD.listing.0">
         <source>Listing</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="FMD.listing.1">
         <source>Lists the records of any table</source>
-        <target>Anvend dette modul til at lave en oversigt i frontend-delen af TYPOlight over posterne i en bestemt tabel.</target>
+        <target>Vis registreringer i enhver tabeller</target>
       </trans-unit>
     </body>
   </file>
