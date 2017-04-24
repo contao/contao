@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MOD.listing.1">
         <source>List the records of any table</source>
-        <target>Tento modul vam umozni vytvorit zoznam záznamov určitej tabuľky.</target>
+        <target>Tento modul vam umozní vytvoriť zoznam záznamov určitej tabuľky.</target>
       </trans-unit>
       <trans-unit id="FMD.listing.0">
         <source>Listing</source>
