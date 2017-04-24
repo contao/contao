@@ -69,7 +69,6 @@ class InstallCommand extends AbstractLockedCommand
         'system/themes',
         'system/tmp',
         '%s/share',
-        '%s/system/cron',
     ];
 
     /**

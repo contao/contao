@@ -147,7 +147,6 @@ class FrontendCron extends \Frontend
 		// Add the cron entry
 		if ($objCron->numRows < 1)
 		{
-			$this->updateCronTxt($time);
 			$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('lastrun', $time)");
 			$return = false;
 		}
@@ -155,7 +154,6 @@ class FrontendCron extends \Frontend
 		// Check the last execution time
 		elseif ($objCron->value <= ($time - $this->getCronTimeout()))
 		{
-			$this->updateCronTxt($time);
 			$this->Database->query("UPDATE tl_cron SET value=$time WHERE name='lastrun'");
 			$return = false;
 		}
@@ -163,16 +161,5 @@ class FrontendCron extends \Frontend
 		$this->Database->unlockTables();
 
 		return $return;
-	}
-
-
-	/**
-	 * Update the cron.txt file
-	 *
-	 * @param integer $time
-	 */
-	protected function updateCronTxt($time)
-	{
-		\File::putContent(\StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir')) . '/system/cron/cron.txt', $time);
 	}
 }
