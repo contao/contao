@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="FMD.comments.1">
         <source>Manage comments or guestbook entries</source>
-        <target>Управљање уносима у коментаре или књигу гостију</target>
+        <target>Управљање коментарима или уносима у књигу гостију</target>
       </trans-unit>
       <trans-unit id="MOD.comments.0">
         <source>Comments</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="MOD.comments.1">
         <source>Manage comments or guestbook entries</source>
-        <target>Управљање уносима у коментаре или књигу гостију</target>
+        <target>Управљање коментарима или уносима у књигу гостију</target>
       </trans-unit>
     </body>
   </file>
