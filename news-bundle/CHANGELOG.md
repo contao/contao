@@ -1,6 +1,6 @@
 # Contao news bundle change log
 
-### DEV
+### 4.3.8 (2017-04-24)
 
  * Correctly support 64 character template names everywhere (see contao/core#6819).
 
