@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.3.9 (2017-04-25)
 
  * Revert the Punycode library changes (see contao/core#8693).
 
