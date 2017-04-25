@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.3.9 (2017-04-25)
+
+ * Revert the Punycode library changes (see contao/core#8693).
+
 ### 4.3.8 (2017-04-24)
 
  * Inline small images in protected folders in the file manager (see #636).
