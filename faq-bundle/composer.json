@@ -1,0 +1,56 @@
+{
+    "name": "contao/faq-bundle",
+    "type": "contao-bundle",
+    "description": "Contao 4 FAQ bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "symfony/framework-bundle": "^2.8|^3.0",
+        "contao/core-bundle": "^4.3.1"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "^4.5",
+        "satooshi/php-coveralls": "^1.0",
+        "symfony/phpunit-bridge": "^2.8|^3.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\FaqBundle\\": "src/"
+        },
+        "classmap": [
+            "src/Resources/contao/"
+        ],
+        "exclude-from-classmap": [
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\FaqBundle\\Test\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "4.4.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\FaqBundle\\ContaoManager\\Plugin"
+    }
+}
