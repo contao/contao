@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### DEV
+ 
+ * Add the contao_installation.initialize_application event (fixes contao/manager-bundle#19).
+
 ### 4.3.6 (2017-03-22)
 
  * Correctly parse column definitions with comma (see #47).

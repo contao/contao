@@ -10,14 +10,14 @@ services:
         arguments:
             - "@session"
 
-    contao.installer:
-        class: Contao\InstallationBundle\Database\Installer
-        arguments:
-            - "@database_connection"
-            - "@contao.doctrine.schema_provider"
-
     contao.install_tool_twig_extension:
         class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
         public: false
         tags:
             - { name: twig.extension }
+
+    contao.installer:
+        class: Contao\InstallationBundle\Database\Installer
+        arguments:
+            - "@database_connection"
+            - "@contao.doctrine.schema_provider"
