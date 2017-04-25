@@ -122,7 +122,7 @@ EOF;
             $expects,
             $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace.php',
-                PhpFileLoader::NAMESPACED
+                'namespaced'
             )
         );
 
@@ -138,7 +138,7 @@ EOF;
             $expects,
             $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php',
-                PhpFileLoader::NAMESPACED
+                'namespaced'
             )
         );
     }

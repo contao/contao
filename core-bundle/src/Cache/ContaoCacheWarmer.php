@@ -117,8 +117,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
 
-        $dumper->dump($this->findConfigFiles('autoload.php'), 'config/autoload.php');
-        $dumper->dump($this->findConfigFiles('config.php'), 'config/config.php');
+        $dumper->dump($this->findConfigFiles('autoload.php'), 'config/autoload.php', ['type' => 'namespaced']);
+        $dumper->dump($this->findConfigFiles('config.php'), 'config/config.php', ['type' => 'namespaced']);
     }
 
     /**
@@ -141,7 +141,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             $dumper->dump(
                 $this->locator->locate('dca/'.$file->getBasename(), null, false),
-                'dca/'.$file->getBasename()
+                'dca/'.$file->getBasename(),
+                ['type' => 'namespaced']
             );
         }
     }

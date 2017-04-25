@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Correctly generate the Contao language cache (see #784).
+
 ### 4.3.9 (2017-04-25)
 
  * Revert the Punycode library changes (see contao/core#8693).
