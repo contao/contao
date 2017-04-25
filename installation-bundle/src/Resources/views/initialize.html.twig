@@ -4,6 +4,8 @@
   <fieldset class="tl_tbox nolegend">
     <h3>{{ 'an_error_occurred'|trans }}</h3>
     <p class="tl_error">{{ 'console_explanation'|trans }}</p>
-    <pre class="console-wrapper"><code>{{ output|ansi_to_html }}</code></pre>
+    {% if output is not empty %}
+      <pre class="console-wrapper"><code>{{ output|ansi_to_html }}</code></pre>
+    {% endif %}
   </fieldset>
 {% endblock %}

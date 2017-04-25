@@ -10,22 +10,16 @@
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\CoreBundle\Command\InstallCommand;
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\Encryption;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
+use Contao\InstallationBundle\Event\ContaoInstallationEvents;
+use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -62,7 +56,7 @@ class InstallationController implements ContainerAwareInterface
      */
     public function installAction()
     {
-        if (null !== ($response = $this->runPostInstallCommands())) {
+        if (null !== ($response = $this->initializeApplication())) {
             return $response;
         }
 
@@ -120,58 +114,19 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Runs the post install commands.
+     * Initializes the application.
      *
      * @return Response|null
      */
-    public function runPostInstallCommands()
+    private function initializeApplication()
     {
-        $rootDir = $this->getContainerParameter('kernel.root_dir');
+        $event = new InitializeApplicationEvent();
 
-        $response = $this->runCommand(
-            new AssetsInstallCommand(),
-            new ArgvInput(['assets:install', '--relative', $rootDir.'/../web'])
-        );
+        $this->container->get('event_dispatcher')->dispatch(ContaoInstallationEvents::INITIALIZE_APPLICATION, $event);
 
-        if (null !== $response) {
-            return $response;
-        }
-
-        // Add the Contao directories
-        if (null !== ($response = $this->runCommand(new InstallCommand()))) {
-            return $response;
-        }
-
-        // Generate the symlinks
-        if (null !== ($response = $this->runCommand(new SymlinksCommand()))) {
-            return $response;
-        }
-
-        return null;
-    }
-
-    /**
-     * Runs a command and returns a response if there was an error.
-     *
-     * @param ContainerAwareCommand $command
-     * @param InputInterface|null   $input
-     *
-     * @return Response|null
-     */
-    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null)
-    {
-        if (null === $input) {
-            $input = new ArgvInput([]);
-        }
-
-        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
-
-        $command->setContainer($this->container);
-        $status = $command->run($input, $output);
-
-        if ($status > 0) {
-            return $this->render('console.html.twig', [
-                'output' => $output->fetch(),
+        if ($event->hasOutput()) {
+            return $this->render('initialize.html.twig', [
+                'output' => $event->getOutput(),
             ]);
         }
 
