@@ -1,5 +1,5 @@
 parameters:
-    prepend_locale: true
+    prepend_locale: false
 
 # Contao configuration
 contao:
