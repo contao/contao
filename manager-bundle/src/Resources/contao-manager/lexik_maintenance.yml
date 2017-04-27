@@ -6,4 +6,4 @@ lexik_maintenance:
             _bypass_maintenance: true
     driver:
         class: "Lexik\\Bundle\\MaintenanceBundle\\Drivers\\FileDriver"
-        options: { file_path: "%kernel.cache_dir%/lock" }
+        options: { file_path: "%kernel.cache_dir%/../maintenance_lock" }
