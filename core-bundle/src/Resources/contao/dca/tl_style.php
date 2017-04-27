@@ -376,7 +376,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['bgimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'context' => 'file', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'bgposition' => array
@@ -577,7 +577,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['liststyleimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'context' => 'file', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'own' => array

@@ -22,6 +22,15 @@ use Symfony\Component\HttpFoundation\Request;
 interface PickerMenuProviderInterface
 {
     /**
+     * Checks if a context is supported.
+     *
+     * @param string $context
+     *
+     * @return bool
+     */
+    public function supports($context);
+
+    /**
      * Creates the menu.
      *
      * @param ItemInterface    $menu
@@ -36,7 +45,7 @@ interface PickerMenuProviderInterface
      *
      * @return bool
      */
-    public function supports($table);
+    public function supportsTable($table);
 
     /**
      * Processes the selected value.

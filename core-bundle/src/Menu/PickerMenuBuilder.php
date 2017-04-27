@@ -69,24 +69,30 @@ class PickerMenuBuilder implements PickerMenuBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function createMenu()
+    public function createMenu($context)
     {
         $menu = $this->factory->createItem('picker');
 
         foreach ($this->providers as $provider) {
-            $provider->createMenu($menu, $this->factory);
+            if ($provider->supports($context)) {
+                $provider->createMenu($menu, $this->factory);
+            }
         }
 
-        return $this->renderer->render($menu);
+        if ($menu->count() > 1) {
+            return $this->renderer->render($menu);
+        }
+
+        return '';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($table)
+    public function supportsTable($table)
     {
         foreach ($this->providers as $provider) {
-            if ($provider->supports($table)) {
+            if ($provider->supportsTable($table)) {
                 return true;
             }
         }
@@ -100,7 +106,7 @@ class PickerMenuBuilder implements PickerMenuBuilderInterface
     public function processSelection($table, $value)
     {
         foreach ($this->providers as $provider) {
-            if ($provider->supports($table)) {
+            if ($provider->supportsTable($table)) {
                 return $provider->processSelection($value);
             }
         }

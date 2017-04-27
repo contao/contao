@@ -24,6 +24,14 @@ class PagePickerProvider extends AbstractMenuProvider implements PickerMenuProvi
     /**
      * {@inheritdoc}
      */
+    public function supports($context)
+    {
+        return 'page' === $context || 'link' === $context;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createMenu(ItemInterface $menu, FactoryInterface $factory)
     {
         $user = $this->getUser();
@@ -36,7 +44,7 @@ class PagePickerProvider extends AbstractMenuProvider implements PickerMenuProvi
     /**
      * {@inheritdoc}
      */
-    public function supports($table)
+    public function supportsTable($table)
     {
         return 'tl_page' === $table;
     }

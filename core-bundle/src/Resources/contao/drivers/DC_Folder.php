@@ -3090,13 +3090,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 */
 	protected function setPickerValue()
 	{
-		$varValue = \Input::get('value');
+		$varValue = \Input::get('value', true);
 
 		if (empty($varValue))
 		{
 			return;
 		}
 
+		$varValue = $this->urlEncode($varValue);
 		$varValue = array_filter(explode(',', $varValue));
 
 		if (empty($varValue))
@@ -3112,17 +3113,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			return;
 		}
 
-		// Ignore the numeric IDs when in switch mode (TinyMCE)
-		if (\Input::get('switch'))
-		{
-			return;
-		}
-
 		$objFiles = \FilesModel::findMultipleByIds($varValue);
 
 		if ($objFiles !== null)
 		{
-			$this->arrPickerValue = array_values($objFiles->fetchEach('path'));
+			$this->arrPickerValue = array_map(array($this, 'urlEncode'), array_values($objFiles->fetchEach('path')));
 		}
 	}
 }
