@@ -16,10 +16,11 @@
         "symfony/swiftmailer-bundle": "^2.3",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "^1.6",
+        "lexik/maintenance-bundle": "^2.0",
+        "nelmio/security-bundle": "^2.2",
         "contao/manager-plugin": "^2.0",
         "contao/core-bundle": "~4.3.5",
-        "contao/installation-bundle": "~4.3.5",
-        "lexik/maintenance-bundle": "^2.0"
+        "contao/installation-bundle": "~4.3.5"
     },
     "require-dev": {
         "composer/composer": "^1.0",
