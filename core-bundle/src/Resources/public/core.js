@@ -999,7 +999,7 @@ var Backend =
 	openModalBrowser: function(field_name, url, type, win) {
 		Backend.openModalSelector({
 			'title': win.document.getElement('div.mce-title').get('text'),
-			'url': document.location.pathname.replace('/contao', '/_contao') + '/picker?target=tl_content.singleSRC&amp;value=' + url + (type == 'file' ? '&amp;switch=1' : '&amp;do=files') + '&amp;popup=1',
+			'url': document.location.pathname.replace('/contao', '/_contao') + '/picker?target=tl_content.singleSRC&amp;value=' + url + (type == 'file' ? '&amp;context=link' : '&amp;do=files&amp;context=file') + '&amp;popup=1',
 			'callback': function(table, value) {
 				new Request.Contao({
 					evalScripts: false,

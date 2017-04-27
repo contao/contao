@@ -344,6 +344,8 @@ class Ajax extends \Backend
 					{
 						foreach ($varValue as $k=>$v)
 						{
+							$v = rawurldecode($v);
+
 							if (\Dbafs::shouldBeSynchronized($v))
 							{
 								$objFile = \FilesModel::findByPath($v);

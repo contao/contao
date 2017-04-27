@@ -486,16 +486,19 @@ abstract class DataContainer extends \Backend
 		{
 			$params = array();
 
-			if (is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['do'])) {
+			if (is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['do']))
+			{
 				$params['do'] = $arrData['eval']['dcaPicker']['do'];
 			}
 
+			$params['context'] = 'link';
 			$params['target'] = $this->strTable.'.'.$this->strField.'.'.$this->intId;
 			$params['value'] = $this->varValue;
 			$params['popup'] = 1;
 
-			if (!is_array($arrData['eval']['dcaPicker']) || !isset($arrData['eval']['dcaPicker']['do'])) {
-				$params['switch'] = 1;
+			if (is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['context']))
+			{
+				$params['context'] = $arrData['eval']['dcaPicker']['context'];
 			}
 
 			$wizard .= ' <a href="' . ampersand(System::getContainer()->get('router')->generate('contao_backend_picker', $params)) . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $this->strField . '">' . \Image::getHtml((is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['icon']) ? $arrData['eval']['dcaPicker']['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
@@ -900,7 +903,7 @@ abstract class DataContainer extends \Backend
 
 		$menuBuilder = \System::getContainer()->get('contao.menu.picker_menu_builder');
 
-		if (!$menuBuilder->supports($this->strTable))
+		if (!$menuBuilder->supportsTable($this->strTable))
 		{
 			return;
 		}

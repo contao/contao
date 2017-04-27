@@ -22,9 +22,11 @@ interface PickerMenuBuilderInterface
     /**
      * Creates the menu.
      *
+     * @param string $context
+     *
      * @return string
      */
-    public function createMenu();
+    public function createMenu($context);
 
     /**
      * Checks if a table is supported.
@@ -33,7 +35,7 @@ interface PickerMenuBuilderInterface
      *
      * @return bool
      */
-    public function supports($table);
+    public function supportsTable($table);
 
     /**
      * Processes the selected value.

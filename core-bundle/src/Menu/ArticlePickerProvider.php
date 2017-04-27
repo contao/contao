@@ -24,6 +24,14 @@ class ArticlePickerProvider extends AbstractMenuProvider implements PickerMenuPr
     /**
      * {@inheritdoc}
      */
+    public function supports($context)
+    {
+        return 'link' === $context;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createMenu(ItemInterface $menu, FactoryInterface $factory)
     {
         $user = $this->getUser();
@@ -36,7 +44,7 @@ class ArticlePickerProvider extends AbstractMenuProvider implements PickerMenuPr
     /**
      * {@inheritdoc}
      */
-    public function supports($table)
+    public function supportsTable($table)
     {
         return 'tl_article' === $table;
     }

@@ -43,7 +43,7 @@ abstract class AbstractMenuProvider
     /**
      * @var array
      */
-    private $keys = ['do', 'target', 'value', 'popup', 'switch'];
+    private $keys = ['do', 'context', 'target', 'value', 'popup'];
 
     /**
      * Constructor.
