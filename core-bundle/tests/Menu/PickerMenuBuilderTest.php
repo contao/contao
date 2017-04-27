@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Tests\Menu;
 
+use Contao\CoreBundle\Menu\FilePickerProvider;
 use Contao\CoreBundle\Menu\PagePickerProvider;
 use Contao\CoreBundle\Menu\PickerMenuBuilder;
 use Contao\CoreBundle\Menu\PickerMenuBuilderInterface;
@@ -59,6 +60,7 @@ class PickerMenuBuilderTest extends TestCase
 
         $menuBuilder = new PickerMenuBuilder($factory, $renderer, $router);
         $menuBuilder->addProvider($this->mockPickerProvider(PagePickerProvider::class));
+        $menuBuilder->addProvider($this->mockPickerProvider(FilePickerProvider::class));
 
         $this->menuBuilder = $menuBuilder;
     }
@@ -80,23 +82,28 @@ class PickerMenuBuilderTest extends TestCase
 
         $menu = <<<EOF
 <ul>
-  <li class="first last">
+  <li class="first">
     <a href="contao_backend:do=page" class="pagemounts">Pages</a>
+  </li>
+  <li class="last">
+    <a href="contao_backend:do=files" class="filemounts">filePicker</a>
   </li>
 </ul>
 
 EOF;
 
-        $this->assertEquals($menu, $this->menuBuilder->createMenu());
+        $this->assertEquals($menu, $this->menuBuilder->createMenu('link'));
+        $this->assertEquals('', $this->menuBuilder->createMenu('page'));
     }
 
     /**
-     * Tests the supports() method.
+     * Tests the supportsTable() method.
      */
-    public function testSupports()
+    public function testSupportsTable()
     {
-        $this->assertTrue($this->menuBuilder->supports('tl_page'));
-        $this->assertFalse($this->menuBuilder->supports('tl_files'));
+        $this->assertTrue($this->menuBuilder->supportsTable('tl_page'));
+        $this->assertTrue($this->menuBuilder->supportsTable('tl_files'));
+        $this->assertFalse($this->menuBuilder->supportsTable('tl_member'));
     }
 
     /**
@@ -106,6 +113,7 @@ EOF;
     {
         $this->assertEquals('foo', $this->menuBuilder->processSelection('tl_files', 'foo'));
         $this->assertEquals('{{link_url::2}}', $this->menuBuilder->processSelection('tl_page', 2));
+        $this->assertEquals('bar', $this->menuBuilder->processSelection('tl_member', 'bar'));
     }
 
     /**

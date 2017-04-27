@@ -70,8 +70,18 @@ class ArticlePickerProviderTest extends TestCase
      */
     public function testSupports()
     {
-        $this->assertTrue($this->provider->supports('tl_article'));
-        $this->assertFalse($this->provider->supports('tl_page'));
+        $this->assertFalse($this->provider->supports('page'));
+        $this->assertFalse($this->provider->supports('file'));
+        $this->assertTrue($this->provider->supports('link'));
+    }
+
+    /**
+     * Tests the supportsTable() method.
+     */
+    public function testSupportsTable()
+    {
+        $this->assertTrue($this->provider->supportsTable('tl_article'));
+        $this->assertFalse($this->provider->supportsTable('tl_page'));
     }
 
     /**
