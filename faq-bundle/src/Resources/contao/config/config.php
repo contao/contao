@@ -36,6 +36,15 @@ array_insert($GLOBALS['FE_MOD'], 3, array
 
 
 /**
+ * Style sheet
+ */
+if (TL_MODE == 'BE')
+{
+	$GLOBALS['TL_CSS'][] = 'bundles/contaofaq/style.css|static';
+}
+
+
+/**
  * Register hooks
  */
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('ModuleFaq', 'getSearchablePages');
