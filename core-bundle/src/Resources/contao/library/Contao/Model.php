@@ -827,7 +827,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? "$t.alias=?" : "$t.id=?",
+				'column' => $isAlias ? array("$t.alias=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
