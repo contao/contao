@@ -1,0 +1,12 @@
+services:
+    contao_calendar.listener.event_picker_provider:
+        class: Contao\CalendarBundle\Menu\EventPickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@security.token_storage"
+            - "@request_stack"
+        calls:
+            - ["setFramework", ["@contao.framework"]]
+        tags:
+            - { name: contao.picker_menu_provider, priority: 96 }

@@ -45,6 +45,15 @@ $GLOBALS['TL_CRON']['daily']['generateCalendarFeeds'] = array('Calendar', 'gener
 
 
 /**
+ * Style sheet
+ */
+if (TL_MODE == 'BE')
+{
+	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/style.css|static';
+}
+
+
+/**
  * Register hooks
  */
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Calendar', 'purgeOldFeeds');
