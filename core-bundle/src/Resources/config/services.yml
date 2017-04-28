@@ -101,7 +101,7 @@ services:
             - "@security.token_storage"
             - "@request_stack"
         tags:
-            - { name: contao.picker_menu_provider }
+            - { name: contao.picker_menu_provider, priority: 192 }
 
     contao.menu.file_picker_provider:
         class: Contao\CoreBundle\Menu\FilePickerProvider
@@ -112,7 +112,7 @@ services:
             - "@request_stack"
             - "%contao.upload_path%"
         tags:
-            - { name: contao.picker_menu_provider }
+            - { name: contao.picker_menu_provider, priority: 160 }
 
     contao.menu.article_picker_provider:
         class: Contao\CoreBundle\Menu\ArticlePickerProvider
