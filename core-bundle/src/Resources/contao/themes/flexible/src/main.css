@@ -527,6 +527,9 @@ table.tl_listing {
 .tl_listing.picker .tl_tree_checkbox:disabled,.tl_listing.picker .tl_tree_radio:disabled,.tl_listing_container.picker .tl_tree_checkbox:disabled,.tl_listing_container.picker .tl_tree_radio:disabled {
 	visibility:hidden;
 }
+.tl_listing_container.picker .tl_content p {
+	padding-right:24px;
+}
 
 /* List view */
 .tl_listing tr.odd td {
@@ -1187,6 +1190,9 @@ ul.sortable button[disabled]:hover {
 	position:relative;
 	top:1px;
 }
+#manager li:hover {
+	background-color:#f3f3f3;
+}
 #manager li.current {
 	background-color:#f3f3f3;
 	border-bottom-color:#f3f3f3;
@@ -1194,6 +1200,9 @@ ul.sortable button[disabled]:hover {
 #manager a {
 	padding:3px 12px 3px 32px;
 	background:url("icons/manager.svg") 12px center no-repeat;
+}
+#manager a:hover {
+	color:#222;
 }
 #manager a.pagemounts {
 	background-image:url("icons/pagemounts.svg");
