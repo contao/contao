@@ -2,6 +2,7 @@
 
 ### DEV
  
+ * Disable the "publish" checkbox if a parent folder is public (see #712).
  * Improve the findByIdOrAlias() method (see #729).
  * Make sure that all modules can have a custom template (see #704).
  * Remove the popupWidth and popupHeight parameters in the file manager (see #727).

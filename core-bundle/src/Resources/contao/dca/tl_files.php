@@ -675,7 +675,26 @@ class tl_files extends Backend
 			return '';
 		}
 
-		$blnPublic = file_exists(TL_ROOT . '/' . $strPath . '/.public');
+		$strCheck = $strPath;
+		$blnDisabled = false;
+
+		// Show new folders as public (see #712)
+		$blnPublic = (basename($strPath) == '__new__');
+
+		// Check if a parent folder is public
+		while ($strCheck != '.' && !$blnPublic)
+		{
+			if (!($blnPublic = file_exists(TL_ROOT . '/' . $strCheck . '/.public')))
+			{
+				$strCheck = dirname($strCheck);
+			}
+		}
+
+		// Disable the checkbox if a parent folder is public (see #712)
+		if ($blnPublic && $strCheck != $strPath)
+		{
+			$blnDisabled = true;
+		}
 
 		// Protect or unprotect the folder
 		if (Input::post('FORM_SUBMIT') == 'tl_files')
@@ -718,7 +737,7 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->field . '_0" class="tl_checkbox" value="1"' . ($blnPublic ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"> <label for="opt_' . $dc->field . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->field . '_0" class="tl_checkbox" value="1"' . ($blnPublic ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisabled ? ' disabled' : '') . '> <label for="opt_' . $dc->field . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
 </div>';
