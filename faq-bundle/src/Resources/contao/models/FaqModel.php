@@ -136,14 +136,15 @@ class FaqModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("($t.id=? OR $t.alias=?) AND pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")";
 
 		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
 			$arrColumns[] = "$t.published='1'";
 		}
 
-		return static::findOneBy($arrColumns, array((is_numeric($varId) ? $varId : 0), $varId), $arrOptions);
+		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
 
 
