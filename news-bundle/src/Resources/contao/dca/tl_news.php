@@ -306,11 +306,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_news', 'pagePicker')
-			),
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'fullsize' => array
@@ -818,19 +814,6 @@ class tl_news extends Backend
 		$session = $objSession->get('news_feed_updater');
 		$session[] = $dc->activeRecord->pid;
 		$objSession->set('news_feed_updater', array_unique($session));
-	}
-
-
-	/**
-	 * Return the link picker wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function pagePicker(DataContainer $dc)
-	{
-		return ' <a href="' . (($dc->value == '' || strpos($dc->value, '{{link_url::') !== false) ? 'contao/page' : 'contao/file') . '?do=' . Input::get('do') . '&amp;table=' . $dc->table . '&amp;field=' . $dc->field . '&amp;value=' . rawurlencode(str_replace(array('{{link_url::', '}}'), '', $dc->value)) . '&amp;switch=1' . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0])) . '\',\'url\':this.href,\'id\':\'' . $dc->field . '\',\'tag\':\'ctrl_'. $dc->field . ((Input::get('act') == 'editAll') ? '_' . $dc->id : '') . '\',\'self\':this});return false">' . Image::getHtml('pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>';
 	}
 
 
