@@ -9,4 +9,4 @@ services:
         calls:
             - ["setFramework", ["@contao.framework"]]
         tags:
-            - { name: contao.picker_menu_provider }
+            - { name: contao.picker_menu_provider, priority: 128 }
