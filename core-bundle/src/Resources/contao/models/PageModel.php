@@ -541,8 +541,7 @@ class PageModel extends \Model
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("($t.id=? OR $t.alias=?)");
-		$arrValues = array((is_numeric($varId) ? $varId : 0), $varId);
+		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
 
 		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
 		{
@@ -550,7 +549,7 @@ class PageModel extends \Model
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
-		return static::findBy($arrColumns, $arrValues, $arrOptions);
+		return static::findBy($arrColumns, $varId, $arrOptions);
 	}
 
 

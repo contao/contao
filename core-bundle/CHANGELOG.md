@@ -2,6 +2,7 @@
 
 ### DEV
  
+ * Improve the findByIdOrAlias() method (see #729).
  * Make sure that all modules can have a custom template (see #704).
  * Remove the popupWidth and popupHeight parameters in the file manager (see #727).
  * Remove the cron.txt file (see #753).
