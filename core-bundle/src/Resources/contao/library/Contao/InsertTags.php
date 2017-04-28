@@ -120,7 +120,10 @@ class InsertTags extends \Controller
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
-					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction', ['insertTag' => '{{' . $strTag . '}}']), 'esi');
+					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction',
+						['insertTag' => '{{' . $strTag . '}}'],
+						['pageId' => $objPage->id, 'request' => \Environment::get('request')]
+					), 'esi');
 					continue;
 				}
 			}
@@ -562,8 +565,19 @@ class InsertTags extends \Controller
 
 				// Mobile/desktop toggle (see #6469)
 				case 'toggle_view':
-					$strUrl = ampersand(\Environment::get('request'));
+					$strRequest = \Environment::get('request');
+
+					// ESI request
+					if (preg_match('/^' . preg_quote(ltrim(\System::getContainer()->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
+					{
+						$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+						$strRequest = $request->query->get('request');
+					}
+
+					$strUrl = ampersand($strRequest);
 					$strGlue = (strpos($strUrl, '?') === false) ? '?' : '&amp;';
+
+					\System::loadLanguageFile('default');
 
 					if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 					{
