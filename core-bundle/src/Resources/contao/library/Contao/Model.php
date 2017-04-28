@@ -807,8 +807,10 @@ abstract class Model
 	 */
 	public static function findByIdOrAlias($varId, array $arrOptions=array())
 	{
+		$isAlias = !is_numeric($varId);
+
 		// Try to load from the registry
-		if (is_numeric($varId) && empty($arrOptions))
+		if (!$isAlias && empty($arrOptions))
 		{
 			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varId);
 
@@ -825,8 +827,8 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => array("($t.id=? OR $t.alias=?)"),
-				'value'  => array((is_numeric($varId) ? $varId : 0), $varId),
+				'column' => $isAlias ? "$t.alias=?" : "$t.id=?",
+				'value'  => $varId,
 				'return' => 'Model'
 			),
 
