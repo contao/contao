@@ -1,6 +1,7 @@
 services:
     contao_news.listener.news_picker_provider:
         class: Contao\NewsBundle\Menu\NewsPickerProvider
+        public: false
         arguments:
             - "@router"
             - "@security.token_storage"

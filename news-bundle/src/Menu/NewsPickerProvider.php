@@ -17,6 +17,7 @@ use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides the news picker.
@@ -26,6 +27,14 @@ use Knp\Menu\ItemInterface;
 class NewsPickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface
 {
     use FrameworkAwareTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($context)
+    {
+        return 'link' === $context;
+    }
 
     /**
      * {@inheritdoc}
@@ -42,7 +51,7 @@ class NewsPickerProvider extends AbstractMenuProvider implements PickerMenuProvi
     /**
      * {@inheritdoc}
      */
-    public function supports($table)
+    public function supportsTable($table)
     {
         return 'tl_news' === $table;
     }
@@ -58,16 +67,17 @@ class NewsPickerProvider extends AbstractMenuProvider implements PickerMenuProvi
     /**
      * {@inheritdoc}
      */
-    public function canHandle($value)
+    public function canHandle(Request $request)
     {
-        return false !== strpos($value, '{{news_url::');
+        return $request->query->has('value') && false !== strpos($request->query->get('value'), '{{news_url::');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPickerUrl(array $params = [])
+    public function getPickerUrl(Request $request)
     {
+        $params = $request->query->all();
         $params['do'] = 'news';
         $params['value'] = str_replace(['{{news_url::', '}}'], '', $params['value']);
 
