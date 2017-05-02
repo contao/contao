@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly cache the unique keys in the SQL cache (see contao/core#8712).
  * Correctly generate the Contao language cache (see #784).
 
 ### 4.3.9 (2017-04-25)
