@@ -207,7 +207,7 @@ class DC_File extends \DataContainer implements \editable
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
-						$return .= "\n  " . '<div id="'.$thisId.'">';
+						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal">';
 
 						continue;
 					}

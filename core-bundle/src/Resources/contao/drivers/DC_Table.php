@@ -1968,7 +1968,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="'.$thisId.'">';
+						$return .= "\n" . '<div id="'.$thisId.'" class="subpal">';
 
 						continue;
 					}
@@ -2421,7 +2421,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
-						$return .= "\n  " . '<div id="'.$thisId.'">';
+						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal">';
 
 						continue;
 					}

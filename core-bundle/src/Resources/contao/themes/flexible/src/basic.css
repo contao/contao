@@ -487,6 +487,11 @@ a.tl_submit {
 .cbx {
 	height:56px;
 }
+.subpal {
+	width:100%;
+	float:left;
+	margin-top:-6px;
+}
 .inline div {
 	display:inline;
 }
