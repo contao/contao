@@ -24,6 +24,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'dynamicPtable'               => true,
 		'onload_callback'             => array
 		(
+			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint')
 		),
 		'sql' => array
@@ -106,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'protected'),
+		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'protected'),
 		'default'                     => '{type_legend},type',
 		'headline'                    => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'text'                        => '{type_legend},type,headline;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -121,8 +122,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'code'                        => '{type_legend},type,headline;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'markdown'                    => '{type_legend},type,headline;{text_legend},code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'toplink'                     => '{type_legend},type,linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC;{image_legend},alt,title,size,imagemargin,imageUrl,fullsize,caption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,imagemargin,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,imagemargin,perRow,fullsize,perPage,numberOfItems;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{poster_legend:hide},posterSRC;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -139,9 +140,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'addImage'                    => 'singleSRC,alt,title,size,imagemargin,imageUrl,fullsize,caption,floating',
+		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
 		'sortable'                    => 'sortIndex,sortOrder',
-		'useImage'                    => 'singleSRC,alt,title,size,caption',
+		'useImage'                    => 'singleSRC,size,overwriteMeta',
+		'overwriteMeta'               => 'alt,title,imageUrl,caption',
 		'protected'                   => 'groups'
 	),
 
@@ -208,6 +210,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
+		'overwriteMeta' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
@@ -218,10 +228,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'setSingleSrcFlags')
 			),
-			'save_callback' => array
-			(
-				array('tl_content', 'storeFileMetaInformation')
-			),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array
@@ -230,7 +236,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'title' => array
@@ -1023,6 +1029,38 @@ class tl_content extends Backend
 
 
 	/**
+	 * Adjust the DCA by type
+	 *
+	 * @param object
+	 */
+	public function adjustDcaByType($dc)
+	{
+		if ($_POST || Input::get('act') != 'edit')
+		{
+			return;
+		}
+
+		$objCte = ContentModel::findByPk($dc->id);
+
+		if ($objCte === null)
+		{
+			return;
+		}
+
+		switch ($objCte->type)
+		{
+			case 'hyperlink':
+				unset($GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl']);
+				break;
+
+			case 'image':
+				$GLOBALS['TL_DCA']['tl_content']['fields']['imagemargin']['eval']['tl_class'] .= ' clr';
+				break;
+		}
+	}
+
+
+	/**
 	 * Show a hint if a JavaScript library needs to be included in the page layout
 	 *
 	 * @param object
@@ -1639,25 +1677,6 @@ class tl_content extends Backend
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
 					break;
 			}
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Pre-fill the "alt" and "caption" fields with the file meta data
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function storeFileMetaInformation($varValue, DataContainer $dc)
-	{
-		if ($dc->activeRecord->singleSRC != $varValue)
-		{
-			$this->addFileMetaInformationToRequest($varValue, ($dc->activeRecord->ptable ?: 'tl_article'), $dc->activeRecord->pid);
 		}
 
 		return $varValue;

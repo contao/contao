@@ -25,6 +25,12 @@ class ContentImage extends \ContentElement
 	 */
 	protected $strTemplate = 'ce_image';
 
+	/**
+	 * Files model
+	 * @var FilesModel
+	 */
+	protected $objFilesModel;
+
 
 	/**
 	 * Return if the image does not exist
@@ -46,6 +52,7 @@ class ContentImage extends \ContentElement
 		}
 
 		$this->singleSRC = $objFile->path;
+		$this->objFilesModel = $objFile;
 
 		return parent::generate();
 	}
@@ -56,6 +63,6 @@ class ContentImage extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->addImageToTemplate($this->Template, $this->arrData);
+		$this->addImageToTemplate($this->Template, $this->arrData, null, null, $this->objFilesModel);
 	}
 }

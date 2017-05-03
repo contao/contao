@@ -1443,12 +1443,13 @@ abstract class Controller extends \System
 	/**
 	 * Add an image to a template
 	 *
-	 * @param object  $objTemplate   The template object to add the image to
-	 * @param array   $arrItem       The element or module as array
-	 * @param integer $intMaxWidth   An optional maximum width of the image
-	 * @param string  $strLightboxId An optional lightbox ID
+	 * @param object     $objTemplate   The template object to add the image to
+	 * @param array      $arrItem       The element or module as array
+	 * @param integer    $intMaxWidth   An optional maximum width of the image
+	 * @param string     $strLightboxId An optional lightbox ID
+	 * @param FilesModel $objModel      An optional files model
 	 */
-	public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null)
+	public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null, FilesModel $objModel=null)
 	{
 		try
 		{
@@ -1550,6 +1551,41 @@ abstract class Controller extends \System
 		{
 			$objTemplate->arrSize = $imgSize;
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
+		}
+
+		// Load the file meta data
+		if (!$arrItem['overwriteMeta'])
+		{
+			$arrMeta = array();
+
+			if ($objModel instanceof FilesModel)
+			{
+				$arrMeta = \Frontend::getMetaData($objModel->meta, $GLOBALS['TL_LANGUAGE']);
+			}
+
+			\Controller::loadDataContainer('tl_files');
+
+			// Add any missing fields
+			foreach (array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']) as $k)
+			{
+				if (!isset($arrMeta[$k]))
+				{
+					$arrMeta[$k] = '';
+				}
+			}
+
+			// Overwrite the item array
+			foreach ($arrMeta as $k=>$v)
+			{
+				if ($k == 'link')
+				{
+					$arrItem['imageUrl'] = $v;
+				}
+				else
+				{
+					$arrItem[$k] = $v;
+				}
+			}
 		}
 
 		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);

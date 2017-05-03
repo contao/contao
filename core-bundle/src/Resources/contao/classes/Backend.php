@@ -714,9 +714,13 @@ abstract class Backend extends \Controller
 	 * @param string  $strUuid
 	 * @param string  $strPtable
 	 * @param integer $intPid
+	 *
+	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0.
 	 */
 	public static function addFileMetaInformationToRequest($strUuid, $strPtable, $intPid)
 	{
+		@trigger_error('Using Backend::addFileMetaInformationToRequest() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$objFile = \FilesModel::findByUuid($strUuid);
 
 		if ($objFile === null)

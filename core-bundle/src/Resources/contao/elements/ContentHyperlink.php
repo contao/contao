@@ -55,7 +55,7 @@ class ContentHyperlink extends \ContentElement
 			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
-				$this->addImageToTemplate($this->Template, $this->arrData);
+				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
 
 				$this->Template->useImage = true;
 				$this->Template->linkTitle = \StringUtil::specialchars($this->linkTitle);
