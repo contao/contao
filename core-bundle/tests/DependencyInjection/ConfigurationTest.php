@@ -50,7 +50,6 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             'contao' => [
-                'root_dir' => $this->getRootDir().'/foo',
                 'web_dir' => $this->getRootDir().'/foo/../web',
                 'image' => [
                     'target_dir' => $this->getRootDir().'/foo/../assets/images',
@@ -60,7 +59,6 @@ class ConfigurationTest extends TestCase
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertEquals(strtr($this->getRootDir().'/foo', '/', DIRECTORY_SEPARATOR), $configuration['root_dir']);
         $this->assertEquals(strtr($this->getRootDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
 
         $this->assertEquals(

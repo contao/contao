@@ -2,6 +2,7 @@
 
 ### DEV
  
+ * Use the kernel.project_dir parameter (see #758).
  * Disable the "publish" checkbox if a parent folder is public (see #712).
  * Improve the findByIdOrAlias() method (see #729).
  * Make sure that all modules can have a custom template (see #704).
@@ -20,4 +21,3 @@
  * Add the contao.web_dir parameter (see contao/installation-bundle#40).
  * Look up the form class and allow to choose the type (see contao/core#8527). 
  * Auto-select the active page in the quick navigation/link module (see contao/core#8587).
- * Add the contao.root_dir parameter (see #662).

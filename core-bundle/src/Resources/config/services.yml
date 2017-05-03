@@ -19,7 +19,7 @@ services:
             - "@filesystem"
             - "@contao.resource_finder"
             - "@contao.resource_locator"
-            - "%contao.root_dir%"
+            - "%kernel.project_dir%"
             - "@database_connection"
             - "@contao.framework"
         tags:
@@ -31,7 +31,7 @@ services:
             - "@contao.framework"
             - "@database_connection"
             - "@request_stack"
-            - "%contao.root_dir%"
+            - "%kernel.project_dir%"
 
     contao.controller.insert_tags:
         class: Contao\CoreBundle\Controller\InsertTagsController
@@ -75,7 +75,7 @@ services:
             - "@router"
             - "@session"
             - "@contao.routing.scope_matcher"
-            - "%contao.root_dir%"
+            - "%kernel.project_dir%"
             - "%contao.error_level%"
         calls:
             - ["setContainer", ["@service_container"]]

@@ -38,7 +38,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     private function getResourcesPath(ContainerBuilder $container)
     {
         $paths = [];
-        $rootDir = $container->getParameter('contao.root_dir');
+        $rootDir = $container->getParameter('kernel.project_dir');
 
         foreach ($container->getParameter('kernel.bundles') as $name => $class) {
             if ('Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle' === $class) {

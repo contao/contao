@@ -215,10 +215,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function mockContainerWithContaoScopes($scope = null)
     {
         $container = new Container();
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
+        $container->setParameter('kernel.project_dir', $this->getRootDir());
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('kernel.debug', false);
-        $container->setParameter('contao.root_dir', $this->getRootDir());
         $container->setParameter('contao.web_dir', $this->getRootDir().'/web');
         $container->setParameter('contao.image.bypass_cache', false);
         $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images');
@@ -474,7 +474,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $framework = $this->mockContaoFramework();
 
         if ($rootDir) {
-            $container->setParameter('contao.root_dir', $rootDir);
             $container->setParameter('contao.web_dir', $rootDir.'/web');
             $container->setParameter('contao.image.target_dir', $rootDir.'/assets/images');
         }

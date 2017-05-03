@@ -92,7 +92,7 @@ class InstallCommand extends AbstractLockedCommand
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
-        $this->rootDir = $this->getContainer()->getParameter('contao.root_dir');
+        $this->rootDir = $this->getContainer()->getParameter('kernel.project_dir');
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();

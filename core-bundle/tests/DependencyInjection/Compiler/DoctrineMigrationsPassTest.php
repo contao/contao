@@ -47,7 +47,6 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
-        $this->assertFalse($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
     }
 
     /**
@@ -60,8 +59,7 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
-        $this->assertTrue($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
+        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
     }
 
     /**

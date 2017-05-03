@@ -690,12 +690,13 @@ class Image
 	public static function getHtml($src, $alt='', $attributes='')
 	{
 		$src = static::getPath($src);
-		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
 
 		if ($src == '')
 		{
 			return '';
 		}
+
+		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
 
 		if (!is_file(TL_ROOT . '/' . $src))
 		{

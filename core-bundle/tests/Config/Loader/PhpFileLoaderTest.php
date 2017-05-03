@@ -174,7 +174,7 @@ EOF;
 
         $this->assertEquals(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/' . $file . '.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
         );
     }
 
@@ -250,7 +250,7 @@ EOF;
 
         $this->assertEquals(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/' . $file . '.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
         );
     }
 

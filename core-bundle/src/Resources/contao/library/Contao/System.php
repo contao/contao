@@ -391,7 +391,7 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		// Prepare the XLIFF loader
-		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('contao.root_dir'), true);
+		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
 
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
 
@@ -814,7 +814,7 @@ abstract class System
 			$strName = TL_ROOT . '/' . $strName;
 		}
 
-		$loader = new XliffFileLoader(static::getContainer()->getParameter('contao.root_dir'), $blnLoad);
+		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), $blnLoad);
 
 		return $loader->load($strName, $strLanguage);
 	}

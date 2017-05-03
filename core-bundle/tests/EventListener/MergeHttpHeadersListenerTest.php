@@ -102,7 +102,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testMultiValueHeadersAreNotOverriden()
     {
         $response = new Response();
-        $response->headers->set('Set-Cookie', 'content');
+        $response->headers->set('Set-Cookie', 'content=foobar');
 
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
@@ -121,7 +121,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         ;
 
         $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['set-cookie: new-content']); // test a lower-case key here
+        $listener->setHeaders(['set-cookie: new-content=foobar']); // test a lower-case key here
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
@@ -130,8 +130,8 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $allHeaders = $response->headers->get('Set-Cookie', null, false);
 
-        $this->assertSame('content', $allHeaders[0]);
-        $this->assertSame('new-content', $allHeaders[1]);
+        $this->assertSame('content=foobar; path=/; httponly', $allHeaders[0]);
+        $this->assertSame('new-content=foobar; path=/; httponly', $allHeaders[1]);
     }
 
     /**

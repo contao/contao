@@ -12,7 +12,7 @@ $image = Image::get($objSubfiles->path, 80, 60, 'center_center');
 
 // New syntax
 $container = System::getContainer();
-$rootDir = $container->getParameter('contao.root_dir');
+$rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
     ->get('contao.image.image_factory')
@@ -30,7 +30,7 @@ $image = Image::create($path, [400, 50, 'box'])
 
 // New syntax
 $container = System::getContainer();
-$rootDir = $container->getParameter('contao.root_dir');
+$rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
     ->get('contao.image.image_factory')
@@ -206,10 +206,10 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
 have been deprecated and will be removed in Contao 5.0.
 
-Use the `contao.root_dir` instead of `TL_ROOT`:
+Use the `kernel.project_dir` instead of `TL_ROOT`:
 
 ```php
-$rootDir = System::getContainer()->getParameter('contao.root_dir');
+$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 ```
 
 Use the `ScopeMatcher` service instead of using `TL_MODE`:

@@ -83,7 +83,7 @@ class UserPasswordCommandTest extends TestCase
             ->execute(
                 [
                     'username' => 'foobar',
-                    '--password' => '12345678'
+                    '--password' => '12345678',
                 ]
             )
         ;
