@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,7 +25,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AutomatorCommand extends AbstractLockedCommand
+class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 

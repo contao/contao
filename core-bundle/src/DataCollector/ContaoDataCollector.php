@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoDataCollector extends DataCollector
+class ContaoDataCollector extends DataCollector implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 

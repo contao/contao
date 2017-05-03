@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\File;
 use Contao\Image as LegacyImage;
@@ -27,7 +28,7 @@ use Imagine\Gd\Imagine as GdImagine;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class LegacyResizer extends ImageResizer
+class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
