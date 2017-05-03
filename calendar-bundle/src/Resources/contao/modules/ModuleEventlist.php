@@ -320,7 +320,7 @@ class ModuleEventlist extends \Events
 					}
 
 					$event['singleSRC'] = $objModel->path;
-					$this->addImageToTemplate($objTemplate, $event);
+					$this->addImageToTemplate($objTemplate, $event, null, null, $objModel);
 				}
 			}
 
@@ -329,7 +329,7 @@ class ModuleEventlist extends \Events
 			// Add enclosure
 			if ($event['addEnclosure'])
 			{
-				$this->addEnclosuresToTemplate($objTemplate, $event);
+				$this->addEnclosuresToTemplate($objTemplate, $event, null, null, $objModel);
 			}
 
 			$strEvents .= $objTemplate->parse();

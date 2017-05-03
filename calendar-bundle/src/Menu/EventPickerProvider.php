@@ -12,6 +12,7 @@ namespace Contao\CalendarBundle\Menu;
 
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Menu\AbstractMenuProvider;
 use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class EventPickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface
+class EventPickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 

@@ -74,6 +74,12 @@
       <trans-unit id="tl_calendar_events.addImage.1">
         <source>Add an image to the event.</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.0">
         <source>Repeat event</source>
       </trans-unit>
