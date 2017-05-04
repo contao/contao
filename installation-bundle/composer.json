@@ -1,7 +1,7 @@
 {
     "name": "contao/installation-bundle",
     "type": "contao-bundle",
-    "description": "Contao 4 installation bundle",
+    "description": "Required to install and update Contao 4",
     "license": "LGPL-3.0+",
     "authors": [
         {
@@ -11,9 +11,9 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "symfony/filesystem": "^3.2",
-        "symfony/framework-bundle": "^3.2",
-        "contao/core-bundle": "^4.3.6",
+        "symfony/filesystem": "^3.3",
+        "symfony/framework-bundle": "^3.3",
+        "contao/core-bundle": "^4.4@dev",
         "sensio/distribution-bundle": "^5.0",
         "sensiolabs/ansi-to-html": "^1.1"
     },
@@ -46,5 +46,6 @@
             "dev-develop": "4.4.x-dev"
         },
         "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin"
-    }
+    },
+    "minimum-stability": "beta"
 }
