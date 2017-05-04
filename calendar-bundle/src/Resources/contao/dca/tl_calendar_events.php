@@ -146,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'source_internal'             => 'jumpTo',
 		'source_article'              => 'articleId',
 		'source_external'             => 'url,target',
-		'overwriteMeta'               => 'alt,imageUrl,caption',
+		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
 		'published'                   => 'start,stop'
 	),
 
@@ -305,6 +305,15 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'alt' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['alt'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'imageTitle' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageTitle'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
