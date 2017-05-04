@@ -183,7 +183,7 @@ abstract class ModuleNews extends \Module
 				}
 
 				$arrArticle['singleSRC'] = $objModel->path;
-				$this->addImageToTemplate($objTemplate, $arrArticle);
+				$this->addImageToTemplate($objTemplate, $arrArticle, null, null, $objModel);
 			}
 		}
 

@@ -10,6 +10,7 @@
 
 namespace Contao\NewsBundle\Menu;
 
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Menu\AbstractMenuProvider;
 use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsPickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface
+class NewsPickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 

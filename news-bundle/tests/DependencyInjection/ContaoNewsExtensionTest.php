@@ -41,7 +41,10 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
         $extension = new ContaoNewsExtension();
         $extension->load([], $container);
 
+        $this->assertTrue($container->has('contao_news.listener.generate_page'));
+        $this->assertTrue($container->has('contao_news.listener.insert_tags'));
         $this->assertTrue($container->has('contao_news.listener.preview_url_create'));
         $this->assertTrue($container->has('contao_news.listener.preview_url_convert'));
+        $this->assertTrue($container->has('contao_news.listener.news_picker_provider'));
     }
 }
