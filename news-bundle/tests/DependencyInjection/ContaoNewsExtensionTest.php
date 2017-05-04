@@ -10,12 +10,14 @@
 
 namespace Contao\NewsBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\NewsBundle\DependencyInjection\ContaoNewsExtension;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsBundle\Menu\NewsPickerProvider;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -135,7 +137,14 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('request_stack', (string) $definition->getArgument(1));
         $this->assertEquals('security.token_storage', (string) $definition->getArgument(2));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[FrameworkAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setFramework', $methodCalls[0][0]);
 
