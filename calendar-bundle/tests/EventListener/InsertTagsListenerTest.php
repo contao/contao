@@ -194,8 +194,8 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
 
-        $this->assertTrue('' === $listener->onReplaceInsertTags('calendar_feed::3'));
-        $this->assertTrue('' === $listener->onReplaceInsertTags('event_url::3'));
+        $this->assertEquals('', $listener->onReplaceInsertTags('calendar_feed::3'));
+        $this->assertEquals('', $listener->onReplaceInsertTags('event_url::3'));
     }
 
     /**
@@ -205,7 +205,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', false, true));
 
-        $this->assertTrue('' === $listener->onReplaceInsertTags('event_url::3'));
+        $this->assertEquals('', $listener->onReplaceInsertTags('event_url::3'));
     }
 
     /**

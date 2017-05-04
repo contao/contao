@@ -4,8 +4,8 @@ services:
         public: false
         arguments:
             - "@router"
-            - "@security.token_storage"
             - "@request_stack"
+            - "@security.token_storage"
         calls:
             - ["setFramework", ["@contao.framework"]]
         tags:
