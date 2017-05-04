@@ -31,14 +31,14 @@ abstract class AbstractMenuProvider
     protected $router;
 
     /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
      * @var RequestStack
      */
     protected $requestStack;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
 
     /**
      * @var array
@@ -48,15 +48,15 @@ abstract class AbstractMenuProvider
     /**
      * Constructor.
      *
-     * @param RouterInterface       $router
-     * @param TokenStorageInterface $tokenStorage
-     * @param RequestStack          $requestStack
+     * @param RouterInterface            $router
+     * @param RequestStack               $requestStack
+     * @param TokenStorageInterface|null $tokenStorage
      */
-    public function __construct(RouterInterface $router, TokenStorageInterface $tokenStorage, RequestStack $requestStack)
+    public function __construct(RouterInterface $router, RequestStack $requestStack, TokenStorageInterface $tokenStorage = null)
     {
         $this->router = $router;
-        $this->tokenStorage = $tokenStorage;
         $this->requestStack = $requestStack;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -68,6 +68,10 @@ abstract class AbstractMenuProvider
      */
     protected function getUser()
     {
+        if (null === $this->tokenStorage) {
+            throw new \RuntimeException('No token storage provided');
+        }
+
         $token = $this->tokenStorage->getToken();
 
         if (null === $token) {
@@ -134,7 +138,7 @@ abstract class AbstractMenuProvider
      *
      * @return array
      */
-    private function getParametersFromRequest(Request $request)
+    protected function getParametersFromRequest(Request $request)
     {
         $params = [];
 
@@ -154,7 +158,7 @@ abstract class AbstractMenuProvider
      *
      * @return string
      */
-    private function getLabel($key)
+    protected function getLabel($key)
     {
         if (isset($GLOBALS['TL_LANG']['MSC'][$key])) {
             return $GLOBALS['TL_LANG']['MSC'][$key];

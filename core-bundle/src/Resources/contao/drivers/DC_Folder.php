@@ -3097,8 +3097,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			return;
 		}
 
-		$varValue = $this->urlEncode($varValue);
-		$varValue = array_filter(explode(',', $varValue));
+		$varValue = array_map(array($this, 'urlEncode'), array_filter(explode(',', $varValue)));
 
 		if (empty($varValue))
 		{

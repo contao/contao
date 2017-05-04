@@ -33,13 +33,13 @@ class FilePickerProvider extends AbstractMenuProvider implements PickerMenuProvi
      * Constructor.
      *
      * @param RouterInterface       $router
-     * @param TokenStorageInterface $tokenStorage
      * @param RequestStack          $requestStack
+     * @param TokenStorageInterface $tokenStorage
      * @param string                $uploadPath
      */
-    public function __construct(RouterInterface $router, TokenStorageInterface $tokenStorage, RequestStack $requestStack, $uploadPath)
+    public function __construct(RouterInterface $router, RequestStack $requestStack, TokenStorageInterface $tokenStorage, $uploadPath)
     {
-        parent::__construct($router, $tokenStorage, $requestStack);
+        parent::__construct($router, $requestStack, $tokenStorage);
 
         $this->uploadPath = $uploadPath;
     }

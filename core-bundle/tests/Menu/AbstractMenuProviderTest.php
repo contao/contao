@@ -50,7 +50,7 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
-            ->setConstructorArgs([$router, $tokenStorage, $requestStack])
+            ->setConstructorArgs([$router, $requestStack, $tokenStorage])
             ->getMockForAbstractClass()
         ;
 
@@ -93,7 +93,7 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
-            ->setConstructorArgs([$router, $tokenStorage, $requestStack])
+            ->setConstructorArgs([$router, $requestStack, $tokenStorage])
             ->getMockForAbstractClass()
         ;
 
@@ -115,7 +115,7 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
-            ->setConstructorArgs([$router, $tokenStorage, $requestStack])
+            ->setConstructorArgs([$router, $requestStack, $tokenStorage])
             ->getMockForAbstractClass()
         ;
 

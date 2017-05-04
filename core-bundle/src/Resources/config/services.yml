@@ -98,8 +98,8 @@ services:
         public: false
         arguments:
             - "@router"
-            - "@security.token_storage"
             - "@request_stack"
+            - "@security.token_storage"
         tags:
             - { name: contao.picker_menu_provider, priority: 192 }
 
@@ -108,8 +108,8 @@ services:
         public: false
         arguments:
             - "@router"
-            - "@security.token_storage"
             - "@request_stack"
+            - "@security.token_storage"
             - "%contao.upload_path%"
         tags:
             - { name: contao.picker_menu_provider, priority: 160 }
@@ -119,8 +119,8 @@ services:
         public: false
         arguments:
             - "@router"
-            - "@security.token_storage"
             - "@request_stack"
+            - "@security.token_storage"
         tags:
             - { name: contao.picker_menu_provider }
 
