@@ -414,6 +414,7 @@ var AjaxRequest =
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
 					'id': id,
+					'class': 'subpal',
 					'html': txt,
 					'styles': {
 						'display': 'block'
