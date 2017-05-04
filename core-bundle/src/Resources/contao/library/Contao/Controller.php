@@ -1577,13 +1577,19 @@ abstract class Controller extends \System
 			// Overwrite the item array
 			foreach ($arrMeta as $k=>$v)
 			{
-				if ($k == 'link')
+				switch ($k)
 				{
-					$arrItem['imageUrl'] = $v;
-				}
-				else
-				{
-					$arrItem[$k] = $v;
+					case 'link':
+						$arrItem['imageUrl'] = $v;
+						break;
+
+					case 'title':
+						$arrItem['imageTitle'] = $v;
+						break;
+
+					default:
+						$arrItem[$k] = $v;
+						break;
 				}
 			}
 		}

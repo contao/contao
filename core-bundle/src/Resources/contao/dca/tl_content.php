@@ -143,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
 		'sortable'                    => 'sortIndex,sortOrder',
 		'useImage'                    => 'singleSRC,size,overwriteMeta',
-		'overwriteMeta'               => 'alt,title,imageUrl,caption',
+		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
 		'protected'                   => 'groups'
 	),
 
@@ -239,9 +239,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'title' => array
+		'imageTitle' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['title'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageTitle'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
