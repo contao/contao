@@ -16,6 +16,8 @@ use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarBundle\Menu\EventPickerProvider;
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -135,7 +137,14 @@ class ContaoCalendarExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('request_stack', (string) $definition->getArgument(1));
         $this->assertEquals('security.token_storage', (string) $definition->getArgument(2));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[FrameworkAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setFramework', $methodCalls[0][0]);
 
