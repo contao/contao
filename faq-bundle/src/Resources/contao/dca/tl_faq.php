@@ -108,15 +108,16 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('addImage', 'addEnclosure'),
+		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
 		'default'                     => '{title_legend},question,alias,author;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},noComments;{publish_legend},published'
 	),
 
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'addImage'                    => 'singleSRC,alt,size,imagemargin,imageUrl,fullsize,caption,floating',
-		'addEnclosure'                => 'enclosure'
+		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
+		'addEnclosure'                => 'enclosure',
+		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
 	),
 
 	// Fields
@@ -201,16 +202,20 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
+		'overwriteMeta' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'fieldType'=>'radio', 'mandatory'=>true),
-			'save_callback' => array
-			(
-				array('tl_faq', 'storeFileMetaInformation')
-			),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array
@@ -219,7 +224,16 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'imageTitle' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageTitle'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'size' => array
@@ -411,25 +425,6 @@ class tl_faq extends Backend
 <div class="limit_height' . (!Config::get('doNotCollapse') ? ' h52' : '') . '">
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";
-	}
-
-
-	/**
-	 * Pre-fill the "alt" and "caption" fields with the file meta data
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function storeFileMetaInformation($varValue, DataContainer $dc)
-	{
-		if ($dc->activeRecord->singleSRC != $varValue)
-		{
-			$this->addFileMetaInformationToRequest($varValue, 'tl_faq_category', $dc->activeRecord->pid);
-		}
-
-		return $varValue;
 	}
 
 

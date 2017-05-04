@@ -41,7 +41,7 @@ class ContaoFaqExtensionTest extends \PHPUnit_Framework_TestCase
         $extension = new ContaoFaqExtension();
         $extension->load([], $container);
 
-        $this->assertTrue($container->has('contao_faq.listener.file_meta_information'));
         $this->assertTrue($container->has('contao_faq.listener.insert_tags'));
+        $this->assertTrue($container->has('contao_faq.listener.faq_picker_provider'));
     }
 }
