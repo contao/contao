@@ -1950,7 +1950,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 							if (count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="'.$thisId.'">' . $arrAjax[$thisId] . '</div>';
+								$current = "\n" . '<div id="'.$thisId.'" class="subpal">' . $arrAjax[$thisId] . '</div>';
 								unset($arrAjax[$thisId]);
 								end($arrAjax);
 								$thisId = key($arrAjax);
