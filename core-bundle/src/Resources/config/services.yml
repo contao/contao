@@ -1,4 +1,13 @@
 services:
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - ["setFramework", ["@contao.framework"]]
+
+        Symfony\Component\DependencyInjection\ContainerAwareInterface:
+            calls:
+                - ["setContainer", ["@service_container"]]
+
     contao.cache:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
@@ -50,8 +59,6 @@ services:
         public: false
         arguments:
             - "%kernel.packages%"
-        calls:
-            - ["setFramework", ["@contao.framework"]]
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
@@ -78,8 +85,6 @@ services:
             - "%contao.image.target_dir%"
             - "@contao.image.resize_calculator"
             - "@filesystem"
-        calls:
-            - ["setFramework", ["@contao.framework"]]
 
     contao.image.image_factory:
         class: Contao\CoreBundle\Image\ImageFactory
@@ -123,8 +128,6 @@ services:
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
             - "%contao.error_level%"
-        calls:
-            - ["setContainer", ["@service_container"]]
 
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
@@ -182,8 +185,6 @@ services:
         arguments:
             - debug
             - false
-        calls:
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: monolog.logger, channel: contao }
 
@@ -256,8 +257,6 @@ services:
         public: false
         arguments:
             - "@contao.routing.scope_matcher"
-        calls:
-            - ["setContainer", ["@service_container"]]
 
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -265,8 +264,6 @@ services:
         arguments:
             - "@contao.framework"
             - "@contao.routing.scope_matcher"
-        calls:
-            - ["setContainer", ["@service_container"]]
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag

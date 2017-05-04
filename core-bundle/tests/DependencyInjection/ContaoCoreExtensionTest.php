@@ -69,6 +69,7 @@ use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -565,7 +566,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($definition->isPublic());
         $this->assertEquals('%kernel.packages%', (string) $definition->getArgument(0));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[FrameworkAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setFramework', $methodCalls[0][0]);
 
@@ -642,7 +650,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals('contao.image.resize_calculator', $definition->getArgument(1));
         $this->assertEquals('filesystem', $definition->getArgument(2));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[FrameworkAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setFramework', $methodCalls[0][0]);
     }
@@ -729,7 +744,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals('%kernel.project_dir%', (string) $definition->getArgument(4));
         $this->assertEquals('%contao.error_level%', (string) $definition->getArgument(5));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[ContainerAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setContainer', $methodCalls[0][0]);
     }
@@ -858,7 +880,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals('debug', (string) $definition->getArgument(0));
         $this->assertEquals(false, (string) $definition->getArgument(1));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[ContainerAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setContainer', $methodCalls[0][0]);
 
@@ -1038,7 +1067,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($definition->isPublic());
         $this->assertEquals('contao.routing.scope_matcher', $definition->getArgument(0));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[ContainerAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setContainer', $methodCalls[0][0]);
     }
@@ -1057,7 +1093,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals('contao.framework', $definition->getArgument(0));
         $this->assertEquals('contao.routing.scope_matcher', $definition->getArgument(1));
 
-        $methodCalls = $definition->getMethodCalls();
+        $conditionals = $definition->getInstanceofConditionals();
+
+        $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
+
+        /** @var ChildDefinition $childDefinition */
+        $childDefinition = $conditionals[ContainerAwareInterface::class];
+
+        $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertEquals('setContainer', $methodCalls[0][0]);
     }
