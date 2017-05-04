@@ -288,7 +288,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'overwriteMeta' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['overwriteMeta'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
