@@ -2,6 +2,7 @@
 
 ### DEV
  
+ * Optimize the element preview height (see #810).
  * Use the file meta data by default when adding an image (see #807).
  * Use the kernel.project_dir parameter (see #758).
  * Disable the "publish" checkbox if a parent folder is public (see #712).

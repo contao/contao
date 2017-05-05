@@ -657,9 +657,9 @@ table.tl_listing {
 .no_padding {
 	padding:5px 6px;
 }
-.tl_content h1 {
-	padding:0;
-	margin:0 0 12px;
+.tl_content h1,.tl_content h2,.tl_content h3,.tl_content h4,.tl_content h5,.tl_content h6 {
+	margin-bottom:1px;
+	font-size:.875rem;
 }
 .tl_content pre {
 	margin-top:3px;
@@ -717,7 +717,29 @@ table.tl_listing {
 	line-height:1.25;
 }
 .limit_toggler {
-	margin-top:9px;
+	width:100%;
+	position:absolute;
+	bottom:0;
+	left:0;
+	background:#fff;
+	line-height:10px;
+	text-align:center;
+}
+.limit_toggler button {
+	margin:0;
+	padding:0;
+	border:0;
+	background:#fff;
+	width:24px;
+	line-height:8px;
+	color:#999;
+	outline:none;
+	border-top-left-radius:2px;
+	border-top-right-radius:2px;
+}
+.limit_toggler button span {
+	position:relative;
+	top:-4px;
 }
 .limit_height input[type="file"] {
 	position:relative;

@@ -1056,7 +1056,7 @@ var Backend =
 		var hgt = 0;
 
 		$$('div.limit_height').each(function(div) {
-			var toggler, size, style;
+			var toggler, button, size, style;
 
 			if (hgt === 0) {
 				hgt = div.className.replace(/[^0-9]*/, '').toInt();
@@ -1065,46 +1065,28 @@ var Backend =
 			// Return if there is no height value
 			if (!hgt) return;
 
-			toggler = new Element('img', {
-				'class': 'limit_toggler',
-				'alt': '',
-				'title': Contao.lang.expand,
-				'width': 20,
-				'height': 24,
-				'data-state': 0
+			toggler = new Element('div', {
+				'class': 'limit_toggler'
 			});
+
+			button = new Element('button', {
+				'html': '<span>...</span>',
+				'class': 'unselectable',
+				'data-state': 0
+			}).inject(toggler);
 
 			size = div.getCoordinates();
-
-			new Tips.Contao(toggler, {
-				offset: {x:0, y:30}
-			});
-
 			div.setStyle('height', hgt);
 
 			// Disable the function if the preview height is below the max-height
 			if (size.height <= hgt) {
-				toggler.src = Backend.themePath + 'icons/expand_.svg';
-				toggler.inject(div, 'after');
 				return;
 			}
 
-			toggler.src = Backend.themePath + 'icons/expand.svg';
-			toggler.setStyle('cursor', 'pointer');
-
-			toggler.addEvent('click', function() {
+			button.addEvent('click', function() {
 				style = toggler.getPrevious('div').getStyle('height').toInt();
 				toggler.getPrevious('div').setStyle('height', ((style > hgt) ? hgt : ''));
-
-				if (toggler.get('data-state') == 0) {
-					toggler.src = Backend.themePath + 'icons/collapse.svg';
-					toggler.set('data-state', 1);
-					toggler.store('tip:title', Contao.lang.collapse);
-				} else {
-					toggler.src = Backend.themePath + 'icons/expand.svg';
-					toggler.set('data-state', 0);
-					toggler.store('tip:title', Contao.lang.expand);
-				}
+				button.set('data-state', button.get('data-state') ? 0 : 1);
 			});
 
 			toggler.inject(div, 'after');
