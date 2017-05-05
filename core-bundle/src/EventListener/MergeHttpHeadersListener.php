@@ -102,7 +102,7 @@ class MergeHttpHeadersListener
     {
         $uniqueKey = $this->getUniqueKey($name);
 
-        if (!in_array($uniqueKey, $this->multiHeaders)) {
+        if (!in_array($uniqueKey, $this->multiHeaders, true)) {
             $this->multiHeaders[] = $uniqueKey;
         }
     }
@@ -114,7 +114,7 @@ class MergeHttpHeadersListener
      */
     public function removeMultiHeader($name)
     {
-        if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders))) {
+        if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders, true))) {
             unset($this->multiHeaders[$i]);
         }
     }
@@ -151,7 +151,7 @@ class MergeHttpHeadersListener
 
             $uniqueKey = $this->getUniqueKey($name);
 
-            if (in_array($uniqueKey, $this->multiHeaders)) {
+            if (in_array($uniqueKey, $this->multiHeaders, true)) {
                 $response->headers->set($uniqueKey, trim($content), false);
             } elseif (!$response->headers->has($uniqueKey)) {
                 $response->headers->set($uniqueKey, trim($content));

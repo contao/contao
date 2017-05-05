@@ -123,7 +123,7 @@ class ImageSizesTest extends TestCase
         $user->isAdmin = false;
 
         // Allow only one image size
-        $user->imageSizes = serialize(['42']);
+        $user->imageSizes = serialize([42]);
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayNotHasKey('relative', $options);

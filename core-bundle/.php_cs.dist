@@ -23,6 +23,7 @@ return PhpCsFixer\Config::create()
         'array_syntax' => ['syntax' => 'short'],
         'header_comment' => ['header' => $header],
         'strict_comparison' => true,
+        'strict_param' => true,
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

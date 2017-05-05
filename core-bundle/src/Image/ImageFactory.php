@@ -106,13 +106,13 @@ class ImageFactory implements ImageFactoryInterface
         } else {
             $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-            if (in_array($fileExtension, ['svg', 'svgz'])) {
+            if (in_array($fileExtension, ['svg', 'svgz'], true)) {
                 $imagine = $this->imagineSvg;
             } else {
                 $imagine = $this->imagine;
             }
 
-            if (!in_array($fileExtension, $this->validExtensions)) {
+            if (!in_array($fileExtension, $this->validExtensions, true)) {
                 throw new \InvalidArgumentException(
                     sprintf('Image type "%s" was not allowed to be processed', $fileExtension)
                 );

@@ -156,7 +156,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     public function createInstance($class, $args = [])
     {
-        if (in_array('getInstance', get_class_methods($class))) {
+        if (in_array('getInstance', get_class_methods($class), true)) {
             return call_user_func_array([$class, 'getInstance'], $args);
         }
 
