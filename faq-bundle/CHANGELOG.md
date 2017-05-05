@@ -1,6 +1,6 @@
 # Contao FAQ bundle change log
 
-### DEV
+### 4.4.0-beta1 (2017-05-05)
 
  * Optimize the element preview height (see contao/core-bundle#678).
  * Use the file meta data by default when adding an image (see contao/core-bundle#807).
