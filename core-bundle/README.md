@@ -63,8 +63,10 @@ class AppKernel extends Kernel
     {
         $bundles = array(
             // ...
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
+            new Nelmio\SecurityBundle\NelmioSecurityBundle(),
             new Contao\CoreBundle\ContaoCoreBundle(),
         );
     }
@@ -128,7 +130,7 @@ contao:
     prepend_locale: "%prepend_locale%"
 
     # Optional parameters
-    root_dir:             "%kernel.root_dir%/.."
+    web_dir:              "%kernel.project_dir%/web"
     encryption_key:       "%kernel.secret%"
     url_suffix:           .html
     upload_path:          files
@@ -137,7 +139,7 @@ contao:
     error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
     image:
         bypass_cache:     false
-        target_path:      assets/images
+        target_dir:       "%kernel.project_dir%/assets/images"
         valid_extensions: ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
         imagine_options:
             jpeg_quality: 80
