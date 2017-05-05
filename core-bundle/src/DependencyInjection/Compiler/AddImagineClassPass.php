@@ -10,9 +10,9 @@
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Imagine\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Imagine\Exception\RuntimeException;
 
 /**
  * Sets the available Imagine class name in the container.

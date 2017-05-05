@@ -386,8 +386,6 @@ class PaletteManipulatorTest extends TestCase
 
     /**
      * Tests applying changes to a missing palette.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testMissingDcaPalette()
     {
@@ -399,13 +397,13 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['palettes']['default']);
 
+        $this->setExpectedException('InvalidArgumentException');
+
         $pm->applyToPalette('default', 'tl_test');
     }
 
     /**
      * Tests applying changes to a missing subpalette.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testMissingDcaSubpalette()
     {
@@ -416,16 +414,18 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
 
+        $this->setExpectedException('InvalidArgumentException');
+
         $pm->applyToSubpalette('name', 'tl_test');
     }
 
     /**
      * Tests adding a field at an invalid position.
-     *
-     * @expectedException \LogicException
      */
     public function testInvalidPosition()
     {
+        $this->setExpectedException('LogicException');
+
         PaletteManipulator::create()
             ->addField('bar', 'foo', 'foo_position')
             ->applyToString('foo')
@@ -434,11 +434,11 @@ class PaletteManipulatorTest extends TestCase
 
     /**
      * Tests adding a field with a fallback at an invalid position.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidFallbackPosition()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         PaletteManipulator::create()
             ->addField(
                 'bar',

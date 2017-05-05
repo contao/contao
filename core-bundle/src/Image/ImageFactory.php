@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FilesModel;
-use Contao\ImageSizeModel;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
@@ -20,6 +19,7 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
+use Contao\ImageSizeModel;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;

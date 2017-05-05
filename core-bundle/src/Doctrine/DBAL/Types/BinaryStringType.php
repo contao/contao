@@ -32,9 +32,9 @@ class BinaryStringType extends Type
     {
         if (isset($fieldDeclaration['fixed']) && $fieldDeclaration['fixed']) {
             return $platform->getBinaryTypeDeclarationSQL($fieldDeclaration);
-        } else {
-            return $platform->getBlobTypeDeclarationSQL($fieldDeclaration);
         }
+
+        return $platform->getBlobTypeDeclarationSQL($fieldDeclaration);
     }
 
     /**

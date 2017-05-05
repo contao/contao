@@ -67,6 +67,41 @@ class LocaleListener
     }
 
     /**
+     * Creates a new instance with the installed languages.
+     *
+     * @param ScopeMatcher $scopeMatcher
+     * @param string       $defaultLocale
+     * @param string       $rootDir
+     *
+     * @return static
+     */
+    public static function createWithLocales(ScopeMatcher $scopeMatcher, $defaultLocale, $rootDir)
+    {
+        $dirs = [__DIR__.'/../Resources/contao/languages'];
+
+        // app/Resources/contao/languages
+        if (is_dir($rootDir.'/Resources/contao/languages')) {
+            $dirs[] = $rootDir.'/Resources/contao/languages';
+        }
+
+        $finder = Finder::create()->directories()->depth(0)->in($dirs);
+
+        $languages = array_values(
+            array_map(
+                function (SplFileInfo $file) {
+                    return $file->getFilename();
+                },
+                iterator_to_array($finder)
+            )
+        );
+
+        // The default locale must be the first supported language (see contao/core#6533)
+        array_unshift($languages, $defaultLocale);
+
+        return new static($scopeMatcher, array_unique($languages));
+    }
+
+    /**
      * Returns the locale from the request, the session or the HTTP header.
      *
      * @param Request $request
@@ -109,40 +144,5 @@ class LocaleListener
         }
 
         return $locale;
-    }
-
-    /**
-     * Creates a new instance with the installed languages.
-     *
-     * @param ScopeMatcher $scopeMatcher
-     * @param string       $defaultLocale
-     * @param string       $rootDir
-     *
-     * @return static
-     */
-    public static function createWithLocales(ScopeMatcher $scopeMatcher, $defaultLocale, $rootDir)
-    {
-        $dirs = [__DIR__.'/../Resources/contao/languages'];
-
-        // app/Resources/contao/languages
-        if (is_dir($rootDir.'/Resources/contao/languages')) {
-            $dirs[] = $rootDir.'/Resources/contao/languages';
-        }
-
-        $finder = Finder::create()->directories()->depth(0)->in($dirs);
-
-        $languages = array_values(
-            array_map(
-                function (SplFileInfo $file) {
-                    return $file->getFilename();
-                },
-                iterator_to_array($finder)
-            )
-        );
-
-        // The default locale must be the first supported language (see contao/core#6533)
-        array_unshift($languages, $defaultLocale);
-
-        return new static($scopeMatcher, array_unique($languages));
     }
 }

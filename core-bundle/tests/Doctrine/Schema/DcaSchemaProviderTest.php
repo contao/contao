@@ -358,8 +358,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     /**
      * Tests parsing an invalid primary key.
-     *
-     * @expectedException \RuntimeException
      */
     public function testInvalidPrimaryKey()
     {
@@ -376,13 +374,13 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ]
         );
 
+        $this->setExpectedException('RuntimeException');
+
         $provider->createSchema();
     }
 
     /**
      * Tests parsing an invalid key.
-     *
-     * @expectedException \RuntimeException
      */
     public function testInvalidKey()
     {
@@ -398,6 +396,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 ],
             ]
         );
+
+        $this->setExpectedException('RuntimeException');
 
         $provider->createSchema();
     }

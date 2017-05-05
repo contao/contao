@@ -26,10 +26,34 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Tests the getUser() method without token storage.
+     */
+    public function testGetUserWithoutTokenStorage()
+    {
+        $router = $this->getMock(RouterInterface::class);
+        $request = new Request();
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
+        $provider = $this
+            ->getMockBuilder(AbstractMenuProvider::class)
+            ->setConstructorArgs([$router, $requestStack])
+            ->getMockForAbstractClass()
+        ;
+
+        $class = new \ReflectionClass($provider);
+        $method = $class->getMethod('getUser');
+        $method->setAccessible(true);
+
+        $this->setExpectedException('RuntimeException', 'No token storage provided');
+
+        $method->invoke($provider);
+    }
+
+    /**
      * Tests the getUser() method without token.
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No token provided
      */
     public function testGetUserWithoutToken()
     {
@@ -57,14 +81,14 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $class = new \ReflectionClass($provider);
         $method = $class->getMethod('getUser');
         $method->setAccessible(true);
+
+        $this->setExpectedException('RuntimeException', 'No token provided');
+
         $method->invoke($provider);
     }
 
     /**
      * Tests the getUser() method without user.
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage The token does not contain a user
      */
     public function testGetUserWithoutUser()
     {
@@ -100,6 +124,9 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $class = new \ReflectionClass($provider);
         $method = $class->getMethod('getUser');
         $method->setAccessible(true);
+
+        $this->setExpectedException('RuntimeException', 'The token does not contain a user');
+
         $method->invoke($provider);
     }
 

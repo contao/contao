@@ -81,11 +81,11 @@ class HtaccessAnalyzerTest extends TestCase
 
     /**
      * Tests adding an invalid file.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidFile()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         new HtaccessAnalyzer(new SplFileInfo('iDoNotExist', 'relativePath', 'relativePathName'));
     }
 }

@@ -139,11 +139,11 @@ class StringUtilTest extends TestCase
      * @param $string
      *
      * @dataProvider parseSimpleTokensInvalidComparison
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testParseSimpleTokensInvalidComparison($string)
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         StringUtil::parseSimpleTokens($string, ['foo' => 'bar']);
     }
 
@@ -502,41 +502,41 @@ class StringUtilTest extends TestCase
 
     /**
      * Tests the stripRootDir() method.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testStripRootDirDifferentPath()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         StringUtil::stripRootDir('/foo');
     }
 
     /**
      * Tests the stripRootDir() method.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testStripRootDirParentPath()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         StringUtil::stripRootDir(dirname($this->getRootDir()).'/');
     }
 
     /**
      * Tests the stripRootDir() method.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testStripRootDirSuffix()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         StringUtil::stripRootDir($this->getRootDir().'foo/');
     }
 
     /**
      * Tests the stripRootDir() method.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testStripRootDirNoSlash()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         StringUtil::stripRootDir($this->getRootDir());
     }
 }

@@ -14,6 +14,8 @@ use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\HelperInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -114,9 +116,6 @@ class UserPasswordCommandTest extends TestCase
 
     /**
      * Tests the execution with differing passwords.
-     *
-     * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage The passwords do not match.
      */
     public function testExecutionWithDifferingPasswords()
     {
@@ -137,17 +136,24 @@ class UserPasswordCommandTest extends TestCase
 
         $this->command->getHelperSet()->set($question, 'question');
 
+        $this->setExpectedException(
+            RuntimeException::class,
+            'The passwords do not match.'
+        );
+
         (new CommandTester($this->command))->execute(['username' => 'foobar']);
     }
 
     /**
      * Tests the command without a username.
-     *
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please provide the username as argument.
      */
     public function testExceptionWhenMissingUsername()
     {
+        $this->setExpectedException(
+            InvalidArgumentException::class,
+            'Please provide the username as argument.'
+        );
+
         (new CommandTester($this->command))->execute([]);
     }
 
@@ -168,12 +174,14 @@ class UserPasswordCommandTest extends TestCase
 
     /**
      * Tests the minimum password length.
-     *
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The password must be at least 8 characters long.
      */
     public function testMinimumPasswordLength()
     {
+        $this->setExpectedException(
+            InvalidArgumentException::class,
+            'The password must be at least 8 characters long.'
+        );
+
         (new CommandTester($this->command))
             ->execute(
                 [
@@ -187,9 +195,6 @@ class UserPasswordCommandTest extends TestCase
 
     /**
      * Tests a custom minimum password length.
-     *
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The password must be at least 16 characters long.
      */
     public function testCustomPasswordLength()
     {
@@ -209,6 +214,11 @@ class UserPasswordCommandTest extends TestCase
         $command->setContainer($container);
         $command->setApplication(new Application());
 
+        $this->setExpectedException(
+            InvalidArgumentException::class,
+            'The password must be at least 16 characters long.'
+        );
+
         (new CommandTester($command))
             ->execute(
                 [
@@ -222,10 +232,6 @@ class UserPasswordCommandTest extends TestCase
 
     /**
      * Tests an invalid username.
-     *
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage foobar
-     * @expectedExceptionMessage not found
      */
     public function testDatabaseUserNotFound()
     {
@@ -237,6 +243,11 @@ class UserPasswordCommandTest extends TestCase
             ->method('update')
             ->willReturn(0)
         ;
+
+        $this->setExpectedException(
+            InvalidArgumentException::class,
+            'Invalid username: foobar'
+        );
 
         (new CommandTester($this->command))
             ->execute(

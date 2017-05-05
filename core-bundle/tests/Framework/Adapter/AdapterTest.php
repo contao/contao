@@ -41,12 +41,12 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests the __call method of a non-existent function.
-     *
-     * @expectedException \PHPUnit_Framework_Error
      */
     public function testMagicCallMissingMethod()
     {
         $adapter = new Adapter('Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass');
+
+        $this->setExpectedException('PHPUnit_Framework_Error');
 
         $adapter->missingMethod();
     }

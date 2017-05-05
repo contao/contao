@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase
@@ -73,7 +74,6 @@ class ConfigurationTest extends TestCase
      * @param string $uploadPath
      *
      * @dataProvider invalidUploadPathProvider
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testInvalidUploadPath($uploadPath)
     {
@@ -83,6 +83,8 @@ class ConfigurationTest extends TestCase
                 'upload_path' => $uploadPath,
             ],
         ];
+
+        $this->setExpectedException(InvalidConfigurationException::class);
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

@@ -61,40 +61,6 @@ class DcaSchemaProvider
     }
 
     /**
-     * Creates a Schema instance from Doctrine ORM metadata.
-     *
-     * @return Schema
-     */
-    private function createSchemaFromOrm()
-    {
-        /** @var EntityManagerInterface $manager */
-        $manager = $this->doctrine->getManager();
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        if (empty($metadata)) {
-            return $this->createSchemaFromDca();
-        }
-
-        $tool = new SchemaTool($manager);
-
-        return $tool->getSchemaFromMetadata($metadata);
-    }
-
-    /**
-     * Creates a Schema instance and adds DCA metadata.
-     *
-     * @return Schema
-     */
-    private function createSchemaFromDca()
-    {
-        $schema = new Schema();
-
-        $this->appendToSchema($schema);
-
-        return $schema;
-    }
-
-    /**
      * Adds the DCA data to the Doctrine schema.
      *
      * @param Schema $schema
@@ -136,6 +102,40 @@ class DcaSchemaProvider
                 }
             }
         }
+    }
+
+    /**
+     * Creates a Schema instance from Doctrine ORM metadata.
+     *
+     * @return Schema
+     */
+    private function createSchemaFromOrm()
+    {
+        /** @var EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+        $metadata = $manager->getMetadataFactory()->getAllMetadata();
+
+        if (empty($metadata)) {
+            return $this->createSchemaFromDca();
+        }
+
+        $tool = new SchemaTool($manager);
+
+        return $tool->getSchemaFromMetadata($metadata);
+    }
+
+    /**
+     * Creates a Schema instance and adds DCA metadata.
+     *
+     * @return Schema
+     */
+    private function createSchemaFromDca()
+    {
+        $schema = new Schema();
+
+        $this->appendToSchema($schema);
+
+        return $schema;
     }
 
     /**

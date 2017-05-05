@@ -14,6 +14,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -81,14 +82,13 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
-     */
     public function testGenerateFrontendWithMissingAlias()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
+
+        $this->setExpectedException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_frontend');
     }
@@ -125,14 +125,14 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests generating the "contao_frontend" route with missing locale.
-     *
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testGenerateFrontendWithMissingLocale()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
+
+        $this->setExpectedException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_frontend', ['alias' => 'foobar']);
     }
@@ -169,14 +169,14 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests generating the "contao_index" route with missing locale.
-     *
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testGenerateIndexWithMissingLocale()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
+
+        $this->setExpectedException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_index');
     }

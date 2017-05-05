@@ -136,12 +136,12 @@ TXT;
 
     /**
      * Tests loading a file with too many nesting levels.
-     *
-     * @expectedException \OutOfBoundsException
      */
     public function testTooManyLevels()
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
+
+        $this->setExpectedException('OutOfBoundsException');
 
         $loader->load(
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',

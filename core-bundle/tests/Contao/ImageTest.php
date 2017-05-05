@@ -128,8 +128,6 @@ class ImageTest extends TestCase
 
     /**
      * Tests the object instantiation with a non-existent file.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructWithNonexistentFile()
     {
@@ -147,13 +145,13 @@ class ImageTest extends TestCase
             ->will($this->returnValue(false))
         ;
 
+        $this->setExpectedException('InvalidArgumentException');
+
         new Image($fileMock);
     }
 
     /**
      * Tests the object instantiation with an invalid extension.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructWithInvalidExtension()
     {
@@ -186,6 +184,8 @@ class ImageTest extends TestCase
                 }
             ))
         ;
+
+        $this->setExpectedException('InvalidArgumentException');
 
         new Image($fileMock);
     }
@@ -1119,8 +1119,6 @@ class ImageTest extends TestCase
 
     /**
      * Tests the setZoomLevel() with a negative out of bounds value.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testSetZoomOutOfBoundsNegative()
     {
@@ -1155,13 +1153,14 @@ class ImageTest extends TestCase
         ;
 
         $imageObj = new Image($fileMock);
+
+        $this->setExpectedException('InvalidArgumentException');
+
         $imageObj->setZoomLevel(-1);
     }
 
     /**
      * Tests the setZoomLevel() method with a positive out of bounds value.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testSetZoomOutOfBoundsPositive()
     {
@@ -1196,6 +1195,9 @@ class ImageTest extends TestCase
         ;
 
         $imageObj = new Image($fileMock);
+
+        $this->setExpectedException('InvalidArgumentException');
+
         $imageObj->setZoomLevel(101);
     }
 

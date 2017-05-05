@@ -11,9 +11,9 @@
 namespace Contao\CoreBundle\Image;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

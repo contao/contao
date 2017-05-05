@@ -80,7 +80,7 @@ class PickerMenuBuilderTest extends TestCase
     {
         $GLOBALS['TL_LANG']['MSC']['pagePicker'] = 'Pages';
 
-        $menu = <<<EOF
+        $menu = <<<'EOF'
 <ul>
   <li class="first">
     <a href="contao_backend:do=page" class="pagemounts">Pages</a>

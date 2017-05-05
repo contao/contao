@@ -62,9 +62,9 @@ abstract class AbstractMenuProvider
     /**
      * Returns the back end user object.
      *
-     * @return BackendUser
-     *
      * @throws \RuntimeException
+     *
+     * @return BackendUser
      */
     protected function getUser()
     {

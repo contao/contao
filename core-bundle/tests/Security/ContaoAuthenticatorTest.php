@@ -18,6 +18,7 @@ use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -80,13 +81,13 @@ class ContaoAuthenticatorTest extends TestCase
 
     /**
      * Tests authenticating an invalid token.
-     *
-     * @expectedException \Symfony\Component\Security\Core\Exception\AuthenticationException
      */
     public function testAuthenticateInvalidToken()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+
+        $this->setExpectedException(AuthenticationException::class);
 
         $authenticator->authenticateToken(
             new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console'
@@ -95,12 +96,12 @@ class ContaoAuthenticatorTest extends TestCase
 
     /**
      * Tests authenticating a token without the container being set.
-     *
-     * @expectedException \LogicException
      */
     public function testAuthenticateTokenWithoutContainer()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
+
+        $this->setExpectedException('LogicException');
 
         $authenticator->authenticateToken(
             new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend'
@@ -142,9 +143,9 @@ class ContaoAuthenticatorTest extends TestCase
             ->willReturnCallback(function ($username) use ($user) {
                 if ('frontend' === $username || 'backend' === $username) {
                     return $user;
-                } else {
-                    throw new UsernameNotFoundException();
                 }
+
+                throw new UsernameNotFoundException();
             })
         ;
 

@@ -67,9 +67,9 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      * @param UserProviderInterface $userProvider
      * @param string                $providerKey
      *
-     * @return TokenInterface|ContaoToken|AnonymousToken
-     *
      * @throws AuthenticationException
+     *
+     * @return TokenInterface|ContaoToken|AnonymousToken
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
@@ -112,9 +112,9 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      *
      * @param TokenInterface $token
      *
-     * @return bool
-     *
      * @throws \LogicException
+     *
+     * @return bool
      */
     private function canSkipAuthentication(TokenInterface $token)
     {

@@ -35,6 +35,19 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
     private $commands = [];
 
     /**
+     * Returns the help text.
+     *
+     * By using the __toString() method, we ensure that the help text is lazy loaded at
+     * a time where the autoloader is available (required by $this->getCommands()).
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -64,19 +77,6 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
         }
 
         return 0;
-    }
-
-    /**
-     * Returns the help text.
-     *
-     * By using the __toString() method, we ensure that the help text is lazy loaded at
-     * a time where the autoloader is available (required by $this->getCommands()).
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
     }
 
     /**

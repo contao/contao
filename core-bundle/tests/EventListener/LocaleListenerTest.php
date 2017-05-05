@@ -159,8 +159,6 @@ class LocaleListenerTest extends TestCase
 
     /**
      * Tests the onKernelRequest() method with an invalid locale.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidLocale()
     {
@@ -169,6 +167,8 @@ class LocaleListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $event = new GetResponseEvent($this->mockKernel(), $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $this->setExpectedException('InvalidArgumentException');
 
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
         $listener->onKernelRequest($event);

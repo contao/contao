@@ -11,8 +11,8 @@
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 
 /**

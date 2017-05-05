@@ -84,9 +84,9 @@ class PaletteManipulator
      * @param string|array|\Closure|null $fallback
      * @param string                     $fallbackPosition
      *
-     * @return static
-     *
      * @throws PalettePositionException
+     *
+     * @return static
      */
     public function addField($name, $parent, $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND)
     {

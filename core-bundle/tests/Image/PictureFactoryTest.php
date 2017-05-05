@@ -10,10 +10,10 @@
 
 namespace Contao\CoreBundle\Tests\Image;
 
-use Contao\CoreBundle\Image\ImageFactory;
-use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\Picture;

@@ -55,8 +55,6 @@ class ResourceFinderTest extends TestCase
 
     /**
      * Tests the findIn() method with an invalid subpath.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testFindInInvalidSubpath()
     {
@@ -65,6 +63,7 @@ class ResourceFinderTest extends TestCase
             $this->getRootDir().'/system/modules/foobar',
         ]);
 
+        $this->setExpectedException('InvalidArgumentException');
         $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('foo'));
     }
 }

@@ -11,8 +11,9 @@
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
-use Contao\FrontendUser;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
+use Contao\FrontendUser;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
@@ -83,13 +84,14 @@ class ContaoTokenTest extends \PHPUnit_Framework_TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function testUnauthenticatedUser()
     {
         /** @var FrontendUser|object $user */
         $user = FrontendUser::getInstance();
         $user->authenticated = false;
+
+        $this->setExpectedException(UsernameNotFoundException::class);
 
         new ContaoToken($user);
     }

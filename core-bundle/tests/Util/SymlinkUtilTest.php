@@ -22,41 +22,41 @@ class SymlinkUtilTest extends TestCase
 {
     /**
      * Tests an empty source file.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testEmptySource()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         SymlinkUtil::symlink('', 'target', $this->getRootDir());
     }
 
     /**
      * Tests an empty target file.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testEmptyTarget()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         SymlinkUtil::symlink('source', '', $this->getRootDir());
     }
 
     /**
      * Tests an invalid target file.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidTarget()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         SymlinkUtil::symlink('source', '../target', $this->getRootDir());
     }
 
     /**
      * Tests an existing target file.
-     *
-     * @expectedException \LogicException
      */
     public function testExistingTarget()
     {
+        $this->setExpectedException('LogicException');
+
         SymlinkUtil::symlink('source', 'app', $this->getRootDir());
     }
 }

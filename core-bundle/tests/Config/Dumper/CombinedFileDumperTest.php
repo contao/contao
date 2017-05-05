@@ -70,11 +70,11 @@ class CombinedFileDumperTest extends TestCase
 
     /**
      * Tests setting an invalid header.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidHeader()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         /** @var Filesystem|\PHPUnit_Framework_MockObject_MockObject $filesystem */
         $filesystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
 

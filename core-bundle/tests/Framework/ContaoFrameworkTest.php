@@ -12,6 +12,8 @@ namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
@@ -335,7 +337,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an invalid request token.
      *
      * @runInSeparateProcess
-     * @expectedException \Contao\CoreBundle\Exception\InvalidRequestTokenException
      */
     public function testInvalidRequestToken()
     {
@@ -372,6 +373,8 @@ class ContaoFrameworkTest extends TestCase
             null,
             ['Contao\RequestToken' => $rtAdapter]
         );
+
+        $this->setExpectedException(InvalidRequestTokenException::class);
 
         $framework->setContainer($container);
         $framework->initialize();
@@ -425,7 +428,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an incomplete installation.
      *
      * @runInSeparateProcess
-     * @expectedException \Contao\CoreBundle\Exception\IncompleteInstallationException
      */
     public function testIncompleteInstallation()
     {
@@ -470,6 +472,8 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login'),
             ['Contao\Config' => $configAdapter]
         );
+
+        $this->setExpectedException(IncompleteInstallationException::class);
 
         $framework->setContainer($container);
         $framework->initialize();
@@ -532,7 +536,6 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with a valid request token.
      *
      * @runInSeparateProcess
-     * @expectedException \LogicException
      */
     public function testContainerNotSet()
     {
@@ -540,6 +543,8 @@ class ContaoFrameworkTest extends TestCase
             new RequestStack(),
             $this->mockRouter('/contao/login')
         );
+
+        $this->setExpectedException('LogicException');
 
         $framework->setContainer();
         $framework->initialize();

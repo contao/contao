@@ -154,9 +154,9 @@ class BackendCsvImportController
      * @param string|null $submitLabel
      * @param bool        $allowLinebreak
      *
-     * @return Response
-     *
      * @throws InternalServerErrorException
+     *
+     * @return Response
      */
     private function importFromTemplate(callable $callback, $table, $field, $id, $submitLabel = null, $allowLinebreak = false)
     {
@@ -324,9 +324,9 @@ class BackendCsvImportController
      *
      * @param string $separator
      *
-     * @return string
-     *
      * @throws \RuntimeException
+     *
+     * @return string
      */
     private function getDelimiter($separator)
     {
@@ -344,9 +344,9 @@ class BackendCsvImportController
      *
      * @param FileUpload $uploader
      *
-     * @return array
-     *
      * @throws \RuntimeException
+     *
+     * @return array
      */
     private function getFiles(FileUpload $uploader)
     {

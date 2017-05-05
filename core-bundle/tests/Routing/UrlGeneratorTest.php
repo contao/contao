@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGenerator as ParentUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -216,11 +217,11 @@ class UrlGeneratorTest extends TestCase
 
     /**
      * Tests that an exception is thrown if a parameter is missing.
-     *
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testThrowsExceptionOnMissingParameter()
     {
+        $this->setExpectedException(MissingMandatoryParametersException::class);
+
         $this->getGenerator()->generate('foo/{article}');
     }
 

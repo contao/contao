@@ -45,6 +45,16 @@ class LanguageHelper implements \ArrayAccess
     }
 
     /**
+     * Returns the combined stack as string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return implode('.', $this->stack);
+    }
+
+    /**
      * Returns true.
      *
      * @param mixed $offset
@@ -91,15 +101,5 @@ class LanguageHelper implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new \LogicException('The language helper is just for retrieving, not for setting.');
-    }
-
-    /**
-     * Returns the combined stack as string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return implode('.', $this->stack);
     }
 }

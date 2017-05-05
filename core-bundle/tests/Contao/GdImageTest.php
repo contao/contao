@@ -125,11 +125,11 @@ class GdImageTest extends TestCase
 
     /**
      * Tests the fromFile() method with an invalid type.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testFromFileInvalidType()
     {
+        $this->setExpectedException('InvalidArgumentException');
+
         GdImage::fromFile(new \File('test.xyz'));
     }
 

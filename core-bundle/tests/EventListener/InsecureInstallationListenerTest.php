@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
+use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -36,13 +37,13 @@ class InsecureInstallationListenerTest extends TestCase
 
     /**
      * Tests the onKernelRequest() method.
-     *
-     * @expectedException \Contao\CoreBundle\Exception\InsecureInstallationException
      */
     public function testOnKernelRequest()
     {
         $kernel = $this->mockKernel();
         $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
+
+        $this->setExpectedException(InsecureInstallationException::class);
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
