@@ -1,0 +1,5 @@
+{{ render_contao_backend_template({
+    main: block('main'),
+    error: block('headline'),
+    headline: block('error')
+}) | raw }}

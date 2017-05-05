@@ -1,0 +1,12 @@
+contao_install:
+    resource: "@ContaoInstallationBundle/Controller"
+    type: annotation
+
+# Redirect /install.php to /contao/install
+contao_install_redirect:
+    path: /install.php
+    defaults:
+        _scope: backend
+        _controller: "FrameworkBundle:Redirect:redirect"
+        route: contao_install
+        permanent: true
