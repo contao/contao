@@ -114,6 +114,7 @@ $GLOBALS['TL_MIME'] =
 	'less'  => ['text/x-less', 'iconLESS.svg'],
 	'html'  => ['text/html', 'iconHTML.svg'],
 	'htm'   => ['text/html', 'iconHTM.svg'],
+	'md'    => ['text/markdown', 'iconMD.svg'],
 	'shtml' => ['text/html', 'iconSHTML.svg'],
 	'txt'   => ['text/plain', 'iconTXT.svg'],
 	'text'  => ['text/plain', 'iconTEXT.svg'],
