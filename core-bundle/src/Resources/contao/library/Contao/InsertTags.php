@@ -79,7 +79,7 @@ class InsertTags extends \Controller
 		}
 
 		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-		$tags = preg_split('~{{([^% #^/!>&][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tags = preg_split('~{{([\pL\pN][^{}]*)}}~u', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		if (count($tags) < 2)
 		{
