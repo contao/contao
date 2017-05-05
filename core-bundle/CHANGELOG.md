@@ -1,7 +1,8 @@
 # Contao core bundle change log
 
 ### DEV
- 
+
+ * Warn if another user has edited a record when saving it (see #809).
  * Optimize the element preview height (see #810).
  * Use the file meta data by default when adding an image (see #807).
  * Use the kernel.project_dir parameter (see #758).
@@ -21,5 +22,5 @@
  * Add the contao.image.target_dir parameter (see #684).
  * Match the security firewall based on the request scope (see #677).
  * Add the contao.web_dir parameter (see contao/installation-bundle#40).
- * Look up the form class and allow to choose the type (see contao/core#8527). 
+ * Look up the form class and allow to choose the type (see contao/core#8527).
  * Auto-select the active page in the quick navigation/link module (see contao/core#8587).

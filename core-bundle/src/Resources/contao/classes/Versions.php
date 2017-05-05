@@ -102,6 +102,26 @@ class Versions extends \Controller
 
 
 	/**
+	 * Returns the latest version
+	 *
+	 * @return integer|null
+	 */
+	public function getLatestVersion()
+	{
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
+		{
+			return null;
+		}
+
+		$objVersion = $this->Database->prepare("SELECT MAX(version) AS version FROM tl_version WHERE fromTable=? AND pid=?")
+									 ->limit(1)
+									 ->execute($this->strTable, $this->intPid);
+
+		return (int) $objVersion->version;
+	}
+
+
+	/**
 	 * Create the initial version of a record
 	 */
 	public function initialize()
