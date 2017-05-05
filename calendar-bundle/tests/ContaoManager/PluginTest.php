@@ -41,8 +41,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $config = (new Plugin())->getBundles($parser)[0];
 
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
-        $this->assertEquals('Contao\CalendarBundle\ContaoCalendarBundle', $config->getName());
-        $this->assertEquals(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
-        $this->assertEquals(['calendar'], $config->getReplace());
+        $this->assertSame('Contao\CalendarBundle\ContaoCalendarBundle', $config->getName());
+        $this->assertSame(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
+        $this->assertSame(['calendar'], $config->getReplace());
     }
 }

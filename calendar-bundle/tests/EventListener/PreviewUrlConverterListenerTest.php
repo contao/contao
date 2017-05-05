@@ -10,10 +10,10 @@
 
 namespace Contao\CalendarBundle\Tests\EventListener;
 
+use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -52,7 +52,7 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlConvertListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlConvert($event);
 
-        $this->assertEquals('http://localhost/events/winter-holidays.html', $event->getUrl());
+        $this->assertSame('http://localhost/events/winter-holidays.html', $event->getUrl());
     }
 
     /**

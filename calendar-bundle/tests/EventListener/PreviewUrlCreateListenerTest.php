@@ -10,10 +10,10 @@
 
 namespace Contao\CalendarBundle\Tests\EventListener;
 
+use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -49,7 +49,7 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlCreate($event);
 
-        $this->assertEquals('calendar=1', $event->getQuery());
+        $this->assertSame('calendar=1', $event->getQuery());
     }
 
     /**
@@ -115,7 +115,7 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlCreate($event);
 
-        $this->assertEquals('calendar=2', $event->getQuery());
+        $this->assertSame('calendar=2', $event->getQuery());
     }
 
     /**

@@ -68,8 +68,8 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
         $eventPicker = $menu->getChild('eventPicker');
 
         $this->assertNotNull($eventPicker);
-        $this->assertEquals('events', $eventPicker->getLinkAttribute('class'));
-        $this->assertEquals('contao_backend:do=calendar', $eventPicker->getUri());
+        $this->assertSame('events', $eventPicker->getLinkAttribute('class'));
+        $this->assertSame('contao_backend:do=calendar', $eventPicker->getUri());
     }
 
     /**
@@ -95,7 +95,7 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessSelection()
     {
-        $this->assertEquals('{{event_url::2}}', $this->provider->processSelection(2));
+        $this->assertSame('{{event_url::2}}', $this->provider->processSelection(2));
     }
 
     /**
@@ -125,14 +125,14 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->query->set('value', '{{event_url::42}}');
 
-        $this->assertEquals(
+        $this->assertSame(
             'contao_backend:value=42:do=calendar:table=tl_calendar_events:id=2',
             $this->provider->getPickerUrl($request)
         );
 
-        $this->assertEquals('contao_backend:value=42:do=calendar', $this->provider->getPickerUrl($request));
-        $this->assertEquals('contao_backend:value=42:do=calendar', $this->provider->getPickerUrl($request));
-        $this->assertEquals('contao_backend:value=42:do=calendar', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=calendar', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=calendar', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=calendar', $this->provider->getPickerUrl($request));
     }
 
     /**

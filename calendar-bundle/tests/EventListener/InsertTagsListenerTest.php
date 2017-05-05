@@ -10,10 +10,10 @@
 
 namespace Contao\CalendarBundle\Tests\EventListener;
 
+use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CalendarBundle\EventListener\InsertTagsListener;
 
 /**
  * Tests the InsertTagsListener class.
@@ -39,7 +39,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://localhost/share/events.xml',
             $listener->onReplaceInsertTags('calendar_feed::2')
         );
@@ -52,27 +52,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
             $listener->onReplaceInsertTags('event::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">',
             $listener->onReplaceInsertTags('event_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'events/the-foobar-event.html',
             $listener->onReplaceInsertTags('event_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'The &quot;foobar&quot; event',
             $listener->onReplaceInsertTags('event_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>The annual foobar event.</p>',
             $listener->onReplaceInsertTags('event_teaser::2')
         );
@@ -85,27 +85,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('external'));
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="https://contao.org" title="The &quot;foobar&quot; event">The "foobar" event</a>',
             $listener->onReplaceInsertTags('event::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="https://contao.org" title="The &quot;foobar&quot; event">',
             $listener->onReplaceInsertTags('event_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://contao.org',
             $listener->onReplaceInsertTags('event_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'The &quot;foobar&quot; event',
             $listener->onReplaceInsertTags('event_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>The annual foobar event.</p>',
             $listener->onReplaceInsertTags('event_teaser::2')
         );
@@ -118,27 +118,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('internal'));
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="internal-target.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
             $listener->onReplaceInsertTags('event::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="internal-target.html" title="The &quot;foobar&quot; event">',
             $listener->onReplaceInsertTags('event_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'internal-target.html',
             $listener->onReplaceInsertTags('event_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'The &quot;foobar&quot; event',
             $listener->onReplaceInsertTags('event_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>The annual foobar event.</p>',
             $listener->onReplaceInsertTags('event_teaser::2')
         );
@@ -151,27 +151,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('article'));
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="portfolio/articles/foobar.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
             $listener->onReplaceInsertTags('event::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="portfolio/articles/foobar.html" title="The &quot;foobar&quot; event">',
             $listener->onReplaceInsertTags('event_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'portfolio/articles/foobar.html',
             $listener->onReplaceInsertTags('event_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'The &quot;foobar&quot; event',
             $listener->onReplaceInsertTags('event_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>The annual foobar event.</p>',
             $listener->onReplaceInsertTags('event_teaser::2')
         );
@@ -194,8 +194,8 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
 
-        $this->assertEquals('', $listener->onReplaceInsertTags('calendar_feed::3'));
-        $this->assertEquals('', $listener->onReplaceInsertTags('event_url::3'));
+        $this->assertSame('', $listener->onReplaceInsertTags('calendar_feed::3'));
+        $this->assertSame('', $listener->onReplaceInsertTags('event_url::3'));
     }
 
     /**
@@ -205,7 +205,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', false, true));
 
-        $this->assertEquals('', $listener->onReplaceInsertTags('event_url::3'));
+        $this->assertSame('', $listener->onReplaceInsertTags('event_url::3'));
     }
 
     /**
