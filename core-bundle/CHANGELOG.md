@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.0-beta1 (2017-05-05)
 
  * Warn if another user has edited a record when saving it (see #809).
  * Optimize the element preview height (see #810).

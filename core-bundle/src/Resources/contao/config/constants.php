@@ -9,9 +9,9 @@
  */
 
 // Core version
-define('VERSION', '4.3');
-define('BUILD', '9');
-define('LONG_TERM_SUPPORT', false);
+define('VERSION', '4.4');
+define('BUILD', '0-beta1');
+define('LONG_TERM_SUPPORT', true);
 
 // Link constants
 define('LINK_BLUR', ' onclick="this.blur()"');
