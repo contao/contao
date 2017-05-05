@@ -1,10 +1,8 @@
 # Contao manager bundle change log
 
-### 4.3.7 (2017-03-23)
+### 4.4.0-beta1 (2017-05-05)
 
- * Fix the 'The target directory "web" does not exist' error.
- * Activate the Nelmio CORS bundle.
-
-### 4.3.5 (2017-02-14)
-
- * Fix the maintenance lock file path.
+ * Extended reporting if the script handler fails (see #27).
+ * Set prepend_locale to false (see contao/core-bundle#785).
+ * Change the maintenance lock file path (see contao/core-bundle#728).
+ * Add basic security (see contao/standard-edition#54).
