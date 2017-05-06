@@ -37,7 +37,7 @@ class NoContentResponseExceptionTest extends \PHPUnit_Framework_TestCase
         $exception = new NoContentResponseException();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertEquals(204, $exception->getResponse()->getStatusCode());
-        $this->assertEquals('', $exception->getResponse()->getContent());
+        $this->assertSame(204, $exception->getResponse()->getStatusCode());
+        $this->assertSame('', $exception->getResponse()->getContent());
     }
 }

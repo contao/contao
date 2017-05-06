@@ -121,7 +121,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertSame(500, $response->getStatusCode());
     }
 
     /**
@@ -150,7 +150,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals($type, $response->getStatusCode());
+        $this->assertSame($type, $response->getStatusCode());
 
         unset($GLOBALS['TL_PTY']);
     }
@@ -174,7 +174,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(503, $response->getStatusCode());
+        $this->assertSame(503, $response->getStatusCode());
     }
 
     /**
@@ -196,7 +196,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(409, $response->getStatusCode());
+        $this->assertSame(409, $response->getStatusCode());
     }
 
     /**
@@ -250,7 +250,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertSame(500, $response->getStatusCode());
     }
 
     /**

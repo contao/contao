@@ -40,6 +40,6 @@ class PreviewUrlConvertEventTest extends \PHPUnit_Framework_TestCase
 
         $event->setUrl('http://localhost');
 
-        $this->assertEquals('http://localhost', $event->getUrl());
+        $this->assertSame('http://localhost', $event->getUrl());
     }
 }

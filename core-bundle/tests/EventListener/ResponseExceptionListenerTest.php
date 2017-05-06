@@ -54,8 +54,8 @@ class ResponseExceptionListenerTest extends TestCase
 
         $response = $event->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('Foo', $response->getContent());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('Foo', $response->getContent());
     }
 
     /**

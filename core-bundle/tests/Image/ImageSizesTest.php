@@ -45,13 +45,16 @@ class ImageSizesTest extends TestCase
      */
     public function setUp()
     {
+        $framework = $this->mockContaoFramework();
+        $framework->initialize();
+
         System::setContainer($this->mockContainerWithContaoScopes());
 
         require_once __DIR__.'/../../src/Resources/contao/config/config.php';
 
         $this->connection = $this->getMock('Doctrine\DBAL\Connection', ['fetchAll'], [], '', false);
         $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework());
+        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $framework);
     }
 
     /**
@@ -143,7 +146,7 @@ class ImageSizesTest extends TestCase
         $user->imageSizes = serialize([]);
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        $this->assertEquals([], $options);
+        $this->assertSame([], $options);
     }
 
     /**

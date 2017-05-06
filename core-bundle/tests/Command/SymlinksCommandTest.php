@@ -47,7 +47,7 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand('contao:symlinks');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\SymlinksCommand', $command);
-        $this->assertEquals('contao:symlinks', $command->getName());
+        $this->assertSame('contao:symlinks', $command->getName());
     }
 
     /**
@@ -73,7 +73,7 @@ class SymlinksCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
         $this->assertContains('web/system/modules/foobar/assets', $display);
         $this->assertContains('system/modules/foobar/assets', $display);
         $this->assertContains('web/system/modules/foobar/html', $display);
@@ -103,7 +103,7 @@ class SymlinksCommandTest extends TestCase
 
         $code = $tester->execute([]);
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
@@ -127,6 +127,6 @@ class SymlinksCommandTest extends TestCase
         $relativePath = $method->invoke($command, $this->getRootDir().'/var/logs');
 
         // The path should be normalized and shortened
-        $this->assertEquals('var/logs', $relativePath);
+        $this->assertSame('var/logs', $relativePath);
     }
 }

@@ -61,8 +61,8 @@ class ArticlePickerProviderTest extends TestCase
         $articlePicker = $menu->getChild('articlePicker');
 
         $this->assertNotNull($articlePicker);
-        $this->assertEquals('articles', $articlePicker->getLinkAttribute('class'));
-        $this->assertEquals('contao_backend:do=article', $articlePicker->getUri());
+        $this->assertSame('articles', $articlePicker->getLinkAttribute('class'));
+        $this->assertSame('contao_backend:do=article', $articlePicker->getUri());
     }
 
     /**
@@ -89,7 +89,7 @@ class ArticlePickerProviderTest extends TestCase
      */
     public function testProcessSelection()
     {
-        $this->assertEquals('{{article_url::2}}', $this->provider->processSelection(2));
+        $this->assertSame('{{article_url::2}}', $this->provider->processSelection(2));
     }
 
     /**
@@ -119,6 +119,6 @@ class ArticlePickerProviderTest extends TestCase
         $request = new Request();
         $request->query->set('value', '{{article_url::42}}');
 
-        $this->assertEquals('contao_backend:value=42:do=article', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=article', $this->provider->getPickerUrl($request));
     }
 }

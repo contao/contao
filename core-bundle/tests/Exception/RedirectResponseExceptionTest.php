@@ -37,7 +37,7 @@ class RedirectResponseExceptionTest extends \PHPUnit_Framework_TestCase
         $exception = new RedirectResponseException('http://example.org');
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertEquals(303, $exception->getResponse()->getStatusCode());
-        $this->assertEquals('http://example.org', $exception->getResponse()->headers->get('Location'));
+        $this->assertSame(303, $exception->getResponse()->getStatusCode());
+        $this->assertSame('http://example.org', $exception->getResponse()->headers->get('Location'));
     }
 }

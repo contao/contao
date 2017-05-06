@@ -48,7 +48,7 @@ class ContaoModuleBundleTest extends TestCase
      */
     public function testGetPath()
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->getRootDir().'/system/modules/foobar',
             $this->bundle->getPath()
         );

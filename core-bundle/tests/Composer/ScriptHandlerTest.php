@@ -177,7 +177,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
+        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
     }
 
     /**
@@ -223,7 +223,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
+        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
     }
 
     /**
@@ -253,22 +253,22 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
         $method->setAccessible(true);
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $method->invokeArgs($this->handler, [$this->getComposerEvent()])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ' -v',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVerbose')])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ' -vv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVeryVerbose')])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ' -vvv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isDebug')])
         );

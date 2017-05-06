@@ -60,7 +60,7 @@ class UserPasswordCommandTest extends TestCase
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Command\UserPasswordCommand', $this->command);
-        $this->assertEquals('contao:user:password', $this->command->getName());
+        $this->assertSame('contao:user:password', $this->command->getName());
     }
 
     /**
@@ -90,7 +90,7 @@ class UserPasswordCommandTest extends TestCase
             )
         ;
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
     }
 
     /**
@@ -111,7 +111,7 @@ class UserPasswordCommandTest extends TestCase
 
         $code = (new CommandTester($this->command))->execute(['username' => 'foobar']);
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
     }
 
     /**
@@ -169,7 +169,7 @@ class UserPasswordCommandTest extends TestCase
             )
         ;
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
     }
 
     /**

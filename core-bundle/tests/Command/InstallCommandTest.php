@@ -54,7 +54,7 @@ class InstallCommandTest extends TestCase
         $command = new InstallCommand('contao:install');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\InstallCommand', $command);
-        $this->assertEquals('contao:install', $command->getName());
+        $this->assertSame('contao:install', $command->getName());
     }
 
     /**
@@ -75,7 +75,7 @@ class InstallCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
         $this->assertContains(' * files', $display);
         $this->assertContains(' * templates', $display);
         $this->assertContains(' * web/system', $display);
@@ -105,7 +105,7 @@ class InstallCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
         $this->assertContains(' * files_test', $display);
         $this->assertContains(' * assets/images_test', $display);
     }
@@ -123,7 +123,7 @@ class InstallCommandTest extends TestCase
 
         $code = $tester->execute([]);
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();

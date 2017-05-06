@@ -140,11 +140,11 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(200, $pictureData['img']['width']);
-        $this->assertEquals(200, $pictureData['img']['height']);
-        $this->assertEquals('http://example.com/dummy.jpg', $pictureData['img']['src']);
-        $this->assertEquals('http://example.com/dummy.jpg', $pictureData['img']['srcset']);
-        $this->assertEquals([], $pictureData['sources']);
+        $this->assertSame(200, $pictureData['img']['width']);
+        $this->assertSame(200, $pictureData['img']['height']);
+        $this->assertSame('http://example.com/dummy.jpg', $pictureData['img']['src']);
+        $this->assertSame('http://example.com/dummy.jpg', $pictureData['img']['srcset']);
+        $this->assertSame([], $pictureData['sources']);
     }
 
     /**
@@ -163,16 +163,16 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(100, $pictureData['img']['width']);
-        $this->assertEquals(100, $pictureData['img']['height']);
+        $this->assertSame(100, $pictureData['img']['width']);
+        $this->assertSame(100, $pictureData['img']['height']);
 
-        $this->assertEquals(
+        $this->assertSame(
             $pictureData['img']['src'],
             $pictureData['img']['srcset'],
             'Attributes src and srcset should be equal'
         );
 
-        $this->assertEquals([], $pictureData['sources']);
+        $this->assertSame([], $pictureData['sources']);
     }
 
     /**
@@ -208,30 +208,30 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(100, $pictureData['img']['width']);
-        $this->assertEquals(100, $pictureData['img']['height']);
+        $this->assertSame(100, $pictureData['img']['width']);
+        $this->assertSame(100, $pictureData['img']['height']);
 
-        $this->assertEquals(
+        $this->assertSame(
             $pictureData['img']['src'],
             $pictureData['img']['srcset'],
             'Attributes src and srcset should be equal'
         );
 
-        $this->assertEquals(50, $pictureData['sources'][0]['width']);
-        $this->assertEquals(50, $pictureData['sources'][0]['height']);
-        $this->assertEquals('(max-width: 900px)', $pictureData['sources'][0]['media']);
+        $this->assertSame(50, $pictureData['sources'][0]['width']);
+        $this->assertSame(50, $pictureData['sources'][0]['height']);
+        $this->assertSame('(max-width: 900px)', $pictureData['sources'][0]['media']);
 
-        $this->assertEquals(
+        $this->assertSame(
             $pictureData['sources'][0]['src'],
             $pictureData['sources'][0]['srcset'],
             'Attributes src and srcset should be equal'
         );
 
-        $this->assertEquals(25, $pictureData['sources'][1]['width']);
-        $this->assertEquals(25, $pictureData['sources'][1]['height']);
-        $this->assertEquals('(max-width: 600px)', $pictureData['sources'][1]['media']);
+        $this->assertSame(25, $pictureData['sources'][1]['width']);
+        $this->assertSame(25, $pictureData['sources'][1]['height']);
+        $this->assertSame('(max-width: 600px)', $pictureData['sources'][1]['media']);
 
-        $this->assertEquals(
+        $this->assertSame(
             $pictureData['sources'][1]['src'],
             $pictureData['sources'][1]['srcset'],
             'Attributes src and srcset should be equal'
@@ -255,14 +255,14 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(100, $pictureData['img']['width']);
-        $this->assertEquals(100, $pictureData['img']['height']);
+        $this->assertSame(100, $pictureData['img']['width']);
+        $this->assertSame(100, $pictureData['img']['height']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
         $this->assertRegExp('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
         $this->assertRegExp('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
         $this->assertRegExp('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
-        $this->assertEquals([], $pictureData['sources']);
+        $this->assertSame([], $pictureData['sources']);
     }
 
     /**
@@ -283,15 +283,15 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(100, $pictureData['img']['width']);
-        $this->assertEquals(100, $pictureData['img']['height']);
-        $this->assertEquals('100vw', $pictureData['img']['sizes']);
+        $this->assertSame(100, $pictureData['img']['width']);
+        $this->assertSame(100, $pictureData['img']['height']);
+        $this->assertSame('100vw', $pictureData['img']['sizes']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
         $this->assertRegExp('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
         $this->assertRegExp('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
         $this->assertRegExp('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
-        $this->assertEquals([], $pictureData['sources']);
+        $this->assertSame([], $pictureData['sources']);
     }
 
     /**
@@ -312,11 +312,11 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(200, $pictureData['img']['width']);
-        $this->assertEquals(200, $pictureData['img']['height']);
-        $this->assertEquals('http://example.com/dummy%20with%20spaces.jpg', $pictureData['img']['src']);
-        $this->assertEquals('http://example.com/dummy%20with%20spaces.jpg', $pictureData['img']['srcset']);
-        $this->assertEquals([], $pictureData['sources']);
+        $this->assertSame(200, $pictureData['img']['width']);
+        $this->assertSame(200, $pictureData['img']['height']);
+        $this->assertSame('http://example.com/dummy%20with%20spaces.jpg', $pictureData['img']['src']);
+        $this->assertSame('http://example.com/dummy%20with%20spaces.jpg', $pictureData['img']['srcset']);
+        $this->assertSame([], $pictureData['sources']);
     }
 
     /**
@@ -335,15 +335,15 @@ class PictureTest extends TestCase
 
         $pictureData = $picture->getTemplateData();
 
-        $this->assertEquals(100, $pictureData['img']['width']);
-        $this->assertEquals(100, $pictureData['img']['height']);
+        $this->assertSame(100, $pictureData['img']['width']);
+        $this->assertSame(100, $pictureData['img']['height']);
 
-        $this->assertEquals(
+        $this->assertSame(
             $pictureData['img']['src'],
             $pictureData['img']['srcset'],
             'Attributes src and srcset should be equal'
         );
 
-        $this->assertEquals([], $pictureData['sources']);
+        $this->assertSame([], $pictureData['sources']);
     }
 }

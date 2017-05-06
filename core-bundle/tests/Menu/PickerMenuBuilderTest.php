@@ -92,8 +92,8 @@ class PickerMenuBuilderTest extends TestCase
 
 EOF;
 
-        $this->assertEquals($menu, $this->menuBuilder->createMenu('link'));
-        $this->assertEquals('', $this->menuBuilder->createMenu('page'));
+        $this->assertSame($menu, $this->menuBuilder->createMenu('link'));
+        $this->assertSame('', $this->menuBuilder->createMenu('page'));
     }
 
     /**
@@ -111,9 +111,9 @@ EOF;
      */
     public function testProcessSelection()
     {
-        $this->assertEquals('foo', $this->menuBuilder->processSelection('tl_files', 'foo'));
-        $this->assertEquals('{{link_url::2}}', $this->menuBuilder->processSelection('tl_page', 2));
-        $this->assertEquals('bar', $this->menuBuilder->processSelection('tl_member', 'bar'));
+        $this->assertSame('foo', $this->menuBuilder->processSelection('tl_files', 'foo'));
+        $this->assertSame('{{link_url::2}}', $this->menuBuilder->processSelection('tl_page', 2));
+        $this->assertSame('bar', $this->menuBuilder->processSelection('tl_member', 'bar'));
     }
 
     /**
@@ -124,16 +124,16 @@ EOF;
         $request = new Request();
         $request->query->set('value', '{{link_url::42}}');
 
-        $this->assertEquals('contao_backend:value=42:do=page', $this->menuBuilder->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=page', $this->menuBuilder->getPickerUrl($request));
 
         $request = new Request();
         $request->query->set('value', '{{news_url::42}}');
 
-        $this->assertEquals(
+        $this->assertSame(
             'contao_backend:do=page:value={{news_url::42}}',
             $this->menuBuilder->getPickerUrl($request)
         );
 
-        $this->assertEquals('contao_backend:do=page', $this->menuBuilder->getPickerUrl(new Request()));
+        $this->assertSame('contao_backend:do=page', $this->menuBuilder->getPickerUrl(new Request()));
     }
 }

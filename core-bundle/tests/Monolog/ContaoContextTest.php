@@ -35,7 +35,7 @@ class ContaoContextTest extends TestCase
     {
         $context = new ContaoContext('foo');
 
-        $this->assertEquals('foo', $context->getFunc());
+        $this->assertSame('foo', $context->getFunc());
         $this->assertNull($context->getAction());
         $this->assertNull($context->getUsername());
         $this->assertNull($context->getIp());
@@ -48,7 +48,7 @@ class ContaoContextTest extends TestCase
         $context->setBrowser('Mozilla');
         $context->setSource('Foo::bar()');
 
-        $this->assertEquals(
+        $this->assertSame(
             json_encode([
                 'func' => 'foo',
                 'action' => 'action',

@@ -54,9 +54,9 @@ class PickerMenuProviderPassTest extends \PHPUnit_Framework_TestCase
         $methodCalls = $container->findDefinition('contao.menu.picker_menu_builder')->getMethodCalls();
 
         $this->assertCount(1, $methodCalls);
-        $this->assertEquals('addProvider', $methodCalls[0][0]);
+        $this->assertSame('addProvider', $methodCalls[0][0]);
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[0][1][0]);
-        $this->assertEquals('contao.menu.page_picker_provider', (string) $methodCalls[0][1][0]);
+        $this->assertSame('contao.menu.page_picker_provider', (string) $methodCalls[0][1][0]);
     }
 
     /**

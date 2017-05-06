@@ -110,7 +110,7 @@ class BinaryStringTypeTest extends TestCase
      */
     public function testName()
     {
-        $this->assertEquals(BinaryStringType::NAME, $this->type->getName());
+        $this->assertSame(BinaryStringType::NAME, $this->type->getName());
     }
 
     /**

@@ -65,7 +65,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'allow_origin' => true,
                 'allow_methods' => ['HEAD', 'GET'],

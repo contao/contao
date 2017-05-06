@@ -49,8 +49,8 @@ class ContaoAuthenticatorTest extends TestCase
         $token = $authenticator->createToken(new Request(), 'frontend');
 
         $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', $token);
-        $this->assertEquals('frontend', $token->getSecret());
-        $this->assertEquals('anon.', $token->getUsername());
+        $this->assertSame('frontend', $token->getSecret());
+        $this->assertSame('anon.', $token->getUsername());
     }
 
     /**
@@ -73,10 +73,9 @@ class ContaoAuthenticatorTest extends TestCase
             $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), $provider, 'frontend')
         );
 
-        $this->assertEquals(
-            new AnonymousToken('console', 'anon.'),
-            $authenticator->authenticateToken(new AnonymousToken('console', 'anon.'), $provider, 'console')
-        );
+        $token = new AnonymousToken('console', 'anon.');
+
+        $this->assertSame($token, $authenticator->authenticateToken($token, $provider, 'console'));
     }
 
     /**

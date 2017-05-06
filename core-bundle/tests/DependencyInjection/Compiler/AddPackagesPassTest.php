@@ -50,8 +50,8 @@ class AddPackagesPassTest extends TestCase
         $this->assertArrayHasKey('contao/test-bundle2', $packages);
         $this->assertArrayNotHasKey('contao/test-bundle3', $packages);
 
-        $this->assertEquals('1.0.0', $packages['contao/test-bundle1']);
-        $this->assertEquals('dev-develop', $packages['contao/test-bundle2']);
+        $this->assertSame('1.0.0', $packages['contao/test-bundle1']);
+        $this->assertSame('dev-develop', $packages['contao/test-bundle2']);
     }
 
     /**

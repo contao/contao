@@ -36,11 +36,11 @@ class ImageSizesEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new ImageSizesEvent([1]);
 
-        $this->assertEquals([1], $event->getImageSizes());
+        $this->assertSame([1], $event->getImageSizes());
 
         $event->setImageSizes([1, 2]);
 
-        $this->assertEquals([1, 2], $event->getImageSizes());
+        $this->assertSame([1, 2], $event->getImageSizes());
     }
 
     /**
@@ -51,6 +51,6 @@ class ImageSizesEventTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock('Contao\BackendUser');
         $event = new ImageSizesEvent([1], $user);
 
-        $this->assertEquals($user, $event->getUser());
+        $this->assertSame($user, $event->getUser());
     }
 }

@@ -39,11 +39,11 @@ class ContaoTableHandlerTest extends TestCase
     {
         $handler = new ContaoTableHandler();
 
-        $this->assertEquals('doctrine.dbal.default_connection', $handler->getDbalServiceName());
+        $this->assertSame('doctrine.dbal.default_connection', $handler->getDbalServiceName());
 
         $handler->setDbalServiceName('foobar');
 
-        $this->assertEquals('foobar', $handler->getDbalServiceName());
+        $this->assertSame('foobar', $handler->getDbalServiceName());
     }
 
     /**

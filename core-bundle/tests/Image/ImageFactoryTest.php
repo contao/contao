@@ -15,14 +15,17 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\Image;
+use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
+use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 use Contao\System;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use Imagine\Image\ImageInterface;
+use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
@@ -62,6 +65,7 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
 
+        /** @var ImageInterface|\PHPUnit_Framework_MockObject_MockObject $imageMock */
         $imageMock = $this
             ->getMockBuilder('Contao\Image\Image')
             ->disableOriginalConstructor()
@@ -81,7 +85,7 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($image) use (&$path) {
                         /* @var Image $image */
-                        $this->assertEquals($path, $image->getPath());
+                        $this->assertSame($path, $image->getPath());
 
                         return true;
                     }
@@ -89,9 +93,9 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($config) {
                         /* @var ResizeConfiguration $config */
-                        $this->assertEquals(100, $config->getWidth());
-                        $this->assertEquals(200, $config->getHeight());
-                        $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
+                        $this->assertSame(100, $config->getWidth());
+                        $this->assertSame(200, $config->getHeight());
+                        $this->assertSame(ResizeConfiguration::MODE_BOX, $config->getMode());
 
                         return true;
                     }
@@ -135,7 +139,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $image);
+        $this->assertSameImage($imageMock, $image);
 
         $path = $this->getRootDir().'/assets/images/dummy.svg';
 
@@ -147,7 +151,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($imageMock, $image);
+        $this->assertSameImage($imageMock, $image);
     }
 
     /**
@@ -188,9 +192,9 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($image) use ($path) {
                         /* @var Image $image */
-                        $this->assertEquals($path, $image->getPath());
+                        $this->assertSame($path, $image->getPath());
 
-                        $this->assertEquals(
+                        $this->assertSameImportantPart(
                             new ImportantPart(new Point(50, 50), new Box(25, 25)),
                             $image->getImportantPart()
                         );
@@ -201,10 +205,10 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($config) {
                         /* @var ResizeConfiguration $config */
-                        $this->assertEquals(100, $config->getWidth());
-                        $this->assertEquals(200, $config->getHeight());
-                        $this->assertEquals(ResizeConfiguration::MODE_BOX, $config->getMode());
-                        $this->assertEquals(50, $config->getZoomLevel());
+                        $this->assertSame(100, $config->getWidth());
+                        $this->assertSame(200, $config->getHeight());
+                        $this->assertSame(ResizeConfiguration::MODE_BOX, $config->getMode());
+                        $this->assertSame(50, $config->getZoomLevel());
 
                         return true;
                     }
@@ -212,12 +216,12 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($options) {
                         /* @var ResizeOptions $options */
-                        $this->assertEquals([
+                        $this->assertSame([
                             'jpeg_quality' => 80,
-                            'interlace' => ImageInterface::INTERLACE_PLANE,
+                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
                         ], $options->getImagineOptions());
 
-                        $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
+                        $this->assertSame($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
                     }
@@ -362,7 +366,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path, 1);
 
-        $this->assertEquals($path, $image->getPath());
+        $this->assertSame($path, $image->getPath());
     }
 
     /**
@@ -377,6 +381,7 @@ class ImageFactoryTest extends TestCase
             ->setZoomLevel(50)
         ;
 
+        /** @var ImageInterface|\PHPUnit_Framework_MockObject_MockObject $imageMock */
         $imageMock = $this
             ->getMockBuilder('Contao\Image\ImageInterface')
             ->disableOriginalConstructor()
@@ -395,14 +400,18 @@ class ImageFactoryTest extends TestCase
             ->with(
                 $this->callback(
                     function ($image) use ($imageMock) {
-                        $this->assertSame($imageMock, $image);
+                        $this->assertSameImage($imageMock, $image);
 
                         return true;
                     }
                 ),
                 $this->callback(
-                    function ($config) use ($resizeConfig) {
-                        $this->assertSame($resizeConfig, $config);
+                    function (ResizeConfigurationInterface $config) use ($resizeConfig) {
+                        $this->assertSame($resizeConfig->isEmpty(), $config->isEmpty());
+                        $this->assertSame($resizeConfig->getWidth(), $config->getWidth());
+                        $this->assertSame($resizeConfig->getHeight(), $config->getHeight());
+                        $this->assertSame($resizeConfig->getMode(), $config->getMode());
+                        $this->assertSame($resizeConfig->getZoomLevel(), $config->getZoomLevel());
 
                         return true;
                     }
@@ -410,12 +419,12 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($options) {
                         /* @var ResizeOptions $options */
-                        $this->assertEquals([
+                        $this->assertSame([
                             'jpeg_quality' => 80,
-                            'interlace' => ImageInterface::INTERLACE_PLANE,
+                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
                         ], $options->getImagineOptions());
 
-                        $this->assertEquals($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
+                        $this->assertSame($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
                     }
@@ -427,7 +436,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory($resizer);
         $image = $imageFactory->create($imageMock, $resizeConfig, $this->getRootDir().'/target/path.jpg');
 
-        $this->assertSame($imageMock, $image);
+        $this->assertSameImage($imageMock, $image);
     }
 
     /**
@@ -435,6 +444,7 @@ class ImageFactoryTest extends TestCase
      */
     public function testCreateWithImageObjectAndEmptyResizeConfiguration()
     {
+        /** @var ImageInterface|\PHPUnit_Framework_MockObject_MockObject $imageMock */
         $imageMock = $this
             ->getMockBuilder('Contao\Image\ImageInterface')
             ->disableOriginalConstructor()
@@ -444,7 +454,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory();
         $image = $imageFactory->create($imageMock, (new ResizeConfiguration()));
 
-        $this->assertSame($imageMock, $image);
+        $this->assertSameImage($imageMock, $image);
     }
 
     /**
@@ -486,10 +496,13 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($image) use ($path, $expected) {
                         /* @var Image $image */
-                        $this->assertEquals($path, $image->getPath());
+                        $this->assertSame($path, $image->getPath());
 
-                        $this->assertEquals(
-                            new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
+                        $this->assertSameImportantPart(
+                            new ImportantPart(
+                                new Point($expected[0], $expected[1]),
+                                new Box($expected[2], $expected[3])
+                            ),
                             $image->getImportantPart()
                         );
 
@@ -499,10 +512,10 @@ class ImageFactoryTest extends TestCase
                 $this->callback(
                     function ($config) {
                         /* @var ResizeConfiguration $config */
-                        $this->assertEquals(50, $config->getWidth());
-                        $this->assertEquals(50, $config->getHeight());
-                        $this->assertEquals(ResizeConfiguration::MODE_CROP, $config->getMode());
-                        $this->assertEquals(0, $config->getZoomLevel());
+                        $this->assertSame(50, $config->getWidth());
+                        $this->assertSame(50, $config->getHeight());
+                        $this->assertSame(ResizeConfiguration::MODE_CROP, $config->getMode());
+                        $this->assertSame(0, $config->getZoomLevel());
 
                         return true;
                     }
@@ -601,7 +614,7 @@ class ImageFactoryTest extends TestCase
 
         $imageFactory = $this->createImageFactory();
 
-        $this->assertEquals(
+        $this->assertSameImportantPart(
             new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
             $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode)
         );
@@ -669,7 +682,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
 
-        $this->assertEquals($path, $image->getPath());
+        $this->assertSame($path, $image->getPath());
     }
 
     /**
@@ -723,7 +736,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->createImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
 
-        $this->assertEquals(
+        $this->assertSameImportantPart(
             new ImportantPart(new Point(0, 0), new Box(200, 200)),
             $image->getImportantPart()
         );
@@ -783,14 +796,14 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->getRootDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
             $image->getPath()
         );
@@ -801,7 +814,7 @@ class ImageFactoryTest extends TestCase
             $this->getRootDir().'/target.jpg'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
             $image->getPath()
         );
@@ -902,7 +915,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->getRootDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
             $image->getPath()
         );
@@ -917,7 +930,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $this->getRootDir().'/images/dummy.jpg',
             $image->getPath(),
             'Hook should not get called if no resize is necessary'
@@ -1046,8 +1059,8 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
-        $this->assertEquals(100, $image->getDimensions()->getSize()->getWidth());
-        $this->assertEquals(100, $image->getDimensions()->getSize()->getHeight());
+        $this->assertSame(100, $image->getDimensions()->getSize()->getWidth());
+        $this->assertSame(100, $image->getDimensions()->getSize()->getHeight());
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -1107,7 +1120,7 @@ class ImageFactoryTest extends TestCase
         if (null === $imagineOptions) {
             $imagineOptions = [
                 'jpeg_quality' => 80,
-                'interlace' => ImageInterface::INTERLACE_PLANE,
+                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
             ];
         }
 
@@ -1125,5 +1138,34 @@ class ImageFactoryTest extends TestCase
             $imagineOptions,
             $validExtensions
         );
+    }
+
+    /**
+     * Asserts that two image objects are the same.
+     *
+     * @param ImageInterface $imageA
+     * @param ImageInterface $imageB
+     */
+    private function assertSameImage(ImageInterface $imageA, ImageInterface $imageB)
+    {
+        $this->assertSame($imageA->getDimensions(), $imageB->getDimensions());
+        $this->assertSame($imageA->getImagine(), $imageB->getImagine());
+        $this->assertSame($imageA->getImportantPart(), $imageB->getImportantPart());
+        $this->assertSame($imageA->getPath(), $imageB->getPath());
+        $this->assertSame($imageA->getUrl($this->getRootDir()), $imageB->getUrl($this->getRootDir()));
+    }
+
+    /**
+     * Asserts that two important path objects are the same.
+     *
+     * @param ImportantPartInterface $partA
+     * @param ImportantPartInterface $partB
+     */
+    private function assertSameImportantPart(ImportantPartInterface $partA, ImportantPartInterface $partB)
+    {
+        $this->assertSame($partA->getPosition()->getX(), $partB->getPosition()->getX());
+        $this->assertSame($partA->getPosition()->getY(), $partB->getPosition()->getY());
+        $this->assertSame($partA->getSize()->getHeight(), $partB->getSize()->getHeight());
+        $this->assertSame($partA->getSize()->getWidth(), $partB->getSize()->getWidth());
     }
 }

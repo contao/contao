@@ -55,12 +55,12 @@ class AddSessionBagsPassTest extends \PHPUnit_Framework_TestCase
         $methodCalls = $container->findDefinition('session')->getMethodCalls();
 
         $this->assertCount(2, $methodCalls);
-        $this->assertEquals('registerBag', $methodCalls[0][0]);
-        $this->assertEquals('registerBag', $methodCalls[1][0]);
+        $this->assertSame('registerBag', $methodCalls[0][0]);
+        $this->assertSame('registerBag', $methodCalls[1][0]);
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[0][1][0]);
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[1][1][0]);
-        $this->assertEquals('contao.session.contao_backend', (string) $methodCalls[0][1][0]);
-        $this->assertEquals('contao.session.contao_frontend', (string) $methodCalls[1][1][0]);
+        $this->assertSame('contao.session.contao_backend', (string) $methodCalls[0][1][0]);
+        $this->assertSame('contao.session.contao_frontend', (string) $methodCalls[1][1][0]);
     }
 
     /**

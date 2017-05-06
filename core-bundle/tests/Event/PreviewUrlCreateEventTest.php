@@ -36,7 +36,7 @@ class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
-        $this->assertEquals(12, $event->getId());
+        $this->assertSame(12, $event->getId());
     }
 
     /**
@@ -46,7 +46,7 @@ class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
-        $this->assertEquals('news', $event->getKey());
+        $this->assertSame('news', $event->getKey());
     }
 
     /**
@@ -60,6 +60,6 @@ class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
 
         $event->setQuery('act=edit&id=12');
 
-        $this->assertEquals('act=edit&id=12', $event->getQuery());
+        $this->assertSame('act=edit&id=12', $event->getQuery());
     }
 }

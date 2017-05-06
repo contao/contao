@@ -52,12 +52,12 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertEquals(
+        $this->assertSame(
             ContaoCoreBundle::SCOPE_FRONTEND,
             $collection->get('contao_frontend')->getDefault('_scope')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ContaoCoreBundle::SCOPE_FRONTEND,
             $collection->get('contao_index')->getDefault('_scope')
         );
@@ -71,12 +71,12 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertEquals(
+        $this->assertSame(
             'ContaoCoreBundle:Frontend:index',
             $collection->get('contao_frontend')->getDefault('_controller')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'ContaoCoreBundle:Frontend:index',
             $collection->get('contao_index')->getDefault('_controller')
         );
@@ -102,7 +102,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/foobar.html',
             $router->generate('contao_frontend', ['alias' => 'foobar'])
         );
@@ -117,7 +117,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/en/foobar.html',
             $router->generate('contao_frontend', ['alias' => 'foobar', '_locale' => 'en'])
         );
@@ -146,7 +146,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/',
             $router->generate('contao_index')
         );
@@ -161,7 +161,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/en/',
             $router->generate('contao_index', ['_locale' => 'en'])
         );

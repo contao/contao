@@ -58,7 +58,7 @@ class AddResourcesPathsPassTest extends TestCase
             $path = strtr($path, '/', '\\');
         }
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 $path.'/Resources/contao',
                 $this->getRootDir().'/system/modules/foobar',

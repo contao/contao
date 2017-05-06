@@ -47,10 +47,10 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector(['contao/core-bundle' => '4.0.0']);
         $collector->collect(new Request(), new Response());
 
-        $this->assertEquals(['ContentText' => 'Contao\ContentText'], $collector->getClassesAliased());
-        $this->assertEquals(['ContentImage' => 'Contao\ContentImage'], $collector->getClassesComposerized());
+        $this->assertSame(['ContentText' => 'Contao\ContentText'], $collector->getClassesAliased());
+        $this->assertSame(['ContentImage' => 'Contao\ContentImage'], $collector->getClassesComposerized());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'version' => '4.0.0',
                 'framework' => true,
@@ -63,10 +63,10 @@ class ContaoDataCollectorTest extends TestCase
             $collector->getSummary()
         );
 
-        $this->assertEquals('4.0.0', $collector->getContaoVersion());
-        $this->assertEquals(['Contao\System'], $collector->getClassesSet());
-        $this->assertEquals(['additional_data' => 'data'], $collector->getAdditionalData());
-        $this->assertEquals('contao', $collector->getName());
+        $this->assertSame('4.0.0', $collector->getContaoVersion());
+        $this->assertSame(['Contao\System'], $collector->getClassesSet());
+        $this->assertSame(['additional_data' => 'data'], $collector->getAdditionalData());
+        $this->assertSame('contao', $collector->getName());
 
         unset($GLOBALS['TL_DEBUG']);
     }
@@ -103,7 +103,7 @@ class ContaoDataCollectorTest extends TestCase
         $collector->setFramework($this->mockContaoFramework(null, null, ['Contao\LayoutModel' => $adapter]));
         $collector->collect(new Request(), new Response());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'version' => '',
                 'framework' => false,
@@ -127,7 +127,7 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector([]);
         $collector->unserialize('N;');
 
-        $this->assertEquals([], $collector->getAdditionalData());
+        $this->assertSame([], $collector->getAdditionalData());
     }
 
     /**
@@ -140,6 +140,6 @@ class ContaoDataCollectorTest extends TestCase
         $method = new \ReflectionMethod($collector, 'getData');
         $method->setAccessible(true);
 
-        $this->assertEquals([], $method->invokeArgs($collector, ['foo']));
+        $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }
 }

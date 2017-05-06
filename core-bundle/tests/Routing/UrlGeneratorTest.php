@@ -65,9 +65,9 @@ class UrlGeneratorTest extends TestCase
      */
     public function testRoute()
     {
-        $this->assertEquals('contao_frontend', $this->getGenerator(false, 0)->generate('foobar'));
-        $this->assertEquals('contao_frontend', $this->getGenerator(true, 0)->generate('foobar'));
-        $this->assertEquals('contao_frontend', $this->getGenerator(false, 0)->generate('foobar/test'));
+        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar'));
+        $this->assertSame('contao_frontend', $this->getGenerator(true, 0)->generate('foobar'));
+        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar/test'));
     }
 
     /**
@@ -75,9 +75,9 @@ class UrlGeneratorTest extends TestCase
      */
     public function testWithoutParameters()
     {
-        $this->assertEquals('foobar', $this->getGenerator()->generate('foobar')['alias']);
-        $this->assertEquals('foobar/test', $this->getGenerator()->generate('foobar/test')['alias']);
-        $this->assertEquals('foobar/article/test', $this->getGenerator()->generate('foobar/article/test')['alias']);
+        $this->assertSame('foobar', $this->getGenerator()->generate('foobar')['alias']);
+        $this->assertSame('foobar/test', $this->getGenerator()->generate('foobar/test')['alias']);
+        $this->assertSame('foobar/article/test', $this->getGenerator()->generate('foobar/article/test')['alias']);
     }
 
     /**
@@ -85,20 +85,20 @@ class UrlGeneratorTest extends TestCase
      */
     public function testIndex()
     {
-        $this->assertEquals('contao_index', $this->getGenerator(false, 0)->generate('index'));
-        $this->assertEquals('contao_index', $this->getGenerator(true, 0)->generate('index'));
+        $this->assertSame('contao_index', $this->getGenerator(false, 0)->generate('index'));
+        $this->assertSame('contao_index', $this->getGenerator(true, 0)->generate('index'));
         $this->assertArrayNotHasKey('alias', $this->getGenerator()->generate('index'));
 
-        $this->assertEquals('contao_frontend', $this->getGenerator(false, 0)->generate('index/foobar'));
+        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('index/foobar'));
         $this->assertArrayHasKey('alias', $this->getGenerator()->generate('index/foobar'));
 
-        $this->assertEquals(
+        $this->assertSame(
             'contao_frontend',
             $this->getGenerator(false, 0)->generate('index/{foo}', ['foo' => 'bar'])
         );
 
         $this->assertArrayHasKey('alias', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar']));
-        $this->assertEquals('index/foo/bar', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
+        $this->assertSame('index/foo/bar', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
     }
 
     /**
@@ -124,13 +124,13 @@ class UrlGeneratorTest extends TestCase
 
         $result = $this->getGenerator()->generate('foo/{article}', $params);
 
-        $this->assertEquals('foo/article/test', $result['alias']);
+        $this->assertSame('foo/article/test', $result['alias']);
         $this->assertArrayNotHasKey('article', $result);
         $this->assertArrayHasKey('items', $result);
 
         $result = $this->getGenerator()->generate('foo/{items}/{article}', $params);
 
-        $this->assertEquals('foo/items/bar/article/test', $result['alias']);
+        $this->assertSame('foo/items/bar/article/test', $result['alias']);
         $this->assertArrayNotHasKey('article', $result);
         $this->assertArrayNotHasKey('items', $result);
     }
@@ -140,7 +140,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testAutoItem()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar',
             $this->getGenerator()->generate(
                 'foo/{items}',
@@ -148,7 +148,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar/article/test',
             $this->getGenerator()->generate(
                 'foo/{items}/{article}',
@@ -158,7 +158,7 @@ class UrlGeneratorTest extends TestCase
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar',
             $this->getGenerator()->generate(
                 'foo/{items}',
@@ -166,7 +166,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar/article/test',
             $this->getGenerator()->generate(
                 'foo/{items}/{article}',
@@ -180,7 +180,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testAutoItemDisabled()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}',
@@ -188,7 +188,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar/article/test',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}/{article}',
@@ -198,7 +198,7 @@ class UrlGeneratorTest extends TestCase
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}',
@@ -206,7 +206,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar/article/test',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}/{article}',
@@ -239,7 +239,7 @@ class UrlGeneratorTest extends TestCase
             false
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://contao.org/',
             $generator->generate(
                 'index',
@@ -248,7 +248,7 @@ class UrlGeneratorTest extends TestCase
            )
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://contao.org/',
             $generator->generate(
                 'index',
@@ -257,7 +257,7 @@ class UrlGeneratorTest extends TestCase
            )
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://contao.org/',
             $generator->generate(
                 'index',
@@ -288,7 +288,7 @@ class UrlGeneratorTest extends TestCase
             false
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://contao.org/',
             $generator->generate(
                 'index',
@@ -303,7 +303,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testWithNonArrayParameters()
     {
-        $this->assertEquals('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
+        $this->assertSame('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
     }
 
     /**

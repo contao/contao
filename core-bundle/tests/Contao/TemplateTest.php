@@ -65,8 +65,8 @@ class TemplateTest extends TestCase
         $template->setData(['value' => 'test']);
 
         $obLevel = ob_get_level();
-        $this->assertEquals('test', $template->parse());
-        $this->assertEquals($obLevel, ob_get_level());
+        $this->assertSame('test', $template->parse());
+        $this->assertSame($obLevel, ob_get_level());
     }
 
     /**
@@ -91,8 +91,8 @@ class TemplateTest extends TestCase
             // Ignore
         }
 
-        $this->assertEquals('', ob_get_clean());
-        $this->assertEquals($obLevel, ob_get_level());
+        $this->assertSame('', ob_get_clean());
+        $this->assertSame($obLevel, ob_get_level());
     }
 
     /**
@@ -125,8 +125,8 @@ EOF
             // Ignore
         }
 
-        $this->assertEquals('', ob_get_clean());
-        $this->assertEquals($obLevel, ob_get_level());
+        $this->assertSame('', ob_get_clean());
+        $this->assertSame($obLevel, ob_get_level());
     }
 
     /**
@@ -183,8 +183,8 @@ EOF
             // Ignore
         }
 
-        $this->assertEquals('', ob_get_clean());
-        $this->assertEquals($obLevel, ob_get_level());
+        $this->assertSame('', ob_get_clean());
+        $this->assertSame($obLevel, ob_get_level());
     }
 
     /**
@@ -222,7 +222,7 @@ EOF
             // Ignore
         }
 
-        $this->assertEquals('', ob_get_clean());
-        $this->assertEquals($obLevel, ob_get_level());
+        $this->assertSame('', ob_get_clean());
+        $this->assertSame($obLevel, ob_get_level());
     }
 }

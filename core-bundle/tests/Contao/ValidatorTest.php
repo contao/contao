@@ -33,7 +33,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testEmail($email, $expected)
     {
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             Validator::isEmail($email),
             'Original: '.$email.' idna: '.Idna::encodeEmail($email)
@@ -109,7 +109,7 @@ EOF;
         sort($actual);
         sort($expected);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     /**
@@ -121,132 +121,132 @@ EOF;
     {
         return [
             // Valid ASCII
-            ['niceandsimple@example.com', true],
-            ['very.common@example.com', true],
-            ['a.little.lengthy.but.fine@dept.example.com', true],
-            ['disposable.style.email.with+symbol@example.com', true],
-            ['other.email-with-dash@example.com', true],
-            ['"very.unusual.@.unusual.com"@example.com', true],
-            ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', true],
-            ['!#$%&\'*+-/=?^_`{}|~@example.org', true],
-            ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', true],
+            ['niceandsimple@example.com', 1],
+            ['very.common@example.com', 1],
+            ['a.little.lengthy.but.fine@dept.example.com', 1],
+            ['disposable.style.email.with+symbol@example.com', 1],
+            ['other.email-with-dash@example.com', 1],
+            ['"very.unusual.@.unusual.com"@example.com', 1],
+            ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', 1],
+            ['!#$%&\'*+-/=?^_`{}|~@example.org', 1],
+            ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', 1],
 
             // Valid with IP addresses
-            ['user@[255.255.255.255]', true],
-            ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', true],
-            ['user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true],
-            ['user@[IPv6:2001::7344]', true],
-            ['user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true],
+            ['user@[255.255.255.255]', 1],
+            ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', 1],
+            ['user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', 1],
+            ['user@[IPv6:2001::7344]', 1],
+            ['user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', 1],
 
             // Valid with IDNA domains
-            ['test@exämple.com', true],
-            ['test@ä-.xe', true],
-            ['test@subexample.wizard', true],
-            ['test@wähwähwäh.ümläüts.de', true],
-            ['"tes@t"@wähwähwäh.ümläüts.de', true],
+            ['test@exämple.com', 1],
+            ['test@ä-.xe', 1],
+            ['test@subexample.wizard', 1],
+            ['test@wähwähwäh.ümläüts.de', 1],
+            ['"tes@t"@wähwähwäh.ümläüts.de', 1],
 
             // Valid with new TLDs
-            ['test@example.photography', true],
-            ['test@sub-domain.example.photography', true],
+            ['test@example.photography', 1],
+            ['test@sub-domain.example.photography', 1],
 
             // Valid with unicode characters in the local part
-            ['niceändsimple@example.com', true],
-            ['véry.çommon@example.com', true],
-            ['a.lîttle.lengthy.but.fiñe@dept.example.com', true],
-            ['dîsposable.style.émail.with+symbol@example.com', true],
-            ['other.émail-with-dash@example.com', true],
-            ['"verî.uñusual.@.uñusual.com"@example.com', true],
-            ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', true],
-            ['üñîçøðé@example.com', true],
-            ['"üñîçøðé"@example.com', true],
-            ['ǅǼ੧ఘⅧ⒇৪@example.com', true],
+            ['niceändsimple@example.com', 1],
+            ['véry.çommon@example.com', 1],
+            ['a.lîttle.lengthy.but.fiñe@dept.example.com', 1],
+            ['dîsposable.style.émail.with+symbol@example.com', 1],
+            ['other.émail-with-dash@example.com', 1],
+            ['"verî.uñusual.@.uñusual.com"@example.com', 1],
+            ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', 1],
+            ['üñîçøðé@example.com', 1],
+            ['"üñîçøðé"@example.com', 1],
+            ['ǅǼ੧ఘⅧ⒇৪@example.com', 1],
 
             // Valid with IP addresses and unicode characters in the local part
-            ['üser@[255.255.255.255]', true],
-            ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', true],
-            ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true],
-            ['üser@[IPv6:2001::7344]', true],
-            ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true],
+            ['üser@[255.255.255.255]', 1],
+            ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', 1],
+            ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', 1],
+            ['üser@[IPv6:2001::7344]', 1],
+            ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', 1],
 
             // Valid with IDNA domains and unicode characters in the local part
-            ['tést@exämple.com', true],
-            ['tést@ä-.xe', true],
-            ['tést@subexample.wizard', true],
-            ['tést@wähwähwäh.ümläüts.de', true],
-            ['"tés@t"@wähwähwäh.ümläüts.de', true],
+            ['tést@exämple.com', 1],
+            ['tést@ä-.xe', 1],
+            ['tést@subexample.wizard', 1],
+            ['tést@wähwähwäh.ümläüts.de', 1],
+            ['"tés@t"@wähwähwäh.ümläüts.de', 1],
 
             // Valid with new TLDs and unicode characters in the local part
-            ['tést@example.photography', true],
-            ['tést@sub-domain.example.photography', true],
+            ['tést@example.photography', 1],
+            ['tést@sub-domain.example.photography', 1],
 
             // Invalid ASCII
-            ['test..child@example.com', false],
-            ['test@sub.-example.com', false],
-            ['test@_smtp_.example.com', false],
-            ['test@sub..example.com', false],
-            ['test@subexamplecom', false],
-            ['Abc.example.com', false],
-            ['A@b@c@example.com', false],
-            ['a"b(c)d,e:f;gi[j\k]l@example.com', false],
-            ['just"not"right@example.com', false],
-            ['this is"not\allowed@example.com', false],
-            ['this\ still\"not\allowed@example.com', false],
-            ['(comment)test@iana.org', false],
-            ['test@[1.2.3.4', false],
-            ['test@iana.org-', false],
-            ['', false],
-            ['test', false],
-            ['@', false],
-            ['test@', false],
+            ['test..child@example.com', 0],
+            ['test@sub.-example.com', 0],
+            ['test@_smtp_.example.com', 0],
+            ['test@sub..example.com', 0],
+            ['test@subexamplecom', 0],
+            ['Abc.example.com', 0],
+            ['A@b@c@example.com', 0],
+            ['a"b(c)d,e:f;gi[j\k]l@example.com', 0],
+            ['just"not"right@example.com', 0],
+            ['this is"not\allowed@example.com', 0],
+            ['this\ still\"not\allowed@example.com', 0],
+            ['(comment)test@iana.org', 0],
+            ['test@[1.2.3.4', 0],
+            ['test@iana.org-', 0],
+            ['', 0],
+            ['test', 0],
+            ['@', 0],
+            ['test@', 0],
 
             // Invalid with IP addresses
-            ['test@a[255.255.255.255]', false],
-            ['test@[255.255.255]', false],
-            ['test@[255.255.255.255.255]', false],
-            ['test@[255.255.255.256]', false],
-            ['test@[2001::7344]', false],
-            ['test@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', false],
+            ['test@a[255.255.255.255]', 0],
+            ['test@[255.255.255]', 0],
+            ['test@[255.255.255.255.255]', 0],
+            ['test@[255.255.255.256]', 0],
+            ['test@[2001::7344]', 0],
+            ['test@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', 0],
 
             // Invalid with IDNA domain
-            ['tes@t@wähwähwäh.ümläüts.de', false],
-            [' test@wähwähwäh.ümläüts.de', false],
+            ['tes@t@wähwähwäh.ümläüts.de', 0],
+            [' test@wähwähwäh.ümläüts.de', 0],
 
             // Invalid with new TLDs
-            ['tes@t@example.photography', false],
-            [' test@sub-domain.example.photography', false],
+            ['tes@t@example.photography', 0],
+            [' test@sub-domain.example.photography', 0],
 
             // Invalid with unicode characters in the local part
-            ['tést..child@example.com', false],
-            ['tést@sub.-example.com', false],
-            ['tést@_smtp_.example.com', false],
-            ['tést@sub..example.com', false],
-            ['tést@subexamplecom', false],
-            ['Abç.example.com', false],
-            ['Â@ఘ@ç@example.com', false],
-            ['â"ఘ(ç)d,e:f;gi[j\k]l@example.com', false],
-            ['jüst"not"rîght@example.com', false],
-            ['this îs"not\alløwed@example.com', false],
-            ['this\ stîll\"not\alløwed@example.com', false],
-            ['(çommént)tést@iana.org', false],
-            ['tést@[1.2.3.4', false],
-            ['tést@iana.org-', false],
-            ['tést@', false],
+            ['tést..child@example.com', 0],
+            ['tést@sub.-example.com', 0],
+            ['tést@_smtp_.example.com', 0],
+            ['tést@sub..example.com', 0],
+            ['tést@subexamplecom', 0],
+            ['Abç.example.com', 0],
+            ['Â@ఘ@ç@example.com', 0],
+            ['â"ఘ(ç)d,e:f;gi[j\k]l@example.com', 0],
+            ['jüst"not"rîght@example.com', 0],
+            ['this îs"not\alløwed@example.com', 0],
+            ['this\ stîll\"not\alløwed@example.com', 0],
+            ['(çommént)tést@iana.org', 0],
+            ['tést@[1.2.3.4', 0],
+            ['tést@iana.org-', 0],
+            ['tést@', 0],
 
             // Invalid with IP addresses and unicode characters in the local part
-            ['tést@a[255.255.255.255]', false],
-            ['tést@[255.255.255]', false],
-            ['tést@[255.255.255.255.255]', false],
-            ['tést@[255.255.255.256]', false],
-            ['tést@[2001::7344]', false],
-            ['tést@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', false],
+            ['tést@a[255.255.255.255]', 0],
+            ['tést@[255.255.255]', 0],
+            ['tést@[255.255.255.255.255]', 0],
+            ['tést@[255.255.255.256]', 0],
+            ['tést@[2001::7344]', 0],
+            ['tést@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', 0],
 
             // Invalid with IDNA domains and unicode characters in the local part
-            ['tés@t@wähwähwäh.ümläüts.de', false],
-            [' tést@wähwähwäh.ümläüts.de', false],
+            ['tés@t@wähwähwäh.ümläüts.de', 0],
+            [' tést@wähwähwäh.ümläüts.de', 0],
 
             // Invalid with new TLDs and unicode characters in the local part
-            ['tés@t@example.photography', false],
-            [' tést@sub-domain.example.photography', false],
+            ['tés@t@example.photography', 0],
+            [' tést@sub-domain.example.photography', 0],
         ];
     }
 }

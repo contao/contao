@@ -62,72 +62,81 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
-        $this->assertEquals('integer', $table->getColumn('id')->getType()->getName());
-        $this->assertEquals(true, $table->getColumn('id')->getNotnull());
-        $this->assertEquals(0, $table->getColumn('id')->getDefault());
-        $this->assertEquals(false, $table->getColumn('id')->getFixed());
+        $this->assertSame('integer', $table->getColumn('id')->getType()->getName());
+        $this->assertSame(true, $table->getColumn('id')->getNotnull());
+        $this->assertSame(false, $table->getColumn('id')->getFixed());
+
+        if (null !== ($default = $table->getColumn('id')->getDefault())) {
+            $this->assertSame('0', $default);
+        }
 
         $this->assertTrue($table->hasColumn('pid'));
-        $this->assertEquals('integer', $table->getColumn('pid')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('pid')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('pid')->getFixed());
+        $this->assertSame('integer', $table->getColumn('pid')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('pid')->getNotnull());
+        $this->assertSame(false, $table->getColumn('pid')->getFixed());
 
         $this->assertTrue($table->hasColumn('title'));
-        $this->assertEquals('string', $table->getColumn('title')->getType()->getName());
-        $this->assertEquals(true, $table->getColumn('title')->getNotnull());
-        $this->assertEquals('', $table->getColumn('title')->getDefault());
-        $this->assertEquals(false, $table->getColumn('title')->getFixed());
-        $this->assertEquals(128, $table->getColumn('title')->getLength());
+        $this->assertSame('string', $table->getColumn('title')->getType()->getName());
+        $this->assertSame(true, $table->getColumn('title')->getNotnull());
+        $this->assertSame(false, $table->getColumn('title')->getFixed());
+        $this->assertSame(128, $table->getColumn('title')->getLength());
+
+        if (null !== ($default = $table->getColumn('title')->getDefault())) {
+            $this->assertSame('', $default);
+        }
 
         $this->assertTrue($table->hasColumn('teaser'));
-        $this->assertEquals('text', $table->getColumn('teaser')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('teaser')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('teaser')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
+        $this->assertSame('text', $table->getColumn('teaser')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('teaser')->getNotnull());
+        $this->assertSame(false, $table->getColumn('teaser')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
 
         $this->assertTrue($table->hasColumn('description'));
-        $this->assertEquals('text', $table->getColumn('description')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('description')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('description')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
+        $this->assertSame('text', $table->getColumn('description')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('description')->getNotnull());
+        $this->assertSame(false, $table->getColumn('description')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
 
         $this->assertTrue($table->hasColumn('content'));
-        $this->assertEquals('text', $table->getColumn('content')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('content')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('content')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
+        $this->assertSame('text', $table->getColumn('content')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('content')->getNotnull());
+        $this->assertSame(false, $table->getColumn('content')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
 
         $this->assertTrue($table->hasColumn('price'));
-        $this->assertEquals('decimal', $table->getColumn('price')->getType()->getName());
-        $this->assertEquals(true, $table->getColumn('price')->getNotnull());
-        $this->assertEquals('0.00', $table->getColumn('price')->getDefault());
-        $this->assertEquals(false, $table->getColumn('price')->getFixed());
-        $this->assertEquals(6, $table->getColumn('price')->getPrecision());
-        $this->assertEquals(2, $table->getColumn('price')->getScale());
+        $this->assertSame('decimal', $table->getColumn('price')->getType()->getName());
+        $this->assertSame(true, $table->getColumn('price')->getNotnull());
+        $this->assertSame('0.00', $table->getColumn('price')->getDefault());
+        $this->assertSame(false, $table->getColumn('price')->getFixed());
+        $this->assertSame(6, $table->getColumn('price')->getPrecision());
+        $this->assertSame(2, $table->getColumn('price')->getScale());
 
         $this->assertTrue($table->hasColumn('thumb'));
-        $this->assertEquals('blob', $table->getColumn('thumb')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('thumb')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('thumb')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
+        $this->assertSame('blob', $table->getColumn('thumb')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('thumb')->getNotnull());
+        $this->assertSame(false, $table->getColumn('thumb')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
 
         $this->assertTrue($table->hasColumn('image'));
-        $this->assertEquals('blob', $table->getColumn('image')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('image')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('image')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
+        $this->assertSame('blob', $table->getColumn('image')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('image')->getNotnull());
+        $this->assertSame(false, $table->getColumn('image')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
 
         $this->assertTrue($table->hasColumn('attachment'));
-        $this->assertEquals('blob', $table->getColumn('attachment')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('attachment')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('attachment')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
+        $this->assertSame('blob', $table->getColumn('attachment')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('attachment')->getNotnull());
+        $this->assertSame(false, $table->getColumn('attachment')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
 
         $this->assertTrue($table->hasColumn('published'));
-        $this->assertEquals('string', $table->getColumn('published')->getType()->getName());
-        $this->assertEquals(true, $table->getColumn('published')->getNotnull());
-        $this->assertEquals('', $table->getColumn('title')->getDefault());
-        $this->assertEquals(true, $table->getColumn('published')->getFixed());
+        $this->assertSame('string', $table->getColumn('published')->getType()->getName());
+        $this->assertSame(true, $table->getColumn('published')->getNotnull());
+        $this->assertSame(true, $table->getColumn('published')->getFixed());
+
+        if (null !== ($default = $table->getColumn('published')->getDefault())) {
+            $this->assertSame('', $default);
+        }
     }
 
     /**
@@ -215,8 +224,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertEquals('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertEquals('utf8', $schema->getTable('tl_member')->getOption('charset'));
+        $this->assertSame('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
+        $this->assertSame('utf8', $schema->getTable('tl_member')->getOption('charset'));
 
         $provider = $this->getProvider([], ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
         $schema = $provider->createSchema();
@@ -224,8 +233,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertEquals('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertEquals('utf8', $schema->getTable('tl_member')->getOption('charset'));
+        $this->assertSame('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
+        $this->assertSame('utf8', $schema->getTable('tl_member')->getOption('charset'));
 
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=Latin1']]);
         $schema = $provider->createSchema();
@@ -233,8 +242,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertEquals('InnoDB', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertEquals('Latin1', $schema->getTable('tl_member')->getOption('charset'));
+        $this->assertSame('InnoDB', $schema->getTable('tl_member')->getOption('engine'));
+        $this->assertSame('Latin1', $schema->getTable('tl_member')->getOption('charset'));
     }
 
     /**
@@ -271,19 +280,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $this->assertTrue($table->hasIndex('PRIMARY'));
         $this->assertTrue($table->getIndex('PRIMARY')->isPrimary());
-        $this->assertEquals(['id'], $table->getIndex('PRIMARY')->getColumns());
+        $this->assertSame(['id'], $table->getIndex('PRIMARY')->getColumns());
 
         $this->assertTrue($table->hasIndex('pid'));
         $this->assertFalse($table->getIndex('pid')->isUnique());
-        $this->assertEquals(['pid'], $table->getIndex('pid')->getColumns());
+        $this->assertSame(['pid'], $table->getIndex('pid')->getColumns());
 
         $this->assertTrue($table->hasIndex('username'));
         $this->assertTrue($table->getIndex('username')->isUnique());
-        $this->assertEquals(['username'], $table->getIndex('username')->getColumns());
+        $this->assertSame(['username'], $table->getIndex('username')->getColumns());
 
         $this->assertTrue($table->hasIndex('name'));
         $this->assertFalse($table->getIndex('name')->isUnique());
-        $this->assertEquals(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
+        $this->assertSame(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
     /**
@@ -312,12 +321,12 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('path'));
-        $this->assertEquals('string', $table->getColumn('path')->getType()->getName());
-        $this->assertEquals(1022, $table->getColumn('path')->getLength());
+        $this->assertSame('string', $table->getColumn('path')->getType()->getName());
+        $this->assertSame(1022, $table->getColumn('path')->getLength());
 
         $this->assertTrue($table->hasIndex('path'));
         $this->assertFalse($table->getIndex('path')->isUnique());
-        $this->assertEquals(['path(333)'], $table->getIndex('path')->getColumns());
+        $this->assertSame(['path(333)'], $table->getIndex('path')->getColumns());
     }
 
     /**
@@ -346,14 +355,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));
-        $this->assertEquals('text', $table->getColumn('text')->getType()->getName());
-        $this->assertEquals(false, $table->getColumn('text')->getNotnull());
-        $this->assertEquals(false, $table->getColumn('text')->getFixed());
-        $this->assertEquals(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
+        $this->assertSame('text', $table->getColumn('text')->getType()->getName());
+        $this->assertSame(false, $table->getColumn('text')->getNotnull());
+        $this->assertSame(false, $table->getColumn('text')->getFixed());
+        $this->assertSame(MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
 
         $this->assertTrue($table->hasIndex('text'));
         $this->assertFalse($table->getIndex('text')->isUnique());
-        $this->assertEquals(['fulltext'], $table->getIndex('text')->getFlags());
+        $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
     /**

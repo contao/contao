@@ -213,7 +213,7 @@ class ToggleViewListenerTest extends TestCase
 
         $cookie = $this->getCookie($event->getResponse());
 
-        $this->assertEquals('/foo/bar', $cookie->getPath());
+        $this->assertSame('/foo/bar', $cookie->getPath());
     }
 
     /**
@@ -227,7 +227,7 @@ class ToggleViewListenerTest extends TestCase
         $cookie = $this->getCookie($response);
 
         $this->assertNotNull($cookie);
-        $this->assertEquals($expectedValue, $cookie->getValue());
+        $this->assertSame($expectedValue, $cookie->getValue());
     }
 
     /**

@@ -47,14 +47,12 @@ class ContaoTokenTest extends \PHPUnit_Framework_TestCase
         $token = new ContaoToken(FrontendUser::getInstance());
 
         $this->assertTrue($token->isAuthenticated());
-        $this->assertEquals('', $token->getCredentials());
+        $this->assertSame('', $token->getCredentials());
 
-        $this->assertEquals(
-            [
-                new Role('ROLE_MEMBER'),
-            ],
-            $token->getRoles()
-        );
+        $roles = $token->getRoles();
+
+        $this->assertCount(1, $roles);
+        $this->assertSame((new Role('ROLE_MEMBER'))->getRole(), $roles[0]->getRole());
     }
 
     /**
@@ -68,15 +66,12 @@ class ContaoTokenTest extends \PHPUnit_Framework_TestCase
         $token = new ContaoToken(BackendUser::getInstance());
 
         $this->assertTrue($token->isAuthenticated());
-        $this->assertEquals('', $token->getCredentials());
+        $this->assertSame('', $token->getCredentials());
+        $roles = $token->getRoles();
 
-        $this->assertEquals(
-            [
-                new Role('ROLE_USER'),
-                new Role('ROLE_ADMIN'),
-            ],
-            $token->getRoles()
-        );
+        $this->assertCount(2, $roles);
+        $this->assertSame((new Role('ROLE_USER'))->getRole(), $roles[0]->getRole());
+        $this->assertSame((new Role('ROLE_ADMIN'))->getRole(), $roles[1]->getRole());
     }
 
     /**

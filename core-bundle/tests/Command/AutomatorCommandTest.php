@@ -31,7 +31,7 @@ class AutomatorCommandTest extends TestCase
         $command = new AutomatorCommand('contao:automator');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $command);
-        $this->assertEquals('contao:automator', $command->getName());
+        $this->assertSame('contao:automator', $command->getName());
     }
 
     /**
@@ -48,7 +48,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute(['command' => $command->getName()]);
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
         $this->assertContains('Please select a task:', $tester->getDisplay());
         $this->assertContains('[10]', $tester->getDisplay());
     }
@@ -81,7 +81,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute(['command' => $command->getName()]);
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
@@ -103,7 +103,7 @@ class AutomatorCommandTest extends TestCase
             'task' => 'purgeTempFolder',
         ]);
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
     }
 
     /**
@@ -120,7 +120,7 @@ class AutomatorCommandTest extends TestCase
 
         $code = $tester->execute(['command' => $command->getName()]);
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
         $this->assertContains('Value "4800" is invalid (see help contao:automator)', $tester->getDisplay());
     }
 
@@ -140,7 +140,7 @@ class AutomatorCommandTest extends TestCase
             'task' => 'fooBar',
         ]);
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
         $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
     }
 

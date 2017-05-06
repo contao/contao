@@ -180,7 +180,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     private function addSummaryData()
     {
         $framework = false;
-        $modelCount = '0';
+        $modelCount = 0;
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $framework = true;

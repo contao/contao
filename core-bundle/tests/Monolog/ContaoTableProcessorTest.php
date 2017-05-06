@@ -43,8 +43,8 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->createContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
-        $this->assertEquals(['foo' => 'bar'], $processor(['foo' => 'bar']));
-        $this->assertEquals(['context' => ['contao' => false]], $processor(['context' => ['contao' => false]]));
+        $this->assertSame(['foo' => 'bar'], $processor(['foo' => 'bar']));
+        $this->assertSame(['context' => ['contao' => false]], $processor(['context' => ['contao' => false]]));
     }
 
     /**
@@ -69,7 +69,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->assertEquals($expectedAction, $context->getAction());
+        $this->assertSame($expectedAction, $context->getAction());
     }
 
     /**
@@ -93,7 +93,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->assertEquals(ContaoContext::CRON, $context->getAction());
+        $this->assertSame(ContaoContext::CRON, $context->getAction());
     }
 
     /**
@@ -106,7 +106,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('127.0.0.1', $context->getIp());
+        $this->assertSame('127.0.0.1', $context->getIp());
     }
 
     /**
@@ -129,14 +129,14 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals($input, $context->getIp());
+        $this->assertSame($input, $context->getIp());
 
         $processor = $this->createContaoTableProcessor($requestStack, null, true);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals($expected, $context->getIp());
+        $this->assertSame($expected, $context->getIp());
     }
 
     /**
@@ -156,19 +156,19 @@ class ContaoTableProcessorTest extends TestCase
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')]]
         )['extra']['contao'];
 
-        $this->assertEquals('foobar', $context->getBrowser());
+        $this->assertSame('foobar', $context->getBrowser());
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('Contao test', $context->getBrowser());
+        $this->assertSame('Contao test', $context->getBrowser());
 
         $requestStack->pop();
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('N/A', $context->getBrowser());
+        $this->assertSame('N/A', $context->getBrowser());
     }
 
     /**
@@ -194,19 +194,19 @@ class ContaoTableProcessorTest extends TestCase
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, 'foobar')]]
         )['extra']['contao'];
 
-        $this->assertEquals('foobar', $context->getUsername());
+        $this->assertSame('foobar', $context->getUsername());
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('k.jones', $context->getUsername());
+        $this->assertSame('k.jones', $context->getUsername());
 
         $tokenStorage->setToken(null);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('N/A', $context->getUsername());
+        $this->assertSame('N/A', $context->getUsername());
     }
 
     /**
@@ -238,7 +238,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $result['extra']['contao'];
 
-        $this->assertEquals($expectedSource, $context->getSource());
+        $this->assertSame($expectedSource, $context->getSource());
     }
 
     /**

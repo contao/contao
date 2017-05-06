@@ -27,6 +27,6 @@ class DoctrineMigrationsDiffCommandTest extends \PHPUnit_Framework_TestCase
         $command = new DoctrineMigrationsDiffCommand();
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand', $command);
-        $this->assertEquals('doctrine:migrations:diff', $command->getName());
+        $this->assertSame('doctrine:migrations:diff', $command->getName());
     }
 }

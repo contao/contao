@@ -56,8 +56,8 @@ class LocaleListenerTest extends TestCase
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals($expected, $request->attributes->get('_locale'));
-        $this->assertEquals($expected, $session->get('_locale'));
+        $this->assertSame($expected, $request->attributes->get('_locale'));
+        $this->assertSame($expected, $session->get('_locale'));
     }
 
     /**
@@ -83,8 +83,8 @@ class LocaleListenerTest extends TestCase
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals($expected, $request->attributes->get('_locale'));
-        $this->assertEquals($expected, $session->get('_locale'));
+        $this->assertSame($expected, $request->attributes->get('_locale'));
+        $this->assertSame($expected, $session->get('_locale'));
     }
 
     /**
@@ -110,8 +110,8 @@ class LocaleListenerTest extends TestCase
         $listener = new LocaleListener($this->mockScopeMatcher(), $available);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals($expected, $request->attributes->get('_locale'));
-        $this->assertEquals($expected, $session->get('_locale'));
+        $this->assertSame($expected, $request->attributes->get('_locale'));
+        $this->assertSame($expected, $session->get('_locale'));
     }
 
     /**
@@ -130,7 +130,7 @@ class LocaleListenerTest extends TestCase
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals('zh-TW', $request->attributes->get('_locale'));
+        $this->assertSame('zh-TW', $request->attributes->get('_locale'));
         $this->assertFalse($session->has('_locale'));
     }
 
@@ -154,7 +154,7 @@ class LocaleListenerTest extends TestCase
         $listener->onKernelRequest($event);
 
         $this->assertNull($request->getSession());
-        $this->assertEquals($expected, $request->attributes->get('_locale'));
+        $this->assertSame($expected, $request->attributes->get('_locale'));
     }
 
     /**

@@ -46,18 +46,18 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bundles);
 
-        $this->assertEquals(KnpMenuBundle::class, $bundles[0]->getName());
-        $this->assertEquals([], $bundles[0]->getReplace());
-        $this->assertEquals([], $bundles[0]->getLoadAfter());
+        $this->assertSame(KnpMenuBundle::class, $bundles[0]->getName());
+        $this->assertSame([], $bundles[0]->getReplace());
+        $this->assertSame([], $bundles[0]->getLoadAfter());
 
-        $this->assertEquals(KnpTimeBundle::class, $bundles[1]->getName());
-        $this->assertEquals([], $bundles[1]->getReplace());
-        $this->assertEquals([], $bundles[1]->getLoadAfter());
+        $this->assertSame(KnpTimeBundle::class, $bundles[1]->getName());
+        $this->assertSame([], $bundles[1]->getReplace());
+        $this->assertSame([], $bundles[1]->getLoadAfter());
 
-        $this->assertEquals(ContaoCoreBundle::class, $bundles[2]->getName());
-        $this->assertEquals(['core'], $bundles[2]->getReplace());
+        $this->assertSame(ContaoCoreBundle::class, $bundles[2]->getName());
+        $this->assertSame(['core'], $bundles[2]->getReplace());
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
                 'Symfony\Bundle\SecurityBundle\SecurityBundle',

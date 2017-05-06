@@ -25,6 +25,6 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGeneratedTokenHasLengthOfEight()
     {
         $generator = new TokenGenerator(1000);
-        $this->assertEquals(8, strlen($generator->generateToken()));
+        $this->assertSame(8, strlen($generator->generateToken()));
     }
 }

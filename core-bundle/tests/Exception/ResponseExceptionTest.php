@@ -38,7 +38,7 @@ class ResponseExceptionTest extends \PHPUnit_Framework_TestCase
         $exception = new ResponseException(new Response('Hello world'));
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertEquals(200, $exception->getResponse()->getStatusCode());
-        $this->assertEquals('Hello world', $exception->getResponse()->getContent());
+        $this->assertSame(200, $exception->getResponse()->getStatusCode());
+        $this->assertSame('Hello world', $exception->getResponse()->getContent());
     }
 }

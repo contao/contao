@@ -61,8 +61,8 @@ class FilePickerProviderTest extends TestCase
         $filePicker = $menu->getChild('filePicker');
 
         $this->assertNotNull($filePicker);
-        $this->assertEquals('filemounts', $filePicker->getLinkAttribute('class'));
-        $this->assertEquals('contao_backend:do=files', $filePicker->getUri());
+        $this->assertSame('filemounts', $filePicker->getLinkAttribute('class'));
+        $this->assertSame('contao_backend:do=files', $filePicker->getUri());
     }
 
     /**
@@ -89,7 +89,7 @@ class FilePickerProviderTest extends TestCase
      */
     public function testProcessSelection()
     {
-        $this->assertEquals('files/foo.jpg', $this->provider->processSelection('files/foo.jpg'));
+        $this->assertSame('files/foo.jpg', $this->provider->processSelection('files/foo.jpg'));
     }
 
     /**
@@ -119,6 +119,6 @@ class FilePickerProviderTest extends TestCase
         $request = new Request();
         $request->query->set('value', 'files/foo.jpg');
 
-        $this->assertEquals('contao_backend:value=files/foo.jpg:do=files', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=files/foo.jpg:do=files', $this->provider->getPickerUrl($request));
     }
 }

@@ -80,22 +80,22 @@ class PictureFactoryTest extends TestCase
                     function (PictureConfiguration $pictureConfig) {
                         $size = $pictureConfig->getSize();
 
-                        $this->assertEquals(100, $size->getResizeConfig()->getWidth());
-                        $this->assertEquals(200, $size->getResizeConfig()->getHeight());
-                        $this->assertEquals(ResizeConfiguration::MODE_BOX, $size->getResizeConfig()->getMode());
-                        $this->assertEquals(50, $size->getResizeConfig()->getZoomLevel());
-                        $this->assertEquals('1x, 2x', $size->getDensities());
-                        $this->assertEquals('100vw', $size->getSizes());
+                        $this->assertSame(100, $size->getResizeConfig()->getWidth());
+                        $this->assertSame(200, $size->getResizeConfig()->getHeight());
+                        $this->assertSame(ResizeConfiguration::MODE_BOX, $size->getResizeConfig()->getMode());
+                        $this->assertSame(50, $size->getResizeConfig()->getZoomLevel());
+                        $this->assertSame('1x, 2x', $size->getDensities());
+                        $this->assertSame('100vw', $size->getSizes());
 
                         $sizeItem = $pictureConfig->getSizeItems()[0];
 
-                        $this->assertEquals(50, $sizeItem->getResizeConfig()->getWidth());
-                        $this->assertEquals(50, $sizeItem->getResizeConfig()->getHeight());
-                        $this->assertEquals(ResizeConfiguration::MODE_CROP, $sizeItem->getResizeConfig()->getMode());
-                        $this->assertEquals(100, $sizeItem->getResizeConfig()->getZoomLevel());
-                        $this->assertEquals('0.5x, 2x', $sizeItem->getDensities());
-                        $this->assertEquals('50vw', $sizeItem->getSizes());
-                        $this->assertEquals('(max-width: 900px)', $sizeItem->getMedia());
+                        $this->assertSame(50, $sizeItem->getResizeConfig()->getWidth());
+                        $this->assertSame(50, $sizeItem->getResizeConfig()->getHeight());
+                        $this->assertSame(ResizeConfiguration::MODE_CROP, $sizeItem->getResizeConfig()->getMode());
+                        $this->assertSame(100, $sizeItem->getResizeConfig()->getZoomLevel());
+                        $this->assertSame('0.5x, 2x', $sizeItem->getDensities());
+                        $this->assertSame('50vw', $sizeItem->getSizes());
+                        $this->assertSame('(max-width: 900px)', $sizeItem->getMedia());
 
                         return true;
                     }
@@ -116,7 +116,7 @@ class PictureFactoryTest extends TestCase
             ->with(
                 $this->callback(
                     function ($imagePath) use ($path) {
-                        $this->assertEquals($path, $imagePath);
+                        $this->assertSame($path, $imagePath);
 
                         return true;
                     }
@@ -225,7 +225,7 @@ class PictureFactoryTest extends TestCase
         $picture = $pictureFactory->create($path, 1);
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
-        $this->assertEquals('my-size', $picture->getImg()['class']);
+        $this->assertSame('my-size', $picture->getImg()['class']);
     }
 
     /**
@@ -334,13 +334,13 @@ class PictureFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (PictureConfigurationInterface $config) {
-                        $this->assertEquals($config->getSizeItems(), []);
-                        $this->assertEquals(
+                        $this->assertSame($config->getSizeItems(), []);
+                        $this->assertSame(
                             ResizeConfigurationInterface::MODE_CROP,
                             $config->getSize()->getResizeConfig()->getMode()
                         );
-                        $this->assertEquals(100, $config->getSize()->getResizeConfig()->getWidth());
-                        $this->assertEquals(200, $config->getSize()->getResizeConfig()->getHeight());
+                        $this->assertSame(100, $config->getSize()->getResizeConfig()->getWidth());
+                        $this->assertSame(200, $config->getSize()->getResizeConfig()->getHeight());
 
                         return true;
                     }
@@ -372,7 +372,7 @@ class PictureFactoryTest extends TestCase
             ->with(
                 $this->callback(
                     function ($imagePath) use ($path) {
-                        $this->assertEquals($path, $imagePath);
+                        $this->assertSame($path, $imagePath);
 
                         return true;
                     }
@@ -392,7 +392,7 @@ class PictureFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function ($mode) {
-                        $this->assertEquals('left_top', $mode);
+                        $this->assertSame('left_top', $mode);
 
                         return true;
                     }
@@ -445,17 +445,17 @@ class PictureFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (PictureConfiguration $pictureConfig) use (&$defaultDensities) {
-                        $this->assertEquals(100, $pictureConfig->getSize()->getResizeConfig()->getWidth());
-                        $this->assertEquals(200, $pictureConfig->getSize()->getResizeConfig()->getHeight());
+                        $this->assertSame(100, $pictureConfig->getSize()->getResizeConfig()->getWidth());
+                        $this->assertSame(200, $pictureConfig->getSize()->getResizeConfig()->getHeight());
 
-                        $this->assertEquals(
+                        $this->assertSame(
                             ResizeConfiguration::MODE_BOX,
                             $pictureConfig->getSize()->getResizeConfig()->getMode()
                         );
 
-                        $this->assertEquals(0, $pictureConfig->getSize()->getResizeConfig()->getZoomLevel());
-                        $this->assertEquals($defaultDensities, $pictureConfig->getSize()->getDensities());
-                        $this->assertEquals('', $pictureConfig->getSize()->getSizes());
+                        $this->assertSame(0, $pictureConfig->getSize()->getResizeConfig()->getZoomLevel());
+                        $this->assertSame($defaultDensities, $pictureConfig->getSize()->getDensities());
+                        $this->assertSame('', $pictureConfig->getSize()->getSizes());
 
                         return true;
                     }
@@ -476,7 +476,7 @@ class PictureFactoryTest extends TestCase
             ->with(
                 $this->callback(
                     function ($imagePath) use ($path) {
-                        $this->assertEquals($path, $imagePath);
+                        $this->assertSame($path, $imagePath);
 
                         return true;
                     }

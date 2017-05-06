@@ -29,7 +29,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         $command = new VersionCommand('contao:version');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\VersionCommand', $command);
-        $this->assertEquals('contao:version', $command->getName());
+        $this->assertSame('contao:version', $command->getName());
     }
 
     /**
@@ -46,7 +46,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
         $this->assertContains('4.0.2', $tester->getDisplay());
     }
 
@@ -64,7 +64,7 @@ class VersionCommandTest extends \PHPUnit_Framework_TestCase
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
-        $this->assertEquals(1, $code);
-        $this->assertEquals('', $tester->getDisplay());
+        $this->assertSame(1, $code);
+        $this->assertSame('', $tester->getDisplay());
     }
 }

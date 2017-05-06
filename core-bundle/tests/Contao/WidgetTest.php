@@ -62,7 +62,7 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
         Input::resetCache();
         Input::initialize();
 
-        $this->assertEquals($expected, $method->invoke($widget, $key));
+        $this->assertSame($expected, $method->invoke($widget, $key));
 
         // Restore the error reporting level
         error_reporting($errorReporting);
@@ -131,10 +131,10 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
                 ['k1' => ['k2' => ['k3' => 'bar']]],
                 'bar',
             ],
-            ['foo[0]', 'foo', ['k1' => 'bar'], ''],
+            ['foo[0]', 'foo', ['k1' => 'bar'], null],
             ['foo[k1][0]', 'foo', ['k1' => 'bar'], 'bar'],
-            ['foo', 'nofoo', 'bar', ''],
-            ['', 'foo', 'bar', ''],
+            ['foo', 'nofoo', 'bar', null],
+            ['', 'foo', 'bar', null],
             ['', '', 'bar', 'bar'],
             ['[0]', '', ['bar'], 'bar'],
         ];

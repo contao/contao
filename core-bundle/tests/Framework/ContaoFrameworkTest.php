@@ -75,12 +75,12 @@ class ContaoFrameworkTest extends TestCase
         $this->assertFalse(defined('BE_USER_LOGGED_IN'));
         $this->assertFalse(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
-        $this->assertEquals('FE', TL_MODE);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
-        $this->assertEquals('', TL_REFERER_ID);
-        $this->assertEquals('index.html', TL_SCRIPT);
-        $this->assertEquals('', TL_PATH);
-        $this->assertEquals('en', $GLOBALS['TL_LANGUAGE']);
+        $this->assertSame('FE', TL_MODE);
+        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame('', TL_REFERER_ID);
+        $this->assertSame('index.html', TL_SCRIPT);
+        $this->assertSame('', TL_PATH);
+        $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
         $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['BE_DATA']);
         $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['FE_DATA']);
     }
@@ -113,12 +113,12 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('BE_USER_LOGGED_IN'));
         $this->assertTrue(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
-        $this->assertEquals('BE', TL_MODE);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
-        $this->assertEquals('foobar', TL_REFERER_ID);
-        $this->assertEquals('contao/login', TL_SCRIPT);
-        $this->assertEquals('', TL_PATH);
-        $this->assertEquals('de', $GLOBALS['TL_LANGUAGE']);
+        $this->assertSame('BE', TL_MODE);
+        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame('foobar', TL_REFERER_ID);
+        $this->assertSame('contao/login', TL_SCRIPT);
+        $this->assertSame('', TL_PATH);
+        $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
     /**
@@ -144,9 +144,9 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
         $this->assertNull(TL_MODE);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
+        $this->assertSame($this->getRootDir(), TL_ROOT);
         $this->assertNull(TL_REFERER_ID);
-        $this->assertEquals('', TL_SCRIPT);
+        $this->assertSame(null, TL_SCRIPT);
         $this->assertNull(TL_PATH);
     }
 
@@ -183,12 +183,12 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('BE_USER_LOGGED_IN'));
         $this->assertTrue(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
-        $this->assertEquals(null, TL_MODE);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
-        $this->assertEquals(null, TL_REFERER_ID);
-        $this->assertEquals(null, TL_SCRIPT);
-        $this->assertEquals('', TL_PATH);
-        $this->assertEquals('de', $GLOBALS['TL_LANGUAGE']);
+        $this->assertSame(null, TL_MODE);
+        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame('', TL_REFERER_ID);
+        $this->assertSame(null, TL_SCRIPT);
+        $this->assertSame('', TL_PATH);
+        $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
     /**
@@ -218,10 +218,10 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(defined('TL_PATH'));
         $this->assertNull(TL_MODE);
-        $this->assertEquals($this->getRootDir(), TL_ROOT);
-        $this->assertEquals('foobar', TL_REFERER_ID);
-        $this->assertEquals('contao/login', TL_SCRIPT);
-        $this->assertEquals('', TL_PATH);
+        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame('foobar', TL_REFERER_ID);
+        $this->assertSame('contao/login', TL_SCRIPT);
+        $this->assertSame('', TL_PATH);
     }
 
     /**
@@ -295,7 +295,7 @@ class ContaoFrameworkTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting(E_ALL ^ E_USER_NOTICE);
 
-        $this->assertNotEquals(
+        $this->assertNotSame(
             $errorReporting,
             error_reporting(),
             'Test is invalid, error level has not changed.'
@@ -303,7 +303,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->assertEquals($errorReporting, error_reporting());
+        $this->assertSame($errorReporting, error_reporting());
 
         error_reporting($errorReporting);
     }
@@ -562,7 +562,7 @@ class ContaoFrameworkTest extends TestCase
         $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
-        $this->assertEquals([1, 2], $instance->constructorArgs);
+        $this->assertSame([1, 2], $instance->constructorArgs);
     }
 
     /**
@@ -577,7 +577,7 @@ class ContaoFrameworkTest extends TestCase
         $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
-        $this->assertEquals([1, 2], $instance->constructorArgs);
+        $this->assertSame([1, 2], $instance->constructorArgs);
     }
 
     /**
@@ -602,6 +602,6 @@ class ContaoFrameworkTest extends TestCase
         $prop = $ref->getProperty('class');
         $prop->setAccessible(true);
 
-        $this->assertEquals($class, $prop->getValue($adapter));
+        $this->assertSame($class, $prop->getValue($adapter));
     }
 }

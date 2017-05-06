@@ -156,35 +156,35 @@ class EnvironmentTest extends TestCase
 
         $agent = Environment::get('agent');
 
-        $this->assertEquals('mac', $agent->os);
-        $this->assertEquals('mac chrome webkit ch33', $agent->class);
-        $this->assertEquals('chrome', $agent->browser);
-        $this->assertEquals('ch', $agent->shorty);
-        $this->assertEquals(33, $agent->version);
-        $this->assertEquals('webkit', $agent->engine);
-        $this->assertEquals([33, 0, 1750, 149], $agent->versions);
+        $this->assertSame('mac', $agent->os);
+        $this->assertSame('mac chrome webkit ch33', $agent->class);
+        $this->assertSame('chrome', $agent->browser);
+        $this->assertSame('ch', $agent->shorty);
+        $this->assertSame('33', $agent->version);
+        $this->assertSame('webkit', $agent->engine);
+        $this->assertSame(['33', '0', '1750', '149'], $agent->versions);
         $this->assertFalse($agent->mobile);
 
-        $this->assertEquals('HTTP/1.1', Environment::get('serverProtocol'));
-        $this->assertEquals($this->getRootDir().'/core/index.php', Environment::get('scriptFilename'));
-        $this->assertEquals('/core/index.php', Environment::get('scriptName'));
-        $this->assertEquals($this->getRootDir(), Environment::get('documentRoot'));
-        $this->assertEquals('/core/en/academy.html?do=test', Environment::get('requestUri'));
-        $this->assertEquals(['de-DE', 'de', 'en-GB', 'en'], Environment::get('httpAcceptLanguage'));
-        $this->assertEquals(['gzip', 'deflate', 'sdch'], Environment::get('httpAcceptEncoding'));
-        $this->assertEquals('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36', Environment::get('httpUserAgent'));
-        $this->assertEquals('localhost', Environment::get('httpHost'));
+        $this->assertSame('HTTP/1.1', Environment::get('serverProtocol'));
+        $this->assertSame($this->getRootDir().'/core/index.php', Environment::get('scriptFilename'));
+        $this->assertSame('/core/index.php', Environment::get('scriptName'));
+        $this->assertSame($this->getRootDir(), Environment::get('documentRoot'));
+        $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
+        $this->assertSame(['de-DE', 'de', 'en-GB', 'en'], Environment::get('httpAcceptLanguage'));
+        $this->assertSame(['gzip', 'deflate', 'sdch'], Environment::get('httpAcceptEncoding'));
+        $this->assertSame('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36', Environment::get('httpUserAgent'));
+        $this->assertSame('localhost', Environment::get('httpHost'));
         $this->assertEmpty(Environment::get('httpXForwardedHost'));
 
         $this->assertTrue(Environment::get('ssl'));
-        $this->assertEquals('https://localhost', Environment::get('url'));
-        $this->assertEquals('https://localhost/core/en/academy.html?do=test', Environment::get('uri'));
-        $this->assertEquals('123.456.789.0', Environment::get('ip'));
-        $this->assertEquals('127.0.0.1', Environment::get('server'));
-        $this->assertEquals('index.php', Environment::get('script'));
-        $this->assertEquals('en/academy.html?do=test', Environment::get('request'));
-        $this->assertEquals('en/academy.html?do=test', Environment::get('indexFreeRequest'));
-        $this->assertEquals('https://localhost'.Environment::get('path').'/', Environment::get('base'));
+        $this->assertSame('https://localhost', Environment::get('url'));
+        $this->assertSame('https://localhost/core/en/academy.html?do=test', Environment::get('uri'));
+        $this->assertSame('123.456.789.0', Environment::get('ip'));
+        $this->assertSame('127.0.0.1', Environment::get('server'));
+        $this->assertSame('index.php', Environment::get('script'));
+        $this->assertSame('en/academy.html?do=test', Environment::get('request'));
+        $this->assertSame('en/academy.html?do=test', Environment::get('indexFreeRequest'));
+        $this->assertSame('https://localhost'.Environment::get('path').'/', Environment::get('base'));
         $this->assertFalse(Environment::get('isAjaxRequest'));
     }
 

@@ -254,14 +254,14 @@ class ImageTest extends TestCase
         $imageObj->setTargetHeight($arguments[1]);
         $imageObj->setResizeMode($arguments[4]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedResult,
             $imageObj->computeResize()
         );
 
         $imageObj->setZoomLevel(50);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedResult,
             $imageObj->computeResize(),
             'Zoom 50 should return the same results if no important part is specified'
@@ -269,7 +269,7 @@ class ImageTest extends TestCase
 
         $imageObj->setZoomLevel(100);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedResult,
             $imageObj->computeResize(),
             'Zoom 100 should return the same results if no important part is specified'
@@ -717,7 +717,7 @@ class ImageTest extends TestCase
         $imageObj->setZoomLevel($arguments[5]);
         $imageObj->setImportantPart($arguments[6]);
 
-        $this->assertEquals($expectedResult, $imageObj->computeResize());
+        $this->assertSame($expectedResult, $imageObj->computeResize());
     }
 
     /**
@@ -1372,17 +1372,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1411,17 +1411,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1448,17 +1448,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1486,17 +1486,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1522,7 +1522,7 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals($file->path, $resultFile->path);
+        $this->assertSame($file->path, $resultFile->path);
     }
 
     /**
@@ -1552,17 +1552,17 @@ class ImageTest extends TestCase
         $imageObj->executeResize();
 
         $resultFile = new \File($imageObj->getResizedPath());
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML(gzdecode($resultFile->getContent()));
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**

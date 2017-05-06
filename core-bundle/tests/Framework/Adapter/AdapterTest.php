@@ -36,7 +36,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = new Adapter('Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass');
 
-        $this->assertEquals(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
+        $this->assertSame(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
     }
 
     /**
