@@ -130,11 +130,11 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRootDir()
     {
-        $this->assertEquals(dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/app', $this->kernel->getRootDir());
+        $this->assertSame(dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/app', $this->kernel->getRootDir());
 
         $this->kernel->setRootDir(__DIR__);
 
-        $this->assertEquals(__DIR__, $this->kernel->getRootDir());
+        $this->assertSame(__DIR__, $this->kernel->getRootDir());
     }
 
     /**
@@ -142,7 +142,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCacheDir()
     {
-        $this->assertEquals(dirname($this->kernel->getRootDir()).'/var/cache/test', $this->kernel->getCacheDir());
+        $this->assertSame(dirname($this->kernel->getRootDir()).'/var/cache/test', $this->kernel->getCacheDir());
     }
 
     /**
@@ -150,7 +150,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLogDir()
     {
-        $this->assertEquals(dirname($this->kernel->getRootDir()).'/var/logs', $this->kernel->getLogDir());
+        $this->assertSame(dirname($this->kernel->getRootDir()).'/var/logs', $this->kernel->getLogDir());
     }
 
     /**
@@ -182,7 +182,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $this->kernel->setRootDir($rootDir);
         $this->kernel->registerContainerConfiguration($loader);
 
-        $this->assertEquals($expectedResult, $files);
+        $this->assertSame($expectedResult, $files);
     }
 
     /**

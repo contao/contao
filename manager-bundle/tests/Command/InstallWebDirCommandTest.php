@@ -87,7 +87,7 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testNameAndArguments()
     {
-        $this->assertEquals('contao:install-web-dir', $this->command->getName());
+        $this->assertSame('contao:install-web-dir', $this->command->getName());
         $this->assertTrue($this->command->getDefinition()->hasArgument('path'));
     }
 

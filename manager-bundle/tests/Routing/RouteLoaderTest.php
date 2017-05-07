@@ -10,12 +10,12 @@
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-use Contao\ManagerBundle\Routing\RouteLoader;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -134,7 +134,7 @@ class RouteLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(4, $routes);
         $this->assertArrayHasKey('contao_catch_all', $routes);
-        $this->assertEquals(3, array_search('contao_catch_all', array_keys($routes)));
+        $this->assertSame(3, array_search('contao_catch_all', array_keys($routes), true));
     }
 
     private function mockRoutePlugin($routeName, $routePath)
