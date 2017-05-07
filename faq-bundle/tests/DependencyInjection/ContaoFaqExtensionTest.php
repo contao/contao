@@ -62,8 +62,8 @@ class ContaoFaqExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_faq.listener.insert_tags');
 
-        $this->assertEquals(InsertTagsListener::class, $definition->getClass());
-        $this->assertEquals('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame(InsertTagsListener::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
     /**
@@ -75,11 +75,11 @@ class ContaoFaqExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_faq.listener.faq_picker_provider');
 
-        $this->assertEquals(FaqPickerProvider::class, $definition->getClass());
+        $this->assertSame(FaqPickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
-        $this->assertEquals('router', (string) $definition->getArgument(0));
-        $this->assertEquals('request_stack', (string) $definition->getArgument(1));
-        $this->assertEquals('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('router', (string) $definition->getArgument(0));
+        $this->assertSame('request_stack', (string) $definition->getArgument(1));
+        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -90,11 +90,11 @@ class ContaoFaqExtensionTest extends \PHPUnit_Framework_TestCase
 
         $methodCalls = $childDefinition->getMethodCalls();
 
-        $this->assertEquals('setFramework', $methodCalls[0][0]);
+        $this->assertSame('setFramework', $methodCalls[0][0]);
 
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertEquals(64, $tags['contao.picker_menu_provider'][0]['priority']);
+        $this->assertSame(64, $tags['contao.picker_menu_provider'][0]['priority']);
     }
 }

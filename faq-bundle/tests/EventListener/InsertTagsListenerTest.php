@@ -39,22 +39,22 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
             $listener->onReplaceInsertTags('faq::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">',
             $listener->onReplaceInsertTags('faq_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'faq/what-does-foobar-mean.html',
             $listener->onReplaceInsertTags('faq_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'What does &quot;foobar&quot; mean?',
             $listener->onReplaceInsertTags('faq_title::2')
         );

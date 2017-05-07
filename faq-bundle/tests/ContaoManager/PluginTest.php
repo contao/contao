@@ -41,8 +41,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $config = (new Plugin())->getBundles($parser)[0];
 
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
-        $this->assertEquals('Contao\FaqBundle\ContaoFaqBundle', $config->getName());
-        $this->assertEquals(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
-        $this->assertEquals(['faq'], $config->getReplace());
+        $this->assertSame('Contao\FaqBundle\ContaoFaqBundle', $config->getName());
+        $this->assertSame(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
+        $this->assertSame(['faq'], $config->getReplace());
     }
 }

@@ -68,8 +68,8 @@ class FaqPickerProviderTest extends \PHPUnit_Framework_TestCase
         $eventPicker = $menu->getChild('faqPicker');
 
         $this->assertNotNull($eventPicker);
-        $this->assertEquals('faq', $eventPicker->getLinkAttribute('class'));
-        $this->assertEquals('contao_backend:do=faq', $eventPicker->getUri());
+        $this->assertSame('faq', $eventPicker->getLinkAttribute('class'));
+        $this->assertSame('contao_backend:do=faq', $eventPicker->getUri());
     }
 
     /**
@@ -95,7 +95,7 @@ class FaqPickerProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessSelection()
     {
-        $this->assertEquals('{{faq_url::2}}', $this->provider->processSelection(2));
+        $this->assertSame('{{faq_url::2}}', $this->provider->processSelection(2));
     }
 
     /**
@@ -125,14 +125,14 @@ class FaqPickerProviderTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->query->set('value', '{{faq_url::42}}');
 
-        $this->assertEquals(
+        $this->assertSame(
             'contao_backend:value=42:do=faq:table=tl_faq:id=2',
             $this->provider->getPickerUrl($request)
         );
 
-        $this->assertEquals('contao_backend:value=42:do=faq', $this->provider->getPickerUrl($request));
-        $this->assertEquals('contao_backend:value=42:do=faq', $this->provider->getPickerUrl($request));
-        $this->assertEquals('contao_backend:value=42:do=faq', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=faq', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=faq', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=faq', $this->provider->getPickerUrl($request));
     }
 
     /**
