@@ -377,7 +377,7 @@ class InstallationController implements ContainerAwareInterface
 
         $template = $request->request->get('template');
 
-        if ('' === $template || !in_array($template, $templates)) {
+        if ('' === $template || !in_array($template, $templates, true)) {
             $this->context['import_error'] = $this->trans('import_empty_source');
 
             return null;

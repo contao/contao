@@ -55,7 +55,7 @@ class Version400Update extends AbstractVersionUpdate
                 $jquery = StringUtil::deserialize($layout->jquery);
 
                 if (!empty($jquery) && is_array($jquery)) {
-                    if (false !== ($key = array_search('j_slider', $jquery))) {
+                    if (false !== ($key = array_search('j_slider', $jquery, true))) {
                         $scripts[] = 'js_slider';
                         unset($jquery[$key]);
 
@@ -70,7 +70,7 @@ class Version400Update extends AbstractVersionUpdate
                 $mootools = StringUtil::deserialize($layout->mootools);
 
                 if (!empty($mootools) && is_array($mootools)) {
-                    if (false !== ($key = array_search('moo_slider', $mootools))) {
+                    if (false !== ($key = array_search('moo_slider', $mootools, true))) {
                         $scripts[] = 'js_slider';
                         unset($mootools[$key]);
 
@@ -94,7 +94,7 @@ class Version400Update extends AbstractVersionUpdate
             $mootools = StringUtil::deserialize($layout->mootools);
 
             if (!empty($mootools) && is_array($mootools)) {
-                if (false !== ($key = array_search('moo_slimbox', $mootools))) {
+                if (false !== ($key = array_search('moo_slimbox', $mootools, true))) {
                     $mootools[] = 'moo_mediabox';
                     unset($mootools[$key]);
 
@@ -111,7 +111,7 @@ class Version400Update extends AbstractVersionUpdate
             $framework = StringUtil::deserialize($layout->framework);
 
             if (!empty($framework) && is_array($framework)) {
-                if (false !== ($key = array_search('tinymce.css', $framework))) {
+                if (false !== ($key = array_search('tinymce.css', $framework, true))) {
                     unset($framework[$key]);
 
                     $stmt = $this->connection->prepare('UPDATE tl_layout SET framework=:framework WHERE id=:id');

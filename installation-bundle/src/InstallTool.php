@@ -64,7 +64,7 @@ class InstallTool
         $cache = \System::getContainer()->get('contao.cache');
 
         if ($cache->contains('login-count')) {
-            return intval($cache->fetch('login-count')) >= 3;
+            return (int) ($cache->fetch('login-count')) >= 3;
         }
 
         return false;
@@ -98,7 +98,7 @@ class InstallTool
         $cache = \System::getContainer()->get('contao.cache');
 
         if ($cache->contains('login-count')) {
-            $count = intval($cache->fetch('login-count')) + 1;
+            $count = (int) ($cache->fetch('login-count')) + 1;
         } else {
             $count = 1;
         }
