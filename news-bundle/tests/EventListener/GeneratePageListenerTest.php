@@ -13,8 +13,8 @@ namespace Contao\NewsBundle\Tests\EventListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\Model\Collection;
+use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\PageModel;
 
 /**
@@ -72,7 +72,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener->onGeneratePage($pageModel, $layoutModel);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 '<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">',
             ],

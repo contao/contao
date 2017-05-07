@@ -68,8 +68,8 @@ class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
         $eventPicker = $menu->getChild('newsPicker');
 
         $this->assertNotNull($eventPicker);
-        $this->assertEquals('news', $eventPicker->getLinkAttribute('class'));
-        $this->assertEquals('contao_backend:do=news', $eventPicker->getUri());
+        $this->assertSame('news', $eventPicker->getLinkAttribute('class'));
+        $this->assertSame('contao_backend:do=news', $eventPicker->getUri());
     }
 
     /**
@@ -95,7 +95,7 @@ class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessSelection()
     {
-        $this->assertEquals('{{news_url::2}}', $this->provider->processSelection(2));
+        $this->assertSame('{{news_url::2}}', $this->provider->processSelection(2));
     }
 
     /**
@@ -125,14 +125,14 @@ class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->query->set('value', '{{news_url::42}}');
 
-        $this->assertEquals(
+        $this->assertSame(
             'contao_backend:value=42:do=news:table=tl_news:id=2',
             $this->provider->getPickerUrl($request)
         );
 
-        $this->assertEquals('contao_backend:value=42:do=news', $this->provider->getPickerUrl($request));
-        $this->assertEquals('contao_backend:value=42:do=news', $this->provider->getPickerUrl($request));
-        $this->assertEquals('contao_backend:value=42:do=news', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=news', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=news', $this->provider->getPickerUrl($request));
+        $this->assertSame('contao_backend:value=42:do=news', $this->provider->getPickerUrl($request));
     }
 
     /**

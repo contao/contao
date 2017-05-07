@@ -39,7 +39,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://localhost/share/news.xml',
             $listener->onReplaceInsertTags('news_feed::2')
         );
@@ -52,27 +52,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
             $listener->onReplaceInsertTags('news::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
             $listener->onReplaceInsertTags('news_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'news/foo-is-not-bar.html',
             $listener->onReplaceInsertTags('news_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
             $listener->onReplaceInsertTags('news_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>Foo does not equal bar.</p>',
             $listener->onReplaceInsertTags('news_teaser::2')
         );
@@ -85,27 +85,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('external'));
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="https://contao.org" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
             $listener->onReplaceInsertTags('news::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="https://contao.org" title="&quot;Foo&quot; is not &quot;bar&quot;">',
             $listener->onReplaceInsertTags('news_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://contao.org',
             $listener->onReplaceInsertTags('news_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
             $listener->onReplaceInsertTags('news_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>Foo does not equal bar.</p>',
             $listener->onReplaceInsertTags('news_teaser::2')
         );
@@ -118,27 +118,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('internal'));
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="internal-target.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
             $listener->onReplaceInsertTags('news::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="internal-target.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
             $listener->onReplaceInsertTags('news_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'internal-target.html',
             $listener->onReplaceInsertTags('news_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
             $listener->onReplaceInsertTags('news_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>Foo does not equal bar.</p>',
             $listener->onReplaceInsertTags('news_teaser::2')
         );
@@ -151,27 +151,27 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('article'));
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="portfolio/articles/foobar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
             $listener->onReplaceInsertTags('news::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<a href="portfolio/articles/foobar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
             $listener->onReplaceInsertTags('news_open::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'portfolio/articles/foobar.html',
             $listener->onReplaceInsertTags('news_url::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
             $listener->onReplaceInsertTags('news_title::2')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '<p>Foo does not equal bar.</p>',
             $listener->onReplaceInsertTags('news_teaser::2')
         );

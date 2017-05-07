@@ -65,8 +65,8 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_news.listener.generate_page');
 
-        $this->assertEquals(GeneratePageListener::class, $definition->getClass());
-        $this->assertEquals('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame(GeneratePageListener::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
     /**
@@ -78,8 +78,8 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_news.listener.insert_tags');
 
-        $this->assertEquals(InsertTagsListener::class, $definition->getClass());
-        $this->assertEquals('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame(InsertTagsListener::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
     /**
@@ -91,15 +91,15 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_news.listener.preview_url_create');
 
-        $this->assertEquals(PreviewUrlCreateListener::class, $definition->getClass());
-        $this->assertEquals('request_stack', (string) $definition->getArgument(0));
-        $this->assertEquals('contao.framework', (string) $definition->getArgument(1));
+        $this->assertSame(PreviewUrlCreateListener::class, $definition->getClass());
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertEquals('contao.preview_url_create', $tags['kernel.event_listener'][0]['event']);
-        $this->assertEquals('onPreviewUrlCreate', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame('contao.preview_url_create', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onPreviewUrlCreate', $tags['kernel.event_listener'][0]['method']);
     }
 
     /**
@@ -111,15 +111,15 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_news.listener.preview_url_convert');
 
-        $this->assertEquals(PreviewUrlConvertListener::class, $definition->getClass());
-        $this->assertEquals('request_stack', (string) $definition->getArgument(0));
-        $this->assertEquals('contao.framework', (string) $definition->getArgument(1));
+        $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertEquals('contao.preview_url_convert', $tags['kernel.event_listener'][0]['event']);
-        $this->assertEquals('onPreviewUrlConvert', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame('contao.preview_url_convert', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onPreviewUrlConvert', $tags['kernel.event_listener'][0]['method']);
     }
 
     /**
@@ -131,11 +131,11 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('contao_news.listener.news_picker_provider');
 
-        $this->assertEquals(NewsPickerProvider::class, $definition->getClass());
+        $this->assertSame(NewsPickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
-        $this->assertEquals('router', (string) $definition->getArgument(0));
-        $this->assertEquals('request_stack', (string) $definition->getArgument(1));
-        $this->assertEquals('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('router', (string) $definition->getArgument(0));
+        $this->assertSame('request_stack', (string) $definition->getArgument(1));
+        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -146,11 +146,11 @@ class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $methodCalls = $childDefinition->getMethodCalls();
 
-        $this->assertEquals('setFramework', $methodCalls[0][0]);
+        $this->assertSame('setFramework', $methodCalls[0][0]);
 
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertEquals(128, $tags['contao.picker_menu_provider'][0]['priority']);
+        $this->assertSame(128, $tags['contao.picker_menu_provider'][0]['priority']);
     }
 }

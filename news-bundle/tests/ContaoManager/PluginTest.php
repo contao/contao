@@ -10,8 +10,8 @@
 
 namespace Contao\NewsBundle\Tests\ContaoManager;
 
-use Contao\NewsBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\NewsBundle\ContaoManager\Plugin;
 
 /**
  * Tests the Plugin class.
@@ -41,8 +41,8 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $config = (new Plugin())->getBundles($parser)[0];
 
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
-        $this->assertEquals('Contao\NewsBundle\ContaoNewsBundle', $config->getName());
-        $this->assertEquals(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
-        $this->assertEquals(['news'], $config->getReplace());
+        $this->assertSame('Contao\NewsBundle\ContaoNewsBundle', $config->getName());
+        $this->assertSame(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
+        $this->assertSame(['news'], $config->getReplace());
     }
 }

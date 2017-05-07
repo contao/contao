@@ -52,7 +52,7 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlConvertListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlConvert($event);
 
-        $this->assertEquals('http://localhost/news/james-wilson-returns.html', $event->getUrl());
+        $this->assertSame('http://localhost/news/james-wilson-returns.html', $event->getUrl());
     }
 
     /**

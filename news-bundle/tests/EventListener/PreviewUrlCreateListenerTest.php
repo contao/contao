@@ -49,7 +49,7 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlCreate($event);
 
-        $this->assertEquals('news=1', $event->getQuery());
+        $this->assertSame('news=1', $event->getQuery());
     }
 
     /**
@@ -115,7 +115,7 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlCreate($event);
 
-        $this->assertEquals('news=2', $event->getQuery());
+        $this->assertSame('news=2', $event->getQuery());
     }
 
     /**
