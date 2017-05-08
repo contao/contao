@@ -11,9 +11,11 @@
 namespace Contao\CalendarBundle\Tests\EventListener;
 
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
+use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlCreateListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -145,29 +147,21 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($isInitialized = true)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn($isInitialized)
         ;
 
         $eventsModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->setMethods(['findByPk'])
             ->getMock()
         ;
 
         $eventsModelAdapter
-            ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
                 switch ($id) {
@@ -181,11 +175,10 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($eventsModelAdapter) {
                 switch ($key) {
-                    case 'Contao\CalendarEventsModel':
+                    case CalendarEventsModel::class:
                         return $eventsModelAdapter;
 
                     default:

@@ -17,7 +17,7 @@ use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarBundle\Menu\EventPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Symfony\Component\DependencyInjection\ChildDefinition;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoCalendarExtensionTest extends \PHPUnit_Framework_TestCase
+class ContaoCalendarExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder
@@ -141,9 +141,7 @@ class ContaoCalendarExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setFramework', $methodCalls[0][0]);

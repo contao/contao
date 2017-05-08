@@ -10,17 +10,23 @@
 
 namespace Contao\CalendarBundle\Tests\EventListener;
 
+use Contao\ArticleModel;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
+use Contao\CalendarEventsModel;
+use Contao\CalendarFeedModel;
+use Contao\CalendarModel;
+use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\PageModel;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the InsertTagsListener class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
+class InsertTagsListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -219,29 +225,16 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($source = 'default', $noModels = false, $noCalendar = false)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $feedModel = $this
-            ->getMockBuilder('Contao\CalendarFeedModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $feedModel = $this->createMock(CalendarFeedModel::class);
 
         $feedModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -258,92 +251,55 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $calendarFeedModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
             ->setMethods(['findByPk'])
-            ->setConstructorArgs(['Contao\CalendarFeedModel'])
             ->getMock()
         ;
 
         $calendarFeedModelAdapter
-            ->expects($this->any())
             ->method('findByPk')
             ->willReturn($noModels ? null : $feedModel)
         ;
 
-        $page = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->setMethods(['getFrontendUrl'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $page = $this->createMock(PageModel::class);
 
         $page
-            ->expects($this->any())
             ->method('getFrontendUrl')
             ->willReturn('events/the-foobar-event.html')
         ;
 
-        $calendarModel = $this
-            ->getMockBuilder('Contao\CalendarModel')
-            ->setMethods(['getRelated'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $calendarModel = $this->createMock(CalendarModel::class);
 
         $calendarModel
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturn($page)
         ;
 
-        $jumpTo = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->setMethods(['getFrontendUrl'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $jumpTo = $this->createMock(PageModel::class);
 
         $jumpTo
-            ->expects($this->any())
             ->method('getFrontendUrl')
             ->willReturn('internal-target.html')
         ;
 
-        $pid = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->setMethods(['getFrontendUrl'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $pid = $this->createMock(PageModel::class);
 
         $pid
-            ->expects($this->any())
             ->method('getFrontendUrl')
             ->willReturn('portfolio/articles/foobar.html')
         ;
 
-        $articleModel = $this
-            ->getMockBuilder('Contao\ArticleModel')
-            ->setMethods(['getRelated'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $articleModel = $this->createMock(ArticleModel::class);
 
         $articleModel
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturn($pid)
         ;
 
-        $eventModel = $this
-            ->getMockBuilder('Contao\CalendarEventsModel')
-            ->setMethods(['getRelated', '__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $eventModel = $this->createMock(CalendarEventsModel::class);
 
         $eventModel
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturnCallback(function ($key) use ($jumpTo, $articleModel, $calendarModel, $noCalendar) {
                 switch ($key) {
@@ -363,7 +319,6 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $eventModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) use ($source) {
                 switch ($key) {
@@ -392,30 +347,28 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $eventsModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
             ->setMethods(['findByIdOrAlias'])
-            ->setConstructorArgs(['Contao\CalendarEventsModel'])
             ->getMock()
         ;
 
         $eventsModelAdapter
-            ->expects($this->any())
             ->method('findByIdOrAlias')
             ->willReturn($noModels ? null : $eventModel)
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($calendarFeedModelAdapter, $eventsModelAdapter) {
                 switch ($key) {
-                    case 'Contao\CalendarFeedModel':
+                    case CalendarFeedModel::class:
                         return $calendarFeedModelAdapter;
 
-                    case 'Contao\CalendarEventsModel':
+                    case CalendarEventsModel::class:
                         return $eventsModelAdapter;
 
-                    case 'Contao\Config':
+                    case Config::class:
                         return $this->mockConfigAdapter();
 
                     default:
@@ -435,32 +388,28 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     private function mockConfigAdapter()
     {
         $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->getMock()
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(true)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('preload')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('getInstance')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {

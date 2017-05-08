@@ -14,9 +14,10 @@ use Contao\BackendUser;
 use Contao\CalendarBundle\Menu\EventPickerProvider;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author Leo Feyer <https:/github.com/leofeyer>
  */
-class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
+class EventPickerProviderTest extends TestCase
 {
     /**
      * @var PickerMenuProviderInterface
@@ -142,10 +143,9 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function mockPickerProvider()
     {
-        $router = $this->getMock(RouterInterface::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $router
-            ->expects($this->any())
             ->method('generate')
             ->willReturnCallback(function ($name, $params) {
                 $url = $name;
@@ -158,31 +158,23 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
             })
         ;
 
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->setMethods(['hasAccess'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $user = $this->createMock(BackendUser::class);
 
         $user
-            ->expects($this->any())
             ->method('hasAccess')
             ->willReturn(true)
         ;
 
-        $token = $this->getMock(TokenInterface::class);
+        $token = $this->createMock(TokenInterface::class);
 
         $token
-            ->expects($this->any())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $tokenStorage = $this->getMock(TokenStorageInterface::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         $tokenStorage
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token)
         ;
@@ -192,26 +184,16 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $calendarModel = $this
-            ->getMockBuilder(CalendarModel::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $calendarModel = $this->createMock(CalendarModel::class);
 
         $calendarModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturn(2)
         ;
 
-        $eventsModel = $this
-            ->getMockBuilder(CalendarEventsModel::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $eventsModel = $this->createMock(CalendarEventsModel::class);
 
         $eventsModel
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturnOnConsecutiveCalls($calendarModel, null)
         ;
@@ -224,19 +206,13 @@ class EventPickerProviderTest extends \PHPUnit_Framework_TestCase
         ;
 
         $adapter
-            ->expects($this->any())
             ->method('findById')
             ->willReturnOnConsecutiveCalls($eventsModel, $eventsModel, null)
         ;
 
-        $framework = $this
-            ->getMockBuilder(ContaoFramework::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturn($adapter)
         ;

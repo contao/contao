@@ -11,13 +11,14 @@
 namespace Contao\CalendarBundle\Tests;
 
 use Contao\CalendarBundle\ContaoCalendarBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ContaoCalendarBundle class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoCalendarBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoCalendarBundleTest extends TestCase
 {
     /**
      * Tests the object instantiation.
