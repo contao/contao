@@ -19,6 +19,7 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -106,7 +107,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $collections[] = $collection;
         }
 
-        return array_reduce(
+        $collection = array_reduce(
             $collections,
             function (RouteCollection $carry, RouteCollection $item) {
                 $carry->addCollection($item);
@@ -115,6 +116,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             },
             new RouteCollection()
         );
+
+        // Redirect the deprecated install.php file
+        $collection->add('contao_install.php', new Route('/install.php', array(
+            '_controller' => 'FrameworkBundle:Redirect:redirect',
+            'route'       => 'contao_install',
+            'permanent'   => true,
+        )));
+
+        return $collection;
     }
 
     /**

@@ -73,6 +73,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $webDir = rtrim($baseDir, '/').'/web';
 
         $this->addFiles($webDir);
+        $this->removeInstallPhp($webDir);
 
         return 0;
     }
@@ -84,6 +85,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function addFiles($webDir)
     {
+        /** @var Finder $finder */
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
 
         foreach ($finder as $file) {
@@ -96,6 +98,18 @@ class InstallWebDirCommand extends AbstractLockedCommand
             $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
 
             $this->io->text(sprintf('Added/updated the <comment>web/%s</comment> file.', $file->getFilename()));
+        }
+    }
+
+    /**
+     * Removes the install.php entry point leftover from Contao <4.4.
+     *
+     * @param string $webDir
+     */
+    private function removeInstallPhp($webDir)
+    {
+        if (file_exists($webDir.'/install.php')) {
+            $this->fs->remove($webDir.'/install.php');
         }
     }
 }
