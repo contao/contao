@@ -90,22 +90,14 @@ class ImageTest extends TestCase
      */
     public function testConstruct()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -131,21 +123,14 @@ class ImageTest extends TestCase
      */
     public function testConstructWithNonexistentFile()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(false))
         ;
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         new Image($fileMock);
     }
@@ -155,22 +140,14 @@ class ImageTest extends TestCase
      */
     public function testConstructWithInvalidExtension()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -185,7 +162,7 @@ class ImageTest extends TestCase
             ))
         ;
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         new Image($fileMock);
     }
@@ -210,22 +187,14 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) use ($arguments) {
@@ -671,22 +640,14 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) use ($arguments) {
@@ -868,22 +829,14 @@ class ImageTest extends TestCase
      */
     public function testSettersAndGetters()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -912,7 +865,9 @@ class ImageTest extends TestCase
         $imageObj = new Image($fileMock);
 
         $this->assertFalse($imageObj->getForceOverride());
+
         $imageObj->setForceOverride(true);
+
         $this->assertTrue($imageObj->getForceOverride());
 
         $this->assertSame($imageObj->getImportantPart(), [
@@ -1011,22 +966,14 @@ class ImageTest extends TestCase
      */
     public function testGetCacheName($arguments, $expectedCacheName)
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) use ($arguments) {
@@ -1122,22 +1069,14 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsNegative()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -1154,7 +1093,7 @@ class ImageTest extends TestCase
 
         $imageObj = new Image($fileMock);
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $imageObj->setZoomLevel(-1);
     }
@@ -1164,22 +1103,14 @@ class ImageTest extends TestCase
      */
     public function testSetZoomOutOfBoundsPositive()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -1196,7 +1127,7 @@ class ImageTest extends TestCase
 
         $imageObj = new Image($fileMock);
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $imageObj->setZoomLevel(101);
     }
@@ -1207,9 +1138,9 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
-     * @dataProvider getLegacyGet
+     * @dataProvider getGetLegacy
      */
-    public function testLegacyGet($arguments, $expectedResult)
+    public function testGetLegacy($arguments, $expectedResult)
     {
         $result = Image::get($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
 
@@ -1217,11 +1148,11 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testLegacyGet() method.
+     * Provides the data for the testGetLegacy() method.
      *
      * @return array
      */
-    public function getLegacyGet()
+    public function getGetLegacy()
     {
         // original image, target width, target height, resize mode, target, force override
         // expected result
@@ -1243,9 +1174,9 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
-     * @dataProvider getLegacyResize
+     * @dataProvider getResizeLegacy
      */
-    public function testLegacyResize($arguments, $expectedResult)
+    public function testResizeLegacy($arguments, $expectedResult)
     {
         $result = Image::resize($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
 
@@ -1253,11 +1184,11 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testLegacyGet() method.
+     * Provides the data for the testGetLegacy() method.
      *
      * @return array
      */
-    public function getLegacyResize()
+    public function getResizeLegacy()
     {
         // original image, target width, target height, resize mode
         // expected result

@@ -84,7 +84,7 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $this->setExpectedException(InvalidConfigurationException::class);
+        $this->expectException(InvalidConfigurationException::class);
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

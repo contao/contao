@@ -52,8 +52,8 @@ class ImageSizesTest extends TestCase
 
         require_once __DIR__.'/../../src/Resources/contao/config/config.php';
 
-        $this->connection = $this->getMock('Doctrine\DBAL\Connection', ['fetchAll'], [], '', false);
-        $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->connection = $this->createMock(Connection::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $framework);
     }
 
@@ -102,8 +102,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMock('Contao\BackendUser');
+        $user = $this->createMock(BackendUser::class);
         $user->imageSizes = serialize(['image_sizes' => '42']);
         $user->isAdmin = true;
 
@@ -121,8 +120,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMock('Contao\BackendUser');
+        $user = $this->createMock(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only one image size

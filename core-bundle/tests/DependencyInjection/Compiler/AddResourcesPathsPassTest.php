@@ -11,7 +11,10 @@
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestBundle\ContaoTestBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -43,9 +46,9 @@ class AddResourcesPathsPassTest extends TestCase
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
 
         $container->setParameter('kernel.bundles', [
-            'FrameworkBundle' => 'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-            'ContaoTestBundle' => 'Contao\TestBundle\ContaoTestBundle',
-            'foobar' => 'Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle',
+            'FrameworkBundle' => FrameworkBundle::class,
+            'ContaoTestBundle' => ContaoTestBundle::class,
+            'foobar' => ContaoModuleBundle::class,
         ]);
 
         $pass->process($container);

@@ -68,7 +68,6 @@ use Imagine\Gd\Imagine;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -154,9 +153,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setFramework', $methodCalls[0][0]);
@@ -570,9 +567,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setFramework', $methodCalls[0][0]);
@@ -654,9 +649,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setFramework', $methodCalls[0][0]);
@@ -748,9 +741,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[ContainerAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setContainer', $methodCalls[0][0]);
@@ -884,9 +875,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[ContainerAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setContainer', $methodCalls[0][0]);
@@ -1071,9 +1060,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[ContainerAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setContainer', $methodCalls[0][0]);
@@ -1097,9 +1084,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[ContainerAwareInterface::class];
-
         $methodCalls = $childDefinition->getMethodCalls();
 
         $this->assertSame('setContainer', $methodCalls[0][0]);

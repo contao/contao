@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Config;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Tests the ResourceFinder class.
@@ -37,7 +38,7 @@ class ResourceFinderTest extends TestCase
     {
         $finder = new ResourceFinder([]);
 
-        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->find());
+        $this->assertInstanceOf(Finder::class, $finder->find());
     }
 
     /**
@@ -50,7 +51,7 @@ class ResourceFinderTest extends TestCase
             $this->getRootDir().'/system/modules/foobar',
         ]);
 
-        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('config'));
+        $this->assertInstanceOf(Finder::class, $finder->findIn('config'));
     }
 
     /**
@@ -63,7 +64,7 @@ class ResourceFinderTest extends TestCase
             $this->getRootDir().'/system/modules/foobar',
         ]);
 
-        $this->setExpectedException('InvalidArgumentException');
-        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('foo'));
+        $this->expectException('InvalidArgumentException');
+        $this->assertInstanceOf(Finder::class, $finder->findIn('foo'));
     }
 }

@@ -11,9 +11,10 @@
 namespace Contao\CoreBundle\Tests\Security\User;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\User;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\User\User;
 class ContaoUserProviderTest extends TestCase
 {
     /**
-     * @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $framework;
 
@@ -38,11 +39,7 @@ class ContaoUserProviderTest extends TestCase
     {
         parent::setUp();
 
-        $this->framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $this->framework = $this->createMock(ContaoFrameworkInterface::class);
     }
 
     /**
@@ -91,7 +88,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes('invalid'));
 
-        $this->setExpectedException(UsernameNotFoundException::class);
+        $this->expectException(UsernameNotFoundException::class);
 
         $provider->loadUserByUsername('frontend');
     }
@@ -104,7 +101,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
-        $this->setExpectedException(UsernameNotFoundException::class);
+        $this->expectException(UsernameNotFoundException::class);
 
         $provider->loadUserByUsername('foo');
     }
@@ -117,7 +114,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
-        $this->setExpectedException(UnsupportedUserException::class);
+        $this->expectException(UnsupportedUserException::class);
 
         $provider->refreshUser(new User('foo', 'bar'));
     }
@@ -130,7 +127,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
-        $this->assertTrue($provider->supportsClass('Contao\FrontendUser'));
+        $this->assertTrue($provider->supportsClass(FrontendUser::class));
     }
 
     /**
@@ -140,7 +137,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
 
-        $this->setExpectedException(UsernameNotFoundException::class);
+        $this->expectException(UsernameNotFoundException::class);
 
         $provider->loadUserByUsername('backend');
     }
@@ -152,7 +149,7 @@ class ContaoUserProviderTest extends TestCase
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
 
-        $this->setExpectedException(UsernameNotFoundException::class);
+        $this->expectException(UsernameNotFoundException::class);
 
         $provider->loadUserByUsername('frontend');
     }

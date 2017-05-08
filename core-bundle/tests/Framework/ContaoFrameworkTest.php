@@ -16,8 +16,12 @@ use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
+use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\RequestToken;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouteCollection;
@@ -160,7 +164,7 @@ class ContaoFrameworkTest extends TestCase
         $request = new Request();
         $request->setLocale('de');
 
-        $routingLoader = $this->getMock('Symfony\Component\Config\Loader\LoaderInterface');
+        $routingLoader = $this->createMock(LoaderInterface::class);
 
         $routingLoader
             ->method('load')
@@ -242,31 +246,16 @@ class ContaoFrameworkTest extends TestCase
         // Ensure to use the fixtures class
         Config::preload();
 
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->setConstructorArgs([
-                $container->get('request_stack'),
-                $this->mockRouter('/contao/login'),
-                $this->mockSession(),
-                $this->mockScopeMatcher(),
-                $this->getRootDir().'/app',
-                error_reporting(),
-            ])
-            ->setMethods(['isInitialized'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFramework::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturnOnConsecutiveCalls(false, true)
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
-            ->with($this->equalTo('Contao\Config'))
+            ->with($this->equalTo(Config::class))
             ->willReturn($this->mockConfigAdapter())
         ;
 
@@ -350,20 +339,18 @@ class ContaoFrameworkTest extends TestCase
         $container->get('request_stack')->push($request);
 
         $rtAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['get', 'validate'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['get', 'validate'])
             ->getMock()
         ;
 
         $rtAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturn('nonsense')
         ;
 
         $rtAdapter
-            ->expects($this->once())
             ->method('validate')
             ->willReturn(false)
         ;
@@ -371,10 +358,10 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             null,
-            ['Contao\RequestToken' => $rtAdapter]
+            [RequestToken::class => $rtAdapter]
         );
 
-        $this->setExpectedException(InvalidRequestTokenException::class);
+        $this->expectException(InvalidRequestTokenException::class);
 
         $framework->setContainer($container);
         $framework->initialize();
@@ -397,14 +384,13 @@ class ContaoFrameworkTest extends TestCase
         $container->get('request_stack')->push($request);
 
         $rtAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['get', 'validate'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['get', 'validate'])
             ->getMock()
         ;
 
         $rtAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturn('foobar')
         ;
@@ -417,7 +403,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             null,
-            ['Contao\RequestToken' => $rtAdapter]
+            [RequestToken::class => $rtAdapter]
         );
 
         $framework->setContainer($container);
@@ -438,20 +424,18 @@ class ContaoFrameworkTest extends TestCase
         $container->get('request_stack')->push($request);
 
         $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
             ->getMock()
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(false)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -470,10 +454,10 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             $this->mockRouter('/contao/login'),
-            ['Contao\Config' => $configAdapter]
+            [Config::class => $configAdapter]
         );
 
-        $this->setExpectedException(IncompleteInstallationException::class);
+        $this->expectException(IncompleteInstallationException::class);
 
         $framework->setContainer($container);
         $framework->initialize();
@@ -493,20 +477,18 @@ class ContaoFrameworkTest extends TestCase
         $container->get('request_stack')->push($request);
 
         $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->setMethods(['isComplete', 'get', 'preload', 'getInstance'])
             ->getMock()
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(false)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -525,7 +507,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockContaoFramework(
             $container->get('request_stack'),
             $this->mockRouter('/contao/install'),
-            ['Contao\Config' => $configAdapter]
+            [Config::class => $configAdapter]
         );
 
         $framework->setContainer($container);
@@ -544,7 +526,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login')
         );
 
-        $this->setExpectedException('LogicException');
+        $this->expectException('LogicException');
 
         $framework->setContainer();
         $framework->initialize();
@@ -555,10 +537,10 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstance()
     {
-        $reflection = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
+        $reflection = new \ReflectionClass(ContaoFramework::class);
         $framework = $reflection->newInstanceWithoutConstructor();
 
-        $class = 'Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass';
+        $class = LegacyClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
@@ -570,10 +552,10 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testCreateInstanceSingelton()
     {
-        $reflection = new \ReflectionClass('Contao\CoreBundle\Framework\ContaoFramework');
+        $reflection = new \ReflectionClass(ContaoFramework::class);
         $framework = $reflection->newInstanceWithoutConstructor();
 
-        $class = 'Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass';
+        $class = LegacySingletonClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
 
         $this->assertInstanceOf($class, $instance);
@@ -585,7 +567,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testGetAdapter()
     {
-        $class = 'Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass';
+        $class = LegacyClass::class;
 
         $adapter = $this
             ->mockContaoFramework(

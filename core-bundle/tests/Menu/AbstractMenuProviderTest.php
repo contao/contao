@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Menu;
 
 use Contao\CoreBundle\Menu\AbstractMenuProvider;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -23,20 +24,19 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author Leo Feyer <https:/github.com/leofeyer>
  */
-class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
+class AbstractMenuProviderTest extends TestCase
 {
     /**
      * Tests the getUser() method without token storage.
      */
     public function testGetUserWithoutTokenStorage()
     {
-        $router = $this->getMock(RouterInterface::class);
+        $router = $this->createMock(RouterInterface::class);
         $request = new Request();
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
             ->setConstructorArgs([$router, $requestStack])
@@ -47,7 +47,8 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getUser');
         $method->setAccessible(true);
 
-        $this->setExpectedException('RuntimeException', 'No token storage provided');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('No token storage provided');
 
         $method->invoke($provider);
     }
@@ -57,11 +58,10 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUserWithoutToken()
     {
-        $router = $this->getMock(RouterInterface::class);
-        $tokenStorage = $this->getMock(TokenStorageInterface::class);
+        $router = $this->createMock(RouterInterface::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         $tokenStorage
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn(null)
         ;
@@ -71,7 +71,6 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
             ->setConstructorArgs([$router, $requestStack, $tokenStorage])
@@ -82,7 +81,8 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getUser');
         $method->setAccessible(true);
 
-        $this->setExpectedException('RuntimeException', 'No token provided');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('No token provided');
 
         $method->invoke($provider);
     }
@@ -92,19 +92,17 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUserWithoutUser()
     {
-        $router = $this->getMock(RouterInterface::class);
-        $token = $this->getMock(TokenInterface::class);
+        $router = $this->createMock(RouterInterface::class);
+        $token = $this->createMock(TokenInterface::class);
 
         $token
-            ->expects($this->any())
             ->method('getUser')
             ->willReturn(null)
         ;
 
-        $tokenStorage = $this->getMock(TokenStorageInterface::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         $tokenStorage
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token)
         ;
@@ -114,7 +112,6 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
             ->setConstructorArgs([$router, $requestStack, $tokenStorage])
@@ -125,7 +122,8 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('getUser');
         $method->setAccessible(true);
 
-        $this->setExpectedException('RuntimeException', 'The token does not contain a user');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The token does not contain a user');
 
         $method->invoke($provider);
     }
@@ -135,11 +133,10 @@ class AbstractMenuProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddMenuItemWithoutRequest()
     {
-        $router = $this->getMock(RouterInterface::class);
-        $tokenStorage = $this->getMock(TokenStorageInterface::class);
+        $router = $this->createMock(RouterInterface::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $requestStack = new RequestStack();
 
-        /** @var AbstractMenuProvider|\PHPUnit_Framework_MockObject_MockObject $provider */
         $provider = $this
             ->getMockBuilder(AbstractMenuProvider::class)
             ->setConstructorArgs([$router, $requestStack, $tokenStorage])

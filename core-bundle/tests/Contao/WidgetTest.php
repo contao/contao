@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Input;
 use Contao\Widget;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Widget class.
@@ -24,7 +25,7 @@ use Contao\Widget;
  * @preserveGlobalState disabled
  * @group contao3
  */
-class WidgetTest extends \PHPUnit_Framework_TestCase
+class WidgetTest extends TestCase
 {
     /**
      * Includes the helper functions if they have not yet been included.
@@ -52,8 +53,8 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
-        $widget = $this->getMock('Contao\Widget');
-        $class = new \ReflectionClass('Contao\Widget');
+        $widget = $this->createMock(Widget::class);
+        $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
 
         $method->setAccessible(true);
@@ -73,11 +74,12 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidate()
     {
+        /* @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
         $widget = $this
-            ->getMockBuilder('Contao\Widget')
+            ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validator', 'getPost', 'generate'])
-            ->getMock()
+            ->setMethods(['validator', 'getPost'])
+            ->getMockForAbstractClass()
         ;
 
         $widget
@@ -92,7 +94,6 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
             ->method('getPost')
         ;
 
-        /* @var Widget $widget */
         $widget
             ->setInputCallback(function () { return 'foobar'; })
             ->validate()
@@ -100,7 +101,6 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('foobar', $widget->value);
 
-        /* @var Widget $widget */
         $widget
             ->setInputCallback(function () { return null; })
             ->validate()
@@ -108,7 +108,6 @@ class WidgetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($widget->value);
 
-        /* @var Widget $widget */
         $widget
             ->setInputCallback(null)
             ->validate() // getPost() should be called once here

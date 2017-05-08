@@ -141,7 +141,7 @@ TXT;
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
 
-        $this->setExpectedException('OutOfBoundsException');
+        $this->expectException('OutOfBoundsException');
 
         $loader->load(
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',

@@ -397,7 +397,7 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['palettes']['default']);
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $pm->applyToPalette('default', 'tl_test');
     }
@@ -414,7 +414,7 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $pm->applyToSubpalette('name', 'tl_test');
     }
@@ -424,7 +424,7 @@ class PaletteManipulatorTest extends TestCase
      */
     public function testInvalidPosition()
     {
-        $this->setExpectedException('LogicException');
+        $this->expectException('LogicException');
 
         PaletteManipulator::create()
             ->addField('bar', 'foo', 'foo_position')
@@ -437,7 +437,7 @@ class PaletteManipulatorTest extends TestCase
      */
     public function testInvalidFallbackPosition()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         PaletteManipulator::create()
             ->addField(

@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Tests\Monolog;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
+use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
@@ -176,10 +177,9 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testUsername()
     {
-        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+        $token = $this->createMock(ContaoToken::class);
 
         $token
-            ->expects($this->any())
             ->method('getUsername')
             ->willReturn('k.jones')
         ;
@@ -315,13 +315,11 @@ class ContaoTableProcessorTest extends TestCase
     private function createContaoTableProcessor($requestStack = null, $tokenStorage = null, $anonymizeIp = true)
     {
         if (null === $requestStack) {
-            $requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack');
+            $requestStack = $this->createMock(RequestStack::class);
         }
 
         if (null === $tokenStorage) {
-            $tokenStorage = $this->getMock(
-                'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
-            );
+            $tokenStorage = $this->createMock(TokenStorageInterface::class);
         }
 
         return new ContaoTableProcessor($requestStack, $tokenStorage, $this->mockScopeMatcher(), $anonymizeIp);

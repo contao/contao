@@ -11,13 +11,14 @@
 namespace Contao\CoreBundle\Tests\Event;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the PreviewUrlCreateEvent class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlCreateEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.

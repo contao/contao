@@ -65,7 +65,7 @@ class ContaoContextTest extends TestCase
      */
     public function testEmptyFunctionName()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         new ContaoContext('');
     }

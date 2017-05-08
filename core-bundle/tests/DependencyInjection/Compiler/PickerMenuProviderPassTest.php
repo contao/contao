@@ -11,6 +11,9 @@
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerMenuProviderPass;
+use Contao\CoreBundle\Menu\PagePickerProvider;
+use Contao\CoreBundle\Menu\PickerMenuBuilder;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -19,7 +22,7 @@ use Symfony\Component\DependencyInjection\Definition;
  *
  * @author Leo Feyer <https:/github.com/leofeyer>
  */
-class PickerMenuProviderPassTest extends \PHPUnit_Framework_TestCase
+class PickerMenuProviderPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -40,10 +43,10 @@ class PickerMenuProviderPassTest extends \PHPUnit_Framework_TestCase
 
         $container->setDefinition(
             'contao.menu.picker_menu_builder',
-            new Definition('Contao\CoreBundle\Menu\PickerMenuBuilder')
+            new Definition(PickerMenuBuilder::class)
         );
 
-        $provider = new Definition('Contao\CoreBundle\Menu\PagePickerProvider');
+        $provider = new Definition(PagePickerProvider::class);
         $provider->addTag('contao.picker_menu_provider');
 
         $container->setDefinition('contao.menu.page_picker_provider', $provider);

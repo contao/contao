@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -28,7 +29,7 @@ class BackendCsvImportControllerTest extends TestCase
     {
         $controller = new BackendCsvImportController(
             $this->mockContaoFramework(),
-            $this->getMock('Doctrine\DBAL\Connection', [], [], '', false),
+            $this->createMock(Connection::class),
             new RequestStack(),
             $this->getRootDir()
         );

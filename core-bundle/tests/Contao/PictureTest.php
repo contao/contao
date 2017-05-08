@@ -88,22 +88,14 @@ class PictureTest extends TestCase
      */
     public function testInstantiation()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {

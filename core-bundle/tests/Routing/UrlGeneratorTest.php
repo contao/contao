@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Tests\Routing;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
@@ -220,7 +221,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testThrowsExceptionOnMissingParameter()
     {
-        $this->setExpectedException(MissingMandatoryParametersException::class);
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $this->getGenerator()->generate('foo/{article}');
     }
@@ -317,49 +318,41 @@ class UrlGeneratorTest extends TestCase
      */
     private function getGenerator($prependLocale = false, $returnArgument = 1, $useAutoItem = true)
     {
-        /** @var UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject $router */
-        $router = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $router = $this->createMock(UrlGeneratorInterface::class);
 
         $router
-            ->expects($this->any())
             ->method('generate')
             ->willReturnArgument($returnArgument)
         ;
 
         $router
-            ->expects($this->any())
             ->method('getContext')
             ->willReturn(new RequestContext())
         ;
 
-        /** @var Adapter|\PHPUnit_Framework_MockObject_MockObject $configAdapter */
         $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->getMock()
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(true)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('preload')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('getInstance')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) use ($useAutoItem) {
                 switch ($key) {
@@ -377,7 +370,7 @@ class UrlGeneratorTest extends TestCase
 
         return new UrlGenerator(
             $router,
-            $this->mockContaoFramework(null, null, ['Contao\Config' => $configAdapter]),
+            $this->mockContaoFramework(null, null, [Config::class => $configAdapter]),
             $prependLocale
         );
     }

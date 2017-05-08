@@ -42,10 +42,9 @@ class PickerMenuBuilderTest extends TestCase
 
         $factory = new MenuFactory();
         $renderer = new ListRenderer(new Matcher());
-        $router = $this->getMock(RouterInterface::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $router
-            ->expects($this->any())
             ->method('generate')
             ->willReturnCallback(function ($name, $params) {
                 $url = $name;

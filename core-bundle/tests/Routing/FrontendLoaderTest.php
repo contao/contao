@@ -12,7 +12,9 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
+class FrontendLoaderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -88,7 +90,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->setExpectedException(MissingMandatoryParametersException::class);
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_frontend');
     }
@@ -132,7 +134,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->setExpectedException(MissingMandatoryParametersException::class);
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_frontend', ['alias' => 'foobar']);
     }
@@ -176,7 +178,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->setExpectedException(MissingMandatoryParametersException::class);
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_index');
     }
@@ -191,29 +193,22 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     private function getRouter(RouteCollection $collection, $urlSuffix = '.html')
     {
-        $loader = $this->getMock('Symfony\Component\Config\Loader\LoaderInterface');
+        $loader = $this->createMock(LoaderInterface::class);
 
         $loader
-            ->expects($this->any())
             ->method('load')
             ->willReturn($collection)
         ;
 
-        /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
-        $container = $this->getMock(
-            'Symfony\Component\DependencyInjection\Container',
-            ['get', 'getParameter']
-        );
+        $container = $this->createMock(ContainerInterface::class);
 
         $container
-            ->expects($this->any())
             ->method('getParameter')
             ->with('contao.url_suffix')
             ->willReturn($urlSuffix)
         ;
 
         $container
-            ->expects($this->any())
             ->method('get')
             ->with('routing.loader')
             ->willReturn($loader)

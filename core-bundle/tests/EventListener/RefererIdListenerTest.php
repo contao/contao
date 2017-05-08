@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the RefererIdListener class.
@@ -40,8 +41,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenAddedToRequest()
     {
-        /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -60,8 +60,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenNotAddedToFrontendRequest()
     {
-        /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
@@ -79,8 +78,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenNotAddedToSubrequest()
     {
-        /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);

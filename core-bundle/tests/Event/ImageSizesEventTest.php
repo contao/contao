@@ -10,14 +10,16 @@
 
 namespace Contao\CoreBundle\Tests\Event;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Event\ImageSizesEvent;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ImageSizesEvent class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ImageSizesEventTest extends \PHPUnit_Framework_TestCase
+class ImageSizesEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -48,7 +50,7 @@ class ImageSizesEventTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUser()
     {
-        $user = $this->getMock('Contao\BackendUser');
+        $user = $this->createMock(BackendUser::class);
         $event = new ImageSizesEvent([1], $user);
 
         $this->assertSame($user, $event->getUser());

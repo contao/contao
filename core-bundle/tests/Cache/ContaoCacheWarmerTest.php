@@ -12,8 +12,10 @@ namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -36,15 +38,12 @@ class ContaoCacheWarmerTest extends TestCase
     {
         parent::setUp();
 
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this->getMock('Doctrine\DBAL\Connection', [], [], '', false);
-
         $this->warmer = new ContaoCacheWarmer(
             new Filesystem(),
             new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao'),
             new FileLocator($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao'),
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
-            $connection,
+            $this->createMock(Connection::class),
             $this->mockContaoFramework()
         );
     }
@@ -71,32 +70,22 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testWarmUp()
     {
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this->getMock(
-            'Doctrine\DBAL\Connection',
-            ['prepare', 'execute', 'fetch', 'query'],
-            [],
-            '',
-            false
-        );
-
-        $connection
-            ->expects($this->any())
-            ->method('prepare')
-            ->willReturn($connection)
-        ;
-
         $class1 = new \stdClass();
         $class1->language = 'en-US';
 
         $class2 = new \stdClass();
         $class2->language = 'en';
 
-        $connection
+        $statement = $this->createMock(Statement::class);
+
+        $statement
             ->expects($this->exactly(3))
             ->method('fetch')
             ->willReturnOnConsecutiveCalls($class1, $class2, false)
         ;
+
+        /** @var Connection $connection */
+        $connection = $this->createConfiguredMock(Connection::class, ['prepare' => $statement]);
 
         $warmer = new ContaoCacheWarmer(
             new Filesystem(),
@@ -161,32 +150,22 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testEmptyBundle()
     {
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this->getMock(
-            'Doctrine\DBAL\Connection',
-            ['prepare', 'execute', 'fetch', 'query'],
-            [],
-            '',
-            false
-        );
-
-        $connection
-            ->expects($this->any())
-            ->method('prepare')
-            ->willReturn($connection)
-        ;
-
         $class1 = new \stdClass();
         $class1->language = 'en-US';
 
         $class2 = new \stdClass();
         $class2->language = 'en';
 
-        $connection
+        $statement = $this->createMock(Statement::class);
+
+        $statement
             ->expects($this->exactly(3))
             ->method('fetch')
             ->willReturnOnConsecutiveCalls($class1, $class2, false)
         ;
+
+        /** @var Connection $connection */
+        $connection = $this->createConfiguredMock(Connection::class, ['prepare' => $statement]);
 
         $warmer = new ContaoCacheWarmer(
             new Filesystem(),
@@ -205,21 +184,14 @@ class ContaoCacheWarmerTest extends TestCase
      */
     public function testIncompleteInstallation()
     {
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['query'], [], '', false);
+        $connection = $this->createMock(Connection::class);
 
         $connection
-            ->expects($this->any())
             ->method('query')
             ->willThrowException(new \Exception())
         ;
 
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->setMethods(['initialize'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
             ->expects($this->never())

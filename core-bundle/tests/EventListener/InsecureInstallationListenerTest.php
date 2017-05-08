@@ -43,7 +43,7 @@ class InsecureInstallationListenerTest extends TestCase
         $kernel = $this->mockKernel();
         $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
 
-        $this->setExpectedException(InsecureInstallationException::class);
+        $this->expectException(InsecureInstallationException::class);
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);

@@ -86,7 +86,7 @@ class ContaoAuthenticatorTest extends TestCase
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
 
-        $this->setExpectedException(AuthenticationException::class);
+        $this->expectException(AuthenticationException::class);
 
         $authenticator->authenticateToken(
             new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console'
@@ -100,7 +100,7 @@ class ContaoAuthenticatorTest extends TestCase
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 
-        $this->setExpectedException('LogicException');
+        $this->expectException('LogicException');
 
         $authenticator->authenticateToken(
             new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend'
@@ -131,13 +131,9 @@ class ContaoAuthenticatorTest extends TestCase
     {
         $user = $this->mockUser();
 
-        $provider = $this->getMock(
-            'Symfony\Component\Security\Core\User\UserProviderInterface',
-            ['loadUserByUsername', 'refreshUser', 'supportsClass']
-        );
+        $provider = $this->createMock(UserProviderInterface::class);
 
         $provider
-            ->expects($this->any())
             ->method('loadUserByUsername')
             ->willReturnCallback(function ($username) use ($user) {
                 if ('frontend' === $username || 'backend' === $username) {
@@ -158,13 +154,14 @@ class ContaoAuthenticatorTest extends TestCase
      */
     private function mockUser()
     {
-        $user = $this->getMock(
-            'Contao\User',
-            ['authenticate']
-        );
+        $user = $this
+            ->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['authenticate'])
+            ->getMock()
+        ;
 
         $user
-            ->expects($this->any())
             ->method('authenticate')
             ->willReturn(true)
         ;

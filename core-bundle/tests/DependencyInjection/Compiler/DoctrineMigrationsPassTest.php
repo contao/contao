@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,7 +42,7 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testWithMigrationsBundle()
     {
-        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
@@ -67,7 +68,7 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testAddsCommandId()
     {
-        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);

@@ -29,8 +29,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testInstantiation()
     {
         $provider = new DcaSchemaProvider(
-            $this->getMock(ContaoFrameworkInterface::class),
-            $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock()
+            $this->createMock(ContaoFrameworkInterface::class),
+            $this->createMock(Registry::class)
         );
 
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $provider);
@@ -383,7 +383,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ]
         );
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
 
         $provider->createSchema();
     }
@@ -406,7 +406,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ]
         );
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
 
         $provider->createSchema();
     }

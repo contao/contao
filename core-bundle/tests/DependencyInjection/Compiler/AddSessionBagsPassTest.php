@@ -11,15 +11,18 @@
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Tests the AddSessionBagsPass class.
  *
  * @author Leo Feyer <https:/github.com/leofeyer>
  */
-class AddSessionBagsPassTest extends \PHPUnit_Framework_TestCase
+class AddSessionBagsPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -37,16 +40,16 @@ class AddSessionBagsPassTest extends \PHPUnit_Framework_TestCase
     public function testProcess()
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('session', new Definition('Symfony\Component\HttpFoundation\Session\Session'));
+        $container->setDefinition('session', new Definition(Session::class));
 
         $container->setDefinition(
             'contao.session.contao_backend',
-            new Definition('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag')
+            new Definition(ArrayAttributeBag::class)
         );
 
         $container->setDefinition(
             'contao.session.contao_frontend',
-            new Definition('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag')
+            new Definition(ArrayAttributeBag::class)
         );
 
         $pass = new AddSessionBagsPass();

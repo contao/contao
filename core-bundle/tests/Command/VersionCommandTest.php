@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\VersionCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -19,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class VersionCommandTest extends \PHPUnit_Framework_TestCase
+class VersionCommandTest extends TestCase
 {
     /**
      * Tests the object instantiation.

@@ -14,7 +14,6 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
-use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -237,7 +236,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
      */
     private function getLayout()
     {
-        /* @var PageModel $objPage */
         global $objPage;
 
         if (null === $objPage) {

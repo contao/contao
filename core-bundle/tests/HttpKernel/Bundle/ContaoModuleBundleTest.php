@@ -59,7 +59,7 @@ class ContaoModuleBundleTest extends TestCase
      */
     public function testModuleFolderDoesNotExist()
     {
-        $this->setExpectedException('LogicException');
+        $this->expectException('LogicException');
 
         $this->bundle = new ContaoModuleBundle('invalid', $this->getRootDir().'/app');
     }

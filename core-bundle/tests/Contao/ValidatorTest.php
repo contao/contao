@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Idna;
 use Contao\StringUtil;
 use Contao\Validator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Validator class.
@@ -21,7 +22,7 @@ use Contao\Validator;
  *
  * @group contao3
  */
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     /**
      * Tests the isEmail() method.

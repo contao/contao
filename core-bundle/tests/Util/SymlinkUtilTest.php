@@ -25,7 +25,7 @@ class SymlinkUtilTest extends TestCase
      */
     public function testEmptySource()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         SymlinkUtil::symlink('', 'target', $this->getRootDir());
     }
@@ -35,7 +35,7 @@ class SymlinkUtilTest extends TestCase
      */
     public function testEmptyTarget()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         SymlinkUtil::symlink('source', '', $this->getRootDir());
     }
@@ -45,7 +45,7 @@ class SymlinkUtilTest extends TestCase
      */
     public function testInvalidTarget()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         SymlinkUtil::symlink('source', '../target', $this->getRootDir());
     }
@@ -55,7 +55,7 @@ class SymlinkUtilTest extends TestCase
      */
     public function testExistingTarget()
     {
-        $this->setExpectedException('LogicException');
+        $this->expectException('LogicException');
 
         SymlinkUtil::symlink('source', 'app', $this->getRootDir());
     }

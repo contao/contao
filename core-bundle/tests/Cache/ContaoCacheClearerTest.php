@@ -45,15 +45,16 @@ class ContaoCacheClearerTest extends TestCase
      */
     public function testClear()
     {
-        $fs = new Filesystem();
         $cacheDir = $this->getCacheDir();
 
-        $fs->mkdir("$cacheDir/contao/config");
-        $this->assertFileExists("$cacheDir/contao/config");
+        $fs = new Filesystem();
+        $fs->mkdir($cacheDir.'/contao/config');
+
+        $this->assertFileExists($cacheDir.'/contao/config');
 
         $clearer = new ContaoCacheClearer($fs);
         $clearer->clear($cacheDir);
 
-        $this->assertFileNotExists("$cacheDir/contao/config");
+        $this->assertFileNotExists($cacheDir.'/contao/config');
     }
 }

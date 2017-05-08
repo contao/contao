@@ -10,8 +10,13 @@
 
 namespace Contao\CoreBundle\Tests\DataCollector;
 
+use Contao\ContentImage;
+use Contao\ContentText;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\LayoutModel;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,17 +43,17 @@ class ContaoDataCollectorTest extends TestCase
     public function testCollectWitoutPageObject()
     {
         $GLOBALS['TL_DEBUG'] = [
-            'classes_set' => ['Contao\System'],
-            'classes_aliased' => ['ContentText' => 'Contao\ContentText'],
-            'classes_composerized' => ['ContentImage' => 'Contao\ContentImage'],
+            'classes_set' => [System::class],
+            'classes_aliased' => ['ContentText' => ContentText::class],
+            'classes_composerized' => ['ContentImage' => ContentImage::class],
             'additional_data' => 'data',
         ];
 
         $collector = new ContaoDataCollector(['contao/core-bundle' => '4.0.0']);
         $collector->collect(new Request(), new Response());
 
-        $this->assertSame(['ContentText' => 'Contao\ContentText'], $collector->getClassesAliased());
-        $this->assertSame(['ContentImage' => 'Contao\ContentImage'], $collector->getClassesComposerized());
+        $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
+        $this->assertSame(['ContentImage' => ContentImage::class], $collector->getClassesComposerized());
 
         $this->assertSame(
             [
@@ -64,7 +69,7 @@ class ContaoDataCollectorTest extends TestCase
         );
 
         $this->assertSame('4.0.0', $collector->getContaoVersion());
-        $this->assertSame(['Contao\System'], $collector->getClassesSet());
+        $this->assertSame([System::class], $collector->getClassesSet());
         $this->assertSame(['additional_data' => 'data'], $collector->getAdditionalData());
         $this->assertSame('contao', $collector->getName());
 
@@ -82,7 +87,7 @@ class ContaoDataCollectorTest extends TestCase
         $layout->template = 'fe_page';
 
         $adapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
             ->setMethods(['__call'])
             ->disableOriginalConstructor()
             ->getMock()
@@ -100,7 +105,7 @@ class ContaoDataCollectorTest extends TestCase
         $objPage->layoutId = 2;
 
         $collector = new ContaoDataCollector([]);
-        $collector->setFramework($this->mockContaoFramework(null, null, ['Contao\LayoutModel' => $adapter]));
+        $collector->setFramework($this->mockContaoFramework(null, null, [LayoutModel::class => $adapter]));
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(

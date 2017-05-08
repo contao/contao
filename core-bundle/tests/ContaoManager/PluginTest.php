@@ -16,13 +16,17 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the Plugin class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PluginTest extends \PHPUnit_Framework_TestCase
+class PluginTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -80,30 +84,21 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRouteCollection()
     {
-        $loader = $this
-            ->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')
-            ->setMethods(['load', 'supports', 'getResolver', 'setResolver'])
-            ->getMock()
-        ;
+        $loader = $this->createMock(LoaderInterface::class);
 
         $loader
             ->expects($this->once())
             ->method('load')
         ;
 
-        $resolver = $this
-            ->getMockBuilder('Symfony\Component\Config\Loader\LoaderResolverInterface')
-            ->setMethods(['resolve'])
-            ->getMock()
-        ;
+        $resolver = $this->createMock(LoaderResolverInterface::class);
 
         $resolver
-            ->expects($this->any())
             ->method('resolve')
             ->willReturn($loader)
         ;
 
         $plugin = new Plugin();
-        $plugin->getRouteCollection($resolver, $this->getMock('Symfony\Component\HttpKernel\KernelInterface'));
+        $plugin->getRouteCollection($resolver, $this->createMock(KernelInterface::class));
     }
 }

@@ -37,15 +37,15 @@ class InsertTagsControllerTest extends TestCase
      */
     public function testRenderNonCacheableInsertTag()
     {
+        /** @var Adapter|\PHPUnit_Framework_MockObject_MockObject $insertTagAdapter */
         $insertTagAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['replace'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['replace'])
             ->getMock()
         ;
 
         $insertTagAdapter
-            ->expects($this->any())
             ->method('replace')
             ->willReturn('3858f62230ac3c915f300c664312c63f')
         ;
@@ -67,22 +67,7 @@ class InsertTagsControllerTest extends TestCase
      */
     private function mockFramework($adapter)
     {
-        $container = $this->mockContainerWithContaoScopes();
-
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->setConstructorArgs([
-                $container->get('request_stack'),
-                $this->mockRouter('/index.html'),
-                $this->mockSession(),
-                $this->mockScopeMatcher(),
-                $this->getRootDir().'/app',
-                error_reporting(),
-            ])
-            ->setMethods(['initialize', 'createInstance'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFramework::class);
 
         $framework
             ->expects($this->once())
@@ -90,12 +75,11 @@ class InsertTagsControllerTest extends TestCase
         ;
 
         $framework
-            ->expects($this->any())
             ->method('createInstance')
             ->willReturn($adapter)
         ;
 
-        $framework->setContainer($container);
+        $framework->setContainer($this->mockContainerWithContaoScopes());
 
         return $framework;
     }
