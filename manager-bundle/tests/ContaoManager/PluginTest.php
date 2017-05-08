@@ -27,6 +27,9 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Plugin
+     */
     private $plugin;
 
     /**
