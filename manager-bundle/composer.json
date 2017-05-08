@@ -35,7 +35,8 @@
         "contao/faq-bundle": "<4.3.4",
         "contao/listing-bundle": "<4.3.4",
         "contao/news-bundle": "<4.3.4",
-        "contao/newsletter-bundle": "<4.3.4"
+        "contao/newsletter-bundle": "<4.3.4",
+        "symfony/http-kernel": "v3.3.0-BETA1"
     },
     "autoload": {
         "psr-4": {
