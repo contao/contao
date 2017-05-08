@@ -13,6 +13,7 @@ namespace Contao\ManagerBundle\ContaoManager;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\FirewallPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -21,13 +22,14 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Plugin for the Contao Manager.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, FirewallPluginInterface, RoutingPluginInterface
 {
     /**
      * @var string|null
@@ -81,6 +83,17 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $loader->load('@ContaoManagerBundle/Resources/contao-manager/web_profiler.yml');
             }
         });
+    }
+
+    /**
+     * {@inheritdoc)
+     */
+    public function getFirewallConfig(array $config)
+    {
+        return array_merge(
+            $config,
+            Yaml::parse(file_get_contents(__DIR__.'/../Resources/contao-manager/security_firewalls.yml'))
+        );
     }
 
     /**

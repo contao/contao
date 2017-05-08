@@ -15,6 +15,7 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\FirewallPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -46,7 +47,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
 
         $pluginLoader
             ->expects($this->any())
-            ->method('getInstancesOf')
+            ->method('getInstances')
             ->willReturn([])
         ;
 
@@ -231,9 +232,55 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
 
         $pluginLoader
             ->expects($this->atLeastOnce())
-            ->method('getInstancesOf')
-            ->with(PluginLoader::CONFIG_PLUGINS)
+            ->method('getInstances')
             ->willReturn([$this->mockConfigPlugin($loader), $this->mockConfigPlugin($loader)])
+        ;
+
+        $this->kernel->setPluginLoader($pluginLoader);
+        $this->kernel->setRootDir(sys_get_temp_dir());
+        $this->kernel->registerContainerConfiguration($loader);
+    }
+
+    public function testRegisterContainerConfigurationLoadsFirewalls()
+    {
+        $container = $this->getMock(ContainerBuilder::class);
+        $container
+            ->expects($this->atLeastOnce())
+            ->method('loadFromExtension')
+            ->with('security', ['firewalls' => ['foo' => 'bar']])
+        ;
+
+        $loader = $this->getMock(LoaderInterface::class);
+        $loader
+            ->expects($this->atLeastOnce())
+            ->method('load')
+            ->willReturnCallback(
+                function ($resource) use ($container) {
+                    if (is_callable($resource)) {
+                        call_user_func($resource, $container);
+                    }
+                }
+            )
+        ;
+
+        $plugin = $this->getMock(FirewallPluginInterface::class);
+        $plugin
+            ->expects($this->once())
+            ->method('getFirewallConfig')
+            ->with([])
+            ->willReturn(['foo' => 'bar'])
+        ;
+
+        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
+        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $pluginLoader
+            ->expects($this->atLeastOnce())
+            ->method('getInstances')
+            ->willReturn([$plugin])
         ;
 
         $this->kernel->setPluginLoader($pluginLoader);

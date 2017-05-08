@@ -16,6 +16,7 @@ use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\IniParser;
 use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\FirewallPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -147,18 +148,27 @@ class ContaoKernel extends Kernel
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
 
-        /** @var ConfigPluginInterface[] $plugins */
-        $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
+        $firewallConfig = [];
 
-        foreach ($plugins as $plugin) {
-            $plugin->registerContainerConfiguration($loader, []);
+        foreach ($this->getPluginLoader()->getInstances() as $plugin) {
+            if ($plugin instanceof ConfigPluginInterface) {
+                $plugin->registerContainerConfiguration($loader, []);
+            }
+
+            if ($plugin instanceof FirewallPluginInterface) {
+                $firewallConfig = $plugin->getFirewallConfig($firewallConfig);
+            }
         }
 
         if (file_exists($this->getRootDir().'/config/parameters.yml')) {
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($loader) {
+        $loader->load(function (ContainerBuilder $container) use ($loader, $firewallConfig) {
+            if (!empty($firewallConfig)) {
+                $container->loadFromExtension('security', ['firewalls' => $firewallConfig]);
+            }
+
             $environment = $container->getParameter('kernel.environment');
 
             if (file_exists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
