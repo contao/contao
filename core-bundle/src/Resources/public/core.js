@@ -2311,7 +2311,7 @@ var Backend =
 			clickEvent = function(e) {
 				var input = this.getElement('input[type="checkbox"],input[type="radio"]');
 
-				if (!input) {
+				if (!input || input.get('disabled')) {
 					return;
 				}
 
