@@ -198,7 +198,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$this->root = null;
 		$this->arrModule = $arrModule;
 
-		$this->initPicker();
+		// Initialize the picker
+		if (isset($_GET['target']) && \Input::get('act') != 'select' && \Input::get('act') != 'paste')
+		{
+			list($table) = explode('.', \Input::get('target'), 2);
+
+			if ($this->strTable != $table)
+			{
+				$this->initPicker();
+			}
+		}
 
 		// Call onload_callback (e.g. to check permissions)
 		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback']))

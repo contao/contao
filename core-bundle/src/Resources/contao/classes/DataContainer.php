@@ -896,11 +896,6 @@ abstract class DataContainer extends \Backend
 	 */
 	protected function initPicker()
 	{
-		if (!isset($_GET['target']) || \Input::get('act') == 'select' || \Input::get('act') == 'paste')
-		{
-			return;
-		}
-
 		$menuBuilder = \System::getContainer()->get('contao.menu.picker_menu_builder');
 
 		if (!$menuBuilder->supportsTable($this->strTable))
