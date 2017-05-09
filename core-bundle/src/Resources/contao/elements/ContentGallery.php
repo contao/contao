@@ -79,9 +79,6 @@ class ContentGallery extends \ContentElement
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$images = array();
 		$auxDate = array();
 		$objFiles = $this->objFiles;
@@ -105,37 +102,15 @@ class ContentGallery extends \ContentElement
 					continue;
 				}
 
-				$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
-
-				if (empty($arrMeta))
-				{
-					if ($this->metaIgnore)
-					{
-						continue;
-					}
-					elseif ($objPage->rootFallbackLanguage !== null)
-					{
-						$arrMeta = $this->getMetaData($objFiles->meta, $objPage->rootFallbackLanguage);
-					}
-				}
-
-				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
-				{
-					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
-				}
-
 				// Add the image
 				$images[$objFiles->path] = array
 				(
-					'id'        => $objFiles->id,
-					'uuid'      => $objFiles->uuid,
-					'name'      => $objFile->basename,
-					'singleSRC' => $objFiles->path,
-					'title'     => \StringUtil::specialchars($arrMeta['title']),
-					'alt'       => \StringUtil::specialchars($arrMeta['alt']),
-					'imageUrl'  => $arrMeta['link'],
-					'caption'   => $arrMeta['caption']
+					'id'         => $objFiles->id,
+					'uuid'       => $objFiles->uuid,
+					'name'       => $objFile->basename,
+					'singleSRC'  => $objFiles->path,
+					'title'      => \StringUtil::specialchars($objFile->basename),
+					'filesModel' => $objFiles->current()
 				);
 
 				$auxDate[] = $objFile->mtime;
@@ -166,37 +141,15 @@ class ContentGallery extends \ContentElement
 						continue;
 					}
 
-					$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
-
-					if (empty($arrMeta))
-					{
-						if ($this->metaIgnore)
-						{
-							continue;
-						}
-						elseif ($objPage->rootFallbackLanguage !== null)
-						{
-							$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->rootFallbackLanguage);
-						}
-					}
-
-					// Use the file name as title if none is given
-					if ($arrMeta['title'] == '')
-					{
-						$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
-					}
-
 					// Add the image
 					$images[$objSubfiles->path] = array
 					(
-						'id'        => $objSubfiles->id,
-						'uuid'      => $objSubfiles->uuid,
-						'name'      => $objFile->basename,
-						'singleSRC' => $objSubfiles->path,
-						'title'     => \StringUtil::specialchars($arrMeta['title']),
-						'alt'       => \StringUtil::specialchars($arrMeta['alt']),
-						'imageUrl'  => $arrMeta['link'],
-						'caption'   => $arrMeta['caption']
+						'id'         => $objSubfiles->id,
+						'uuid'       => $objSubfiles->uuid,
+						'name'       => $objFile->basename,
+						'singleSRC'  => $objSubfiles->path,
+						'title'      => \StringUtil::specialchars($objFile->basename),
+						'filesModel' => $objSubfiles->current()
 					);
 
 					$auxDate[] = $objFile->mtime;
@@ -355,7 +308,7 @@ class ContentGallery extends \ContentElement
 					$images[($i+$j)]['imagemargin'] = $this->imagemargin;
 					$images[($i+$j)]['fullsize'] = $this->fullsize;
 
-					$this->addImageToTemplate($objCell, $images[($i+$j)], $intMaxWidth, $strLightboxId);
+					$this->addImageToTemplate($objCell, $images[($i+$j)], $intMaxWidth, $strLightboxId, $images[($i+$j)]['filesModel']);
 
 					// Add column width and class
 					$objCell->colWidth = $colwidth . '%';

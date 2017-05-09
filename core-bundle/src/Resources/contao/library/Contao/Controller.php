@@ -1553,12 +1553,23 @@ abstract class Controller extends \System
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
 		}
 
-		// Load the file meta data
-		if (!$arrItem['overwriteMeta'])
-		{
-			$arrMeta = array();
+		$arrMeta = array();
 
-			if ($objModel instanceof FilesModel)
+		// Load the meta data
+		if ($objModel instanceof FilesModel)
+		{
+			if (TL_MODE == 'FE')
+			{
+				global $objPage;
+
+				$arrMeta = \Frontend::getMetaData($objModel->meta, $objPage->language);
+
+				if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
+				{
+					$arrMeta = \Frontend::getMetaData($objModel->meta, $objPage->rootFallbackLanguage);
+				}
+			}
+			else
 			{
 				$arrMeta = \Frontend::getMetaData($objModel->meta, $GLOBALS['TL_LANGUAGE']);
 			}
@@ -1574,32 +1585,42 @@ abstract class Controller extends \System
 				}
 			}
 
-			// Overwrite the item array
-			foreach ($arrMeta as $k=>$v)
+			$arrMeta['imageTitle'] = $arrMeta['title'];
+			$arrMeta['imageUrl'] = $arrMeta['link'];
+			unset($arrMeta['title'], $arrMeta['link']);
+
+			// Add the meta data to the item
+			if (!$arrItem['overwriteMeta'])
 			{
-				switch ($k)
+				foreach ($arrMeta as $k=>$v)
 				{
-					case 'link':
-						$arrItem['imageUrl'] = $v;
-						break;
+					switch ($k)
+					{
+						case 'alt':
+						case 'imageTitle':
+							$arrItem[$k] = \StringUtil::specialchars($v);
+							break;
 
-					case 'title':
-						$arrItem['imageTitle'] = $v;
-						break;
-
-					default:
-						$arrItem[$k] = $v;
-						break;
+						default:
+							$arrItem[$k] = $v;
+							break;
+					}
 				}
 			}
 		}
 
 		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);
 
-		// Only add the title if the image is not part of an image link
-		if (empty($arrItem['imageUrl']) && empty($arrItem['fullsize']))
+		// Move the title to the link tag so it is shown in the lightbox
+		if ($arrItem['fullsize'] && $arrItem['imageTitle'] && !$arrItem['linkTitle'])
 		{
-			$picture['title'] = \StringUtil::specialchars($arrItem['title']);
+			$arrItem['linkTitle'] = $arrItem['imageTitle'];
+			unset($arrItem['imageTitle']);
+		}
+
+		if (isset($arrItem['imageTitle']))
+		{
+			$picture['title'] = \StringUtil::specialchars($arrItem['imageTitle']);
 		}
 
 		$objTemplate->picture = $picture;
@@ -1652,16 +1673,19 @@ abstract class Controller extends \System
 			$objTemplate->attributes = ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
 		}
 
+		// Add the meta data to the template
+		foreach (array_keys($arrMeta) as $k)
+		{
+			$objTemplate->$k = $arrItem[$k];
+		}
+
 		// Do not urlEncode() here because getImage() already does (see #3817)
 		$objTemplate->src = TL_FILES_URL . $src;
-		$objTemplate->alt = \StringUtil::specialchars($arrItem['alt']);
-		$objTemplate->title = \StringUtil::specialchars($arrItem['title']);
-		$objTemplate->linkTitle = \StringUtil::specialchars($arrItem['linkTitle'] ?: $arrItem['title']);
+		$objTemplate->singleSRC = $arrItem['singleSRC'];
+		$objTemplate->linkTitle = $arrItem['linkTitle'] ?: $arrItem['title'];
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
 		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
 		$objTemplate->margin = static::generateMargin($arrMargin);
-		$objTemplate->caption = $arrItem['caption'];
-		$objTemplate->singleSRC = $arrItem['singleSRC'];
 		$objTemplate->addImage = true;
 	}
 
