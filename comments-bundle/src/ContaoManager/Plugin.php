@@ -10,6 +10,8 @@
 
 namespace Contao\CommentsBundle\ContaoManager;
 
+use Contao\CommentsBundle\ContaoCommentsBundle;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -27,8 +29,8 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('Contao\CommentsBundle\ContaoCommentsBundle')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle'])
+            BundleConfig::create(ContaoCommentsBundle::class)
+                ->setLoadAfter([ContaoCoreBundle::class])
                 ->setReplace(['comments']),
         ];
     }
