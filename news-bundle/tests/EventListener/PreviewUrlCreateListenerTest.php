@@ -11,9 +11,10 @@
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlCreateListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -145,29 +146,21 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($isInitialized = true)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn($isInitialized)
         ;
 
         $newsModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->setMethods(['findByPk'])
             ->getMock()
         ;
 
         $newsModelAdapter
-            ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
                 switch ($id) {
@@ -181,7 +174,6 @@ class PreviewUrlCreateListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($newsModelAdapter) {
                 switch ($key) {

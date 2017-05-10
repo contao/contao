@@ -11,9 +11,12 @@
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\News;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
+use Contao\NewsModel;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlConverterListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -118,42 +121,33 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($isInitialized = true)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn($isInitialized)
         ;
 
         $newsAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['generateNewsUrl'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['generateNewsUrl'])
             ->getMock()
         ;
 
         $newsAdapter
-            ->expects($this->any())
             ->method('generateNewsUrl')
             ->willReturn('news/james-wilson-returns.html')
         ;
 
         $newsModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['findByPk'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['findByPk'])
             ->getMock()
         ;
 
         $newsModelAdapter
-            ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
                 switch ($id) {
@@ -167,14 +161,13 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($newsAdapter, $newsModelAdapter) {
                 switch ($key) {
-                    case 'Contao\News':
+                    case News::class:
                         return $newsAdapter;
 
-                    case 'Contao\NewsModel':
+                    case NewsModel::class:
                         return $newsModelAdapter;
 
                     default:

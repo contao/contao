@@ -11,12 +11,14 @@
 namespace Contao\NewsBundle\Tests\Menu;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
 use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Menu\NewsPickerProvider;
 use Contao\NewsModel;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -28,7 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author Leo Feyer <https:/github.com/leofeyer>
  */
-class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
+class NewsPickerProviderTest extends TestCase
 {
     /**
      * @var PickerMenuProviderInterface
@@ -142,10 +144,9 @@ class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function mockPickerProvider()
     {
-        $router = $this->getMock(RouterInterface::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $router
-            ->expects($this->any())
             ->method('generate')
             ->willReturnCallback(function ($name, $params) {
                 $url = $name;
@@ -158,31 +159,23 @@ class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
             })
         ;
 
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->setMethods(['hasAccess'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $user = $this->createMock(BackendUser::class);
 
         $user
-            ->expects($this->any())
             ->method('hasAccess')
             ->willReturn(true)
         ;
 
-        $token = $this->getMock(TokenInterface::class);
+        $token = $this->createMock(TokenInterface::class);
 
         $token
-            ->expects($this->any())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $tokenStorage = $this->getMock(TokenStorageInterface::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         $tokenStorage
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token)
         ;
@@ -192,51 +185,35 @@ class NewsPickerProviderTest extends \PHPUnit_Framework_TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $archiveModel = $this
-            ->getMockBuilder(NewsArchiveModel::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $archiveModel = $this->createMock(NewsArchiveModel::class);
 
         $archiveModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturn(2)
         ;
 
-        $newsModel = $this
-            ->getMockBuilder(NewsModel::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $newsModel = $this->createMock(NewsModel::class);
 
         $newsModel
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturnOnConsecutiveCalls($archiveModel, null)
         ;
 
         $adapter = $this
-            ->getMockBuilder(NewsModel::class)
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->setMethods(['findById'])
             ->getMock()
         ;
 
         $adapter
-            ->expects($this->any())
             ->method('findById')
             ->willReturnOnConsecutiveCalls($newsModel, $newsModel, null)
         ;
 
-        $framework = $this
-            ->getMockBuilder(ContaoFramework::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturn($adapter)
         ;

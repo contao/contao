@@ -17,6 +17,7 @@ use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsBundle\Menu\NewsPickerProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -26,7 +27,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoNewsExtensionTest extends \PHPUnit_Framework_TestCase
+class ContaoNewsExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder

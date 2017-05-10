@@ -10,15 +10,19 @@
 
 namespace Contao\NewsBundle\Tests\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\NewsBundle\ContaoManager\Plugin;
+use Contao\NewsBundle\ContaoNewsBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Plugin class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PluginTest extends \PHPUnit_Framework_TestCase
+class PluginTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -35,14 +39,14 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBundles()
     {
-        $parser = $this->getMock('Contao\ManagerPlugin\Bundle\Parser\ParserInterface');
+        $parser = $this->createMock(ParserInterface::class);
 
         /** @var BundleConfig $config */
         $config = (new Plugin())->getBundles($parser)[0];
 
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
-        $this->assertSame('Contao\NewsBundle\ContaoNewsBundle', $config->getName());
-        $this->assertSame(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
+        $this->assertSame(ContaoNewsBundle::class, $config->getName());
+        $this->assertSame([ContaoCoreBundle::class], $config->getLoadAfter());
         $this->assertSame(['news'], $config->getReplace());
     }
 }
