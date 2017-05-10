@@ -10,9 +10,11 @@
 
 namespace Contao\NewsletterBundle\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\NewsletterBundle\ContaoNewsletterBundle;
 
 /**
  * Plugin for the Contao Manager.
@@ -27,8 +29,8 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('Contao\NewsletterBundle\ContaoNewsletterBundle')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle'])
+            BundleConfig::create(ContaoNewsletterBundle::class)
+                ->setLoadAfter([ContaoCoreBundle::class])
                 ->setReplace(['newsletter']),
         ];
     }
