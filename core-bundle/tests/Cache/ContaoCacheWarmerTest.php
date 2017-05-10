@@ -84,8 +84,12 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturnOnConsecutiveCalls($class1, $class2, false)
         ;
 
-        /** @var Connection $connection */
-        $connection = $this->createConfiguredMock(Connection::class, ['prepare' => $statement]);
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
 
         $warmer = new ContaoCacheWarmer(
             new Filesystem(),
@@ -164,8 +168,12 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturnOnConsecutiveCalls($class1, $class2, false)
         ;
 
-        /** @var Connection $connection */
-        $connection = $this->createConfiguredMock(Connection::class, ['prepare' => $statement]);
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
 
         $warmer = new ContaoCacheWarmer(
             new Filesystem(),
