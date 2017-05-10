@@ -60,7 +60,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     public function getRootDir()
     {
-        return __DIR__.'/Fixtures';
+        return __DIR__.DIRECTORY_SEPARATOR.'Fixtures';
     }
 
     /**
