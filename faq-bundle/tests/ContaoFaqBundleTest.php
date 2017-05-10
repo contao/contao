@@ -11,13 +11,14 @@
 namespace Contao\FaqBundle\Tests;
 
 use Contao\FaqBundle\ContaoFaqBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ContaoFaqBundle class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoFaqBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoFaqBundleTest extends TestCase
 {
     /**
      * Tests the object instantiation.

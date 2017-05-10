@@ -14,6 +14,7 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqBundle\Menu\FaqPickerProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoFaqExtensionTest extends \PHPUnit_Framework_TestCase
+class ContaoFaqExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder

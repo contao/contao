@@ -10,17 +10,21 @@
 
 namespace Contao\FaqBundle\Tests\EventListener;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
+use Contao\FaqCategoryModel;
+use Contao\FaqModel;
+use Contao\PageModel;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the InsertTagsListener class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
+class InsertTagsListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -77,7 +81,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(true));
 
-        $this->assertTrue('' === $listener->onReplaceInsertTags('faq_url::2'));
+        $this->assertSame('', $listener->onReplaceInsertTags('faq_url::2'));
     }
 
     /**
@@ -87,7 +91,7 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(false, true));
 
-        $this->assertTrue('' === $listener->onReplaceInsertTags('faq_url::3'));
+        $this->assertSame('', $listener->onReplaceInsertTags('faq_url::3'));
     }
 
     /**
@@ -100,61 +104,35 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($noFaqModel = false, $noFaqCategory = false)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $page = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->setMethods(['getFrontendUrl'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $page = $this->createMock(PageModel::class);
 
         $page
-            ->expects($this->any())
             ->method('getFrontendUrl')
             ->willReturn('faq/what-does-foobar-mean.html')
         ;
 
-        $category = $this
-            ->getMockBuilder('Contao\FaqCategoryModel')
-            ->setMethods(['getRelated'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $category = $this->createMock(FaqCategoryModel::class);
 
         $category
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturn($page)
         ;
 
-        $faq = $this
-            ->getMockBuilder('Contao\FaqModel')
-            ->setMethods(['getRelated', '__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $faq = $this->createMock(FaqModel::class);
 
         $faq
-            ->expects($this->any())
             ->method('getRelated')
             ->willReturn($noFaqCategory ? null : $category)
         ;
 
         $faq
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -174,27 +152,25 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $faqModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
             ->setMethods(['findByIdOrAlias'])
-            ->setConstructorArgs(['Contao\FaqModel'])
             ->getMock()
         ;
 
         $faqModelAdapter
-            ->expects($this->any())
             ->method('findByIdOrAlias')
             ->willReturn($noFaqModel ? null : $faq)
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($faqModelAdapter) {
                 switch ($key) {
-                    case 'Contao\FaqModel':
+                    case FaqModel::class:
                         return $faqModelAdapter;
 
-                    case 'Contao\Config':
+                    case Config::class:
                         return $this->mockConfigAdapter();
 
                     default:
@@ -214,32 +190,28 @@ class InsertTagsListenerTest extends \PHPUnit_Framework_TestCase
     private function mockConfigAdapter()
     {
         $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->getMock()
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(true)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('preload')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('getInstance')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
