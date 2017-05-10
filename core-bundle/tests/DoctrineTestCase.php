@@ -79,6 +79,6 @@ abstract class DoctrineTestCase extends TestCase
             ->willReturn($file)
         ;
 
-        return $this->mockContaoFramework(null, null, [], ['Contao\Database\Installer' => $installer]);
+        return $this->mockContaoFramework(null, null, [], [Installer::class => $installer]);
     }
 }

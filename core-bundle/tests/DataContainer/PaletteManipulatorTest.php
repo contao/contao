@@ -27,7 +27,7 @@ class PaletteManipulatorTest extends TestCase
     {
         $pm = PaletteManipulator::create();
 
-        static::assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
+        $this->assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
     }
 
     /**

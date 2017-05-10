@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Tests;
 
 use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\Adapter;
@@ -21,9 +22,11 @@ use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\FilesModel;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
+use Contao\RequestToken;
 use Imagine\Gd\Imagine as ImagineGd;
 use Imagine\Image\ImageInterface;
 use Psr\Log\NullLogger;
@@ -92,21 +95,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $router = $this->mockRouter('/index.html');
         }
 
-        if (!isset($adapters['Contao\Config'])) {
-            $adapters['Contao\Config'] = $this->mockConfigAdapter();
+        if (!isset($adapters[Config::class])) {
+            $adapters[Config::class] = $this->mockConfigAdapter();
         }
 
-        if (!isset($adapters['Contao\RequestToken'])) {
-            $adapters['Contao\RequestToken'] = $this->mockRequestTokenAdapter();
+        if (!isset($adapters[RequestToken::class])) {
+            $adapters[RequestToken::class] = $this->mockRequestTokenAdapter();
         }
 
-        if (!isset($adapters['Contao\FilesModel'])) {
-            $adapters['Contao\FilesModel'] = $this->mockFilesModelAdapter();
+        if (!isset($adapters[FilesModel::class])) {
+            $adapters[FilesModel::class] = $this->mockFilesModelAdapter();
         }
 
         /* @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
+            ->getMockBuilder(ContaoFramework::class)
             ->setConstructorArgs([
                 $requestStack,
                 $router,

@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;
+use Contao\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -87,7 +88,7 @@ class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterfa
      */
     public function supportsClass($class)
     {
-        return is_subclass_of($class, 'Contao\User');
+        return is_subclass_of($class, User::class);
     }
 
     /**

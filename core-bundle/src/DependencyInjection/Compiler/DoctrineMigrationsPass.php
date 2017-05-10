@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand;
 use Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider;
+use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -61,10 +62,6 @@ class DoctrineMigrationsPass implements CompilerPassInterface
      */
     private function hasMigrationsBundle(ContainerBuilder $container)
     {
-        return in_array(
-            'Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle',
-            $container->getParameter('kernel.bundles'),
-            true
-        );
+        return in_array(DoctrineMigrationsBundle::class, $container->getParameter('kernel.bundles'), true);
     }
 }

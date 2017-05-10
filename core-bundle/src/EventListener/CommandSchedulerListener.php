@@ -54,7 +54,7 @@ class CommandSchedulerListener
         }
 
         /** @var FrontendCron $controller */
-        $controller = $this->framework->createInstance('Contao\FrontendCron');
+        $controller = $this->framework->createInstance(FrontendCron::class);
         $controller->run();
     }
 

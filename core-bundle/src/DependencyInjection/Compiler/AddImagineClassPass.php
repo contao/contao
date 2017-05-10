@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Imagine\Exception\RuntimeException;
+use Imagine\Gd\Imagine;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -54,6 +55,6 @@ class AddImagineClassPass implements CompilerPassInterface
             return $class;
         }
 
-        return 'Imagine\Gd\Imagine'; // see #616
+        return Imagine::class; // see #616
     }
 }

@@ -12,6 +12,13 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Exception\NoActivePageFoundException;
+use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageError404;
@@ -63,13 +70,13 @@ class PrettyErrorScreenListener
      * @var array
      */
     private $mapper = [
-        'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'forward_page_not_found',
-        'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'incomplete_installation',
-        'Contao\CoreBundle\Exception\InsecureInstallationException' => 'insecure_installation',
-        'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'invalid_request_token',
-        'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'no_active_page_found',
-        'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'no_layout_specified',
-        'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'no_root_page_found',
+        ForwardPageNotFoundException::class => 'forward_page_not_found',
+        IncompleteInstallationException::class => 'incomplete_installation',
+        InsecureInstallationException::class => 'insecure_installation',
+        InvalidRequestTokenException::class => 'invalid_request_token',
+        NoActivePageFoundException::class => 'no_active_page_found',
+        NoLayoutSpecifiedException::class => 'no_layout_specified',
+        NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
     /**

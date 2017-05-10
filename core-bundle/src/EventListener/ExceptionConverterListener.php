@@ -10,7 +10,18 @@
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Exception\NoActivePageFoundException;
+use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -28,17 +39,17 @@ class ExceptionConverterListener
      * @var array
      */
     private $mapper = [
-        'Contao\CoreBundle\Exception\AccessDeniedException' => 'AccessDeniedHttpException',
-        'Contao\CoreBundle\Exception\ForwardPageNotFoundException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\IncompleteInstallationException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\InsecureInstallationException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\InternalServerErrorException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\InvalidRequestTokenException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\NoActivePageFoundException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\NoLayoutSpecifiedException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\NoRootPageFoundException' => 'InternalServerErrorHttpException',
-        'Contao\CoreBundle\Exception\PageNotFoundException' => 'NotFoundHttpException',
-        'Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
+        AccessDeniedException::class => 'AccessDeniedHttpException',
+        ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
+        IncompleteInstallationException::class => 'InternalServerErrorHttpException',
+        InsecureInstallationException::class => 'InternalServerErrorHttpException',
+        InternalServerErrorException::class => 'InternalServerErrorHttpException',
+        InvalidRequestTokenException::class => 'InternalServerErrorHttpException',
+        NoActivePageFoundException::class => 'InternalServerErrorHttpException',
+        NoLayoutSpecifiedException::class => 'InternalServerErrorHttpException',
+        NoRootPageFoundException::class => 'InternalServerErrorHttpException',
+        PageNotFoundException::class => 'NotFoundHttpException',
+        ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
         // Deprecated since Contao 4.1, to be removed in Contao 5.0
         'Contao\CoreBundle\Exception\ServiceUnavailableException' => 'ServiceUnavailableHttpException',
     ];

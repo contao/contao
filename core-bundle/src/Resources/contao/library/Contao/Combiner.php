@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Leafo\ScssPhp\Compiler;
+use Leafo\ScssPhp\Formatter\Compressed;
+use Leafo\ScssPhp\Formatter\Expanded;
 
 
 /**
@@ -392,7 +394,7 @@ class Combiner extends \System
 				TL_ROOT . '/vendor/contao-components/compass/css'
 			));
 
-			$objCompiler->setFormatter((\Config::get('debugMode') ? 'Leafo\ScssPhp\Formatter\Expanded' : 'Leafo\ScssPhp\Formatter\Compressed'));
+			$objCompiler->setFormatter((\Config::get('debugMode') ? Expanded::class : Compressed::class));
 
 			return $this->fixPaths($objCompiler->compile($content), $arrFile);
 		}

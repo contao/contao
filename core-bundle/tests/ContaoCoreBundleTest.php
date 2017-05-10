@@ -11,6 +11,11 @@
 namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -61,10 +66,10 @@ class ContaoCoreBundleTest extends TestCase
             $classes[] = $reflection->getName();
         }
 
-        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $classes);
-        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass', $classes);
-        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass', $classes);
-        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass', $classes);
-        $this->assertContains('Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass', $classes);
+        $this->assertContains(AddPackagesPass::class, $classes);
+        $this->assertContains(AddSessionBagsPass::class, $classes);
+        $this->assertContains(AddResourcesPathsPass::class, $classes);
+        $this->assertContains(AddImagineClassPass::class, $classes);
+        $this->assertContains(DoctrineMigrationsPass::class, $classes);
     }
 }

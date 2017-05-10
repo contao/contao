@@ -21,7 +21,7 @@ namespace Contao;
  * Usage:
  *
  *     ClassLoader::addNamespace('Custom');
- *     ClassLoader::addClass('Custom\\Calendar', 'calendar/Calendar.php');
+ *     ClassLoader::addClass('Custom\Calendar', 'calendar/Calendar.php');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *

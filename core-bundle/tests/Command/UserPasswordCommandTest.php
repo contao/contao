@@ -10,9 +10,11 @@
 
 namespace Contao\CoreBundle\Tests\Command;
 
+use Contao\Config;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -46,7 +48,7 @@ class UserPasswordCommandTest extends TestCase
         $framework = $this->mockContaoFramework(
             null,
             null,
-            ['Contao\Encryption' => $this->mockEncryptionAdapter()]
+            [Encryption::class => $this->mockEncryptionAdapter()]
         );
 
         $connection = $this->createMock(Connection::class);
@@ -192,8 +194,8 @@ class UserPasswordCommandTest extends TestCase
             null,
             null,
             [
-                'Contao\Config' => $this->mockConfigAdapter(16),
-                'Contao\Encryption' => $this->mockEncryptionAdapter(),
+                Config::class => $this->mockConfigAdapter(16),
+                Encryption::class => $this->mockEncryptionAdapter(),
             ]
         );
 
