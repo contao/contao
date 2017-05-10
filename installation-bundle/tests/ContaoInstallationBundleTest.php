@@ -11,13 +11,14 @@
 namespace Contao\InstallationBundle\Tests;
 
 use Contao\InstallationBundle\ContaoInstallationBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ContaoInstallationBundle class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoInstallationBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoInstallationBundleTest extends TestCase
 {
     /**
      * Tests the object instantiation.
