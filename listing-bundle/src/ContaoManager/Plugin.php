@@ -10,6 +10,8 @@
 
 namespace Contao\ListingBundle\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\ListingBundle\ContaoListingBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -27,8 +29,8 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('Contao\ListingBundle\ContaoListingBundle')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle'])
+            BundleConfig::create(ContaoListingBundle::class)
+                ->setLoadAfter([ContaoCoreBundle::class])
                 ->setReplace(['listing']),
         ];
     }
