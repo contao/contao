@@ -166,7 +166,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         /** @var Route[] $routes */
         $routes = array_values($this->plugin->getRouteCollection($resolver, $kernel)->all());
 
-        $this->assertCount(2, $routes);
+        $this->assertCount(3, $routes);
         $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
         $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
     }
