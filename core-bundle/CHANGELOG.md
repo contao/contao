@@ -2,6 +2,7 @@
 
 ### 4.4.0-beta1 (2017-05-05)
 
+ * Update the Punycode library to version 2 (see #748).
  * Always add custom meta fields to the templates (see #717).
  * Warn if another user has edited a record when saving it (see #809).
  * Optimize the element preview height (see #810).

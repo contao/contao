@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
  * Tests the Validator class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
+ * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @group contao3
  */
