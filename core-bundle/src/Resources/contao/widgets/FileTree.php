@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DcaFilterInterface;
+
 
 /**
  * Provide methods to handle input field "file tree".
@@ -18,10 +20,14 @@ namespace Contao;
  * @property boolean $multiple
  * @property boolean $isGallery
  * @property boolean $isDownloads
+ * @property boolean $files
+ * @property boolean $filesOnly
+ * @property string  $path
+ * @property string  $extensions
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileTree extends \Widget
+class FileTree extends \Widget implements DcaFilterInterface
 {
 
 	/**
@@ -77,6 +83,35 @@ class FileTree extends \Widget
 
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getDcaFilter()
+	{
+		$arrFilters = array();
+
+		// Only folders can be selected
+		if ($this->files === false)
+		{
+			$arrFilters['hideFiles'] = true;
+		}
+
+		// Only files within a custom path can be selected
+		if ($this->path)
+		{
+			$arrFilters['root'] = array($this->path);
+		}
+
+		// Only certain file types can be selected
+		if ($this->extensions)
+		{
+			$arrFilters['extensions'] = $this->extensions;
+		}
+
+		return $arrFilters;
+	}
+
+
+	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -85,6 +120,13 @@ class FileTree extends \Widget
 	 */
 	protected function validator($varInput)
 	{
+		$this->checkValue($varInput);
+
+		if ($this->hasErrors())
+		{
+			return '';
+		}
+
 		// Store the order value
 		if ($this->orderField != '')
 		{
@@ -121,6 +163,73 @@ class FileTree extends \Widget
 			$arrValue = array_filter(explode(',', $varInput));
 
 			return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : \StringUtil::uuidToBin($arrValue[0]);
+		}
+	}
+
+
+	/**
+	 * Check the selected value
+	 *
+	 * @param mixed $varInput
+	 */
+	protected function checkValue($varInput)
+	{
+		if ($varInput == '')
+		{
+			return;
+		}
+
+		if (strpos($varInput, ',') === false)
+		{
+			$arrUuids = array($varInput);
+		}
+		else
+		{
+			$arrUuids = array_filter(explode(',', $varInput));
+		}
+
+		$objFiles = \FilesModel::findMultipleByUuids($arrUuids);
+
+		if ($objFiles === null)
+		{
+			return;
+		}
+
+		foreach ($objFiles as $objFile)
+		{
+			// Only files can be selected
+			if ($this->filesOnly && is_dir(TL_ROOT . '/' . $objFile->path))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['filesOnly']);
+				break;
+			}
+
+			// Only folders can be selected
+			if ($this->files === false && !is_dir(TL_ROOT . '/' . $objFile->path))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['foldersOnly']);
+				break;
+			}
+
+			// Only files within a custom path can be selected
+			if ($this->path && strpos($objFile->path, $this->path . '/') !== 0)
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
+				break;
+			}
+
+			// Only certain file types can be selected
+			if ($this->extensions && !is_dir(TL_ROOT . '/' . $objFile->path))
+			{
+				$objFile = new \File($objFile->path);
+				$extensions = \StringUtil::trimsplit(',', $this->extensions);
+
+				if (!in_array($objFile->extension, $extensions))
+				{
+					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extensionsOnly'], $this->extensions));
+					break;
+				}
+			}
 		}
 	}
 

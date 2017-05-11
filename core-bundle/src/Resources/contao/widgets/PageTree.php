@@ -10,16 +10,19 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DcaFilterInterface;
+
 
 /**
  * Provide methods to handle input field "page tree".
  *
  * @property string  $orderField
  * @property boolean $multiple
+ * @property array   $rootNodes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageTree extends \Widget
+class PageTree extends \Widget implements DcaFilterInterface
 {
 
 	/**
@@ -75,6 +78,39 @@ class PageTree extends \Widget
 
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getDcaFilter()
+	{
+		$arrFilters = array();
+
+		// Predefined node set (see #3563)
+		if (is_array($this->rootNodes))
+		{
+			// Allow only those roots that are allowed in root nodes
+			if (!empty($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']))
+			{
+				$root = array_intersect(array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')), $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']);
+
+				if (empty($root))
+				{
+					$root = $this->rootNodes;
+					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ''; // hide the breadcrumb menu
+				}
+
+				$arrFilters['root'] = $this->eliminateNestedPages($root);
+			}
+			else
+			{
+				$arrFilters['root'] = $this->eliminateNestedPages($this->rootNodes);
+			}
+		}
+
+		return $arrFilters;
+	}
+
+
+	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -83,6 +119,13 @@ class PageTree extends \Widget
 	 */
 	protected function validator($varInput)
 	{
+		$this->checkValue($varInput);
+
+		if ($this->hasErrors())
+		{
+			return '';
+		}
+
 		// Store the order value
 		if ($this->orderField != '')
 		{
@@ -117,6 +160,34 @@ class PageTree extends \Widget
 			$arrValue = array_map('intval', array_filter(explode(',', $varInput)));
 
 			return $this->multiple ? $arrValue : $arrValue[0];
+		}
+	}
+
+
+	/**
+	 * Check the selected value
+	 *
+	 * @param mixed $varInput
+	 */
+	protected function checkValue($varInput)
+	{
+		if ($varInput == '' || !is_array($this->rootNodes))
+		{
+			return;
+		}
+
+		if (strpos($varInput, ',') === false)
+		{
+			$arrIds = array(intval($varInput));
+		}
+		else
+		{
+			$arrIds = array_map('intval', array_filter(explode(',', $varInput)));
+		}
+
+		if (count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
+		{
+			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}
 	}
 

@@ -82,6 +82,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 */
 	protected $blnIsDbAssisted = false;
 
+	/**
+	 * Hide files
+	 * @var boolean
+	 */
+	protected $blnHideFiles = false;
+
 
 	/**
 	 * Initialize the object
@@ -178,17 +184,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->arrValidFileTypes = \StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes']));
 		}
 
-		// Initialize the picker
-		if (isset($_GET['target']) && \Input::get('act') != 'select' && \Input::get('act') != 'paste')
-		{
-			list($table) = explode('.', \Input::get('target'), 2);
-
-			if ($this->strTable != $table)
-			{
-				$this->initPicker();
-			}
-		}
-
 		// Call onload_callback (e.g. to check permissions)
 		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback']))
 		{
@@ -203,6 +198,17 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					$callback($this);
 				}
+			}
+		}
+
+		// Initialize the picker
+		if (isset($_GET['target']) && \Input::get('act') != 'select' && \Input::get('act') != 'paste')
+		{
+			list($table) = explode('.', \Input::get('target'), 2);
+
+			if ($this->strTable != $table)
+			{
+				$this->initPicker();
 			}
 		}
 
@@ -2652,6 +2658,19 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
+				elseif ($this->blnHideFiles && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				{
+					--$countFiles;
+				}
+				elseif (!empty($this->arrValidFileTypes) && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				{
+					$objFile =  new \File($currentFolder . '/' . $file);
+
+					if (!in_array($objFile->extension, $this->arrValidFileTypes))
+					{
+						--$countFiles;
+					}
+				}
 			}
 
 			if (!empty($arrFound) && $countFiles < 1 && !in_array($currentFolder, $arrFound))
@@ -2727,6 +2746,11 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$return .= $this->generateTree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrClipboard, $arrFound);
 				$return .= '</ul></li>';
 			}
+		}
+
+		if ($this->blnHideFiles)
+		{
+			return $return;
 		}
 
 		// Process files
@@ -3091,6 +3115,27 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		while ($path != '.');
 
 		return true;
+	}
+
+
+	/**
+	 * Set the DCA filter
+	 *
+	 * @param array $arrFilter
+	 */
+	protected function setDcaFilter($arrFilter)
+	{
+		parent::setDcaFilter($arrFilter);
+
+		if (isset($arrFilter['hideFiles']) && $arrFilter['hideFiles'] === true)
+		{
+			$this->blnHideFiles = true;
+		}
+
+		if (isset($arrFilter['extensions']))
+		{
+			$this->arrValidFileTypes = $arrFilter['extensions'];
+		}
 	}
 
 

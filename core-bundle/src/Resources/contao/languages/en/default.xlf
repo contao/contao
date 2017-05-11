@@ -155,6 +155,21 @@
       <trans-unit id="ERR.fileExists">
         <source>The file "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within "%s"!</source>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select "%s" files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
       </trans-unit>
