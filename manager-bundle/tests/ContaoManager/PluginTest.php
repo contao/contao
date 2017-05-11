@@ -154,18 +154,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertNotContains('web_profiler.yml', $files);
     }
 
-    public function testGetFirewallConfig()
-    {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Config\FirewallPluginInterface', $this->plugin);
-
-        $config = $this->plugin->getFirewallConfig([]);
-
-        $this->assertArrayHasKey('dev', $config);
-        $this->assertArrayHasKey('install', $config);
-        $this->assertArrayHasKey('backend', $config);
-        $this->assertArrayHasKey('frontend', $config);
-    }
-
     public function testGetRouteCollectionInProd()
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $this->plugin);

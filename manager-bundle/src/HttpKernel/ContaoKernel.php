@@ -16,8 +16,9 @@ use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\IniParser;
 use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
-use Contao\ManagerPlugin\Config\FirewallPluginInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -148,27 +149,18 @@ class ContaoKernel extends Kernel
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
 
-        $firewallConfig = [];
+        /** @var ConfigPluginInterface[] $plugins */
+        $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
-        foreach ($this->getPluginLoader()->getInstances() as $plugin) {
-            if ($plugin instanceof ConfigPluginInterface) {
-                $plugin->registerContainerConfiguration($loader, []);
-            }
-
-            if ($plugin instanceof FirewallPluginInterface) {
-                $firewallConfig = $plugin->getFirewallConfig($firewallConfig);
-            }
+        foreach ($plugins as $plugin) {
+            $plugin->registerContainerConfiguration($loader, []);
         }
 
         if (file_exists($this->getRootDir().'/config/parameters.yml')) {
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($loader, $firewallConfig) {
-            if (!empty($firewallConfig)) {
-                $container->loadFromExtension('security', ['firewalls' => $firewallConfig]);
-            }
-
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
             $environment = $container->getParameter('kernel.environment');
 
             if (file_exists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
@@ -177,6 +169,21 @@ class ContaoKernel extends Kernel
                 $loader->load($this->getRootDir().'/config/config.yml');
             }
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getContainerBuilder()
+    {
+        $container = new PluginContainerBuilder($this->getPluginLoader(), []);
+        $container->getParameterBag()->add($this->getKernelParameters());
+
+        if (class_exists('ProxyManager\Configuration') && class_exists('Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator')) {
+            $container->setProxyInstantiator(new RuntimeInstantiator());
+        }
+
+        return $container;
     }
 
     /**
