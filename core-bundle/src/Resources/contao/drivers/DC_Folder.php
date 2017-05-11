@@ -3134,7 +3134,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 		if (isset($arrFilter['extensions']))
 		{
-			$this->arrValidFileTypes = $arrFilter['extensions'];
+			$this->arrValidFileTypes = \StringUtil::trimsplit(',', strtolower($arrFilter['extensions']));
 		}
 	}
 
