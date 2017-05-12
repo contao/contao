@@ -251,20 +251,12 @@ class UrlGeneratorTest extends TestCase
 
         $this->assertSame(
             'http://contao.org/',
-            $generator->generate(
-                'index',
-                ['_domain' => 'contao.org'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            $generator->generate('index', ['_domain' => 'contao.org'], UrlGeneratorInterface::ABSOLUTE_URL)
         );
 
         $this->assertSame(
             'http://contao.org/',
-            $generator->generate(
-                'index',
-                ['_domain' => 'contao.org:80'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            $generator->generate('index', ['_domain' => 'contao.org:80'], UrlGeneratorInterface::ABSOLUTE_URL)
         );
     }
 
@@ -291,11 +283,7 @@ class UrlGeneratorTest extends TestCase
 
         $this->assertSame(
             'https://contao.org/',
-            $generator->generate(
-                'index',
-                ['_domain' => 'contao.org'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            $generator->generate('index', ['_domain' => 'contao.org'], UrlGeneratorInterface::ABSOLUTE_URL)
         );
     }
 

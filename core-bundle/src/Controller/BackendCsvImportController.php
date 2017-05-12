@@ -131,8 +131,8 @@ class BackendCsvImportController
                 $data[] = [
                     'value' => $row[0],
                     'label' => $row[1],
-                    'default' => $row[2] ? 1 : '',
-                    'group' => $row[3] ? 1 : '',
+                    'default' => !empty($row[2]) ? 1 : '',
+                    'group' => !empty($row[3]) ? 1 : '',
                 ];
 
                 return $data;

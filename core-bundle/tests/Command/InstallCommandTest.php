@@ -35,7 +35,6 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/assets/images');
         $fs->remove($this->getRootDir().'/assets/images_test');
         $fs->remove($this->getRootDir().'/assets/js');
-        $fs->remove($this->getRootDir().'/files');
         $fs->remove($this->getRootDir().'/files_test');
         $fs->remove($this->getRootDir().'/system/cache');
         $fs->remove($this->getRootDir().'/system/config');
@@ -76,7 +75,6 @@ class InstallCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains(' * files', $display);
         $this->assertContains(' * templates', $display);
         $this->assertContains(' * web/system', $display);
         $this->assertContains(' * assets/css', $display);
