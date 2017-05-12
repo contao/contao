@@ -156,6 +156,9 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the registerContainerConfiguration() method.
      *
+     * @param string $rootDir
+     * @param string $expectedResult
+     *
      * @dataProvider containerConfigurationProvider
      */
     public function testRegisterContainerConfiguration($rootDir, $expectedResult)
