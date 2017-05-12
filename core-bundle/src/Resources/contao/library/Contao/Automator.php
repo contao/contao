@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\ContaoCacheClearer;
-use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;

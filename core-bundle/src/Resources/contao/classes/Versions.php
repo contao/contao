@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Database\Result;
 
 
 /**
@@ -385,6 +386,7 @@ class Versions extends \Controller
 		$intTo = 0;
 		$intFrom = 0;
 
+		/** @var Result|object $objVersions */
 		$objVersions = $this->Database->prepare("SELECT * FROM tl_version WHERE pid=? AND fromTable=? ORDER BY version DESC")
 									  ->execute($this->intPid, $this->strTable);
 

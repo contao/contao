@@ -46,7 +46,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $password
  * @property boolean $pwChange
  * @property boolean $admin
- * @property string  $groups
+ * @property array   $groups
  * @property string  $inherit
  * @property string  $modules
  * @property string  $themes

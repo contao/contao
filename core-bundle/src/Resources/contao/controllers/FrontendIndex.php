@@ -267,21 +267,20 @@ class FrontendIndex extends \Frontend
 			switch ($objPage->type)
 			{
 				case 'error_404':
-					/** @var PageError404 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
+					/** @var PageError404 $objHandler */
 					return $objHandler->getResponse();
 					break;
 
 				case 'error_403':
-					/** @var PageError403 $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
 
+					/** @var PageError403 $objHandler */
 					return $objHandler->getResponse($objPage->rootId);
 					break;
 
 				default:
-					/** @var PageRegular $objHandler */
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
 
 					// Backwards compatibility
@@ -291,6 +290,7 @@ class FrontendIndex extends \Frontend
 
 						try
 						{
+							/** @var PageRegular $objHandler */
 							$objHandler->generate($objPage, true);
 							$objResponse = new Response(ob_get_contents(), http_response_code());
 						}
@@ -302,6 +302,7 @@ class FrontendIndex extends \Frontend
 						return $objResponse;
 					}
 
+					/** @var PageRegular $objHandler */
 					return $objHandler->getResponse($objPage, true);
 					break;
 			}

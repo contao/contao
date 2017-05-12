@@ -1151,8 +1151,9 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the deprecated contao.image.target_path configuration option.
      *
-     * @expectedDeprecation Using the contao.image.target_path parameter has been deprecated %s.
      * @group legacy
+     *
+     * @expectedDeprecation Using the contao.image.target_path parameter has been deprecated %s.
      */
     public function testImageTargetPath()
     {

@@ -20,12 +20,12 @@ use Symfony\Component\Routing\RouterInterface;
  * Provide methods to manage back end users.
  *
  * @property boolean $isAdmin
- * @property string  $groups
+ * @property array   $groups
  * @property array   $pagemounts
  * @property array   $filemounts
  * @property array   $filemountIds
  * @property string  $fop
- * @property string  $alexf
+ * @property array   $alexf
  * @property array   $imageSizes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -191,8 +191,8 @@ class BackendUser extends \User
 	/**
 	 * Check whether the current user has a certain access right
 	 *
-	 * @param string       $field
-	 * @param array|string $array
+	 * @param array|string $field
+	 * @param string       $array
 	 *
 	 * @return boolean
 	 */

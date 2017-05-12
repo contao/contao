@@ -21,9 +21,10 @@ use PHPUnit\Framework\TestCase;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  *
+ * @group contao3
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
- * @group contao3
  */
 class WidgetTest extends TestCase
 {

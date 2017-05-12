@@ -758,7 +758,7 @@ abstract class Widget extends \Controller
 	/**
 	 * Set a callback to fetch the widget input instead of using getPost()
 	 *
-	 * @param callable $callable The callback
+	 * @param callable|null $callback The callback
 	 *
 	 * @return $this The widget object
 	 */

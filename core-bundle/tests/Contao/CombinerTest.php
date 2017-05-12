@@ -22,9 +22,10 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  *
+ * @group contao3
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
- * @group contao3
  */
 class CombinerTest extends TestCase
 {

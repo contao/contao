@@ -21,9 +21,10 @@ use Symfony\Component\Filesystem\Filesystem;
  * @author Martin Auswöger <https://github.com/ausi>
  * @author Yanick Witschi <https://github.com/Toflar>
  *
+ * @group contao3
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
- * @group contao3
  */
 class GdImageTest extends TestCase
 {

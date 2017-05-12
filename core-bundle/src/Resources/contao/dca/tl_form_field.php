@@ -612,11 +612,9 @@ class tl_form_field extends Backend
 	/**
 	 * Return a list of form fields
 	 *
-	 * @param DataContainer $dc
-	 *
 	 * @return array
 	 */
-	public function getFields(DataContainer $dc)
+	public function getFields()
 	{
 		$arrFields = $GLOBALS['TL_FFL'];
 

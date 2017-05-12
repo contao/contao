@@ -1040,7 +1040,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions The options array
 	 *
-	 * @return static|Model\Collection|null A model, model collection or null if the result is empty
+	 * @return Model|Model[]|Model\Collection|null A model, model collection or null if the result is empty
 	 */
 	protected static function find(array $arrOptions)
 	{

@@ -1305,7 +1305,7 @@ class tl_page extends Backend
 	 *
 	 * @param DataContainer $dc
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getPageTypes(DataContainer $dc)
 	{

@@ -958,10 +958,11 @@ class StringUtil
 	 *
 	 * @param string  $strString          The input string
 	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialchars($strString, $blnStripInsertTags=false)
+	public static function specialchars($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
 	{
 		if ($blnStripInsertTags)
 		{
@@ -969,7 +970,7 @@ class StringUtil
 		}
 
 		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), false);
+		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), $blnDoubleEncode);
 	}
 
 

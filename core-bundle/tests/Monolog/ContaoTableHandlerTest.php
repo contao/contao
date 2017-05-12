@@ -52,8 +52,9 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests the handle() method.
      *
-     * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
      * @group legacy
+     *
+     * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
      */
     public function testHandle()
     {
@@ -164,6 +165,24 @@ class ContaoTableHandlerTest extends TestCase
             'level' => Logger::DEBUG,
             'extra' => ['contao' => null],
             'context' => [],
+        ];
+
+        $handler = new ContaoTableHandler();
+
+        $this->assertFalse($handler->handle($record));
+    }
+
+    /**
+     * Tests the handle() method.
+     */
+    public function testHandleWithoutContainer()
+    {
+        $record = [
+            'level' => Logger::DEBUG,
+            'extra' => ['contao' => new ContaoContext('foobar')],
+            'context' => [],
+            'datetime' => new \DateTime(),
+            'message' => 'foobar',
         ];
 
         $handler = new ContaoTableHandler();

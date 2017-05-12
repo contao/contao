@@ -98,7 +98,7 @@ class ModuleQuicknav extends \Module
 		$this->Template->button = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
 		$this->Template->request = ampersand(\Environment::get('request'), true);
-		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host, $lang);
+		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
 	}
 
 
@@ -108,11 +108,10 @@ class ModuleQuicknav extends \Module
 	 * @param integer $pid
 	 * @param integer $level
 	 * @param string  $host
-	 * @param string  $language
 	 *
 	 * @return array
 	 */
-	protected function getQuicknavPages($pid, $level=1, $host=null, $language=null)
+	protected function getQuicknavPages($pid, $level=1, $host=null)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;

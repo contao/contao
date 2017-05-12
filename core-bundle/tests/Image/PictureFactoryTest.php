@@ -16,7 +16,6 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
@@ -27,7 +26,6 @@ use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
-use Contao\Image\ResizeOptionsInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
@@ -275,7 +273,7 @@ class PictureFactoryTest extends TestCase
             ->method('generate')
             ->with(
                 $this->callback(
-                    function (ImageInterface $image) {
+                    function () {
                         return true;
                     }
                 ),
@@ -293,7 +291,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeOptionsInterface $options) {
+                    function () {
                         return true;
                     }
                 )
@@ -324,7 +322,7 @@ class PictureFactoryTest extends TestCase
             ->method('getImportantPartFromLegacyMode')
             ->with(
                 $this->callback(
-                    function (ImageInterface $image) {
+                    function () {
                         return true;
                     }
                 ),

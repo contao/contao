@@ -26,7 +26,6 @@ use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
-use Contao\Image\Resizer;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Contao\System;
