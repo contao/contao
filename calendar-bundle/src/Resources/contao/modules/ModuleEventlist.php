@@ -329,7 +329,7 @@ class ModuleEventlist extends \Events
 			// Add enclosure
 			if ($event['addEnclosure'])
 			{
-				$this->addEnclosuresToTemplate($objTemplate, $event, null, null, $objModel);
+				$this->addEnclosuresToTemplate($objTemplate, $event);
 			}
 
 			$strEvents .= $objTemplate->parse();
