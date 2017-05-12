@@ -18,17 +18,17 @@ namespace Contao;
  * @property integer $pid
  * @property string  $hash
  *
- * @method static NewsletterChannelModel|null findById($id, $opt=array())
- * @method static NewsletterChannelModel|null findByPk($id, $opt=array())
- * @method static NewsletterChannelModel|null findOneBy($col, $val, $opt=array())
- * @method static NewsletterChannelModel|null findOneByPid($val, $opt=array())
- * @method static NewsletterChannelModel|null findOneByHash($val, $opt=array())
+ * @method static NewsletterBlacklistModel|null findById($id, $opt=array())
+ * @method static NewsletterBlacklistModel|null findByPk($id, $opt=array())
+ * @method static NewsletterBlacklistModel|null findOneBy($col, $val, $opt=array())
+ * @method static NewsletterBlacklistModel|null findOneByPid($val, $opt=array())
+ * @method static NewsletterBlacklistModel|null findOneByHash($val, $opt=array())
  *
- * @method static Model\Collection|NewsletterChannelModel|null findByPid($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findByHash($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findMultipleByIds($val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findBy($col, $val, $opt=array())
- * @method static Model\Collection|NewsletterChannelModel|null findAll($opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findByPid($val, $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findByHash($val, $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findMultipleByIds($val, $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findBy($col, $val, $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findAll($opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByPid($val, $opt=array())
