@@ -182,6 +182,7 @@ class News extends \Frontend
 				$objItem->link = $this->getLink($objArticle, $strUrl);
 				$objItem->published = $objArticle->date;
 
+				/** @var BackendUser $objAuthor */
 				if (($objAuthor = $objArticle->getRelated('author')) !== null)
 				{
 					$objItem->author = $objAuthor->name;
