@@ -2797,7 +2797,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 						}
 						else
 						{
-							$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), array(400, 50, 'box'))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px -19px"');
+							$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), array(400, 50, ResizeConfiguration::MODE_BOX))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px -19px"');
 						}
 
 						$importantPart = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded))->getImportantPart();

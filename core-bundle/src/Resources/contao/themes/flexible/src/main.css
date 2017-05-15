@@ -860,12 +860,19 @@ ul.sgallery {
 	overflow:hidden;
 }
 ul.sgallery li {
+	min-width:75px;
+	min-height:50px;
 	float:left;
-	margin-right:0;
-}
-.gimage {
-	margin:2px;
+	margin:2px 4px 2px 0;
+	padding:0;
 	border:1px solid #808080;
+	background:#eee;
+	display:-webkit-flex;
+	display:flex;
+	-webkit-align-items:center;
+	align-items:center;
+	-webkit-justify-content:center;
+	justify-content:center;
 }
 
 /* Welcome screen */
@@ -1182,8 +1189,8 @@ ul.sortable li:hover .dirname {
 }
 ul.sortable button {
 	position:absolute;
-	top:5px;
-	right:3px;
+	top:0;
+	right:0;
 	border:0;
 	background:rgba(255,255,255,.7);
 	margin:0;

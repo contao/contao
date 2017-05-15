@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\DataContainer\DcaFilterInterface;
+use Contao\Image\ResizeConfiguration;
 
 
 /**
@@ -276,14 +277,7 @@ class FileTree extends \Widget implements DcaFilterInterface
 
 							if ($objFile->isImage)
 							{
-								$image = \Image::getPath('placeholder.svg');
-
-								if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
-								{
-									$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
-								}
-
-								$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
 							}
 							else
 							{
@@ -320,14 +314,7 @@ class FileTree extends \Widget implements DcaFilterInterface
 									// Only show images
 									if ($objFile->isImage)
 									{
-										$image = \Image::getPath('placeholder.svg');
-
-										if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
-										{
-											$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objSubfiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
-										}
-
-										$arrValues[$objSubfiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
+										$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
 									}
 								}
 								else
@@ -350,14 +337,7 @@ class FileTree extends \Widget implements DcaFilterInterface
 								// Only show images
 								if ($objFile->isImage)
 								{
-									$image = \Image::getPath('placeholder.svg');
-
-									if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
-									{
-										$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
-									}
-
-									$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage removable" title="' . \StringUtil::specialchars($strInfo) . '"');
+									$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
 								}
 							}
 							else
@@ -444,5 +424,42 @@ class FileTree extends \Widget implements DcaFilterInterface
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * Return the preview image
+	 *
+	 * @param File   $objFile
+	 * @param string $strInfo
+	 * @param string $strClass
+	 *
+	 * @return string
+	 */
+	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
+	{
+		if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
+		{
+			// Inline the image if no preview image will be generated (see #636)
+			if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 75)
+			{
+				$image = $objFile->dataUri;
+			}
+			else
+			{
+				$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(75, 50, 'center_center'))->getUrl(TL_ROOT);
+			}
+		}
+		else
+		{
+			$image = \Image::getPath('placeholder.svg');
+		}
+
+		if (strpos($image, 'data:') === 0)
+		{
+			return '<img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '">';
+		}
+
+		return \Image::getHtml($image, '', 'class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '"');
 	}
 }

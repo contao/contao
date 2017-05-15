@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\DataContainer\DcaFilterInterface;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\Image\ResizeConfiguration;
 
 
 /**
@@ -613,7 +614,7 @@ abstract class DataContainer extends \Backend
 				{
 					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
 					{
-						$image = rawurldecode(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(699, 524, 'box'))->getUrl(TL_ROOT));
+						$image = rawurldecode(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl(TL_ROOT));
 					}
 					else
 					{
