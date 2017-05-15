@@ -62,7 +62,7 @@ Request.Contao = new Class(
 		}
 
 		// Empty response
-		if (json == null) {
+		if (json === null) {
 			json = {'content':''};
 		} else if (typeof(json) != 'object') {
 			json = {'content':text};
