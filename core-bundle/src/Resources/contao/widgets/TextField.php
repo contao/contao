@@ -150,7 +150,11 @@ class TextField extends \Widget
 			// Hide the Punycode format (see #2750)
 			if ($this->rgxp == 'url')
 			{
-				$this->varValue = \Idna::decode($this->varValue);
+				try
+				{
+					$this->varValue = \Idna::decodeUrl($this->varValue);
+				}
+				catch (\InvalidArgumentException $e) {}
 			}
 			elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 			{

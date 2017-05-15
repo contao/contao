@@ -57,9 +57,13 @@ class PickerMenuBuilderTest extends TestCase
             })
         ;
 
+        /** @var FilePickerProvider $filePickerProvider */
+        $filePickerProvider = $this->mockPickerProvider(FilePickerProvider::class);
+        $filePickerProvider->setFramework($this->mockContaoFramework());
+
         $menuBuilder = new PickerMenuBuilder($factory, $renderer, $router);
         $menuBuilder->addProvider($this->mockPickerProvider(PagePickerProvider::class));
-        $menuBuilder->addProvider($this->mockPickerProvider(FilePickerProvider::class));
+        $menuBuilder->addProvider($filePickerProvider);
 
         $this->menuBuilder = $menuBuilder;
     }

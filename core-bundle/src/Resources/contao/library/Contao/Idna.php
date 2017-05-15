@@ -238,4 +238,97 @@ class Idna
 
 		return $strReturn;
 	}
+
+
+	/**
+	 * Decode the domain in an URL
+	 *
+	 * @param string $strUrl The URL
+	 *
+	 * @return string The decoded URL
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public static function decodeUrl($strUrl)
+	{
+		if ($strUrl == '')
+		{
+			return '';
+		}
+
+		// Empty anchor (see #3555) or insert tag
+		if ($strUrl == '#' || strpos($strUrl, '{{') === 0)
+		{
+			return $strUrl;
+		}
+
+		// E-mail address
+		if (strpos($strUrl, 'mailto:') === 0)
+		{
+			return static::decodeEmail($strUrl);
+		}
+
+		$arrUrl = parse_url($strUrl);
+
+		if (!isset($arrUrl['scheme']))
+		{
+			throw new \InvalidArgumentException(sprintf('Expected a FQDN, got "%s"', $strUrl));
+		}
+
+		// Scheme
+		if (isset($arrUrl['scheme']))
+		{
+			$arrUrl['scheme'] .= ((substr($strUrl, strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
+		}
+
+		// User
+		if (isset($arrUrl['user']))
+		{
+			$arrUrl['user'] .= isset($arrUrl['pass']) ? ':' : '@';
+		}
+
+		// Password
+		if (isset($arrUrl['pass']))
+		{
+			$arrUrl['pass'] .= '@';
+		}
+
+		// Host
+		if (isset($arrUrl['host']))
+		{
+			$arrUrl['host'] = static::decode($arrUrl['host']);
+		}
+
+		// Port
+		if (isset($arrUrl['port']))
+		{
+			$arrUrl['port'] = ':' . $arrUrl['port'];
+		}
+
+		// Path does not have to be altered
+
+		// Query
+		if (isset($arrUrl['query']))
+		{
+			$arrUrl['query'] = '?' . $arrUrl['query'];
+		}
+
+		// Anchor
+		if (isset($arrUrl['fragment']))
+		{
+			$arrUrl['fragment'] = '#' . $arrUrl['fragment'];
+		}
+
+		$strReturn = '';
+
+		foreach (array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment') as $key)
+		{
+			if (isset($arrUrl[$key]))
+			{
+				$strReturn .= $arrUrl[$key];
+			}
+		}
+
+		return $strReturn;
+	}
 }

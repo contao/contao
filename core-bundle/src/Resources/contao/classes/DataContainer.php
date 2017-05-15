@@ -514,8 +514,8 @@ abstract class DataContainer extends \Backend
           new Request.Contao({
             evalScripts: false,
             onSuccess: function(txt, json) {
-              $("ctrl_' . $this->strInputName . '").value = json.content;
-              this.set("href", this.get("href").replace(/&value=[^&]*/, "&value=" + json.content));
+              $("ctrl_' . $this->strInputName . '").value = (json.tag || json.content);
+              this.set("href", this.get("href").replace(/&value=[^&]*/, "&value=" + (json.tag || json.content)));
             }.bind(this)
           }).post({"action":"processPickerSelection", "table":table, "value":value.join(","), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
         }.bind(this)

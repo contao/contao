@@ -98,4 +98,20 @@ class IdnaTest extends TestCase
         Idna::encodeUrl('www.fööbar.de');
         Idna::encodeUrl('index.php?foo=bar');
     }
+
+    /**
+     * Tests the decodeUrl() method.
+     */
+    public function testDecodeUrl()
+    {
+        $this->assertSame('http://www.fööbar.de', Idna::decodeUrl('http://www.xn--fbar-5qaa.de'));
+        $this->assertSame('', Idna::decodeUrl(''));
+        $this->assertSame('#', Idna::decodeUrl('#'));
+        $this->assertSame('mailto:info@fööbar.de', Idna::decodeUrl('mailto:info@xn--fbar-5qaa.de'));
+
+        $this->expectException('InvalidArgumentException');
+
+        Idna::decodeUrl('www.xn--fbar-5qaa.de');
+        Idna::decodeUrl('index.php?foo=bar');
+    }
 }

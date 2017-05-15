@@ -10,6 +10,10 @@
 
 namespace Contao\CoreBundle\Menu;
 
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
+use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\FilesModel;
+use Contao\StringUtil;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +26,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FilePickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface
+class FilePickerProvider extends AbstractMenuProvider implements PickerMenuProviderInterface, FrameworkAwareInterface
 {
+    use FrameworkAwareTrait;
+
     /**
      * @var string
      */
@@ -77,6 +83,18 @@ class FilePickerProvider extends AbstractMenuProvider implements PickerMenuProvi
      */
     public function processSelection($value)
     {
+        $value = rawurldecode($value);
+
+        /** @var FilesModel $adapter */
+        $adapter = $this->framework->getAdapter(FilesModel::class);
+
+        if (($model = $adapter->findByPath($value)) instanceof FilesModel) {
+            return json_encode([
+                'content' => $value,
+                'tag' => sprintf('{{file::%s}}', StringUtil::binToUuid($model->uuid)),
+            ]);
+        }
+
         return $value;
     }
 
@@ -85,7 +103,13 @@ class FilePickerProvider extends AbstractMenuProvider implements PickerMenuProvi
      */
     public function canHandle(Request $request)
     {
-        return $request->query->has('value') && 0 === strpos($request->query->get('value'), $this->uploadPath.'/');
+        if (!$request->query->has('value')) {
+            return false;
+        }
+
+        $value = $request->query->get('value');
+
+        return 0 === strpos($value, $this->uploadPath.'/') || false !== strpos($value, '{{file::');
     }
 
     /**
@@ -95,6 +119,17 @@ class FilePickerProvider extends AbstractMenuProvider implements PickerMenuProvi
     {
         $params = $request->query->all();
         $params['do'] = 'files';
+
+        if (isset($params['value']) && 0 === strpos($params['value'], '{{')) {
+            $value = str_replace(['{{file::', '}}'], '', $params['value']);
+
+            /** @var FilesModel $adapter */
+            $adapter = $this->framework->getAdapter(FilesModel::class);
+
+            if (($model = $adapter->findByUuid($value)) instanceof FilesModel) {
+                $params['value'] = $model->path;
+            }
+        }
 
         return $this->route('contao_backend', $params);
     }

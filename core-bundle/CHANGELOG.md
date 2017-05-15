@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Use the "file" insert tag in the file picker where applicable (see contao/core#8578).
  * Update the Punycode library to version 2 (see #748).
  * Always add custom meta fields to the templates (see #717).
 
