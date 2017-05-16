@@ -89,8 +89,9 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s vendor/bin/contao-console%s %s%s --env=prod',
-                $phpPath,
+                '%s %s%s %s%s --env=prod',
+                escapeshellarg($phpPath),
+                escapeshellarg(__DIR__.'/../../bin/contao-console'),
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event)
