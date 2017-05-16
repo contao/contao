@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.3.10 (2017-05-16)
 
  * Add the event_dispatcher in the installation kernel (see contao/managed-edition#7).
 
