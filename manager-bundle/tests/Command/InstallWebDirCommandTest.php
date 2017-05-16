@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -21,7 +22,7 @@ use Symfony\Component\Finder\Finder;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
+class InstallWebDirCommandTest extends TestCase
 {
     /**
      * @var InstallWebDirCommand
@@ -91,6 +92,9 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->command->getDefinition()->hasArgument('path'));
     }
 
+    /**
+     * Tests the command.
+     */
     public function testCommandRegular()
     {
         foreach ($this->webFiles as $file) {
@@ -104,17 +108,15 @@ class InstallWebDirCommandTest extends \PHPUnit_Framework_TestCase
             $this->assertFileExists($this->tmpdir.'/web/'.$file->getRelativePathname());
 
             $expectedString = file_get_contents($file->getPathname());
-
-            $expectedString = str_replace(
-                ['{root-dir}', '{vendor-dir}'],
-                ['../app', '../vendor'],
-                $expectedString
-            );
+            $expectedString = str_replace(['{root-dir}', '{vendor-dir}'], ['../app', '../vendor'], $expectedString);
 
             $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getRelativePathname(), $expectedString);
         }
     }
 
+    /**
+     * Tests that the command does not override optional optional files.
+     */
     public function testCommandDoesNotOverrideOptionals()
     {
         foreach ($this->webFiles as $file) {

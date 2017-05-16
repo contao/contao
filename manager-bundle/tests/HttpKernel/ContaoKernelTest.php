@@ -10,12 +10,14 @@
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use AppBundle\AppBundle;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -24,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoKernelTest extends \PHPUnit_Framework_TestCase
+class ContaoKernelTest extends TestCase
 {
     /**
      * @var ContaoKernel
@@ -38,14 +40,9 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
-        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $pluginLoader = $this->createMock(PluginLoader::class);
 
         $pluginLoader
-            ->expects($this->any())
             ->method('getInstancesOf')
             ->willReturn([])
         ;
@@ -68,11 +65,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegisterBundles()
     {
-        /** @var BundleLoader|\PHPUnit_Framework_MockObject_MockObject $bundleLoader */
-        $bundleLoader = $this->getMockBuilder(BundleLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $bundleLoader = $this->createMock(BundleLoader::class);
 
         $bundleLoader
             ->expects($this->once())
@@ -89,7 +82,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $bundles = $this->kernel->registerBundles();
 
         $this->assertArrayHasKey(ContaoManagerBundle::class, $bundles);
-        $this->assertArrayNotHasKey('AppBundle\\AppBundle', $bundles);
+        $this->assertArrayNotHasKey(AppBundle::class, $bundles);
     }
 
     /**
@@ -99,11 +92,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegistersAppBundle()
     {
-        /** @var BundleLoader|\PHPUnit_Framework_MockObject_MockObject $bundleLoader */
-        $bundleLoader = $this->getMockBuilder(BundleLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $bundleLoader = $this->createMock(BundleLoader::class);
 
         $bundleLoader
             ->expects($this->once())
@@ -122,7 +111,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
         $bundles = $this->kernel->registerBundles();
 
         $this->assertArrayHasKey(ContaoManagerBundle::class, $bundles);
-        $this->assertArrayHasKey('AppBundle\\AppBundle', $bundles);
+        $this->assertArrayHasKey(AppBundle::class, $bundles);
     }
 
     /**
@@ -164,8 +153,8 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
     public function testRegisterContainerConfiguration($rootDir, $expectedResult)
     {
         $files = [];
+        $loader = $this->createMock(LoaderInterface::class);
 
-        $loader = $this->getMock(LoaderInterface::class);
         $loader
             ->expects($this->atLeastOnce())
             ->method('load')
@@ -224,13 +213,8 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegisterContainerConfigurationLoadsPlugins()
     {
-        $loader = $this->getMock(LoaderInterface::class);
-
-        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
-        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $loader = $this->createMock(LoaderInterface::class);
+        $pluginLoader = $this->createMock(PluginLoader::class);
 
         $pluginLoader
             ->expects($this->atLeastOnce())
@@ -253,7 +237,7 @@ class ContaoKernelTest extends \PHPUnit_Framework_TestCase
      */
     private function mockConfigPlugin(LoaderInterface $loader)
     {
-        $plugin = $this->getMock(ConfigPluginInterface::class);
+        $plugin = $this->createMock(ConfigPluginInterface::class);
 
         $plugin
             ->expects($this->once())

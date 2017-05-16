@@ -11,13 +11,15 @@
 namespace Contao\ManagerBundle\Tests\Composer;
 
 use Contao\ManagerBundle\Composer\ScriptHandler;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the ScriptHandler class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
+class ScriptHandlerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -27,13 +29,21 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ManagerBundle\Composer\ScriptHandler', new ScriptHandler());
     }
 
+    /**
+     * Tests that the initializeApplication() method exists.
+     */
     public function testInitializeApplicationMethodExists()
     {
         $this->assertTrue(method_exists(ScriptHandler::class, 'initializeApplication'));
     }
 
+    /**
+     * Tests adding the app directory.
+     */
     public function testAddAppDirectory()
     {
         ScriptHandler::addAppDirectory();
+
+        (new Filesystem())->remove(__DIR__.'/../../app');
     }
 }

@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\Test\Cache;
 
 use Contao\ManagerBundle\Cache\BundleCacheClearer;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Kamil Kuzminski <https://github.com/qzminski>
  */
-class BundleCacheClearerTest extends \PHPUnit_Framework_TestCase
+class BundleCacheClearerTest extends TestCase
 {
     /**
      * Tests the object instantiation.

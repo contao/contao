@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\Tests\DependencyInjection;
 
 use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
+class ContaoManagerExtensionTest extends TestCase
 {
     /**
      * @var ContaoManagerExtension
@@ -40,15 +41,8 @@ class ContaoManagerExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf(
-            'Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension',
-            $this->extension
-        );
-
-        $this->assertInstanceOf(
-            'Symfony\Component\HttpKernel\DependencyInjection\Extension',
-            $this->extension
-        );
+        $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension', $this->extension);
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\DependencyInjection\Extension', $this->extension);
     }
 
     /**

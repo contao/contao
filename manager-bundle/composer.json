@@ -19,13 +19,13 @@
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
         "contao/manager-plugin": "^2.0",
-        "contao/core-bundle": "~4.4.0",
-        "contao/installation-bundle": "~4.4.0"
+        "contao/core-bundle": "~4.4.0@dev",
+        "contao/installation-bundle": "~4.4.0@dev"
     },
     "require-dev": {
         "composer/composer": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^4.5",
+        "phpunit/phpunit": "^5.0",
         "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.2"
     },
@@ -35,8 +35,7 @@
         "contao/faq-bundle": "<4.3.4",
         "contao/listing-bundle": "<4.3.4",
         "contao/news-bundle": "<4.3.4",
-        "contao/newsletter-bundle": "<4.3.4",
-        "symfony/http-kernel": "v3.3.0-BETA1"
+        "contao/newsletter-bundle": "<4.3.4"
     },
     "autoload": {
         "psr-4": {
