@@ -29,6 +29,11 @@ class DcaExtractor
         return [];
     }
 
+    public function getUniqueFields()
+    {
+        return [];
+    }
+
     public function getKeys()
     {
         return [];
