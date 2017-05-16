@@ -309,7 +309,7 @@ abstract class Module extends \Frontend
 		foreach ($objSubpages as $objSubpage)
 		{
 			// Skip hidden sitemap pages
-			if ($this instanceof ModuleSitemap && $objSubpages->sitemap == 'map_never')
+			if ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_never')
 			{
 				continue;
 			}

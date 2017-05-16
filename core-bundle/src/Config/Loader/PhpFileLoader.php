@@ -21,8 +21,6 @@ use Symfony\Component\Config\Loader\Loader;
  */
 class PhpFileLoader extends Loader
 {
-    const NAMESPACED = 'namespaced';
-
     /**
      * Reads the contents of a PHP file stripping the opening and closing PHP tags.
      *
@@ -37,7 +35,7 @@ class PhpFileLoader extends Loader
 
         $code = $this->stripLegacyCheck($code);
 
-        if (false !== $namespace && self::NAMESPACED === $type) {
+        if (false !== $namespace && 'namespaced' === $type) {
             $code = sprintf("\nnamespace %s {%s}\n", $namespace, $code);
         }
 
