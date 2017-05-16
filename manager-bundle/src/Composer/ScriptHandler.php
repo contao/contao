@@ -104,7 +104,9 @@ class ScriptHandler
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command.', $cmd));
+            throw new \RuntimeException(
+                sprintf('An error occurred while executing the "%s" command: %s', $cmd, $process->getErrorOutput())
+            );
         }
     }
 
