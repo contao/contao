@@ -843,7 +843,7 @@
       </trans-unit>
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
-        <target>インポートsuするCSVファイルをアップロードしてください。</target>
+        <target>インポートするCSVファイルをアップロードしてください。</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>

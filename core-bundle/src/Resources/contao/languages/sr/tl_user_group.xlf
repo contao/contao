@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit group ID %s</source>
-        <target>Уреди детање групе ID %s</target>
+        <target>Уреди детаље групе ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy.0">
         <source>Duplicate group</source>

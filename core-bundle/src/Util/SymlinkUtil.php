@@ -35,13 +35,18 @@ class SymlinkUtil
 
         $fs = new Filesystem();
 
+        if (!$fs->isAbsolutePath($target)) {
+            $target = $rootDir.'/'.$target;
+        }
+
+        if (!$fs->isAbsolutePath($link)) {
+            $link = $rootDir.'/'.$link;
+        }
+
         if ('\\' === DIRECTORY_SEPARATOR) {
-            $fs->symlink($rootDir.'/'.$target, $rootDir.'/'.$link);
+            $fs->symlink($target, $link);
         } else {
-            $fs->symlink(
-                rtrim($fs->makePathRelative($rootDir.'/'.$target, dirname($rootDir.'/'.$link)), '/'),
-                $rootDir.'/'.$link
-            );
+            $fs->symlink(rtrim($fs->makePathRelative($target, dirname($link)), '/'), $link);
         }
     }
 

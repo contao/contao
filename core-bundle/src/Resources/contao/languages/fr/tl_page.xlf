@@ -203,21 +203,27 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
+        <target>Définir les délais d'attente du cache</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set cache timeout values for the page and its subpages.</source>
+        <target>Définissez les valeurs de délai d'attente du cache pour la page et ses sous-pages.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Server cache timeout</source>
+        <target>Délai d'attente du cache du serveur</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <target>Le nombre de secondes après lesquelles la page ne devrait plus être considérée comme nouvelle par des caches partagés.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
+        <target>Délai d'attente du cache du client</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
+        <target>Le nombre de secondes après lequel la page ne devrait plus être considérée comme nouvelle par le navigateur.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>

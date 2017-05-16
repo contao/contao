@@ -970,35 +970,29 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->set['tstamp'] = ($blnDoNotRedirect ? time() : 0);
 
 			// Mark the new record with "copy of" (see #2938)
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['headline']))
+			foreach (array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']) as $strKey)
 			{
-				$headline = \StringUtil::deserialize($this->set['headline']);
+				if (in_array($strKey, array('headline', 'name', 'subject', 'title')))
+				{
+					if ($strKey == 'headline')
+					{
+						$headline = \StringUtil::deserialize($this->set['headline']);
 
-				if (!empty($headline) && is_array($headline) && $headline['value'] != '')
-				{
-					$headline['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $headline['value']);
-					$this->set['headline'] = serialize($headline);
-				}
-			}
-			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']))
-			{
-				if ($this->set['name'] != '')
-				{
-					$this->set['name'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set['name']);
-				}
-			}
-			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['subject']))
-			{
-				if ($this->set['subject'] != '')
-				{
-					$this->set['subject'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set['subject']);
-				}
-			}
-			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['title']))
-			{
-				if ($this->set['title'] != '')
-				{
-					$this->set['title'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set['title']);
+						if (!empty($headline) && is_array($headline) && $headline['value'] != '')
+						{
+							$headline['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $headline['value']);
+							$this->set['headline'] = serialize($headline);
+						}
+					}
+					else
+					{
+						if ($this->set[$strKey] != '')
+						{
+							$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
+						}
+					}
+
+					break;
 				}
 			}
 
@@ -2033,7 +2027,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
 				{
 					$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">'.$GLOBALS['TL_LANG']['MSC']['saveNcreate'].'</button>';
-					$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">'.$GLOBALS['TL_LANG']['MSC']['saveNduplicate'].'</button>';
+
+					if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'])
+					{
+						$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">'.$GLOBALS['TL_LANG']['MSC']['saveNduplicate'].'</button>';
+					}
 				}
 
 				if ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'])
@@ -2257,7 +2255,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				// Parent view
 				elseif ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4)
 				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intId . '&amp;id=' . $this->intId;
+					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . CURRENT_ID . '&amp;id=' . $this->intId;
 				}
 
 				// List view

@@ -585,7 +585,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		$this->Files->mkdir($strFolder . '/__new__');
-		$this->redirect(html_entity_decode($this->switchToEdit($this->urlEncode($strFolder) . '/__new__')));
+		$this->redirect(html_entity_decode($this->switchToEdit($strFolder . '/__new__')));
 	}
 
 
@@ -2754,7 +2754,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
 					{
 						// Inline the image if no preview image will be generated (see #636)
-						if ($objFile->height !== null && $objFile->height <= 50 || $objFile->width !== null && $objFile->width <= 400)
+						if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 400)
 						{
 							$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" style="margin:0 0 2px -19px">';
 						}

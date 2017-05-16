@@ -1,5 +1,12 @@
 # Contao core bundle change log
 
+### 4.3.10 (2017-05-16)
+
+ * Correctly save and duplicate in the parent view (see #797).
+ * Correctly skip hidden items in the sitemap module (see #818).
+ * Correctly cache the unique keys in the SQL cache (see contao/core#8712).
+ * Correctly generate the Contao language cache (see #784).
+
 ### 4.3.9 (2017-04-25)
 
  * Revert the Punycode library changes (see contao/core#8693).

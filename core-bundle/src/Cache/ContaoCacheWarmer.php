@@ -117,8 +117,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
 
-        $dumper->dump($this->findConfigFiles('autoload.php'), 'config/autoload.php');
-        $dumper->dump($this->findConfigFiles('config.php'), 'config/config.php');
+        $dumper->dump($this->findConfigFiles('autoload.php'), 'config/autoload.php', ['type' => 'namespaced']);
+        $dumper->dump($this->findConfigFiles('config.php'), 'config/config.php', ['type' => 'namespaced']);
     }
 
     /**
@@ -141,7 +141,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
             $dumper->dump(
                 $this->locator->locate('dca/'.$file->getBasename(), null, false),
-                'dca/'.$file->getBasename()
+                'dca/'.$file->getBasename(),
+                ['type' => 'namespaced']
             );
         }
     }
@@ -216,10 +217,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $this->filesystem->dumpFile(
                 sprintf('%s/contao/sql/%s.php', $cacheDir, $table),
                 sprintf(
-                    "<?php\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n\$this->blnIsDbTable = true;\n",
+                    "<?php\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n\$this->blnIsDbTable = true;\n",
                     sprintf('$this->arrMeta = %s;', var_export($extract->getMeta(), true)),
                     sprintf('$this->arrFields = %s;', var_export($extract->getFields(), true)),
                     sprintf('$this->arrOrderFields = %s;', var_export($extract->getOrderFields(), true)),
+                    sprintf('$this->arrUniqueFields = %s;', var_export($extract->getUniqueFields(), true)),
                     sprintf('$this->arrKeys = %s;', var_export($extract->getKeys(), true)),
                     sprintf('$this->arrRelations = %s;', var_export($extract->getRelations(), true))
                 )
