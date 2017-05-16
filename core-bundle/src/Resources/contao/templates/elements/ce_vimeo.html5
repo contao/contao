@@ -1,0 +1,7 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <iframe<?= $this->size ?> src="<?= $this->src ?>" frameborder="0" allowfullscreen></iframe>
+
+<?php $this->endblock(); ?>
