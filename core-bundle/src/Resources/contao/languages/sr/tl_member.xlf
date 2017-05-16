@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_member.company.0">
         <source>Company</source>
-        <target>Фирма</target>
+        <target>Фирма/Компанија</target>
       </trans-unit>
       <trans-unit id="tl_member.company.1">
         <source>Here you can enter a company name.</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_member.state.0">
         <source>State</source>
-        <target>Статус</target>
+        <target>Провинција/Република/Област</target>
       </trans-unit>
       <trans-unit id="tl_member.state.1">
         <source>Plase enter the name of the state.</source>
@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_member.email.0">
         <source>E-mail address</source>
-        <target>E-mail адреса</target>
+        <target>Имејл адреса</target>
       </trans-unit>
       <trans-unit id="tl_member.email.1">
         <source>Please enter a valid e-mail address.</source>
-        <target>Унесите исправну email адресу.</target>
+        <target>Унесите исправну имејл адресу.</target>
       </trans-unit>
       <trans-unit id="tl_member.website.0">
         <source>Website</source>
@@ -131,7 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups.0">
         <source>Member groups</source>
-        <target>Чланске групе</target>
+        <target>Групе чланова</target>
       </trans-unit>
       <trans-unit id="tl_member.groups.1">
         <source>Here you can assign the member to one or more groups.</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_member.login.1">
         <source>Allow the member to log into the front end.</source>
-        <target>Дозволи члану да се пријави у фронт-енд.</target>
+        <target>Дозволи члану да се пријави у ФронтЕнд.</target>
       </trans-unit>
       <trans-unit id="tl_member.username.0">
         <source>Username</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_member.assignDir.1">
         <source>Define a home directory for the member.</source>
-        <target>Дефиниши почетни директоријум корисника.</target>
+        <target>Дефинисање почетног директоријума корисника.</target>
       </trans-unit>
       <trans-unit id="tl_member.homeDir.0">
         <source>Home directory</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_member.disable.1">
         <source>Temporarily disable the account.</source>
-        <target>Привремено онемогући налог.</target>
+        <target>Привремено онемогући кориштење налога.</target>
       </trans-unit>
       <trans-unit id="tl_member.start.0">
         <source>Activate on</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_member.groups_legend">
         <source>Member groups</source>
-        <target>Чланске групе</target>
+        <target>Групе чланова</target>
       </trans-unit>
       <trans-unit id="tl_member.login_legend">
         <source>Login details</source>
@@ -279,11 +279,11 @@
       </trans-unit>
       <trans-unit id="tl_member.toggle.0">
         <source>Activate/deactivate member</source>
-        <target>Активира/деактивирај члана</target>
+        <target>Активирање/Деактивирање члана</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.1">
         <source>Activate/deactivate member ID %s</source>
-        <target>Активирај/деактивирај члана ID %s</target>
+        <target>Активирање/Деактивирање члана ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su.0">
         <source>Preview</source>

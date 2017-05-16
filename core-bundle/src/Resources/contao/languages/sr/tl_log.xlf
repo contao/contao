@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="tl_log.tstamp.1">
         <source>Date and time of the log entry</source>
-        <target>Датум и време записа лога</target>
+        <target>Датум и време записа дневника</target>
       </trans-unit>
       <trans-unit id="tl_log.source.0">
         <source>Origin</source>
-        <target>Порекло</target>
+        <target>Извор</target>
       </trans-unit>
       <trans-unit id="tl_log.source.1">
         <source>Back end or front end</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_log.text.1">
         <source>Details of the log entry</source>
-        <target>Детаљи записа лога</target>
+        <target>Детаљи записа дневника</target>
       </trans-unit>
       <trans-unit id="tl_log.func.0">
         <source>Function</source>

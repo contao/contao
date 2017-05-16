@@ -155,9 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.0">
         <source>Export style sheet</source>
+        <target>Izvozi slogovno predlogo</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.1">
         <source>Export style sheet ID %s</source>
+        <target>Izvozi slogovno predlogo ID %s</target>
       </trans-unit>
     </body>
   </file>

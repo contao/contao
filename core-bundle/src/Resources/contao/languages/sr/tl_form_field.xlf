@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.url.1">
         <source>Checks whether the input is a valid URL.</source>
-        <target>Провери да ли је унешен исправан формат URL-а.</target>
+        <target>Провери да ли је унешен исправан формат URL.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>

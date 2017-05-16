@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.1">
         <source>A custom image link target will override the lightbox link, so the image cannot be viewed fullsize anymore.</source>
-        <target>Додајте линк ка некој дестинацији - URL-у на који ће посетилац да иде кликом на слику. Ако одаберете ову опцију, слика неће моћи да се прикаже у пуној величини.</target>
+        <target>Додајте линк ка некој дестинацији - URL на који ће посетилац да иде кликом на слику. Ако одаберете ову опцију, слика неће моћи да се прикаже у пуној величини.</target>
       </trans-unit>
       <trans-unit id="tl_content.fullsize.0">
         <source>Full-size view/new window</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Редослед сортирања</target>
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooHeadline.1">
         <source>Please enter the headline of the content pane. HTML tags are allowed.</source>
-        <target>Унесите наслов акордиона (дозвољена је употреба HTML тагова).</target>
+        <target>Унесите наслов акордиона. Дозвољена је употреба HTML тагова.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStyle.0">
         <source>CSS format</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
-        <target>Текст ће бити приказан уместо одредишног URL-a.</target>
+        <target>Текст ће бити приказан уместо одредишног URL.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -323,11 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_content.orderSRC.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Редослед сортирања</target>
       </trans-unit>
       <trans-unit id="tl_content.orderSRC.1">
         <source>The sort order of the items.</source>
-        <target>Распоред сортирања ставки.</target>
+        <target>Редослед сортирања ставки.</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
@@ -339,7 +339,7 @@
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>
-        <target>сличице по реду</target>
+        <target>сличица по реду</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.1">
         <source>The number of image thumbnails per row.</source>
@@ -387,7 +387,7 @@
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Custom element template</source>
-        <target>Произвољни шаблон елемента</target>
+        <target>Прилагођени шаблон елемента</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can overwrite the default element template.</source>
@@ -675,7 +675,7 @@
       </trans-unit>
       <trans-unit id="tl_content.custom">
         <source>Custom order</source>
-        <target>Произвољни редослед</target>
+        <target>Прилагођени редослед</target>
       </trans-unit>
       <trans-unit id="tl_content.random">
         <source>Random order</source>
@@ -719,7 +719,7 @@
       </trans-unit>
       <trans-unit id="tl_content.copy.1">
         <source>Duplicate content element ID %s</source>
-        <target>Кпирај елемент ID %s</target>
+        <target>Копирај елемент ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete.0">
         <source>Delete element</source>

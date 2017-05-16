@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size_item.media.0">
         <source>Media query</source>
-        <target>Media-Query</target>
+        <target>Медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.media.1">
         <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
@@ -39,11 +39,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
         <source>New image size media query</source>
-        <target>Новa величина слике за Media-Query</target>
+        <target>Нови Media-Query за величину слике</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new image size media query</source>
-        <target>Креирај нову величину слике за Media-Query</target>
+        <target>Креирај нови Media-Query за величину слике</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.0">
         <source>Image size media query details</source>

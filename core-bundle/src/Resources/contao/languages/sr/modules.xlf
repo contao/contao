@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the site structure of your website(s)</source>
-        <target>Постављање структуре сајта/ова</target>
+        <target>Постављање структуре сајта(ова)</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>
-        <target>Стилови</target>
+        <target>Колекције стилова</target>
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>
-        <target>Стилови</target>
+        <target>Колекције стилова</target>
       </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
@@ -227,7 +227,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicklink.1">
         <source>Generates a custom drop-down menu</source>
-        <target>Израда прилагођеног drop-down менија</target>
+        <target>Израда прилагођеног падајућег менија</target>
       </trans-unit>
       <trans-unit id="FMD.booknav.0">
         <source>Book navigation</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="FMD.logout.1">
         <source>Automatically logs out a user</source>
-        <target>Аутоматски одјављује корисника</target>
+        <target>Аутоматско одјављивање корисника</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a user's personal data</source>
-        <target>Израда форме за уређивање личних података корисника</target>
+        <target>Израда формулара за уређивање личних података корисника</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
@@ -287,7 +287,7 @@
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a user registration form</source>
-        <target>Израда форме за регистрацију корисника</target>
+        <target>Израда формулара за регистрацију корисника</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="FMD.changePassword.1">
         <source>Generates a form to change the password</source>
-        <target>Израда форме за ресет лозинке</target>
+        <target>Израда формулара за ресет лозинке</target>
       </trans-unit>
       <trans-unit id="FMD.lostPassword.0">
         <source>Lost password</source>
@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="FMD.lostPassword.1">
         <source>Generates a form to request a new password</source>
-        <target>Израда форме за захтев за нову лозинку</target>
+        <target>Израда формулара захтева за нову лозинку</target>
       </trans-unit>
       <trans-unit id="FMD.closeAccount.0">
         <source>Close account</source>
@@ -347,11 +347,11 @@
       </trans-unit>
       <trans-unit id="FMD.flash.0">
         <source>Flash movie</source>
-        <target>Флеш видео</target>
+        <target>Flash видео</target>
       </trans-unit>
       <trans-unit id="FMD.flash.1">
         <source>Embeds a Flash movie into the page</source>
-        <target>Уметање флеш видео фајла у страницу</target>
+        <target>Уметање flash видео фајла у страницу</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>
@@ -363,7 +363,7 @@
       </trans-unit>
       <trans-unit id="FMD.html.0">
         <source>Custom HTML</source>
-        <target>Додатни HTML код</target>
+        <target>Прилагођени HTML кȏд</target>
       </trans-unit>
       <trans-unit id="FMD.html.1">
         <source>Allows you to add custom HTML code</source>

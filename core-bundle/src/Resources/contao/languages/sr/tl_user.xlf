@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_user.email.0">
         <source>E-mail address</source>
-        <target>E-mail адреса</target>
+        <target>Имејл адреса</target>
       </trans-unit>
       <trans-unit id="tl_user.email.1">
         <source>Please enter a valid e-mail address.</source>
-        <target>Унесите исправну email адресу.</target>
+        <target>Унесите валидну имејл адресу.</target>
       </trans-unit>
       <trans-unit id="tl_user.language.0">
         <source>Back end language</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user.language.1">
         <source>Here you can choose the back end language.</source>
-        <target>Овде можете изабрати који ће језик бити кориштен у БекЕнду.</target>
+        <target>Овде можете изабрати језик БекЕнда.</target>
       </trans-unit>
       <trans-unit id="tl_user.backendTheme.0">
         <source>Back end theme</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_user.backendTheme.1">
         <source>Here you can override the global back end theme.</source>
-        <target>Овде можете прегазити глобалну БекЕнд тему.</target>
+        <target>Овде можете прегазити глобалну тему БекЕнда.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -51,15 +51,15 @@
       </trans-unit>
       <trans-unit id="tl_user.showHelp.0">
         <source>Show explanation</source>
-        <target>Прикажи објашњење</target>
+        <target>Прикажи појашњење</target>
       </trans-unit>
       <trans-unit id="tl_user.showHelp.1">
         <source>Show a short explanation text below each input field.</source>
-        <target>Прикажи кратко објашњење испод сваког поља за унос.</target>
+        <target>Прикажи кратко појашњење испод сваког поља за унос.</target>
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.0">
         <source>Show thumbnail images</source>
-        <target>Прикажи мале thumbnail сличице</target>
+        <target>Прикажи мале сличице</target>
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.1">
         <source>Show thumbnail images in the file manager.</source>
@@ -67,19 +67,19 @@
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>
-        <target>Омогући &quot;rich text editor&quot;</target>
+        <target>Омогући rich text editor</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.1">
         <source>Use the rich text editor to format text elements.</source>
-        <target>Користи &quot;rich text editor&quot; за форматирање текстуалних елемената.</target>
+        <target>Користи rich text editor за форматирање текстуалних елемената.</target>
       </trans-unit>
       <trans-unit id="tl_user.useCE.0">
         <source>Enable the code editor</source>
-        <target>Омогући едитор кода</target>
+        <target>Омогући уређивач кȏда</target>
       </trans-unit>
       <trans-unit id="tl_user.useCE.1">
         <source>Use the code editor to modify code elements.</source>
-        <target>Користи едитор кода за модификацију елемената кода.</target>
+        <target>Користи уређивач кȏда за измену елемената кȏда.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_user.pwChange.1">
         <source>Make the user change his password upon the next login.</source>
-        <target>Поставите захтев да корисник промени лозинку приликом следеће пријаве.</target>
+        <target>Захтевај од корисника да промени лозинку након првог пријављивања.</target>
       </trans-unit>
       <trans-unit id="tl_user.admin.0">
         <source>Make the user an administrator</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_user.groups.0">
         <source>User groups</source>
-        <target>Корисничке групе</target>
+        <target>Групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_user.groups.1">
         <source>Here you can assign the user to one or more groups.</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_user.group.0">
         <source>Use group settings only</source>
-        <target>Само групна подешавања</target>
+        <target>Користи само подешавања групе</target>
       </trans-unit>
       <trans-unit id="tl_user.group.1">
         <source>The user inherits only group permissions.</source>
@@ -123,11 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_user.extend.0">
         <source>Extend group settings</source>
-        <target>Прошири групна подешавања</target>
+        <target>Прошири подешавања групе</target>
       </trans-unit>
       <trans-unit id="tl_user.extend.1">
         <source>The group permissions are extended by individual ones.</source>
-        <target>Групне дозволе ће бити проширене личним дозволама</target>
+        <target>Групне дозволе ће бити проширене личним дозволама.</target>
       </trans-unit>
       <trans-unit id="tl_user.custom.0">
         <source>Use individual settings only</source>
@@ -139,19 +139,19 @@
       </trans-unit>
       <trans-unit id="tl_user.modules.0">
         <source>Back end modules</source>
-        <target>БекЕнд модули</target>
+        <target>Модули БекЕнда</target>
       </trans-unit>
       <trans-unit id="tl_user.modules.1">
         <source>Here you can grant access to one or more back end modules.</source>
-        <target>Овде можете доделити приступ једном или више БекЕнд модула.</target>
+        <target>Овде можете доделити приступ једном или више модула БекЕнда.</target>
       </trans-unit>
       <trans-unit id="tl_user.themes.0">
         <source>Theme modules</source>
-        <target>Модули тема</target>
+        <target>Модули теме</target>
       </trans-unit>
       <trans-unit id="tl_user.themes.1">
         <source>Here you can grant access to the theme modules.</source>
-        <target>Овде можете доделити приступ модулима тема.</target>
+        <target>Овде можете доделити приступ модулима теме.</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>Овде можете дозволити приступ једној или више величина слика.</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
@@ -206,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_user.disable.1">
         <source>Temporarily disable the account.</source>
-        <target>Привремено онемогући налог.</target>
+        <target>Привремено онемогући кориштење налога.</target>
       </trans-unit>
       <trans-unit id="tl_user.start.0">
         <source>Activate on</source>
@@ -234,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_user.name_legend">
         <source>Name and e-mail</source>
-        <target>Име и email</target>
+        <target>Име и имејл</target>
       </trans-unit>
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
@@ -254,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.groups_legend">
         <source>User groups</source>
-        <target>Корисничке групе</target>
+        <target>Групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_user.modules_legend">
         <source>Allowed modules</source>
@@ -294,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Page cache</source>
-        <target>Кеш странице</target>
+        <target>Кеш страницa</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -306,7 +307,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The page cache has been purged</source>
-        <target>Кеш странице је обрисан</target>
+        <target>Кеш страницa је обрисан</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>

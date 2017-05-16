@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.3.10 (2017-05-16)
 
  * Correctly save and duplicate in the parent view (see #797).
  * Correctly skip hidden items in the sitemap module (see #818).
