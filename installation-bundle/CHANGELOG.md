@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### DEV
+
+ * Add the event_dispatcher in the installation kernel (see contao/managed-edition#7).
+
 ### 4.3.9 (2017-04-25)
  
  * Add the contao_installation.initialize_application event (fixes contao/manager-bundle#19).
