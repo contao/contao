@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly skip hidden items in the sitemap module (see #818).
  * Correctly cache the unique keys in the SQL cache (see contao/core#8712).
  * Correctly generate the Contao language cache (see #784).
 
