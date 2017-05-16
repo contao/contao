@@ -585,7 +585,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
 		$this->Files->mkdir($strFolder . '/__new__');
-		$this->redirect(html_entity_decode($this->switchToEdit($this->urlEncode($strFolder) . '/__new__')));
+		$this->redirect(html_entity_decode($this->switchToEdit($strFolder . '/__new__')));
 	}
 
 
