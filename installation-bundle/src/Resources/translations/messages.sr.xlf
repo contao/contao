@@ -18,17 +18,17 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Из безбедосних разлога, алат за инсталацију је закључан након што је три пута за редом, унесена погрешна лозинка. Да откључате алат, покрените &lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt; из командне линије.</target>
+        <target>Из безбедосних разлога, алат за инсталацију је закључан након што је погрешна лозинка узастопно унешена више од три пута. Да бисте га откључали покрените из командне линије &lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>PHP-у није омогућено да уписује фајлове!</target>
+        <target>PHP нема могућност да креира фајлове!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>Подешавања Вашег сервера не подржавају приступ фајловима преко PHP; PHP се највероватније врти у модулу Apache-a под другим корисником. Молимо Вас да контактирате Вашег сервер администратора и замолите га да реши проблем.</target>
+        <target>Подешавања вашег сервера не подржавају приступ фајловима преко PHP; PHP се највероватније врти у модулу Apache под другим корисником. Молимо вас да контактирате вашег администратора сервера и замолите га да реши проблем.</target>
         
       </trans-unit>
       <trans-unit id="7">
@@ -43,12 +43,12 @@
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>Шифра алата за инсталацију</target>
+        <target>Лозинка алата за инсталацију</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Молимо Вас да унесете лозинку ради спречавања неауторизованог приступа.</target>
+        <target>Унесите лозинку којом ћете спречити неауторизовани приступ.</target>
         
       </trans-unit>
       <trans-unit id="11">
@@ -73,7 +73,7 @@
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>Лозинка мора да има бар %d карактера!</target>
+        <target>Лозинка мора садржати барем %d знакова.</target>
         
       </trans-unit>
       <trans-unit id="16">
@@ -83,12 +83,12 @@
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>Унесите шифру за приступ алату за инсталацију. Ова шифра није иста као шифра за приступ Contao БекЕнду.</target>
+        <target>Унесите лозинку алата за инсталацију. Лозинка алата за инсталацију није исто што и лозинка за приступ БекЕнду.</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>Морате одобрити употребу колачића да бисте користили Contao систем.</target>
+        <target>Морате одобрити употребу колачића да бисте користили Contao.</target>
         
       </trans-unit>
       <trans-unit id="19">
@@ -108,7 +108,7 @@
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>Веза са базом податак успешно успостављена.</target>
+        <target>Веза са базом податак је успешно успостављена.</target>
         
       </trans-unit>
       <trans-unit id="23">
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="25">
         <source>database_host</source>
-        <target>Хост</target>
+        <target>Host</target>
         
       </trans-unit>
       <trans-unit id="26">
@@ -208,7 +208,7 @@
       </trans-unit>
       <trans-unit id="42">
         <source>template_import_explain</source>
-        <target>Овде можете да увезете &lt;code&gt;.sql&lt;/code&gt; фајл из директоријума &lt;code&gt;templates&lt;/code&gt;. Сви постојећи подаци биће обрисани! Ако желите да увезете само тему, користите менаџер тема у БекЕнд-у Contaо.</target>
+        <target>Овде можете да увезете &lt;code&gt;.sql&lt;/code&gt; фајл из директоријума &lt;code&gt;templates&lt;/code&gt;. Сви постојећи подаци биће обрисани! Ако само желите да увезете тему, уместо ове опције, користите менаџер тема у БекЕнду.</target>
         
       </trans-unit>
       <trans-unit id="43">
@@ -278,7 +278,7 @@
       </trans-unit>
       <trans-unit id="56">
         <source>admin_email</source>
-        <target>Email</target>
+        <target>Имејл</target>
         
       </trans-unit>
       <trans-unit id="57">
@@ -288,7 +288,7 @@
       </trans-unit>
       <trans-unit id="58">
         <source>admin_error_extnd</source>
-        <target>Из безбедоносних разлога овде не можете да користите карактере: #()/&lt;=&gt;</target>
+        <target>Из безбедоносних разлога овде не можете да користите знакове: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="59">
@@ -298,7 +298,7 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_email</source>
-        <target>Унесите валидну e-mail адресу!</target>
+        <target>Унесите валидну имејл адресу!</target>
         
       </trans-unit>
       <trans-unit id="61">
@@ -333,7 +333,7 @@
       </trans-unit>
       <trans-unit id="67">
         <source>installation_complete_explain</source>
-        <target>Сада идите у БекЕнд Contao и проверите системска подешавања.</target>
+        <target>Сада идите у Contao БекЕнд и проверите системска подешавања.</target>
         
       </trans-unit>
       <trans-unit id="68">
@@ -343,7 +343,7 @@
       </trans-unit>
       <trans-unit id="69">
         <source>old_database</source>
-        <target>База је застарила!</target>
+        <target>База је застарела!</target>
         
       </trans-unit>
       <trans-unit id="70">

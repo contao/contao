@@ -21,6 +21,7 @@ use Doctrine\Common\Cache\FilesystemCache;
 use SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -81,6 +82,10 @@ class ContainerFactory
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $container->set('request_stack', $requestStack);
+
+        // Set up the event dispatcher
+        $eventDispatcher = new EventDispatcher();
+        $container->set('event_dispatcher', $eventDispatcher);
 
         // Create the session bag
         $bag = new ArrayAttributeBag('_contao_be_attributes');
