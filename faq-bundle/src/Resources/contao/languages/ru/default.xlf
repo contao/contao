@@ -5,6 +5,10 @@
         <source>Last update on %s by %s.</source>
         <target>Последнее обновление от %s, обновил %s.</target>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+        <target>Вопросы и ответы</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

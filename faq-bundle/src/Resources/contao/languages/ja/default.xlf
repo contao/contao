@@ -5,6 +5,10 @@
         <source>Last update on %s by %s.</source>
         <target>%sに%sが最後に更新</target>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+        <target>FAQ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

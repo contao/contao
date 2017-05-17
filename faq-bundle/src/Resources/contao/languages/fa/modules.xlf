@@ -9,6 +9,9 @@
         <source>Manage frequently asked questions</source>
         <target>مدیریت پرسش و پاسخ‌ها</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_faq">
+        <source>Questions</source>
+      </trans-unit>
       <trans-unit id="FMD.faq">
         <source>FAQ</source>
         <target>پرسش و پاسخ</target>

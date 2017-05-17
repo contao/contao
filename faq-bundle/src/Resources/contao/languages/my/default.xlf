@@ -5,6 +5,10 @@
         <source>Last update on %s by %s.</source>
         <target>%s တွင် %s မှနောက်ဆံုးမွမ်းမံ</target>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+        <target>မေးနေကြမေးခွန်းများ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

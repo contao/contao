@@ -5,6 +5,10 @@
         <source>Last update on %s by %s.</source>
         <target>Poslední aktualizace dne %s, %s</target>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+        <target>FAQ Často kladené otázky</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

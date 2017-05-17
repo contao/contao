@@ -5,6 +5,10 @@
         <source>Last update on %s by %s.</source>
         <target>Останнє оновлення здійснено на %s ( %s ).</target>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+        <target>Часті питання (FAQ)</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

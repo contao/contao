@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
-        <target>Објави подешавања</target>
+        <target>Примени подешавања</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
         <source>New question</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.editheader.1">
         <source>Edit the category settings</source>
-        <target>Уреди подешавања категорију</target>
+        <target>Уреди подешавања категорије</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

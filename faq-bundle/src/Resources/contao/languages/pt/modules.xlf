@@ -9,6 +9,9 @@
         <source>Manage frequently asked questions</source>
         <target>Este módulo permite a você gerenciar questões realizadas frequentemente.</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_faq">
+        <source>Questions</source>
+      </trans-unit>
       <trans-unit id="FMD.faq">
         <source>FAQ</source>
         <target>FAQ</target>
