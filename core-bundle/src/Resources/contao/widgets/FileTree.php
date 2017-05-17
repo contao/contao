@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\DataContainer\DcaFilterInterface;
-use Contao\Image\ResizeConfiguration;
 
 
 /**

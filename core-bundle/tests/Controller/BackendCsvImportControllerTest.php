@@ -74,7 +74,7 @@ class BackendCsvImportControllerTest extends TestCase
             })
         ;
 
-        $expect = <<<EOF
+        $expect = <<<'EOF'
 <form id="tl_csv_import_lw">
   <div class="uploader"></div>
 </form>
@@ -110,7 +110,7 @@ EOF;
             })
         ;
 
-        $expect = <<<EOF
+        $expect = <<<'EOF'
 <form id="tl_csv_import_tw">
   <div class="uploader"></div>
 </form>
@@ -146,7 +146,7 @@ EOF;
             })
         ;
 
-        $expect = <<<EOF
+        $expect = <<<'EOF'
 <form id="tl_csv_import_ow">
   <div class="uploader"></div>
 </form>

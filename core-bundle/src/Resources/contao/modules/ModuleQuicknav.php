@@ -80,12 +80,6 @@ class ModuleQuicknav extends \Module
 		{
 			$objRootPage = \PageModel::findWithDetails($this->rootPage);
 
-			// Set the language
-			if (\Config::get('addLanguageToUrl') && $objRootPage->rootLanguage != $objPage->rootLanguage)
-			{
-				$lang = $objRootPage->rootLanguage;
-			}
-
 			// Set the domain
 			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
 			{
