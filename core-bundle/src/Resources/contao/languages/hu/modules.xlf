@@ -137,29 +137,34 @@
         <source>Change your personal data or set a new password</source>
         <target>Személyes adatok módosítása vagy új jelszó beállítása</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>Stílus lapok</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Stílus lapok</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>Felhasználói felület modulok</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>Oldal elrendezések</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Mező</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>Képméret</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>Képméret média lekérdezés</target>
+        <source>Media queries</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Oldal elrendezések</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Felhasználói felület modulok</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>Stílus lapok</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

@@ -38,52 +38,40 @@
         <target>Visibilité</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
-        <source>New image size media query</source>
-        <target>Nouveau media query pour la taille de l'image</target>
+        <source>New media query</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
-        <source>Create a new image size media query</source>
-        <target>Créer un nouveau media query pour la taille de l'image</target>
+        <source>Create a new media query</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.0">
-        <source>Image size media query details</source>
-        <target>Détails du media query pour la taille de l'image</target>
+        <source>Media query details</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.1">
-        <source>Show the details of image size media query ID %s</source>
-        <target>Afficher les détails du media query pour la taille de l'image ID %s</target>
+        <source>Show the details of media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.0">
-        <source>Edit image size media query</source>
-        <target>Éditer le media query pour la taille de l'image</target>
+        <source>Edit media query</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.1">
-        <source>Edit image size media query ID %s</source>
-        <target>Éditer le media query pour la taille de l'image ID %s</target>
+        <source>Edit media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut.0">
-        <source>Move image size media query</source>
-        <target>Déplacer le media query pour la taille de l'image</target>
+        <source>Move media query</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut.1">
-        <source>Move image size media query ID %s</source>
-        <target>Déplacer le media query pour la taille de l'image ID %s</target>
+        <source>Move media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.0">
-        <source>Duplicate image size media query</source>
-        <target>Dupliquer le media query pour la taille de l'image</target>
+        <source>Duplicate media query</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
-        <source>Duplicate image size media query ID %s</source>
-        <target>Dupliquer le media query pour la taille de l'image ID %s</target>
+        <source>Duplicate media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.0">
-        <source>Delete image size media query</source>
-        <target>Supprimer le media query pour la taille de l'image</target>
+        <source>Delete media query</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
-        <source>Delete image size media query ID %s</source>
-        <target>Supprimer le media query pour la taille de l'image ID %s</target>
+        <source>Delete media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.editheader.0">
         <source>Edit image size</source>
@@ -98,24 +86,21 @@
         <target>Coller au début</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
-        <source>Paste after image size media query ID %s</source>
-        <target>Coller après le media query pour la taille de l'image ID %s</target>
+        <source>Paste after media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
         <target>Créer une nouvelle définition de formatage au début</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
-        <source>Add new after image size media query ID %s</source>
-        <target>Ajouter un nouveau media query après le media query pour la taille de l'image ID %s</target>
+        <source>Add new after media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
         <source>Toggle visibility</source>
         <target>Basculer la visibilité</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.1">
-        <source>Toggle the visibility of image size media query ID %s</source>
-        <target>Basculer la visibilité du media query pour la taille de l'image ID %s</target>
+        <source>Toggle the visibility of media query ID %s</source>
       </trans-unit>
     </body>
   </file>

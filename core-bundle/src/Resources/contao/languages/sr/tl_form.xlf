@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
-        <target>Пошаљи податке из формулара преко email-а</target>
+        <target>Пошаљи податке из формулара имејлом</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.1">
         <source>Send the submitted data to an e-mail address.</source>
-        <target>Пошаљи податке из формулара на e-mail адресу.</target>
+        <target>Пошаљи податке из формулара на имејл адресу.</target>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>

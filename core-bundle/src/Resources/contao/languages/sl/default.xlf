@@ -205,6 +205,21 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>Datoteja &quot;%s&quot; že obstaja!</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Napačen preusmeritveni cilj (krožni sklic)!</target>
@@ -259,6 +274,9 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Prosim, vnesite le sledeče znake: A-Z0-0[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionWarning">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -883,6 +901,13 @@
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
         <target>Izbriši element</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>CSV uvoz</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
@@ -1680,10 +1705,6 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
         <source>The maintenance mode is currently enabled.</source>
         <target>Trenutno je omogočen način za vzdrževanje.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-        <target>Način za vzdrževanje je trenutno onemogočen.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Prelom vrstic</target>
@@ -1741,20 +1762,23 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
         <target>Ponastavi izbrano</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Prehod na izbiro datotek</target>
+        <source>Files</source>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Prehod na izbiro strani</target>
+        <source>Pages</source>
+        <target>Strani</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Članki</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Odpri upravljalca datotek</target>
+        <source>File manager</source>
+        <target>Upravljalec datotek</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Spremenite strukturo strani</target>
+        <source>Site structure</source>
+        <target>Struktura strani</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1763,10 +1787,6 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Nazaj na izbiro strani</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Prosimo vrnite se na izbiro strani ali datoteke in izberite želen element, preden zaprete pogovorno okno.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>

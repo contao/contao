@@ -205,6 +205,21 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>¡El archivo &quot;%s&quot; ya existe!</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>¡Objetivo de redirección no válido (referencia circular)!</target>
@@ -260,6 +275,9 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Por favor, introduzca sólo los caracteres siguientes: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionWarning">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -884,6 +902,13 @@
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
         <target>Eliminar el elemento</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>Importar CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
@@ -1687,10 +1712,6 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>The maintenance mode is currently enabled.</source>
         <target>Actualmente está habilitado el modo de mantenimiento.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-        <target>Actualmente está deshabilitado el modo de mantenimiento.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Ajuste de texto</target>
@@ -1748,20 +1769,23 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <target>Restablecer la selección</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Cambiar al selector de ficheros.</target>
+        <source>Files</source>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Cambiar al selector de páginas.</target>
+        <source>Pages</source>
+        <target>Páginas</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Artículos</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Abrir el gestor de archivos</target>
+        <source>File manager</source>
+        <target>Gestor de archivos</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Modificar la estructura del sitio</target>
+        <source>Site structure</source>
+        <target>Estructura sitio web</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1770,10 +1794,6 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Volver al selector de páginas</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Por favor regrese al selector de páginas o fichero y haga una selección antes de cerrar el diálogo.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>

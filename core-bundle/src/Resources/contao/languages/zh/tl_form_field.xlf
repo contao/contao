@@ -553,6 +553,9 @@
         <source>Toggle the visibility of field ID %s</source>
         <target>切换ID为 %s 的域的可见性</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

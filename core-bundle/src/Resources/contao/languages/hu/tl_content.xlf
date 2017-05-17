@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Egy kép adható a tartalmi elemhez.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Forrásfájl</target>
@@ -49,11 +55,10 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>Itt megadható egy alternatív szöveg a képekhez (&lt;em&gt;alt&lt;/em&gt; attribútum).</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Cím</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Itt megadható a kép megnevezése (&lt;em&gt;title&lt;/em&gt; attribútum).</target>
       </trans-unit>

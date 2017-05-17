@@ -204,6 +204,21 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>Filen &quot;%s&quot; eksisterer allerede.</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Ugyldigt mål for omdirigering (vil skabe et endeløst loop).</target>
@@ -255,6 +270,9 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Indtast venligst kun bogstaver, tal samt følgende specielle tegn: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionWarning">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -876,6 +894,13 @@
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
         <target>Slet element</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>CSV-importering</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
@@ -1665,9 +1690,6 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Ordombrydning</target>
@@ -1725,20 +1747,23 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
         <target>Nulstil valgte</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Skift til filvælgeren</target>
+        <source>Files</source>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Skift til sidevælgeren</target>
+        <source>Pages</source>
+        <target>Sider</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Artikler</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Åben filarkivet</target>
+        <source>File manager</source>
+        <target>Filarkiv</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Ændre sidestrukturen</target>
+        <source>Site structure</source>
+        <target>Sidestruktur</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1747,10 +1772,6 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Tilbage til sidevælgeren</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Gå venligst tilbage til side eller fil -vælgeren og foretag dit valg, inden du lukker dialogen.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>

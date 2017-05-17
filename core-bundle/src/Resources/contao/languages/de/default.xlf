@@ -205,6 +205,26 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>Die Datei &quot;%s&quot; existiert bereits!</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+        <target>Sie können nur Dateien auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+        <target>Sie können nur Ordner auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+        <target>Sie können nur Dateien oder Ordner innerhalb von &quot;%s&quot; auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+        <target>Sie können nur &quot;%s&quot;-Dateien auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+        <target>Ihre Auswahl enthält ungültige Seiten-IDs!</target>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Ungültiges Weiterleitungsziel (Zirkelbezug)!</target>
@@ -260,6 +280,10 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Bitte geben Sie nur folgende Zeichen ein: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionWarning">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
+        <target>Ein anderer Benutzer hat die Version %s erstellt, während Sie die Version %s des Datensatzes bearbeitet haben.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -884,6 +908,14 @@
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
         <target>Das Element löschen</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>CSV-Import</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
+        <target>Optionen aus einer CSV-Datei importieren</target>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
@@ -1687,10 +1719,6 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>The maintenance mode is currently enabled.</source>
         <target>Der Wartungsmodus ist aktiv.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-        <target>Der Wartungsmodus ist nicht aktiv.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Zeilenumbruch</target>
@@ -1748,20 +1776,24 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Auswahl aufheben</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Zum Dateiwähler</target>
+        <source>Files</source>
+        <target>Dateien</target>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Zum Seitenwähler</target>
+        <source>Pages</source>
+        <target>Seiten</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Artikel</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Die Dateiverwaltung öffnen</target>
+        <source>File manager</source>
+        <target>Dateiverwaltung</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Die Seitenstruktur bearbeiten</target>
+        <source>Site structure</source>
+        <target>Seitenstruktur</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1770,10 +1802,6 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Zurück zum Seitenwähler</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Bitte gehen Sie zurück zum Seiten- bzw. Dateiwähler und nehmen Sie dort eine Auswahl vor, bevor Sie den Dialog schließen.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>

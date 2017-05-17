@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>
-        <target>Дошло је до грешке приликом извршавања скрипта. Нешто не ради исправно.</target>
+        <target>Дошло је до грешке приликом извршавања скрипте. Нешто не ради исправно.</target>
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; or &lt;code&gt;app/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>За више информација, претражите &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; или постетите &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</target>
+        <target>За више информација, претражите &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; или посетите &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.incomplete">
         <source>Incomplete installation</source>
@@ -62,8 +62,7 @@
         <target>Инсталација није комплетирана, те Contao систем не може радити исправно.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
-        <target>Отворите инсталациони алат за Contao (&lt;code&gt;/install.php&lt;/code&gt;) у Вашем интернет прегледачу.</target>
+        <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

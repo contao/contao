@@ -61,8 +61,7 @@
         <target>نصب تکمیل نشده است، بنابراین کانتائو به درستی کار نخواهد کرد.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool (&lt;code&gt;/install.php&lt;/code&gt;) in your browser.</source>
-        <target>لطفا ابزار نصب کانتائو &lt;code&gt;/install.php&lt;/code&gt; را در مرورگرتان باز کنید.</target>
+        <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>

@@ -553,6 +553,9 @@
         <source>Toggle the visibility of field ID %s</source>
         <target>Conmutar la visibilidad del campo con ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.name.1">
         <source>Please enter the style sheet name.</source>
-        <target>Унесите име стилова.</target>
+        <target>Унесите назив за колекцију стилова.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.embedImages.0">
         <source>Embed images up to</source>
-        <target>Embed images up to</target>
+        <target>Уметни слике до</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.embedImages.1">
         <source>Here you can enter the file size in bytes up to which images will be embedded in the style sheet as data: string. Set to 0 to disable the feature.</source>
@@ -19,27 +19,27 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.cc.0">
         <source>Conditional comment</source>
-        <target>Условни коментар</target>
+        <target>Условни коментари</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cc.1">
         <source>Conditional comments allow you to create Internet Explorer specific style sheets (e.g. &lt;em&gt;if lt IE 9&lt;/em&gt;).</source>
-        <target>Условни коментари омогућавају креирање стилова специфичних за Интернет Експлорер (нпр. &lt;em&gt;if lt IE 9&lt;/em&gt;).</target>
+        <target>Условни коментари вам омогућавају да креирате посебне стилове намењене употреби у Internet Explorer (нпр. &lt;em&gt;if lt IE 9&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.0">
         <source>Media types</source>
-        <target>Врста медија</target>
+        <target>Врсте медија</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.1">
         <source>Here you can choose the media types the style sheet applies to.</source>
-        <target>Овде можете одабрати врсту медија на коју ће Стилови бити примењени.</target>
+        <target>Овде можете изабрати врсте медија на које ће се колекција стилова примењивати.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.0">
         <source>Media query</source>
-        <target>Media-Query</target>
+        <target>Медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.1">
         <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
-        <target>Овде можете дефинисати врсту медија користећи упит за медиј као нпр.&lt;em&gt;screen и (min-width: 800px)&lt;/em&gt;. Врста медија дефинисана изнад у том случају биће прегажена.</target>
+        <target>Овде можете одредити врсту медија користећи медијски упит као што је &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. У том случају ће врста медија одабрана горе бити прегажена.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.0">
         <source>Global variables</source>
@@ -47,23 +47,23 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.1">
         <source>Here you can define global variables for the style sheet (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Овде можете дефинисати глобалне варијабле за Стилове (нпр. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; или &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
+        <target>Овде можете дефинисати глобалне варијабле за колекцију стилова (нпр.  &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; или &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.0">
         <source>Source files</source>
-        <target>Изворни фајл</target>
+        <target>Изворни фајлови</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.1">
         <source>Here you can upload one or more .css files to be imported.</source>
-        <target>Овде можете изабрати један или више .css фајлова које ћете увести.</target>
+        <target>Овде можете изабрати један или више .css фајлова који ће бити увежени.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.tstamp.0">
         <source>Revision date</source>
-        <target>Датум ревизије</target>
+        <target>Датум последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Датум и време последње ревизије</target>
+        <target>Датум и време последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.title_legend">
         <source>Name</source>
@@ -83,67 +83,67 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.css_imported">
         <source>Style sheet &quot;%s&quot; has been imported.</source>
-        <target>Стилови &quot;%s&quot; су увезени.</target>
+        <target>Колекција стилова &quot;%s&quot; је увежена.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.css_renamed">
         <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
-        <target>Стилови &quot;%s&quot; су увезени као &quot;%s&quot;.</target>
+        <target>Колекција стилова &quot;%s&quot; је увежена као &quot;%s&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
         <source>New style sheet</source>
-        <target>Нови стилови</target>
+        <target>Нова колекција стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>
-        <target>Креирај нове стилове</target>
+        <target>Креирај нову колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.show.0">
         <source>Style sheet details</source>
-        <target>Детаљи стилова</target>
+        <target>Детаљи колекције стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.show.1">
         <source>Show the details of style sheet ID %s</source>
-        <target>Прикажи детаље стилова ID %s</target>
+        <target>Прикажи детаље колекције стилова ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.edit.0">
         <source>Edit style sheet</source>
-        <target>Уреди стилове</target>
+        <target>Уреди колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.edit.1">
         <source>Edit style sheet ID %s</source>
-        <target>Уреди стилове ID %s</target>
+        <target>Уреди колекцију стилова ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.0">
         <source>Edit style sheet</source>
-        <target>Уреди стилове</target>
+        <target>Уреди колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.editheader.1">
         <source>Edit the style sheet settings</source>
-        <target>Уреди подешавања стилова</target>
+        <target>Уреди подешавања колекције стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.0">
         <source>Move style sheet</source>
-        <target>Помери стилове</target>
+        <target>Помери колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.cut.1">
         <source>Move style sheet ID %s</source>
-        <target>Помери стилове ID %s</target>
+        <target>Помери колекцију стилова ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.copy.0">
         <source>Duplicate style sheet</source>
-        <target>Копирај стилове</target>
+        <target>Копирај колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.copy.1">
         <source>Duplicate style sheet ID %s</source>
-        <target>Копирај стилове ID %s</target>
+        <target>Копирај колекцију стилова ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.delete.0">
         <source>Delete style sheet</source>
-        <target>Обриши стилове</target>
+        <target>Обриши колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.delete.1">
         <source>Delete style sheet ID %s</source>
-        <target>Обриши стилове ID %s</target>
+        <target>Обриши колекцију стилова ID %s</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.0">
         <source>CSS import</source>
@@ -155,11 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.0">
         <source>Export style sheet</source>
-        <target>Извези Стилове</target>
+        <target>Извези колекцију стилова</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.export.1">
         <source>Export style sheet ID %s</source>
-        <target>Извези Стилове ID %s</target>
+        <target>Извези колекцију стилова ID %s</target>
       </trans-unit>
     </body>
   </file>
