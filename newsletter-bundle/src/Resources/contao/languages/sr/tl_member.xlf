@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_member.newsletter.0">
         <source>Newsletters</source>
-        <target>Newsletters</target>
+        <target>Билтени - Newsletters</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter.1">
         <source>Here you can manage the member's subscriptions.</source>

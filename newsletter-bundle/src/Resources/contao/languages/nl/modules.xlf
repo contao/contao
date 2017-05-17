@@ -13,6 +13,10 @@
         <source>Recipients</source>
         <target>Ontvangers</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_newsletter">
+        <source>Newsletters</source>
+        <target>Nieuwsbrieven</target>
+      </trans-unit>
       <trans-unit id="FMD.newsletter">
         <source>Newsletter</source>
         <target>Nieuwsbrief</target>

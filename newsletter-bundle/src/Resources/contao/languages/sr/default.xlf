@@ -11,15 +11,15 @@
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
-        <target>Линк за активацију је неисправан и истекао</target>
+        <target>Линк за активацију је неисправан или је истекао.</target>
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
-        <target>Изаберите барем један канал</target>
+        <target>Изаберите барем један канал.</target>
       </trans-unit>
       <trans-unit id="ERR.blacklisted">
         <source>The e-mail address has been unsubscribed from the channel.</source>
-        <target>E-mail адреса је одјављена са канала.</target>
+        <target>Имејл адреса је одјављена са канала.</target>
       </trans-unit>
       <trans-unit id="MSC.subscribe">
         <source>Subscribe</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="MSC.nl_confirm">
         <source>Thank you for your subscription. You will receive a confirmation e-mail.</source>
-        <target>Хвала Вам на томе што сте се претплатили. На Ваш email ће бити послата потврда о претплати.</target>
+        <target>Хвала вам што сте се претплатили. На ваш имејл ће бити послата порука о потврди претплате.</target>
       </trans-unit>
       <trans-unit id="MSC.nl_activate">
         <source>Your subscription has been activated.</source>

@@ -13,6 +13,10 @@
         <source>Recipients</source>
         <target>宛先</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_newsletter">
+        <source>Newsletters</source>
+        <target>ニュースレター</target>
+      </trans-unit>
       <trans-unit id="FMD.newsletter">
         <source>Newsletter</source>
         <target>ニュースレター</target>

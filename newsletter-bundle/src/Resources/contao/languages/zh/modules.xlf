@@ -13,6 +13,10 @@
         <source>Recipients</source>
         <target>接收人</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_newsletter">
+        <source>Newsletters</source>
+        <target>新闻通讯</target>
+      </trans-unit>
       <trans-unit id="FMD.newsletter">
         <source>Newsletter</source>
         <target>简报</target>
