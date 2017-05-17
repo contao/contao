@@ -399,6 +399,9 @@ abstract class Backend extends \Controller
 			$dc = new $dataContainer($strTable, $arrModule);
 		}
 
+		// Wrap the existing headline
+		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
+
 		// AJAX request
 		if ($_POST && \Environment::get('isAjaxRequest'))
 		{
@@ -442,17 +445,17 @@ abstract class Backend extends \Controller
 
 					if ($objRow->title != '')
 					{
-						$this->Template->headline .= ' » ' . $objRow->title;
+						$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
 					}
 					elseif ($objRow->name != '')
 					{
-						$this->Template->headline .= ' » ' . $objRow->name;
+						$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 					}
 				}
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' » ' . sprintf($GLOBALS['TL_LANG'][$strTable][\Input::get('key')][1], \Input::get('id'));
+			$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][\Input::get('key')][1], \Input::get('id')) . '</span>';
 		}
 
 		// Default action
@@ -493,127 +496,81 @@ abstract class Backend extends \Controller
 					break;
 			}
 
-			$strFirst = null;
-			$strSecond = null;
-
-			// Handle child child tables (e.g. tl_style)
-			if (isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+			// Add the name of the parent elements
+			if ($strTable && in_array($strTable, $arrTables) && $strTable != $arrTables[0])
 			{
-				$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
+				$trail = array();
 
-				if (in_array($ptable, $arrTables))
+				$pid = $dc->id;
+				$table = $strTable;
+				$ptable = (\Input::get('act') != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
+
+				while ($ptable && !in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)))
 				{
-					$this->loadDataContainer($ptable);
+					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
+											 ->limit(1)
+											 ->execute($pid);
 
-					if (isset($GLOBALS['TL_DCA'][$ptable]['config']['ptable']))
+					// Add only parent tables to the trail
+					if ($table != $ptable)
 					{
-						$ftable = $GLOBALS['TL_DCA'][$ptable]['config']['ptable'];
-
-						if (in_array($ftable, $arrTables))
+						// Add table name
+						if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
 						{
-							$strFirst = $ftable;
-							$strSecond = $ptable;
+							$trail[] = ' › <span>'. $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 						}
-					}
-				}
-			}
 
-			// Build the breadcrumb trail
-			if ($strFirst !== null && $strSecond !== null)
-			{
-				if (!isset($_GET['act']) || \Input::get('act') == 'paste' && \Input::get('mode') == 'create' || \Input::get('act') == 'select' || \Input::get('act') == 'editAll' || \Input::get('act') == 'overrideAll')
-				{
-					if ($strTable == $strSecond)
-					{
-						$strQuery = "SELECT * FROM $strFirst WHERE id=?";
-					}
-					else
-					{
-						$strQuery = "SELECT * FROM $strFirst WHERE id=(SELECT pid FROM $strSecond WHERE id=?)";
-					}
-				}
-				else
-				{
-					if ($strTable == $strSecond)
-					{
-						$strQuery = "SELECT * FROM $strFirst WHERE id=(SELECT pid FROM $strSecond WHERE id=?)";
-					}
-					else
-					{
-						$strQuery = "SELECT * FROM $strFirst WHERE id=(SELECT pid FROM $strSecond WHERE id=(SELECT pid FROM $strTable WHERE id=?))";
-					}
-				}
-
-				// Add the first level name
-				$objRow = $this->Database->prepare($strQuery)
-										 ->limit(1)
-										 ->execute($dc->id);
-
-				if ($objRow->title != '')
-				{
-					$this->Template->headline .= ' » ' . $objRow->title;
-				}
-				elseif ($objRow->name != '')
-				{
-					$this->Template->headline .= ' » ' . $objRow->name;
-				}
-
-				if (isset($GLOBALS['TL_LANG']['MOD'][$strSecond]))
-				{
-					$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MOD'][$strSecond];
-				}
-
-				// Add the second level name
-				$objRow = $this->Database->prepare("SELECT * FROM $strSecond WHERE id=?")
-										 ->limit(1)
-										 ->execute(CURRENT_ID);
-
-				if ($objRow->title != '')
-				{
-					$this->Template->headline .= ' » ' . $objRow->title;
-				}
-				elseif ($objRow->name != '')
-				{
-					$this->Template->headline .= ' » ' . $objRow->name;
-				}
-			}
-			else
-			{
-				// Add the name of the parent element
-				if ($strTable && in_array($strTable, $arrTables) && $strTable != $arrTables[0])
-				{
-					if ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] != '')
-					{
-						$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=?")
-												 ->limit(1)
-												 ->execute(CURRENT_ID);
-
+						// Add object title or name
 						if ($objRow->title != '')
 						{
-							$this->Template->headline .= ' » ' . $objRow->title;
+							$trail[] = ' › <span>' . $objRow->title . '</span>';
 						}
 						elseif ($objRow->name != '')
 						{
-							$this->Template->headline .= ' » ' . $objRow->name;
+							$trail[] = ' › <span>' . $objRow->name . '</span>';
 						}
+						elseif ($objRow->headline != '')
+						{
+							$trail[] = ' › <span>' . $objRow->headline . '</span>';
+						}
+
 					}
+
+					$this->loadDataContainer($ptable);
+
+					// Next parent table
+					$pid = $objRow->pid;
+					$table = $ptable;
+					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable']) ? $objRow->ptable : $GLOBALS['TL_DCA'][$ptable]['config']['ptable'];
 				}
 
-				// Add the name of the submodule
-				if ($strTable && isset($GLOBALS['TL_LANG']['MOD'][$strTable]))
+				// Add the last parent table
+				if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
 				{
-					$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MOD'][$strTable];
+					$trail[] = ' › <span>'. $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
+				}
+
+				// Add the breadcrumb trail in reverse order
+				foreach (array_reverse($trail) as $breadcrumb)
+				{
+					$this->Template->headline .= $breadcrumb;
 				}
 			}
 
 			// Add the current action
 			if (\Input::get('act') == 'editAll')
 			{
-				$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MSC']['all'][0];
+				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
+				{
+					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
+				}
 			}
 			elseif (\Input::get('act') == 'overrideAll')
 			{
-				$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MSC']['all_override'][0];
+				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
+				{
+					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
+				}
 			}
 			else
 			{
@@ -624,27 +581,34 @@ abstract class Backend extends \Controller
 						// Handle new folders (see #7980)
 						if (strpos(\Input::get('id'), '__new__') !== false)
 						{
-							$this->Template->headline .= ' » ' . dirname(\Input::get('id')) . ' » ' . $GLOBALS['TL_LANG'][$strTable]['new'][1];
+							$this->Template->headline .= ' › <span>' . dirname(\Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 						}
 						else
 						{
-							$this->Template->headline .= ' » ' . \Input::get('id');
+							$this->Template->headline .= ' › <span>' . \Input::get('id') . '</span>';
 						}
 					}
-					elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act][1]))
 					{
-						$this->Template->headline .= ' » ' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('id'));
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('id')) . '</span>';
 					}
 				}
 				elseif (\Input::get('pid'))
 				{
 					if (\Input::get('do') == 'files' || \Input::get('do') == 'tpl_editor')
 					{
-						$this->Template->headline .= ' » ' . \Input::get('pid');
+						if (\Input::get('act') == 'move')
+						{
+							$this->Template->headline .= ' › <span>' . \Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
+						}
+						else
+						{
+							$this->Template->headline .= ' › <span>' . \Input::get('pid') . '</span>';
+						}
 					}
-					elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act][1]))
 					{
-						$this->Template->headline .= ' » ' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('pid'));
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('pid')) . '</span>';
 					}
 				}
 			}

@@ -185,11 +185,15 @@ body.popup {
 /* Data container */
 h1.main_headline {
 	margin:0;
-	padding:18px 12px;
+	padding:15px 12px;
+	line-height:22px;
 	border-bottom:1px solid #ddd;
 }
 .popup h1.main_headline {
 	display:none;
+}
+h1.main_headline span:nth-child(even) {
+	font-weight:300;
 }
 h2.sub_headline {
 	margin:3px 18px;
