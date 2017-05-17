@@ -547,7 +547,7 @@ table.tl_listing {
 	padding-right:6px !important;
 }
 .list_view .tl_listing img.theme_preview {
-	margin:3px 9px 3px 0;
+	margin-right:9px;
 }
 .tl_show {
 	width:96%;
@@ -869,7 +869,7 @@ ul.sgallery li {
 	float:left;
 	margin:2px 4px 2px 0;
 	padding:0;
-	border:1px solid #808080;
+	border:1px solid #aaa;
 	background:#eee;
 	display:-webkit-flex;
 	display:flex;

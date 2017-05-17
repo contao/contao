@@ -2196,7 +2196,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			$this->import('Files');
-			$varValue = Utf8::toAscii($varValue);
 
 			// Trigger the save_callback
 			if (is_array($arrData['save_callback']))

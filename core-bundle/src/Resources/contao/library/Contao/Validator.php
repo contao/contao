@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Patchwork\Utf8;
+
 
 /**
  * Validates arbitrary data
@@ -401,7 +403,7 @@ class Validator
 		}
 
 		// Must not be longer than 255 characters
-		if (mb_strlen($strName) > 255)
+		if (Utf8::strlen($strName) > 255)
 		{
 			return false;
 		}

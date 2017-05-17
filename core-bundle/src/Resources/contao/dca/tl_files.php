@@ -456,7 +456,6 @@ class tl_files extends Backend
 	 */
 	public function checkFilename($varValue, DataContainer $dc)
 	{
-		$varValue = Patchwork\Utf8::toAscii($varValue);
 		$varValue = str_replace('"', '', $varValue);
 
 		if (strpos($varValue, '/') !== false || preg_match('/\.$/', $varValue))
@@ -474,7 +473,7 @@ class tl_files extends Backend
 				$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 			}
 
-			if ($intMaxlength && utf8_strlen($varValue) > $intMaxlength)
+			if ($intMaxlength && Patchwork\Utf8::strlen($varValue) > $intMaxlength)
 			{
 				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
 			}
