@@ -548,6 +548,7 @@ table.tl_listing {
 }
 .list_view .tl_listing img.theme_preview {
 	margin-right:9px;
+	border:1px solid #aaa;
 }
 .tl_show {
 	width:96%;
@@ -558,7 +559,8 @@ table.tl_listing {
 	background:#f6f6f6;
 }
 .tl_show td {
-	padding:6px;
+	padding:4px 6px;
+	line-height:18px;
 }
 .tl_label {
 	margin-right:12px;
@@ -1704,6 +1706,9 @@ fieldset.collapsed > legend {
 		margin-bottom:3px;
 		padding-left:6px !important;
 		padding-right:7px !important;
+	}
+	.tl_show td {
+		word-break:break-word;
 	}
 	.tl_metawizard label {
 		width:auto;

@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Show both paths and UUIDs in the "show" view (see #793).
  * Do not romanize file names anymore.
  * Improve the back end breadcrumb menu (see #623).
  * Correctly render the image thumbnails (see #817).

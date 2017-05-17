@@ -503,28 +503,49 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				{
 					foreach ($value as $kk=>$vv)
 					{
-						$value[$kk] = $vv ? \StringUtil::binToUuid($vv) : '';
+						if (($objFile = \FilesModel::findByUuid($vv)) instanceof FilesModel)
+						{
+							$value[$kk] = $objFile->path . ' (' . \StringUtil::binToUuid($vv) . ')';
+						}
+						else
+						{
+							$value[$kk] = '';
+						}
 					}
 
-					$row[$i] = implode(', ', $value);
+					$row[$i] = implode('<br>', $value);
 				}
 				else
 				{
-					$row[$i] = $value ? \StringUtil::binToUuid($value) : '';
+					if (($objFile = \FilesModel::findByUuid($value)) instanceof FilesModel)
+					{
+						$row[$i] = $objFile->path . ' (' . \StringUtil::binToUuid($value) . ')';
+					}
+					else
+					{
+						$row[$i] = '';
+					}
 				}
 			}
 			elseif (is_array($value))
 			{
-				foreach ($value as $kk=>$vv)
+				if (count($value) == 2 && isset($value['value']) && isset($value['unit']))
 				{
-					if (is_array($vv))
-					{
-						$vals = array_values($vv);
-						$value[$kk] = $vals[0].' ('.$vals[1].')';
-					}
+					$row[$i] = trim($value['value'] . $value['unit']);
 				}
+				else
+				{
+					foreach ($value as $kk=>$vv)
+					{
+						if (is_array($vv))
+						{
+							$vals = array_values($vv);
+							$value[$kk] = array_shift($vals).' ('.implode(', ', array_filter($vals)).')';
+						}
+					}
 
-				$row[$i] = implode(', ', $value);
+					$row[$i] = implode('<br>', $value);
+				}
 			}
 			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] == 'date')
 			{
