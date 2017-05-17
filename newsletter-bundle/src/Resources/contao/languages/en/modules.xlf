@@ -11,6 +11,9 @@
       <trans-unit id="MOD.tl_newsletter_recipients">
         <source>Recipients</source>
       </trans-unit>
+      <trans-unit id="MOD.tl_newsletter">
+        <source>Newsletters</source>
+      </trans-unit>
       <trans-unit id="FMD.newsletter">
         <source>Newsletter</source>
       </trans-unit>
