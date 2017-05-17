@@ -118,12 +118,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
 
         // Redirect the deprecated install.php file
-        $collection->add('contao_install_redirect', new Route('/install.php', array(
-            '_scope'      => 'backend',
+        $collection->add('contao_install_redirect', new Route('/install.php', [
+            '_scope' => 'backend',
             '_controller' => 'FrameworkBundle:Redirect:redirect',
-            'route'       => 'contao_install',
-            'permanent'   => true,
-        )));
+            'route' => 'contao_install',
+            'permanent' => true,
+        ]));
 
         return $collection;
     }
