@@ -460,6 +460,9 @@ a.tl_submit {
 	display:table; /* see #6093 */
 	width:96%;
 }
+.clr:not(.widget) {
+	width:100%;
+}
 .w50 {
 	width:46%;
 	float:left;
