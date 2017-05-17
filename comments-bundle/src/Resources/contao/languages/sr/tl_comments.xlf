@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
         <source>E-mail address</source>
-        <target>E-mail адреса</target>
+        <target>Имејл адреса</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.1">
         <source>The e-mail address will not be published.</source>
-        <target>Адреса е-maila неће бити објављена.</target>
+        <target>Адреса имејла неће бити објављена.</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
