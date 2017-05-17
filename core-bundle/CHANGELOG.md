@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Improve the back end breadcrumb menu (see #623).
  * Correctly render the image thumbnails (see #817).
  * Use the "file" insert tag in the file picker where applicable (see contao/core#8578).
  * Update the Punycode library to version 2 (see #748).
