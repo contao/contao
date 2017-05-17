@@ -708,12 +708,14 @@ class tl_files extends Backend
 			}
 		}
 
-		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx"';
+		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
 
 		if (Input::get('act') == 'editAll' || Input::get('act') == 'overrideAll')
 		{
 			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
 		}
+
+		$class = trim('widget ' . $class);
 
 		return '
 <div class="' . $class . '">
