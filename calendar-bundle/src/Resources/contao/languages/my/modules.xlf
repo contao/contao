@@ -13,6 +13,10 @@
         <source>Calendar feeds</source>
         <target>ပြက္ခဒိန်ကုန်ကြမ်းများ</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_calendar_events">
+        <source>Events</source>
+        <target>အဖြစ်အပျက်များ</target>
+      </trans-unit>
       <trans-unit id="FMD.events">
         <source>Events</source>
         <target>အဖြစ်အပျက်များ</target>

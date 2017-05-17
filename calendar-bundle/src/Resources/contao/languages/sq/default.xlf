@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>deri %s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Kalendar/Ngjarje</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

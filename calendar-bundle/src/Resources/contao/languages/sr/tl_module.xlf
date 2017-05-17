@@ -17,6 +17,12 @@
         <source>Show events only once even if they span multiple days.</source>
         <target>Прикажи догађај само једном, чак иако траје више дана.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_hideRunning.0">
+        <source>Hide running events</source>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_hideRunning.1">
+        <source>Do not show running events in the list of upcoming events.</source>
+      </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
         <target>Почетни дан у недељи</target>
@@ -35,7 +41,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
-        <target>Игнориши параметре URL-а</target>
+        <target>Игнориши параметре URL</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.1">
         <source>Do not switch the time period based on the date/month/year URL parameters.</source>
@@ -67,7 +73,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
-        <target>Шаблон за догађај</target>
+        <target>Шаблон догађаја</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select the event template.</source>

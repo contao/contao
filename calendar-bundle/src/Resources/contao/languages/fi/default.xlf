@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>saakka %s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Tapahtumat</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

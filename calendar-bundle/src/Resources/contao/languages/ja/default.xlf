@@ -57,6 +57,10 @@
         <source>until %s</source>
         <target>%sまで</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>イベント</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

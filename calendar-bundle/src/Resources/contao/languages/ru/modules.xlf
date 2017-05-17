@@ -13,6 +13,10 @@
         <source>Calendar feeds</source>
         <target>RSS-каналы календаря</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_calendar_events">
+        <source>Events</source>
+        <target>События</target>
+      </trans-unit>
       <trans-unit id="FMD.events">
         <source>Events</source>
         <target>События</target>

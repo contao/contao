@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>fram till %s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Kalender</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
