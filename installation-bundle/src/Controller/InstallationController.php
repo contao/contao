@@ -232,14 +232,25 @@ class InstallationController implements ContainerAwareInterface
         $fs = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()
             ->directories()
             ->depth('==0')
-            ->in($cacheDir.'/..')
+            ->in(dirname($cacheDir))
         ;
 
         foreach ($finder as $dir) {
             $fs->remove($dir);
+        }
+
+        // Zend OPcache
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+
+        // APC
+        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+            apc_clear_cache();
         }
     }
 
