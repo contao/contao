@@ -562,6 +562,12 @@ table.tl_listing {
 	padding:4px 6px;
 	line-height:18px;
 }
+.tl_show td:first-child {
+	width:34%;
+}
+.tl_show td p:last-of-type {
+	margin-bottom:0;
+}
 .tl_label {
 	margin-right:12px;
 	font-weight:500;

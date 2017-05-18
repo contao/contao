@@ -258,7 +258,7 @@
         <source>Name and type</source>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta information</source>
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
