@@ -58,34 +58,38 @@
     </div>
   <?php endif; ?>
 
-  <table class="all_records">
-  <thead>
-    <tr>
-      <?php foreach ($this->thead as $col): ?>
-        <th class="head<?= $col['class'] ?>"><a href="<?= $col['href'] ?>" title="<?= $col['title'] ?>"><?= $col['link'] ?></a></th>
-      <?php endforeach; ?>
-      <?php if ($this->details): ?>
-        <th class="head col_last">&nbsp;</th>
-      <?php endif; ?>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($this->tbody as $class=>$row): ?>
-      <tr class="<?= $class ?>">
-        <?php foreach ($row as $col): ?>
-          <td class="body <?= $col['class'] ?>"><?= $col['content'] ?></td>
+  <?php if ($this->searchable && $this->for && empty($this->tbody)): ?>
+    <?= $this->no_results ?>
+  <?php else: ?>
+    <table class="all_records">
+    <thead>
+      <tr>
+        <?php foreach ($this->thead as $col): ?>
+          <th class="head<?= $col['class'] ?>"><a href="<?= $col['href'] ?>" title="<?= $col['title'] ?>"><?= $col['link'] ?></a></th>
         <?php endforeach; ?>
-        <?php if ($this->details && isset($col)): ?>
-          <?php if ($col['details']): ?>
-            <td class="body <?= $this->col_last ?> col_last"><a href="<?= $col['url'] ?>"><?= Image::getHtml('assets/contao/images/info.svg') ?></a></td>
-          <?php else: ?>
-            <td class="body <?= $this->col_last ?> col_last">&nbsp;</td>
-          <?php endif; ?>
+        <?php if ($this->details): ?>
+          <th class="head col_last">&nbsp;</th>
         <?php endif; ?>
       </tr>
-    <?php endforeach; ?>
-  </tbody>
-  </table>
+    </thead>
+    <tbody>
+      <?php foreach ($this->tbody as $class=>$row): ?>
+        <tr class="<?= $class ?>">
+          <?php foreach ($row as $col): ?>
+            <td class="body <?= $col['class'] ?>"><?= $col['content'] ?></td>
+          <?php endforeach; ?>
+          <?php if ($this->details && isset($col)): ?>
+            <?php if ($col['details']): ?>
+              <td class="body <?= $this->col_last ?> col_last"><a href="<?= $col['url'] ?>"><?= Image::getHtml('assets/contao/images/info.svg') ?></a></td>
+            <?php else: ?>
+              <td class="body <?= $this->col_last ?> col_last">&nbsp;</td>
+            <?php endif; ?>
+          <?php endif; ?>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+    </table>
+  <?php endif; ?>
 
   <?= $this->pagination ?>
 
