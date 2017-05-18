@@ -26,6 +26,10 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			array('tl_comments', 'checkPermission')
 		),
+		'onsubmit_callback' => array
+		(
+			array('tl_comments', 'notifyOfReply')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -231,6 +235,11 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['notified'],
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'notifiedReply' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['notifiedReply'],
+			'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)
 );
@@ -320,6 +329,41 @@ class tl_comments extends Backend
 				}
 				break;
 		}
+	}
+
+
+	/**
+	 * Notify subscribers of a reply
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function notifyOfReply(DataContainer $dc)
+	{
+		// Return if there is no active record (override all) or no reply or the notification has been sent already
+		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifyReply)
+		{
+			return;
+		}
+
+		$objNotify = \CommentsNotifyModel::findActiveBySourceAndParent($dc->activeRecord->source, $dc->activeRecord->parent);
+
+		if ($objNotify !== null)
+		{
+			while ($objNotify->next())
+			{
+				// Prepare the URL
+				$strUrl = \Idna::decode(\Environment::get('base')) . $objNotify->url;
+
+				$objEmail = new \Email();
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], \Idna::decode(\Environment::get('host')));
+				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove);
+				$objEmail->sendTo($objNotify->email);
+			}
+		}
+
+		$this->Database->prepare("UPDATE tl_comments SET notifiedReply='1' WHERE id=?")->execute($dc->id);
 	}
 
 

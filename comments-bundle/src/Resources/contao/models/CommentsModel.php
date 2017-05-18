@@ -29,6 +29,7 @@ namespace Contao;
  * @property boolean $published
  * @property string  $ip
  * @property boolean $notified
+ * @property boolean $notifiedReply
  *
  * @method static CommentsModel|null findById($id, $opt=array())
  * @method static CommentsModel|null findByPk($id, $opt=array())
@@ -48,6 +49,7 @@ namespace Contao;
  * @method static CommentsModel|null findOneByPublished($val, $opt=array())
  * @method static CommentsModel|null findOneByIp($val, $opt=array())
  * @method static CommentsModel|null findOneByNotified($val, $opt=array())
+ * @method static CommentsModel|null findOneByNotifiedReply($val, $opt=array())
  *
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByTstamp($val, $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findBySource($val, $opt=array())
@@ -63,6 +65,7 @@ namespace Contao;
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByPublished($val, $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByIp($val, $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByNotified($val, $opt=array())
+ * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByNotifiedReply($val, $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findMultipleByIds($val, $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findBy($col, $val, $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findAll($opt=array())
@@ -82,6 +85,7 @@ namespace Contao;
  * @method static integer countByPublished($val, $opt=array())
  * @method static integer countByIp($val, $opt=array())
  * @method static integer countByNotified($val, $opt=array())
+ * @method static integer countByNotifiedReply($val, $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
