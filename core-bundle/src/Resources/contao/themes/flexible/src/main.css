@@ -80,10 +80,12 @@ body.popup {
 #container {
 	max-width:1140px;
 	margin:0 auto;
+	min-height:calc(100vh - 98px);
 }
 .popup #container {
 	padding:0;
 	width:auto;
+	min-height:0;
 }
 
 /* Left */
@@ -1639,7 +1641,7 @@ fieldset.collapsed > legend {
 		transform:translateY(-42px);
 	}
 	#footer {
-		padding:12px 0 18px;
+		padding:12px 0;
 	}
 	#tmenu a {
 		width:18px;
@@ -1671,9 +1673,6 @@ fieldset.collapsed > legend {
 	}
 	.list_view .tl_listing img.theme_preview {
 		display:none;
-	}
-	.tl_subpanel {
-		padding:3px 6px;
 	}
 	.tl_filter {
 		box-sizing:border-box;
@@ -1725,7 +1724,8 @@ fieldset.collapsed > legend {
 		width:100%;
 	}
 	#tl_buttons {
-		line-height:2;
+		padding:6px 9px 0;
+		line-height:20px;
 	}
 	#tl_breadcrumb li {
 		padding:3px;
