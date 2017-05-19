@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
-use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -206,7 +205,7 @@ class BackendCsvImportController
      * @param FileUpload $uploader
      * @param bool       $allowLinebreak
      *
-     * @return Template|object
+     * @return BackendTemplate|object
      */
     private function prepareTemplate(Request $request, FileUpload $uploader, $allowLinebreak = false)
     {
