@@ -20,17 +20,17 @@ set_time_limit(0);
 
 if (file_exists(__DIR__.'/../autoload.php')) {
     // Composer bin directory
-    $vendorRoot = dirname(__DIR__);
+    $projectRoot = dirname(dirname(__DIR__));
 } else {
     // Package bin directory
-    $vendorRoot = dirname(dirname(dirname(__DIR__)));
+    $projectRoot = dirname(dirname(dirname(dirname(__DIR__))));
 }
 
 /** @var Composer\Autoload\ClassLoader $loader */
-$loader = require $vendorRoot.'/autoload.php';
+$loader = require $projectRoot.'/vendor/autoload.php';
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-ManagerBundlePlugin::autoloadModules($vendorRoot.'/../system/modules');
+ManagerBundlePlugin::autoloadModules($projectRoot.'/system/modules');
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'prod');
@@ -40,7 +40,6 @@ if ($debug) {
     Debug::enable();
 }
 
-$kernel = new ContaoKernel($env, $debug);
-$kernel->setRootDir($vendorRoot.'/../app');
+$kernel = new ContaoKernel($projectRoot, $env, $debug);
 $application = new Application($kernel);
 $application->run($input);
