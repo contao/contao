@@ -150,6 +150,7 @@ class BackendConfirm extends \Backend
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
 		$objTemplate->charset = \Config::get('characterSet');
 

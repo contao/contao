@@ -8,40 +8,45 @@
 
 /* Body */
 body {
-	background:#eaeaea;
+	background:#eaeaea url("icons/stop.svg") center 3em no-repeat;
 }
 
 /* Container */
 #container {
 	width:640px;
-	margin:5% auto 0;
-	padding:18px 18px 6px;
+	margin:15em auto 0;
 	background:#fff;
 }
 
 /* Elements */
+h1 {
+	padding:14px 18px 12px;
+	line-height:22px;
+	border-bottom:1px solid #ddd;
+}
 p {
 	line-height:1.3;
 }
-#link {
+p a {
+	vertical-align:middle;
+}
+.link {
 	word-wrap:break-word;
+}
+.tl_formbody_edit {
+	padding:18px 18px 6px;
 }
 .tl_submit {
 	margin-right:6px;
 }
-dl {
-	overflow:hidden;
-	line-height:1.3;
+table {
 	margin:0 18px 18px;
 }
-dt,dd {
-	display:block;
-	float:left;
+th,td {
+	padding:2px;
 }
-dt {
-	width:150px;
-	font-weight:500;
-	clear:both;
+th {
+	padding-right:12px;
 }
 
 /* Handheld */
@@ -50,15 +55,5 @@ dt {
 		width:auto;
 		margin-left:10px;
 		margin-right:10px;
-	}
-	dl {
-		margin:0 0 9px;
-	}
-	dt,dd {
-		float:none;
-	}
-	dd {
-		margin-left:0;
-		margin-bottom:9px;
 	}
 }
