@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -2212,8 +2213,22 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Show a warning if the record has been saved by another user (see #8412)
 			if ($intLatestVersion !== null && isset($_POST['VERSION_NUMBER']) && $intLatestVersion > \Input::post('VERSION_NUMBER'))
 			{
-				\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['versionWarning'], $intLatestVersion, \Input::post('VERSION_NUMBER')));
-				$this->reload();
+				/** @var BackendTemplate|object $objTemplate */
+				$objTemplate = new \BackendTemplate('be_conflict');
+
+				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
+				$objTemplate->theme = \Backend::getTheme();
+				$objTemplate->charset = \Config::get('characterSet');
+				$objTemplate->base = \Environment::get('base');
+				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
+				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, \Input::post('VERSION_NUMBER'));
+				$objTemplate->explain2 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
+				$objTemplate->diff = $objVersions->compare(true);
+				$objTemplate->href = \Environment::get('request');
+				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
+
+				throw new ResponseException($objTemplate->getResponse());
 			}
 
 			// Redirect

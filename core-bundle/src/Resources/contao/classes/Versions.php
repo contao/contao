@@ -58,14 +58,22 @@ class Versions extends \Controller
 	 *
 	 * @param string  $strTable
 	 * @param integer $intPid
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($strTable, $intPid)
 	{
 		$this->import('Database');
 		parent::__construct();
 
+		$this->loadDataContainer($strTable);
+
+		if (!isset($GLOBALS['TL_DCA'][$strTable])) {
+			throw new \InvalidArgumentException(sprintf('"%s" is not a valid table', StringUtil::specialchars($strTable)));
+		}
+
 		$this->strTable = $strTable;
-		$this->intPid = $intPid;
+		$this->intPid = (int) $intPid;
 	}
 
 
@@ -318,8 +326,6 @@ class Versions extends \Controller
 		// Unset fields that do not exist (see #5219)
 		$data = array_intersect_key($data, $arrFields);
 
-		$this->loadDataContainer($this->strTable);
-
 		// Reset fields added after storing the version to their default value (see #7755)
 		foreach (array_diff_key($arrFields, $data) as $k=>$v)
 		{
@@ -378,8 +384,14 @@ class Versions extends \Controller
 
 	/**
 	 * Compare versions
+	 *
+	 * @param bool $blnReturnBuffer
+	 *
+	 * @return string
+	 *
+	 * @throws ResponseException
 	 */
-	public function compare()
+	public function compare($blnReturnBuffer=false)
 	{
 		$strBuffer = '';
 		$arrVersions = array();
@@ -454,7 +466,6 @@ class Versions extends \Controller
 			if ($intTo > 0 && $intFrom > 0)
 			{
 				\System::loadLanguageFile($this->strTable);
-				$this->loadDataContainer($this->strTable);
 
 				// Get the order fields
 				$objDcaExtractor = \DcaExtractor::getInstance($this->strTable);
@@ -539,6 +550,11 @@ class Versions extends \Controller
 		if ($strBuffer == '')
 		{
 			$strBuffer = '<p>'.$GLOBALS['TL_LANG']['MSC']['identicalVersions'].'</p>';
+		}
+
+		if ($blnReturnBuffer)
+		{
+			return $strBuffer;
 		}
 
 		/** @var BackendTemplate|object $objTemplate */
