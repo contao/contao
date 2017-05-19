@@ -18,7 +18,7 @@
 
   <?php if (!$this->hasErrors()): ?>
     <div style="display:none">
-      <label for="ctrl_<?= $this->id ?>_hp">Do not fill out this field</label>
+      <label for="ctrl_<?= $this->id ?>_hp">Do not fill in this field</label>
       <input type="text" name="<?= $this->name ?>_name" id="ctrl_<?= $this->id ?>_hp" value="">
     </div>
     <script>
