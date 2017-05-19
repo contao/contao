@@ -12,6 +12,7 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Handles the database installation.
@@ -99,8 +100,8 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
-        $fromSchema = $this->connection->getSchemaManager()->createSchema();
-        $toSchema = $this->schemaProvider->createSchema();
+        $fromSchema = $this->dropNonContaoTables($this->connection->getSchemaManager()->createSchema());
+        $toSchema = $this->dropNonContaoTables($this->schemaProvider->createSchema());
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
@@ -170,5 +171,23 @@ class Installer
         }
 
         $this->commands = $return;
+    }
+
+    /**
+     * Removes tables from the schema that do not start with tl_.
+     *
+     * @param Schema $schema
+     *
+     * @return Schema
+     */
+    private function dropNonContaoTables(Schema $schema)
+    {
+        foreach ($schema->getTableNames() as $tableName) {
+            if (0 !== strpos($tableName, 'tl_')) {
+                $schema->dropTable($tableName);
+            }
+        }
+
+        return $schema;
     }
 }
