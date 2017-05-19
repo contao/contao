@@ -42,11 +42,11 @@ class FormCaptcha extends \Widget
 	protected $strCaptchaKey;
 
 	/**
-	 * Security questions
+	 * Captcha values
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $strQuestion;
+	protected $arrCaptcha = array();
 
 	/**
 	 * The CSS class prefix
@@ -116,7 +116,7 @@ class FormCaptcha extends \Widget
 				break;
 
 			case 'question':
-				return $this->strQuestion;
+				return $this->getQuestion();
 				break;
 
 			default:
@@ -147,27 +147,44 @@ class FormCaptcha extends \Widget
 
 
 	/**
+	 * Generate the captcha values and store them in the session
+	 */
+	protected function generateCaptcha()
+	{
+		if ($this->arrCaptcha) {
+			return;
+		}
+
+		$int1 = rand(1, 9);
+		$int2 = rand(1, 9);
+
+		$this->arrCaptcha = array
+		(
+			'int1' => $int1,
+			'int2' => $int2,
+			'sum' => $int1 + $int2,
+			'key' => $this->strCaptchaKey,
+			'time' => time()
+		);
+
+		/** @var SessionInterface $objSession */
+		$objSession = \System::getContainer()->get('session');
+
+		$objSession->set('captcha_' . $this->strId, $this->arrCaptcha);
+	}
+
+
+	/**
 	 * Generate the captcha question
 	 *
 	 * @return string The question string
 	 */
 	protected function getQuestion()
 	{
-		$int1 = rand(1, 9);
-		$int2 = rand(1, 9);
+		$this->generateCaptcha();
 
 		$question = $GLOBALS['TL_LANG']['SEC']['question' . rand(1, 3)];
-		$question = sprintf($question, $int1, $int2);
-
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
-
-		$objSession->set('captcha_' . $this->strId, array
-		(
-			'sum' => $int1 + $int2,
-			'key' => $this->strCaptchaKey,
-			'time' => time()
-		));
+		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';
 		$arrCharacters = Utf8::str_split($question);
@@ -188,12 +205,9 @@ class FormCaptcha extends \Widget
 	 */
 	protected function getSum()
 	{
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		$this->generateCaptcha();
 
-		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
-
-		return $arrCaptcha['sum'];
+		return $this->arrCaptcha['sum'];
 	}
 
 
