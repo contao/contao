@@ -132,7 +132,7 @@ class PluginTest extends TestCase
 
         $files = [];
 
-        $loader = $this->getMock(LoaderInterface::class);
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->atLeastOnce())
             ->method('load')

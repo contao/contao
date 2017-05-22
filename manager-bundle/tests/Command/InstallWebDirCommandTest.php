@@ -134,4 +134,17 @@ class InstallWebDirCommandTest extends TestCase
             }
         }
     }
+
+    /**
+     * Tests that the install.php is removed from web directory.
+     */
+    public function testCommandRemovesInstallPhp()
+    {
+        $this->filesystem->dumpFile($this->tmpdir.'/web/install.php', 'foobar-content');
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['path' => $this->tmpdir]);
+
+        $this->assertFileNotExists($this->tmpdir.'/web/install.php');
+    }
 }
