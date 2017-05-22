@@ -182,8 +182,10 @@ class Installer
      */
     private function dropNonContaoTables(Schema $schema)
     {
+        $needle = $schema->getName().'.tl_';
+
         foreach ($schema->getTableNames() as $tableName) {
-            if (0 !== strpos($tableName, 'tl_')) {
+            if (0 !== strpos($tableName, $needle)) {
                 $schema->dropTable($tableName);
             }
         }
