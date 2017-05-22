@@ -56,7 +56,5 @@
             "dev-develop": "4.3.x-dev"
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
