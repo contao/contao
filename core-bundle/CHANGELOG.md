@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Add the "allowed member groups" setting (see contao/core#8528).
  * Hide the CAPTCHA field by default by adding a honeypot field (see #832).
  * Add the "href" parameter to the article list (see #694).
  * Show both paths and UUIDs in the "show" view (see #793).

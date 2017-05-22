@@ -56,6 +56,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $fop
  * @property string  $forms
  * @property string  $formp
+ * @property array   $amg
  * @property boolean $disable
  * @property string  $start
  * @property string  $stop

@@ -95,9 +95,11 @@ class BackendSwitch extends \Backend
 				$objTemplate->show = 1;
 			}
 
-			// Allow admins to switch user accounts
-			if ($this->User->isAdmin)
+			// Switch user accounts
+			if ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg))
 			{
+				$objTemplate->canSwitchUser = true;
+
 				// Remove old sessions
 				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
 							   ->execute(($time - \Config::get('sessionTimeout')), $strHash);
@@ -107,7 +109,8 @@ class BackendSwitch extends \Backend
 				{
 					$objUser = \MemberModel::findByUsername(\Input::post('user'));
 
-					if ($objUser !== null)
+					// Check the allowed member groups
+					if ($objUser !== null && ($this->User->isAdmin || count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
 					{
 						// Insert the new session
 						$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
@@ -145,7 +148,6 @@ class BackendSwitch extends \Backend
 		$objTemplate->fePreview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$objTemplate->hiddenElements = $GLOBALS['TL_LANG']['MSC']['hiddenElements'];
 		$objTemplate->action = ampersand(\Environment::get('request'));
-		$objTemplate->isAdmin = $this->User->isAdmin;
 
 		return $objTemplate->getResponse();
 	}
@@ -156,17 +158,32 @@ class BackendSwitch extends \Backend
 	 */
 	protected function getDatalistOptions()
 	{
+		$strGroups = '';
+
 		if (!$this->User->isAdmin)
 		{
-			header('HTTP/1.1 400 Bad Request');
-			die('You must be an administrator to use the script');
+			// No allowed member groups
+			if (!is_array($this->User->amg) || empty($this->User->amg))
+			{
+				header('Content-type: application/json');
+				die(json_encode(array()));
+			}
+
+			$arrGroups = array();
+
+			foreach ($this->User->amg as $intGroup)
+			{
+				$arrGroups[] = '%"' . (int) $intGroup . '"%';
+			}
+
+			$strGroups = " AND (groups LIKE '" . implode("' OR GROUPS LIKE '", $arrGroups) . "')";
 		}
 
 		$arrUsers = array();
 		$time = \Date::floorToMinute();
 
 		// Get the active front end users
-		$objUsers = $this->Database->prepare("SELECT username FROM tl_member WHERE username LIKE ? AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username")
+		$objUsers = $this->Database->prepare("SELECT username FROM tl_member WHERE username LIKE ?$strGroups AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username")
 								   ->limit(10)
 								   ->execute(str_replace('%', '', \Input::post('value')) . '%');
 

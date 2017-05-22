@@ -25,6 +25,7 @@ namespace Contao;
  * @property string  $fop
  * @property string  $forms
  * @property string  $formp
+ * @property string  $amg
  * @property string  $alexf
  * @property boolean $disable
  * @property string  $start
@@ -44,6 +45,7 @@ namespace Contao;
  * @method static UserGroupModel|null findOneByFop($val, $opt=array())
  * @method static UserGroupModel|null findOneByForms($val, $opt=array())
  * @method static UserGroupModel|null findOneByFormp($val, $opt=array())
+ * @method static UserGroupModel|null findOneByAmg($val, $opt=array())
  * @method static UserGroupModel|null findOneByAlexf($val, $opt=array())
  * @method static UserGroupModel|null findOneByDisable($val, $opt=array())
  * @method static UserGroupModel|null findOneByStart($val, $opt=array())
@@ -59,6 +61,7 @@ namespace Contao;
  * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByFop($val, $opt=array())
  * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByForms($val, $opt=array())
  * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByFormp($val, $opt=array())
+ * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByAmg($val, $opt=array())
  * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByAlexf($val, $opt=array())
  * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByDisable($val, $opt=array())
  * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByStart($val, $opt=array())
@@ -78,6 +81,7 @@ namespace Contao;
  * @method static integer countByFop($val, $opt=array())
  * @method static integer countByForms($val, $opt=array())
  * @method static integer countByFormp($val, $opt=array())
+ * @method static integer countByAmg($val, $opt=array())
  * @method static integer countByAlexf($val, $opt=array())
  * @method static integer countByDisable($val, $opt=array())
  * @method static integer countByStart($val, $opt=array())
