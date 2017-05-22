@@ -18,7 +18,7 @@
         "doctrine/doctrine-bundle": "^1.6",
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
-        "contao/manager-plugin": "^2.0",
+        "contao/manager-plugin": "^2.1",
         "contao/core-bundle": "~4.4.0@dev",
         "contao/installation-bundle": "~4.4.0@dev"
     },

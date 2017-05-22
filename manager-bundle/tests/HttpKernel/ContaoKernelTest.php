@@ -210,7 +210,6 @@ class ContaoKernelTest extends TestCase
         $pluginLoader
             ->expects($this->atLeastOnce())
             ->method('getInstancesOf')
-            ->with(PluginLoader::CONFIG_PLUGINS)
             ->willReturn([$this->mockConfigPlugin($loader), $this->mockConfigPlugin($loader)])
         ;
 
