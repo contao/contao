@@ -45,5 +45,5 @@
         },
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "RC"
 }
