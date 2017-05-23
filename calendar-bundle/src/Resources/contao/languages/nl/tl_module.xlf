@@ -15,13 +15,15 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Toont evenementen slechts eenmaal, ook als ze meerdere dagen overbruggen.</target>
+        <target>Toont gebeurtenissen slechts eenmaal, ook als ze meerdere dagen omvatten.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
+        <target>Verberg lopende gebeurtenissen</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>
+        <target>Huidige gebeurtenissen verbergen in lijst .</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
@@ -33,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
-        <target>Indeling evenementenlijst</target>
+        <target>Indeling lijst van gebeurtenissen</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Kies een indeling voor de evenementenlijst.</target>
+        <target>Kies een indeling voor lijst van gebeurtenissen.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
