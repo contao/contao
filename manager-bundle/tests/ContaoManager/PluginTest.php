@@ -88,6 +88,45 @@ class PluginTest extends TestCase
     }
 
     /**
+     * Tests the registerContainerConfiguration() method in the production environment.
+     */
+    public function testRegisterContainerConfigurationInProd()
+    {
+        $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $this->plugin);
+
+        $files = [];
+        $loader = $this->createMock(LoaderInterface::class);
+
+        $loader
+            ->expects($this->atLeastOnce())
+            ->method('load')
+            ->willReturnCallback(
+                function ($resource) use (&$files) {
+                    if (is_string($resource)) {
+                        $files[] = basename($resource);
+                    } elseif (is_callable($resource)) {
+                        $container = new ContainerBuilder();
+                        $container->setParameter('kernel.environment', 'prod');
+                        call_user_func($resource, $container);
+                    }
+                }
+            )
+        ;
+
+        $this->plugin->registerContainerConfiguration($loader, []);
+
+        $this->assertContains('framework.yml', $files);
+        $this->assertContains('security.yml', $files);
+        $this->assertContains('contao.yml', $files);
+        $this->assertContains('twig.yml', $files);
+        $this->assertContains('doctrine.yml', $files);
+        $this->assertContains('swiftmailer.yml', $files);
+        $this->assertContains('monolog.yml', $files);
+        $this->assertContains('lexik_maintenance.yml', $files);
+        $this->assertNotContains('web_profiler.yml', $files);
+    }
+
+    /**
      * Tests the registerContainerConfiguration() method.
      */
     public function testRegisterContainerConfigurationInDev()
@@ -124,42 +163,6 @@ class PluginTest extends TestCase
         $this->assertContains('monolog.yml', $files);
         $this->assertContains('lexik_maintenance.yml', $files);
         $this->assertContains('web_profiler.yml', $files);
-    }
-
-    public function testRegisterContainerConfigurationInProd()
-    {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $this->plugin);
-
-        $files = [];
-
-        $loader = $this->createMock(LoaderInterface::class);
-        $loader
-            ->expects($this->atLeastOnce())
-            ->method('load')
-            ->willReturnCallback(
-                function ($resource) use (&$files) {
-                    if (is_string($resource)) {
-                        $files[] = basename($resource);
-                    } elseif (is_callable($resource)) {
-                        $container = new ContainerBuilder();
-                        $container->setParameter('kernel.environment', 'prod');
-                        call_user_func($resource, $container);
-                    }
-                }
-            )
-        ;
-
-        $this->plugin->registerContainerConfiguration($loader, []);
-
-        $this->assertContains('framework.yml', $files);
-        $this->assertContains('security.yml', $files);
-        $this->assertContains('contao.yml', $files);
-        $this->assertContains('twig.yml', $files);
-        $this->assertContains('doctrine.yml', $files);
-        $this->assertContains('swiftmailer.yml', $files);
-        $this->assertContains('monolog.yml', $files);
-        $this->assertContains('lexik_maintenance.yml', $files);
-        $this->assertNotContains('web_profiler.yml', $files);
     }
 
     /**
