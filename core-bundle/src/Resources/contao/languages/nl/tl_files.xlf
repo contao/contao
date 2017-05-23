@@ -66,12 +66,10 @@
         <target>Hoogte van het belangrijkste deel ingeven.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta information</source>
-        <target>Meta informatie</target>
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta information.</source>
-        <target>Hier kunt u meta-informatie van het bestand opgeven.</target>
+        <source>Here you can enter the file meta data.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

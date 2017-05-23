@@ -339,8 +339,7 @@
         <target>Користи почетни директоријум</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Користи почетни директоријум као извор фајла у случају да је корисник пријављен.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

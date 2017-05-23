@@ -201,6 +201,13 @@
         <source>Here you can define the form permissions.</source>
         <target>フォームの権限を設定できます。</target>
       </trans-unit>
+      <trans-unit id="tl_user.amg.0">
+        <source>Allowed member groups</source>
+        <target>許可するメンバーグループ</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.1">
+        <source>Members of these groups can be used in the front end preview.</source>
+      </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
         <target>停止</target>
@@ -276,6 +283,10 @@
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>
         <target>フォームの権限</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg_legend">
+        <source>Allowed member groups</source>
+        <target>許可するメンバーグループ</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

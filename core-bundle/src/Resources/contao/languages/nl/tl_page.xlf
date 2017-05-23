@@ -342,8 +342,7 @@
         <target>Naam en type</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta information</source>
-        <target>Meta informatie</target>
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>

@@ -139,6 +139,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
+        <target>Éléments de contenu</target>
       </trans-unit>
       <trans-unit id="MOD.tl_form_field">
         <source>Fields</source>
@@ -150,6 +151,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
         <source>Media queries</source>
+        <target>Media queries</target>
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
@@ -161,6 +163,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_style">
         <source>Format definitions</source>
+        <target>Définitions de formatage</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>

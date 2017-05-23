@@ -339,8 +339,7 @@
         <target>Uporabi domač direktorij</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Uporabi domačo mapo kot izvor datotek, če je uporabnik preverjen.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

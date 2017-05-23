@@ -334,8 +334,7 @@
         <target>Naziv in tip</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta information</source>
-        <target>Meta informacije</target>
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>

@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_member.assignDir.0">
         <source>Set home directory</source>
-        <target>Ein Benutzerverzeichnis festlegen</target>
+        <target>Ein Home-Verzeichnis festlegen</target>
       </trans-unit>
       <trans-unit id="tl_member.assignDir.1">
         <source>Define a home directory for the member.</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_member.homeDir.0">
         <source>Home directory</source>
-        <target>Benutzerverzeichnis</target>
+        <target>Home-Verzeichnis</target>
       </trans-unit>
       <trans-unit id="tl_member.homeDir.1">
         <source>Please select a folder from the files directory.</source>
@@ -215,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_member.homedir_legend">
         <source>Home directory</source>
-        <target>Benutzerverzeichnis</target>
+        <target>Home-Verzeichnis</target>
       </trans-unit>
       <trans-unit id="tl_member.account_legend">
         <source>Account settings</source>

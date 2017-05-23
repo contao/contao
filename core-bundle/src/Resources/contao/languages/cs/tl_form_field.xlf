@@ -326,8 +326,7 @@
         <target>Použít domovský adresář</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Uložit nahrávané soubory do domácího adresáře, pokud je přihlášený alespoň jeden z uživatelů.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -555,6 +554,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
+        <target>Importovat možnosti ze souboru CSV</target>
       </trans-unit>
     </body>
   </file>

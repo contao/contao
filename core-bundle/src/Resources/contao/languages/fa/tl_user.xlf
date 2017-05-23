@@ -200,6 +200,13 @@
         <source>Here you can define the form permissions.</source>
         <target>اینجا می‌توانید مجوزهای فرم را تعریف نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_user.amg.0">
+        <source>Allowed member groups</source>
+        <target>گروه‌های اعضاء مجاز</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.1">
+        <source>Members of these groups can be used in the front end preview.</source>
+      </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
         <target>غیرفعال</target>
@@ -275,6 +282,10 @@
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>
         <target>مجوزهای فرم</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg_legend">
+        <source>Allowed member groups</source>
+        <target>گروه‌های اعضاء مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

@@ -339,8 +339,7 @@
         <target>Home könyvtár alkalmazása</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Home könyvtár használata a fájlok forrásaként regisztrált tagok esetén.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

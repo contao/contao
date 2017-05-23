@@ -201,6 +201,14 @@
         <source>Here you can define the form permissions.</source>
         <target>Hier können Sie die Formularrechte festlegen.</target>
       </trans-unit>
+      <trans-unit id="tl_user.amg.0">
+        <source>Allowed member groups</source>
+        <target>Erlaubte Mitgliedergruppen</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.1">
+        <source>Members of these groups can be used in the front end preview.</source>
+        <target>Mitglieder dieser Gruppe können in der Frontend-Vorschau verwendet werden.</target>
+      </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
         <target>Deaktivieren</target>
@@ -276,6 +284,10 @@
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>
         <target>Formular-Rechte</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Erlaubte Mitgliedergruppen</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

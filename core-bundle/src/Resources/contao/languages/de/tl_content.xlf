@@ -339,11 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
-        <target>Benutzerverzeichnis verwenden</target>
+        <target>Home-Verzeichnis verwenden</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Das Benutzerverzeichnis als Dateiquelle verwenden, wenn sich ein Benutzer angemeldet hat.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Das Home-Verzeichnis als Dateiquelle verwenden, wenn sich ein Mitglied angemeldet hat.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

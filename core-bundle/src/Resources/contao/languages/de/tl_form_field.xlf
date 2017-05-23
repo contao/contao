@@ -323,11 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.0">
         <source>Use home directory</source>
-        <target>Benutzerverzeichnis verwenden</target>
+        <target>Home-Verzeichnis verwenden</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Die Datei im Benutzerverzeichnis speichern, wenn sich ein Benutzer angemeldet hat.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>Die Datei im Home-Verzeichnis speichern, wenn sich ein Mitglied angemeldet hat.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>

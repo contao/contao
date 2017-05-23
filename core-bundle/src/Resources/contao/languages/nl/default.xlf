@@ -207,18 +207,23 @@
       </trans-unit>
       <trans-unit id="ERR.filesOnly">
         <source>You can only select files!</source>
+        <target>U kunt alleen bestanden selecteren!</target>
       </trans-unit>
       <trans-unit id="ERR.foldersOnly">
         <source>You can only select folders!</source>
+        <target>U kunt alleen mappen selecteren!</target>
       </trans-unit>
       <trans-unit id="ERR.pathOnly">
         <source>You can only select files or folders within &quot;%s&quot;!</source>
+        <target>U kunt alleen bestanden of mappen binnen &quot;%s&quot; selecteren!</target>
       </trans-unit>
       <trans-unit id="ERR.extensionsOnly">
         <source>You can only select &quot;%s&quot; files!</source>
+        <target>U kunt alleen &quot;%s&quot; bestanden selecteren!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
+        <target>Uw selectie bevat ongeldige pagina IDs!</target>
       </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
@@ -275,9 +280,6 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Voer alleen de volgende tekens in: A-Z0-9[]_-</target>
-      </trans-unit>
-      <trans-unit id="ERR.versionWarning">
-        <source>Another user has created version %s while you were editing version %s of this record.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -909,6 +911,7 @@
       </trans-unit>
       <trans-unit id="MSC.ow_import.1">
         <source>Import options from a CSV file</source>
+        <target>Importeer van een CSV bestand</target>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
@@ -1688,6 +1691,9 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <source>Relative path</source>
         <target>Relatief pad</target>
       </trans-unit>
+      <trans-unit id="MSC.fileMeta">
+        <source>Meta data</source>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Versie</target>
@@ -1770,6 +1776,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.filePicker">
         <source>Files</source>
+        <target>Bestanden</target>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
         <source>Pages</source>
@@ -2243,6 +2250,16 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <source>Invalid token</source>
         <target>Ongeldig token</target>
       </trans-unit>
+      <trans-unit id="MSC.versionConflict">
+        <source>Version conflict</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict1">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
+        <target>Een andere gebruiker heeft versie %s gemaakt terwijl u versie %s van dit record bewerkt.</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict2">
+        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+      </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
         <target>U kunt items anders rangschikken door ze te slepen</target>
@@ -2260,8 +2277,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to store file meta information.</source>
-        <target>U dient een startpagina toe te voegen aan de site-structuur om meta-informatie op te kunnen slaan.</target>
+        <source>You have to add a root page in the site structure to enter file meta data.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

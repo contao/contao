@@ -326,8 +326,7 @@
         <target>استفاده از دایرکتوری شخصی</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>ذخیره پرونده در دایرکتوری شخصی برای کاربران تایید شده.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>

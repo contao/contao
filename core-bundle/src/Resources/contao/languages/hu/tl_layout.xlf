@@ -277,16 +277,16 @@
         <target>Itt lehet megadni a &lt;body&gt; tag osztályait.</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
-        <source>Viewport</source>
+        <source>Viewport tag</source>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
-        <source>Here you can overwrite the viewport content (defaults to &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</source>
+        <source>Here you can set a custom viewport tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can overwrite the title tag (defaults to &lt;em&gt;{{page::pageTitle}} - {{page::rootPageTitle}}&lt;/em&gt;).</source>
+        <source>Here you can set a custom title tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>

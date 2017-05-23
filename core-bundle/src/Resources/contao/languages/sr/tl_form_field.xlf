@@ -326,8 +326,7 @@
         <target>Користи почетни директоријум</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Сачувај фајл у почетни директоријум ако је корисник аутентификован.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>

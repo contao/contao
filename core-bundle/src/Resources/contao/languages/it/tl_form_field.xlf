@@ -326,8 +326,7 @@
         <target>Usa cartella principale</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Se l'utente è loggato, archivia i file nella sua cartella principale invece che caricare una cartella.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
