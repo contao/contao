@@ -1,0 +1,3 @@
+<form id="<?= $this->formId ?>">
+  <div class="uploader"></div>
+</form>

@@ -1,0 +1,405 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="hu">
+    <body>
+      <trans-unit id="tl_settings.websiteTitle.0">
+        <source>Website title</source>
+        <target>Website címe</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.websiteTitle.1">
+        <source>Please enter the title of the website.</source>
+        <target>Adja meg a honlap címét.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.adminEmail.0">
+        <source>E-mail address of the system administrator</source>
+        <target>A rendszer adminisztrátor e-mail címe.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.adminEmail.1">
+        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
+        <target>Automatikusan generált üzeneteket fog erre a címre küldeni a rendszer, mint például a feliratkozást visszaigazoló értesítő.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.dateFormat.0">
+        <source>Date format</source>
+        <target>Dátum formátum</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.dateFormat.1">
+        <source>The date format string will be parsed with the PHP date() function.</source>
+        <target>A dátum formátumát a PHP date() függvény határozza meg.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeFormat.0">
+        <source>Time format</source>
+        <target>Idő formátum</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeFormat.1">
+        <source>The time format string will be parsed with the PHP date() function.</source>
+        <target>A idő formátumát a PHP date() függvény határozza meg.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.datimFormat.0">
+        <source>Date and time format</source>
+        <target>Dátum és idő formátum</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.datimFormat.1">
+        <source>The date and time format string will be parsed with the PHP date() function.</source>
+        <target>A dátum és idő formátumát a PHP date() függvény határozza meg.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeZone.0">
+        <source>Time zone</source>
+        <target>Időzóna</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeZone.1">
+        <source>Please select the server time zone.</source>
+        <target>Válassza ki a szerver időzónáját.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.characterSet.0">
+        <source>Character set</source>
+        <target>Karakterkészlet</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.characterSet.1">
+        <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
+        <target>Ajánlott az UTF-8 használata, így a különleges karakterek is helyesen jelennek meg.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableCron.0">
+        <source>Disable the command scheduler</source>
+        <target>Tiltsa le a parancs ütemezőt.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableCron.1">
+        <source>Disable the periodic command scheduler and execute the cron.php script by a real cron job (which you have to set up manually).</source>
+        <target>Tiltsa le az ütemezett parancs végrehajtást és helyette a cron.php script fog végrehajtódni (kézzel kell beállítania).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Markup sűrítése</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Tömörítse a HTML kódot mielőtt elküldi a böngészőnek.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gzipScripts.0">
+        <source>Compress scripts</source>
+        <target>Scriptek tömörítése</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gzipScripts.1">
+        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
+        <target>Hozza létre egy tömörített változatát a CSS és JavaScript fájloknak. A .htaccess fájl módosítása szükséges hozzá.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.resultsPerPage.0">
+        <source>Items per page</source>
+        <target>Elem oldalanként</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.resultsPerPage.1">
+        <source>Here you can define the number of items per page in the back end.</source>
+        <target>Itt adhatja meg a tételek számát oldalanként a back end részen.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxResultsPerPage.0">
+        <source>Maximum items per page</source>
+        <target>Elemek maximális száma oldalanként</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxResultsPerPage.1">
+        <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
+        <target>Ez az általános korlát lép életbe, ha a felhasználó a &quot;minden elem mutatása&quot; opciót választja.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.fileSyncExclude.0">
+        <source>Exclude folders from synchronization</source>
+        <target>Kivéve mappák szinkronizálása</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.fileSyncExclude.1">
+        <source>Here you can enter a comma separated list of folders which will be exempt from the files synchronization (e.g. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Note that excluded resources cannot be used in e.g. image or download elements!</source>
+        <target>Itt tudja megadni vesszővel elválasztva azon könyvtárak listáját, amelyek mentesülnek a fájlok szinkronizálása alól(pl. &lt;em&gt;mellékletek,music_academy&lt;/em&gt;). Vegye figyelembe, hogy a kizárt erőforrások nem használhatóak pl.: képként, vagy letölthető elemként!</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.doNotCollapse.0">
+        <source>Do not collapse elements</source>
+        <target>Ne zárja össze az elemeket</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.doNotCollapse.1">
+        <source>Do not collapse elements in the back end preview.</source>
+        <target>Ne zárja össze az elemeket a back end előnézetnél.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.sslProxyDomain.0">
+        <source>SSL proxy domain</source>
+        <target>SSL proxy domain</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.sslProxyDomain.1">
+        <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
+        <source>Anonymize IP addresses</source>
+        <target>IP cím titkosítása</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
+        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
+        <target>Minden az adatbázisban tárolt IP cím titkosítása, kivéve a &lt;em&gt;tl_session&lt;/em&gt; táblázatban (az IP cím biztonsági okokból az üléshez van hozzárendelve).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
+        <source>Anonymize Google Analytics</source>
+        <target>Google Analytics titkosítás</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
+        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
+        <target>A Google Analytics-nek küldött IP címek titkosítása.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
+        <source>Do not redirect empty URLs</source>
+        <target>Ne irányítsa át az üres URL-eket</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
+        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
+        <target>Egy üres URL honlapján való megjelenítése helyett irányításon át a nyelvi gyökér oldalra (nem ajánlott).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.useAutoItem.0">
+        <source>Enable auto_item</source>
+        <target>auto_item engedélyezése</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.useAutoItem.1">
+        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
+        <target>Kihagyja az &lt;em&gt;items/&lt;/em&gt; vagy &lt;em&gt;események/&lt;/em&gt; jelöléseket az URL címből, és automatikusan beállítja az elem alapján az &lt;em&gt;auto_item&lt;/em&gt; paramétert.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.folderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Könyvtár stílusú URLek</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.folderUrl.1">
+        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Itt engedélyezheti könyvtárszerkezet stílusú oldal álneveket, mint &lt;em&gt; docs/install/download.html&lt;/em&gt; az ilyen alak helyett: &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedTags.0">
+        <source>Allowed HTML tags</source>
+        <target>Engedélyezett HTML elemek</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedTags.1">
+        <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
+        <target>Itt megadhat egy listát az engedélyezett HTML elemekről, melyek nem lesznek eltávolítva.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableRefererCheck.0">
+        <source>Disable request tokens</source>
+        <target>Referer ellenőrzés kikapcsolása</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.disableRefererCheck.1">
+        <source>Do not check the request token when a form is submitted (insecure!).</source>
+        <target>Ne ellenőrizze a kérés tokent, mikor elküldi az űrlapot (nem biztonságos!).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.lockPeriod.0">
+        <source>Account locking time</source>
+        <target>Fiók zárolási idő</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.lockPeriod.1">
+        <source>An account will be locked if a wrong password is entered three times in a row.</source>
+        <target>A fiók zárolva lesz, ha egymást követő 3 próbálkozás során helytelen jelszó kerül megadásra.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedDownload.0">
+        <source>Download file types</source>
+        <target>Letölthető fájltípusok</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedDownload.1">
+        <source>Here you can enter a comma separated list of downloadable file types.</source>
+        <target>Itt adhatja meg a vesszővel elválasztott listáját a letölthető fájltípusoknak.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.editableFiles.0">
+        <source>Editable file types</source>
+        <target>Szerkeszthető fájltípusok</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.editableFiles.1">
+        <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
+        <target>Itt adhatja meg a vesszővel elválasztott listáját a forrás szerkesztőben módosítható fájltípusoknak.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.templateFiles.0">
+        <source>Template file types</source>
+        <target>Template fájltípusok</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.templateFiles.1">
+        <source>Here you can enter a comma separated list of supported template file types.</source>
+        <target>Vesszővel elválasztva adja meg a támogatott fájltípusokat.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxImageWidth.0">
+        <source>Maximum front end width</source>
+        <target>Maximális szélesség a front enden</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxImageWidth.1">
+        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
+        <target>Ha a szélessége egy képnek vagy filmnek meghaladja ezt az értéket, akkor automatikusan ki lesz igazítva.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgWidth.0">
+        <source>Maximum GD image width</source>
+        <target>Maximum GD kép szélesség</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgWidth.1">
+        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
+        <target>Itt adhatja meg a kép maximális szélességét amelyet a GD könytár feldolgozáskor használ, ha ez lehetséges.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgHeight.0">
+        <source>Maximum GD image height</source>
+        <target>Maximum GD kép magasság</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.gdMaxImgHeight.1">
+        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
+        <target>Itt adhatja meg a kép maximális szélességét amelyet a GD könytár feldolgozáskor használ, ha ez lehetséges.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploadTypes.0">
+        <source>Upload file types</source>
+        <target>Feltölthető fájltípusok</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploadTypes.1">
+        <source>Here you can enter a comma separated list of uploadable file types.</source>
+        <target>Itt adhatja meg a vesszővel elválasztott listáját a feltölthető fájltípusoknak.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxFileSize.0">
+        <source>Maximum upload file size</source>
+        <target>Maximálisan feltölthető fájl méret</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxFileSize.1">
+        <source>Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).</source>
+        <target>Itt tudja megadni a feltölthető maximális fájlméretet bájtban (1 MB = 1000 kB = 1000000 byte).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageWidth.0">
+        <source>Maximum image width</source>
+        <target>Maximális kép szélesség</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels.</source>
+        <target>Itt lehet megadni a feltölthető kép maximális szélességét pixelben.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageHeight.0">
+        <source>Maximum image height</source>
+        <target>Maximális kép magasság</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels.</source>
+        <target>Itt lehet megadni a feltölthető kép maximális magasságát pixelben.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.enableSearch.0">
+        <source>Enable searching</source>
+        <target>Keresés bekapcsolása</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.enableSearch.1">
+        <source>Index pages so they can be searched.</source>
+        <target>Indexeli az oldalakat, lehetővé téve a keresést.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.indexProtected.0">
+        <source>Index protected pages</source>
+        <target>Védett oldalak indexelése</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.indexProtected.1">
+        <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
+        <target>Óvatosan használja ezt a beállítást és mindig zárja ki a személyes információkkal rendelkező oldalakat az indexelésből!</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.0">
+        <source>Storage time for undo steps</source>
+        <target>Visszavonási lépések tárolási ideje</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.1">
+        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
+        <target>Itt adhatja meg a visszavonási lépések tárolási idejét másodpercben (24 óra = 86400 másodperc).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.0">
+        <source>Storage time for versions</source>
+        <target>Verziók tárolási ideje</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.1">
+        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
+        <target>Itt adhatja meg a különböző oldal elemek verzióinak tárolási idejét másodpercben (90 nap = 7.776.000 másodperc).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.0">
+        <source>Storage time for log entries</source>
+        <target>Naplóbejegyzések tárolási ideje</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.1">
+        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
+        <target>Itt adhatja meg a naplóbejegyzések tárolási idejét másodpercben (14 nap = 1.209.600 másodperc).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.sessionTimeout.0">
+        <source>Session timeout</source>
+        <target>Munkamenet időtúllépése</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.sessionTimeout.1">
+        <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
+        <target>Itt tudja megadni a maximális élettartamát a munkamenetnek másodpercben (60 perc = 3600 másodperc).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.autologin.0">
+        <source>Auto login period</source>
+        <target>Az automatikus bejelentkezés időtartama</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.autologin.1">
+        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
+        <target>Itt lehet beállítani a front end automatikus bejelentkezési határidőt (90 nap = 7776000 másodperc).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultUser.0">
+        <source>Default page owner</source>
+        <target>Alapértelmezett oldal tulajdonos</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultUser.1">
+        <source>Here you can select a user as the default owner of a page.</source>
+        <target>Itt választhatja ki azt a felhasználót aki az oldal alapértelmezett tulajdonosa lesz.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultGroup.0">
+        <source>Default page group</source>
+        <target>Alapértelmezett oldal csoport</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultGroup.1">
+        <source>Here you can select a group as the default owner of a page.</source>
+        <target>Itt választhatja ki az oldal tulajdonosának alapértelmezett csoportját.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultChmod.0">
+        <source>Default access rights</source>
+        <target>Alapértelmezett hozzáférési jogok</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultChmod.1">
+        <source>Please assign the default access rights for pages and articles.</source>
+        <target>Kérem adja meg az alapértelmezett jogosultságokat az oldalakhoz és cikkekhez.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.title_legend">
+        <source>Website title</source>
+        <target>Website címe</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.date_legend">
+        <source>Date and time</source>
+        <target>Dátum és idő</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.global_legend">
+        <source>Global configuration</source>
+        <target>Globális beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.backend_legend">
+        <source>Back end configuration</source>
+        <target>Back end beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.frontend_legend">
+        <source>Front end configuration</source>
+        <target>Front end beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.proxy_legend">
+        <source>Proxy configuration</source>
+        <target>Proxy beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.privacy_legend">
+        <source>Privacy settings</source>
+        <target>Adatvédelmi beálítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.security_legend">
+        <source>Security settings</source>
+        <target>Biztonsági beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.files_legend">
+        <source>Files and images</source>
+        <target>Fájlok és képek</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploads_legend">
+        <source>Upload settings</source>
+        <target>Feltöltés beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.search_legend">
+        <source>Search engine settings</source>
+        <target>Kereső motor beállítások</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeout_legend">
+        <source>Timeout values</source>
+        <target>Időtúllépési értékek</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.chmod_legend">
+        <source>Default access rights</source>
+        <target>Alapértelmezett hozzáférési jogok</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.edit">
+        <source>Edit the local configuration</source>
+        <target>A helyi konfiguráció szerkesztése</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

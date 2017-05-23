@@ -1,0 +1,8 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ statusName }}
+{% endblock %}
+{% block main %}
+    <h2>{{ error.matter }}</h2>
+    <p>{{ exception }}</p>
+{% endblock %}
