@@ -10,9 +10,13 @@
 
 
 /**
- * Extend default palette
+ * Extend the default palette
  */
-$GLOBALS['TL_DCA']['tl_user_group']['palettes']['default'] = str_replace('formp;', 'formp;{faq_legend},faqs,faqp;', $GLOBALS['TL_DCA']['tl_user_group']['palettes']['default']);
+Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+    ->addLegend('faq_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
+    ->addField(array('faqs', 'faqp'), 'faq_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('default', 'tl_user_group')
+;
 
 
 /**
