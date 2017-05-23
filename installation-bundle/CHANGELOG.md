@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.4.0-RC1 (2017-05-23)
 
  * Ignore tables not starting with "tl_" in the install tool (see #51).
  * Re-add the "sqlCompileCommand" hook (see #51).
