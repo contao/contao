@@ -98,12 +98,17 @@
         <target>Kommentatorens IP adresse.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
-        <source>Notified</source>
-        <target>Underrettet</target>
+        <source>Notified (comment)</source>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
         <target>Underrettelsen om denne kommentar er blevet afsendt.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>

@@ -1,6 +1,6 @@
 # Contao comments bundle change log
 
-### DEV
+### 4.4.0-RC1 (2017-05-23)
 
  * Notify subscribers of replies (see contao/core#8565).
 

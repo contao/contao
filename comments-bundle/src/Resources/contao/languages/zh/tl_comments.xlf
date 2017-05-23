@@ -98,12 +98,17 @@
         <target>作者的IP地址</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
-        <source>Notified</source>
-        <target>通知</target>
+        <source>Notified (comment)</source>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
         <target>这条评论的通知已发送。</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>

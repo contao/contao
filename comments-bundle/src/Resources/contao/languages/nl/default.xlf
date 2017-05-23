@@ -118,8 +118,8 @@ Annuleren: %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
-        <target>Een nieuwe reactie is toegevoegd aan %s</target>
+        <source>New comment on %s</source>
+        <target>Nieuwe reactie op %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
         <source>Hello %s,
@@ -142,6 +142,34 @@ een nieuwe reactie is toegevoegd aan een pagina waarop u geabonneerd bent:
 ---
 
 Om uw inschrijving te beëindigen klik hier:
+%s
+</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+        <target>Nieuw antwoord op reactie %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
+        <target>Hallo %s,
+
+er is een nieuw antwoord op een reactie toegevoegd aan een pagina waarop u bent aangemeld:
+
+%s
+
+---
+
+Om uw aanmelding te annuleren, klik hier:
 %s
 </target>
       </trans-unit>

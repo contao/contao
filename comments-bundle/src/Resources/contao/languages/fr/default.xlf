@@ -118,8 +118,8 @@ Annuler : %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
-        <target>Un nouveau commentaire a été ajouté sur %s</target>
+        <source>New comment on %s</source>
+        <target>Nouveau commentaire sur %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
         <source>Hello %s,
@@ -144,6 +144,22 @@ Un nouveau commentaire a été ajouté sur une page que vous suivez :
 Pour annuler votre abonnement, veuillez cliquer ici :
 %s
 </target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
       </trans-unit>
     </body>
   </file>

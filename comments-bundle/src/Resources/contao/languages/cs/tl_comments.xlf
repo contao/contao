@@ -98,12 +98,20 @@
         <target>IP adresa autora</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
-        <source>Notified</source>
-        <target>Informován(a)</target>
+        <source>Notified (comment)</source>
+        <target>Oznámený (komentář)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
         <target>Oznámení o novém komentáři bylo posláno. </target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+        <target>Oznámený (odpověď)</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
+        <target>Bylo odesláno oznámení k tomuto komentáři.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>

@@ -118,7 +118,7 @@ Widersprechen: %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
+        <source>New comment on %s</source>
         <target>Neuer Kommentar auf %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
@@ -136,6 +136,34 @@ To cancel your subscription, please click here:
         <target>Hallo %s,
 
 auf einer Seite, die Sie abonniert haben, wurde ein neuer Kommentar hinzugefügt:
+
+%s
+
+---
+
+Klicken Sie hier, um Ihr Abonnement zu kündigen:
+%s
+</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+        <target>Neue Antwort auf einen Kommentar auf %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
+        <target>Hallo %s,
+
+auf einer Seite, die Sie abonniert haben, wurde eine neue Antwort auf einen Kommentar hinzugefügt:
 
 %s
 

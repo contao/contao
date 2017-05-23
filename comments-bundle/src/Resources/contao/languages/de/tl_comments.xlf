@@ -98,12 +98,20 @@
         <target>Die IP-Adresse des Autors.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
-        <source>Notified</source>
-        <target>Benachrichtigt</target>
+        <source>Notified (comment)</source>
+        <target>Benachrichtigt (Kommentar)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
         <target>Die Benachrichtigung für diesen Kommentar wurde gesendet.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+        <target>Benachrichtigt (Antwort)</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
+        <target>Die Benachrichtigung für die Antwort auf diesen Kommentar wurde gesendet.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
