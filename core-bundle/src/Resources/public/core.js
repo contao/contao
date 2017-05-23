@@ -50,30 +50,6 @@ var AjaxRequest =
 			return false;
 		}
 
-		new Request.Contao({
-			url: url,
-			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
-			onSuccess: function(txt) {
-				var li = new Element('li', {
-					'id': id,
-					'class': 'tl_parent',
-					'html': txt
-				}).inject(parent, 'after');
-
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
-				parent.removeClass('node-collapsed').addClass('node-expanded');
-				AjaxRequest.hideBox();
-
-				// HOOK
-				window.fireEvent('ajax_change');
-   			}
-		}).post({'action':'loadNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-
 		return false;
 	},
 

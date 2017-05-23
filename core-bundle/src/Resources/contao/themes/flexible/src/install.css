@@ -8,7 +8,7 @@
 
 /* Body */
 body {
-	background:#eaeaea;
+	background:#eaeaec;
 }
 
 /* Header */
@@ -18,7 +18,7 @@ body {
 }
 #header h1 {
 	margin:0;
-	padding:18px 12px 18px 46px;
+	padding:15px 12px 15px 46px;
 	background:#f47c00 url("icons/logo.svg") no-repeat 15px center;
 	color:#fff;
 	font-size:1.125rem;
