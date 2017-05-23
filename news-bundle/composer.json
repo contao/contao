@@ -53,5 +53,5 @@
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "RC"
 }
