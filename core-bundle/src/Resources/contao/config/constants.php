@@ -10,7 +10,7 @@
 
 // Core version
 define('VERSION', '4.4');
-define('BUILD', '0-beta1');
+define('BUILD', '0-RC1');
 define('LONG_TERM_SUPPORT', true);
 
 // Link constants

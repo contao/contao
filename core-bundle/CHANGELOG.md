@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.0-RC1 (2017-05-23)
 
  * Tweak the back end template. 
  * Add the "allowed member groups" setting (see contao/core#8528).

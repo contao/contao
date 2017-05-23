@@ -89,7 +89,8 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/orm": "<2.4",
         "doctrine/doctrine-migrations-bundle": "<1.1",
-        "swiftmailer/swiftmailer": "<5.4.5"
+        "swiftmailer/swiftmailer": "<5.4.5",
+        "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
     },
     "autoload": {
         "psr-4": {
