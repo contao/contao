@@ -18,7 +18,7 @@ body {
 }
 #header h1 {
 	margin:0;
-	padding:15px 12px 15px 46px;
+	padding:15px 12px 15px 51px;
 	background:#f47c00 url("icons/logo.svg") no-repeat 15px center;
 	color:#fff;
 	font-size:1.125rem;
@@ -26,8 +26,8 @@ body {
 
 /* Main */
 #main {
-	padding-top:18px;
-	padding-bottom:12px;
+	padding-top:10px;
+	padding-bottom:5px;
 }
 
 /* Container */
@@ -113,12 +113,10 @@ fieldset p:last-of-type {
 
 /* Go to back end */
 #back_end {
-	margin:0 18px 0 0;
+	margin:0 15px 0 0;
 	text-align:right;
 }
 #back_end a {
-	padding:3px 0 3px 21px;
-	background:url("icons/manager.svg") no-repeat left center;
 	color:#666;
 }
 
@@ -151,7 +149,7 @@ fieldset > div {
 	margin-bottom:12px;
 }
 fieldset.tl_tbox,fieldset.tl_box {
-	padding:6px 18px 0;
+	padding:6px 15px 0;
 	border:solid #f6f6f6;
 	border-width:26px 0 0;
 }

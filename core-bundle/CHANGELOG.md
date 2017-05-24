@@ -2,7 +2,7 @@
 
 ### 4.4.0-RC1 (2017-05-23)
 
- * Tweak the back end template. 
+ * Tweak the back end template.
  * Add the "allowed member groups" setting (see contao/core#8528).
  * Hide the CAPTCHA field by default by adding a honeypot field (see #832).
  * Add the "href" parameter to the article list (see #694).

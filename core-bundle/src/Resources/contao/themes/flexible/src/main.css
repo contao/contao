@@ -83,6 +83,7 @@ body.popup {
 	padding:0;
 	width:auto;
 	min-height:0;
+	background:#fff;
 }
 
 /* Left */
@@ -103,7 +104,7 @@ body.popup {
 .popup #main {
 	float:none;
 	width:auto;
-	max-width:0;
+	max-width:auto;
 	min-height:0;
 	margin:0;
 	padding:0;
@@ -124,20 +125,27 @@ body.popup {
 	display:block;
 	padding:3px 0;
 	color:rgba(255,255,255,.4);
+	font-size:.75rem;
+	text-transform:uppercase;
+}
+#tl_navigation .tl_level_1_group a:before {
+	content:attr(data-first-letter);
+	display:inline-block;
+	width:12px;
+	padding:2px;
+	margin-right:8px;
+	background:rgba(255, 255, 255, .15);
+	border-radius:2px;
+	text-align:center;
 }
 #tl_navigation .node-collapsed {
-	padding-bottom:15px;
+	padding-bottom:14px;
 }
 #tl_navigation .tl_level_2 {
 	padding:0 0 15px;
 }
-#tl_navigation .tl_level_2 a {
-	display:block;
-	font-weight:300;
-	color:rgba(255,255,255,.8);
-}
 #tl_navigation .tl_level_2 li {
-	padding:6px 15px 6px 11px;
+	padding:6px 20px 6px 35px;
 	border-left:4px solid #252332;
 }
 #tl_navigation .tl_level_2 li:hover {
@@ -147,6 +155,11 @@ body.popup {
 #tl_navigation .tl_level_2 li.active {
 	background-color:#263248;
 	border-left-color:#f47c00;
+}
+#tl_navigation .tl_level_2 a {
+	display:block;
+	font-weight:300;
+	color:rgba(255,255,255,.8);
 }
 
 /* Buttons */

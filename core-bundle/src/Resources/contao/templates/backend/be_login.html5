@@ -28,45 +28,24 @@
   <div id="container" class="cf">
     <div id="main">
       <h1>Contao</h1>
-      <p class="tl_info" id="javascript"><?= $this->jsDisabled ?></p>
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-          <?= $this->messages ?>
-          <table class="tl_login_table">
-            <tr>
-              <td<?= $this->uClass ?>><label for="username"><?= $this->username ?></label></td>
-              <td style="text-align:right"><input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" required></td>
-            </tr>
-            <tr>
-              <td<?= $this->pClass ?>><label for="password"><?= $this->password ?></label></td>
-              <td style="text-align:right"><input type="password" name="password" id="password" class="tl_text" value="" required></td>
-            </tr>
-            <tr>
-              <td><label for="language"><?= $this->userLanguage ?></label></td>
-              <td style="text-align:right">
-                <select name="language" id="language" class="tl_select">
-                  <option value=""><?= $this->default ?></option>
-                  <option value="">---</option>
-                  <?php foreach ($this->languages as $key=>$lang): ?>
-                    <option value="<?= StringUtil::specialchars($key) ?>"><?= $lang ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </td>
-            </tr>
-          </table>
-          <div class="tl_login_submit_container">
+          <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" placeholder="<?= $this->username ?>" required>
+          <input type="password" name="password" id="password" class="tl_text" value="" placeholder="<?= $this->password ?>" required>
+          <div class="submit_container cf">
             <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
+            <a href="<?= $this->route('contao_root') ?>" class="footer_preview" title="<?= $this->feLink ?>"><?= $this->feLink ?> ›</a>
           </div>
         </div>
       </form>
-      <div id="tl_license">
-        <p>Contao Open Source CMS :: Copyright ©2005-<?= date('Y') ?> by Leo Feyer :: Extensions are copyright of their respective owners :: Visit <a href="https://contao.org" target="_blank">contao.org</a> for more information :: Obstructing the appearance of this notice is prohibited by law!</p>
-        <p>Contao is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY. Without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. Contao is free software. You can redistribute it and/or modify it under the terms of the GNU/LGPL as published by the Free Software Foundation.</p>
-      </div>
-      <p id="go_to_frontend"><a href="<?= $this->route('contao_root') ?>" class="footer_preview" title="<?= $this->feLink ?>"><?= $this->feLink ?></a></p>
     </div>
+    <?= $this->messages ?>
+  </div>
+
+  <div class="tl_info" id="javascript">
+    <?= $this->jsDisabled ?>
   </div>
 
   <script>

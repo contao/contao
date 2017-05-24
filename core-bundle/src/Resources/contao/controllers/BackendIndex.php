@@ -90,8 +90,6 @@ class BackendIndex extends \Backend
 		$objTemplate->headline = $strHeadline;
 		$objTemplate->curLanguage = \Input::post('language') ?: str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
 		$objTemplate->curUsername = \Input::post('username') ?: '';
-		$objTemplate->uClass = ($_POST && empty($_POST['username'])) ? ' class="login_error"' : '';
-		$objTemplate->pClass = ($_POST && empty($_POST['password'])) ? ' class="login_error"' : '';
 		$objTemplate->loginButton = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['loginBT']);
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
