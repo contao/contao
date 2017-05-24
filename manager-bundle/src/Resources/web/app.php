@@ -20,7 +20,8 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 ManagerBundlePlugin::autoloadModules(__DIR__.'/../system/modules');
 
-$kernel = new ContaoKernel(dirname(__DIR__), 'prod', false);
+ContaoKernel::setProjectDir(dirname(__DIR__));
+$kernel = new ContaoKernel('prod', false);
 
 // Enable the Symfony reverse proxy
 $kernel = new ContaoCache($kernel);

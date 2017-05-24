@@ -31,7 +31,7 @@ class ContaoKernel extends Kernel
     /**
      * @var string
      */
-    private $projectDir;
+    protected static $projectDir;
 
     /**
      * @var PluginLoader
@@ -46,14 +46,11 @@ class ContaoKernel extends Kernel
     /**
      * Constructor.
      *
-     * @param string $projectDir
      * @param string $environment
      * @param bool   $debug
      */
-    public function __construct($projectDir, $environment, $debug)
+    public function __construct($environment, $debug)
     {
-        $this->projectDir = $projectDir;
-
         parent::__construct($environment, $debug);
     }
 
@@ -74,7 +71,11 @@ class ContaoKernel extends Kernel
      */
     public function getProjectDir()
     {
-        return $this->projectDir;
+        if (null === self::$projectDir) {
+            throw new \LogicException('setProjectDir() must be called to initialize the ContaoKernel.');
+        }
+
+        return self::$projectDir;
     }
 
     /**
@@ -82,28 +83,7 @@ class ContaoKernel extends Kernel
      */
     public function getRootDir()
     {
-        if (null === $this->rootDir) {
-            $this->rootDir = $this->projectDir.'/app';
-        }
-
-        return $this->rootDir;
-    }
-
-    /**
-     * Sets the application root dir.
-     *
-     * @param string $dir
-     *
-     * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0
-     */
-    public function setRootDir($dir)
-    {
-        @trigger_error(
-            'Using ContaoKernel::setRootDir() has been deprecated and will no longer work in Contao 5.0.',
-            E_USER_DEPRECATED
-        );
-
-        $this->rootDir = realpath($dir) ?: null;
+        return $this->getProjectDir().'/app';
     }
 
     /**
@@ -111,7 +91,7 @@ class ContaoKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return $this->projectDir.'/var/cache/'.$this->getEnvironment();
+        return $this->getProjectDir().'/var/cache/'.$this->getEnvironment();
     }
 
     /**
@@ -119,7 +99,7 @@ class ContaoKernel extends Kernel
      */
     public function getLogDir()
     {
-        return $this->projectDir.'/var/logs';
+        return $this->getProjectDir().'/var/logs';
     }
 
     /**
@@ -130,7 +110,7 @@ class ContaoKernel extends Kernel
     public function getPluginLoader()
     {
         if (null === $this->pluginLoader) {
-            $this->pluginLoader = new PluginLoader($this->projectDir.'/vendor/composer/installed.json');
+            $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
         }
 
         return $this->pluginLoader;
@@ -156,7 +136,7 @@ class ContaoKernel extends Kernel
         if (null === $this->bundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
-            $parser->addParser(new IniParser($this->projectDir.'/system/modules'));
+            $parser->addParser(new IniParser($this->getProjectDir().'/system/modules'));
 
             $this->bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
         }
@@ -255,5 +235,15 @@ class ContaoKernel extends Kernel
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
         }
+    }
+
+    /**
+     * Initializes getProjectDir() because the ContaoKernel does not know it's location.
+     *
+     * @param string $projectDir
+     */
+    public static function setProjectDir($projectDir)
+    {
+        self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 }
