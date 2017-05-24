@@ -124,7 +124,7 @@ body.popup {
 #tl_navigation .tl_level_1_group a {
 	display:block;
 	padding:3px 0;
-	color:rgba(255,255,255,.4);
+	color:#919098;
 	font-size:.75rem;
 	text-transform:uppercase;
 }
@@ -134,7 +134,7 @@ body.popup {
 	width:12px;
 	padding:2px;
 	margin-right:8px;
-	background:rgba(255, 255, 255, .15);
+	background:#454451;
 	border-radius:2px;
 	text-align:center;
 }
@@ -159,7 +159,7 @@ body.popup {
 #tl_navigation .tl_level_2 a {
 	display:block;
 	font-weight:300;
-	color:rgba(255,255,255,.8);
+	color:#d3d3d6;
 }
 
 /* Buttons */
