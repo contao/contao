@@ -41,7 +41,7 @@ button {
 
 /* Font */
 body {
-	font:300 .875rem/1 Roboto,sans-serif;
+	font:300 .875rem/.875rem Lato,sans-serif;
 	color:#222;
 }
 pre,code,.tl_textarea.monospace {
@@ -154,6 +154,13 @@ p {
 .widget > div > * {
 	font-size:.875rem;
 }
+.widget h3 label {
+	margin-right:3px;
+}
+.widget h3 a {
+	position:absolute;
+	margin-top:-1px;
+}
 
 /* Forms */
 optgroup {
@@ -209,7 +216,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 	margin:2px 0;
 	box-sizing:border-box;
 	border:1px solid #aaa;
-	padding:6px;
+	padding:5px 6px 6px;
 	border-radius:2px;
 	-moz-appearance:none;
 	-webkit-appearance:none;
@@ -220,6 +227,10 @@ fieldset.checkbox_container,fieldset.radio_container {
 	background-color:#f9f9f9;
 	border:1px solid #c8c8c8;
 	cursor:not-allowed;
+}
+.tl_textarea {
+	padding-top:7px;
+	padding-bottom:5px;
 }
 .tl_text_2,.tl_text_3,.tl_text_4,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
 	margin-right:1%;
@@ -258,7 +269,7 @@ select[multiple] {
 	margin:2px 0;
 	box-sizing:border-box;
 	border:1px solid #aaa;
-	padding:6px 22px 6px 6px;
+	padding:5px 22px 6px 6px;
 	border-radius:2px;
 	background:#fff url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDUwMCA1MDAiPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMzEuNTIzIiB5MT0iNDIuNjMiIHgyPSIzNjguNDc4IiB5Mj0iMjc5LjU4NCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjNiM2IzIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOTk5Ii8+PC9saW5lYXJHcmFkaWVudD48cGF0aCBmaWxsPSJ1cmwoI2EpIiBkPSJNMjUwIDM5Ni42NjZjLTEuMTU1IDAtNC4xMS0xLjgzMi03LjExMy02Ljc1bC0xNjkuNi0yNzcuNDU1Yy0yLjUxNy00LjExNC0zLjE5LTYuOTgtMy4yOC04LjMxNC44MjctLjMzIDIuNTY1LS44MTIgNS42MjctLjgxMmgzNDguNzMzYzMuMDYzIDAgNC43OTguNDgyIDUuNjI3LjgxMi0uMDkgMS4zMzQtLjc2NiA0LjItMy4yOCA4LjMxNWwtMTY5LjYgMjc3LjQ1N2MtMy4wMDUgNC45MTctNS45NiA2Ljc1LTcuMTE0IDYuNzV6Ii8+PC9zdmc+") right -16px center no-repeat;
 	background-origin:content-box;
@@ -373,6 +384,7 @@ a.tl_submit {
 	display:inline-block;
 	position:relative;
 	z-index:1;
+	margin-left:1px;
 }
 .split-button ul {
 	position:absolute;
@@ -425,6 +437,9 @@ a.tl_submit {
 	border:inset 7px;
 	border-top-style:solid;
 	border-color:#aaa transparent transparent;
+}
+.split-button button img {
+	vertical-align:bottom;
 }
 .split-button > button[type="submit"] {
 	position:relative;

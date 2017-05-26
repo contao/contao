@@ -849,7 +849,7 @@ var Backend =
 	openModalImage: function(options) {
 		var opt = options || {},
 			maxWidth = (window.getSize().x - 20).toInt();
-		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 768);
+		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 900);
 		var M = new SimpleModal({
 			'width': opt.width,
 			'hideFooter': true,
@@ -873,7 +873,7 @@ var Backend =
 		var opt = options || {},
 			maxWidth = (window.getSize().x - 20).toInt(),
 			maxHeight = (window.getSize().y - 137).toInt();
-		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 768);
+		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 900);
 		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,
@@ -899,7 +899,7 @@ var Backend =
 			maxWidth = (window.getSize().x - 20).toInt(),
 			maxHeight = (window.getSize().y - 192).toInt();
 		if (!opt.id) opt.id = 'tl_select';
-		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 768);
+		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 900);
 		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,

@@ -32,6 +32,12 @@
       <trans-unit id="tl_user.backendTheme.1">
         <source>Here you can override the global back end theme.</source>
       </trans-unit>
+      <trans-unit id="tl_user.maxWidth.0">
+        <source>Maximum width</source>
+      </trans-unit>
+      <trans-unit id="tl_user.maxWidth.1">
+        <source>Limit the width of the main area to 900px.</source>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
       </trans-unit>

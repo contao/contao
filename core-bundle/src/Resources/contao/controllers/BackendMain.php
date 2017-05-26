@@ -86,7 +86,7 @@ class BackendMain extends \Backend
 		$packages = System::getContainer()->getParameter('kernel.packages');
 
 		$this->Template = new \BackendTemplate('be_main');
-		$this->Template->version = $packages['contao/core-bundle'];
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $packages['contao/core-bundle'];
 		$this->Template->main = '';
 
 		// Ajax request

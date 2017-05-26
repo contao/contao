@@ -38,6 +38,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $email
  * @property string  $language
  * @property string  $backendTheme
+ * @property string  $maxWidth
  * @property string  $uploader
  * @property boolean $showHelp
  * @property boolean $thumbnails

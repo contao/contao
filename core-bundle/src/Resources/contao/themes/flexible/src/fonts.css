@@ -6,24 +6,42 @@
  * @license LGPL-3.0+
  */
 
-/* Roboto (https://google-webfonts-helper.herokuapp.com/fonts/roboto?subsets=latin-ext,latin) */
+/* Lato (https://google-webfonts-helper.herokuapp.com/fonts/lato?subsets=latin-ext,latin) */
 @font-face {
-	font-family:"Roboto";
+	font-family:"Lato";
 	font-weight:300;
 	font-style:normal;
-	src:local("Roboto Light"),
-		url("fonts/roboto-v15-latin-ext_latin-300.woff2") format("woff2"),
-		url("fonts/roboto-v15-latin-ext_latin-300.woff") format("woff"),
+	src:local("Lato 300"),
+		url("fonts/lato-v13-latin_latin-ext-300.woff2") format("woff2"),
+		url("fonts/lato-v13-latin_latin-ext-300.woff") format("woff"),
 		url("fonts/roboto-v15-latin-ext_latin-300.ttf") format("truetype");
 }
 @font-face {
-	font-family:"Roboto";
+	font-family:"Lato";
+	font-weight:300;
+	font-style:italic;
+	src:local("Lato 300 Italic"),
+		url("fonts/lato-v13-latin_latin-ext-300italic.woff2") format("woff2"),
+		url("fonts/lato-v13-latin_latin-ext-300italic.woff") format("woff"),
+		url("fonts/lato-v13-latin_latin-ext-300italic.ttf") format("truetype");
+}
+@font-face {
+	font-family:"Lato";
 	font-weight:500;
 	font-style:normal;
-	src:local("Roboto Medium"),
-		url("fonts/roboto-v15-latin-ext_latin-500.woff2") format("woff2"),
-		url("fonts/roboto-v15-latin-ext_latin-500.woff") format("woff"),
-		url("fonts/roboto-v15-latin-ext_latin-500.ttf") format("truetype");
+	src:local("Lato Regular"),
+		url("fonts/lato-v13-latin_latin-ext-regular.woff2") format("woff2"),
+		url("fonts/lato-v13-latin_latin-ext-regular.woff") format("woff"),
+		url("fonts/lato-v13-latin_latin-ext-regular.ttf") format("truetype");
+}
+@font-face {
+	font-family:"Lato";
+	font-weight:500;
+	font-style:italic;
+	src:local("Lato Regular Italic"),
+		url("fonts/lato-v13-latin_latin-ext-italic.woff2") format("woff2"),
+		url("fonts/lato-v13-latin_latin-ext-italic.woff") format("woff"),
+		url("fonts/lato-v13-latin_latin-ext-italic.ttf") format("truetype");
 }
 
 /* Roboto Mono (https://google-webfonts-helper.herokuapp.com/fonts/roboto-mono?subsets=latin) */

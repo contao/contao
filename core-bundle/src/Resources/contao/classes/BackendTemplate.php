@@ -57,6 +57,11 @@ class BackendTemplate extends \Template
 		// User agent class (see #3074 and #6277)
 		$this->ua = \Environment::get('agent')->class;
 
+		if (\Config::get('maxWidth'))
+		{
+			$this->ua .= ' mw';
+		}
+
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && is_array($GLOBALS['TL_CSS']))
 		{

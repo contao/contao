@@ -29,12 +29,11 @@ h2 {
 	max-width:220px;
 }
 .formbody .tl_submit {
-	padding-top:6px;
+	padding-top:5px;
 	padding-bottom:6px;
 }
 .formbody .arrow {
-	position:relative;
-	top:1px;
+	vertical-align:middle;
 }
 .formbody .static-version {
 	margin-right:3px;
@@ -80,5 +79,5 @@ h2 {
 #diff dt,#diff dd {
 	margin:0;
 	padding:3px 6px;
-	font: 300 .75rem/1.25 "Roboto Mono", monospace;
+	font: 300 .75rem/1.25 "Roboto Mono",monospace;
 }

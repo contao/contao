@@ -18,7 +18,7 @@ body {
 }
 #header h1 {
 	margin:0;
-	padding:15px 12px 15px 51px;
+	padding:17px 12px 17px 51px;
 	background:#f47c00 url("icons/logo.svg") no-repeat 15px center;
 	color:#fff;
 	font-size:1.125rem;
@@ -113,7 +113,7 @@ fieldset p:last-of-type {
 
 /* Go to back end */
 #back_end {
-	margin:0 15px 0 0;
+	margin-right:15px;
 	text-align:right;
 }
 #back_end a {

@@ -27,13 +27,19 @@
 
   <div id="container" class="cf">
     <div id="main">
-      <h1>Contao</h1>
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-          <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" placeholder="<?= $this->username ?>" required>
-          <input type="password" name="password" id="password" class="tl_text" value="" placeholder="<?= $this->password ?>" required>
+          <h1><?= $this->headline ?></h1>
+          <div class="widget">
+            <label for="username"><?= $this->username ?></label>
+            <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" placeholder="<?= $this->username ?>" required>
+          </div>
+          <div class="widget">
+            <label for="password"><?= $this->password ?></label>
+            <input type="password" name="password" id="password" class="tl_text" value="" placeholder="<?= $this->password ?>" required>
+          </div>
           <div class="submit_container cf">
             <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
             <a href="<?= $this->route('contao_root') ?>" class="footer_preview" title="<?= $this->feLink ?>"><?= $this->feLink ?> ›</a>

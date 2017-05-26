@@ -13,5 +13,8 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
+[*.html5]
+insert_final_newline = false
+
 [*.min.{css,js}]
 insert_final_newline = false

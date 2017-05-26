@@ -31,7 +31,9 @@
       <p><?= $this->explain1 ?></p>
       <p><?= $this->explain2 ?></p>
       <div id="diff"><?= $this->diff ?></div>
-      <p><a href="<?= $this->href ?>" class="tl_submit"><?= $this->button ?></a></p>
+      <div class="submit_container">
+        <a href="<?= $this->href ?>" class="tl_submit"><?= $this->button ?></a>
+      </div>
     </div>
   </div>
 
