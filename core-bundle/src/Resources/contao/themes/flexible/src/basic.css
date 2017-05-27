@@ -161,6 +161,9 @@ p {
 	position:absolute;
 	margin-top:-1px;
 }
+.widget h3 img {
+	margin-right:3px;
+}
 
 /* Forms */
 optgroup {
@@ -256,7 +259,7 @@ select::-ms-expand {
 select[multiple] {
 	height:auto;
 }
-.tl_select,.tl_mselect {
+.tl_select,.tl_mselect,.tl_select_column {
 	width:100%;
 }
 .tl_select_unit {

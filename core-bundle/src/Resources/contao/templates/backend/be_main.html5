@@ -57,7 +57,7 @@
           <a href="<?= $this->request ?>#skipNavigation" class="invisible"><?= $this->skipNavigation ?></a>
           <ul class="tl_level_1">
             <?php foreach ($this->modules as $strGroup=>$arrModules): ?>
-              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" title="<?= $arrModules['title']; ?>" class="group-<?= $strGroup ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>', '<?= $arrModules['ajaxUrl']; ?>')" data-first-letter="<?= substr($arrModules['label'], 0, 1) ?>"><?= $arrModules['label'] ?></a></li>
+              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" title="<?= $arrModules['title']; ?>" class="group-<?= $strGroup ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>', '<?= $arrModules['ajaxUrl']; ?>')"><?= $arrModules['label'] ?></a></li>
               <?php if ($arrModules['modules']): ?>
                 <li class="tl_parent" id="<?= $strGroup ?>"<?php if ($arrModules['isClosed']) echo ' style="display:none"'; ?>>
                   <ul class="tl_level_2">
