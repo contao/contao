@@ -41,15 +41,20 @@ button {
 
 /* Font */
 body {
-	font:300 .875rem/.875rem Lato,sans-serif;
+	font:.875rem/1 Lato,sans-serif;
 	color:#222;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	body {
+		font-family:"Lato Retina",Lato,sans-serif;
+	}
 }
 pre,code,.tl_textarea.monospace {
 	font:300 .75rem/1.25 "Roboto Mono",monospace;
 }
 h1,h2,h3,h4,h5,h6 {
 	font-size:1rem;
-	font-weight:500;
+	font-weight:bold;
 }
 input,textarea,select,button {
 	font:inherit;
@@ -60,7 +65,7 @@ input {
 	line-height:normal; /* see #501 */
 }
 strong,b,th {
-	font-weight:500;
+	font-weight:bold;
 }
 .tl_gray {
 	color:#999;
@@ -184,7 +189,7 @@ fieldset.tl_radio_container {
 	line-height:16px;
 }
 fieldset.tl_checkbox_container legend,fieldset.tl_radio_container legend {
-	font-weight:500;
+	font-weight:bold;
 }
 fieldset.checkbox_container,fieldset.radio_container {
 	border:0;
@@ -306,16 +311,16 @@ select[multiple] {
 }
 .tl_checkbox_single_container label {
 	margin-left:4px;
-	font-weight:500;
+	font-weight:bold;
 }
 
 /* Grouped checkboxes */
 .checkbox_toggler {
-	font-weight:500;
+	font-weight:bold;
 }
 .checkbox_toggler_first {
 	margin-top:3px;
-	font-weight:500;
+	font-weight:bold;
 }
 .checkbox_toggler img,.checkbox_toggler_first img {
 	position:relative;

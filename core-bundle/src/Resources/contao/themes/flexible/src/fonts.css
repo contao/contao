@@ -6,44 +6,76 @@
  * @license LGPL-3.0+
  */
 
-/* Lato (https://google-webfonts-helper.herokuapp.com/fonts/lato?subsets=latin-ext,latin) */
+/* Lato (https://google-webfonts-helper.herokuapp.com/fonts/lato?subsets=latin,latin-ext) */
 @font-face {
-	font-family:"Lato";
-	src:local("Lato 300"),
-		url("fonts/lato-v13-latin_latin-ext-300.woff2") format("woff2"),
-		url("fonts/lato-v13-latin_latin-ext-300.woff") format("woff"),
-		url("fonts/roboto-v15-latin-ext_latin-300.ttf") format("truetype");
-	font-weight:300;
+	font-family:"Lato Retina";
+	src:local("Lato Light"),
+		url("fonts/lato-v13-latin-ext_latin-300.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-300.woff") format("woff");
+	font-weight:normal;
 	font-style:normal;
 	text-rendering:optimizeLegibility;
 }
 @font-face {
-	font-family:"Lato";
-	src:local("Lato 300 Italic"),
-		url("fonts/lato-v13-latin_latin-ext-300italic.woff2") format("woff2"),
-		url("fonts/lato-v13-latin_latin-ext-300italic.woff") format("woff"),
-		url("fonts/lato-v13-latin_latin-ext-300italic.ttf") format("truetype");
-	font-weight:300;
+	font-family:"Lato Retina";
+	src:local("Lato Light Italic"),
+		url("fonts/lato-v13-latin-ext_latin-300italic.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-300italic.woff") format("woff");
+	font-weight:normal;
+	font-style:italic;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato Retina";
+	src:local("Lato Regular"),
+		url("fonts/lato-v13-latin-ext_latin-regular.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-regular.woff") format("woff");
+	font-weight:bold;
+	font-style:normal;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato Retina";
+	src:local("Lato Regular Italic"),
+		url("fonts/lato-v13-latin-ext_latin-italic.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-italic.woff") format("woff");
+	font-weight:bold;
 	font-style:italic;
 	text-rendering:optimizeLegibility;
 }
 @font-face {
 	font-family:"Lato";
 	src:local("Lato Regular"),
-		url("fonts/lato-v13-latin_latin-ext-regular.woff2") format("woff2"),
-		url("fonts/lato-v13-latin_latin-ext-regular.woff") format("woff"),
-		url("fonts/lato-v13-latin_latin-ext-regular.ttf") format("truetype");
-	font-weight:500;
+		url("fonts/lato-v13-latin-ext_latin-regular.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-regular.woff") format("woff");
+	font-weight:normal;
 	font-style:normal;
 	text-rendering:optimizeLegibility;
 }
 @font-face {
 	font-family:"Lato";
 	src:local("Lato Regular Italic"),
-		url("fonts/lato-v13-latin_latin-ext-italic.woff2") format("woff2"),
-		url("fonts/lato-v13-latin_latin-ext-italic.woff") format("woff"),
-		url("fonts/lato-v13-latin_latin-ext-italic.ttf") format("truetype");
-	font-weight:500;
+		url("fonts/lato-v13-latin-ext_latin-italic.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-italic.woff") format("woff");
+	font-weight:normal;
+	font-style:italic;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato";
+	src:local("Lato Bold"),
+		url("fonts/lato-v13-latin-ext_latin-700.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-700.woff") format("woff");
+	font-weight:bold;
+	font-style:normal;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato";
+	src:local("Lato Bold Italic"),
+		url("fonts/lato-v13-latin-ext_latin-700italic.woff2") format("woff2"),
+		url("fonts/lato-v13-latin-ext_latin-700italic.woff") format("woff");
+	font-weight:bold;
 	font-style:italic;
 	text-rendering:optimizeLegibility;
 }
@@ -53,9 +85,8 @@
 	font-family:"Roboto Mono";
 	src:local("Roboto Mono Light"),
 		url("fonts/roboto-mono-v4-latin-ext_latin-300.woff2") format("woff2"),
-		url("fonts/roboto-mono-v4-latin-ext_latin-300.woff") format("woff"),
-		url("fonts/roboto-mono-v4-latin-ext_latin-300.ttf") format("truetype");
-	font-weight:300;
+		url("fonts/roboto-mono-v4-latin-ext_latin-300.woff") format("woff");
+	font-weight:normal;
 	font-style:normal;
 	text-rendering:optimizeLegibility;
 }
@@ -65,9 +96,8 @@
 	font-family:"Architects Daughter";
 	src:local("Architects Daughter"),
 		url("fonts/architects-daughter-v6-latin-regular.woff2") format("woff2"),
-		url("fonts/architects-daughter-v6-latin-regular.woff") format("woff"),
-		url("fonts/architects-daughter-v6-latin-regular.ttf") format("truetype");
-	font-weight:400;
+		url("fonts/architects-daughter-v6-latin-regular.woff") format("woff");
+	font-weight:normal;
 	font-style:normal;
 	text-rendering:optimizeLegibility;
 }

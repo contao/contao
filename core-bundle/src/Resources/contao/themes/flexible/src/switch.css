@@ -24,14 +24,14 @@ h1 {
 	float:left;
 	margin:10px 0 0 3px;
 	font-size:.875rem;
-	font-weight:300;
+	font-weight:normal;
 }
 
 /* Close */
 .close {
 	font-size:1rem;
 	color:#999;
-	font-weight:500;
+	font-weight:bold;
 	padding:0 3px;
 	vertical-align:middle;
 }

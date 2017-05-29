@@ -29,7 +29,7 @@ body {
 }
 .tl_label {
 	margin-right:12px;
-	font-weight:500;
+	font-weight:bold;
 	white-space:nowrap;
 }
 .meta p {
