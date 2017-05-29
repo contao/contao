@@ -189,7 +189,7 @@ class Encryption
 
 		if (function_exists('password_hash'))
 		{
-			return password_hash($strPassword, PASSWORD_BCRYPT, array('cost'=>$intCost));
+			return password_hash($strPassword, PASSWORD_DEFAULT, array('cost'=>$intCost));
 		}
 		elseif (CRYPT_BLOWFISH == 1)
 		{
