@@ -179,6 +179,16 @@ class ContaoKernel extends Kernel
     }
 
     /**
+     * Initializes getProjectDir() because the ContaoKernel does not know it's location.
+     *
+     * @param string $projectDir
+     */
+    public static function setProjectDir($projectDir)
+    {
+        self::$projectDir = realpath($projectDir) ?: $projectDir;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getContainerBuilder()
@@ -228,15 +238,5 @@ class ContaoKernel extends Kernel
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
         }
-    }
-
-    /**
-     * Initializes getProjectDir() because the ContaoKernel does not know it's location.
-     *
-     * @param string $projectDir
-     */
-    public static function setProjectDir($projectDir)
-    {
-        self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 }

@@ -56,7 +56,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
         'app_dev.php',
     ];
 
-
     /**
      * {@inheritdoc}
      */
