@@ -44,17 +44,6 @@ class ContaoKernel extends Kernel
     private $bundleLoader;
 
     /**
-     * Constructor.
-     *
-     * @param string $environment
-     * @param bool   $debug
-     */
-    public function __construct($environment, $debug)
-    {
-        parent::__construct($environment, $debug);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function registerBundles()
@@ -83,7 +72,11 @@ class ContaoKernel extends Kernel
      */
     public function getRootDir()
     {
-        return $this->getProjectDir().'/app';
+        if (null === $this->rootDir) {
+            $this->rootDir = $this->getProjectDir().'/app';
+        }
+
+        return $this->rootDir;
     }
 
     /**
