@@ -138,16 +138,16 @@ body.popup {
 	text-transform:uppercase;
 }
 #tl_navigation .group-content {
-	background:url("icons/content.svg") 3px 4px no-repeat;
+	background:url("icons/content.svg") 3px 3px no-repeat;
 }
 #tl_navigation .group-design {
-	background:url("icons/monitor.svg") 3px 4px no-repeat;
+	background:url("icons/monitor.svg") 3px 3px no-repeat;
 }
 #tl_navigation .group-accounts {
-	background:url("icons/person.svg") 3px 4px no-repeat;
+	background:url("icons/person.svg") 3px 3px no-repeat;
 }
 #tl_navigation .group-system {
-	background:url("icons/wrench.svg") 3px 4px no-repeat;
+	background:url("icons/wrench.svg") 3px 3px no-repeat;
 }
 #tl_navigation .node-collapsed {
 	padding-bottom:14px;

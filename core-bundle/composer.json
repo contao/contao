@@ -47,7 +47,7 @@
         "contao/image": "^0.3.1",
         "contao/imagine-svg": "^0.1.2",
         "contao-components/ace": "^1.2",
-        "contao-components/chosen": "^1.1",
+        "contao-components/chosen": "^1.1.5",
         "contao-components/colorbox": "^1.6",
         "contao-components/colorpicker": "^1.4.0.1",
         "contao-components/compass": "^0.12",
@@ -62,11 +62,11 @@
         "contao-components/mediaelement": "^2.21.1",
         "contao-components/mootools": "^1.6.0.1",
         "contao-components/respimage": "^1.4",
-        "contao-components/simplemodal": "^2.0",
+        "contao-components/simplemodal": "^2.0.2",
         "contao-components/swipe": "^2.0.3",
         "contao-components/tablesort": "^3.4.5",
         "contao-components/tablesorter": "^2.0.5.3",
-        "contao-components/tinymce4": "^4.3.4.1"
+        "contao-components/tinymce4": "^4.5.2.2"
     },
     "require-dev": {
         "ext-fileinfo": "*",
