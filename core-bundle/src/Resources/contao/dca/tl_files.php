@@ -568,23 +568,21 @@ class tl_files extends Backend
 	 */
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (is_dir(TL_ROOT . '/' . $row['id']))
-		{
-			$finder = Symfony\Component\Finder\Finder::create()->in(TL_ROOT . '/' . $row['id']);
+		$path = TL_ROOT . '/' . urldecode($row['id']);
 
-			if ($finder->count() > 0)
-			{
-				return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
-			}
-			else
-			{
-				return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
-			}
-		}
-		else
+		if (!is_dir($path))
 		{
 			return ($this->User->hasAccess('f3', 'fop') || $this->User->hasAccess('f4', 'fop')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
+
+		$finder = Symfony\Component\Finder\Finder::create()->in($path);
+
+		if ($finder->count() > 0)
+		{
+			return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		}
+
+		return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
