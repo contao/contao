@@ -1698,12 +1698,8 @@ fieldset.collapsed > legend {
 	#tmenu .burger {
 		margin-left:6px;
 	}
-	#tmenu .icon-alert,#tmenu .icon-profile,#tmenu .icon-preview {
+	#tmenu .icon-alert,#tmenu .icon-profile,#tmenu .icon-preview,#tmenu .icon-logout {
 		background-size:15px;
-		background-position:left 16px;
-	}
-	#tmenu .icon-logout {
-		background-size:17px;
 		background-position:left 16px;
 	}
 	div.tl_tbox,div.tl_box {
