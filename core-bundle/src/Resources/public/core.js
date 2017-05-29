@@ -2456,7 +2456,7 @@ var Backend =
 				isDrawing = false;
 			},
 			init = function() {
-				el.getParent('.tl_tbox').getElements('input[name^="importantPart"]').each(function(input) {
+				el.getParent('.tl_tbox,.tl_box').getElements('input[name^="importantPart"]').each(function(input) {
 					['x', 'y', 'width', 'height'].each(function(key) {
 						if (input.get('name').substr(13, key.length) === key.capitalize()) {
 							inputElements[key] = input = $(input);

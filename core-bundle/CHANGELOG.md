@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly set the important part in "edit multiple" mode (see #839).
  * Remove the broken alias transliteration see (#848).
 
 ### 4.4.0-RC1 (2017-05-23)
