@@ -127,12 +127,11 @@ function standardize($strString, $blnPreserveUppercase=false)
 {
 	@trigger_error('Using standardize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::standardize() instead.', E_USER_DEPRECATED);
 
-	$arrSearch = array('/[^a-zA-Z0-9 \.\&\/_-]+/', '/[ \.\&\/-]+/');
+	$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 	$arrReplace = array('', '-');
 
 	$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
 	$strString = strip_insert_tags($strString);
-	$strString = Patchwork\Utf8::toAscii($strString);
 	$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
 	if (is_numeric(substr($strString, 0, 1)))
@@ -142,7 +141,7 @@ function standardize($strString, $blnPreserveUppercase=false)
 
 	if (!$blnPreserveUppercase)
 	{
-		$strString = strtolower($strString);
+		$strString = Patchwork\Utf8::strtolower($strString);
 	}
 
 	return trim($strString, '-');

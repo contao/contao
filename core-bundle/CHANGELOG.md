@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Remove the broken alias transliteration see (#848).
+
 ### 4.4.0-RC1 (2017-05-23)
 
  * Tweak the back end template.
