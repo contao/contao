@@ -11,9 +11,12 @@
 namespace Contao\ManagerBundle\Command;
 
 use Contao\CoreBundle\Command\AbstractLockedCommand;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -45,6 +48,16 @@ class InstallWebDirCommand extends AbstractLockedCommand
     ];
 
     /**
+     * Files that should not be copied on no-dev option.
+     *
+     * @var array
+     */
+    private $devFiles = [
+        'app_dev.php',
+    ];
+
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -58,7 +71,61 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 'The installation root directory (defaults to the current working directory).',
                 getcwd()
             )
+            ->addOption(
+                'no-dev',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not copy the app_dev.php entry point to the web folder.'
+            )
+            ->addOption(
+                'user',
+                'u',
+                InputOption::VALUE_REQUIRED,
+                'Username for the app_dev.php entry point.'
+            )
+            ->addOption(
+                'password',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'Password for the app_dev.php entry point.'
+            )
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        $user = $input->getOption('user');
+        $password = $input->getOption('password');
+
+        if (true === $input->getOption('no-dev') && (null !== $user || null !== $password)) {
+            throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
+        }
+
+        if (null === $password && null !== $user) {
+            throw new \InvalidArgumentException('Cannot set a username without password.');
+        }
+
+        if (true !== $password) {
+            return;
+        }
+
+        /** @var QuestionHelper $helper */
+        $helper = $this->getHelper('question');
+
+        if (null === $input->getOption('user')) {
+            $input->setOption(
+                'user',
+                $helper->ask($input, $output, new Question('Please enter a username:'))
+            );
+        }
+
+        $input->setOption(
+            'password',
+            $helper->ask($input, $output, (new Question('Please enter a password:'))->setHidden(true))
+        );
     }
 
     /**
@@ -69,11 +136,12 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $baseDir = $input->getArgument('path');
-        $webDir = rtrim($baseDir, '/').'/web';
+        $projectDir = $input->getArgument('path');
+        $webDir = rtrim($projectDir, '/').'/web';
 
-        $this->addFiles($webDir);
+        $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);
+        $this->storeAppDevAccesskey($input, $projectDir);
 
         return 0;
     }
@@ -82,8 +150,9 @@ class InstallWebDirCommand extends AbstractLockedCommand
      * Adds files from Resources/web to the application's web directory.
      *
      * @param string $webDir
+     * @param bool   $dev
      */
-    private function addFiles($webDir)
+    private function addFiles($webDir, $dev = true)
     {
         /** @var Finder $finder */
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
@@ -95,8 +164,11 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 continue;
             }
 
-            $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
+            if (!$dev && in_array($file->getRelativePathname(), $this->devFiles, true)) {
+                continue;
+            }
 
+            $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
             $this->io->text(sprintf('Added/updated the <comment>web/%s</comment> file.', $file->getFilename()));
         }
     }
@@ -108,8 +180,75 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function removeInstallPhp($webDir)
     {
-        if (file_exists($webDir.'/install.php')) {
-            $this->fs->remove($webDir.'/install.php');
+        if (!file_exists($webDir.'/install.php')) {
+            return;
         }
+
+        $this->fs->remove($webDir.'/install.php');
+        $this->io->text('Deleted the <comment>web/install.php</comment> file.');
+    }
+
+    /**
+     * Stores username and password in .env file in the project directory.
+     *
+     * @param InputInterface $input
+     * @param string         $projectDir
+     */
+    private function storeAppDevAccesskey(InputInterface $input, $projectDir)
+    {
+        $user = $input->getOption('user');
+        $password = $input->getOption('password');
+
+        if (null === $password && null === $user) {
+            return;
+        }
+
+        if (true === $input->getOption('no-dev') && (null !== $user || null !== $password)) {
+            throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
+        }
+
+        if ((null === $password && null !== $user) || (null === $user && null !== $password)) {
+            throw new \InvalidArgumentException('Must have username and password to set the access key.');
+        }
+
+        $accessKey = password_hash(
+            $input->getOption('user').':'.$input->getOption('password'),
+            PASSWORD_DEFAULT
+        );
+
+        $this->addToDotEnv($projectDir, 'APP_DEV_ACCESSKEY', $accessKey);
+    }
+
+    /**
+     * Appends value to the .env file, removing a line with the given key.
+     *
+     * @param string $projectDir
+     * @param string $key
+     * @param string $value
+     */
+    private function addToDotEnv($projectDir, $key, $value)
+    {
+        $fs = new Filesystem();
+
+        $path = $projectDir.'/.env';
+        $content = '';
+
+        if ($fs->exists($path)) {
+            $lines = file($path, FILE_IGNORE_NEW_LINES);
+
+            if (false === $lines) {
+                throw new \RuntimeException(sprintf('Could not read "%s" file.', $path));
+            }
+
+            foreach ($lines as $line) {
+                if (0 === strpos($line, $key.'=')) {
+                    continue;
+                }
+
+                $content .= $line."\n";
+            }
+        }
+
+        $fs->dumpFile($path, $content.$key.'='.escapeshellarg($value)."\n");
     }
 }
