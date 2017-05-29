@@ -1675,7 +1675,8 @@ fieldset.collapsed > legend {
 		display:inline;
 	}
 	#tmenu .burger button {
-		padding:4px 9px 8px;
+		margin-top:-4px;
+		padding:15px 9px 16px;
 		border:0;
 		background:none;
 	}
@@ -1696,7 +1697,7 @@ fieldset.collapsed > legend {
 		text-indent:100%;
 	}
 	#tmenu .burger {
-		margin-left:6px;
+		margin-left:4px;
 	}
 	#tmenu .icon-alert,#tmenu .icon-profile,#tmenu .icon-preview,#tmenu .icon-logout {
 		background-size:15px;
