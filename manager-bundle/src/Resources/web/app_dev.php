@@ -10,7 +10,6 @@
 
 use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +50,6 @@ unset($accessKey);
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 Debug::enable();
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 ManagerBundlePlugin::autoloadModules(__DIR__.'/../system/modules');
 
 ContaoKernel::setProjectDir(dirname(__DIR__));

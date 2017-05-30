@@ -3,7 +3,6 @@
 use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('TL_SCRIPT')) {
@@ -13,7 +12,6 @@ if (!defined('TL_SCRIPT')) {
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 ManagerBundlePlugin::autoloadModules(__DIR__.'/modules');
 
 $request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
