@@ -18,15 +18,17 @@ body.popup {
 #header {
 	min-height:48px;
 	text-align:left;
-	padding-right:3px;
 	background:#f47c00;
+}
+#header .inner {
+	padding-right:5px;
 }
 #header, #header a {
 	color:#fff;
 }
 #header h1 {
 	position:absolute;
-	left:12px;
+	left:15px;
 }
 #header h1 a {
 	display:block;
@@ -69,7 +71,6 @@ body.popup {
 	background:url("icons/preview.svg") left 18px no-repeat;
 }
 #tmenu .icon-logout {
-	padding-left:21px;
 	background:url("icons/exit.svg") left 18px no-repeat;
 }
 
@@ -106,6 +107,8 @@ body.popup {
 	min-height:calc(100vh - 68px);
 	background:#fff;
 	border:10px solid #eaeaec;
+	display:flex;
+	flex-direction:column;
 }
 .popup #main {
 	float:none;
@@ -115,6 +118,7 @@ body.popup {
 	margin:0;
 	padding:0;
 	border:0;
+	display:initial;
 }
 
 /* Navigation */
@@ -176,8 +180,7 @@ body.popup {
 	color:#252332;
 }
 #left .version {
-	margin:0 15px;
-	padding:15px 0 15px 24px;
+	padding:15px;
 	border-top:1px solid #3b3946;
 	color:#919098;
 	font-size:.75rem;
@@ -367,6 +370,10 @@ input[type=search]::-webkit-search-decoration {
 	padding:0;
 	font-size:.875rem;
 }
+.tl_tbox.theme_import {
+	padding-left:10px;
+	padding-right:10px;
+}
 .tl_tbox.theme_import h3,.tl_tbox.theme_import h4,.tl_tbox.theme_import p {
 	line-height:1.3;
 }
@@ -432,6 +439,14 @@ input[type=search]::-webkit-search-decoration {
 #tl_maintenance_index .tl_tbox {
 	margin-top:-12px;
 }
+.tl_edit_form {
+	display:flex;
+	flex-direction:column;
+	flex-grow:1;
+}
+.tl_edit_form .tl_formbody_edit {
+	flex-grow:1;
+}
 
 /* Picker search */
 #search {
@@ -469,9 +484,15 @@ input[type=search]::-webkit-search-decoration {
 }
 
 /* Rebuild the search index */
+#tl_maintenance_index {
+	display:flex;
+	flex-direction:column;
+	flex-grow:1;
+}
 #tl_rebuild_index {
 	padding:0 18px 18px;
 	line-height:1.3;
+	flex-grow:1;
 }
 #index_note {
 	margin:24px 0 18px;
@@ -1477,8 +1498,7 @@ label.error,legend.error {
 	font-size:.75rem;
 }
 .tl_formbody_edit > .tl_error {
-	margin-left:18px;
-	margin-right:18px;
+	margin-top:9px;
 }
 
 /* Fieldsets */
@@ -1588,6 +1608,7 @@ fieldset.collapsed > legend {
 #sync-results {
 	overflow:hidden;
 	margin:18px 18px 0;
+	flex-grow:1;
 }
 #sync-results p {
 	margin-bottom:0;

@@ -28,6 +28,7 @@ body {
 #main {
 	padding-top:10px;
 	padding-bottom:5px;
+	margin-bottom:18px;
 }
 
 /* Container */
@@ -56,9 +57,6 @@ body {
 /* Paragraphs */
 p {
 	line-height:1.3;
-}
-fieldset p:last-of-type {
-	margin-bottom:0;
 }
 
 /* Form tables */
@@ -114,6 +112,7 @@ fieldset p:last-of-type {
 /* Go to back end */
 #back_end {
 	margin-right:15px;
+	margin-bottom:9px;
 	text-align:right;
 }
 #back_end a {
@@ -138,7 +137,7 @@ fieldset p:last-of-type {
 }
 .tl_submit_container {
 	margin-top:18px;
-	margin-bottom:12px;
+	margin-bottom:1em;
 }
 .tl_formbody_submit .tl_submit {
 	background:#f3f3f3;
@@ -146,7 +145,7 @@ fieldset p:last-of-type {
 
 /* Fieldsets */
 fieldset > div {
-	margin-bottom:12px;
+	margin-bottom:-2px;
 }
 fieldset.tl_tbox,fieldset.tl_box {
 	padding:6px 15px 0;

@@ -107,7 +107,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $adapters[FilesModel::class] = $this->mockFilesModelAdapter();
         }
 
-        /* @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
+        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
         $framework = $this
             ->getMockBuilder(ContaoFramework::class)
             ->setConstructorArgs([

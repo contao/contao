@@ -184,8 +184,8 @@ if (!defined('TL_SCRIPT')) {
     die('Your script is not compatible with Contao 4.');
 }
 
-/** @var Composer\Autoload\ClassLoader */
-$loader = require __DIR__ . '/../app/autoload.php';
+/** @var Composer\Autoload\ClassLoader $laoder */
+$loader = require __DIR__ . '/../vendor/autoload.php';
 
 $request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
 $request->attributes->set('_scope', ('BE' === TL_MODE ? 'backend' : 'frontend'));

@@ -75,7 +75,7 @@ class WidgetTest extends TestCase
      */
     public function testValidate()
     {
-        /* @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
+        /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
