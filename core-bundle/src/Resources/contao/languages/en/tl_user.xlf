@@ -36,7 +36,13 @@
         <source>Maximum width</source>
       </trans-unit>
       <trans-unit id="tl_user.maxWidth.1">
-        <source>Limit the width of the main area to 900px.</source>
+        <source>Limit the width of the back end to 1280 pixels.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.optimizeContrast.0">
+        <source>Optimize contrast</source>
+      </trans-unit>
+      <trans-unit id="tl_user.optimizeContrast.1">
+        <source>E.g. show the left column with dark text on white background.</source>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

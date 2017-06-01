@@ -368,6 +368,7 @@ class BackendUser extends \User
 		\Config::set('thumbnails', $this->thumbnails);
 		\Config::set('backendTheme', $this->backendTheme);
 		\Config::set('maxWidth', $this->maxWidth);
+		\Config::set('optimizeContrast', $this->optimizeContrast);
 
 		// Inherit permissions
 		$always = array('alexf');

@@ -72,7 +72,8 @@
           <a id="skipNavigation" class="invisible">&nbsp;</a>
         </nav>
         <div class="version">
-          <?= $this->version ?>
+          <?= $this->version ?><br>
+          Learn more on <a href="https://contao.org" target="_blank">contao.org</a>
         </div>
       </div>
     <?php endif; ?>

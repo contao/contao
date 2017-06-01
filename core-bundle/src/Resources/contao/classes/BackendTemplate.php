@@ -62,6 +62,11 @@ class BackendTemplate extends \Template
 			$this->ua .= ' mw';
 		}
 
+		if (\Config::get('optimizeContrast'))
+		{
+			$this->ua .= ' oc';
+		}
+
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && is_array($GLOBALS['TL_CSS']))
 		{

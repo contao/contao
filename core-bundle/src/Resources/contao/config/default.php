@@ -104,6 +104,7 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
 $GLOBALS['TL_CONFIG']['maxWidth']             = false;
+$GLOBALS['TL_CONFIG']['optimizeContrast']     = false;
 $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = [];
 $GLOBALS['TL_CONFIG']['fileSyncExclude']      = '';

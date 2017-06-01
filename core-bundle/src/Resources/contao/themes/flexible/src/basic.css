@@ -143,8 +143,8 @@ p {
 
 /* Widgets */
 .widget {
-	margin-left:10px;
-	margin-right:10px;
+	margin-left:15px;
+	margin-right:15px;
 	position:relative;
 }
 .widget {
@@ -481,18 +481,18 @@ a.tl_submit {
 .clr {
 	clear:both;
 	display:table; /* see #6093 */
-	width:calc(100% - 20px);
+	width:calc(100% - 30px);
 }
 .clr:not(.widget) {
 	width:100%;
 }
 .w50 {
-	width:calc(50% - 20px);
+	width:calc(50% - 30px);
 	float:left;
 	height:80px;
 }
 .long {
-	width:calc(100% - 20px); /* see #6320 */
+	width:calc(100% - 30px); /* see #6320 */
 }
 .wizard > a {
 	vertical-align:middle;
@@ -510,7 +510,7 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:16px 10px 8px;
+	margin:16px 15px 8px;
 }
 .cbx {
 	height:56px;
@@ -566,7 +566,7 @@ a.tl_submit {
 @media (max-width:767px) {
 	.w50 {
 		float:none;
-		width:calc(100% - 20px);
+		width:calc(100% - 30px);
 	}
 	.cbx {
 		height:32px;
