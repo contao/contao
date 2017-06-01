@@ -1407,6 +1407,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>Toggle navigation</source>
         <target>Navegación de palanca</target>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Usuario</target>

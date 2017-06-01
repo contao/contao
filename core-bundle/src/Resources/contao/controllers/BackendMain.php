@@ -229,6 +229,7 @@ class BackendMain extends \Backend
 		$this->Template->isPopup = \Input::get('popup');
 		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
+		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank">contao.org</a>');
 
 		$strSystemMessages = \Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');

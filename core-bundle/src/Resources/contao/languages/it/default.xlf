@@ -1401,6 +1401,9 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Toggle navigation</source>
         <target>Modifica navigazione</target>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Utente</target>

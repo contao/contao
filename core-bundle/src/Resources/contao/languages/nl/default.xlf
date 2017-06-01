@@ -1407,6 +1407,9 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <source>Toggle navigation</source>
         <target>Navigatie omschakelen</target>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Gebruiker</target>

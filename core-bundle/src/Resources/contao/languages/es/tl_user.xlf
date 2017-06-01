@@ -41,18 +41,11 @@
         <source>Here you can override the global back end theme.</source>
         <target>Aquí puedes sobre escribir el tema del back end.</target>
       </trans-unit>
-      <trans-unit id="tl_user.maxWidth.0">
-        <source>Maximum width</source>
-        <target>Ancho máximo</target>
+      <trans-unit id="tl_user.limitWidth.0">
+        <source>Limit width</source>
       </trans-unit>
-      <trans-unit id="tl_user.maxWidth.1">
-        <source>Limit the width of the back end to 1280 pixels.</source>
-      </trans-unit>
-      <trans-unit id="tl_user.optimizeContrast.0">
-        <source>Optimize contrast</source>
-      </trans-unit>
-      <trans-unit id="tl_user.optimizeContrast.1">
-        <source>E.g. show the left column with dark text on white background.</source>
+      <trans-unit id="tl_user.limitWidth.1">
+        <source>Limit the maximum width of the back end.</source>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

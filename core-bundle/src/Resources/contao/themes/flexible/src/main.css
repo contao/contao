@@ -24,8 +24,8 @@ body.popup {
 	padding-right:4px;
 	box-sizing:border-box;
 }
-.mw #header .inner {
-	max-width:1280px;
+.lw #header .inner {
+	max-width:1140px;
 	margin:0 auto;
 	position:relative;
 }
@@ -86,12 +86,9 @@ body.popup {
 	min-height:calc(100vh - 48px);
 	background:#252332;
 }
-.mw #container {
-	max-width:1280px;
+.lw #container {
+	max-width:1140px;
 	margin:0 auto;
-}
-.oc #container {
-	background:#fff;
 }
 .popup #container {
 	padding:0;
@@ -110,20 +107,13 @@ body.popup {
 	display:flex;
 	flex-direction:column;
 }
-.oc #left {
-	background:#fff;
-	width:239px;
-	border-right:1px solid #ddd;
-}
 #left .version {
 	margin-top:6em;
 	padding:15px;
 	border-top:1px solid #3b3946;
 	font-size:.75rem;
 	line-height:1.4;
-}
-.oc #left .version {
-	border-top:1px solid #ddd;
+	background:#1b1924;
 }
 #left .version,#left .version a {
 	color:#919098;
@@ -158,9 +148,6 @@ body.popup {
 	padding:15px 0 6px;
 	border-top:1px solid #3b3946;
 }
-.oc #tl_navigation .tl_level_1_group {
-	border-top:1px solid #ddd;
-}
 #tl_navigation .tl_level_1_group:first-child {
 	border-top:0;
 	padding-top:18px;
@@ -191,40 +178,21 @@ body.popup {
 	padding:0 0 15px;
 }
 #tl_navigation .tl_level_2 li {
-	max-width:166px;
 	padding:6px 23px 6px 35px;
 	border-left:4px solid #252332;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
-}
-.oc #tl_navigation .tl_level_2 li {
-	border-left:4px solid #fff;
-}
-#tl_navigation .tl_level_2 li:hover {
-	background-color:#263248;
-	border-left-color:#263248;
-}
-.oc #tl_navigation .tl_level_2 li:hover {
-	background-color:#ececec;
-	border-left-color:#ececec;
 }
 #tl_navigation .tl_level_2 li.active {
-	background-color:#eaeaec;
+	background-color:#1b1924;
 	border-left-color:#f47c00;
-}
-.oc #tl_navigation .tl_level_2 li.active {
-	background-color:#ececec;
 }
 #tl_navigation .tl_level_2 a {
 	display:block;
 	font-weight:normal;
 	color:#d3d3d6;
+	transition:color .2s ease;
 }
-#tl_navigation .tl_level_2 li.active a {
-	color:#252332;
-}
-.oc #tl_navigation .tl_level_2 a,.oc #tl_navigation .tl_level_2 li.active a {
-	color:#222;
+#tl_navigation .tl_level_2 li:hover a,#tl_navigation .tl_level_2 li.active a {
+	color:#fff;
 }
 
 /* Buttons */
