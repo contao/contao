@@ -14,6 +14,9 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
+/** @var Composer\Autoload\ClassLoader */
+$loader = require __DIR__.'/../vendor/autoload.php';
+
 /***********************************************************************************************/
 /*                               ###  READ FIRST  ###                                          */
 /* Access to debug front controllers must only be allowed on localhost or with authentication. */
@@ -45,9 +48,6 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 }
 
 unset($accessKey);
-
-/** @var Composer\Autoload\ClassLoader */
-$loader = require __DIR__.'/../vendor/autoload.php';
 
 Debug::enable();
 ManagerBundlePlugin::autoloadModules(__DIR__.'/../system/modules');
