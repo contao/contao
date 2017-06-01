@@ -39,39 +39,51 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
         <source>New media query</source>
+        <target>新しいメディアクエリ</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
+        <target>新しいメディアクエリを作成</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.0">
         <source>Media query details</source>
+        <target>メディアクエリの詳細</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of media query ID %s</source>
+        <target>ID %sのメディアクエリの詳細を表示</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.0">
         <source>Edit media query</source>
+        <target>メディアクエリを編集</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
+        <target>ID %sのメディアクエリを編集</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut.0">
         <source>Move media query</source>
+        <target>メディアクエリを移動</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut.1">
         <source>Move media query ID %s</source>
+        <target>画像サイズのメディアクエリを移動</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.0">
         <source>Duplicate media query</source>
+        <target>メディアクエリを複製</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
         <source>Duplicate media query ID %s</source>
+        <target>ID %sのメディアクエリを複製</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.0">
         <source>Delete media query</source>
+        <target>メディアクエリを削除</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
+        <target>ID %sのメディアクエリを削除</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.editheader.0">
         <source>Edit image size</source>
@@ -87,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
+        <target>ID %sのメディアクエリの後に貼り付け</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
@@ -94,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Add new after media query ID %s</source>
+        <target>ID %sのメディアクエリの後に追加</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
         <source>Toggle visibility</source>
@@ -101,6 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.1">
         <source>Toggle the visibility of media query ID %s</source>
+        <target>ID %sのメディアクエリの表示と非表示を切り替え</target>
       </trans-unit>
     </body>
   </file>

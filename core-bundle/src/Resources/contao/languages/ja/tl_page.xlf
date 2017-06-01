@@ -343,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Meta data</source>
+        <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>

@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
         <source>Media queries</source>
+        <target>メディアクエリ</target>
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
@@ -162,6 +163,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_style">
         <source>Format definitions</source>
+        <target>書式定義</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>

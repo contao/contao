@@ -1545,7 +1545,7 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
-        <target>Bitte geben Sie ein neues Passwort ein</target>
+        <target>Bitte geben Sie ein neues Passwort ein.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
