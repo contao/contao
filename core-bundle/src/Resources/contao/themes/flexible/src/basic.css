@@ -77,7 +77,7 @@ strong,b,th {
 	color:#c33;
 }
 .tl_blue {
-	color:#427aae;
+	color:#006494;
 }
 .tl_orange {
 	color:#f90;
@@ -92,7 +92,7 @@ a {
 	text-decoration:none;
 }
 a:hover,a:active {
-	color:#589b0e;
+	color:#006494;
 }
 hr {
 	height:1px;
@@ -559,7 +559,7 @@ a.tl_submit {
 
 /* Row highlighting */
 .hover-div:hover,.hover-row:hover td,.hover-div:hover .limit_toggler,.hover-row:hover .limit_toggler {
-	background-color:#ebfdd7 !important;
+	background-color:#fffce1 !important;
 }
 
 /* Handheld */

@@ -26,9 +26,6 @@ h1 {
 p {
 	line-height:1.3;
 }
-p a {
-	vertical-align:middle;
-}
 .link {
 	word-wrap:break-word;
 }
@@ -37,6 +34,9 @@ p a {
 }
 .submit_container {
 	margin-top:1.5em;
+}
+.submit_container a {
+	vertical-align:middle;
 }
 .tl_submit {
 	margin-right:6px;

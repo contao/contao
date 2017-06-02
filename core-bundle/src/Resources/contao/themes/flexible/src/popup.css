@@ -25,7 +25,7 @@ body {
 	width:34%;
 }
 .tl_show tr:nth-child(even) td {
-	background:#f6f6f6;
+	background:#f6f6f8;
 }
 .tl_label {
 	margin-right:12px;
