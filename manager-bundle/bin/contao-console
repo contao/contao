@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2017 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
+use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
+
+set_time_limit(0);
+
+if (file_exists(__DIR__.'/../autoload.php')) {
+    // Composer bin directory
+    $vendorRoot = dirname(__DIR__);
+} else {
+    // Package bin directory
+    $vendorRoot = dirname(dirname(dirname(__DIR__)));
+}
+
+/** @var Composer\Autoload\ClassLoader $loader */
+$loader = require $vendorRoot.'/autoload.php';
+
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+ManagerBundlePlugin::autoloadModules($vendorRoot.'/../system/modules');
+
+$input = new ArgvInput();
+$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'prod');
+$debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
+
+if ($debug) {
+    Debug::enable();
+}
+
+$kernel = new ContaoKernel($env, $debug);
+$kernel->setRootDir($vendorRoot.'/../app');
+$application = new Application($kernel);
+$application->run($input);
