@@ -27,6 +27,7 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; or &lt;code&gt;app/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Otevřete současný soubor log ve složce &lt;code&gt;var/logs&lt;/code&gt; nebo &lt;code&gt;app/logs&lt;/code&gt; a najděte dané chybové hlášení (pravděpodobně jedno z posledních)</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
@@ -62,6 +63,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
         <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
+        <target>Otevřete prosím instalační nástroj Contaa (&lt;code&gt;/contao/install&lt;/code&gt;) ve Vašem prohlížeči.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
