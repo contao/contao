@@ -203,23 +203,23 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
-        <target>Время кэширования</target>
+        <target>Время кеширования</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set cache timeout values for the page and its subpages.</source>
-        <target>Установите значение времени кэширования страницы и ее подстраниц.</target>
+        <target>Установите значение времени кеширования страницы и ее подстраниц.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Server cache timeout</source>
-        <target>Время кэширования сервера</target>
+        <target>Время кеширования сервера</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
-        <target>Количество секунд, после чего страница больше не должна считаться новой совместно используемыми кэшами.</target>
+        <target>Количество секунд, после чего страница больше не должна считаться новой совместно используемыми кешами.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
-        <target>Время кэширования клиента</target>
+        <target>Время кеширования клиента</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
@@ -383,7 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cache_legend">
         <source>Cache settings</source>
-        <target>Настройки кэша</target>
+        <target>Настройки кеша</target>
       </trans-unit>
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
@@ -515,7 +515,7 @@
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
-        <target>0 (не кэшировать)</target>
+        <target>0 (не кешировать)</target>
       </trans-unit>
       <trans-unit id="CACHE.5">
         <source>5 seconds</source>

@@ -23,10 +23,12 @@ services:
         tags:
             -  { name: console.command }
 
+    contao.command.user_password_command:
+        class: Contao\CoreBundle\Command\UserPasswordCommand
+        tags:
+            -  { name: console.command }
+
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand
         tags:
             -  { name: console.command }
-
-    console.command.contao_corebundle_command_doctrinemigrationsdiffcommand:
-        synthetic: true # prevent auto-registration by Bundle::registerCommands

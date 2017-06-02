@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>認証済みのユーザーはホームディレクトリをファイルの情報元に使用します。</target>
+        <target>認証済みのユーザーの場合はホームディレクトリをファイルの情報元に使用します。</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

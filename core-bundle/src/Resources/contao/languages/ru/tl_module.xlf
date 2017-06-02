@@ -435,11 +435,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
         <source>Cache timeout</source>
-        <target>Время кэширования</target>
+        <target>Время кеширования</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>В заданный период кэширования, RSS-канал будет загружен из кэша.</target>
+        <target>В заданный период кеширования, RSS-канал будет загружен из кеша.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>

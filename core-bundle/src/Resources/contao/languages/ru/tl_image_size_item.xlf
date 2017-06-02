@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size_item.media.0">
         <source>Media query</source>
-        <target>Media query (Медиа запрос)</target>
+        <target>Media query (Медиа-запрос)</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.media.1">
         <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>

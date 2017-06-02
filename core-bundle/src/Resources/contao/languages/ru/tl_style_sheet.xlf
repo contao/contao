@@ -27,19 +27,19 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.0">
         <source>Media types</source>
-        <target>Media types (Медиа типы)</target>
+        <target>Media types (Медиа-типы)</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.1">
         <source>Here you can choose the media types the style sheet applies to.</source>
-        <target>Вы можете выбрать медиа типы применяемой таблицы стилей.</target>
+        <target>Вы можете выбрать медиа-типы применяемой таблицы стилей.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.0">
         <source>Media query</source>
-        <target>Media query (Медиа запрос)</target>
+        <target>Media query (Медиа-запрос)</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.1">
         <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
-        <target>Вы можете указать тип используемого Media query (Медиа запроса) напр. &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. Медиа типы определенные выше будут перезаписаны.</target>
+        <target>Вы можете указать тип используемого Media query (Медиа-запроса) напр. &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. Медиа типы определенные выше будут перезаписаны.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.0">
         <source>Global variables</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.media_legend">
         <source>Media settings</source>
-        <target>Медиа настройки</target>
+        <target>Медиа-настройки</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars_legend">
         <source>Global variables</source>

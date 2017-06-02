@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### 4.3.11 (2017-06-02)
+
+ * Fix an incompatibility issue with Symfony 3.3 (see #760).
+
 ### 4.3.10 (2017-05-16)
 
  * Correctly save and duplicate in the parent view (see #797).

@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New article</source>
-        <target>Neuer Beitrag</target>
+        <target>Neuer Artikel</target>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_article.show.0">
         <source>Article details</source>
-        <target>Beitragsdetails</target>
+        <target>Artikeldetails</target>
       </trans-unit>
       <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_article.copy.0">
         <source>Duplicate article</source>
-        <target>Beitrag duplizieren</target>
+        <target>Artikel duplizieren</target>
       </trans-unit>
       <trans-unit id="tl_article.copy.1">
         <source>Duplicate article ID %s</source>
@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_article.cut.0">
         <source>Move article</source>
-        <target>Beitrag verschieben</target>
+        <target>Artikel verschieben</target>
       </trans-unit>
       <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_article.delete.0">
         <source>Delete article</source>
-        <target>Beitrag löschen</target>
+        <target>Artikel löschen</target>
       </trans-unit>
       <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.0">
         <source>Publish/unpublish article</source>
-        <target>Beitrag veröffentlichen/unveröffentlichen</target>
+        <target>Artikel veröffentlichen/unveröffentlichen</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Publish/unpublish article ID %s</source>
