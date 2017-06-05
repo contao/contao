@@ -223,11 +223,10 @@ class Newsletter extends \Backend
 		$this->import('BackendUser', 'User');
 
 		// Preview newsletter
-		$return = '
+		$return = \Message::generate() . '
 <div id="tl_buttons">
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-'.\Message::generate().'
 <form action="'.TL_SCRIPT.'" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
 <div class="tl_formbody_edit tl_newsletter_send">
 <input type="hidden" name="do" value="' . \Input::get('do') . '">
