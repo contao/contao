@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Trigger all the callbacks in the toggleVisibility() methods (see #756).
  * Only execute the command scheduler upon the "contao_backend" and "contao_frontend" routes (see #736).
  * Correctly set the important part in "edit multiple" mode (see #839).
  * Remove the broken alias transliteration see (#848).

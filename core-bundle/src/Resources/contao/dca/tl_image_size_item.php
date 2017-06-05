@@ -343,13 +343,41 @@ class tl_image_size_item extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
-		$this->checkPermission();
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
 
 		// Check the field access
 		if (!$this->User->hasAccess('tl_image_size_item::invisible', 'alexf'))
 		{
 			$this->log('Not enough permissions to publish/unpublish image size item ID "'.$intId.'"', __METHOD__, TL_ERROR);
 			$this->redirect('contao/main.php?act=error');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_image_size_item WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
 		}
 
 		$objVersions = new Versions('tl_image_size_item', $intId);
@@ -375,9 +403,34 @@ class tl_image_size_item extends Backend
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_image_size_item SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_image_size_item SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
 
 		$objVersions->create();
 	}

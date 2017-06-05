@@ -431,10 +431,40 @@ class tl_user_group extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
+
 		// Check the field access permissions
 		if (!$this->User->hasAccess('tl_user_group::disable', 'alexf'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user group ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
 		}
 
 		$objVersions = new Versions('tl_user_group', $intId);
@@ -460,9 +490,34 @@ class tl_user_group extends Backend
 			}
 		}
 
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
+
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_user_group SET tstamp=". time() .", disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_user_group SET tstamp=$time, disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->disable = ($blnVisible ? '1' : '');
+		}
 
 		$objVersions->create();
 	}

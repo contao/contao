@@ -622,12 +622,14 @@ class tl_member extends Backend
 	 */
 	public function checkRemoveSession($dc)
 	{
-		if ($dc instanceof DataContainer && $dc->activeRecord)
+		if (!($dc instanceof DataContainer) || !$dc->activeRecord)
 		{
-			if ($dc->activeRecord->disable || ($dc->activeRecord->start != '' && $dc->activeRecord->start > time()) || ($dc->activeRecord->stop != '' && $dc->activeRecord->stop < time()))
-			{
-				$this->removeSession($dc);
-			}
+			return;
+		}
+
+		if ($dc->activeRecord->disable || ($dc->activeRecord->start != '' && $dc->activeRecord->start > time()) || ($dc->activeRecord->stop != '' && $dc->activeRecord->stop < time()))
+		{
+			$this->removeSession($dc);
 		}
 	}
 
@@ -639,11 +641,13 @@ class tl_member extends Backend
 	 */
 	public function removeSession($dc)
 	{
-		if ($dc instanceof DataContainer && $dc->activeRecord)
+		if (!($dc instanceof DataContainer) || !$dc->activeRecord)
 		{
-			$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
-						   ->execute($dc->activeRecord->id);
+			return;
 		}
+
+		$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
+					   ->execute($dc->activeRecord->id);
 	}
 
 
@@ -704,10 +708,40 @@ class tl_member extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
+
 		// Check the field access
 		if (!$this->User->hasAccess('tl_member::disable', 'alexf'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate member ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
 		}
 
 		$objVersions = new Versions('tl_member', $intId);
@@ -739,13 +773,29 @@ class tl_member extends Backend
 		$this->Database->prepare("UPDATE tl_member SET tstamp=$time, disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
-		$objVersions->create();
-
-		// Remove the session if the user is disabled (see #5353)
-		if (!$blnVisible)
+		if ($dc)
 		{
-			$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
-						   ->execute($intId);
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->disable = ($blnVisible ? '1' : '');
 		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
+
+		$objVersions->create();
 	}
 }

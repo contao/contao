@@ -791,7 +791,35 @@ class tl_style extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
-		$this->checkPermission();
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_style WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
+		}
 
 		$objVersions = new Versions('tl_style', $intId);
 		$objVersions->initialize();
@@ -816,21 +844,35 @@ class tl_style extends Backend
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_style SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_style SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
-		$objVersions->create();
-
-		// Recreate the style sheet
-		$objStylesheet = $this->Database->prepare("SELECT pid FROM tl_style WHERE id=?")
-									    ->limit(1)
-									    ->execute($intId);
-
-		if ($objStylesheet->numRows)
+		if ($dc)
 		{
-			$this->import('StyleSheets');
-			$this->StyleSheets->updateStyleSheet($objStylesheet->pid);
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
 		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$callback(($dc ?: $this));
+				}
+			}
+		}
+
+		$objVersions->create();
 	}
 }
