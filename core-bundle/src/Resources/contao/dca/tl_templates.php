@@ -328,14 +328,14 @@ class tl_templates extends Backend
 		}
 
 		// Show form
-		return '
-<div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
-</div>'.(($strError != '') ? '
-
+		return ($strError ? '
 <div class="tl_message">
 <p class="tl_error">'.$strError.'</p>
 </div>' : '').'
+
+<div id="tl_buttons">
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+</div>
 
 <form action="'.ampersand(Environment::get('request')).'" id="tl_create_template" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">

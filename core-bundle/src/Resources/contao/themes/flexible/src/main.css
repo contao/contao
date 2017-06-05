@@ -226,9 +226,6 @@ h2.sub_headline {
 	margin:3px 18px;
 	padding:7px 0;
 }
-.tl_message {
-	margin:18px 0 0;
-}
 .tl_gerror {
 	margin:12px;
 	padding:3px 0 3px 22px;
@@ -1620,8 +1617,7 @@ fieldset.collapsed > legend {
 /* File synchronization */
 #sync-results {
 	overflow:hidden;
-	margin:18px 18px 0;
-	flex-grow:1;
+	margin:18px 15px 0;
 }
 #sync-results p {
 	margin-bottom:0;
@@ -1634,9 +1630,14 @@ fieldset.collapsed > legend {
 	float:right;
 }
 #result-list {
-	margin-top:1em;
-	margin-bottom:1em;
+	margin:15px;
+	flex-grow:1;
 }
+#result-list .tl_error,#result-list .tl_confirm,#result-list .tl_info,#result-list .tl_new {
+	padding:3px 0;
+	background:none;
+}
+
 
 /* DropZone */
 .dropzone {
@@ -1813,9 +1814,6 @@ fieldset.collapsed > legend {
 	}
 	.tl_modulewizard td:first-child .tl_select {
 		max-width:52vw;
-	}
-	.tl_message {
-		margin:6px 15px 0; /* FIXME */
 	}
 	#paste_hint,.sort_hint {
 		display:none;
