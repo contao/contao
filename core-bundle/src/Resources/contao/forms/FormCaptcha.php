@@ -239,7 +239,7 @@ class FormCaptcha extends \Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value=""%s%s',
+		return sprintf('<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text"%s%s',
 						$this->strCaptchaKey,
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
@@ -255,7 +255,7 @@ class FormCaptcha extends \Widget
 	 */
 	public function generateQuestion()
 	{
-		return sprintf('<span class="captcha_text%s">%s</span>',
+		return sprintf('<span id="captcha_text" class="captcha_text%s">%s</span>',
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						$this->getQuestion());
 	}
