@@ -207,7 +207,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'sectionWizard',
-			'sql'                     => "varchar(1022) NOT NULL default ''"
+			'sql'                     => "blob NULL"
 		),
 		'framework' => array
 		(
