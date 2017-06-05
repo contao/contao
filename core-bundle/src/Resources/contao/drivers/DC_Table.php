@@ -3577,7 +3577,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$return .= ((\Input::get('act') == 'select') ? '
-
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -3619,7 +3618,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		// End table
 		$return .= $_buttons . '</div></li>'.$tree.'
-</ul>
+</ul>'.(($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+<div class="tl_radio_reset">
+<label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
+</div>' : '').'
 </div>';
 
 		// Close the form
@@ -4527,7 +4529,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 </script>';
 		}
 
-		$return .= '
+		$return .= (($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+<div class="tl_radio_reset">
+<label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
+</div>' : '').'
 </div>';
 
 		// Close form
@@ -4969,7 +4974,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			// Close the table
 			$return .= '
-</table>
+</table>'.(($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+<div class="tl_radio_reset">
+<label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
+</div>' : '').'
 </div>';
 
 			// Close the form

@@ -575,6 +575,7 @@ table.tl_listing {
 	background-image:linear-gradient(90deg, transparent calc(100% - 26px), #ffce42 26px);
 }
 .tl_listing.picker .tl_tree_checkbox,.tl_listing.picker .tl_tree_radio,.tl_listing_container.picker .tl_tree_checkbox,.tl_listing_container.picker .tl_tree_radio {
+	margin-top:2px;
 	margin-left:8px;
 }
 .tl_listing.picker .tl_tree_checkbox:disabled,.tl_listing.picker .tl_tree_radio:disabled,.tl_listing_container.picker .tl_tree_checkbox:disabled,.tl_listing_container.picker .tl_tree_radio:disabled {
@@ -583,6 +584,10 @@ table.tl_listing {
 .tl_listing_container.picker .tl_content p {
 	padding-right:24px;
 }
+.tl_listing_container.picker .limit_toggler {
+	width:calc(100% - 26px);
+}
+
 
 /* List view */
 .tl_listing tr.odd td {
@@ -634,7 +639,12 @@ table.tl_listing {
 	padding:0 6px 3px 0;
 	text-align:right;
 }
-.tl_select_label {
+.tl_radio_reset {
+	margin-top:6px;
+	padding:0 6px 3px 0;
+	text-align:right;
+}
+.tl_select_label,.tl_radio_label {
 	margin-right:2px;
 	color:#999;
 	font-size:.75rem;
