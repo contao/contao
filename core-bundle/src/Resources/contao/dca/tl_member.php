@@ -530,12 +530,14 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		if (!$this->User->isAdmin)
+		$blnCanSwitchUser = ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg));
+
+		if (!$blnCanSwitchUser)
 		{
 			return '';
 		}
 
-		if (!$row['login'] || $row['username'] == '')
+		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && count(array_intersect(\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
 		}

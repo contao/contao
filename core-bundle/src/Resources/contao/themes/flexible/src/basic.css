@@ -169,6 +169,9 @@ p {
 .widget h3 img {
 	margin-right:3px;
 }
+.widget-captcha {
+	display:initial !important;
+}
 
 /* Forms */
 optgroup {

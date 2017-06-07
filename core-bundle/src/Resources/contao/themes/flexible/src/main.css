@@ -906,10 +906,10 @@ label.tl_change_selected {
 /* Breadcrumb */
 #tl_breadcrumb {
 	margin:0 0 12px;
-	padding:6px;
+	padding:9px 6px;
 	overflow:hidden;
 	background:#fffce1;
-	border:1px solid #d49822;
+	border:1px solid #d68c23;
 }
 #tl_breadcrumb li {
 	margin:0;
@@ -1718,9 +1718,12 @@ fieldset.collapsed > legend {
 	}
 	#tmenu .burger button {
 		margin-top:-4px;
-		padding:15px 9px 16px;
+		padding:15px 9px 15px;
 		border:0;
 		background:none;
+	}
+	#tmenu .burger img {
+		margin-top:1px;
 	}
 }
 
