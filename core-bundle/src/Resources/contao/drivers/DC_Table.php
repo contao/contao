@@ -3553,12 +3553,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					}
 
 					$arrFound = $arrRoot;
-					$this->root = $this->eliminateNestedPages($arrFound);
+					$this->root = $this->eliminateNestedPages($arrFound, $table, $blnHasSorting);
 				}
 				else
 				{
 					$arrFound = $objRoot->fetchEach($fld);
-					$this->root = $this->eliminateNestedPages($arrFound);
+					$this->root = $this->eliminateNestedPages($arrFound, $table, $blnHasSorting);
 				}
 			}
 		}
