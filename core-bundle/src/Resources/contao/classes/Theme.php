@@ -686,10 +686,11 @@ class Theme extends \Backend
 
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
-
 		$objSession->remove('uploaded_themes');
 
-		// Redirect
+		$this->import('Automator');
+		$this->Automator->generateSymlinks();
+
 		$this->redirect(str_replace('&key=importTheme', '', \Environment::get('request')));
 	}
 

@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Regenerate the symlinks after importing a theme (see #867).
  * Only check "gdMaxImgWidth" and "gdMaxImgHeight" if the GDlib is used to resize images (see #826).
  * Improve the accessibility of the CAPTCHA widget (see contao/core#8709).
  * Re-add the "reset selection" buttons to the picker (see #856).
