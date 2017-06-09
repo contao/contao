@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Update all Contao components to their latest version.
  * Regenerate the symlinks after importing a theme (see #867).
  * Only check "gdMaxImgWidth" and "gdMaxImgHeight" if the GDlib is used to resize images (see #826).
  * Improve the accessibility of the CAPTCHA widget (see contao/core#8709).
