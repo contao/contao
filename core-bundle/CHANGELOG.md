@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Only check "gdMaxImgWidth" and "gdMaxImgHeight" if the GDlib is used to resize images (see #826).
  * Improve the accessibility of the CAPTCHA widget (see contao/core#8709).
  * Re-add the "reset selection" buttons to the picker (see #856).
  * Trigger all the callbacks in the toggleVisibility() methods (see #756).

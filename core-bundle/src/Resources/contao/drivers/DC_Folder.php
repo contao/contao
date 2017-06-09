@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
+use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -2747,28 +2748,33 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$thumbnail .= ')</span>';
 
 			// Generate the thumbnail
-			if ($objFile->isImage)
+			if ($objFile->isImage && $objFile->viewHeight > 0 && \Config::get('thumbnails'))
 			{
-				if ($objFile->viewHeight > 0)
+				$blnCanResize = true;
+
+				// Check the maximum width and height if the GDlib is used to resize images
+				if (!$objFile->isSvgImage && \System::getContainer()->get('contao.image.imagine') instanceof Imagine)
 				{
-					if (\Config::get('thumbnails') && ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')))
+					$blnCanResize = $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth');
+				}
+
+				if ($blnCanResize)
+				{
+					// Inline the image if no preview image will be generated (see #636)
+					if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 400)
 					{
-						// Inline the image if no preview image will be generated (see #636)
-						if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 400)
-						{
-							$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" style="margin:0 0 2px -18px">';
-						}
-						else
-						{
-							$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), array(400, 50, ResizeConfiguration::MODE_BOX))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px -18px"');
-						}
+						$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" style="margin:0 0 2px -18px">';
+					}
+					else
+					{
+						$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), array(400, 50, ResizeConfiguration::MODE_BOX))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px -18px"');
+					}
 
-						$importantPart = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded))->getImportantPart();
+					$importantPart = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
-						if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
-						{
-							$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
-						}
+					if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
+					{
+						$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl(TL_ROOT), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 			}

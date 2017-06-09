@@ -14,6 +14,7 @@ use Contao\CoreBundle\DataContainer\DcaFilterInterface;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\Image\ResizeConfiguration;
+use Imagine\Gd\Imagine;
 
 
 /**
@@ -608,9 +609,17 @@ abstract class DataContainer extends \Backend
 
 			if ($objFile->isImage)
 			{
+				$blnCanResize = true;
+
+				// Check the maximum width and height if the GDlib is used to resize images
+				if (!$objFile->isSvgImage && \System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				{
+					$blnCanResize = $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth');
+				}
+
 				$image = \Image::getPath('placeholder.svg');
 
-				if ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))
+				if ($blnCanResize)
 				{
 					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
 					{
