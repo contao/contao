@@ -241,11 +241,11 @@ class tl_content_news extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$callback(($dc ?: $this));
+					$callback($dc);
 				}
 			}
 		}
@@ -283,11 +283,11 @@ class tl_content_news extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+					$blnVisible = $callback($blnVisible, $dc);
 				}
 			}
 		}
@@ -312,11 +312,11 @@ class tl_content_news extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$callback(($dc ?: $this));
+					$callback($dc);
 				}
 			}
 		}
