@@ -84,7 +84,7 @@ body.popup {
 #container {
 	display:flex;
 	min-height:calc(100vh - 48px);
-	background:#142634;
+	background:#172b3b;
 }
 .lw #container {
 	max-width:1140px;
@@ -113,7 +113,7 @@ body.popup {
 	border-top:1px solid #3a454d;
 	font-size:.75rem;
 	line-height:1.4;
-	background:#142634;
+	background:#172b3b;
 }
 #left .version,#left .version a {
 	color:#91979c;
@@ -182,7 +182,7 @@ body.popup {
 	border-left:4px solid #0f1c26;
 }
 #tl_navigation .tl_level_2 li.active {
-	background-color:#142634;
+	background-color:#172b3b;
 	border-left-color:#f47c00;
 }
 #tl_navigation .tl_level_2 a {
@@ -1557,6 +1557,9 @@ fieldset.collapsed > legend {
 }
 
 /* Maintenance */
+#tl_maintenance_cache table {
+	width:100%;
+}
 #tl_maintenance_cache th,#tl_maintenance_cache td {
 	border-bottom:1px solid #e9e9e9;
 }
