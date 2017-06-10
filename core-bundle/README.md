@@ -43,7 +43,7 @@ Then run `php composer.phar update` to install the vendor files.
 
 
 Activation
--------------
+----------
 
 Remove the `parameters.yml` import from your `app/config/config.yml` file:
 
@@ -53,7 +53,7 @@ imports:
     - { resource: security.yml }
 ```
 
-Then add the following to your `app/AppKernel.php` file:
+Then adjust to your `app/AppKernel.php` file:
 
 ```php
 // app/AppKernel.php
@@ -61,14 +61,14 @@ class AppKernel extends Kernel
 {
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             // ...
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new Nelmio\SecurityBundle\NelmioSecurityBundle(),
             new Contao\CoreBundle\ContaoCoreBundle(),
-        );
+        ];
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -83,6 +83,10 @@ class AppKernel extends Kernel
     }
 }
 ```
+
+
+Configuration
+-------------
 
 Add the Contao routes to your `app/config/routing.yml` file:
 
