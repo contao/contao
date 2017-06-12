@@ -1,6 +1,6 @@
 # Contao news bundle change log
 
-### DEV
+### 4.4.0-RC2 (2017-06-12)
 
  * Trigger all the callbacks in the toggleVisibility() methods (see contao/core-bundle#756).
 
