@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Fix the "save and go back" function (see #870).
+
 ### 4.4.0-RC2 (2017-06-12)
 
  * Update all Contao components to their latest version.
