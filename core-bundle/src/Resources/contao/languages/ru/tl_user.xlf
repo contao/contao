@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.0">
         <source>Limit width</source>
+        <target>Ограничение ширины</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
         <source>Limit the maximum width of the back end.</source>
+        <target>Ограничьте максимальную ширину панели управления.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -301,7 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_user.session_legend">
         <source>Clear cache</source>
-        <target>Очистить кэш</target>
+        <target>Очистить кеш</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionLabel">
         <source>Session data</source>
@@ -309,11 +311,11 @@
       </trans-unit>
       <trans-unit id="tl_user.htmlLabel">
         <source>Image cache</source>
-        <target>Кэш изображений</target>
+        <target>Кеш изображений</target>
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Page cache</source>
-        <target>Кэш страниц</target>
+        <target>Кеш страниц</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -321,11 +323,11 @@
       </trans-unit>
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
-        <target>Кэш изображений очищен</target>
+        <target>Кеш изображений очищен</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The page cache has been purged</source>
-        <target>Кэш страниц очищен</target>
+        <target>Кеш страниц очищен</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>

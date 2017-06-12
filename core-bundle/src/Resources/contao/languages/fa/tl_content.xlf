@@ -57,6 +57,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
+        <target>عنوان تصویر</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>

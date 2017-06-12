@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.0">
         <source>Limit width</source>
+        <target>Omezení šířky</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
         <source>Limit the maximum width of the back end.</source>
+        <target>Omezí maximální šířku backendu.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>Členové této skupiny mohou použít náhled stránky.</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>

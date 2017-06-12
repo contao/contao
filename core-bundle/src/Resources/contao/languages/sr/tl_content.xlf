@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
+        <target>Препиши мета податке</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the image meta data from the file manager.</source>
+        <target>Препиши постојеће мета податке слике у менаџеру фајлова.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
+        <target>Назив слике</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
@@ -340,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Користи почетни директоријум као извор фајла у случају да је корисник аутентификован.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

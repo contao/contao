@@ -67,9 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
         <source>Meta data</source>
+        <target>Meta informace</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file meta data.</source>
+        <target>Zde můžete zadat soubor s meta daty.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

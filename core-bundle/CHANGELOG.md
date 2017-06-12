@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.0-RC2 (2017-06-12)
 
  * Update all Contao components to their latest version.
  * Regenerate the symlinks after importing a theme (see #867).
