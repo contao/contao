@@ -1107,7 +1107,7 @@ class tl_content extends Backend
 				break;
 
 			case 'player':
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'j_mediaelement'));
+				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_mediaelement'));
 				break;
 
 			case 'table':

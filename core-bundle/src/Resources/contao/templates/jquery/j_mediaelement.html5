@@ -1,5 +1,7 @@
 <?php
 
+@trigger_error('Using the "j_mediaelement" template has been deprecated and will no longer work in Contao 5.0. Use the "js_mediaelement" template instead.', E_USER_DEPRECATED);
+
 // Add the mediaelement style sheet
 $GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|static';
 
@@ -12,9 +14,7 @@ $GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|stati
         return $(this).parents('picture').length === 0;
     }).mediaelementplayer({
       // Put custom options here
-      pluginPath: '<?= Environment::get('path') ?>/assets/mediaelement/',
-      flashName: 'legacy/flashmediaelement.swf',
-      silverlightName: 'legacy/silverlightmediaelement.xap'
+      pluginPath: '<?= Environment::get('path') ?>/assets/mediaelement/plugins/'
     });
   });
 </script>
