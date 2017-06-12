@@ -99,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
         <source>Notified (comment)</source>
+        <target>Notificado (comentario)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
@@ -106,9 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.0">
         <source>Notified (reply)</source>
+        <target>Notificado (respuesta)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.1">
         <source>The notification of the reply to this comment has been sent.</source>
+        <target>Se ha enviado la notificación de la respuesta a este comentario.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
