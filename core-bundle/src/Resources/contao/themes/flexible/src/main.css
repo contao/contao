@@ -178,7 +178,6 @@ body.popup {
 	padding:0 0 15px;
 }
 #tl_navigation .tl_level_2 li {
-	padding:6px 23px 6px 35px;
 	border-left:4px solid #0f1c26;
 }
 #tl_navigation .tl_level_2 li.active {
@@ -187,6 +186,7 @@ body.popup {
 }
 #tl_navigation .tl_level_2 a {
 	display:block;
+	padding:6px 18px 6px 35px;
 	font-weight:normal;
 	color:#d3d5d7;
 	transition:color .2s ease;
