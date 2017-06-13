@@ -1069,6 +1069,59 @@ abstract class Backend extends \Controller
 
 
 	/**
+	 * Generate the DCA picker wizard
+	 *
+	 * @param boolean|array $config
+	 * @param string        $table
+	 * @param string        $field
+	 * @param integer       $id
+	 * @param string        $value
+	 * @param string        $inputName
+	 *
+	 * @return string
+	 */
+	public static function getDcaPickerWizard($config, $table, $field, $id, $value, $inputName)
+	{
+		$params = array();
+
+		if (is_array($config) && isset($config['do']))
+		{
+			$params['do'] = $config['do'];
+		}
+
+		$params['context'] = 'link';
+		$params['target'] = $table.'.'.$field.'.'.$id;
+		$params['value'] = $value;
+		$params['popup'] = 1;
+
+		if (is_array($config) && isset($config['context']))
+		{
+			$params['context'] = $config['context'];
+		}
+
+		return ' <a href="' . ampersand(System::getContainer()->get('router')->generate('contao_backend_picker', $params)) . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . \Image::getHtml((is_array($config) && isset($config['icon']) ? $config['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+  <script>
+    $("pp_' . $inputName . '").addEvent("click", function(e) {
+      e.preventDefault();
+      Backend.openModalSelector({
+        "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0])) . '",
+        "url": this.href,
+        "callback": function(table, value) {
+          new Request.Contao({
+            evalScripts: false,
+            onSuccess: function(txt, json) {
+              $("ctrl_' . $inputName . '").value = (json.tag || json.content);
+              this.set("href", this.get("href").replace(/&value=[^&]*/, "&value=" + (json.tag || json.content)));
+            }.bind(this)
+          }).post({"action":"processPickerSelection", "table":table, "value":value.join(","), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+        }.bind(this)
+      });
+    });
+  </script>';
+	}
+
+
+	/**
 	 * Add the custom layout section references
 	 */
 	public function addCustomLayoutSectionReferences()

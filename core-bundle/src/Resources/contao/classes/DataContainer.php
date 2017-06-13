@@ -488,42 +488,7 @@ abstract class DataContainer extends \Backend
 		// DCA picker
 		if (isset($arrData['eval']['dcaPicker']) && (is_array($arrData['eval']['dcaPicker']) || $arrData['eval']['dcaPicker'] === true))
 		{
-			$params = array();
-
-			if (is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['do']))
-			{
-				$params['do'] = $arrData['eval']['dcaPicker']['do'];
-			}
-
-			$params['context'] = 'link';
-			$params['target'] = $this->strTable.'.'.$this->strField.'.'.$this->intId;
-			$params['value'] = $this->varValue;
-			$params['popup'] = 1;
-
-			if (is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['context']))
-			{
-				$params['context'] = $arrData['eval']['dcaPicker']['context'];
-			}
-
-			$wizard .= ' <a href="' . ampersand(System::getContainer()->get('router')->generate('contao_backend_picker', $params)) . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $this->strField . '">' . \Image::getHtml((is_array($arrData['eval']['dcaPicker']) && isset($arrData['eval']['dcaPicker']['icon']) ? $arrData['eval']['dcaPicker']['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
-  <script>
-    $("pp_' . $this->strField . '").addEvent("click", function(e) {
-      e.preventDefault();
-      Backend.openModalSelector({
-        "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
-        "url": this.href,
-        "callback": function(table, value) {
-          new Request.Contao({
-            evalScripts: false,
-            onSuccess: function(txt, json) {
-              $("ctrl_' . $this->strInputName . '").value = (json.tag || json.content);
-              this.set("href", this.get("href").replace(/&value=[^&]*/, "&value=" + (json.tag || json.content)));
-            }.bind(this)
-          }).post({"action":"processPickerSelection", "table":table, "value":value.join(","), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
-        }.bind(this)
-      });
-    });
-  </script>';
+			$wizard .= \Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], $this->strTable, $this->strField, $this->intId, $this->varValue, $this->strInputName);
 		}
 
 		// Add a custom wizard
