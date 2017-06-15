@@ -34,7 +34,8 @@ class ScriptHandler
         static::addAppDirectory();
         static::addWebEntryPoints($event);
 
-        static::executeCommand('cache:clear', $event);
+        static::executeCommand('cache:clear --no-warmup', $event);
+        static::executeCommand('cache:warmup', $event);
         static::executeCommand('assets:install --symlink --relative', $event);
 
         static::executeCommand('contao:install', $event);

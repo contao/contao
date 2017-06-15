@@ -13,7 +13,11 @@ namespace Contao\ManagerBundle\ContaoManager;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,7 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface
 {
     /**
      * @var string|null
@@ -126,6 +130,48 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         ]));
 
         return $collection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container)
+    {
+        if ('doctrine' !== $extensionName) {
+            return $extensionConfigs;
+        }
+
+        $params = [];
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['dbal']['connections']['default'])) {
+                $params = array_merge($params, $extensionConfig['dbal']['connections']['default']);
+            }
+        }
+
+        $parameterBag = $container->getParameterBag();
+
+        foreach ($params as $key => $value) {
+            $params[$key] = $parameterBag->resolveValue($value);
+        }
+
+        try {
+            $connection = DriverManager::getConnection($params);
+            $connection->connect();
+            $connection->close();
+        } catch (ConnectionException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.1',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
     }
 
     /**

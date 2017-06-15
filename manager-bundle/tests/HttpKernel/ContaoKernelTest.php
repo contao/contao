@@ -96,24 +96,6 @@ class ContaoKernelTest extends TestCase
     }
 
     /**
-     * Tests the getRootDir() method.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using ContaoKernel::setRootDir() has been deprecated and will no longer work in Contao 5.0.
-     */
-    public function testGetRootDir()
-    {
-        $kernel = $this->getKernel(__DIR__);
-
-        $this->assertSame(__DIR__.'/app', $kernel->getRootDir());
-
-        $kernel->setRootDir(__DIR__);
-
-        $this->assertSame(__DIR__, $kernel->getRootDir());
-    }
-
-    /**
      * Tests the getCacheDir() method.
      */
     public function testGetCacheDir()
@@ -235,7 +217,8 @@ class ContaoKernelTest extends TestCase
             ->willReturn([])
         ;
 
-        $kernel = new ContaoKernel($projectDir, 'test', true);
+        ContaoKernel::setProjectDir($projectDir);
+        $kernel = new ContaoKernel('test', true);
         $kernel->setPluginLoader($pluginLoader);
 
         return $kernel;
