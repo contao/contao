@@ -10,21 +10,25 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
-        "symfony/symfony": "^3.2",
+        "php": ">=5.6.0",
+        "symfony/symfony": "^3.3",
         "symfony/monolog-bundle": "^2.8",
         "symfony/swiftmailer-bundle": "^2.3",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "^1.6",
-        "contao/manager-plugin": "^2.0",
-        "contao/core-bundle": "~4.3.5",
-        "contao/installation-bundle": "~4.3.5",
-        "lexik/maintenance-bundle": "^2.0"
+        "friendsofsymfony/http-cache": "^2.0",
+        "lexik/maintenance-bundle": "^2.0",
+        "nelmio/security-bundle": "^2.2",
+        "terminal42/header-replay-bundle": "^1.0",
+        "contao/manager-plugin": "^2.1",
+        "contao/core-bundle": "4.4.*",
+        "contao/installation-bundle": "4.4.*"
     },
     "require-dev": {
         "composer/composer": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^4.5",
+        "phpunit/phpunit": "^5.0",
+        "php-http/message-factory": "^1.0.2",
         "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.2"
     },
@@ -43,16 +47,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\ManagerBundle\\Test\\": "tests/"
+            "Contao\\ManagerBundle\\Tests\\": "tests/"
         }
     },
     "bin": [
         "bin/contao-console"
     ],
     "extra": {
-        "branch-alias": {
-            "dev-develop": "4.3.x-dev"
-        },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
 }

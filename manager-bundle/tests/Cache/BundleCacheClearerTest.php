@@ -11,6 +11,7 @@
 namespace Contao\ManagerBundle\Test\Cache;
 
 use Contao\ManagerBundle\Cache\BundleCacheClearer;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Kamil Kuzminski <https://github.com/qzminski>
  */
-class BundleCacheClearerTest extends \PHPUnit_Framework_TestCase
+class BundleCacheClearerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -39,13 +40,15 @@ class BundleCacheClearerTest extends \PHPUnit_Framework_TestCase
 
         $fs = new Filesystem();
         $fs->mkdir($tmpdir);
-        $fs->touch("$tmpdir/bundles.map");
+        $fs->touch($tmpdir.'/bundles.map');
 
-        $this->assertFileExists("$tmpdir/bundles.map");
+        $this->assertFileExists($tmpdir.'/bundles.map');
 
         $clearer = new BundleCacheClearer($fs);
         $clearer->clear($tmpdir);
 
-        $this->assertFileNotExists("$tmpdir/bundles.map");
+        $this->assertFileNotExists($tmpdir.'/bundles.map');
+
+        $fs->remove($tmpdir);
     }
 }

@@ -18,3 +18,7 @@ doctrine:
                 password: "%database_password%"
                 dbname: "%database_name%"
                 charset: UTF8
+        types:
+            binary_string:
+                class: "Contao\\CoreBundle\\Doctrine\\DBAL\\Types\\BinaryStringType"
+                commented: true

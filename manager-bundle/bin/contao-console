@@ -11,7 +11,6 @@
 
 use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
@@ -20,17 +19,16 @@ set_time_limit(0);
 
 if (file_exists(__DIR__.'/../autoload.php')) {
     // Composer bin directory
-    $vendorRoot = dirname(__DIR__);
+    $projectDir = dirname(dirname(__DIR__));
 } else {
     // Package bin directory
-    $vendorRoot = dirname(dirname(dirname(__DIR__)));
+    $projectDir = dirname(dirname(dirname(dirname(__DIR__))));
 }
 
 /** @var Composer\Autoload\ClassLoader $loader */
-$loader = require $vendorRoot.'/autoload.php';
+$loader = require $projectDir.'/vendor/autoload.php';
 
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-ManagerBundlePlugin::autoloadModules($vendorRoot.'/../system/modules');
+ManagerBundlePlugin::autoloadModules($projectDir.'/system/modules');
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'prod');
@@ -40,7 +38,7 @@ if ($debug) {
     Debug::enable();
 }
 
+ContaoKernel::setProjectDir($projectDir);
 $kernel = new ContaoKernel($env, $debug);
-$kernel->setRootDir($vendorRoot.'/../app');
 $application = new Application($kernel);
 $application->run($input);

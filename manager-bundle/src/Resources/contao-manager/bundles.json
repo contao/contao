@@ -9,6 +9,7 @@
     "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
     "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
     "Nelmio\\CorsBundle\\NelmioCorsBundle",
+    "Nelmio\\SecurityBundle\\NelmioSecurityBundle",
     "Contao\\ManagerBundle\\ContaoManagerBundle",
     {
         "bundle": "Symfony\\Bundle\\DebugBundle\\DebugBundle",

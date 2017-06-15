@@ -34,7 +34,8 @@ class ScriptHandler
         static::addAppDirectory();
         static::addWebEntryPoints($event);
 
-        static::executeCommand('cache:clear', $event);
+        static::executeCommand('cache:clear --no-warmup', $event);
+        static::executeCommand('cache:warmup', $event);
         static::executeCommand('assets:install --symlink --relative', $event);
 
         static::executeCommand('contao:install', $event);
@@ -89,8 +90,9 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s vendor/bin/contao-console%s %s%s --env=prod',
-                $phpPath,
+                '%s %s%s %s%s --env=prod',
+                escapeshellarg($phpPath),
+                escapeshellarg(__DIR__.'/../../bin/contao-console'),
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event)

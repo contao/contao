@@ -1,3 +1,0 @@
-# CORS configuration
-nelmio_cors:
-    paths: { '^/': [] } # the NelmioCorsExtension does not load if there are no paths

@@ -8,16 +8,17 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test;
+namespace Contao\ManagerBundle\Tests;
 
 use Contao\ManagerBundle\ContaoManagerBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ContaoManagerBundle class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoManagerBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoManagerBundleTest extends TestCase
 {
     /**
      * Tests the object instantiation.

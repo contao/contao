@@ -16,7 +16,9 @@ use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\IniParser;
 use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -26,6 +28,11 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class ContaoKernel extends Kernel
 {
+    /**
+     * @var string
+     */
+    protected static $projectDir;
+
     /**
      * @var PluginLoader
      */
@@ -51,23 +58,25 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getRootDir()
+    public function getProjectDir()
     {
-        if (null === $this->rootDir) {
-            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/app';
+        if (null === self::$projectDir) {
+            throw new \LogicException('setProjectDir() must be called to initialize the ContaoKernel.');
         }
 
-        return $this->rootDir;
+        return self::$projectDir;
     }
 
     /**
-     * Sets the application root dir.
-     *
-     * @param string $dir
+     * {@inheritdoc}
      */
-    public function setRootDir($dir)
+    public function getRootDir()
     {
-        $this->rootDir = realpath($dir) ?: null;
+        if (null === $this->rootDir) {
+            $this->rootDir = $this->getProjectDir().'/app';
+        }
+
+        return $this->rootDir;
     }
 
     /**
@@ -75,7 +84,7 @@ class ContaoKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return dirname($this->getRootDir()).'/var/cache/'.$this->getEnvironment();
+        return $this->getProjectDir().'/var/cache/'.$this->getEnvironment();
     }
 
     /**
@@ -83,7 +92,7 @@ class ContaoKernel extends Kernel
      */
     public function getLogDir()
     {
-        return dirname($this->getRootDir()).'/var/logs';
+        return $this->getProjectDir().'/var/logs';
     }
 
     /**
@@ -94,7 +103,7 @@ class ContaoKernel extends Kernel
     public function getPluginLoader()
     {
         if (null === $this->pluginLoader) {
-            $this->pluginLoader = new PluginLoader($this->getRootDir().'/../vendor/composer/installed.json');
+            $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
         }
 
         return $this->pluginLoader;
@@ -120,7 +129,7 @@ class ContaoKernel extends Kernel
         if (null === $this->bundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
-            $parser->addParser(new IniParser(dirname($this->getRootDir()).'/system/modules'));
+            $parser->addParser(new IniParser($this->getProjectDir().'/system/modules'));
 
             $this->bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
         }
@@ -167,6 +176,33 @@ class ContaoKernel extends Kernel
                 $loader->load($this->getRootDir().'/config/config.yml');
             }
         });
+    }
+
+    /**
+     * Initializes getProjectDir() because the ContaoKernel does not know it's location.
+     *
+     * @param string $projectDir
+     */
+    public static function setProjectDir($projectDir)
+    {
+        self::$projectDir = realpath($projectDir) ?: $projectDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getContainerBuilder()
+    {
+        $container = new PluginContainerBuilder($this->getPluginLoader(), []);
+        $container->getParameterBag()->add($this->getKernelParameters());
+
+        if (class_exists('ProxyManager\Configuration')
+            && class_exists('Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator')
+        ) {
+            $container->setProxyInstantiator(new RuntimeInstantiator());
+        }
+
+        return $container;
     }
 
     /**

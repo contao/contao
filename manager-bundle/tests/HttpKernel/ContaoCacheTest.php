@@ -8,25 +8,35 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ManagerBundle\Test\HttpKernel;
+namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the ContaoCache class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoCacheTest extends \PHPUnit_Framework_TestCase
+class ContaoCacheTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $cache = new ContaoCache($this->getMock('Symfony\Component\HttpKernel\Kernel', [], [], '', false), __DIR__);
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
+
+        $fs = new Filesystem();
+        $fs->mkdir($tmpdir);
+
+        $cache = new ContaoCache($this->createMock(KernelInterface::class), $tmpdir);
 
         $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoCache', $cache);
         $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache', $cache);
+
+        $fs->remove($tmpdir);
     }
 }

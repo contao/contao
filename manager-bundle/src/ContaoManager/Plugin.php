@@ -10,15 +10,20 @@
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -26,7 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface
 {
     /**
      * @var string|null
@@ -73,7 +78,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/swiftmailer.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/monolog.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/lexik_maintenance.yml');
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/nelmio_cors.yml');
+        $loader->load('@ContaoManagerBundle/Resources/contao-manager/nelmio_security.yml');
 
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             if ('dev' === $container->getParameter('kernel.environment')) {
@@ -106,7 +111,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $collections[] = $collection;
         }
 
-        return array_reduce(
+        $collection = array_reduce(
             $collections,
             function (RouteCollection $carry, RouteCollection $item) {
                 $carry->addCollection($item);
@@ -115,6 +120,58 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             },
             new RouteCollection()
         );
+
+        // Redirect the deprecated install.php file
+        $collection->add('contao_install_redirect', new Route('/install.php', [
+            '_scope' => 'backend',
+            '_controller' => 'FrameworkBundle:Redirect:redirect',
+            'route' => 'contao_install',
+            'permanent' => true,
+        ]));
+
+        return $collection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container)
+    {
+        if ('doctrine' !== $extensionName) {
+            return $extensionConfigs;
+        }
+
+        $params = [];
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['dbal']['connections']['default'])) {
+                $params = array_merge($params, $extensionConfig['dbal']['connections']['default']);
+            }
+        }
+
+        $parameterBag = $container->getParameterBag();
+
+        foreach ($params as $key => $value) {
+            $params[$key] = $parameterBag->resolveValue($value);
+        }
+
+        try {
+            $connection = DriverManager::getConnection($params);
+            $connection->connect();
+            $connection->close();
+        } catch (ConnectionException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.1',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
     }
 
     /**
