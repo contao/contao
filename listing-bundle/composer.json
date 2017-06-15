@@ -40,9 +40,6 @@
         "preferred-install": "dist"
     },
     "extra": {
-        "branch-alias": {
-            "dev-release/4.4.0": "4.4.x-dev"
-        },
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     },
     "minimum-stability": "RC"
