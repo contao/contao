@@ -355,6 +355,7 @@ class ModuleListing extends \Module
 		$this->Template->order_by = \Input::get('order_by');
 		$this->Template->sort = \Input::get('sort');
 		$this->Template->col_last = 'col_' . $j;
+		$this->Template->no_results = sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], \Input::get('for'));
 	}
 
 

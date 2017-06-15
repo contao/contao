@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_search.1">
         <source>Here you can enter a comma seperated list of fields that you want to be searchable.</source>
-        <target>Унесите, запетом раздвојена, поља за која желите да буду претражива.</target>
+        <target>Унесите, запетом раздвојена, поља по којима желите омогућити претрагу.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_sort.0">
         <source>Order by</source>
