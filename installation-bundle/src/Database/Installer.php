@@ -12,6 +12,7 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Handles the database installation.
@@ -99,8 +100,8 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
-        $fromSchema = $this->connection->getSchemaManager()->createSchema();
-        $toSchema = $this->schemaProvider->createSchema();
+        $fromSchema = $this->dropNonContaoTables($this->connection->getSchemaManager()->createSchema());
+        $toSchema = $this->dropNonContaoTables($this->schemaProvider->createSchema());
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
@@ -158,6 +159,35 @@ class Installer
             }
         }
 
-        $this->commands = array_filter($return);
+        $return = array_filter($return);
+
+        // HOOK: allow third-party developers to modify the array (see #3281)
+        if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
+                $return = \System::importStatic($callback[0])->{$callback[1]}($return);
+            }
+        }
+
+        $this->commands = $return;
+    }
+
+    /**
+     * Removes tables from the schema that do not start with tl_.
+     *
+     * @param Schema $schema
+     *
+     * @return Schema
+     */
+    private function dropNonContaoTables(Schema $schema)
+    {
+        $needle = $schema->getName().'.tl_';
+
+        foreach ($schema->getTableNames() as $tableName) {
+            if (0 !== strpos($tableName, $needle)) {
+                $schema->dropTable($tableName);
+            }
+        }
+
+        return $schema;
     }
 }

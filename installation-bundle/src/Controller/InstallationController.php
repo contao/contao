@@ -56,12 +56,12 @@ class InstallationController implements ContainerAwareInterface
      */
     public function installAction()
     {
-        if ($this->container->has('contao.framework')) {
-            $this->container->get('contao.framework')->initialize();
-        }
-
         if (null !== ($response = $this->initializeApplication())) {
             return $response;
+        }
+
+        if ($this->container->has('contao.framework')) {
+            $this->container->get('contao.framework')->initialize();
         }
 
         $installTool = $this->container->get('contao.install_tool');
@@ -232,14 +232,25 @@ class InstallationController implements ContainerAwareInterface
         $fs = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()
             ->directories()
             ->depth('==0')
-            ->in($cacheDir.'/..')
+            ->in(dirname($cacheDir))
         ;
 
         foreach ($finder as $dir) {
             $fs->remove($dir);
+        }
+
+        // Zend OPcache
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+
+        // APC
+        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+            apc_clear_cache();
         }
     }
 
@@ -326,7 +337,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      *
-     * @return Response|RedirectResponse|null
+     * @return RedirectResponse|null
      */
     private function adjustDatabaseTables()
     {
@@ -356,7 +367,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      *
-     * @return Response|RedirectResponse|null
+     * @return RedirectResponse|null
      */
     private function importExampleWebsite()
     {
@@ -377,7 +388,7 @@ class InstallationController implements ContainerAwareInterface
 
         $template = $request->request->get('template');
 
-        if ('' === $template || !in_array($template, $templates)) {
+        if ('' === $template || !in_array($template, $templates, true)) {
             $this->context['import_error'] = $this->trans('import_empty_source');
 
             return null;
@@ -402,7 +413,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Creates an admin user.
      *
-     * @return Response|RedirectResponse|null
+     * @return RedirectResponse|null
      */
     private function createAdminUser()
     {

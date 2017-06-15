@@ -3,7 +3,8 @@ services:
         class: Contao\InstallationBundle\InstallTool
         arguments:
             - "@database_connection"
-            - "%kernel.root_dir%"
+            - "%kernel.project_dir%"
+            - "%kernel.logs_dir%"
 
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser

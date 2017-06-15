@@ -36,15 +36,22 @@ class InstallTool
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $logDir;
+
+    /**
      * Constructor.
      *
      * @param Connection $connection
      * @param string     $rootDir
+     * @param string     $logDir
      */
-    public function __construct(Connection $connection, $rootDir)
+    public function __construct(Connection $connection, $rootDir, $logDir)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
+        $this->logDir = $logDir;
     }
 
     /**
@@ -57,7 +64,7 @@ class InstallTool
         $cache = \System::getContainer()->get('contao.cache');
 
         if ($cache->contains('login-count')) {
-            return intval($cache->fetch('login-count')) >= 3;
+            return (int) ($cache->fetch('login-count')) >= 3;
         }
 
         return false;
@@ -91,7 +98,7 @@ class InstallTool
         $cache = \System::getContainer()->get('contao.cache');
 
         if ($cache->contains('login-count')) {
-            $count = intval($cache->fetch('login-count')) + 1;
+            $count = (int) ($cache->fetch('login-count')) + 1;
         } else {
             $count = 1;
         }
@@ -193,7 +200,7 @@ class InstallTool
 
         $column = $this->connection->fetchAssoc($sql." AND COLUMN_NAME = 'sections'");
 
-        return 'varchar(1022)' !== $column['Type'];
+        return !in_array($column['Type'], ['varchar(1022)', 'blob'], true);
     }
 
     /**
@@ -219,7 +226,7 @@ class InstallTool
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
-            ->in($this->rootDir.'/../templates')
+            ->in($this->rootDir.'/templates')
         ;
 
         $templates = [];
@@ -250,7 +257,7 @@ class InstallTool
             }
         }
 
-        $data = file($this->rootDir.'/../templates/'.$template);
+        $data = file($this->rootDir.'/templates/'.$template);
 
         foreach (preg_grep('/^INSERT /', $data) as $query) {
             $this->connection->query($query);
@@ -392,7 +399,7 @@ class InstallTool
                 $e->getTraceAsString()
             ),
             3,
-            $this->rootDir.'/../var/logs/prod-'.date('Y-m-d').'.log'
+            $this->logDir.'/prod-'.date('Y-m-d').'.log'
         );
     }
 }

@@ -11,6 +11,7 @@
 namespace Contao\InstallationBundle\Database;
 
 use Doctrine\DBAL\Connection;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class AbstractVersionUpdate
+abstract class AbstractVersionUpdate implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 

@@ -16,13 +16,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Installer class.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class InstallerTest extends \PHPUnit_Framework_TestCase
+class InstallerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -172,47 +173,28 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
      */
     private function createInstaller(Schema $fromSchema = null, Schema $toSchema = null)
     {
-        /** @var MySqlSchemaManager|\PHPUnit_Framework_MockObject_MockObject $schemaManager */
-        $schemaManager = $this
-            ->getMockBuilder(MySqlSchemaManager::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
 
         $schemaManager
-            ->expects($this->any())
             ->method('createSchema')
             ->willReturn($fromSchema)
         ;
 
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
-            ->expects($this->any())
             ->method('getSchemaManager')
             ->willReturn($schemaManager)
         ;
 
         $connection
-            ->expects($this->any())
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
         ;
 
-        /** @var DcaSchemaProvider|\PHPUnit_Framework_MockObject_MockObject $schemaProvider */
-        $schemaProvider = $this
-            ->getMockBuilder(DcaSchemaProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $schemaProvider = $this->createMock(DcaSchemaProvider::class);
 
         $schemaProvider
-            ->expects($this->any())
             ->method('createSchema')
             ->willReturn($toSchema)
         ;
