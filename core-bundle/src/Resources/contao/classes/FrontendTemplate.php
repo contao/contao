@@ -371,9 +371,13 @@ class FrontendTemplate extends \Template
 			return $response->setPrivate();
 		}
 
-		// Do not cache the response if a user is logged in or the page is protected or uses a mobile layout
-		// TODO: Add support for proxies so they can vary on member context and page layout
-		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->isMobile || $objPage->protected || $this->hasAuthenticatedBackendUser())
+		// Vary on page layout
+		$response->setVary(array('Contao-Page-Layout'), false);
+		$response->headers->set('Contao-Page-Layout', $objPage->isMobile ? 'mobile' : 'desktop');
+
+		// Do not cache the response if a user is logged in or the page is protected
+		// TODO: Add support for proxies so they can vary on member context
+		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->protected || $this->hasAuthenticatedBackendUser())
 		{
 			return $response->setPrivate();
 		}

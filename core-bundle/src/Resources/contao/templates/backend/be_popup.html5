@@ -26,38 +26,38 @@
 
   <div id="container" class="cf">
     <div id="main">
-      <table class="tl_help_table">
+      <table class="tl_show">
         <tr>
-          <td class="tl_label"><?= $this->label_ctime ?>:</td>
+          <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
           <td><?= $this->ctime ?></td>
         </tr>
         <tr>
-          <td class="tl_label"><?= $this->label_mtime ?>:</td>
+          <td><span class="tl_label"><?= $this->labels->fileModified ?>:</span></td>
           <td><?= $this->mtime ?></td>
         </tr>
         <tr>
-          <td class="tl_label"><?= $this->label_atime ?>:</td>
+          <td><span class="tl_label"><?= $this->labels->fileAccessed ?>:</span></td>
           <td><?= $this->atime ?></td>
         </tr>
         <tr>
-          <td class="tl_label"><?= $this->label_path ?>:</td>
+          <td><span class="tl_label"><?= $this->labels->filePath ?>:</span></td>
           <td><?= $this->path ?></td>
         </tr>
         <?php if ($this->uuid): ?>
           <tr>
-            <td class="tl_label"><?= $this->label_uuid ?>:</td>
+            <td><span class="tl_label"><?= $this->labels->fileUuid ?>:</span></td>
             <td><?= $this->uuid ?></td>
           </tr>
         <?php endif; ?>
         <?php if ($this->filesize): ?>
           <tr>
-            <td class="tl_label"><?= $this->label_filesize ?>:</td>
+            <td><span class="tl_label"><?= $this->labels->fileSize ?>:</span></td>
             <td><?= $this->filesize ?></td>
           </tr>
         <?php endif; ?>
         <?php if ($this->src): ?>
           <tr>
-            <td class="tl_label"><?= $this->label_imagesize ?>:</td>
+            <td><span class="tl_label"><?= $this->labels->fileImageSize ?>:</span></td>
             <?php if ($this->width && $this->height): ?>
               <td><?= $this->width ?> x <?= $this->height ?></td>
             <?php else: ?>
@@ -65,10 +65,25 @@
             <?php endif; ?>
           </tr>
         <?php endif; ?>
+        <?php if ($this->meta): ?>
+          <tr class="meta">
+            <td><span class="tl_label"><?= $this->labels->fileMeta ?>:</span></td>
+            <td>
+              <?php foreach ($this->meta as $lang => $data): ?>
+                <p><?= $this->languages->$lang ?></p>
+                <?php foreach ($data as $field => $value): ?>
+                  <?php if ($value): ?>
+                    <?= $value ?> (<?= $this->labels->{'aw_'.$field} ?>)<br>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              <?php endforeach; ?>
+            </td>
+          </tr>
+        <?php endif; ?>
       </table>
       <?php if ($this->href): ?>
         <div id="download">
-          <a href="<?= $this->href ?>" download="<?= basename($this->path) ?>"><?= Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
+          <a href="<?= $this->href ?>" class="tl_submit" download="<?= basename($this->path) ?>"><?= Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
         </div>
       <?php endif; ?>
       <?php if ($this->isImage): ?>

@@ -69,7 +69,6 @@ class InstallCommand extends AbstractLockedCommand
         'system/themes',
         'system/tmp',
         '%s/share',
-        '%s/system/cron',
     ];
 
     /**
@@ -93,7 +92,7 @@ class InstallCommand extends AbstractLockedCommand
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
-        $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $this->rootDir = $this->getContainer()->getParameter('kernel.project_dir');
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
@@ -146,7 +145,7 @@ class InstallCommand extends AbstractLockedCommand
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
-        $this->addIgnoredDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.image.target_path'));
+        $this->addIgnoredDir($this->getContainer()->getParameter('contao.image.target_dir'));
     }
 
     /**
@@ -185,8 +184,8 @@ if (!defined('TL_SCRIPT')) {
     die('Your script is not compatible with Contao 4.');
 }
 
-/** @var Composer\Autoload\ClassLoader */
-$loader = require __DIR__ . '/../app/autoload.php';
+/** @var Composer\Autoload\ClassLoader $laoder */
+$loader = require __DIR__ . '/../vendor/autoload.php';
 
 $request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
 $request->attributes->set('_scope', ('BE' === TL_MODE ? 'backend' : 'frontend'));

@@ -1,4 +1,13 @@
 services:
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - ["setFramework", ["@contao.framework"]]
+
+        Symfony\Component\DependencyInjection\ContainerAwareInterface:
+            calls:
+                - ["setContainer", ["@service_container"]]
+
     contao.cache:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
@@ -19,11 +28,19 @@ services:
             - "@filesystem"
             - "@contao.resource_finder"
             - "@contao.resource_locator"
-            - "%kernel.root_dir%"
+            - "%kernel.project_dir%"
             - "@database_connection"
             - "@contao.framework"
         tags:
             - { name: kernel.cache_warmer }
+
+    contao.controller.backend_csv_import:
+        class: Contao\CoreBundle\Controller\BackendCsvImportController
+        arguments:
+            - "@contao.framework"
+            - "@database_connection"
+            - "@request_stack"
+            - "%kernel.project_dir%"
 
     contao.controller.insert_tags:
         class: Contao\CoreBundle\Controller\InsertTagsController
@@ -42,9 +59,6 @@ services:
         public: false
         arguments:
             - "%kernel.packages%"
-        calls:
-            - ["setFramework", ["@contao.framework"]]
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
 
@@ -54,6 +68,36 @@ services:
             - "@contao.framework"
             - "@doctrine"
 
+    contao.image.imagine:
+        class: Imagine\Gd\Imagine
+
+    contao.image.imagine_svg:
+        class: Contao\ImagineSvg\Imagine
+
+    contao.image.resize_calculator:
+        class: Contao\Image\ResizeCalculator
+        public: false
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\LegacyResizer
+        public: false
+        arguments:
+            - "%contao.image.target_dir%"
+            - "@contao.image.resize_calculator"
+            - "@filesystem"
+
+    contao.image.image_factory:
+        class: Contao\CoreBundle\Image\ImageFactory
+        arguments:
+            - "@contao.image.resizer"
+            - "@contao.image.imagine"
+            - "@contao.image.imagine_svg"
+            - "@filesystem"
+            - "@contao.framework"
+            - "%contao.image.bypass_cache%"
+            - "%contao.image.imagine_options%"
+            - "%contao.image.valid_extensions%"
+
     contao.image.image_sizes:
         class: Contao\CoreBundle\Image\ImageSizes
         arguments:
@@ -61,16 +105,79 @@ services:
             - "@event_dispatcher"
             - "@contao.framework"
 
+    contao.image.picture_generator:
+        class: Contao\Image\PictureGenerator
+        arguments:
+            - "@contao.image.resizer"
+
+    contao.image.picture_factory:
+        class: Contao\CoreBundle\Image\PictureFactory
+        arguments:
+            - "@contao.image.picture_generator"
+            - "@contao.image.image_factory"
+            - "@contao.framework"
+            - "%contao.image.bypass_cache%"
+            - "%contao.image.imagine_options%"
+
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
             - "@request_stack"
             - "@router"
             - "@session"
-            - "%kernel.root_dir%"
+            - "@contao.routing.scope_matcher"
+            - "%kernel.project_dir%"
             - "%contao.error_level%"
-        calls:
-            - ["setContainer", ["@service_container"]]
+
+    contao.menu.matcher:
+        class: Knp\Menu\Matcher\Matcher
+        public: false
+
+    contao.menu.picker_menu_builder:
+        class: Contao\CoreBundle\Menu\PickerMenuBuilder
+        arguments:
+            - "@knp_menu.factory"
+            - "@contao.menu.renderer"
+            - "@router"
+        tags:
+            - { name: knp_menu.menu_builder, method: createMenu, alias: picker }
+
+    contao.menu.page_picker_provider:
+        class: Contao\CoreBundle\Menu\PagePickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@request_stack"
+            - "@security.token_storage"
+        tags:
+            - { name: contao.picker_menu_provider, priority: 192 }
+
+    contao.menu.file_picker_provider:
+        class: Contao\CoreBundle\Menu\FilePickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@request_stack"
+            - "@security.token_storage"
+            - "%contao.upload_path%"
+        tags:
+            - { name: contao.picker_menu_provider, priority: 160 }
+
+    contao.menu.article_picker_provider:
+        class: Contao\CoreBundle\Menu\ArticlePickerProvider
+        public: false
+        arguments:
+            - "@router"
+            - "@request_stack"
+            - "@security.token_storage"
+        tags:
+            - { name: contao.picker_menu_provider }
+
+    contao.menu.renderer:
+        class: Knp\Menu\Renderer\ListRenderer
+        public: false
+        arguments:
+            - "@contao.menu.matcher"
 
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
@@ -78,8 +185,6 @@ services:
         arguments:
             - debug
             - false
-        calls:
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: monolog.logger, channel: contao }
 
@@ -89,8 +194,7 @@ services:
         arguments:
             - "@request_stack"
             - "@security.token_storage"
-        calls:
-            - ["setContainer", ["@service_container"]]
+            - "@contao.routing.scope_matcher"
         tags:
             - { name: monolog.processor }
 
@@ -130,65 +234,36 @@ services:
             - "@contao.framework"
             - "%contao.prepend_locale%"
 
+    contao.routing.scope_matcher:
+        class: Contao\CoreBundle\Routing\ScopeMatcher
+        arguments:
+            - "@contao.routing.backend_matcher"
+            - "@contao.routing.frontend_matcher"
+
+    contao.routing.backend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        public: false
+        calls:
+            - ["matchAttribute", ["_scope", "backend"]]
+
+    contao.routing.frontend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        public: false
+        calls:
+            - ["matchAttribute", ["_scope", "frontend"]]
+
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator
         public: false
-        calls:
-            - ["setContainer", ["@service_container"]]
+        arguments:
+            - "@contao.routing.scope_matcher"
 
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         public: false
         arguments:
             - "@contao.framework"
-        calls:
-            - ["setContainer", ["@service_container"]]
-
-    contao.image.imagine:
-        class: Imagine\Gd\Imagine
-
-    contao.image.imagine_svg:
-        class: Contao\ImagineSvg\Imagine
-
-    contao.image.resize_calculator:
-        class: Contao\Image\ResizeCalculator
-        public: false
-
-    contao.image.resizer:
-        class: Contao\CoreBundle\Image\LegacyResizer
-        public: false
-        arguments:
-            - "%kernel.root_dir%/../%contao.image.target_path%"
-            - "@contao.image.resize_calculator"
-            - "@filesystem"
-        calls:
-            - ["setFramework", ["@contao.framework"]]
-
-    contao.image.image_factory:
-        class: Contao\CoreBundle\Image\ImageFactory
-        arguments:
-            - "@contao.image.resizer"
-            - "@contao.image.imagine"
-            - "@contao.image.imagine_svg"
-            - "@filesystem"
-            - "@contao.framework"
-            - "%contao.image.bypass_cache%"
-            - "%contao.image.imagine_options%"
-            - "%contao.image.valid_extensions%"
-
-    contao.image.picture_generator:
-        class: Contao\Image\PictureGenerator
-        arguments:
-            - "@contao.image.resizer"
-
-    contao.image.picture_factory:
-        class: Contao\CoreBundle\Image\PictureFactory
-        arguments:
-            - "@contao.image.picture_generator"
-            - "@contao.image.image_factory"
-            - "@contao.framework"
-            - "%contao.image.bypass_cache%"
-            - "%contao.image.imagine_options%"
+            - "@contao.routing.scope_matcher"
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
@@ -205,3 +280,13 @@ services:
             - "_contao_fe_attributes"
         calls:
             - ["setName", ["contao_frontend"]]
+
+    contao.twig.template_extension:
+        class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
+        public: false
+        arguments:
+            - "@request_stack"
+            - "@contao.framework"
+            - "@contao.routing.scope_matcher"
+        tags:
+            - { name: twig.extension }

@@ -26,6 +26,12 @@
       <trans-unit id="tl_content.addImage.1">
         <source>Add an image to the content element.</source>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
       </trans-unit>
@@ -38,10 +44,10 @@
       <trans-unit id="tl_content.alt.1">
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
       </trans-unit>
       <trans-unit id="tl_content.size.0">
@@ -252,7 +258,7 @@
         <source>Use home directory</source>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

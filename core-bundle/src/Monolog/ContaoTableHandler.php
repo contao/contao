@@ -15,6 +15,7 @@ use Contao\System;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoTableHandler extends AbstractProcessingHandler
+class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -159,7 +160,7 @@ class ContaoTableHandler extends AbstractProcessingHandler
             return;
         }
 
-        trigger_error('Using the addLogEntry hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Using the addLogEntry hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         /** @var System $system */
         $system = $framework->getAdapter(System::class);

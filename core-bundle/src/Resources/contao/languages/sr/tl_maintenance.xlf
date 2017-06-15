@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
-        <target>Пражњење табеле &lt;code&gt;tl_log&lt;/code&gt; у којој су смештени записи дневника. Након тога, ови записи ће бити трајно обрисани.</target>
+        <target>Пражњење табеле &lt;code&gt;tl_log&lt;/code&gt; у којој су смештени записи лога. Након тога, ови записи ће бити трајно обрисани.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Уклањање аутоматски генерисаних сличица и чишћење кеша страница, тако да не постоје линкови према обрисаним ресурсима.</target>
+        <target>Уклањање аутоматски генерисане сличице и онда чисти кеш страница, тако да не постоје линкови према обрисаним ресурсима.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
         <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>Уклањање аутоматски генерисаних &lt;code&gt;.css&lt;/code&gt; и &lt;code&gt;.js&lt;/code&gt; фајлова, те поновно креирање интерних колекција стилова и након тога брисање кеша страница.</target>
+        <target>Уклања аутоматски генерисане &lt;code&gt;.css&lt;/code&gt; и &lt;code&gt;.js&lt;/code&gt; фајлове, поново креира интерне стилове и након тога брише кеш страница.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the page cache</source>

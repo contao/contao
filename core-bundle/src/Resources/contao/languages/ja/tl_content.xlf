@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>コンテント要素に画像を追加します。</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+        <target>メタデータを上書き</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+        <target>ファイル管理による画像のメタデータを上書きします。</target>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>ソースファイル</target>
@@ -49,11 +57,11 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>画像の代替テキスト(&lt;em&gt;alt&lt;/em&gt;属性)を指定できます。</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>題名</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
+        <target>画像の題名</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>画像の題名(&lt;em&gt;title&lt;/em&gt;属性)を指定できます。</target>
       </trans-unit>
@@ -334,8 +342,8 @@
         <target>ホームディレクトリの使用</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>認証済みのユーザーの場合はホームディレクトリをファイルの情報元に使用します。</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>認証済みのメンバーの場合はホームディレクトリをファイルの情報元に使用します。</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

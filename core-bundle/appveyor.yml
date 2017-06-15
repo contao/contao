@@ -8,12 +8,11 @@ cache:
 
 init:
   - SET PATH=c:\php;%PATH%
-  - SET SYMFONY_DEPRECATIONS_HELPER=weak
 
 install:
   - mkdir c:\php && cd c:\php
-  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-5.6.27-Win32-VC11-x86.zip
-  - 7z x php-5.6.27-Win32-VC11-x86.zip -y >nul
+  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-5.6.29-Win32-VC11-x86.zip
+  - 7z x php-5.6.29-Win32-VC11-x86.zip -y >nul
   - del *.zip
   - copy php.ini-production php.ini
   - echo date.timezone="UTC" >> php.ini

@@ -207,7 +207,7 @@ class DC_File extends \DataContainer implements \editable
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
-						$return .= "\n  " . '<div id="'.$thisId.'">';
+						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal">';
 
 						continue;
 					}
@@ -296,30 +296,24 @@ class DC_File extends \DataContainer implements \editable
 		// Add the buttons and end the form
 		$return .= '
 </div>
-
 <div class="tl_formbody_submit">
-
 <div class="tl_submit_container">
   ' . implode(' ', $arrButtons) . '
 </div>
-
 </div>
 </form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = '
+		$return = \Message::generate() . ($this->noReload ? '
+<p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['general'].'</p>' : '') . '
 <div id="tl_buttons">
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-'.\Message::generate().'
-<form action="'.ampersand(\Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
-
+<form action="'.ampersand(\Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="FORM_FIELDS[]" value="'.\StringUtil::specialchars($this->strPalette).'">'.($this->noReload ? '
-
-<p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['general'].'</p>' : '').$return;
+<input type="hidden" name="FORM_FIELDS[]" value="'.\StringUtil::specialchars($this->strPalette).'">' . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (\Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
@@ -356,7 +350,6 @@ class DC_File extends \DataContainer implements \editable
 		if ($this->noReload)
 		{
 			$return .= '
-
 <script>
   window.addEvent(\'domready\', function() {
     Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));

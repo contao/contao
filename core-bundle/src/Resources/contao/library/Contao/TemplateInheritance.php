@@ -61,6 +61,12 @@ trait TemplateInheritance
 	 */
 	protected $arrBlockNames = array();
 
+	/**
+	 * Buffer level
+	 * @var int
+	 */
+	protected $intBufferLevel = 0;
+
 
 	/**
 	 * Parse the template file and return it as string
@@ -85,19 +91,29 @@ trait TemplateInheritance
 			$this->strDefault = null;
 
 			ob_start();
-			include $strParent;
+			$this->intBufferLevel = 1;
 
-			// Capture the output of the root template
-			if ($this->strParent === null)
+			try
 			{
-				$strBuffer = ob_get_contents();
-			}
-			elseif ($this->strParent == $strCurrent)
-			{
-				$this->strDefault = $this->getTemplatePath($this->strParent, $this->strFormat, true);
-			}
+				include $strParent;
 
-			ob_end_clean();
+				// Capture the output of the root template
+				if ($this->strParent === null)
+				{
+					$strBuffer = ob_get_contents();
+				}
+				elseif ($this->strParent == $strCurrent)
+				{
+					$this->strDefault = $this->getTemplatePath($this->strParent, $this->strFormat, true);
+				}
+			}
+			finally
+			{
+				for ($i=0; $i<$this->intBufferLevel; $i++)
+				{
+					ob_end_clean();
+				}
+			}
 		}
 
 		// Reset the internal arrays
@@ -106,7 +122,7 @@ trait TemplateInheritance
 		// Add start and end markers in debug mode
 		if (\Config::get('debugMode'))
 		{
-			$strRelPath = str_replace(TL_ROOT . '/', '', $this->getTemplatePath($this->strTemplate, $this->strFormat));
+			$strRelPath = \StringUtil::stripRootDir($this->getTemplatePath($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
 		}
 
@@ -179,6 +195,7 @@ trait TemplateInheritance
 				{
 					echo $this->arrBlocks[$name];
 					ob_start();
+					++$this->intBufferLevel;
 				}
 			}
 		}
@@ -187,16 +204,13 @@ trait TemplateInheritance
 		else
 		{
 			// Clean the output buffer
-			ob_end_clean();
+			ob_clean();
 
 			// Check for nested blocks
 			if (count($this->arrBlockNames) > 1)
 			{
 				throw new \Exception('Nested blocks are not allowed in child templates');
 			}
-
-			// Start a new output buffer
-			ob_start();
 		}
 	}
 
@@ -234,6 +248,7 @@ trait TemplateInheritance
 				else
 				{
 					ob_end_clean();
+					--$this->intBufferLevel;
 				}
 			}
 		}

@@ -326,8 +326,7 @@
         <target>使用用户主目录</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>如果用户有授权，可保存到该用户的主目录</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -552,6 +551,9 @@
       <trans-unit id="tl_form_field.toggle.1">
         <source>Toggle the visibility of field ID %s</source>
         <target>切换ID为 %s 的域的可见性</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
       </trans-unit>
     </body>
   </file>

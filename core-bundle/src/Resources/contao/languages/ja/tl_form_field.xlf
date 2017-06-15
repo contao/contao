@@ -326,8 +326,8 @@
         <target>ホームディレクトリの使用</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>ログインしたユーザーの場合はホームディレクトリにファイルを保存します。</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>ログインしたメンバーの場合はホームディレクトリにファイルを保存します。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -552,6 +552,10 @@
       <trans-unit id="tl_form_field.toggle.1">
         <source>Toggle the visibility of field ID %s</source>
         <target>ID %sの項目の表示と非表示を切り替え</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+        <target>CSVファイルからインポートのオプション</target>
       </trans-unit>
     </body>
   </file>

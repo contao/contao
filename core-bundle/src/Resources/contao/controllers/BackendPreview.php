@@ -85,11 +85,12 @@ class BackendPreview extends \Backend
 		$objTemplate->url = $strUrl;
 
 		// Switch to a particular member (see #6546)
-		if (\Input::get('user') && $this->User->isAdmin)
+		if (\Input::get('user') && ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg)))
 		{
 			$objUser = \MemberModel::findByUsername(\Input::get('user'));
 
-			if ($objUser !== null)
+			// Check the allowed member groups
+			if ($objUser !== null && ($this->User->isAdmin || count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
 			{
 				$strHash = $this->getSessionHash('FE_USER_AUTH');
 

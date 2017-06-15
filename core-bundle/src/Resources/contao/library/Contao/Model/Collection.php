@@ -244,7 +244,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @param string $strKey The property name
 	 *
-	 * @return Model|static The model or a model collection if there are multiple rows
+	 * @return Collection|Model The model or a model collection if there are multiple rows
 	 */
 	public function getRelated($strKey)
 	{
@@ -253,7 +253,10 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 			$this->first();
 		}
 
-		return $this->arrModels[$this->intIndex]->getRelated($strKey);
+		/** @var Collection|Model $objModel */
+		$objModel = $this->arrModels[$this->intIndex]->getRelated($strKey);
+
+		return $objModel;
 	}
 
 
@@ -284,7 +287,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Go to the previous row
 	 *
-	 * @return static|false The model collection object or false if there is no previous row
+	 * @return Collection|false The model collection object or false if there is no previous row
 	 */
 	public function prev()
 	{
@@ -318,7 +321,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Go to the next row
 	 *
-	 * @return static|boolean The model collection object or false if there is no next row
+	 * @return Collection|false The model collection object or false if there is no next row
 	 */
 	public function next()
 	{

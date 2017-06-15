@@ -539,15 +539,15 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
-        <target>Ein Benutzerverzeichnis anlegen</target>
+        <target>Ein Home-Verzeichnis anlegen</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.1">
         <source>Create a home directory from the registered username.</source>
-        <target>Ein Benutzerverzeichnis aus dem registrierten Benutzernamen erstellen.</target>
+        <target>Ein Home-Verzeichnis aus dem registrierten Benutzernamen erstellen.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_homeDir.0">
         <source>Home directory path</source>
-        <target>Pfad zum Benutzerverzeichnis</target>
+        <target>Pfad zum Home-Verzeichnis</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_homeDir.1">
         <source>Please select the parent folder from the files directory.</source>

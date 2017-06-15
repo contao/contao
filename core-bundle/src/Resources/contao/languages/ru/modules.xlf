@@ -137,29 +137,37 @@
         <source>Change your personal data or set a new password</source>
         <target>Изменение личных данных или пароля</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>Таблицы стилей</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
+        <target>Элементы контента</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Таблицы стилей</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>Модули внешнего интерфейса</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>Макеты страниц</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Поля</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>Размеры изображения</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>Размер изображения медиа-запросов</target>
+        <source>Media queries</source>
+        <target>Media queries (Медиа-запросы)</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Макеты страниц</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Модули внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+        <target>Определения формата</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>Таблицы стилей</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

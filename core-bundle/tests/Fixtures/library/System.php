@@ -2,7 +2,7 @@
 
 namespace Contao\Fixtures;
 
-use Contao\CoreBundle\Test\LanguageHelper;
+use Contao\CoreBundle\Tests\LanguageHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class System

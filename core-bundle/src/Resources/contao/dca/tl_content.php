@@ -24,6 +24,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'dynamicPtable'               => true,
 		'onload_callback'             => array
 		(
+			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint')
 		),
 		'sql' => array
@@ -106,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'protected'),
+		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'protected'),
 		'default'                     => '{type_legend},type',
 		'headline'                    => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'text'                        => '{type_legend},type,headline;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -121,8 +122,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'code'                        => '{type_legend},type,headline;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'markdown'                    => '{type_legend},type,headline;{text_legend},code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'toplink'                     => '{type_legend},type,linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC;{image_legend},alt,title,size,imagemargin,imageUrl,fullsize,caption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,imagemargin,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},size,imagemargin,perRow,fullsize,perPage,numberOfItems;{template_legend:hide},galleryTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{poster_legend:hide},posterSRC;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,autoplay;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -139,9 +140,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'addImage'                    => 'singleSRC,alt,title,size,imagemargin,imageUrl,fullsize,caption,floating',
+		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
 		'sortable'                    => 'sortIndex,sortOrder',
-		'useImage'                    => 'singleSRC,alt,title,size,caption',
+		'useImage'                    => 'singleSRC,size,overwriteMeta',
+		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
 		'protected'                   => 'groups'
 	),
 
@@ -208,6 +210,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
+		'overwriteMeta' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
@@ -217,10 +227,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'load_callback' => array
 			(
 				array('tl_content', 'setSingleSrcFlags')
-			),
-			'save_callback' => array
-			(
-				array('tl_content', 'storeFileMetaInformation')
 			),
 			'sql'                     => "binary(16) NULL"
 		),
@@ -233,9 +239,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'title' => array
+		'imageTitle' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['title'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageTitle'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -270,11 +276,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_content', 'pagePicker')
-			),
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'fullsize' => array
@@ -463,11 +465,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_content', 'pagePicker')
-			),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'target' => array
@@ -622,7 +620,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'rgxp'=>'url', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_content', 'extractYouTubeId')
@@ -635,7 +633,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'rgxp'=>'url', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_content', 'extractVimeoId')
@@ -1031,6 +1029,38 @@ class tl_content extends Backend
 
 
 	/**
+	 * Adjust the DCA by type
+	 *
+	 * @param object
+	 */
+	public function adjustDcaByType($dc)
+	{
+		if ($_POST || Input::get('act') != 'edit')
+		{
+			return;
+		}
+
+		$objCte = ContentModel::findByPk($dc->id);
+
+		if ($objCte === null)
+		{
+			return;
+		}
+
+		switch ($objCte->type)
+		{
+			case 'hyperlink':
+				unset($GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl']);
+				break;
+
+			case 'image':
+				$GLOBALS['TL_DCA']['tl_content']['fields']['imagemargin']['eval']['tl_class'] .= ' clr';
+				break;
+		}
+	}
+
+
+	/**
 	 * Show a hint if a JavaScript library needs to be included in the page layout
 	 *
 	 * @param object
@@ -1077,7 +1107,7 @@ class tl_content extends Backend
 				break;
 
 			case 'player':
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'j_mediaelement'));
+				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_mediaelement'));
 				break;
 
 			case 'table':
@@ -1151,7 +1181,7 @@ class tl_content extends Backend
 		// Limit the element's height
 		if (!Config::get('doNotCollapse'))
 		{
-			$class .=  ' h64';
+			$class .=  ' h40';
 		}
 
 		$objModel = new ContentModel();
@@ -1174,7 +1204,7 @@ class tl_content extends Backend
 	 */
 	public function editArticleAlias(DataContainer $dc)
 	{
-		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
 
 
@@ -1236,7 +1266,7 @@ class tl_content extends Backend
 	 */
 	public function editAlias(DataContainer $dc)
 	{
-		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
 
 
@@ -1314,7 +1344,7 @@ class tl_content extends Backend
 	 */
 	public function editForm(DataContainer $dc)
 	{
-		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
 
 
@@ -1354,7 +1384,7 @@ class tl_content extends Backend
 	 */
 	public function editModule(DataContainer $dc)
 	{
-		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
+		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
 
 
@@ -1410,7 +1440,7 @@ class tl_content extends Backend
 	 */
 	public function editArticle(DataContainer $dc)
 	{
-		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editarticle'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editarticle'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editarticle'][0]) . '</a>';
+		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editarticle'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editarticle'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editarticle'][0]) . '</a>';
 	}
 
 
@@ -1576,10 +1606,15 @@ class tl_content extends Backend
 	 * @param DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.
+	 *             Set the "dcaPicker" eval attribute instead.
 	 */
 	public function pagePicker(DataContainer $dc)
 	{
-		return ' <a href="' . (($dc->value == '' || strpos($dc->value, '{{link_url::') !== false) ? 'contao/page' : 'contao/file') . '?do=' . Input::get('do') . '&amp;table=' . $dc->table . '&amp;field=' . $dc->field . '&amp;value=' . rawurlencode(str_replace(array('{{link_url::', '}}'), '', $dc->value)) . '&amp;switch=1' . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0])) . '\',\'url\':this.href,\'id\':\'' . $dc->field . '\',\'tag\':\'ctrl_'. $dc->field . ((Input::get('act') == 'editAll') ? '_' . $dc->id : '') . '\',\'self\':this});return false">' . Image::getHtml('pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>';
+		@trigger_error('Using tl_content::pagePicker() has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.', E_USER_DEPRECATED);
+
+		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->id, $dc->value, $dc->inputName);
 	}
 
 
@@ -1660,25 +1695,6 @@ class tl_content extends Backend
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
 					break;
 			}
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Pre-fill the "alt" and "caption" fields with the file meta data
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function storeFileMetaInformation($varValue, DataContainer $dc)
-	{
-		if ($dc->activeRecord->singleSRC != $varValue)
-		{
-			$this->addFileMetaInformationToRequest($varValue, ($dc->activeRecord->ptable ?: 'tl_article'), $dc->activeRecord->pid);
 		}
 
 		return $varValue;
@@ -1788,18 +1804,7 @@ class tl_content extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
-		$this->checkPermission();
-
-		// Check the field access
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
-		}
-
-		// Reverse the logic (elements have invisible=1)
-		$blnVisible = !$blnVisible;
-
-		// The onload_callbacks vary depending on the dynamic parent table (see #4894)
+		// Trigger the onload_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
@@ -1807,17 +1812,39 @@ class tl_content extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$callback(($dc ?: $this));
+					$callback($dc);
 				}
+			}
+		}
+
+		// Check the field access
+		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
 			}
 		}
 
 		$objVersions = new Versions('tl_content', $intId);
 		$objVersions->initialize();
+
+		// Reverse the logic (elements have invisible=1)
+		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
@@ -1827,18 +1854,43 @@ class tl_content extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+					$blnVisible = $callback($blnVisible, $dc);
 				}
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_content SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
 
 		$objVersions->create();
 	}

@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -20,8 +20,8 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Test\Fixtures\Exception\DerivedPageNotFoundException;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\Fixtures\Exception\DerivedPageNotFoundException;
+use Contao\CoreBundle\Tests\TestCase;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;

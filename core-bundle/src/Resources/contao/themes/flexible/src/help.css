@@ -29,7 +29,7 @@ body {
 }
 .tl_label {
 	width:200px;
-	font-weight:500;
+	font-weight:bold;
 }
 td.headline {
 	font-size:1rem;

@@ -277,20 +277,17 @@
         <target>Har kan du tilføje dine egne classes til &amp;lt;body&amp;gt; tagget.</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
-        <source>Viewport</source>
-        <target>Viewport</target>
+        <source>Viewport tag</source>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
-        <source>Here you can overwrite the viewport content (defaults to &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</source>
-        <target>Her kan du overskrive viewport content (standard &lt;em&gt;width=device-width,initial-scale=1.0&lt;/em&gt;).</target>
+        <source>Here you can set a custom viewport tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
         <target>Title tag</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can overwrite the title tag (defaults to &lt;em&gt;{{page::pageTitle}} - {{page::rootPageTitle}}&lt;/em&gt;).</source>
-        <target>Her kan du overskrive sidetitel tagget (standard er &lt;em&gt;{{page::pageTitle}} - {{page::rootPageTitle}}&lt;/em&gt;).</target>
+        <source>Here you can set a custom title tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>

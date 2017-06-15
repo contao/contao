@@ -327,8 +327,8 @@
         <target>Использовать домашний каталог</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Использовать домашний каталог как источник файлов при авторизации пользователя.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>Хранить файл в домашнем каталоге, если участник авторизован.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -553,6 +553,10 @@
       <trans-unit id="tl_form_field.toggle.1">
         <source>Toggle the visibility of field ID %s</source>
         <target>Переключить видимость поля ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+        <target>Импорт настроек из файла CSV</target>
       </trans-unit>
     </body>
   </file>

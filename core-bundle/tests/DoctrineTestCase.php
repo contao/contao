@@ -8,10 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test;
+namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 /**
@@ -28,34 +30,26 @@ abstract class DoctrineTestCase extends TestCase
      */
     protected function mockDoctrineRegistry()
     {
-        $connection = $this->getMock('Doctrine\DBAL\Connection', ['getDatabasePlatform'], [], '', false);
+        $connection = $this->createMock(Connection::class);
 
         $connection
-            ->expects($this->any())
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
         ;
 
-        $registry = $this
-            ->getMockBuilder(Registry::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $registry = $this->createMock(Registry::class);
 
         $registry
-            ->expects($this->any())
             ->method('getConnection')
             ->willReturn($connection)
         ;
 
         $registry
-            ->expects($this->any())
             ->method('getConnections')
             ->willReturn([$connection])
         ;
 
         $registry
-            ->expects($this->any())
             ->method('getManagerNames')
             ->willReturn([])
         ;
@@ -73,20 +67,18 @@ abstract class DoctrineTestCase extends TestCase
      */
     protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = [])
     {
-        $installer = $this->getMock('Contao\Database\Installer', ['getFromDca', 'getFromFile']);
+        $installer = $this->createMock(Installer::class);
 
         $installer
-            ->expects($this->any())
             ->method('getFromDca')
             ->willReturn($dca)
         ;
 
         $installer
-            ->expects($this->any())
             ->method('getFromFile')
             ->willReturn($file)
         ;
 
-        return $this->mockContaoFramework(null, null, [], ['Contao\Database\Installer' => $installer]);
+        return $this->mockContaoFramework(null, null, [], [Installer::class => $installer]);
     }
 }

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\ContaoCacheClearer;
-use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -45,7 +43,7 @@ class Automator extends \System
 		$objDatabase->execute("TRUNCATE TABLE tl_search");
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
-		$strCachePath = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
 		$objFolder = new \Folder($strCachePath . '/contao/search');
@@ -106,7 +104,7 @@ class Automator extends \System
 	 */
 	public function purgeImageCache()
 	{
-		$strTargetPath = \System::getContainer()->getParameter('contao.image.target_path');
+		$strTargetPath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir'));
 
 		// Walk through the subfolders
 		foreach (scan(TL_ROOT . '/' . $strTargetPath) as $dir)
@@ -158,7 +156,7 @@ class Automator extends \System
 	 */
 	public function purgePageCache()
 	{
-		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCacheDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new \Folder($strCacheDir . '/http_cache');
 		$objFolder->purge();
@@ -173,7 +171,7 @@ class Automator extends \System
 	 */
 	public function purgeSearchCache()
 	{
-		$strCacheDir = str_replace(TL_ROOT . DIRECTORY_SEPARATOR, '', \System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCacheDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new \Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();
@@ -245,14 +243,16 @@ class Automator extends \System
 		// Delete the old files
 		if (!$blnReturn)
 		{
-			foreach (scan(TL_ROOT . '/web/share') as $file)
+			$shareDir = \System::getContainer()->getParameter('contao.web_dir') . '/share';
+
+			foreach (scan($shareDir) as $file)
 			{
-				if (is_dir(TL_ROOT . '/web/share/' . $file))
+				if (is_dir($shareDir . '/' . $file))
 				{
 					continue; // see #6652
 				}
 
-				$objFile = new \File('web/share/' . $file);
+				$objFile = new \File(\StringUtil::stripRootDir($shareDir) . '/' . $file);
 
 				if ($objFile->extension == 'xml' && !in_array($objFile->filename, $arrFeeds))
 				{
@@ -328,7 +328,7 @@ class Automator extends \System
 		// Create the XML file
 		while ($objRoot->next())
 		{
-			$objFile = new \File('web/share/' . $objRoot->sitemapName . '.xml');
+			$objFile = new \File(\StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir')) . '/share/' . $objRoot->sitemapName . '.xml');
 
 			$objFile->truncate();
 			$objFile->append('<?xml version="1.0" encoding="UTF-8"?>');

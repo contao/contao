@@ -1313,12 +1313,11 @@ class StyleSheets extends \Backend
 		}
 
 		// Return form
-		return '
+		return \Message::generate() . '
 <div id="tl_buttons">
 <a href="' .ampersand(str_replace('&key=import', '', \Environment::get('request'))). '" class="header_back" title="' .\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']). '" accesskey="b">' .$GLOBALS['TL_LANG']['MSC']['backBT']. '</a>
 </div>
-' .\Message::generate(). '
-<form action="' .ampersand(\Environment::get('request'), true). '" id="tl_style_sheet_import" class="tl_form" method="post" enctype="multipart/form-data">
+<form action="' .ampersand(\Environment::get('request'), true). '" id="tl_style_sheet_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_style_sheet_import">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">

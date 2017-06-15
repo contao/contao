@@ -25,7 +25,7 @@ class ModuleCloseAccount extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_password';
+	protected $strTemplate = 'mod_closeAccount';
 
 
 	/**

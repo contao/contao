@@ -326,8 +326,8 @@
         <target>Utilizar directorio usuario</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Si hay un usuario registrado en el sistema, almacenar el archivo en su directorio principal en vez de la carpeta para archivos transferidos.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>Guarde el archivo en el directorio principal si hay un socio autenticado.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -552,6 +552,10 @@
       <trans-unit id="tl_form_field.toggle.1">
         <source>Toggle the visibility of field ID %s</source>
         <target>Conmutar la visibilidad del campo con ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+        <target>Importar opciones de un fichero CSV</target>
       </trans-unit>
     </body>
   </file>

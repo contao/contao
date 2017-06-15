@@ -8,11 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\DependencyInjection\Compiler;
+namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,13 +42,12 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testWithMigrationsBundle()
     {
-        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
-        $this->assertFalse($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
     }
 
     /**
@@ -60,8 +60,7 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
-        $this->assertTrue($container->getDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID)->isSynthetic());
+        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
     }
 
     /**
@@ -69,7 +68,7 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     public function testAddsCommandId()
     {
-        $container = $this->createContainerBuilder(['Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle']);
+        $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);

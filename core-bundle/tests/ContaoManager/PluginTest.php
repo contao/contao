@@ -8,20 +8,37 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\ContaoManager;
+namespace Contao\CoreBundle\Tests\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin;
+use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
+use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use PHPUnit\Framework\TestCase;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 /**
  * Tests the Plugin class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Yanick Witschi <https://github.com/toflar>
  */
-class PluginTest extends \PHPUnit_Framework_TestCase
+class PluginTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -43,30 +60,39 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         /** @var BundleConfig[] $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(2, $bundles);
+        $this->assertCount(4, $bundles);
 
-        $this->assertEquals(KnpTimeBundle::class, $bundles[0]->getName());
-        $this->assertEquals([], $bundles[0]->getReplace());
-        $this->assertEquals([], $bundles[0]->getLoadAfter());
+        $this->assertSame(KnpMenuBundle::class, $bundles[0]->getName());
+        $this->assertSame([], $bundles[1]->getReplace());
+        $this->assertSame([], $bundles[1]->getLoadAfter());
 
-        $this->assertEquals(ContaoCoreBundle::class, $bundles[1]->getName());
-        $this->assertEquals(['core'], $bundles[1]->getReplace());
+        $this->assertSame(KnpTimeBundle::class, $bundles[1]->getName());
+        $this->assertSame([], $bundles[2]->getReplace());
+        $this->assertSame([], $bundles[2]->getLoadAfter());
 
-        $this->assertEquals(
+        $this->assertSame(HeaderReplayBundle::class, $bundles[2]->getName());
+        $this->assertSame([], $bundles[0]->getReplace());
+        $this->assertSame([], $bundles[0]->getLoadAfter());
+
+        $this->assertSame(ContaoCoreBundle::class, $bundles[3]->getName());
+        $this->assertSame(['core'], $bundles[3]->getReplace());
+
+        $this->assertSame(
             [
-                'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-                'Symfony\Bundle\SecurityBundle\SecurityBundle',
-                'Symfony\Bundle\TwigBundle\TwigBundle',
-                'Symfony\Bundle\MonologBundle\MonologBundle',
-                'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle',
-                'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
-                'Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle',
-                'Knp\Bundle\TimeBundle\KnpTimeBundle',
-                'Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle',
-                'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle',
-                'Contao\ManagerBundle\ContaoManagerBundle',
+                FrameworkBundle::class,
+                SecurityBundle::class,
+                TwigBundle::class,
+                MonologBundle::class,
+                SwiftmailerBundle::class,
+                DoctrineBundle::class,
+                DoctrineCacheBundle::class,
+                KnpMenuBundle::class,
+                KnpTimeBundle::class,
+                LexikMaintenanceBundle::class,
+                SensioFrameworkExtraBundle::class,
+                ContaoManagerBundle::class,
             ],
-            $bundles[1]->getLoadAfter()
+            $bundles[3]->getLoadAfter()
         );
     }
 
@@ -75,30 +101,21 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRouteCollection()
     {
-        $loader = $this
-            ->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')
-            ->setMethods(['load', 'supports', 'getResolver', 'setResolver'])
-            ->getMock()
-        ;
+        $loader = $this->createMock(LoaderInterface::class);
 
         $loader
             ->expects($this->once())
             ->method('load')
         ;
 
-        $resolver = $this
-            ->getMockBuilder('Symfony\Component\Config\Loader\LoaderResolverInterface')
-            ->setMethods(['resolve'])
-            ->getMock()
-        ;
+        $resolver = $this->createMock(LoaderResolverInterface::class);
 
         $resolver
-            ->expects($this->any())
             ->method('resolve')
             ->willReturn($loader)
         ;
 
         $plugin = new Plugin();
-        $plugin->getRouteCollection($resolver, $this->getMock('Symfony\Component\HttpKernel\KernelInterface'));
+        $plugin->getRouteCollection($resolver, $this->createMock(KernelInterface::class));
     }
 }

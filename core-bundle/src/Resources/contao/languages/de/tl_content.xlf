@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Dem Inhaltselement ein Bild hinzufügen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+        <target>Metadaten überschreiben</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+        <target>Die Bild-Metadaten aus der Dateiverwaltung überschreiben.</target>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Quelldatei</target>
@@ -49,11 +57,11 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>Hier können Sie einen alternativen Text für das Bild eingeben (&lt;em&gt;alt&lt;/em&gt;-Attribut).</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Titel</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
+        <target>Bildtitel</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Hier können Sie den Titel des Bildes eingeben (&lt;em&gt;title&lt;/em&gt;-Attribut).</target>
       </trans-unit>
@@ -331,11 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
-        <target>Benutzerverzeichnis verwenden</target>
+        <target>Home-Verzeichnis verwenden</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Das Benutzerverzeichnis als Dateiquelle verwenden, wenn sich ein Benutzer angemeldet hat.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Das Home-Verzeichnis als Dateiquelle verwenden, wenn sich ein Mitglied angemeldet hat.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

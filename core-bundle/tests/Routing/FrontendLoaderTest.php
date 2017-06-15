@@ -8,12 +8,15 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Routing;
+namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -21,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
+class FrontendLoaderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -51,12 +54,12 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertEquals(
+        $this->assertSame(
             ContaoCoreBundle::SCOPE_FRONTEND,
             $collection->get('contao_frontend')->getDefault('_scope')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ContaoCoreBundle::SCOPE_FRONTEND,
             $collection->get('contao_index')->getDefault('_scope')
         );
@@ -70,25 +73,24 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
 
-        $this->assertEquals(
+        $this->assertSame(
             'ContaoCoreBundle:Frontend:index',
             $collection->get('contao_frontend')->getDefault('_controller')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'ContaoCoreBundle:Frontend:index',
             $collection->get('contao_index')->getDefault('_controller')
         );
     }
 
-    /**
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
-     */
     public function testGenerateFrontendWithMissingAlias()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
+
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_frontend');
     }
@@ -102,7 +104,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/foobar.html',
             $router->generate('contao_frontend', ['alias' => 'foobar'])
         );
@@ -117,7 +119,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/en/foobar.html',
             $router->generate('contao_frontend', ['alias' => 'foobar', '_locale' => 'en'])
         );
@@ -125,14 +127,14 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests generating the "contao_frontend" route with missing locale.
-     *
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testGenerateFrontendWithMissingLocale()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
+
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_frontend', ['alias' => 'foobar']);
     }
@@ -146,7 +148,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/',
             $router->generate('contao_index')
         );
@@ -161,7 +163,7 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
 
-        $this->assertEquals(
+        $this->assertSame(
             '/en/',
             $router->generate('contao_index', ['_locale' => 'en'])
         );
@@ -169,14 +171,14 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests generating the "contao_index" route with missing locale.
-     *
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testGenerateIndexWithMissingLocale()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
         $router = $this->getRouter($collection);
+
+        $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_index');
     }
@@ -191,29 +193,22 @@ class FrontendLoaderTest extends \PHPUnit_Framework_TestCase
      */
     private function getRouter(RouteCollection $collection, $urlSuffix = '.html')
     {
-        $loader = $this->getMock('Symfony\Component\Config\Loader\LoaderInterface');
+        $loader = $this->createMock(LoaderInterface::class);
 
         $loader
-            ->expects($this->any())
             ->method('load')
             ->willReturn($collection)
         ;
 
-        /** @var ContainerInterface|\PHPUnit_Framework_MockObject_MockObject $container */
-        $container = $this->getMock(
-            'Symfony\Component\DependencyInjection\Container',
-            ['get', 'getParameter']
-        );
+        $container = $this->createMock(ContainerInterface::class);
 
         $container
-            ->expects($this->any())
             ->method('getParameter')
             ->with('contao.url_suffix')
             ->willReturn($urlSuffix)
         ;
 
         $container
-            ->expects($this->any())
             ->method('get')
             ->with('routing.loader')
             ->willReturn($loader)

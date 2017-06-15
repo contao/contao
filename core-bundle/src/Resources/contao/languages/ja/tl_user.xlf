@@ -41,6 +41,14 @@
         <source>Here you can override the global back end theme.</source>
         <target>全体的なバックエンドのテーマを上書きできます。</target>
       </trans-unit>
+      <trans-unit id="tl_user.limitWidth.0">
+        <source>Limit width</source>
+        <target>幅を制限</target>
+      </trans-unit>
+      <trans-unit id="tl_user.limitWidth.1">
+        <source>Limit the maximum width of the back end.</source>
+        <target>バックエンドの最大の幅を制限します。</target>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
         <target>ファイルのアップローダー</target>
@@ -201,6 +209,14 @@
         <source>Here you can define the form permissions.</source>
         <target>フォームの権限を設定できます。</target>
       </trans-unit>
+      <trans-unit id="tl_user.amg.0">
+        <source>Allowed member groups</source>
+        <target>許可するメンバーグループ</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.1">
+        <source>Members of these groups can be used in the front end preview.</source>
+        <target>これらのグループのメンバーをフロントエンドのプレビューに使用できます。</target>
+      </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
         <target>停止</target>
@@ -276,6 +292,10 @@
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>
         <target>フォームの権限</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg_legend">
+        <source>Allowed member groups</source>
+        <target>許可するメンバーグループ</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

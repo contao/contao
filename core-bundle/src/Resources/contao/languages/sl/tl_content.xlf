@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Če izberete to možnost bo vsebini dodana slika.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Izvorna datoteka</target>
@@ -49,11 +55,10 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>Alternativno besedilo bo prikazano namesto slike ali filma, če uporabnik ne bo mogel videti grafične vsebine. Alternativno besedilo ponavadi vsebuje kratek opis slike.</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Naziv</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Tu lahko vnesete naslov slike (HTML atribut &lt;em&gt;title&lt;/em&gt;)</target>
       </trans-unit>
@@ -334,8 +339,7 @@
         <target>Uporabi domač direktorij</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Uporabi domačo mapo kot izvor datotek, če je uporabnik preverjen.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

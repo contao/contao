@@ -342,8 +342,7 @@
         <target>名称和类型</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta information</source>
-        <target>Meta信息</target>
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>

@@ -24,7 +24,7 @@ class MergeHttpHeadersListener
     /**
      * @var ContaoFrameworkInterface
      */
-    private $contaoFramework;
+    private $framework;
 
     /**
      * @var array
@@ -45,11 +45,11 @@ class MergeHttpHeadersListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $contaoFramework
+     * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(ContaoFrameworkInterface $contaoFramework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
         $this->setHeaders(headers_list());
     }
 
@@ -102,7 +102,7 @@ class MergeHttpHeadersListener
     {
         $uniqueKey = $this->getUniqueKey($name);
 
-        if (!in_array($uniqueKey, $this->multiHeaders)) {
+        if (!in_array($uniqueKey, $this->multiHeaders, true)) {
             $this->multiHeaders[] = $uniqueKey;
         }
     }
@@ -114,7 +114,7 @@ class MergeHttpHeadersListener
      */
     public function removeMultiHeader($name)
     {
-        if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders))) {
+        if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders, true))) {
             unset($this->multiHeaders[$i]);
         }
     }
@@ -126,7 +126,7 @@ class MergeHttpHeadersListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$this->contaoFramework->isInitialized()) {
+        if (!$this->framework->isInitialized()) {
             return;
         }
 
@@ -151,7 +151,7 @@ class MergeHttpHeadersListener
 
             $uniqueKey = $this->getUniqueKey($name);
 
-            if (in_array($uniqueKey, $this->multiHeaders)) {
+            if (in_array($uniqueKey, $this->multiHeaders, true)) {
                 $response->headers->set($uniqueKey, trim($content), false);
             } elseif (!$response->headers->has($uniqueKey)) {
                 $response->headers->set($uniqueKey, trim($content));

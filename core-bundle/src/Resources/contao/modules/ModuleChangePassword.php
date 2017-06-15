@@ -25,7 +25,7 @@ class ModuleChangePassword extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_change_password';
+	protected $strTemplate = 'mod_changePassword';
 
 
 	/**
@@ -208,14 +208,14 @@ class ModuleChangePassword extends \Module
 				$this->jumpToOrReload($objJumpTo->row());
 			}
 
-			$flashBag->set('mod_change_password_confirm', $GLOBALS['TL_LANG']['MSC']['newPasswordSet']);
+			$flashBag->set('mod_changePassword_confirm', $GLOBALS['TL_LANG']['MSC']['newPasswordSet']);
 			$this->reload();
 		}
 
 		// Confirmation message
-		if ($flashBag->has('mod_change_password_confirm'))
+		if ($flashBag->has('mod_changePassword_confirm'))
 		{
-			$arrMessages = $flashBag->get('mod_change_password_confirm');
+			$arrMessages = $flashBag->get('mod_changePassword_confirm');
 			$this->Template->message = $arrMessages[0];
 		}
 

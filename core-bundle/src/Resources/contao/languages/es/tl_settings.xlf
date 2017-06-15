@@ -62,8 +62,8 @@
         <target>Deshabilitar la programación de comandos</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and execute the cron.php script by a real cron job (which you have to set up manually).</source>
-        <target>Deshabilitar la programación de comandos periódicos y ejecutar el script cron.php utilizando una tarea cron real (se debe configurar manualmente).</target>
+        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
+        <target>Deshabilite el planificador de comandos periódico y active la ruta &lt;em&gt;_contao/cron&lt;/em&gt; mediante un cron job real (que debe configurar manualmente).</target>
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.0">
         <source>Minify the markup</source>

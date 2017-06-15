@@ -8,7 +8,7 @@
 
 /* Body */
 body {
-	background:#eaeaea;
+	background:#eaeaec;
 }
 
 /* Header */
@@ -18,16 +18,17 @@ body {
 }
 #header h1 {
 	margin:0;
-	padding:18px 12px 18px 46px;
+	padding:16px 12px 16px 51px;
 	background:#f47c00 url("icons/logo.svg") no-repeat 15px center;
 	color:#fff;
-	font-size:1.125rem;
+	font-weight:normal;
 }
 
 /* Main */
 #main {
-	padding-top:18px;
-	padding-bottom:12px;
+	padding-top:10px;
+	padding-bottom:5px;
+	margin-bottom:18px;
 }
 
 /* Container */
@@ -47,7 +48,7 @@ body {
 	margin:12px 0 0;
 	padding:0;
 	font-size:.875rem;
-	font-weight:300;
+	font-weight:normal;
 }
 #container .nolegend h3 {
 	padding-top:0;
@@ -56,9 +57,6 @@ body {
 /* Paragraphs */
 p {
 	line-height:1.3;
-}
-fieldset p:last-of-type {
-	margin-bottom:0;
 }
 
 /* Form tables */
@@ -81,9 +79,9 @@ fieldset p:last-of-type {
 }
 .tl_col_0 {
 	padding:12px 0 3px;
-	color:#589b0e;
+	color:#006494;
 }
-.tl_col_1 {
+.tl_col_1,.tl_col_2 * {
 	vertical-align:top;
 }
 .tl_col_2 {
@@ -104,7 +102,7 @@ fieldset p:last-of-type {
 	background:url("icons/ok.svg") no-repeat left center;
 }
 .tl_info {
-	color:#427aae;
+	color:#006494;
 	background:url("icons/show.svg") no-repeat 1px 3px;
 }
 .tl_formbody .tl_error {
@@ -113,13 +111,9 @@ fieldset p:last-of-type {
 
 /* Go to back end */
 #back_end {
-	margin:0 18px 0 0;
+	margin-right:15px;
+	margin-bottom:9px;
 	text-align:right;
-}
-#back_end a {
-	padding:3px 0 3px 21px;
-	background:url("icons/manager.svg") no-repeat left center;
-	color:#666;
 }
 
 /* License */
@@ -140,7 +134,7 @@ fieldset p:last-of-type {
 }
 .tl_submit_container {
 	margin-top:18px;
-	margin-bottom:12px;
+	margin-bottom:1em;
 }
 .tl_formbody_submit .tl_submit {
 	background:#f3f3f3;
@@ -148,10 +142,10 @@ fieldset p:last-of-type {
 
 /* Fieldsets */
 fieldset > div {
-	margin-bottom:12px;
+	margin-bottom:-2px;
 }
 fieldset.tl_tbox,fieldset.tl_box {
-	padding:6px 18px 0;
+	padding:6px 15px 0;
 	border:solid #f6f6f6;
 	border-width:26px 0 0;
 }
@@ -159,9 +153,9 @@ fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
 	border:0;
 }
 fieldset.tl_tbox > legend,fieldset.tl_box > legend {
-	color:#589b0e;
+	color:#6a6a6c;
 	padding:6px 0 6px 18px;
-	background:#f6f6f6 url("icons/navcol.svg") left center no-repeat;
+	background:#f6f6f8 url("icons/navcol.svg") left center no-repeat;
 	cursor:pointer;
 }
 fieldset.collapsed {
@@ -173,7 +167,7 @@ fieldset.collapsed div {
 	display:none !important;
 }
 fieldset.collapsed > legend {
-	background:#f6f6f6 url("icons/navexp.svg") left center no-repeat;
+	background:#f6f6f8 url("icons/navexp.svg") left center no-repeat;
 }
 fieldset:not(.collapsed) + fieldset {
 	margin-top:9px;

@@ -38,52 +38,52 @@
         <target>Видљивост</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
-        <source>New image size media query</source>
-        <target>Нови Media-Query за величину слике</target>
+        <source>New media query</source>
+        <target>Нови медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
-        <source>Create a new image size media query</source>
-        <target>Креирај нови Media-Query за величину слике</target>
+        <source>Create a new media query</source>
+        <target>Креирај нови медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.0">
-        <source>Image size media query details</source>
-        <target>Детаљи величине слике Media-Query</target>
+        <source>Media query details</source>
+        <target>Детаљи медијског упита</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.show.1">
-        <source>Show the details of image size media query ID %s</source>
-        <target>Прикажи детаље величине слике за Media-Query ID %s</target>
+        <source>Show the details of media query ID %s</source>
+        <target>Прикажи детаље медијског упита ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.0">
-        <source>Edit image size media query</source>
-        <target>Уреди Media-Query величине слике</target>
+        <source>Edit media query</source>
+        <target>Уреди медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.1">
-        <source>Edit image size media query ID %s</source>
-        <target>Уреди Media-Query величине слике ID %s</target>
+        <source>Edit media query ID %s</source>
+        <target>Уреди медијски упит ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut.0">
-        <source>Move image size media query</source>
-        <target>Помери Media-Query величине слике</target>
+        <source>Move media query</source>
+        <target>Помери медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut.1">
-        <source>Move image size media query ID %s</source>
-        <target>Помери Media-Query величине слике ID %s</target>
+        <source>Move media query ID %s</source>
+        <target>Помери медијски упит ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.0">
-        <source>Duplicate image size media query</source>
-        <target>Копирај Media-Query величине слике</target>
+        <source>Duplicate media query</source>
+        <target>Копирај медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
-        <source>Duplicate image size media query ID %s</source>
-        <target>Копирај Media-Query величине слике ID %s</target>
+        <source>Duplicate media query ID %s</source>
+        <target>Копирај медијски упит ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.0">
-        <source>Delete image size media query</source>
-        <target>Обриши Media-Query величине слике</target>
+        <source>Delete media query</source>
+        <target>Обриши медијски упит</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
-        <source>Delete image size media query ID %s</source>
-        <target>Обриши Media-Query величине слике ID %s</target>
+        <source>Delete media query ID %s</source>
+        <target>Обриши медијски упит ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.editheader.0">
         <source>Edit image size</source>
@@ -98,24 +98,24 @@
         <target>Налепи на врх</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
-        <source>Paste after image size media query ID %s</source>
-        <target>Налепи након Media-Query величине слике ID %s</target>
+        <source>Paste after media query ID %s</source>
+        <target>Налепи након медијског упита ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
         <target>Додај ново на врх</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
-        <source>Add new after image size media query ID %s</source>
-        <target>Додај нови након Media-Query величине слике ID %s</target>
+        <source>Add new after media query ID %s</source>
+        <target>Додај нови након медијског упита ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
         <source>Toggle visibility</source>
         <target>Промени видљивост</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.1">
-        <source>Toggle the visibility of image size media query ID %s</source>
-        <target>Сакриј видљивост Media-Query величине слике ID %s</target>
+        <source>Toggle the visibility of media query ID %s</source>
+        <target>Сакриј видљивост медијског упита ID %s</target>
       </trans-unit>
     </body>
   </file>

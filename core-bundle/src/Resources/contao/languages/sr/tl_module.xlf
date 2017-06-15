@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
-        <target>Унесите назив модула.</target>
+        <target>Унесите назив модула</target>
       </trans-unit>
       <trans-unit id="tl_module.headline.0">
         <source>Headline</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
-        <target>Постави страницу референцирања</target>
+        <target>Постави референтну страницу</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.1">
         <source>Define a custom source or target page for the module.</source>
@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPage.0">
         <source>Reference page</source>
-        <target>Страница референцирања</target>
+        <target>Референтна страница</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
         <source>Please choose the reference page from the site structure.</source>
-        <target>Изаберите страницу референцирања из структуре сајта.</target>
+        <target>Изаберите референтну страницу из структуре сајта.</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Custom module template</source>
-        <target>Прилагођени шаблон модула</target>
+        <target>Додатни шаблон модула</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can overwrite the default module template.</source>
@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customLabel.0">
         <source>Custom label</source>
-        <target>Произвољна лабела</target>
+        <target>Прилагођена лабела</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
         <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Овде можете унети прилагођену лабелу за падајући мени.</target>
+        <target>Овде можете унети посебну лабелу за падајући мени.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -119,11 +119,11 @@
       </trans-unit>
       <trans-unit id="tl_module.autologin.1">
         <source>Allow members to log into the front end automatically.</source>
-        <target>Дозволи корисницима да се аутоматски пријављују у ФронтЕнд.  </target>
+        <target>Дозволи корисницима ФронтЕнда да се аутоматски пријављују.  </target>
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.0">
         <source>Redirect page</source>
-        <target>Страница преусмеравања</target>
+        <target>Преусмерење странице</target>
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Преусмери корисника на последњу страницу коју је посетио, уместо да иде на страницу преусмеравања.</target>
+        <target>Преусмери корисника на последњу страницу коју је посетио, уместо да иде на страницу за преусмерење.</target>
       </trans-unit>
       <trans-unit id="tl_module.cols.0">
         <source>Number of columns</source>
@@ -163,11 +163,11 @@
       </trans-unit>
       <trans-unit id="tl_module.editable.0">
         <source>Editable fields</source>
-        <target>Поља која је могуће уређивати</target>
+        <target>Поља за уређивање</target>
       </trans-unit>
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
-        <target>Прикажи ова поља на формулару у ФронтЕнду.</target>
+        <target>Прикажи ова поља на формулару у ФронтЕнд-у.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -179,11 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_module.form.0">
         <source>Form</source>
-        <target>Формулар</target>
+        <target>Образац</target>
       </trans-unit>
       <trans-unit id="tl_module.form.1">
         <source>Please select a form.</source>
-        <target>Изаберите формулар.</target>
+        <target>Изаберите образац.</target>
       </trans-unit>
       <trans-unit id="tl_module.queryType.0">
         <source>Default query type</source>
@@ -235,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context range</source>
-        <target>Опсег контекста</target>
+        <target>Опсег контектста</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The number of characters on the left and right side of each keyword that are used as context.</source>
@@ -243,7 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_module.totalLength.0">
         <source>Maximum context length</source>
-        <target>Максимална дужина контекста</target>
+        <target>Максимална дужина контектста</target>
       </trans-unit>
       <trans-unit id="tl_module.totalLength.1">
         <source>Here you can limit the overall context length per result.</source>
@@ -259,19 +259,19 @@
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>
-        <target>Распоред формулара за претрагу</target>
+        <target>Формулар претраге</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.1">
         <source>Here you can select the search form layout.</source>
-        <target>Изаберите распоред формулара за претрагу.</target>
+        <target>Изаберите формулар птрераге.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
-        <target>Шаблон за приказ резултата претраге</target>
+        <target>Шаблон резултата претраге</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.1">
         <source>Here you can select the search results template.</source>
-        <target>Овде можете изабрати шаблон за резултате претраге који дефинише на који ће начин резултати претраге бити приказани.</target>
+        <target>Овде можете изабрати шаблон за резултате претраге.</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Column</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the column whose articles you want to list.</source>
-        <target>Изаберите колону чије артикле желите да излистате.</target>
+        <target>Изаберите колону чије артикле желиоте да излистате.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_module.altContent.1">
         <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>Алтернативни садржај ће бити приказан ако филм не може да се учита. Дозвољена је употреба HTML тагова.</target>
+        <target>Алтернативни садржај ће бити приказан ако филм не може да се учита. Дозвољено је кориштење HTML тагова.</target>
       </trans-unit>
       <trans-unit id="tl_module.source.0">
         <source>Source</source>
@@ -343,11 +343,11 @@
       </trans-unit>
       <trans-unit id="tl_module.source.1">
         <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Да ли желите да користите фајл са сервера или са неког вањског URL.</target>
+        <target>Да ли желите да користите фајл са сервера или са неког вањског URL-а.</target>
       </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
-        <target>Изворни фајл</target>
+        <target>Изворни код</target>
       </trans-unit>
       <trans-unit id="tl_module.singleSRC.1">
         <source>Please select a file from the files directory.</source>
@@ -359,7 +359,7 @@
       </trans-unit>
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
-        <target>Унесите URL (http://…) адресе на којој се налази flash филм.</target>
+        <target>Унесите URL (http://…) Flash филма.</target>
       </trans-unit>
       <trans-unit id="tl_module.interactive.0">
         <source>Make interactive</source>
@@ -367,15 +367,15 @@
       </trans-unit>
       <trans-unit id="tl_module.interactive.1">
         <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Нека flash филм буде интерактиван са претраживачем (захтева JavaScript).</target>
+        <target>Нека Flash филм буде интерактиван у односу на интернет претраживал (потребна употреба JavaScript-а).</target>
       </trans-unit>
       <trans-unit id="tl_module.flashID.0">
         <source>Flash movie ID</source>
-        <target>ID flash филма</target>
+        <target>ID Flash филма</target>
       </trans-unit>
       <trans-unit id="tl_module.flashID.1">
         <source>Please enter a unique Flash movie ID.</source>
-        <target>Унесите јединствени  ID flash филма.</target>
+        <target>Унесите јединствени  ID Flash филма.</target>
       </trans-unit>
       <trans-unit id="tl_module.flashJS.0">
         <source>JavaScript _DoFSCommand(command, args) {</source>
@@ -383,7 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_module.flashJS.1">
         <source>Please enter the JavaScript code.</source>
-        <target>Унесите JavaScript кôд</target>
+        <target>Унесите JavaScript код.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -399,15 +399,15 @@
       </trans-unit>
       <trans-unit id="tl_module.imgSize.1">
         <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Овде можете да поставите димензије слике и начин промене величине слике.</target>
+        <target>Овде можете да поставите димензије слике и мод за промену величине.</target>
       </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
-        <target>Прикажи текст испод слике</target>
+        <target>Прикажи поднаслов</target>
       </trans-unit>
       <trans-unit id="tl_module.useCaption.1">
         <source>Display the image name or caption below the image.</source>
-        <target>Прикажи име слике или посебан текст испод слике.</target>
+        <target>Прикажи име слике и поднаслов испод слике.</target>
       </trans-unit>
       <trans-unit id="tl_module.multiSRC.0">
         <source>Source files</source>
@@ -419,15 +419,15 @@
       </trans-unit>
       <trans-unit id="tl_module.orderSRC.0">
         <source>Sort order</source>
-        <target>Редослед сортирања</target>
+        <target>Начин сортирања</target>
       </trans-unit>
       <trans-unit id="tl_module.orderSRC.1">
         <source>The sort order of the items.</source>
-        <target>Редослед сортирања ставки.</target>
+        <target>Распоред сортирања ставки.</target>
       </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
-        <target>HTML кȏд</target>
+        <target>HTML код</target>
       </trans-unit>
       <trans-unit id="tl_module.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
@@ -439,23 +439,23 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>Овде можете дефинисати колико дуго ће RSS сажетак садржаја бити чуван у кешу.</target>
+        <target>Овде можете дефинисати колико дуго ће RSS приказивач бити чуван у кешу.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
-        <target>URL-ови сажетка</target>
+        <target>URL-ови приказивача</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.1">
         <source>Please enter the URL of one or more RSS feeds.</source>
-        <target>Унесите URL једног или више RSS сажетака.</target>
+        <target>Унесите URL једног или више RSS приказивача.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.0">
         <source>Feed template</source>
-        <target>Шаблон сажетка</target>
+        <target>Шаблон приказивача</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.1">
         <source>Here you can select the feed template.</source>
-        <target>Овде можете изабрати шаблон сажетка.</target>
+        <target>Овде можете изабрати шаблон приказивача.</target>
       </trans-unit>
       <trans-unit id="tl_module.numberOfItems.0">
         <source>Number of items</source>
@@ -471,7 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_module.protected.1">
         <source>Show the module to certain member groups only.</source>
-        <target>Прикажи модул само члановима одређених група.</target>
+        <target>Прикажи модул само за одређену групу.</target>
       </trans-unit>
       <trans-unit id="tl_module.groups.0">
         <source>Allowed member groups</source>
@@ -479,7 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_module.groups.1">
         <source>These groups will be able to see the module.</source>
-        <target>Ове групе ће моћи да виде модул.</target>
+        <target>Следеће групе ће моћи да виде модул.</target>
       </trans-unit>
       <trans-unit id="tl_module.guests.0">
         <source>Show to guests only</source>
@@ -507,7 +507,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
-        <target>Групе чланова</target>
+        <target>Чланске групе</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
         <source>Here you can assign the user to one or more groups.</source>
@@ -547,7 +547,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_homeDir.0">
         <source>Home directory path</source>
-        <target>Путања до почетног директоријума</target>
+        <target>Путања почетног директоријума</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_homeDir.1">
         <source>Please select the parent folder from the files directory.</source>
@@ -555,11 +555,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_activate.0">
         <source>Send activation e-mail</source>
-        <target>Пошаљи имејл за активацију</target>
+        <target>Пошаљи email за активацију</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_activate.1">
         <source>Send an activation e-mail to the registered e-mail address.</source>
-        <target>Пошаљи имејл за активацију на регистровану имејл адресу.</target>
+        <target>Пошаљи email за активацију на регистровану email адресу.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.0">
         <source>Confirmation page</source>
@@ -583,7 +583,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Можете да користите џокере &lt;em&gt;##домен##&lt;/em&gt; (име домена), &lt;em&gt;##link##&lt;/em&gt; (линк за активацију) и било који податак корисника (нпр. &lt;em&gt;##презиме##&lt;/em&gt;).</target>
+        <target>Можете да користите џокере &lt;em&gt;##домен##&lt;/em&gt; (име домена), &lt;em&gt;##link##&lt;/em&gt; (линк за активацију) и било које улазно поље (нпр. &lt;em&gt;##презиме##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -591,15 +591,15 @@
       </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
-        <target>Подешавања навигације</target>
+        <target>Подешавање навигације</target>
       </trans-unit>
       <trans-unit id="tl_module.reference_legend">
         <source>Reference page</source>
-        <target>Страница референцирања</target>
+        <target>Референтна страница</target>
       </trans-unit>
       <trans-unit id="tl_module.redirect_legend">
         <source>Redirect settings</source>
-        <target>Подешавања преусмерења</target>
+        <target>Подешавање преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_module.template_legend">
         <source>Template settings</source>
@@ -615,7 +615,7 @@
       </trans-unit>
       <trans-unit id="tl_module.include_legend">
         <source>Include settings</source>
-        <target>Подешавања уметнутих садржаја</target>
+        <target>Подешавања уметања</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
         <source>Files and folders</source>
@@ -623,7 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_module.interact_legend">
         <source>Interactive Flash movie</source>
-        <target>Интерактивни flash филм</target>
+        <target>Интерактивни Flash филм</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -639,7 +639,7 @@
       </trans-unit>
       <trans-unit id="tl_module.email_legend">
         <source>E-mail settings</source>
-        <target>Подешавања имејла</target>
+        <target>Подешавања emaila</target>
       </trans-unit>
       <trans-unit id="tl_module.account_legend">
         <source>Account settings</source>
@@ -654,9 +654,9 @@
 
 Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
 </source>
-        <target>Хвала вам што сте се регистровали на ##domain##.
+        <target>Хвала вам за регистрацију на ##domain##.
 
-Молимо Вас да кликнете на ##link## да завршите процес регистрације и извршите активацију Вашег налога. Ако нисте тражили да отворите налог, игноришите овај имејл.
+Молимо Вас да кликнете на ##link## да завршите процес регистрације и извршите активацију Вашег налога. Ако нисте тражили да отворите налог, молимо Вас да игноришете овај e-mail.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
@@ -670,7 +670,7 @@ Please click ##link## to set the new password. If you did not request this e-mai
 </source>
         <target>Захтевали сте нову лозинку на ##domain##.
 
-Молимо Вас да кликнете на  ##link## да поставите нову лозинку. Ако Ви нисте тражили да добијете овај имејл, контактирајте администратора сајта.
+Молимо Вас да кликнете на  ##link## tда поставите нову лозинку. Ако Ви нисте тражили да добијете овај e-mail, контактирајте администратора сајта.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
@@ -679,7 +679,7 @@ Please click ##link## to set the new password. If you did not request this e-mai
       </trans-unit>
       <trans-unit id="tl_module.external">
         <source>External URL</source>
-        <target>Вањски URL</target>
+        <target>Екстерни URL</target>
       </trans-unit>
       <trans-unit id="tl_module.close_deactivate">
         <source>Deactivate account</source>
@@ -687,11 +687,11 @@ Please click ##link## to set the new password. If you did not request this e-mai
       </trans-unit>
       <trans-unit id="tl_module.close_delete">
         <source>Irrevocably delete account</source>
-        <target>Трајно обриши налог</target>
+        <target>Трајно обрши налог</target>
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>Add module</source>
-        <target>Додавање модула</target>
+        <target>Додај модул</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Add a module</source>

@@ -127,10 +127,24 @@ class BackendPopup extends \Backend
 			if ($objFile->isImage)
 			{
 				$objTemplate->isImage = true;
-				$objTemplate->width = $objFile->width;
-				$objTemplate->height = $objFile->height;
+				$objTemplate->width = $objFile->viewWidth;
+				$objTemplate->height = $objFile->viewHeight;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
+			}
+
+			// Meta data
+			if (($objModel = \FilesModel::findByPath($this->strFile)) instanceof FilesModel)
+			{
+				$arrMeta = \StringUtil::deserialize($objModel->meta);
+
+				if (is_array($arrMeta))
+				{
+					\System::loadLanguageFile('languages');
+
+					$objTemplate->meta = $arrMeta;
+					$objTemplate->languages = (object) $GLOBALS['TL_LANG']['LNG'];
+				}
 			}
 
 			$objTemplate->href = ampersand(\Environment::get('request'), true) . '&amp;download=1';
@@ -148,13 +162,7 @@ class BackendPopup extends \Backend
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = \StringUtil::specialchars($this->strFile);
 		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->label_uuid = $GLOBALS['TL_LANG']['MSC']['fileUuid'];
-		$objTemplate->label_imagesize = $GLOBALS['TL_LANG']['MSC']['fileImageSize'];
-		$objTemplate->label_filesize = $GLOBALS['TL_LANG']['MSC']['fileSize'];
-		$objTemplate->label_ctime = $GLOBALS['TL_LANG']['MSC']['fileCreated'];
-		$objTemplate->label_mtime = $GLOBALS['TL_LANG']['MSC']['fileModified'];
-		$objTemplate->label_atime = $GLOBALS['TL_LANG']['MSC']['fileAccessed'];
-		$objTemplate->label_path = $GLOBALS['TL_LANG']['MSC']['filePath'];
+		$objTemplate->labels = (object) $GLOBALS['TL_LANG']['MSC'];
 		$objTemplate->download = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 
 		return $objTemplate->getResponse();

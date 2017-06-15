@@ -129,9 +129,9 @@ class UserPasswordCommand extends ContainerAwareCommand
      *
      * @param string $password
      *
-     * @return string
-     *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     private function validateAndHashPassword($password)
     {

@@ -65,13 +65,17 @@
         <source>Form permissions</source>
         <target>Permissions des formulaires</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Paramètres du compte</target>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Groupes de membres autorisés</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Champs autorisés</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Account settings</source>
+        <target>Paramètres du compte</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New user group</source>

@@ -8,11 +8,14 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Controller;
+namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\BackendController;
-use Contao\CoreBundle\Test\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Menu\PickerMenuBuilderInterface;
+use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the BackendControllerTest class.
@@ -36,13 +39,8 @@ class BackendControllerTest extends TestCase
      */
     public function testActions()
     {
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
-        /** @var ContainerBuilder $container */
         $container = $this->mockKernel()->getContainer();
         $container->set('contao.framework', $framework);
 
@@ -60,5 +58,26 @@ class BackendControllerTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->popupAction());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->switchAction());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->alertsAction());
+    }
+
+    /**
+     * Tests the pickerAction method.
+     */
+    public function testPickerAction()
+    {
+        $pickerBuilder = $this->createMock(PickerMenuBuilderInterface::class);
+
+        $pickerBuilder
+            ->method('getPickerUrl')
+            ->willReturn('/_contao/picker')
+        ;
+
+        $container = $this->mockKernel()->getContainer();
+        $container->set('contao.menu.picker_menu_builder', $pickerBuilder);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        $this->assertInstanceOf(RedirectResponse::class, $controller->pickerAction(new Request()));
     }
 }

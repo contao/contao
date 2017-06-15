@@ -8,11 +8,11 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -30,8 +30,7 @@ class MergeHttpHeadersListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        /** @var ContaoFrameworkInterface $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $listener = new MergeHttpHeadersListener($framework);
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\MergeHttpHeadersListener', $listener);
@@ -49,8 +48,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             new Response()
         );
 
-        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
             ->expects($this->once())
@@ -77,8 +75,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             new Response()
         );
 
-        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
             ->expects($this->once())
@@ -102,7 +99,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testMultiValueHeadersAreNotOverriden()
     {
         $response = new Response();
-        $response->headers->set('Set-Cookie', 'content');
+        $response->headers->set('Set-Cookie', 'content=foobar');
 
         $responseEvent = new FilterResponseEvent(
             $this->mockKernel(),
@@ -111,8 +108,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             $response
         );
 
-        /** @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this->getMock('Contao\CoreBundle\Framework\ContaoFrameworkInterface');
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
             ->expects($this->once())
@@ -121,7 +117,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         ;
 
         $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['set-cookie: new-content']); // test a lower-case key here
+        $listener->setHeaders(['set-cookie: new-content=foobar']); // test a lower-case key here
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
@@ -130,8 +126,8 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $allHeaders = $response->headers->get('Set-Cookie', null, false);
 
-        $this->assertSame('content', $allHeaders[0]);
-        $this->assertSame('new-content', $allHeaders[1]);
+        $this->assertSame('content=foobar; path=/; httponly', $allHeaders[0]);
+        $this->assertSame('new-content=foobar; path=/; httponly', $allHeaders[1]);
     }
 
     /**
@@ -141,7 +137,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $listener = new MergeHttpHeadersListener($this->mockContaoFramework());
 
-        $this->assertEquals(
+        $this->assertSame(
             $listener->getMultiHeaders(),
             [
                 'set-cookie',
@@ -154,7 +150,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $listener->removeMultiHeader('cache-control');
 
-        $this->assertEquals(
+        $this->assertSame(
             $listener->getMultiHeaders(),
             [
                 'set-cookie',
@@ -166,7 +162,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $listener->addMultiHeader('dummy');
 
-        $this->assertEquals(
+        $this->assertSame(
             $listener->getMultiHeaders(),
             [
                 'set-cookie',
@@ -179,7 +175,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $listener->setMultiHeader(['set-cookie', 'link', 'vary', 'pragma', 'cache-control']);
 
-        $this->assertEquals(
+        $this->assertSame(
             $listener->getMultiHeaders(),
             [
                 'set-cookie',

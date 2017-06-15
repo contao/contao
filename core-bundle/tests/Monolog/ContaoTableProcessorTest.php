@@ -8,14 +8,14 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Monolog;
+namespace Contao\CoreBundle\Tests\Monolog;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Security\Authentication\ContaoToken;
+use Contao\CoreBundle\Tests\TestCase;
 use Monolog\Logger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -44,8 +44,8 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->createContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
-        $this->assertEquals(['foo' => 'bar'], $processor(['foo' => 'bar']));
-        $this->assertEquals(['context' => ['contao' => false]], $processor(['context' => ['contao' => false]]));
+        $this->assertSame(['foo' => 'bar'], $processor(['foo' => 'bar']));
+        $this->assertSame(['context' => ['contao' => false]], $processor(['context' => ['contao' => false]]));
     }
 
     /**
@@ -70,7 +70,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->assertEquals($expectedAction, $context->getAction());
+        $this->assertSame($expectedAction, $context->getAction());
     }
 
     /**
@@ -94,7 +94,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->assertEquals(ContaoContext::CRON, $context->getAction());
+        $this->assertSame(ContaoContext::CRON, $context->getAction());
     }
 
     /**
@@ -102,20 +102,12 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testIpOnEmptyRequest()
     {
-        $requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack');
-
-        $requestStack
-            ->expects($this->any())
-            ->method('getCurrentRequest')
-            ->willReturn(null)
-        ;
-
-        $processor = $this->createContaoTableProcessor($requestStack);
+        $processor = $this->createContaoTableProcessor();
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('127.0.0.1', $context->getIp());
+        $this->assertSame('127.0.0.1', $context->getIp());
     }
 
     /**
@@ -138,14 +130,14 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals($input, $context->getIp());
+        $this->assertSame($input, $context->getIp());
 
         $processor = $this->createContaoTableProcessor($requestStack, null, true);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals($expected, $context->getIp());
+        $this->assertSame($expected, $context->getIp());
     }
 
     /**
@@ -165,19 +157,19 @@ class ContaoTableProcessorTest extends TestCase
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, null, null, 'foobar')]]
         )['extra']['contao'];
 
-        $this->assertEquals('foobar', $context->getBrowser());
+        $this->assertSame('foobar', $context->getBrowser());
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('Contao test', $context->getBrowser());
+        $this->assertSame('Contao test', $context->getBrowser());
 
         $requestStack->pop();
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('N/A', $context->getBrowser());
+        $this->assertSame('N/A', $context->getBrowser());
     }
 
     /**
@@ -185,10 +177,9 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testUsername()
     {
-        $token = $this->getMock('Contao\CoreBundle\Security\Authentication\ContaoToken', [], [], '', false);
+        $token = $this->createMock(ContaoToken::class);
 
         $token
-            ->expects($this->any())
             ->method('getUsername')
             ->willReturn('k.jones')
         ;
@@ -203,34 +194,42 @@ class ContaoTableProcessorTest extends TestCase
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, 'foobar')]]
         )['extra']['contao'];
 
-        $this->assertEquals('foobar', $context->getUsername());
+        $this->assertSame('foobar', $context->getUsername());
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('k.jones', $context->getUsername());
+        $this->assertSame('k.jones', $context->getUsername());
 
         $tokenStorage->setToken(null);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
-        $this->assertEquals('N/A', $context->getUsername());
+        $this->assertSame('N/A', $context->getUsername());
     }
 
     /**
      * Tests that the source is added.
      *
-     * @param ContainerInterface $container
-     * @param string|null        $contextSource
-     * @param string|null        $expectedSource
+     * @param string $scope
+     * @param string $contextSource
+     * @param string $expectedSource
      *
      * @dataProvider sourceProvider
      */
-    public function testSource($container, $contextSource, $expectedSource)
+    public function testSource($scope, $contextSource, $expectedSource)
     {
-        $processor = $this->createContaoTableProcessor();
-        $processor->setContainer($container);
+        $requestStack = new RequestStack();
+
+        if (null !== $scope) {
+            $request = new Request();
+            $request->attributes->set('_scope', $scope);
+
+            $requestStack->push($request);
+        }
+
+        $processor = $this->createContaoTableProcessor($requestStack);
 
         $result = $processor(
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, null, null, null, $contextSource)]]
@@ -239,7 +238,7 @@ class ContaoTableProcessorTest extends TestCase
         /** @var ContaoContext $context */
         $context = $result['extra']['contao'];
 
-        $this->assertEquals($expectedSource, $context->getSource());
+        $this->assertSame($expectedSource, $context->getSource());
     }
 
     /**
@@ -294,40 +293,14 @@ class ContaoTableProcessorTest extends TestCase
             [null, 'BE', 'BE'],
             [null, null, 'FE'],
 
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_FRONTEND), 'FE', 'FE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_FRONTEND), 'BE', 'BE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_FRONTEND), null, 'FE'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'FE', 'FE'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, 'BE', 'BE'],
+            [ContaoCoreBundle::SCOPE_FRONTEND, null, 'FE'],
 
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_BACKEND), 'FE', 'FE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_BACKEND), 'BE', 'BE'],
-            [$this->mockContainerWithScope(ContaoCoreBundle::SCOPE_BACKEND), null, 'BE'],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'],
+            [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'],
+            [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'],
         ];
-    }
-
-    /**
-     * Mocks a Symfony container with scope.
-     *
-     * @param string $scope
-     *
-     * @return ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockContainerWithScope($scope)
-    {
-        $request = new Request([], [], ['_scope' => $scope]);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->with('request_stack')
-            ->willReturn($requestStack)
-        ;
-
-        return $container;
     }
 
     /**
@@ -342,15 +315,13 @@ class ContaoTableProcessorTest extends TestCase
     private function createContaoTableProcessor($requestStack = null, $tokenStorage = null, $anonymizeIp = true)
     {
         if (null === $requestStack) {
-            $requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack');
+            $requestStack = $this->createMock(RequestStack::class);
         }
 
         if (null === $tokenStorage) {
-            $tokenStorage = $this->getMock(
-                'Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
-            );
+            $tokenStorage = $this->createMock(TokenStorageInterface::class);
         }
 
-        return new ContaoTableProcessor($requestStack, $tokenStorage, $anonymizeIp);
+        return new ContaoTableProcessor($requestStack, $tokenStorage, $this->mockScopeMatcher(), $anonymizeIp);
     }
 }

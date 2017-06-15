@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Config\Loader;
+namespace Contao\CoreBundle\Tests\Config\Loader;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the PhpFileLoader class.
@@ -74,7 +74,7 @@ $GLOBALS['TL_TEST'] = true;
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $expects,
             $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php')
         );
@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_test'] = [
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $content,
             $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
         );
@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = 'DC_Table';
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $expects,
             $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace.php',
@@ -134,7 +134,7 @@ $GLOBALS['TL_TEST'] = true;
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $expects,
             $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php',
@@ -172,9 +172,9 @@ $GLOBALS['TL_DCA']['tl_test'] = [
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/' . $file . '.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
         );
     }
 
@@ -211,7 +211,7 @@ $GLOBALS['TL_DCA']['tl_test'] = [
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $content,
             $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_declare3.php')
         );
@@ -248,9 +248,9 @@ $GLOBALS['TL_DCA']['tl_test'] = [
 
 EOF;
 
-        $this->assertEquals(
+        $this->assertSame(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/' . $file . '.php')
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
         );
     }
 

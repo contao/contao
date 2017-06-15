@@ -122,10 +122,12 @@ class Image
 		// Check whether the file exists
 		if (!$file->exists())
 		{
+			$webDir = \System::getContainer()->getParameter('contao.web_dir');
+
 			// Handle public bundle resources
-			if (file_exists(TL_ROOT . '/web/' . $file->path))
+			if (file_exists($webDir . '/' . $file->path))
 			{
-				$file = new \File('web/' . $file->path);
+				$file = new \File(\StringUtil::stripRootDir($webDir) . '/' . $file->path);
 			}
 			else
 			{
@@ -381,11 +383,12 @@ class Image
 	public function getResizedPath()
 	{
 		$path = $this->resizedPath;
+		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
 
 		// Strip the web/ prefix (see #337)
-		if (strncmp($path, 'web/', 4) === 0)
+		if (strncmp($path, $webDir . '/', strlen($webDir) + 1) === 0)
 		{
-			$path = substr($path, 4);
+			$path = substr($path, strlen($webDir) + 1);
 		}
 
 		return $path;
@@ -415,7 +418,7 @@ class Image
 			. '-t' . $this->fileObj->mtime
 		), 0, 8);
 
-		return System::getContainer()->getParameter('contao.image.target_path') . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
+		return \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir')) . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
 	}
 
 
@@ -693,12 +696,15 @@ class Image
 			return '';
 		}
 
+		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+
 		if (!is_file(TL_ROOT . '/' . $src))
 		{
 			// Handle public bundle resources
-			if (file_exists(TL_ROOT . '/web/' . $src))
+			if (file_exists(TL_ROOT . '/' . $webDir . '/' . $src))
 			{
-				$src = 'web/' . $src;
+				@trigger_error('Paths relative to the webdir are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				$src = $webDir . '/' . $src;
 			}
 			else
 			{
@@ -709,9 +715,9 @@ class Image
 		$objFile = new \File($src);
 
 		// Strip the web/ prefix (see #337)
-		if (strncmp($src, 'web/', 4) === 0)
+		if (strncmp($src, $webDir . '/', strlen($webDir) + 1) === 0)
 		{
-			$src = substr($src, 4);
+			$src = substr($src, strlen($webDir) + 1);
 		}
 
 		$static = (strncmp($src, 'assets/', 7) === 0) ? TL_ASSETS_URL : TL_FILES_URL;

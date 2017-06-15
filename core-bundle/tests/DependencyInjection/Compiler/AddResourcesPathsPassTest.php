@@ -8,10 +8,13 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\DependencyInjection\Compiler;
+namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestBundle\ContaoTestBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -39,12 +42,13 @@ class AddResourcesPathsPassTest extends TestCase
         $pass = new AddResourcesPathsPass();
 
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->getRootDir());
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
 
         $container->setParameter('kernel.bundles', [
-            'FrameworkBundle' => 'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-            'ContaoTestBundle' => 'Contao\TestBundle\ContaoTestBundle',
-            'foobar' => 'Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle',
+            'FrameworkBundle' => FrameworkBundle::class,
+            'ContaoTestBundle' => ContaoTestBundle::class,
+            'foobar' => ContaoModuleBundle::class,
         ]);
 
         $pass->process($container);
@@ -57,7 +61,7 @@ class AddResourcesPathsPassTest extends TestCase
             $path = strtr($path, '/', '\\');
         }
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 $path.'/Resources/contao',
                 $this->getRootDir().'/system/modules/foobar',

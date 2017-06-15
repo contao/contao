@@ -65,13 +65,17 @@
         <source>Form permissions</source>
         <target>Dovoljenja obrazca</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Nastavitve računa</target>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Dovoljene skupine uporabnikov</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Izključena polja</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Account settings</source>
+        <target>Nastavitve računa</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New user group</source>

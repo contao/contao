@@ -65,13 +65,17 @@
         <source>Form permissions</source>
         <target>フォームの権限</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>アカウントの設定</target>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>許可するメンバーグループ</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>許可する項目</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Account settings</source>
+        <target>アカウントの設定</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New user group</source>

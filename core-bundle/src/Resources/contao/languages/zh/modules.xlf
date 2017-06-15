@@ -137,29 +137,34 @@
         <source>Change your personal data or set a new password</source>
         <target>更改您的个人数据或建立新的密码。</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>样式表</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>样式表</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>前端模块</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>页面布局</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>字段</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>图片尺寸</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>图片尺寸media queries</target>
+        <source>Media queries</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>页面布局</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>前端模块</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>样式表</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

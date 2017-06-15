@@ -10,7 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DcaFilterInterface;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\Image\ResizeConfiguration;
+use Imagine\Gd\Imagine;
 
 
 /**
@@ -107,6 +111,30 @@ abstract class DataContainer extends \Backend
 	 * @var boolean
 	 */
 	protected $blnUploadable = false;
+
+	/**
+	 * The picker table
+	 * @var string
+	 */
+	protected $strPickerTable;
+
+	/**
+	 * The picker field
+	 * @var string
+	 */
+	protected $strPickerField;
+
+	/**
+	 * The picker ID
+	 * @var integer
+	 */
+	protected $intPickerId;
+
+	/**
+	 * The picker value
+	 * @var array
+	 */
+	protected $arrPickerValue = array();
 
 
 	/**
@@ -205,7 +233,7 @@ abstract class DataContainer extends \Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'])
 		{
-			$xlabel .= ' <a href="contao/help.php?table='.$this->strTable.'&amp;field='.$this->strField.'" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'width\':735,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0])).'\',\'url\':this.href});return false">'.\Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard'], 'style="vertical-align:text-bottom"').'</a>';
+			$xlabel .= ' <a href="contao/help.php?table='.$this->strTable.'&amp;field='.$this->strField.'" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0])).'\',\'url\':this.href});return false">'.\Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard'], 'style="vertical-align:text-bottom"').'</a>';
 		}
 
 		// Add a custom xlabel
@@ -271,6 +299,15 @@ abstract class DataContainer extends \Backend
 		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
 		{
 			$this->varValue = \StringUtil::insertTagToSrc($this->varValue);
+		}
+
+		// Use raw request if set globally but allow opting out setting useRawRequestData to false explicitly
+		$useRawGlobally = isset($GLOBALS['TL_DCA'][$this->strTable]['config']['useRawRequestData']) && $GLOBALS['TL_DCA'][$this->strTable]['config']['useRawRequestData'] === true;
+		$notRawForField = isset($arrData['eval']['useRawRequestData']) && $arrData['eval']['useRawRequestData'] === false;
+
+		if ($useRawGlobally && !$notRawForField)
+		{
+			$arrData['eval']['useRawRequestData'] = true;
 		}
 
 		/** @var Widget $objWidget */
@@ -432,12 +469,13 @@ abstract class DataContainer extends \Backend
 			// Support single fields as well (see #5240)
 			$strKey = $arrData['eval']['multiple'] ? $this->strField . '_0' : $this->strField;
 
-			$wizard .= ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $this->strField . '"') . '
+			$wizard .= ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
   <script>
     window.addEvent("domready", function() {
+      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
       new MooRainbow("moo_' . $this->strField . '", {
         id: "ctrl_' . $strKey . '",
-        startColor: ((cl = $("ctrl_' . $strKey . '").value.hexToRgb(true)) ? cl : [255, 0, 0]),
+        startColor: cl,
         imgPath: "assets/colorpicker/images/",
         onComplete: function(color) {
           $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
@@ -445,6 +483,12 @@ abstract class DataContainer extends \Backend
       });
     });
   </script>';
+		}
+
+		// DCA picker
+		if (isset($arrData['eval']['dcaPicker']) && (is_array($arrData['eval']['dcaPicker']) || $arrData['eval']['dcaPicker'] === true))
+		{
+			$wizard .= \Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], $this->strTable, $this->strField, $this->intId, $this->varValue, $this->strInputName);
 		}
 
 		// Add a custom wizard
@@ -530,13 +574,21 @@ abstract class DataContainer extends \Backend
 
 			if ($objFile->isImage)
 			{
+				$blnCanResize = true;
+
+				// Check the maximum width and height if the GDlib is used to resize images
+				if (!$objFile->isSvgImage && \System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				{
+					$blnCanResize = $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth');
+				}
+
 				$image = \Image::getPath('placeholder.svg');
 
-				if ($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))
+				if ($blnCanResize)
 				{
 					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
 					{
-						$image = rawurldecode(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(699, 524, 'box'))->getUrl(TL_ROOT));
+						$image = rawurldecode(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl(TL_ROOT));
 					}
 					else
 					{
@@ -548,7 +600,6 @@ abstract class DataContainer extends \Backend
 				$ctrl = 'ctrl_preview_' . substr(md5($image), 0, 8);
 
 				$strPreview = '
-
 <div id="' . $ctrl . '" class="tl_edit_preview" data-original-width="' . $objFile->viewWidth . '" data-original-height="' . $objFile->viewHeight . '">
   <img src="' . $objImage->dataUri . '" width="' . $objImage->width . '" height="' . $objImage->height . '" alt="">
 </div>';
@@ -709,7 +760,7 @@ abstract class DataContainer extends \Backend
 			{
 				if ($k == 'show')
 				{
-					$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1').'" title="'.\StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'width\':768,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strTable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
+					$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1').'" title="'.\StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strTable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
 				}
 				else
 				{
@@ -812,6 +863,167 @@ abstract class DataContainer extends \Backend
 
 		return $return;
 	}
+
+
+	/**
+	 * Initialize the picker
+	 *
+	 * @return boolean
+	 *
+	 * @throws InternalServerErrorException
+	 */
+	protected function initPicker()
+	{
+		$menuBuilder = \System::getContainer()->get('contao.menu.picker_menu_builder');
+
+		if (!$menuBuilder->supportsTable($this->strTable))
+		{
+			return false;
+		}
+
+		list($this->strPickerTable, $this->strPickerField, $this->intPickerId) = explode('.', \Input::get('target'), 3);
+		$this->intPickerId = (int) $this->intPickerId;
+
+		\Controller::loadDataContainer($this->strPickerTable);
+
+		$this->setPickerValue();
+
+		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$this->strPickerTable]['config']['dataContainer'];
+		$objDca = new $strDriver($this->strPickerTable);
+		$objDca->id = $this->intPickerId;
+		$objDca->field = $this->strPickerField;
+
+		// Set the active record
+		if ($this->intPickerId && $this->Database->tableExists($this->strPickerTable))
+		{
+			/** @var Model $strModel */
+			$strModel = \Model::getClassFromTable($this->strPickerTable);
+
+			if (class_exists($strModel))
+			{
+				$objModel = $strModel::findByPk($this->intPickerId);
+
+				if ($objModel !== null)
+				{
+					$objDca->activeRecord = $objModel;
+				}
+			}
+		}
+
+		// Call the load_callback
+		if (is_array($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['load_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['load_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->arrPickerValue = $this->{$callback[0]}->{$callback[1]}($this->arrPickerValue, $objDca);
+				}
+				elseif (is_callable($callback))
+				{
+					$this->arrPickerValue = $callback($this->arrPickerValue, $objDca);
+				}
+			}
+		}
+
+		if (!isset($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]))
+		{
+			throw new InternalServerErrorException('Target field "' . $this->strPickerTable . '.' . $this->strPickerField . '" does not exist.');
+		}
+
+		/** @var Widget $strClass */
+		$strClass = $GLOBALS['BE_FFL'][$GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['inputType']];
+
+		/** @var Widget $objWidget */
+		$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField], $this->strPickerField, $this->arrPickerValue, $this->strPickerField, $this->strPickerTable, $objDca));
+
+		if ($objWidget instanceof DcaFilterInterface)
+		{
+			$this->setDcaFilter($objWidget->getDcaFilter());
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Set the picker value
+	 */
+	protected function setPickerValue()
+	{
+		$varValue = \Input::get('value');
+
+		if (empty($varValue))
+		{
+			return;
+		}
+
+		$varValue = array_filter(explode(',', $varValue));
+
+		if (empty($varValue))
+		{
+			return;
+		}
+
+		$this->arrPickerValue = $varValue;
+	}
+
+
+	/**
+	 * Set the DCA filter
+	 *
+	 * @param array $arrFilter
+	 */
+	protected function setDcaFilter($arrFilter)
+	{
+		if (isset($arrFilter['root']))
+		{
+			$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] = $arrFilter['root'];
+		}
+	}
+
+
+	/**
+	 * Return the picker attributes
+	 *
+	 * @return string
+	 */
+	protected function getPickerAttributes()
+	{
+		if ($this->strPickerField)
+		{
+			return ' id="tl_select" data-table="' . $this->strTable . '"';
+		}
+
+		return '';
+	}
+
+
+	/**
+	 * Return the picker input field markup
+	 *
+	 * @param string $value
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	protected function getPickerInputField($value, $attributes='')
+	{
+		$id = is_numeric($value) ? $value : md5($value);
+
+		switch ($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'])
+		{
+			case 'checkbox':
+				return ' <input type="checkbox" name="'.$this->strPickerField.'[]" id="'.$this->strPickerField.'_'.$id.'" class="tl_tree_checkbox" value="'.\StringUtil::specialchars($value).'" onfocus="Backend.getScrollOffset()"'.\Widget::optionChecked($value, $this->arrPickerValue).$attributes.'>';
+
+			case 'radio':
+				return ' <input type="radio" name="'.$this->strPickerField.'" id="'.$this->strPickerField.'_'.$id.'" class="tl_tree_radio" value="'.\StringUtil::specialchars($value).'" onfocus="Backend.getScrollOffset()"'.\Widget::optionChecked($value, $this->arrPickerValue).$attributes.'>';
+		}
+
+		return '';
+	}
+
 
 	/**
 	 * Return the name of the current palette

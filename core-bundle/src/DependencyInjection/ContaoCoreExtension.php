@@ -10,11 +10,10 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
@@ -50,7 +49,10 @@ class ContaoCoreExtension extends ConfigurableExtension
         // Add the resource to the container
         parent::getConfiguration($config, $container);
 
-        return new Configuration($container->getParameter('kernel.debug'));
+        return new Configuration(
+            $container->getParameter('kernel.debug'),
+            $container->getParameter('kernel.project_dir')
+        );
     }
 
     /**
@@ -67,6 +69,7 @@ class ContaoCoreExtension extends ConfigurableExtension
             $loader->load($file);
         }
 
+        $container->setParameter('contao.web_dir', $mergedConfig['web_dir']);
         $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
         $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
         $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
@@ -75,7 +78,7 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);
         $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
-        $container->setParameter('contao.image.target_path', $mergedConfig['image']['target_path']);
+        $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
         $container->setParameter('contao.security.disable_ip_check', $mergedConfig['security']['disable_ip_check']);
@@ -84,41 +87,31 @@ class ContaoCoreExtension extends ConfigurableExtension
             $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
         }
 
-        $this->addContainerScopeListener($container);
+        $this->overwriteImageTargetDir($mergedConfig, $container);
+
+        $container
+            ->registerForAutoconfiguration(PickerMenuProviderInterface::class)
+            ->addTag('contao.picker_menu_provider')
+        ;
     }
 
     /**
-     * Adds the container scope listener.
+     * Reads the old contao.image.target_path parameter.
      *
+     * @param array            $mergedConfig
      * @param ContainerBuilder $container
      */
-    private function addContainerScopeListener(ContainerBuilder $container)
+    private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container)
     {
-        if (!method_exists('Symfony\Component\DependencyInjection\Container', 'enterScope')) {
+        if (!isset($mergedConfig['image']['target_path'])) {
             return;
         }
 
-        $definition = new Definition('Contao\CoreBundle\EventListener\ContainerScopeListener');
-        $definition->addArgument(new Reference('service_container'));
-
-        $definition->addTag(
-            'kernel.event_listener',
-            [
-                'event' => 'kernel.request',
-                'method' => 'onKernelRequest',
-                'priority' => 30,
-            ]
+        $container->setParameter(
+            'contao.image.target_dir',
+            $container->getParameter('kernel.project_dir').'/'.$mergedConfig['image']['target_path']
         );
 
-        $definition->addTag(
-            'kernel.event_listener',
-            [
-                'event' => 'kernel.finish_request',
-                'method' => 'onKernelFinishRequest',
-                'priority' => -254,
-            ]
-        );
-
-        $container->setDefinition('contao.listener.container_scope', $definition);
+        @trigger_error('Using the contao.image.target_path parameter has been deprecated and will no longer work in Contao 5. Use the contao.image.target_dir parameter instead.', E_USER_DEPRECATED);
     }
 }

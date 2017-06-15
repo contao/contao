@@ -42,11 +42,6 @@ class ContentHyperlink extends \ContentElement
 
 		$embed = explode('%s', $this->embed);
 
-		if ($this->linkTitle == '')
-		{
-			$this->linkTitle = $this->url;
-		}
-
 		// Use an image instead of the title
 		if ($this->useImage && $this->singleSRC != '')
 		{
@@ -55,10 +50,8 @@ class ContentHyperlink extends \ContentElement
 			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
-				$this->addImageToTemplate($this->Template, $this->arrData);
-
+				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
 				$this->Template->useImage = true;
-				$this->Template->linkTitle = \StringUtil::specialchars($this->linkTitle);
 			}
 		}
 
@@ -78,8 +71,12 @@ class ContentHyperlink extends \ContentElement
 		$this->Template->embed_pre = $embed[0];
 		$this->Template->embed_post = $embed[1];
 		$this->Template->link = $this->linkTitle;
-		$this->Template->linkTitle = \StringUtil::specialchars($this->titleText ?: $this->linkTitle);
 		$this->Template->target = '';
+
+		if ($this->titleText)
+		{
+			$this->Template->linkTitle = \StringUtil::specialchars($this->titleText);
+		}
 
 		// Override the link target
 		if ($this->target)

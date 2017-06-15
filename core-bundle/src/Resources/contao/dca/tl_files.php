@@ -456,7 +456,6 @@ class tl_files extends Backend
 	 */
 	public function checkFilename($varValue, DataContainer $dc)
 	{
-		$varValue = Patchwork\Utf8::toAscii($varValue);
 		$varValue = str_replace('"', '', $varValue);
 
 		if (strpos($varValue, '/') !== false || preg_match('/\.$/', $varValue))
@@ -474,7 +473,7 @@ class tl_files extends Backend
 				$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 			}
 
-			if ($intMaxlength && utf8_strlen($varValue) > $intMaxlength)
+			if ($intMaxlength && Patchwork\Utf8::strlen($varValue) > $intMaxlength)
 			{
 				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
 			}
@@ -569,23 +568,21 @@ class tl_files extends Backend
 	 */
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (is_dir(TL_ROOT . '/' . $row['id']))
-		{
-			$finder = Symfony\Component\Finder\Finder::create()->in(TL_ROOT . '/' . $row['id']);
+		$path = TL_ROOT . '/' . urldecode($row['id']);
 
-			if ($finder->count() > 0)
-			{
-				return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
-			}
-			else
-			{
-				return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
-			}
-		}
-		else
+		if (!is_dir($path))
 		{
 			return ($this->User->hasAccess('f3', 'fop') || $this->User->hasAccess('f4', 'fop')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
+
+		$finder = Symfony\Component\Finder\Finder::create()->in($path);
+
+		if ($finder->count() > 0)
+		{
+			return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		}
+
+		return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -646,7 +643,7 @@ class tl_files extends Backend
 		}
 		else
 		{
-			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'width\':'.$row['popupWidth'].',\'title\':\''.str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href});return false">'.Image::getHtml($icon, $label).'</a> ';
+			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'title\':\''.str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href});return false">'.Image::getHtml($icon, $label).'</a> ';
 		}
 	}
 
@@ -675,7 +672,24 @@ class tl_files extends Backend
 			return '';
 		}
 
-		$blnPublic = file_exists(TL_ROOT . '/' . $strPath . '/.public');
+		$blnPublic = false;
+		$blnDisabled = false;
+		$strCheck = $strPath;
+
+		// Check if a parent folder is public
+		while ($strCheck != '.' && !$blnPublic)
+		{
+			if (!($blnPublic = file_exists(TL_ROOT . '/' . $strCheck . '/.public')))
+			{
+				$strCheck = dirname($strCheck);
+			}
+		}
+
+		// Disable the checkbox if a parent folder is public (see #712)
+		if ($blnPublic && $strCheck != $strPath)
+		{
+			$blnDisabled = true;
+		}
 
 		// Protect or unprotect the folder
 		if (Input::post('FORM_SUBMIT') == 'tl_files')
@@ -720,7 +734,7 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->field . '_0" class="tl_checkbox" value="1"' . ($blnPublic ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"> <label for="opt_' . $dc->field . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->field . '_0" class="tl_checkbox" value="1"' . (($blnPublic || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisabled ? ' disabled' : '') . '> <label for="opt_' . $dc->field . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
 </div>';

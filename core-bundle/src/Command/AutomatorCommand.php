@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
+use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,7 +25,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AutomatorCommand extends AbstractLockedCommand
+class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
@@ -32,6 +33,19 @@ class AutomatorCommand extends AbstractLockedCommand
      * @var array
      */
     private $commands = [];
+
+    /**
+     * Returns the help text.
+     *
+     * By using the __toString() method, we ensure that the help text is lazy loaded at
+     * a time where the autoloader is available (required by $this->getCommands()).
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
+    }
 
     /**
      * {@inheritdoc}
@@ -63,19 +77,6 @@ class AutomatorCommand extends AbstractLockedCommand
         }
 
         return 0;
-    }
-
-    /**
-     * Returns the help text.
-     *
-     * By using the __toString() method, we ensure that the help text is lazy loaded at
-     * a time where the autoloader is available (required by $this->getCommands()).
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
     }
 
     /**
@@ -118,7 +119,7 @@ class AutomatorCommand extends AbstractLockedCommand
         $commands = [];
 
         // Find all public methods
-        $class = new \ReflectionClass('Contao\Automator');
+        $class = new \ReflectionClass(Automator::class);
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
@@ -144,7 +145,7 @@ class AutomatorCommand extends AbstractLockedCommand
         $task = $input->getArgument('task');
 
         if (null !== $task) {
-            if (!in_array($task, $commands)) {
+            if (!in_array($task, $commands, true)) {
                 throw new \InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
             }
 

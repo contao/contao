@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>在内容元素中添加一个图片。</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>图像源文件</target>
@@ -49,11 +55,10 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>一个易访问的网站总会为图片和动画提供一个可替换文本来简短描述其内容。</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>标题</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>此处您可以设定图片标题 (&lt;em&gt;标题&lt;/em&gt; 属性).</target>
       </trans-unit>
@@ -334,8 +339,7 @@
         <target>使用用户主目录</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>如果是授权用户，使用主目录作为文件来源</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

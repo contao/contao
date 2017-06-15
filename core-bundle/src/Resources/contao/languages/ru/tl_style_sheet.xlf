@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.1">
         <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
-        <target>Вы можете указать тип используемого Media query (Медиа-запроса) напр. &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. Медиа типы определенные выше будут перезаписаны.</target>
+        <target>Вы можете указать тип используемого Media query (Медиа-запроса) напр. &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. Медиа-типы определенные выше будут перезаписаны.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.0">
         <source>Global variables</source>

@@ -137,29 +137,34 @@
         <source>Change your personal data or set a new password</source>
         <target>Modifica i tuoi dati personali o cambia la password</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>Fogli di stile</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Fogli di stile</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>Moduli nel frontend</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>Layout pagina</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Campi</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>Dimensioni immagine</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>Dimensioni immagine media queries</target>
+        <source>Media queries</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Layout pagina</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Moduli nel frontend</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>Fogli di stile</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

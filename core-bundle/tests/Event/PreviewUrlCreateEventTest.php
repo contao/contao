@@ -8,16 +8,17 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Event;
+namespace Contao\CoreBundle\Tests\Event;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the PreviewUrlCreateEvent class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlCreateEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -36,7 +37,7 @@ class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
-        $this->assertEquals(12, $event->getId());
+        $this->assertSame(12, $event->getId());
     }
 
     /**
@@ -46,7 +47,7 @@ class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
-        $this->assertEquals('news', $event->getKey());
+        $this->assertSame('news', $event->getKey());
     }
 
     /**
@@ -60,6 +61,6 @@ class PreviewUrlCreateEventTest extends \PHPUnit_Framework_TestCase
 
         $event->setQuery('act=edit&id=12');
 
-        $this->assertEquals('act=edit&id=12', $event->getQuery());
+        $this->assertSame('act=edit&id=12', $event->getQuery());
     }
 }

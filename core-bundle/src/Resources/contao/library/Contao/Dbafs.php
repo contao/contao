@@ -130,7 +130,7 @@ class Dbafs
 			// Add the relative path
 			foreach ($objFiles as $objFile)
 			{
-				$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
+				$strRelpath = \StringUtil::stripRootDir($objFile->getPathname());
 
 				if ($objFile->isDir())
 				{
@@ -514,7 +514,7 @@ class Dbafs
 		// Create or update the database entries
 		foreach ($objFiles as $objFile)
 		{
-			$strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
+			$strRelpath = \StringUtil::stripRootDir($objFile->getPathname());
 
 			// Get all subfiles in a single query
 			if ($objFile->isDir())

@@ -65,13 +65,17 @@
         <source>Form permissions</source>
         <target>Formular tilladelser</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Kontoindstillinger</target>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Tilladte medlemsgrupper</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Ekskluderede felter</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Account settings</source>
+        <target>Kontoindstillinger</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New user group</source>

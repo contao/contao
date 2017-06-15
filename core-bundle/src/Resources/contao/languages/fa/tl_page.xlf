@@ -336,7 +336,7 @@
         <target>نام و گونه</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta information</source>
+        <source>Meta data</source>
         <target>اطلاعات متا</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">

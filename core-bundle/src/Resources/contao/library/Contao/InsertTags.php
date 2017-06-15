@@ -78,7 +78,8 @@ class InsertTags extends \Controller
 			return \StringUtil::restoreBasicEntities($strBuffer);
 		}
 
-		$tags = preg_split('/{{([^{}]+)}}/', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
+		$tags = preg_split('~{{([\pL\pN][^{}]*)}}~u', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		if (count($tags) < 2)
 		{
@@ -116,11 +117,14 @@ class InsertTags extends \Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[0] == 'file' && !\Validator::isStringUuid($elements[1])) || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
-					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction', ['insertTag' => '{{' . $strTag . '}}']), 'esi');
+					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction',
+						['insertTag' => '{{' . $strTag . '}}'],
+						['pageId' => $objPage->id, 'request' => \Environment::get('request')]
+					), 'esi');
 					continue;
 				}
 			}
@@ -562,8 +566,19 @@ class InsertTags extends \Controller
 
 				// Mobile/desktop toggle (see #6469)
 				case 'toggle_view':
-					$strUrl = ampersand(\Environment::get('request'));
+					$strRequest = \Environment::get('request');
+
+					// ESI request
+					if (preg_match('/^' . preg_quote(ltrim(\System::getContainer()->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
+					{
+						$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+						$strRequest = $request->query->get('request');
+					}
+
+					$strUrl = ampersand($strRequest);
 					$strGlue = (strpos($strUrl, '?') === false) ? '?' : '&amp;';
+
+					\System::loadLanguageFile('default');
 
 					if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
 					{
@@ -912,8 +927,16 @@ class InsertTags extends \Controller
 					if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && file_exists(TL_ROOT . '/templates/' . $strFile))
 					{
 						ob_start();
-						include TL_ROOT . '/templates/' . $strFile;
-						$arrCache[$strTag] = ob_get_clean();
+
+						try
+						{
+							include TL_ROOT . '/templates/' . $strFile;
+							$arrCache[$strTag] = ob_get_contents();
+						}
+						finally
+						{
+							ob_end_clean();
+						}
 					}
 
 					$_GET = $arrGet;

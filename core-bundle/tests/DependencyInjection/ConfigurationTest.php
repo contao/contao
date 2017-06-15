@@ -8,12 +8,14 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\DependencyInjection;
+namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\Configuration;
+use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     /**
      * @var Configuration
@@ -27,7 +29,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false);
+        $this->configuration = new Configuration(false, $this->getRootDir().'/app');
     }
 
     /**
@@ -37,9 +39,32 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Configuration', $this->configuration);
 
-        $this->assertInstanceOf(
-            'Symfony\Component\Config\Definition\Builder\TreeBuilder',
-            $this->configuration->getConfigTreeBuilder()
+        $treeBuilder = $this->configuration->getConfigTreeBuilder();
+
+        $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $treeBuilder);
+    }
+
+    /**
+     * Tests the path resolving.
+     */
+    public function testPathResolving()
+    {
+        $params = [
+            'contao' => [
+                'web_dir' => $this->getRootDir().'/foo/../web',
+                'image' => [
+                    'target_dir' => $this->getRootDir().'/foo/../assets/images',
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame(strtr($this->getRootDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
+
+        $this->assertSame(
+            strtr($this->getRootDir().'/assets/images', '/', DIRECTORY_SEPARATOR),
+            $configuration['image']['target_dir']
         );
     }
 
@@ -49,18 +74,19 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      * @param string $uploadPath
      *
      * @dataProvider invalidUploadPathProvider
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testInvalidUploadPath($uploadPath)
     {
-        $processor = new Processor();
-
-        $processor->processConfiguration($this->configuration, [
+        $params = [
             'contao' => [
                 'encryption_key' => 's3cr3t',
                 'upload_path' => $uploadPath,
             ],
-        ]);
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
     }
 
     /**
@@ -74,11 +100,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             [''],
             ['app'],
             ['assets'],
+            ['bin'],
             ['contao'],
             ['plugins'],
             ['share'],
             ['system'],
             ['templates'],
+            ['var'],
             ['vendor'],
             ['web'],
         ];

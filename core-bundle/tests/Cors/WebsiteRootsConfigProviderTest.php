@@ -8,12 +8,13 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test;
+namespace Contao\CoreBundle\Tests\Cors;
 
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,20 +22,14 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
+class WebsiteRootsConfigProviderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
+        $connection = $this->createMock(Connection::class);
         $configProvider = new WebsiteRootsConfigProvider($connection);
 
         $this->assertInstanceOf('Contao\CoreBundle\Cors\WebsiteRootsConfigProvider', $configProvider);
@@ -47,10 +42,9 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'http://origin.com');
-        $statement = $this->getMock(Statement::class);
+        $statement = $this->createMock(Statement::class);
 
         $statement
-            ->expects($this->at(0))
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
@@ -65,7 +59,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'allow_origin' => true,
                 'allow_methods' => ['HEAD', 'GET'],
@@ -82,10 +76,9 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
-        $statement = $this->getMock(Statement::class);
+        $statement = $this->createMock(Statement::class);
 
         $statement
-            ->expects($this->at(0))
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
@@ -111,12 +104,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('http://foobar.com');
         $request->headers->remove('Origin');
 
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
             ->expects($this->never())
@@ -137,12 +125,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', '');
 
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
             ->expects($this->never())
@@ -163,15 +146,9 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
 
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
-            ->expects($this->any())
             ->method('isConnected')
             ->willReturn(false)
         ;
@@ -195,11 +172,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
 
-        $schemaManager = $this
-            ->getMockBuilder(MySqlSchemaManager::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
 
         $schemaManager
             ->expects($this->once())
@@ -207,21 +180,14 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
             ->willReturn(false)
         ;
 
-        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
-            ->expects($this->any())
             ->method('isConnected')
             ->willReturn(true)
         ;
 
         $connection
-            ->expects($this->any())
             ->method('getSchemaManager')
             ->willReturn($schemaManager)
         ;
@@ -246,11 +212,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getConnection($statement)
     {
-        $schemaManager = $this
-            ->getMockBuilder(MySqlSchemaManager::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
 
         $schemaManager
             ->expects($this->once())
@@ -258,11 +220,7 @@ class WebsiteRootsConfigProviderTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true)
         ;
 
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
             ->expects($this->once())

@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\DataContainer;
+namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the PaletteManipulator class.
@@ -27,7 +27,7 @@ class PaletteManipulatorTest extends TestCase
     {
         $pm = PaletteManipulator::create();
 
-        static::assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
+        $this->assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
     }
 
     /**
@@ -39,17 +39,17 @@ class PaletteManipulatorTest extends TestCase
             ->addField('foo', 'config_legend', PaletteManipulator::POSITION_PREPEND, 'config_legend')
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},foo,bar',
             $pm->applyToString('{config_legend},bar')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},foo,bar;{foo_legend},baz',
             $pm->applyToString('{config_legend},bar;{foo_legend},baz')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{foo_legend},baz;{config_legend},foo',
             $pm->applyToString('{foo_legend},baz')
         );
@@ -64,17 +64,17 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'config_legend', PaletteManipulator::POSITION_APPEND, 'config_legend')
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},foo,bar',
             $pm->applyToString('{config_legend},foo')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},foo,bar;{foo_legend},baz',
             $pm->applyToString('{config_legend},foo;{foo_legend},baz')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{foo_legend},baz;{config_legend},bar',
             $pm->applyToString('{foo_legend},baz')
         );
@@ -90,12 +90,12 @@ class PaletteManipulatorTest extends TestCase
             ->addField('foo', 'config_legend', PaletteManipulator::POSITION_APPEND)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},foo;{foo_legend},baz',
             $pm->applyToString('{foo_legend},baz')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{bar_legend},baz;{config_legend},foo',
             $pm->applyToString('{bar_legend},baz')
         );
@@ -111,12 +111,12 @@ class PaletteManipulatorTest extends TestCase
             ->addField('foo', 'config_legend')
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{foo_legend},baz;{config_legend},foo',
             $pm->applyToString('{foo_legend},baz')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{bar_legend},baz;{config_legend},foo',
             $pm->applyToString('{bar_legend},baz')
         );
@@ -131,12 +131,12 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'foo', PaletteManipulator::POSITION_BEFORE)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},bar,foo',
             $pm->applyToString('{config_legend},foo')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},baz,bar',
             $pm->applyToString('{config_legend},baz')
         );
@@ -151,12 +151,12 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'foo', PaletteManipulator::POSITION_AFTER)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},foo,bar',
             $pm->applyToString('{config_legend},foo')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '{config_legend},baz,bar',
             $pm->applyToString('{config_legend},baz')
         );
@@ -176,7 +176,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('first', '', PaletteManipulator::POSITION_PREPEND)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             'first,field1,field2,field3,field4,foobar',
             $pm->applyToString('field1', true)
         );
@@ -191,7 +191,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', ['baz', 'foo'])
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{foobar_legend},foo,bar',
             $pm->applyToString('{foobar_legend},foo')
         );
@@ -207,7 +207,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('name', 'name_legend', PaletteManipulator::POSITION_APPEND)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{name_legend},name',
             $pm->applyToString('')
         );
@@ -216,7 +216,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('name', 'name_legend', PaletteManipulator::POSITION_APPEND)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             'name',
             $pm->applyToString('')
         );
@@ -225,7 +225,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('name', 'name_legend', PaletteManipulator::POSITION_APPEND, 'name_legend')
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{name_legend},name',
             $pm->applyToString('')
         );
@@ -240,7 +240,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'foo', PaletteManipulator::POSITION_AFTER)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{name_legend},name;foo,bar',
             $pm->applyToString('{name_legend},name;foo')
         );
@@ -256,7 +256,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('foo', 'bar', PaletteManipulator::POSITION_BEFORE)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{foobar_legend},foo,bar',
             $pm->applyToString('{foobar_legend},bar')
         );
@@ -272,7 +272,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'foo', PaletteManipulator::POSITION_AFTER)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{foobar_legend},foo,bar;{other_legend},other',
             $pm->applyToString('{foobar_legend},foo;{other_legend},other')
         );
@@ -288,7 +288,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField(['foo', 'bar'], 'foobar_legend', PaletteManipulator::POSITION_APPEND)
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{name_legend},name;{foobar_legend:hide},foo,bar',
             $pm->applyToString('{name_legend},name')
         );
@@ -308,7 +308,7 @@ class PaletteManipulatorTest extends TestCase
 
         $pm->applyToPalette('default', 'tl_test');
 
-        $this->assertEquals(
+        $this->assertSame(
             '{name_legend},name;{foobar_legend},foo,bar',
             $GLOBALS['TL_DCA']['tl_test']['palettes']['default']
         );
@@ -327,7 +327,7 @@ class PaletteManipulatorTest extends TestCase
 
         $pm->applyToSubpalette('name', 'tl_test');
 
-        $this->assertEquals(
+        $this->assertSame(
             'firstname,lastname,foo,bar',
             $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']
         );
@@ -347,7 +347,7 @@ class PaletteManipulatorTest extends TestCase
             )
         ;
 
-        $this->assertEquals(
+        $this->assertSame(
             '{name_legend},name,bar',
             $pm->applyToString('{name_legend},name')
         );
@@ -386,8 +386,6 @@ class PaletteManipulatorTest extends TestCase
 
     /**
      * Tests applying changes to a missing palette.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testMissingDcaPalette()
     {
@@ -399,13 +397,13 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['palettes']['default']);
 
+        $this->expectException('InvalidArgumentException');
+
         $pm->applyToPalette('default', 'tl_test');
     }
 
     /**
      * Tests applying changes to a missing subpalette.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testMissingDcaSubpalette()
     {
@@ -416,16 +414,18 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
 
+        $this->expectException('InvalidArgumentException');
+
         $pm->applyToSubpalette('name', 'tl_test');
     }
 
     /**
      * Tests adding a field at an invalid position.
-     *
-     * @expectedException \LogicException
      */
     public function testInvalidPosition()
     {
+        $this->expectException('LogicException');
+
         PaletteManipulator::create()
             ->addField('bar', 'foo', 'foo_position')
             ->applyToString('foo')
@@ -434,11 +434,11 @@ class PaletteManipulatorTest extends TestCase
 
     /**
      * Tests adding a field with a fallback at an invalid position.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidFallbackPosition()
     {
+        $this->expectException('InvalidArgumentException');
+
         PaletteManipulator::create()
             ->addField(
                 'bar',

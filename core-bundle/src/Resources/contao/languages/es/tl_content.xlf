@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Si escoges esta opción, se añadirá una imagen al contenido.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+        <target>Sobrescribir metadatos</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+        <target>Sobrescribir los metadatos de imagen del gestor de archivos.</target>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Archivo fuente</target>
@@ -49,11 +57,11 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>Para que las imágenes o películas sean más accesibles, siempre deberías proporcionar un texto alternativo, incluyendo una breve descripción del su contenido.</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Título</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
+        <target>Título de la imagen</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Aquí puedes poner el título de la imagen (&lt;em&gt;título&lt;/em&gt; atributo).</target>
       </trans-unit>
@@ -334,8 +342,8 @@
         <target>Utilizar directorio usuario</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Cuando se conecte un usuario del front end, utiliza su directorio home como archivo fuente.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Utilice el directorio principal como origen de archivo si hay un socio autenticado.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

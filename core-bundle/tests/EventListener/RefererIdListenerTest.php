@@ -8,14 +8,15 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\RefererIdListener;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the RefererIdListener class.
@@ -30,7 +31,7 @@ class RefererIdListenerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $listener = new RefererIdListener($this->mockTokenManager());
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\RefererIdListener', $listener);
     }
@@ -40,16 +41,14 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenAddedToRequest()
     {
-        /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager());
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
@@ -61,16 +60,14 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenNotAddedToFrontendRequest()
     {
-        /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager());
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
@@ -81,16 +78,14 @@ class RefererIdListenerTest extends TestCase
      */
     public function testTokenNotAddedToSubrequest()
     {
-        /** @var HttpKernelInterface $kernel */
-        $kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', ['test', false]);
+        $kernel = $this->createMock(KernelInterface::class);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager());
-        $listener->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));

@@ -26,20 +26,25 @@
 
   <div id="container" class="cf">
     <div id="main">
-      <p><?= Image::getHtml('stop.svg') ?></p>
       <form action="<?= $this->route('contao_backend_confirm') ?>" class="tl_form" method="post">
         <div class="tl_formbody_edit">
           <input type="hidden" name="FORM_SUBMIT" value="invalid_token_url">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-          <p id="link"><?= $this->link ?></p>
-          <dl>
+          <h1><?= $this->h1 ?></h1>
+          <p class="link"><?= $this->link ?></p>
+          <table>
             <?php foreach ($this->info as $key=>$info): ?>
-              <dt><?= $this->labels[$key] ?></dt>
-              <dd><?= $info ?></dd>
+              <tr>
+                <th scope="row"><?= $this->labels[$key] ?></th>
+                <td><?= $info ?></td>
+              </tr>
             <?php endforeach; ?>
-          </dl>
+          </table>
           <p><?= $this->explain ?></p>
-          <p><button type="submit" name="cancel" class="tl_submit" accesskey="s"><?= $this->cancel ?></button> <a href="<?= $this->href ?>"><?= $this->continue ?></a></p>
+          <div class="submit_container cf">
+            <button type="submit" name="cancel" class="tl_submit" accesskey="s"><?= $this->cancel ?></button>
+            <a href="<?= $this->href ?>"><?= $this->continue ?></a>
+          </div>
         </div>
       </form>
     </div>

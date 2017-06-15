@@ -137,29 +137,37 @@
         <source>Change your personal data or set a new password</source>
         <target>Modifier vos informations personnelles ou définir un nouveau mot de passe.</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>Feuilles de style</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
+        <target>Éléments de contenu</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Feuilles de style</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>Modules du front office</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>Présentations de page</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Champs</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>Dimensions des images</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>Dimensions des images &quot;media queries&quot;</target>
+        <source>Media queries</source>
+        <target>Media queries</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Présentations de page</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Modules du front office</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+        <target>Définitions de formatage</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>Feuilles de style</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

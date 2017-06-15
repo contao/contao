@@ -342,7 +342,7 @@
         <target>Назив и врста</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta information</source>
+        <source>Meta data</source>
         <target>Мета подаци</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">

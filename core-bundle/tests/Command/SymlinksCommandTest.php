@@ -8,11 +8,11 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Command;
+namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -35,7 +35,8 @@ class SymlinksCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/system/logs');
         $fs->remove($this->getRootDir().'/system/themes');
         $fs->remove($this->getRootDir().'/var/cache');
-        $fs->remove($this->getRootDir().'/web');
+        $fs->remove($this->getRootDir().'/web/assets');
+        $fs->remove($this->getRootDir().'/web/system');
     }
 
     /**
@@ -46,7 +47,7 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand('contao:symlinks');
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\SymlinksCommand', $command);
-        $this->assertEquals('contao:symlinks', $command->getName());
+        $this->assertSame('contao:symlinks', $command->getName());
     }
 
     /**
@@ -55,8 +56,9 @@ class SymlinksCommandTest extends TestCase
     public function testOutput()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('kernel.logs_dir', $this->getRootDir().'/var/logs');
+        $container->setParameter('kernel.project_dir', $this->getRootDir());
+        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.upload_path', 'app');
 
         $container->set(
@@ -71,7 +73,7 @@ class SymlinksCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertEquals(0, $code);
+        $this->assertSame(0, $code);
         $this->assertContains('web/system/modules/foobar/assets', $display);
         $this->assertContains('system/modules/foobar/assets', $display);
         $this->assertContains('web/system/modules/foobar/html', $display);
@@ -101,7 +103,7 @@ class SymlinksCommandTest extends TestCase
 
         $code = $tester->execute([]);
 
-        $this->assertEquals(1, $code);
+        $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
@@ -125,6 +127,6 @@ class SymlinksCommandTest extends TestCase
         $relativePath = $method->invoke($command, $this->getRootDir().'/var/logs');
 
         // The path should be normalized and shortened
-        $this->assertEquals('var/logs', $relativePath);
+        $this->assertSame('var/logs', $relativePath);
     }
 }

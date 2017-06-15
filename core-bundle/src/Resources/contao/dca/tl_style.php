@@ -376,11 +376,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['bgimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_style', 'filePicker')
-			),
+			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'context' => 'file', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'bgposition' => array
@@ -581,11 +577,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['liststyleimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_style', 'filePicker')
-			),
+			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'context' => 'file', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'own' => array
@@ -672,19 +664,6 @@ class tl_style extends Backend
 		}
 
 		return '';
-	}
-
-
-	/**
-	 * Return the file picker wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function filePicker(DataContainer $dc)
-	{
-		return ' <a href="contao/file.php?do='.Input::get('do').'&amp;table='.$dc->table.'&amp;field='.$dc->field.'&amp;value='.$dc->value.'" title="'.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['filepicker'])).'" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0])).'\',\'url\':this.href,\'id\':\''.$dc->field.'\',\'tag\':\'ctrl_'.$dc->field . ((Input::get('act') == 'editAll') ? '_' . $dc->id : '').'\',\'self\':this});return false">' . Image::getHtml('pickfile.svg', $GLOBALS['TL_LANG']['MSC']['filepicker']) . '</a>';
 	}
 
 
@@ -812,7 +791,35 @@ class tl_style extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
-		$this->checkPermission();
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_style WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
+		}
 
 		$objVersions = new Versions('tl_style', $intId);
 		$objVersions->initialize();
@@ -828,30 +835,44 @@ class tl_style extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+					$blnVisible = $callback($blnVisible, $dc);
 				}
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_style SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_style SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
-		$objVersions->create();
-
-		// Recreate the style sheet
-		$objStylesheet = $this->Database->prepare("SELECT pid FROM tl_style WHERE id=?")
-									    ->limit(1)
-									    ->execute($intId);
-
-		if ($objStylesheet->numRows)
+		if ($dc)
 		{
-			$this->import('StyleSheets');
-			$this->StyleSheets->updateStyleSheet($objStylesheet->pid);
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
 		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
+		$objVersions->create();
 	}
 }

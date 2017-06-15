@@ -326,7 +326,7 @@
         <target>Користи почетни директоријум</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
         <target>Сачувај фајл у почетни директоријум ако је корисник аутентификован.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
@@ -552,6 +552,10 @@
       <trans-unit id="tl_form_field.toggle.1">
         <source>Toggle the visibility of field ID %s</source>
         <target>Промени видљивост поља ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+        <target>Увези опције из CSV фајла</target>
       </trans-unit>
     </body>
   </file>

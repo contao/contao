@@ -70,14 +70,13 @@ class Maintenance extends \Backend implements \executable
 
 		if ($isLocked)
 		{
-			$objTemplate->class= 'tl_confirm';
+			$objTemplate->class= 'tl_error';
 			$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'];
 			$objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['maintenanceDisable'];
 		}
 		else
 		{
 			$objTemplate->class= 'tl_info';
-			$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['maintenanceDisabled'];
 			$objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['maintenanceEnable'];
 		}
 

@@ -10,7 +10,6 @@
 
 namespace Contao\CoreBundle\Config\Dumper;
 
-use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 

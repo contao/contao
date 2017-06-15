@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Monolog;
+namespace Contao\CoreBundle\Tests\Monolog;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the ContaoContextTest class.
@@ -35,7 +35,7 @@ class ContaoContextTest extends TestCase
     {
         $context = new ContaoContext('foo');
 
-        $this->assertEquals('foo', $context->getFunc());
+        $this->assertSame('foo', $context->getFunc());
         $this->assertNull($context->getAction());
         $this->assertNull($context->getUsername());
         $this->assertNull($context->getIp());
@@ -48,7 +48,7 @@ class ContaoContextTest extends TestCase
         $context->setBrowser('Mozilla');
         $context->setSource('Foo::bar()');
 
-        $this->assertEquals(
+        $this->assertSame(
             json_encode([
                 'func' => 'foo',
                 'action' => 'action',
@@ -62,11 +62,11 @@ class ContaoContextTest extends TestCase
 
     /**
      * Tests passing an empty function name.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testEmptyFunctionName()
     {
+        $this->expectException('InvalidArgumentException');
+
         new ContaoContext('');
     }
 }

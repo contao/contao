@@ -20,30 +20,73 @@ basis for your application.
 Installation
 ------------
 
-Edit your `composer.json` file and add the following requirement:
+Edit your `composer.json` file and add the following:
 
 ```json
 "require": {
-    "contao/core-bundle": "~4.2"
+    "contao/core-bundle": "^4.4"
+}
+"config": {
+    "component-dir": "assets"
+},
+"post-install-cmd": [
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::addDirectories",
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::generateSymlinks"
+],
+"post-update-cmd": [
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::addDirectories",
+    "Contao\\CoreBundle\\Composer\\ScriptHandler::generateSymlinks"
+]
+```
+
+Then run `php composer.phar update` to install the vendor files.
+
+
+Activation
+----------
+
+Remove the `parameters.yml` import from your `app/config/config.yml` file:
+
+```yml
+imports:
+    - { resource: parameters.yml } # <-- remove this line
+    - { resource: security.yml }
+```
+
+Then adjust to your `app/AppKernel.php` file:
+
+```php
+// app/AppKernel.php
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = [
+            // ...
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new Knp\Bundle\TimeBundle\KnpTimeBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
+            new Nelmio\SecurityBundle\NelmioSecurityBundle(),
+            new Contao\CoreBundle\ContaoCoreBundle(),
+        ];
+    }
+
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        $rootDir = $this->getRootDir();
+
+        if (file_exists($rootDir.'/config/parameters.yml')) {
+            $loader->load($rootDir.'/config/parameters.yml');
+        }
+
+        $loader->load($rootDir.'/config/config_'.$this->getEnvironment().'.yml');
+    }
 }
 ```
 
-Edit your `app/config/config.yml` file and add the following:
 
-```yml
-# Contao configuration
-contao:
-    # Required parameters
-    prepend_locale: true
-    encryption_key: "%kernel.secret%"
-
-    # Optional parameters
-    url_suffix:           .html
-    upload_path:          files
-    csrf_token_name:      contao_csrf_token
-    pretty_error_screens: true
-    error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
-```
+Configuration
+-------------
 
 Add the Contao routes to your `app/config/routing.yml` file:
 
@@ -52,43 +95,87 @@ ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
-Replace the content of your `app/config/security.yml` file with the following:
+Edit your `app/config/security.yml` file:
 
 ```yml
-imports:
-    - { resource: "@ContaoCoreBundle/Resources/config/security.yml" }
+security:
+    providers:
+        contao.security.user_provider:
+            id: contao.security.user_provider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+
+        install:
+            pattern: ^/(contao/install|install\.php)
+            security: false
+
+        backend:
+            request_matcher: contao.routing.backend_matcher
+            stateless: true
+            simple_preauth:
+                authenticator: contao.security.authenticator
+
+        frontend:
+            request_matcher: contao.routing.frontend_matcher
+            stateless: true
+            simple_preauth:
+                authenticator: contao.security.authenticator
+```
+
+Edit your `app/config/config.yml` file and add the following:
+
+```yml
+# Contao configuration
+contao:
+    # Required parameters
+    prepend_locale: "%prepend_locale%"
+
+    # Optional parameters
+    web_dir:              "%kernel.project_dir%/web"
+    encryption_key:       "%kernel.secret%"
+    url_suffix:           .html
+    upload_path:          files
+    csrf_token_name:      contao_csrf_token
+    pretty_error_screens: true
+    error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
+    image:
+        bypass_cache:     false
+        target_dir:       "%kernel.project_dir%/assets/images"
+        valid_extensions: ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
+        imagine_options:
+            jpeg_quality: 80
+            interlace:    plane
+    security:
+        disable_ip_check: false
+```
+
+You can also overwrite any parameter stored in the `localconfig.php` file:
+
+```yml
+# Contao configuration
+contao:
+    localconfig:
+        adminEmail: foo@bar.com
+        dateFormat: Y-m-d
 ```
 
 
-Meta package
-------------
+License
+-------
 
-There is a meta package at [contao/contao][4], which you can require in your
-`composer.json` to install all the default bundles at once:
+Contao is licensed under the terms of the LGPLv3.
 
-```json
-"require": {
-    "contao/contao": "~4.2"
-}
-```
 
-This is the same as:
+Getting support
+---------------
 
-```json
-"require": {
-    "contao/calendar-bundle": "~4.2",
-    "contao/comments-bundle": "~4.2",
-    "contao/core-bundle": "~4.2",
-    "contao/faq-bundle": "~4.2",
-    "contao/installation-bundle": "~1.1",
-    "contao/listing-bundle": "~4.2",
-    "contao/news-bundle": "~4.2",
-    "contao/newsletter-bundle": "~4.2"
-}
-```
+Visit the [support page][4] to learn about the available support options.
 
 
 [1]: https://contao.org
-[2]: http://symfony.com/
+[2]: https://symfony.com
 [3]: https://github.com/contao/standard-edition
-[4]: https://github.com/contao/contao
+[4]: https://contao.org/en/support.html

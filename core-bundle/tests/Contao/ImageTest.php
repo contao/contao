@@ -8,9 +8,9 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Contao;
+namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\Image;
 use Contao\System;
@@ -22,9 +22,10 @@ use Symfony\Component\Filesystem\Filesystem;
  * @author Martin Auswöger <https://github.com/ausi>
  * @author Yanick Witschi <https://github.com/Toflar>
  *
+ * @group contao3
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
- * @group legacy
  */
 class ImageTest extends TestCase
 {
@@ -38,7 +39,7 @@ class ImageTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = __DIR__.'/../../tmp';
+        self::$rootDir = dirname(dirname(__DIR__)).'/tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -90,22 +91,14 @@ class ImageTest extends TestCase
      */
     public function testConstruct()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -128,51 +121,34 @@ class ImageTest extends TestCase
 
     /**
      * Tests the object instantiation with a non-existent file.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructWithNonexistentFile()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(false))
         ;
+
+        $this->expectException('InvalidArgumentException');
 
         new Image($fileMock);
     }
 
     /**
      * Tests the object instantiation with an invalid extension.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructWithInvalidExtension()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -186,6 +162,8 @@ class ImageTest extends TestCase
                 }
             ))
         ;
+
+        $this->expectException('InvalidArgumentException');
 
         new Image($fileMock);
     }
@@ -210,22 +188,14 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithoutImportantPart($arguments, $expectedResult)
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) use ($arguments) {
@@ -254,14 +224,14 @@ class ImageTest extends TestCase
         $imageObj->setTargetHeight($arguments[1]);
         $imageObj->setResizeMode($arguments[4]);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedResult,
             $imageObj->computeResize()
         );
 
         $imageObj->setZoomLevel(50);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedResult,
             $imageObj->computeResize(),
             'Zoom 50 should return the same results if no important part is specified'
@@ -269,7 +239,7 @@ class ImageTest extends TestCase
 
         $imageObj->setZoomLevel(100);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedResult,
             $imageObj->computeResize(),
             'Zoom 100 should return the same results if no important part is specified'
@@ -671,22 +641,14 @@ class ImageTest extends TestCase
      */
     public function testComputeResizeWithImportantPart($arguments, $expectedResult)
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) use ($arguments) {
@@ -717,7 +679,7 @@ class ImageTest extends TestCase
         $imageObj->setZoomLevel($arguments[5]);
         $imageObj->setImportantPart($arguments[6]);
 
-        $this->assertEquals($expectedResult, $imageObj->computeResize());
+        $this->assertSame($expectedResult, $imageObj->computeResize());
     }
 
     /**
@@ -868,22 +830,14 @@ class ImageTest extends TestCase
      */
     public function testSettersAndGetters()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -912,7 +866,9 @@ class ImageTest extends TestCase
         $imageObj = new Image($fileMock);
 
         $this->assertFalse($imageObj->getForceOverride());
+
         $imageObj->setForceOverride(true);
+
         $this->assertTrue($imageObj->getForceOverride());
 
         $this->assertSame($imageObj->getImportantPart(), [
@@ -1011,22 +967,14 @@ class ImageTest extends TestCase
      */
     public function testGetCacheName($arguments, $expectedCacheName)
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) use ($arguments) {
@@ -1119,27 +1067,17 @@ class ImageTest extends TestCase
 
     /**
      * Tests the setZoomLevel() with a negative out of bounds value.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testSetZoomOutOfBoundsNegative()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -1155,32 +1093,25 @@ class ImageTest extends TestCase
         ;
 
         $imageObj = new Image($fileMock);
+
+        $this->expectException('InvalidArgumentException');
+
         $imageObj->setZoomLevel(-1);
     }
 
     /**
      * Tests the setZoomLevel() method with a positive out of bounds value.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testSetZoomOutOfBoundsPositive()
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
-        $fileMock = $this
-            ->getMockBuilder('Contao\File')
-            ->setMethods(['__get', 'exists'])
-            ->setConstructorArgs(['dummy.jpg'])
-            ->getMock()
-        ;
+        $fileMock = $this->createMock(File::class);
 
         $fileMock
-            ->expects($this->any())
             ->method('exists')
             ->will($this->returnValue(true))
         ;
 
         $fileMock
-            ->expects($this->any())
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
@@ -1196,6 +1127,9 @@ class ImageTest extends TestCase
         ;
 
         $imageObj = new Image($fileMock);
+
+        $this->expectException('InvalidArgumentException');
+
         $imageObj->setZoomLevel(101);
     }
 
@@ -1205,9 +1139,9 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
-     * @dataProvider getLegacyGet
+     * @dataProvider getGetLegacy
      */
-    public function testLegacyGet($arguments, $expectedResult)
+    public function testGetLegacy($arguments, $expectedResult)
     {
         $result = Image::get($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
 
@@ -1215,11 +1149,11 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testLegacyGet() method.
+     * Provides the data for the testGetLegacy() method.
      *
      * @return array
      */
-    public function getLegacyGet()
+    public function getGetLegacy()
     {
         // original image, target width, target height, resize mode, target, force override
         // expected result
@@ -1241,9 +1175,9 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
-     * @dataProvider getLegacyResize
+     * @dataProvider getResizeLegacy
      */
-    public function testLegacyResize($arguments, $expectedResult)
+    public function testResizeLegacy($arguments, $expectedResult)
     {
         $result = Image::resize($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
 
@@ -1251,11 +1185,11 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testLegacyGet() method.
+     * Provides the data for the testGetLegacy() method.
      *
      * @return array
      */
-    public function getLegacyResize()
+    public function getResizeLegacy()
     {
         // original image, target width, target height, resize mode
         // expected result
@@ -1370,17 +1304,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1409,17 +1343,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1446,17 +1380,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1484,17 +1418,17 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertEquals('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**
@@ -1520,7 +1454,7 @@ class ImageTest extends TestCase
 
         $resultFile = new \File($imageObj->getResizedPath());
 
-        $this->assertEquals($file->path, $resultFile->path);
+        $this->assertSame($file->path, $resultFile->path);
     }
 
     /**
@@ -1550,17 +1484,17 @@ class ImageTest extends TestCase
         $imageObj->executeResize();
 
         $resultFile = new \File($imageObj->getResizedPath());
-        $this->assertEquals(100, $resultFile->width);
-        $this->assertEquals(100, $resultFile->height);
+        $this->assertSame(100, $resultFile->width);
+        $this->assertSame(100, $resultFile->height);
 
         $doc = new \DOMDocument();
         $doc->loadXML(gzdecode($resultFile->getContent()));
 
-        $this->assertEquals('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertEquals('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertEquals('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertEquals('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertEquals('100', $doc->documentElement->firstChild->getAttribute('height'));
+        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
+        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
+        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
     /**

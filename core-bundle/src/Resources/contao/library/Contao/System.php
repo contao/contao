@@ -149,11 +149,20 @@ abstract class System
 	{
 		$strKey = $strKey ?: $strClass;
 
+		if (is_object($strKey))
+		{
+			$strKey = get_class($strClass);
+		}
+
 		if ($blnForce || !isset($this->arrObjects[$strKey]))
 		{
 			$container = static::getContainer();
 
-			if (!class_exists($strClass) && $container->has($strClass))
+			if (is_object($strClass))
+			{
+				$this->arrObjects[$strKey] = $strClass;
+			}
+			elseif (!class_exists($strClass) && $container->has($strClass))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
@@ -182,11 +191,20 @@ abstract class System
 	{
 		$strKey = $strKey ?: $strClass;
 
+		if (is_object($strKey))
+		{
+			$strKey = get_class($strClass);
+		}
+
 		if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
 		{
 			$container = static::getContainer();
 
-			if (!class_exists($strClass) && $container->has($strClass))
+			if (is_object($strClass))
+			{
+				static::$arrStaticObjects[$strKey] = $strClass;
+			}
+			elseif (!class_exists($strClass) && $container->has($strClass))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
@@ -238,7 +256,7 @@ abstract class System
 	 */
 	public static function log($strText, $strFunction, $strCategory)
 	{
-		trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
+		@trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
 
 		$level = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 		$logger = static::getContainer()->get('monolog.logger.contao');
@@ -373,7 +391,7 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		// Prepare the XLIFF loader
-		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.root_dir'), true);
+		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
 
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
 
@@ -796,7 +814,7 @@ abstract class System
 			$strName = TL_ROOT . '/' . $strName;
 		}
 
-		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.root_dir'), $blnLoad);
+		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), $blnLoad);
 
 		return $loader->load($strName, $strLanguage);
 	}

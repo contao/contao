@@ -12,7 +12,7 @@ $image = Image::get($objSubfiles->path, 80, 60, 'center_center');
 
 // New syntax
 $container = System::getContainer();
-$rootDir = dirname($container->getParameter('kernel.root_dir'));
+$rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
     ->get('contao.image.image_factory')
@@ -30,7 +30,7 @@ $image = Image::create($path, [400, 50, 'box'])
 
 // New syntax
 $container = System::getContainer();
-$rootDir = dirname($container->getParameter('kernel.root_dir'));
+$rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
     ->get('contao.image.image_factory')
@@ -206,26 +206,33 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
 have been deprecated and will be removed in Contao 5.0.
 
-Use the `kernel.root_dir` instead of `TL_ROOT`:
+Use the `kernel.project_dir` instead of `TL_ROOT`:
 
 ```php
-$rootDir = dirname(System::getContainer()->getParameter('kernel.root_dir'));
+$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 ```
 
-Use the `ScopeAwareTrait` trait instead of using `TL_MODE`:
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
 
 ```php
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Test {
-    use ScopeAwareTrait;
+    private $requestStack;
+    private $scopeMatcher;
+ 
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {    
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
 
     public function isBackend() {
-        return $this->isBackendScope();
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
     }
 
     public function isFrontend() {
-        return $this->isFrontendScope();
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
     }
 }
 ```
@@ -310,3 +317,24 @@ $GLOBALS['TL_DCA']['tl_example'] = array
 );
 
 ```
+
+
+### dcaconfig.php
+
+Using the `dcaconfig.php` file to adjust a data container is deprecated in
+Contao 4.0 and will no longer be supported in Contao 5.0. Add the DCA files
+with your modifications to the `app/Resources/contao/dca` folder instead.
+
+
+#### initconfig.php
+
+Using the `initconfig.php` file to customize the initialization process is
+deprecated in Contao 4.0 and will no longer be supported in Contao 5.0.
+Subscribe to one of the Symfony events instead (e.g. `kernel.request`).
+
+
+### langconfig.php
+
+Using the `langconfig.php` file to adjust translations is deprecated in Contao
+4.0 and will no longer be supported in Contao 5.0. Add the language files with
+your modifications to the `app/Resources/contao/languages` folder instead.

@@ -30,16 +30,6 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
-    {
-        parent::configure();
-
-        $this->setName('doctrine:migrations:diff');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var Application $application */
@@ -53,5 +43,15 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
         );
 
         parent::execute($input, $output);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        parent::configure();
+
+        $this->setName('doctrine:migrations:diff');
     }
 }

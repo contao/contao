@@ -25,7 +25,7 @@ class ModuleCustomnav extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_navigation';
+	protected $strTemplate = 'mod_customnav';
 
 
 	/**

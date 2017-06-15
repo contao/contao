@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -169,7 +169,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['filemounts'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
+			'eval'                    => array('multiple'=>true, 'files'=>false, 'fieldType'=>'checkbox'),
 			'sql'                     => "blob NULL"
 		),
 		'fop' => array
@@ -212,6 +212,15 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'options'                 => array('create', 'delete'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'amg' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['amg'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
 		),
@@ -422,10 +431,40 @@ class tl_user_group extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
 		// Check the field access permissions
 		if (!$this->User->hasAccess('tl_user_group::disable', 'alexf'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user group ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_user_group WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
 		}
 
 		$objVersions = new Versions('tl_user_group', $intId);
@@ -442,18 +481,43 @@ class tl_user_group extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+					$blnVisible = $callback($blnVisible, $dc);
 				}
 			}
 		}
 
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_user_group SET tstamp=". time() .", disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_user_group SET tstamp=$time, disable='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->disable = ($blnVisible ? '1' : '');
+		}
 
 		$objVersions->create();
 	}

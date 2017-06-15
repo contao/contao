@@ -67,7 +67,11 @@ class AddPackagesPass implements CompilerPassInterface
 
         foreach ($json as $package) {
             if (isset($package['version'])) {
-                $packages[$package['name']] = $package['version'];
+                if (isset($package['extra']['branch-alias'][$package['version']])) {
+                    $packages[$package['name']] = $package['extra']['branch-alias'][$package['version']];
+                } else {
+                    $packages[$package['name']] = $package['version'];
+                }
             }
         }
 

@@ -62,8 +62,8 @@
         <target>Отключить планировщик команд</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and execute the cron.php script by a real cron job (which you have to set up manually).</source>
-        <target>Отключить планировщик команд и выполнять сценарий cron.php (необходимо установить вручную).</target>
+        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
+        <target>Отключить планировщик периодических команд и запускать &lt;em&gt;_contao/cron&lt;/em&gt; как задания cron (необходимо установить вручную).</target>
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.0">
         <source>Minify the markup</source>

@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Doctrine\Schema;
+namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
@@ -27,8 +27,8 @@ class MigrationsSchemaProviderTest extends DcaSchemaProviderTest
     public function testInstantiation()
     {
         $provider = new MigrationsSchemaProvider(
-            $this->getMock(ContaoFrameworkInterface::class),
-            $this->getMockBuilder(Registry::class)->disableOriginalConstructor()->getMock()
+            $this->createMock(ContaoFrameworkInterface::class),
+            $this->createMock(Registry::class)
         );
 
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider', $provider);

@@ -11,13 +11,25 @@
 namespace Contao\CoreBundle\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
+use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 /**
  * Plugin for the Contao Manager.
@@ -32,22 +44,25 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
+            BundleConfig::create(KnpMenuBundle::class),
             BundleConfig::create(KnpTimeBundle::class),
+            BundleConfig::create(HeaderReplayBundle::class),
             BundleConfig::create(ContaoCoreBundle::class)
                 ->setReplace(['core'])
                 ->setLoadAfter(
                     [
-                        'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-                        'Symfony\Bundle\SecurityBundle\SecurityBundle',
-                        'Symfony\Bundle\TwigBundle\TwigBundle',
-                        'Symfony\Bundle\MonologBundle\MonologBundle',
-                        'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle',
-                        'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
-                        'Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle',
-                        'Knp\Bundle\TimeBundle\KnpTimeBundle',
-                        'Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle',
-                        'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle',
-                        'Contao\ManagerBundle\ContaoManagerBundle',
+                        FrameworkBundle::class,
+                        SecurityBundle::class,
+                        TwigBundle::class,
+                        MonologBundle::class,
+                        SwiftmailerBundle::class,
+                        DoctrineBundle::class,
+                        DoctrineCacheBundle::class,
+                        KnpMenuBundle::class,
+                        KnpTimeBundle::class,
+                        LexikMaintenanceBundle::class,
+                        SensioFrameworkExtraBundle::class,
+                        ContaoManagerBundle::class,
                     ]
                 ),
         ];

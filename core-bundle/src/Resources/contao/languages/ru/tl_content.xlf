@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Добавить изображение к элементу контента.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+        <target>Переопределить метаданные</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+        <target>Переопределить метаданные изображения в файл-менеджере.</target>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Исходный файл</target>
@@ -49,11 +57,11 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>Введите альтернативный текст для изображения (атрибут &lt;em&gt;alt&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Название</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
+        <target>Название изображения</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Введите название изображения (атрибут &lt;em&gt;title&lt;/em&gt;).</target>
       </trans-unit>
@@ -334,8 +342,8 @@
         <target>Использовать домашний каталог</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Использовать домашний каталог как источник файлов при авторизации пользователя.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Использовать домашний каталог как источник файла, если участник авторизован.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

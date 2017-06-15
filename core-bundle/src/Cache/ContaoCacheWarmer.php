@@ -133,7 +133,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
-            if (in_array($file->getBasename(), $processed)) {
+            if (in_array($file->getBasename(), $processed, true)) {
                 continue;
             }
 
@@ -169,7 +169,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             foreach ($files as $file) {
                 $name = substr($file->getBasename(), 0, -4);
 
-                if (in_array($name, $processed)) {
+                if (in_array($name, $processed, true)) {
                     continue;
                 }
 
@@ -201,7 +201,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
-            if (in_array($file->getBasename(), $processed)) {
+            if (in_array($file->getBasename(), $processed, true)) {
                 continue;
             }
 
@@ -241,7 +241,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         foreach ($files as $file) {
             $mapper[$file->getBasename('.html5')] = rtrim(
-                $this->filesystem->makePathRelative($file->getPath(), dirname($this->rootDir)),
+                $this->filesystem->makePathRelative($file->getPath(), $this->rootDir),
                 '/'
             );
         }

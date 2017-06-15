@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Config\Loader;
+namespace Contao\CoreBundle\Tests\Config\Loader;
 
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the XliffFileLoader class.
@@ -56,7 +56,7 @@ class XliffFileLoaderTest extends TestCase
      */
     public function testLoadIntoString()
     {
-        $loader = new XliffFileLoader($this->getRootDir().'/app', false);
+        $loader = new XliffFileLoader($this->getRootDir(), false);
 
         $source = <<<'TXT'
 
@@ -88,7 +88,7 @@ $GLOBALS['TL_LANG']['MSC']['second_file'] = 'This is the source';
 
 TXT;
 
-        $this->assertEquals(
+        $this->assertSame(
             $source,
             $loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
@@ -96,7 +96,7 @@ TXT;
             )
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $target,
             $loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
@@ -120,28 +120,28 @@ TXT;
             'en'
         );
 
-        $this->assertEquals('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
-        $this->assertEquals('This is the second source', $GLOBALS['TL_LANG']['MSC']['second'][0]);
-        $this->assertEquals('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
+        $this->assertSame('This is the first source', $GLOBALS['TL_LANG']['MSC']['first']);
+        $this->assertSame('This is the second source', $GLOBALS['TL_LANG']['MSC']['second'][0]);
+        $this->assertSame('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
 
         $loader->load(
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
             'de'
         );
 
-        $this->assertEquals('This is the first target', $GLOBALS['TL_LANG']['MSC']['first']);
-        $this->assertEquals('This is the second target', $GLOBALS['TL_LANG']['MSC']['second'][0]);
-        $this->assertEquals('This is the third target', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
+        $this->assertSame('This is the first target', $GLOBALS['TL_LANG']['MSC']['first']);
+        $this->assertSame('This is the second target', $GLOBALS['TL_LANG']['MSC']['second'][0]);
+        $this->assertSame('This is the third target', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 
     /**
      * Tests loading a file with too many nesting levels.
-     *
-     * @expectedException \OutOfBoundsException
      */
     public function testTooManyLevels()
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
+
+        $this->expectException('OutOfBoundsException');
 
         $loader->load(
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',

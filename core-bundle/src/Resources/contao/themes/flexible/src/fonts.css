@@ -6,44 +6,98 @@
  * @license LGPL-3.0+
  */
 
-/* Roboto (https://google-webfonts-helper.herokuapp.com/fonts/roboto?subsets=latin-ext,latin) */
+/* Lato (http://www.latofonts.com/lato-free-fonts/) */
 @font-face {
-	font-family:"Roboto";
-	font-weight:300;
+	font-family:"Lato Retina";
+	src:local("Lato Light"),
+		url("fonts/Lato-Light.woff2") format("woff2"),
+		url("fonts/Lato-Light.woff") format("woff");
+	font-weight:normal;
 	font-style:normal;
-	src:local("Roboto Light"),
-		url("fonts/roboto-v15-latin-ext_latin-300.woff2") format("woff2"),
-		url("fonts/roboto-v15-latin-ext_latin-300.woff") format("woff"),
-		url("fonts/roboto-v15-latin-ext_latin-300.ttf") format("truetype");
+	text-rendering:optimizeLegibility;
 }
 @font-face {
-	font-family:"Roboto";
-	font-weight:500;
+	font-family:"Lato Retina";
+	src:local("Lato Light Italic"),
+		url("fonts/Lato-LightItalic.woff2") format("woff2"),
+		url("fonts/Lato-LightItalic.woff") format("woff");
+	font-weight:normal;
+	font-style:italic;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato Retina";
+	src:local("Lato Medium"),
+		url("fonts/Lato-Medium.woff2") format("woff2"),
+		url("fonts/Lato-Medium.woff") format("woff");
+	font-weight:bold;
 	font-style:normal;
-	src:local("Roboto Medium"),
-		url("fonts/roboto-v15-latin-ext_latin-500.woff2") format("woff2"),
-		url("fonts/roboto-v15-latin-ext_latin-500.woff") format("woff"),
-		url("fonts/roboto-v15-latin-ext_latin-500.ttf") format("truetype");
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato Retina";
+	src:local("Lato Medium Italic"),
+		url("fonts/Lato-MediumItalic.woff2") format("woff2"),
+		url("fonts/Lato-MediumItalic.woff") format("woff");
+	font-weight:bold;
+	font-style:italic;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato";
+	src:local("Lato Regular"),
+		url("fonts/Lato-Regular.woff2") format("woff2"),
+		url("fonts/Lato-Regular.woff") format("woff");
+	font-weight:normal;
+	font-style:normal;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato";
+	src:local("Lato Regular Italic"),
+		url("fonts/Lato-Italic.woff2") format("woff2"),
+		url("fonts/Lato-Italic.woff") format("woff");
+	font-weight:normal;
+	font-style:italic;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato";
+	src:local("Lato Semibold"),
+		url("fonts/Lato-Semibold.woff2") format("woff2"),
+		url("fonts/Lato-Semibold.woff") format("woff");
+	font-weight:bold;
+	font-style:normal;
+	text-rendering:optimizeLegibility;
+}
+@font-face {
+	font-family:"Lato";
+	src:local("Lato Semibold Italic"),
+		url("fonts/Lato-SemiboldItalic.woff2") format("woff2"),
+		url("fonts/Lato-SemiboldItalic.woff") format("woff");
+	font-weight:bold;
+	font-style:italic;
+	text-rendering:optimizeLegibility;
 }
 
 /* Roboto Mono (https://google-webfonts-helper.herokuapp.com/fonts/roboto-mono?subsets=latin) */
 @font-face {
 	font-family:"Roboto Mono";
-	font-weight:300;
-	font-style:normal;
 	src:local("Roboto Mono Light"),
 		url("fonts/roboto-mono-v4-latin-ext_latin-300.woff2") format("woff2"),
-		url("fonts/roboto-mono-v4-latin-ext_latin-300.woff") format("woff"),
-		url("fonts/roboto-mono-v4-latin-ext_latin-300.ttf") format("truetype");
+		url("fonts/roboto-mono-v4-latin-ext_latin-300.woff") format("woff");
+	font-weight:normal;
+	font-style:normal;
+	text-rendering:optimizeLegibility;
 }
 
 /* Architects Daughter (https://google-webfonts-helper.herokuapp.com/fonts/architects-daughter?subsets=latin) */
 @font-face {
 	font-family:"Architects Daughter";
-	font-weight:400;
-	font-style:normal;
 	src:local("Architects Daughter"),
 		url("fonts/architects-daughter-v6-latin-regular.woff2") format("woff2"),
-		url("fonts/architects-daughter-v6-latin-regular.woff") format("woff"),
-		url("fonts/architects-daughter-v6-latin-regular.ttf") format("truetype");
+		url("fonts/architects-daughter-v6-latin-regular.woff") format("woff");
+	font-weight:normal;
+	font-style:normal;
+	text-rendering:optimizeLegibility;
 }

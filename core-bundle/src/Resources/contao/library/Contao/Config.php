@@ -276,34 +276,10 @@ class Config
 			opcache_invalidate(TL_ROOT . '/system/config/localconfig.php', true);
 		}
 
-		// Reset the Zend Optimizer+ cache (unfortunately no API to delete just a single file)
-		if (function_exists('accelerator_reset'))
-		{
-			accelerator_reset();
-		}
-
 		// Recompile the APC file (thanks to Trenker)
 		if (function_exists('apc_compile_file') && !ini_get('apc.stat'))
 		{
 			apc_compile_file(TL_ROOT . '/system/config/localconfig.php');
-		}
-
-		// Purge the eAccelerator cache (thanks to Trenker)
-		if (function_exists('eaccelerator_purge') && !ini_get('eaccelerator.check_mtime'))
-		{
-			@eaccelerator_purge();
-		}
-
-		// Purge the XCache cache (thanks to Trenker)
-		if (function_exists('xcache_count') && !ini_get('xcache.stat'))
-		{
-			if (($count = xcache_count(XC_TYPE_PHP)) > 0)
-			{
-				for ($id=0; $id<$count; $id++)
-				{
-					xcache_clear_cache(XC_TYPE_PHP, $id);
-				}
-			}
 		}
 
 		$this->blnIsModified = false;

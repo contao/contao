@@ -41,6 +41,12 @@
         <source>Here you can override the global back end theme.</source>
         <target>Her kan du tilsidesætte det globale back end -tema.</target>
       </trans-unit>
+      <trans-unit id="tl_user.limitWidth.0">
+        <source>Limit width</source>
+      </trans-unit>
+      <trans-unit id="tl_user.limitWidth.1">
+        <source>Limit the maximum width of the back end.</source>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
         <target>Fil uploader</target>
@@ -200,6 +206,13 @@
         <source>Here you can define the form permissions.</source>
         <target>Her kan du definere tilladelser for formularer</target>
       </trans-unit>
+      <trans-unit id="tl_user.amg.0">
+        <source>Allowed member groups</source>
+        <target>Tilladte medlemsgrupper</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.1">
+        <source>Members of these groups can be used in the front end preview.</source>
+      </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
         <target>Deaktiver</target>
@@ -275,6 +288,10 @@
       <trans-unit id="tl_user.forms_legend">
         <source>Form permissions</source>
         <target>Formular tilladelser</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Tilladte medlemsgrupper</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

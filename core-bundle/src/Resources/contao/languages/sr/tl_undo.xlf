@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.0">
         <source>Affected rows</source>
-        <target>Редови над којима је извршена промена</target>
+        <target>Редови над којима је вршена/врши се промена</target>
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.1">
         <source>Number of records included in the undo step</source>
-        <target>Број записа укључених у враћање претходне верзије</target>
+        <target>Број корака у процедури за &quot;Undo&quot;</target>
       </trans-unit>
       <trans-unit id="tl_undo.query.0">
         <source>Details</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.query.1">
         <source>Details of the undo step</source>
-        <target>Детаљи корака за враћање претходне верзије</target>
+        <target>Детаљи &quot;Undo&quot; корака</target>
       </trans-unit>
       <trans-unit id="tl_undo.data.0">
         <source>Data</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.data.1">
         <source>Raw data of the undo step</source>
-        <target>Неформатирани подаци претходних верзија</target>
+        <target>Неформатирани подаци &quot;Undo&quot; корака</target>
       </trans-unit>
       <trans-unit id="tl_undo.show.0">
         <source>Show details</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo.1">
         <source>Restore entry ID %s</source>
-        <target>Врати садржај записа ID %s</target>
+        <target>Обнови садржај записа са ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -57,6 +57,11 @@ class BackendTemplate extends \Template
 		// User agent class (see #3074 and #6277)
 		$this->ua = \Environment::get('agent')->class;
 
+		if (\Config::get('limitWidth'))
+		{
+			$this->ua .= ' lw';
+		}
+
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && is_array($GLOBALS['TL_CSS']))
 		{
@@ -132,8 +137,7 @@ class BackendTemplate extends \Template
 					. 'collapse:"' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '",'
 					. 'expand:"' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '",'
 					. 'loading:"' . $GLOBALS['TL_LANG']['MSC']['loadingData'] . '",'
-					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '",'
-					. 'picker:"' . $GLOBALS['TL_LANG']['MSC']['pickerNoSelection'] . '"'
+					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '"'
 				. '},'
 				. 'script_url:"' . TL_ASSETS_URL . '",'
 				. 'path:"' . \Environment::get('path') . '",'

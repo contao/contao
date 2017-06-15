@@ -10,16 +10,19 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DcaFilterInterface;
+
 
 /**
  * Provide methods to handle input field "page tree".
  *
  * @property string  $orderField
  * @property boolean $multiple
+ * @property array   $rootNodes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageTree extends \Widget
+class PageTree extends \Widget implements DcaFilterInterface
 {
 
 	/**
@@ -75,6 +78,39 @@ class PageTree extends \Widget
 
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getDcaFilter()
+	{
+		$arrFilters = array();
+
+		// Predefined node set (see #3563)
+		if (is_array($this->rootNodes))
+		{
+			// Allow only those roots that are allowed in root nodes
+			if (!empty($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']))
+			{
+				$root = array_intersect(array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')), $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']);
+
+				if (empty($root))
+				{
+					$root = $this->rootNodes;
+					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ''; // hide the breadcrumb menu
+				}
+
+				$arrFilters['root'] = $this->eliminateNestedPages($root);
+			}
+			else
+			{
+				$arrFilters['root'] = $this->eliminateNestedPages($this->rootNodes);
+			}
+		}
+
+		return $arrFilters;
+	}
+
+
+	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -83,6 +119,13 @@ class PageTree extends \Widget
 	 */
 	protected function validator($varInput)
 	{
+		$this->checkValue($varInput);
+
+		if ($this->hasErrors())
+		{
+			return '';
+		}
+
 		// Store the order value
 		if ($this->orderField != '')
 		{
@@ -117,6 +160,34 @@ class PageTree extends \Widget
 			$arrValue = array_map('intval', array_filter(explode(',', $varInput)));
 
 			return $this->multiple ? $arrValue : $arrValue[0];
+		}
+	}
+
+
+	/**
+	 * Check the selected value
+	 *
+	 * @param mixed $varInput
+	 */
+	protected function checkValue($varInput)
+	{
+		if ($varInput == '' || !is_array($this->rootNodes))
+		{
+			return;
+		}
+
+		if (strpos($varInput, ',') === false)
+		{
+			$arrIds = array(intval($varInput));
+		}
+		else
+		{
+			$arrIds = array_map('intval', array_filter(explode(',', $varInput)));
+		}
+
+		if (count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
+		{
+			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}
 	}
 
@@ -184,14 +255,29 @@ class PageTree extends \Widget
 		}
 
 		$return .= '</ul>
-    <p><a href="contao/page.php?do='.\Input::get('do').'&amp;table='.$this->strTable.'&amp;field='.$this->strField.'&amp;act=show&amp;id='.$this->activeRecord->id.'&amp;value='.implode(',', $arrSet).'&amp;rt='.REQUEST_TOKEN.'" class="tl_submit" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])).'\',\'url\':this.href,\'id\':\''.$this->strId.'\'});return false">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>' . ($blnHasOrder ? '
+    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'page', 'context'=>'page', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', $arrSet), 'popup'=>1))) . '" class="tl_submit" id="pt_' . $this->strField . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <script>
+      $("pt_' . $this->strField . '").addEvent("click", function(e) {
+        e.preventDefault();
+        Backend.openModalSelector({
+          "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
+          "url": this.href,
+          "callback": function(table, value) {
+            new Request.Contao({
+              evalScripts: false,
+              onSuccess: function(txt, json) {
+                $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
+                json.javascript && Browser.exec(json.javascript);
+              }
+            }).post({"action":"reloadPagetree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+          }
+        });
+      });
+    </script>' . ($blnHasOrder ? '
     <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '') . '
   </div>';
 
-		if (!\Environment::get('isAjaxRequest'))
-		{
-			$return = '<div>' . $return . '</div>';
-		}
+		$return = '<div>' . $return . '</div>';
 
 		return $return;
 	}

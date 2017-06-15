@@ -8,13 +8,16 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Composer;
+namespace Contao\CoreBundle\Tests\Composer;
 
 use Composer\Composer;
+use Composer\Config;
+use Composer\Downloader\DownloadManager;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Script\Event;
 use Contao\CoreBundle\Composer\ScriptHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ScriptHandler class.
@@ -23,7 +26,7 @@ use Contao\CoreBundle\Composer\ScriptHandler;
  *
  * @preserveGlobalState disabled
  */
-class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
+class ScriptHandlerTest extends TestCase
 {
     /**
      * @var ScriptHandler
@@ -177,7 +180,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
+        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
     }
 
     /**
@@ -223,7 +226,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
+        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
     }
 
     /**
@@ -253,22 +256,22 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
         $method->setAccessible(true);
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $method->invokeArgs($this->handler, [$this->getComposerEvent()])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ' -v',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVerbose')])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ' -vv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVeryVerbose')])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             ' -vvv',
             $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isDebug')])
         );
@@ -315,24 +318,21 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockComposer(PackageInterface $package)
     {
-        $config = $this->getMock('Composer\Config');
-        $downloadManager = $this->getMock('Composer\Downloader\DownloadManager', [], [], '', false);
-        $composer = $this->getMock('Composer\Composer', ['getConfig', 'getDownloadManager', 'getPackage']);
+        $config = $this->createMock(Config::class);
+        $downloadManager = $this->createMock(DownloadManager::class);
+        $composer = $this->createMock(Composer::class);
 
         $composer
-            ->expects($this->any())
             ->method('getConfig')
             ->willReturn($config)
         ;
 
         $composer
-            ->expects($this->any())
             ->method('getDownloadManager')
             ->willReturn($downloadManager)
         ;
 
         $composer
-            ->expects($this->any())
             ->method('getPackage')
             ->willReturn($package)
         ;
@@ -349,10 +349,10 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockIO($method = null)
     {
-        $io = $this->getMock('Composer\IO\IOInterface');
+        $io = $this->createMock(IOInterface::class);
 
         if (null !== $method) {
-            $io->expects($this->any())->method($method)->willReturn(true);
+            $io->method($method)->willReturn(true);
         }
 
         return $io;
@@ -367,22 +367,19 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockPackage(array $extras = [])
     {
-        $package = $this->getMock('Composer\Package\PackageInterface');
+        $package = $this->createMock(PackageInterface::class);
 
         $package
-            ->expects($this->any())
             ->method('getTargetDir')
             ->willReturn('')
         ;
 
         $package
-            ->expects($this->any())
             ->method('getName')
             ->willReturn('foo/bar')
         ;
 
         $package
-            ->expects($this->any())
             ->method('getPrettyName')
             ->willReturn('foo/bar')
         ;

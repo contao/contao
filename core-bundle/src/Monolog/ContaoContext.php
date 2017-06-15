@@ -83,6 +83,22 @@ class ContaoContext
     }
 
     /**
+     * Returns a JSON representation of the object.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return json_encode([
+            'func' => $this->func,
+            'action' => $this->action,
+            'username' => $this->username,
+            'ip' => $this->ip,
+            'browser' => $this->browser,
+        ]);
+    }
+
+    /**
      * Returns the function name.
      *
      * @return string
@@ -190,21 +206,5 @@ class ContaoContext
     public function setSource($source)
     {
         $this->source = (string) $source;
-    }
-
-    /**
-     * Returns a JSON representation of the object.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return json_encode([
-            'func' => $this->func,
-            'action' => $this->action,
-            'username' => $this->username,
-            'ip' => $this->ip,
-            'browser' => $this->browser,
-        ]);
     }
 }

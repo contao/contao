@@ -178,14 +178,15 @@ into the following templates:
 The following templates have been renamed to match the content element or
 module key:
 
- * `ce_accordion`       -> `ce_accordionSingle`
- * `ce_accordion_start` -> `ce_accordionStart`
- * `ce_accordion_stop`  -> `ce_accordionStop`
- * `ce_slider_start`    -> `ce_sliderStart`
- * `ce_slider_stop`     -> `ce_sliderStop`
- * `mod_article_list`   -> `mod_articlelist`
- * `mod_article_nav`    -> `mod_articlenav`
- * `mod_random_image`   -> `mod_randomImage`
+ * `ce_accordion`        -> `ce_accordionSingle`
+ * `ce_accordion_start`  -> `ce_accordionStart`
+ * `ce_accordion_stop`   -> `ce_accordionStop`
+ * `ce_slider_start`     -> `ce_sliderStart`
+ * `ce_slider_stop`      -> `ce_sliderStop`
+ * `mod_article_list`    -> `mod_articlelist`
+ * `mod_article_nav`     -> `mod_articlenav`
+ * `mod_random_image`    -> `mod_randomImage`
+ * `mod_change_password` -> `mod_changePassword`
 
 The following templates have been consolidated:
 

@@ -53,7 +53,7 @@ class InsertTagsController extends Controller
         $this->framework->initialize();
 
         /** @var InsertTags $it */
-        $it = $this->framework->createInstance('Contao\InsertTags');
+        $it = $this->framework->createInstance(InsertTags::class);
 
         // Never cache these responses
         return (new Response($it->replace($insertTag, false)))->setPrivate();

@@ -13,9 +13,11 @@
     <div class="tl_formbody_edit">
       <input type="hidden" name="FORM_SUBMIT" value="tl_maintenance_mode">
       <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-      <div class="tl_tbox">
-        <p class="<?= $this->class ?>"><?= $this->explain ?></p>
-      </div>
+      <?php if ($this->explain): ?>
+        <div class="tl_message">
+          <p class="<?= $this->class ?>"><?= $this->explain ?></p>
+        </div>
+      <?php endif; ?>
     </div>
     <div class="tl_submit_container">
       <button type="submit" name="maintenance" class="tl_submit"><?= $this->submit ?></button>

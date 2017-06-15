@@ -503,12 +503,13 @@ abstract class Controller extends \System
 	/**
 	 * Generate a form and return it as string
 	 *
-	 * @param mixed  $varId     A form ID or a Model object
-	 * @param string $strColumn The column the form is in
+	 * @param mixed   $varId      A form ID or a Model object
+	 * @param string  $strColumn  The column the form is in
+	 * @param boolean $blnModule  Render the form as module
 	 *
 	 * @return string The form HTML markup
 	 */
-	public static function getForm($varId, $strColumn='main')
+	public static function getForm($varId, $strColumn='main', $blnModule=false)
 	{
 		if (is_object($varId))
 		{
@@ -529,9 +530,20 @@ abstract class Controller extends \System
 			}
 		}
 
-		$objRow->typePrefix = 'ce_';
+		$strClass = $blnModule ? \Module::findClass('form') : \ContentElement::findClass('form');
+
+		if (!class_exists($strClass))
+		{
+			static::log('Form class "'.$strClass.'" does not exist', __METHOD__, TL_ERROR);
+
+			return '';
+		}
+
+		$objRow->typePrefix = $blnModule ? 'mod_' : 'ce_';
 		$objRow->form = $objRow->id;
-		$objElement = new \Form($objRow, $strColumn);
+
+		/** @var \Form $objElement */
+		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
@@ -1431,12 +1443,13 @@ abstract class Controller extends \System
 	/**
 	 * Add an image to a template
 	 *
-	 * @param object  $objTemplate   The template object to add the image to
-	 * @param array   $arrItem       The element or module as array
-	 * @param integer $intMaxWidth   An optional maximum width of the image
-	 * @param string  $strLightboxId An optional lightbox ID
+	 * @param object     $objTemplate   The template object to add the image to
+	 * @param array      $arrItem       The element or module as array
+	 * @param integer    $intMaxWidth   An optional maximum width of the image
+	 * @param string     $strLightboxId An optional lightbox ID
+	 * @param FilesModel $objModel      An optional files model
 	 */
-	public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null)
+	public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null, FilesModel $objModel=null)
 	{
 		try
 		{
@@ -1540,12 +1553,74 @@ abstract class Controller extends \System
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
 		}
 
+		$arrMeta = array();
+
+		// Load the meta data
+		if ($objModel instanceof FilesModel)
+		{
+			if (TL_MODE == 'FE')
+			{
+				global $objPage;
+
+				$arrMeta = \Frontend::getMetaData($objModel->meta, $objPage->language);
+
+				if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
+				{
+					$arrMeta = \Frontend::getMetaData($objModel->meta, $objPage->rootFallbackLanguage);
+				}
+			}
+			else
+			{
+				$arrMeta = \Frontend::getMetaData($objModel->meta, $GLOBALS['TL_LANGUAGE']);
+			}
+
+			\Controller::loadDataContainer('tl_files');
+
+			// Add any missing fields
+			foreach (array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']) as $k)
+			{
+				if (!isset($arrMeta[$k]))
+				{
+					$arrMeta[$k] = '';
+				}
+			}
+
+			$arrMeta['imageTitle'] = $arrMeta['title'];
+			$arrMeta['imageUrl'] = $arrMeta['link'];
+			unset($arrMeta['title'], $arrMeta['link']);
+
+			// Add the meta data to the item
+			if (!$arrItem['overwriteMeta'])
+			{
+				foreach ($arrMeta as $k=>$v)
+				{
+					switch ($k)
+					{
+						case 'alt':
+						case 'imageTitle':
+							$arrItem[$k] = \StringUtil::specialchars($v);
+							break;
+
+						default:
+							$arrItem[$k] = $v;
+							break;
+					}
+				}
+			}
+		}
+
 		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);
 
-		// Only add the title if the image is not part of an image link
-		if (empty($arrItem['imageUrl']) && empty($arrItem['fullsize']))
+		// Move the title to the link tag so it is shown in the lightbox
+		if ($arrItem['fullsize'] && $arrItem['imageTitle'] && !$arrItem['linkTitle'])
 		{
-			$picture['title'] = \StringUtil::specialchars($arrItem['title']);
+			$arrItem['linkTitle'] = $arrItem['imageTitle'];
+			unset($arrItem['imageTitle']);
+		}
+
+		if (isset($arrItem['imageTitle']))
+		{
+			$picture['title'] = \StringUtil::specialchars($arrItem['imageTitle']);
 		}
 
 		$objTemplate->picture = $picture;
@@ -1598,16 +1673,19 @@ abstract class Controller extends \System
 			$objTemplate->attributes = ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
 		}
 
+		// Add the meta data to the template
+		foreach (array_keys($arrMeta) as $k)
+		{
+			$objTemplate->$k = $arrItem[$k];
+		}
+
 		// Do not urlEncode() here because getImage() already does (see #3817)
 		$objTemplate->src = TL_FILES_URL . $src;
-		$objTemplate->alt = \StringUtil::specialchars($arrItem['alt']);
-		$objTemplate->title = \StringUtil::specialchars($arrItem['title']);
-		$objTemplate->linkTitle = \StringUtil::specialchars($arrItem['linkTitle'] ?: $arrItem['title']);
+		$objTemplate->singleSRC = $arrItem['singleSRC'];
+		$objTemplate->linkTitle = $arrItem['linkTitle'] ?: $arrItem['title'];
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
 		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
 		$objTemplate->margin = static::generateMargin($arrMargin);
-		$objTemplate->caption = $arrItem['caption'];
-		$objTemplate->singleSRC = $arrItem['singleSRC'];
 		$objTemplate->addImage = true;
 	}
 

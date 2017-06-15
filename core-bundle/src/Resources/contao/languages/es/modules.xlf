@@ -137,29 +137,37 @@
         <source>Change your personal data or set a new password</source>
         <target>Este módulo permite al usuario actual cambiar su información personal como el nombre, correo electrónico o contraseña.</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>Hojas de estilo</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
+        <target>Elementos de contenido</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Hojas de estilo</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>Módulos del Front end</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>Diseño de página</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Campos</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>Tamaños de imágen</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>Tamaño de imagen tras consultas de medios</target>
+        <source>Media queries</source>
+        <target>Media queries</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Diseño de página</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Módulos del Front end</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+        <target>Definiciones de formato</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>Hojas de estilo</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

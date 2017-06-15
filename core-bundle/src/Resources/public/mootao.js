@@ -36,7 +36,7 @@ Request.Contao = new Class(
 	},
 
 	initialize: function(options) {
-		if (options) {
+		if (options && !options.url) {
 			// Try to replace the URL with the form action
 			try	{
 				this.options.url = options.field.getParent('form').getAttribute('action');
@@ -62,8 +62,10 @@ Request.Contao = new Class(
 		}
 
 		// Empty response
-		if (json == null) {
+		if (json === null) {
 			json = {'content':''};
+		} else if (typeof(json) != 'object') {
+			json = {'content':text};
 		}
 
 		// Isolate scripts and execute them
@@ -265,7 +267,11 @@ Class.refactor(Sortables,
 {
 	initialize: function(lists, options) {
 		options.dragOptions = Object.merge(options.dragOptions || {}, { preventDefault: (options.dragOptions && options.dragOptions.preventDefault) || Browser.Features.Touch });
-		options.dragOptions.unDraggableTags = ['input', 'a', 'textarea', 'select', 'option'];
+		if (options.dragOptions.unDraggableTags === undefined) {
+			options.dragOptions.unDraggableTags = this.options.unDraggableTags.filter(function(tag) {
+				return tag != 'button';
+			});
+		}
 		return this.previous.apply(this, arguments);
 	},
 

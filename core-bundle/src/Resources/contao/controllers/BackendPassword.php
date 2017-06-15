@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -50,13 +51,16 @@ class BackendPassword extends \Backend
 	 */
 	public function run()
 	{
+		/** @var Request $request */
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_password');
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_password')
 		{
-			$pw = \Input::postUnsafeRaw('password');
-			$cnf = \Input::postUnsafeRaw('confirm');
+			$pw = $request->request->get('password');
+			$cnf = $request->request->get('confirm');
 
 			// The passwords do not match
 			if ($pw != $cnf)
@@ -122,7 +126,8 @@ class BackendPassword extends \Backend
 		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));
-		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_change'];
+		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
+		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];

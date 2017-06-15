@@ -8,11 +8,13 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Routing;
+namespace Contao\CoreBundle\Tests\Routing;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\UrlGenerator;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGenerator as ParentUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -64,9 +66,9 @@ class UrlGeneratorTest extends TestCase
      */
     public function testRoute()
     {
-        $this->assertEquals('contao_frontend', $this->getGenerator(false, 0)->generate('foobar'));
-        $this->assertEquals('contao_frontend', $this->getGenerator(true, 0)->generate('foobar'));
-        $this->assertEquals('contao_frontend', $this->getGenerator(false, 0)->generate('foobar/test'));
+        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar'));
+        $this->assertSame('contao_frontend', $this->getGenerator(true, 0)->generate('foobar'));
+        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar/test'));
     }
 
     /**
@@ -74,9 +76,9 @@ class UrlGeneratorTest extends TestCase
      */
     public function testWithoutParameters()
     {
-        $this->assertEquals('foobar', $this->getGenerator()->generate('foobar')['alias']);
-        $this->assertEquals('foobar/test', $this->getGenerator()->generate('foobar/test')['alias']);
-        $this->assertEquals('foobar/article/test', $this->getGenerator()->generate('foobar/article/test')['alias']);
+        $this->assertSame('foobar', $this->getGenerator()->generate('foobar')['alias']);
+        $this->assertSame('foobar/test', $this->getGenerator()->generate('foobar/test')['alias']);
+        $this->assertSame('foobar/article/test', $this->getGenerator()->generate('foobar/article/test')['alias']);
     }
 
     /**
@@ -84,20 +86,20 @@ class UrlGeneratorTest extends TestCase
      */
     public function testIndex()
     {
-        $this->assertEquals('contao_index', $this->getGenerator(false, 0)->generate('index'));
-        $this->assertEquals('contao_index', $this->getGenerator(true, 0)->generate('index'));
+        $this->assertSame('contao_index', $this->getGenerator(false, 0)->generate('index'));
+        $this->assertSame('contao_index', $this->getGenerator(true, 0)->generate('index'));
         $this->assertArrayNotHasKey('alias', $this->getGenerator()->generate('index'));
 
-        $this->assertEquals('contao_frontend', $this->getGenerator(false, 0)->generate('index/foobar'));
+        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('index/foobar'));
         $this->assertArrayHasKey('alias', $this->getGenerator()->generate('index/foobar'));
 
-        $this->assertEquals(
+        $this->assertSame(
             'contao_frontend',
             $this->getGenerator(false, 0)->generate('index/{foo}', ['foo' => 'bar'])
         );
 
         $this->assertArrayHasKey('alias', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar']));
-        $this->assertEquals('index/foo/bar', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
+        $this->assertSame('index/foo/bar', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
     }
 
     /**
@@ -123,13 +125,13 @@ class UrlGeneratorTest extends TestCase
 
         $result = $this->getGenerator()->generate('foo/{article}', $params);
 
-        $this->assertEquals('foo/article/test', $result['alias']);
+        $this->assertSame('foo/article/test', $result['alias']);
         $this->assertArrayNotHasKey('article', $result);
         $this->assertArrayHasKey('items', $result);
 
         $result = $this->getGenerator()->generate('foo/{items}/{article}', $params);
 
-        $this->assertEquals('foo/items/bar/article/test', $result['alias']);
+        $this->assertSame('foo/items/bar/article/test', $result['alias']);
         $this->assertArrayNotHasKey('article', $result);
         $this->assertArrayNotHasKey('items', $result);
     }
@@ -139,7 +141,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testAutoItem()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar',
             $this->getGenerator()->generate(
                 'foo/{items}',
@@ -147,7 +149,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar/article/test',
             $this->getGenerator()->generate(
                 'foo/{items}/{article}',
@@ -157,7 +159,7 @@ class UrlGeneratorTest extends TestCase
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar',
             $this->getGenerator()->generate(
                 'foo/{items}',
@@ -165,7 +167,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/bar/article/test',
             $this->getGenerator()->generate(
                 'foo/{items}/{article}',
@@ -179,7 +181,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testAutoItemDisabled()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}',
@@ -187,7 +189,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar/article/test',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}/{article}',
@@ -197,7 +199,7 @@ class UrlGeneratorTest extends TestCase
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}',
@@ -205,7 +207,7 @@ class UrlGeneratorTest extends TestCase
             )['alias']
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo/items/bar/article/test',
             $this->getGenerator(false, 1, false)->generate(
                 'foo/{items}/{article}',
@@ -216,11 +218,11 @@ class UrlGeneratorTest extends TestCase
 
     /**
      * Tests that an exception is thrown if a parameter is missing.
-     *
-     * @expectedException \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      */
     public function testThrowsExceptionOnMissingParameter()
     {
+        $this->expectException(MissingMandatoryParametersException::class);
+
         $this->getGenerator()->generate('foo/{article}');
     }
 
@@ -238,7 +240,7 @@ class UrlGeneratorTest extends TestCase
             false
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://contao.org/',
             $generator->generate(
                 'index',
@@ -247,22 +249,14 @@ class UrlGeneratorTest extends TestCase
            )
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://contao.org/',
-            $generator->generate(
-                'index',
-                ['_domain' => 'contao.org'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            $generator->generate('index', ['_domain' => 'contao.org'], UrlGeneratorInterface::ABSOLUTE_URL)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://contao.org/',
-            $generator->generate(
-                'index',
-                ['_domain' => 'contao.org:80'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            $generator->generate('index', ['_domain' => 'contao.org:80'], UrlGeneratorInterface::ABSOLUTE_URL)
         );
     }
 
@@ -287,13 +281,9 @@ class UrlGeneratorTest extends TestCase
             false
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://contao.org/',
-            $generator->generate(
-                'index',
-                ['_domain' => 'contao.org'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            $generator->generate('index', ['_domain' => 'contao.org'], UrlGeneratorInterface::ABSOLUTE_URL)
         );
     }
 
@@ -302,7 +292,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testWithNonArrayParameters()
     {
-        $this->assertEquals('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
+        $this->assertSame('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
     }
 
     /**
@@ -316,49 +306,41 @@ class UrlGeneratorTest extends TestCase
      */
     private function getGenerator($prependLocale = false, $returnArgument = 1, $useAutoItem = true)
     {
-        /** @var UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject $router */
-        $router = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $router = $this->createMock(UrlGeneratorInterface::class);
 
         $router
-            ->expects($this->any())
             ->method('generate')
             ->willReturnArgument($returnArgument)
         ;
 
         $router
-            ->expects($this->any())
             ->method('getContext')
             ->willReturn(new RequestContext())
         ;
 
-        /** @var Adapter|\PHPUnit_Framework_MockObject_MockObject $configAdapter */
         $configAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
             ->getMock()
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('isComplete')
             ->willReturn(true)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('preload')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('getInstance')
             ->willReturn(null)
         ;
 
         $configAdapter
-            ->expects($this->any())
             ->method('get')
             ->willReturnCallback(function ($key) use ($useAutoItem) {
                 switch ($key) {
@@ -376,7 +358,7 @@ class UrlGeneratorTest extends TestCase
 
         return new UrlGenerator(
             $router,
-            $this->mockContaoFramework(null, null, ['Contao\Config' => $configAdapter]),
+            $this->mockContaoFramework(null, null, [Config::class => $configAdapter]),
             $prependLocale
         );
     }

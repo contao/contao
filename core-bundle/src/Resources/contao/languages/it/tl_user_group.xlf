@@ -65,13 +65,17 @@
         <source>Form permissions</source>
         <target>Permessi form</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.account_legend">
-        <source>Account settings</source>
-        <target>Impostazioni utente</target>
+      <trans-unit id="tl_user_group.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Accesso gruppi</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Campi abilitati</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.account_legend">
+        <source>Account settings</source>
+        <target>Impostazioni utente</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New user group</source>

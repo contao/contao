@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Přidat obrázek k obsahovému elementu.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+        <target>Přepsat meta data</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+        <target>Přepsat meta informace obrázku z Manažera souborů</target>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Zdrojový soubor</target>
@@ -49,11 +57,11 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>V zajmu toho udělat obrázek nebo video přístupný můžete poskytnout alternativní text s krátkým popisem jejich obsahu.</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Titulek</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
+        <target>Název obrázku</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Zde můžete přidat název obrázku (&lt;em&gt;název&lt;/em&gt; atribut).</target>
       </trans-unit>
@@ -334,8 +342,8 @@
         <target>Použít domovský adresář</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Použít domovský adresář jako zdroj dat, když se přihlášil jeden z členů.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Použít hlavní složku jako zdroj souborů, pokud existuje autorizovaný člen.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

@@ -59,19 +59,19 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Из безбедосних разлога, овде не можете користити знакове: =&lt;&gt;&amp;/()#</target>
+        <target>Из разлога сигурности, овде не можете користити знакове: =&lt;&gt;&amp;/()#</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
-        <target>Унесите исправну имејл адресу!</target>
+        <target>Унесите валидну e-mail адресу!</target>
       </trans-unit>
       <trans-unit id="ERR.emails">
         <source>There is at least one invalid e-mail address!</source>
-        <target>Најмање једна имејл адреса није исправна!</target>
+        <target>Најмање једна e-mail адреса није валидна!</target>
       </trans-unit>
       <trans-unit id="ERR.url">
         <source>Please enter a valid URL format and encode special characters!</source>
-        <target>Унесите исправан формат URL а специјалне карактере енкодирајте!</target>
+        <target>Унесите валидан формат URL-а а специјалне карактере енкодирајте!</target>
       </trans-unit>
       <trans-unit id="ERR.locale">
         <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
@@ -111,11 +111,11 @@
       </trans-unit>
       <trans-unit id="ERR.filename">
         <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
-        <target>Име барем једног од фајлова постављених на сервер садржи неправилне знакове или превазилази максималну дужину од 255 знакова!</target>
+        <target>Име барем једног од фајлова постављених на сервер садржи неправилне карактере или превазилази максималну дужину од 255 знакова!</target>
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>Максимална величина фајлова који се копирају на сервер је %s (проверите Contao или php.ini подешавања)!</target>
+        <target>Максимална величина фајлова који се копирају на сервер је %s (Contao или php.ini подешавања)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
@@ -205,9 +205,29 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>Фајл &quot;%s&quot; већ постоји!</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+        <target>Можете одабрати искључиво фајлове!</target>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+        <target>Можете одабрати искључиво фолдере!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+        <target>Можете одабрати искључиво фајлове или фолдере унутар &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+        <target>Можете одабрати само &quot;%s&quot; фајлове!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+        <target>Ваш избор садржи неисправан ID странице!</target>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
-        <target>Неисправно одредиште преусмерења (кружна референца)!</target>
+        <target>Неисправно одредиште преусмеравања (кружна референца)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
@@ -215,7 +235,7 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
-        <target>Нити једна од активних root страница за &lt;strong&gt;%s&lt;/strong&gt; нема постављен резервни језик.</target>
+        <target>Нити једна од активних root страница за &lt;strong&gt;%s&lt;/strong&gt;  нема постављен резервни језик.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as language fallback.</source>
@@ -299,7 +319,7 @@
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
-        <target>Омогућавање прилагођеног HTML кода.</target>
+        <target>Омогућавање властитог HTML кода.</target>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -315,7 +335,7 @@
       </trans-unit>
       <trans-unit id="CTE.table.1">
         <source>Generates an optionally sortable table.</source>
-        <target>Генерисање табеле која се по потреби може сортирати.</target>
+        <target>Генерисање табеле која се опционо може сортирати.</target>
       </trans-unit>
       <trans-unit id="CTE.accordion">
         <source>Accordion</source>
@@ -347,11 +367,11 @@
       </trans-unit>
       <trans-unit id="CTE.code.0">
         <source>Code</source>
-        <target>Кȏд:</target>
+        <target>Код</target>
       </trans-unit>
       <trans-unit id="CTE.code.1">
         <source>Highlights code snippets and prints them to the screen.</source>
-        <target>Наглашавање делова кȏда и штампање истих на екран.</target>
+        <target>Наглашавање делова кода и штампање истих на екран.</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.0">
         <source>Markdown</source>
@@ -519,7 +539,7 @@
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
-        <target>Вањско преусмерeње</target>
+        <target>Вањско преусмеравање</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
         <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
@@ -527,7 +547,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
-        <target>Интерно преусмерeње</target>
+        <target>Интерно преусмеравање</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page within the site structure.</source>
@@ -595,7 +615,7 @@
       </trans-unit>
       <trans-unit id="FOP.f6">
         <source>Synchronize the file system with the database</source>
-        <target>Синхронизуј систем фајлова са базом података</target>
+        <target>Синхронизуј фајл систем са базом података</target>
       </trans-unit>
       <trans-unit id="CHMOD.editpage">
         <source>Edit page</source>
@@ -711,11 +731,11 @@
       </trans-unit>
       <trans-unit id="MONTHS.5">
         <source>June</source>
-        <target>Јуни</target>
+        <target>Јун</target>
       </trans-unit>
       <trans-unit id="MONTHS.6">
         <source>July</source>
-        <target>Јули</target>
+        <target>Јул</target>
       </trans-unit>
       <trans-unit id="MONTHS.7">
         <source>August</source>
@@ -807,7 +827,7 @@
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Унесите адресу сајта (http://…), имејл адресу (mailto:…) или таг за уметање.</target>
+        <target>Унесите адресу сајта (http://…), мејл адресу (mailto:…) или инсерт таг.</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
@@ -871,7 +891,7 @@
       </trans-unit>
       <trans-unit id="MSC.lw_copy">
         <source>Duplicate the element</source>
-        <target>Копирај елемент</target>
+        <target>Направи копију елемента</target>
       </trans-unit>
       <trans-unit id="MSC.lw_up">
         <source>Move the element one position up</source>
@@ -884,6 +904,14 @@
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
         <target>Обриши елемент</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>CSV увоз</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
+        <target>Увези опције из CSV фајла</target>
       </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
@@ -1011,7 +1039,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
-        <target>Текст испод слике</target>
+        <target>Заглавље</target>
       </trans-unit>
       <trans-unit id="MSC.aw_delete">
         <source>Delete the language</source>
@@ -1227,19 +1255,19 @@
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
-        <target>Ваша претходна пријава је била %s. Добро дошли назад!</target>
+        <target>Ваша претходна пријава је била %s. Добродошли назад!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
-        <target>Претходна пријава</target>
+        <target>Последња пријава</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.1">
         <source>Last login: %s</source>
-        <target>Претходна пријава: %s</target>
+        <target>Последња пријава: %s</target>
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
-        <target>Изгледа да је ово први пут да се пријављујете. Добро дошли у Contao!</target>
+        <target>Изгледа да је ово први пут да се пријављујете. Добродошли у Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
@@ -1316,13 +1344,13 @@ The account has been locked for %d minutes, because the user has entered an inva
 
 This e-mail has been generated by Contao. You can not reply to it directly.
 </source>
-        <target>Следећи Contao налог је закључан из безбедносних разлога.
+        <target>Следећи Contao налог је закључан из сигурносних разлога.
 
 Корисник: %s
 Име: %s
 Сајт: %s
 
-Налог је закључан у трајању %d минута, зато што је корисник погрешио лозинку узастопно три пута. Након истека наведеног периода , налог ће бити откључан аутоматски.
+минута, зато што је корисник погрешио лозинку узастопно три пута. Након истека наведеног периода , налог ће бити откључан аутоматски.
 Мејл је аутоматски генерисао Contao систем. Немојте одговарати директно на њега.
 </target>
       </trans-unit>
@@ -1332,7 +1360,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.toggleMobile.1">
         <source>Go to the mobile version</source>
-        <target>Иди на верзију прилагођену мобилним уређајима</target>
+        <target>Иди на мобилну верзију</target>
       </trans-unit>
       <trans-unit id="MSC.toggleDesktop.0">
         <source>Desktop version</source>
@@ -1340,7 +1368,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.toggleDesktop.1">
         <source>Go to the desktop version</source>
-        <target>Иди на верзију прилагођену десктоп уређајима</target>
+        <target>Иди на десктоп верзију</target>
       </trans-unit>
       <trans-unit id="MSC.feLink">
         <source>Go to front end</source>
@@ -1377,6 +1405,10 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
         <target>Прикажи навигацију</target>
+      </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+        <target>Детаљније на %s</target>
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
@@ -1516,7 +1548,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
-        <target>Унесите лозинку</target>
+        <target>Молимо Вас да унесете лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1662,6 +1694,10 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Relative path</source>
         <target>Релативна путања</target>
       </trans-unit>
+      <trans-unit id="MSC.fileMeta">
+        <source>Meta data</source>
+        <target>Мета подаци</target>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Верзија</target>
@@ -1685,10 +1721,6 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
         <target>Тренутно је укључен режим за одржавање.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-        <target>Режим за одржавање тренутно је искључен.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1747,20 +1779,24 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Ресетуј изабрано</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Пребаци на одабир фајла</target>
+        <source>Files</source>
+        <target>Фајлови</target>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Пребаци на одабир странице</target>
+        <source>Pages</source>
+        <target>Странице</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Чланци</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Отвори менаџер фајлова</target>
+        <source>File manager</source>
+        <target>Менаџер фајлова - File manager</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Измени структуру сајта</target>
+        <source>Site structure</source>
+        <target>Структура сајта</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1769,10 +1805,6 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Назад на одабир странице</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Молимо Вас да се вратите на одабир странице или одабир фајла пре него што завршите акцију.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
@@ -1880,7 +1912,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.emailAddress">
         <source>E-mail address</source>
-        <target>Имејл адреса</target>
+        <target>E-mail адреса</target>
       </trans-unit>
       <trans-unit id="MSC.register">
         <source>Register</source>
@@ -1888,7 +1920,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.resendActivation">
         <source>The activation mail has been re-sent to your e-mail address.</source>
-        <target>Мејл за активацију је поново послат на вашу имејл адресу.</target>
+        <target>Мејл за активацију је поново послат на вашу e-mail адресу.</target>
       </trans-unit>
       <trans-unit id="MSC.accountActivated">
         <source>Your account has been activated.</source>
@@ -1908,7 +1940,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>Нови члан (ID %s) се регистровао на вашем сајту. %s Ако нисте одобрили активацију путем имејла, морате ручно да активирате налог у БекЕнду.</target>
+        <target>Нови члан (ID %s) се регистровао на вашем сајту. %s Ако нисте одобрили активацију путем e-maila, морате ручно да активирате налог у БекЕнду.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -2180,7 +2212,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.invalidPage">
         <source>Sorry, item &quot;%s&quot; does not exist.</source>
-        <target>Жао нам је, али ставка &quot;%s&quot; не постоји.</target>
+        <target>Извините, али ставка &quot;%s&quot; не постоји.</target>
       </trans-unit>
       <trans-unit id="MSC.list_orderBy">
         <source>Order by %s</source>
@@ -2222,6 +2254,18 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Invalid token</source>
         <target>Неважећи токен</target>
       </trans-unit>
+      <trans-unit id="MSC.versionConflict">
+        <source>Version conflict</source>
+        <target>Конфликт верзија</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict1">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
+        <target>Други корисник је креирао верзију %s истовремено док сте ви уређивали верзију %s записа.</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict2">
+        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+        <target>Промене које сте ви унели су сада сачуване као верзија %s и могуће је да су преписане преко промена у верзији %s. Стога, проверите верзије испод:</target>
+      </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
         <target>Превуци ставке да им промениш распоред</target>
@@ -2239,7 +2283,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Преузимање  %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to store file meta information.</source>
+        <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Да бисте чували мета податке о фајлу, у структуру сајта морате додати root страницу.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">

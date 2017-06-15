@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Hvis du vælger denne mulighed, vil et billede blive føjet til elementet.</target>
       </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.0">
+        <source>Overwrite meta data</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteMeta.1">
+        <source>Overwrite the image meta data from the file manager.</source>
+      </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
         <target>Kildefil</target>
@@ -49,11 +55,10 @@
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
         <target>For at gøre billeder og film tilgængelige bør du altid angive en alternativ beskrivelse med en kort beskrivelse af deres indhold.</target>
       </trans-unit>
-      <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Overskrift</target>
+      <trans-unit id="tl_content.imageTitle.0">
+        <source>Image title</source>
       </trans-unit>
-      <trans-unit id="tl_content.title.1">
+      <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Her kan du indtaste billedets title (&lt;em&gt;title&lt;/em&gt; attribute).</target>
       </trans-unit>
@@ -334,8 +339,7 @@
         <target>Brug hjemmemappe</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
-        <source>Use the home directory as file source if there is an authenticated user.</source>
-        <target>Hvis en frontend-bruger har logget på, brug da hans hjemmemappe som filkilde.</target>
+        <source>Use the home directory as file source if there is an authenticated member.</source>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

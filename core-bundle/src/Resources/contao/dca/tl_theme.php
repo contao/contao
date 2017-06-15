@@ -195,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['screenshot'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'fieldType'=>'radio'),
+			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'fieldType'=>'radio', 'isGallery'=>true),
 			'sql'                     => "binary(16) NULL"
 		),
 		'templates' => array
@@ -293,7 +293,7 @@ class tl_theme extends Backend
 
 			if ($objFile !== null)
 			{
-				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(160, 120, 'center_top'))->getUrl(TL_ROOT), '', 'class="theme_preview"') . ' ' . $label;
+				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl(TL_ROOT), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 

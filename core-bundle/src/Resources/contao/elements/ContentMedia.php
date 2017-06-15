@@ -149,7 +149,7 @@ class ContentMedia extends \ContentElement
 			}
 			else
 			{
-				$this->Template->size = ' width="400" height="30"';
+				$this->Template->size = ' width="400" height="40"';
 			}
 		}
 		else

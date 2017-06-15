@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test;
+namespace Contao\CoreBundle\Tests;
 
 /**
  * Returns the language array keys as array.
@@ -42,6 +42,16 @@ class LanguageHelper implements \ArrayAccess
     public function __get($key)
     {
         return $this->offsetGet($key);
+    }
+
+    /**
+     * Returns the combined stack as string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return implode('.', $this->stack);
     }
 
     /**
@@ -91,15 +101,5 @@ class LanguageHelper implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new \LogicException('The language helper is just for retrieving, not for setting.');
-    }
-
-    /**
-     * Returns the combined stack as string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return implode('.', $this->stack);
     }
 }

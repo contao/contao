@@ -75,7 +75,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".str_replace(strtr(dirname($this->rootDir), '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
+        $return = "\n// ".str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($name, '\\', '/'))."\n";
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 
@@ -183,9 +183,9 @@ class XliffFileLoader extends Loader
      * @param array $chunks
      * @param mixed $value
      *
-     * @return string
-     *
      * @throws \OutOfBoundsException
+     *
+     * @return string
      */
     private function getStringRepresentation(array $chunks, $value)
     {
@@ -256,7 +256,7 @@ class XliffFileLoader extends Loader
         }
 
         if (is_numeric($key)) {
-            return intval($key);
+            return (int) $key;
         }
 
         return "'".str_replace("'", "\\'", $key)."'";

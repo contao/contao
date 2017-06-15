@@ -86,7 +86,7 @@ class BackendMain extends \Backend
 		$packages = System::getContainer()->getParameter('kernel.packages');
 
 		$this->Template = new \BackendTemplate('be_main');
-		$this->Template->version = $packages['contao/core-bundle'];
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $packages['contao/core-bundle'];
 		$this->Template->main = '';
 
 		// Ajax request
@@ -184,11 +184,17 @@ class BackendMain extends \Backend
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 
-		// File picker reference
+		// File picker reference (backwards compatibility)
 		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules') || \Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules')) && $objSession->get('filePickerRef'))
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
+		}
+
+		// Picker menu
+		if (\Input::get('popup') && \Input::get('context'))
+		{
+			$this->Template->pickerMenu = \System::getContainer()->get('contao.menu.picker_menu_builder')->createMenu(\Input::get('context'));
 		}
 
 		// Website title
@@ -200,7 +206,7 @@ class BackendMain extends \Backend
 		$this->Template->theme = \Backend::getTheme();
 		$this->Template->base = \Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->title = \StringUtil::specialchars($this->Template->title);
+		$this->Template->title = \StringUtil::specialchars(strip_tags($this->Template->title));
 		$this->Template->charset = \Config::get('characterSet');
 		$this->Template->account = $GLOBALS['TL_LANG']['MOD']['login'][1];
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
@@ -223,6 +229,7 @@ class BackendMain extends \Backend
 		$this->Template->isPopup = \Input::get('popup');
 		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
+		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank">contao.org</a>');
 
 		$strSystemMessages = \Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');

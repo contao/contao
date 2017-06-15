@@ -137,29 +137,37 @@
         <source>Change your personal data or set a new password</source>
         <target>Persönliche Daten ändern oder ein neues Passwort setzen</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Style sheets</source>
-        <target>Stylesheets</target>
+      <trans-unit id="MOD.tl_content">
+        <source>Content elements</source>
+        <target>Inhaltselemente</target>
       </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-        <target>Stylesheets</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_module">
-        <source>Front end modules</source>
-        <target>Frontend-Module</target>
-      </trans-unit>
-      <trans-unit id="MOD.tl_layout">
-        <source>Page layouts</source>
-        <target>Seitenlayouts</target>
+      <trans-unit id="MOD.tl_form_field">
+        <source>Fields</source>
+        <target>Felder</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size">
         <source>Image sizes</source>
         <target>Bildgrößen</target>
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
-        <source>Image size media queries</source>
-        <target>Bildgrößen-Media-Queries</target>
+        <source>Media queries</source>
+        <target>Media-Queries</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_layout">
+        <source>Page layouts</source>
+        <target>Seitenlayouts</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_module">
+        <source>Front end modules</source>
+        <target>Frontend-Module</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style">
+        <source>Format definitions</source>
+        <target>Formatdefinitionen</target>
+      </trans-unit>
+      <trans-unit id="MOD.tl_style_sheet">
+        <source>Style sheets</source>
+        <target>Stylesheets</target>
       </trans-unit>
       <trans-unit id="MOD.css">
         <source>Style sheets</source>

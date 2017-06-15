@@ -73,7 +73,7 @@ class SymlinksCommand extends AbstractLockedCommand
     protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->rootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+        $this->rootDir = $this->getContainer()->getParameter('kernel.project_dir');
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->generateSymlinks();
@@ -262,7 +262,7 @@ class SymlinksCommand extends AbstractLockedCommand
                 $parent = dirname($path);
 
                 while (false !== strpos($parent, '/')) {
-                    if (in_array($parent, $parents)) {
+                    if (in_array($parent, $parents, true)) {
                         $this->rows[] = [
                             sprintf(
                                 '<fg=yellow;options=bold>%s</>',

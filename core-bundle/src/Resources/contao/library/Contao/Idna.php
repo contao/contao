@@ -10,7 +10,8 @@
 
 namespace Contao;
 
-use True\Punycode;
+use TrueBV\Exception\LabelOutOfBoundsException;
+use TrueBV\Punycode;
 
 
 /**
@@ -46,7 +47,14 @@ class Idna
 
 		$objPunycode = new Punycode();
 
-		return $objPunycode->encode($strDomain);
+		try
+		{
+			return $objPunycode->encode($strDomain);
+		}
+		catch (LabelOutOfBoundsException $e)
+		{
+			return '';
+		}
 	}
 
 
@@ -66,7 +74,14 @@ class Idna
 
 		$objPunycode = new Punycode();
 
-		return $objPunycode->decode($strDomain);
+		try
+		{
+			return $objPunycode->decode($strDomain);
+		}
+		catch (LabelOutOfBoundsException $e)
+		{
+			return '';
+		}
 	}
 
 
@@ -90,9 +105,14 @@ class Idna
 		}
 
 		$arrChunks = explode('@', $strEmail);
-		$strHost = array_pop($arrChunks);
+		$strHost = static::encode(array_pop($arrChunks));
 
-		return implode('@', $arrChunks) . '@' . static::encode($strHost);
+		if ($strHost == '')
+		{
+			return '';
+		}
+
+		return implode('@', $arrChunks) . '@' . $strHost;
 	}
 
 
@@ -116,9 +136,14 @@ class Idna
 		}
 
 		$arrChunks = explode('@', $strEmail);
-		$strHost = array_pop($arrChunks);
+		$strHost = static::decode(array_pop($arrChunks));
 
-		return implode('@', $arrChunks) . '@' . static::decode($strHost);
+		if ($strHost == '')
+		{
+			return '';
+		}
+
+		return implode('@', $arrChunks) . '@' . $strHost;
 	}
 
 
@@ -128,6 +153,8 @@ class Idna
 	 * @param string $strUrl The URL
 	 *
 	 * @return string The encoded URL
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public static function encodeUrl($strUrl)
 	{
@@ -136,25 +163,23 @@ class Idna
 			return '';
 		}
 
-		// Empty anchor (see #3555)
-		if ($strUrl == '#')
+		// Empty anchor (see #3555) or insert tag
+		if ($strUrl == '#' || strpos($strUrl, '{{') === 0)
 		{
 			return $strUrl;
 		}
 
 		// E-mail address
-		if (strncasecmp($strUrl, 'mailto:', 7) === 0)
+		if (strpos($strUrl, 'mailto:') === 0)
 		{
 			return static::encodeEmail($strUrl);
 		}
 
 		$arrUrl = parse_url($strUrl);
 
-		// Add the scheme to ensure that parse_url works correctly
-		if (!isset($arrUrl['scheme']) && strncmp($strUrl, '{{', 2) !== 0)
+		if (!isset($arrUrl['scheme']))
 		{
-			$arrUrl = parse_url('http://' . $strUrl);
-			unset($arrUrl['scheme']);
+			throw new \InvalidArgumentException(sprintf('Expected a FQDN, got "%s"', $strUrl));
 		}
 
 		// Scheme
@@ -201,6 +226,109 @@ class Idna
 			$arrUrl['fragment'] = '#' . $arrUrl['fragment'];
 		}
 
-		return $arrUrl['scheme'] . $arrUrl['user'] . $arrUrl['pass'] . $arrUrl['host'] . $arrUrl['port'] . $arrUrl['path'] . $arrUrl['query'] . $arrUrl['fragment'];
+		$strReturn = '';
+
+		foreach (array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment') as $key)
+		{
+			if (isset($arrUrl[$key]))
+			{
+				$strReturn .= $arrUrl[$key];
+			}
+		}
+
+		return $strReturn;
+	}
+
+
+	/**
+	 * Decode the domain in an URL
+	 *
+	 * @param string $strUrl The URL
+	 *
+	 * @return string The decoded URL
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public static function decodeUrl($strUrl)
+	{
+		if ($strUrl == '')
+		{
+			return '';
+		}
+
+		// Empty anchor (see #3555) or insert tag
+		if ($strUrl == '#' || strpos($strUrl, '{{') === 0)
+		{
+			return $strUrl;
+		}
+
+		// E-mail address
+		if (strpos($strUrl, 'mailto:') === 0)
+		{
+			return static::decodeEmail($strUrl);
+		}
+
+		$arrUrl = parse_url($strUrl);
+
+		if (!isset($arrUrl['scheme']))
+		{
+			throw new \InvalidArgumentException(sprintf('Expected a FQDN, got "%s"', $strUrl));
+		}
+
+		// Scheme
+		if (isset($arrUrl['scheme']))
+		{
+			$arrUrl['scheme'] .= ((substr($strUrl, strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
+		}
+
+		// User
+		if (isset($arrUrl['user']))
+		{
+			$arrUrl['user'] .= isset($arrUrl['pass']) ? ':' : '@';
+		}
+
+		// Password
+		if (isset($arrUrl['pass']))
+		{
+			$arrUrl['pass'] .= '@';
+		}
+
+		// Host
+		if (isset($arrUrl['host']))
+		{
+			$arrUrl['host'] = static::decode($arrUrl['host']);
+		}
+
+		// Port
+		if (isset($arrUrl['port']))
+		{
+			$arrUrl['port'] = ':' . $arrUrl['port'];
+		}
+
+		// Path does not have to be altered
+
+		// Query
+		if (isset($arrUrl['query']))
+		{
+			$arrUrl['query'] = '?' . $arrUrl['query'];
+		}
+
+		// Anchor
+		if (isset($arrUrl['fragment']))
+		{
+			$arrUrl['fragment'] = '#' . $arrUrl['fragment'];
+		}
+
+		$strReturn = '';
+
+		foreach (array('scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment') as $key)
+		{
+			if (isset($arrUrl[$key]))
+			{
+				$strReturn .= $arrUrl[$key];
+			}
+		}
+
+		return $strReturn;
 	}
 }

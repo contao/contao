@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-@trigger_error('Using the Contao\ClassLoader class has been deprecated and will no longer work in Contao 5.0. Use the Composer autoloader instead.', E_USER_DEPRECATED);
-
 
 /**
  * Automatically loads class files based on a mapper array
@@ -23,7 +21,7 @@ namespace Contao;
  * Usage:
  *
  *     ClassLoader::addNamespace('Custom');
- *     ClassLoader::addClass('Custom\\Calendar', 'calendar/Calendar.php');
+ *     ClassLoader::addClass('Custom\Calendar', 'calendar/Calendar.php');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  *
@@ -50,9 +48,13 @@ class ClassLoader
 	 * Add a new namespace
 	 *
 	 * @param string $name The namespace name
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
 	 */
 	public static function addNamespace($name)
 	{
+		@trigger_error('Using ClassLoader::addNamespace() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if (in_array($name, self::$namespaces))
 		{
 			return;
@@ -66,9 +68,13 @@ class ClassLoader
 	 * Add multiple new namespaces
 	 *
 	 * @param array $names An array of namespace names
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
 	 */
 	public static function addNamespaces($names)
 	{
+		@trigger_error('Using ClassLoader::addNamespaces() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		foreach ($names as $name)
 		{
 			self::addNamespace($name);
@@ -80,9 +86,13 @@ class ClassLoader
 	 * Return the namespaces as array
 	 *
 	 * @return array An array of all namespaces
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
 	 */
 	public static function getNamespaces()
 	{
+		@trigger_error('Using ClassLoader::getNamespaces() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		return self::$namespaces;
 	}
 
@@ -92,9 +102,13 @@ class ClassLoader
 	 *
 	 * @param string $class The class name
 	 * @param string $file  The path to the class file
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
 	 */
 	public static function addClass($class, $file)
 	{
+		@trigger_error('Using ClassLoader::addClass() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		self::$classes[$class] = $file;
 	}
 
@@ -103,9 +117,13 @@ class ClassLoader
 	 * Add multiple new classes with their file paths
 	 *
 	 * @param array $classes An array of classes
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
 	 */
 	public static function addClasses($classes)
 	{
+		@trigger_error('Using ClassLoader::addClasses() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		foreach ($classes as $class=>$file)
 		{
 			self::addClass($class, $file);
@@ -117,9 +135,13 @@ class ClassLoader
 	 * Return the classes as array.
 	 *
 	 * @return array An array of all classes
+	 *
+	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
 	 */
 	public static function getClasses()
 	{
+		@trigger_error('Using ClassLoader::getClasses() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		return self::$classes;
 	}
 

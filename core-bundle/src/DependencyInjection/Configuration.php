@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Adds the Contao configuration structure.
@@ -27,13 +28,20 @@ class Configuration implements ConfigurationInterface
     private $debug;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * Constructor.
      *
-     * @param bool $debug
+     * @param bool   $debug
+     * @param string $rootDir
      */
-    public function __construct($debug)
+    public function __construct($debug, $rootDir)
     {
         $this->debug = (bool) $debug;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -48,12 +56,21 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('web_dir')
+                    ->cannotBeEmpty()
+                    ->defaultValue($this->resolvePath($this->rootDir.'/web'))
+                    ->validate()
+                        ->always(function ($value) {
+                            return $this->resolvePath($value);
+                        })
+                    ->end()
+                ->end()
                 ->booleanNode('prepend_locale')
                     ->defaultFalse()
                 ->end()
                 ->scalarNode('encryption_key')
-                    ->isRequired()
                     ->cannotBeEmpty()
+                    ->defaultValue('%kernel.secret%')
                 ->end()
                 ->scalarNode('url_suffix')
                     ->defaultValue('.html')
@@ -90,7 +107,16 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue($this->debug)
                         ->end()
                         ->scalarNode('target_path')
-                            ->defaultValue('assets/images')
+                            ->defaultNull()
+                        ->end()
+                        ->scalarNode('target_dir')
+                            ->cannotBeEmpty()
+                            ->defaultValue($this->resolvePath($this->rootDir.'/assets/images'))
+                            ->validate()
+                                ->always(function ($value) {
+                                    return $this->resolvePath($value);
+                                })
+                            ->end()
                         ->end()
                         ->arrayNode('valid_extensions')
                             ->prototype('scalar')->end()
@@ -123,5 +149,23 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $treeBuilder;
+    }
+
+    /**
+     * Resolves a path.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    private function resolvePath($value)
+    {
+        $path = Path::canonicalize($value);
+
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $path = str_replace('/', '\\', $path);
+        }
+
+        return $path;
     }
 }

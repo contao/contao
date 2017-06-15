@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 /**
  * Provide methods to handle table fields.
@@ -164,111 +167,22 @@ class TableWizard extends \Widget
 	 * @param DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception
+	 * @throws ResponseException
+	 *
+	 * @deprecated Deprecated since Contao 4.3 to be removed in 5.0.
+	 *             Use the contao.controller.backend_csv_import service instead.
 	 */
 	public function importTable(DataContainer $dc)
 	{
-		if (\Input::get('key') != 'table')
+		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importTableWizard($dc);
+
+		if ($response instanceof RedirectResponse)
 		{
-			return '';
+			throw new ResponseException($response);
 		}
 
-		/** @var FileUpload $objUploader */
-		$objUploader = new \FileUpload();
-
-		// Import CSS
-		if (\Input::post('FORM_SUBMIT') == 'tl_table_import')
-		{
-			$arrUploaded = $objUploader->uploadTo('system/tmp');
-
-			if (empty($arrUploaded))
-			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['all_fields']);
-				$this->reload();
-			}
-
-			$this->import('Database');
-			$arrTable = array();
-
-			foreach ($arrUploaded as $strCsvFile)
-			{
-				$objFile = new \File($strCsvFile);
-
-				if ($objFile->extension != 'csv')
-				{
-					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
-					continue;
-				}
-
-				// Get separator
-				switch (\Input::post('separator'))
-				{
-					case 'semicolon':
-						$strSeparator = ';';
-						break;
-
-					case 'tabulator':
-						$strSeparator = "\t";
-						break;
-
-					default:
-						$strSeparator = ',';
-						break;
-				}
-
-				$resFile = $objFile->handle;
-
-				while(($arrRow = @fgetcsv($resFile, null, $strSeparator)) !== false)
-				{
-					$arrTable[] = $arrRow;
-				}
-			}
-
-			$objVersions = new \Versions($dc->table, \Input::get('id'));
-			$objVersions->create();
-
-			$this->Database->prepare("UPDATE " . $dc->table . " SET tableitems=? WHERE id=?")
-						   ->execute(serialize($arrTable), \Input::get('id'));
-
-			\System::setCookie('BE_PAGE_OFFSET', 0, 0);
-			$this->redirect(str_replace('&key=table', '', \Environment::get('request')));
-		}
-
-		// Return form
-		return '
-<div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=table', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
-</div>
-'.\Message::generate().'
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_table_import" class="tl_form" method="post" enctype="multipart/form-data">
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="tl_table_import">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-
-<fieldset class="tl_tbox nolegend">
-  <div class="widget w50">
-    <h3><label for="separator">'.$GLOBALS['TL_LANG']['MSC']['separator'][0].'</label></h3>
-    <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
-      <option value="comma">'.$GLOBALS['TL_LANG']['MSC']['comma'].'</option>
-      <option value="semicolon">'.$GLOBALS['TL_LANG']['MSC']['semicolon'].'</option>
-      <option value="tabulator">'.$GLOBALS['TL_LANG']['MSC']['tabulator'].'</option>
-    </select>'.(($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
-    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['separator'][1].'</p>' : '').'
-  </div>
-  <div class="widget clr">
-    <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
-    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
-  </div>
-</fieldset>
-
-</div>
-
-<div class="tl_formbody_submit">
-
-<div class="tl_submit_container">
-  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['tw_import'][0].'</button>
-</div>
-
-</div>
-</form>';
+		return $response->getContent();
 	}
 }

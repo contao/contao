@@ -8,12 +8,12 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Image;
+namespace Contao\CoreBundle\Tests\Image;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Image\ImageSizes;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -45,13 +45,16 @@ class ImageSizesTest extends TestCase
      */
     public function setUp()
     {
+        $framework = $this->mockContaoFramework();
+        $framework->initialize();
+
         System::setContainer($this->mockContainerWithContaoScopes());
 
         require_once __DIR__.'/../../src/Resources/contao/config/config.php';
 
-        $this->connection = $this->getMock('Doctrine\DBAL\Connection', ['fetchAll'], [], '', false);
-        $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework());
+        $this->connection = $this->createMock(Connection::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $framework);
     }
 
     /**
@@ -99,8 +102,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMock('Contao\BackendUser');
+        $user = $this->createMock(BackendUser::class);
         $user->imageSizes = serialize(['image_sizes' => '42']);
         $user->isAdmin = true;
 
@@ -118,12 +120,11 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMock('Contao\BackendUser');
+        $user = $this->createMock(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only one image size
-        $user->imageSizes = serialize(['42']);
+        $user->imageSizes = serialize([42]);
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayNotHasKey('relative', $options);
@@ -143,7 +144,7 @@ class ImageSizesTest extends TestCase
         $user->imageSizes = serialize([]);
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        $this->assertEquals([], $options);
+        $this->assertSame([], $options);
     }
 
     /**

@@ -279,6 +279,12 @@ class StringUtil
 		$strString = static::restoreBasicEntities($strString);
 		$strString = static::standardize(strip_tags($strString));
 
+		// Remove the prefix if the alias is not numeric (see #707)
+		if (strncmp($strString, 'id-', 3) === 0 && !is_numeric($strSubstr = substr($strString, 3)))
+		{
+			$strString = $strSubstr;
+		}
+
 		return $strString;
 	}
 
@@ -354,7 +360,7 @@ class StringUtil
 		}
 
 		// Find all mailto: addresses
-		preg_match_all('/mailto:(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', $strString, $matches);
+		preg_match_all('/mailto:(?:[^\x00-\x20\x22\x40\x7F]{1,64}+|\x22[^\x00-\x1F\x7F]{1,64}?\x22)@(?:\[(?:IPv)?[a-f0-9.:]{1,47}\]|[\w.-]{1,252}\.[a-z]{2,63}\b)/u', $strString, $matches);
 
 		foreach ($matches[0] as &$strEmail)
 		{
@@ -378,7 +384,7 @@ class StringUtil
 		}, $strString);
 
 		// Find all addresses in the plain text
-		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]+|\x22[^\x00-\x1F\x7F]+?\x22)@(?:\[(?:IPv)?[a-f0-9.:]+\]|[\w.-]+\.[a-z]{2,63}\b)/u', strip_tags($strString), $matches);
+		preg_match_all('/(?:[^\x00-\x20\x22\x40\x7F]{1,64}|\x22[^\x00-\x1F\x7F]{1,64}?\x22)@(?:\[(?:IPv)?[a-f0-9.:]{1,47}\]|[\w.-]{1,252}\.[a-z]{2,63}\b)/u', strip_tags($strString), $matches);
 
 		foreach ($matches[0] as &$strEmail)
 		{
@@ -952,10 +958,11 @@ class StringUtil
 	 *
 	 * @param string  $strString          The input string
 	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
 	 *
 	 * @return string The converted string
 	 */
-	public static function specialchars($strString, $blnStripInsertTags=false)
+	public static function specialchars($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
 	{
 		if ($blnStripInsertTags)
 		{
@@ -963,7 +970,7 @@ class StringUtil
 		}
 
 		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), false);
+		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), $blnDoubleEncode);
 	}
 
 
@@ -998,12 +1005,11 @@ class StringUtil
 	 */
 	public static function standardize($strString, $blnPreserveUppercase=false)
 	{
-		$arrSearch = array('/[^a-zA-Z0-9 \.\&\/_-]+/', '/[ \.\&\/-]+/');
+		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
 		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
 		$strString = static::stripInsertTags($strString);
-		$strString = Utf8::toAscii($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
 		if (is_numeric(substr($strString, 0, 1)))
@@ -1013,7 +1019,7 @@ class StringUtil
 
 		if (!$blnPreserveUppercase)
 		{
-			$strString = strtolower($strString);
+			$strString = Utf8::strtolower($strString);
 		}
 
 		return trim($strString, '-');
@@ -1114,5 +1120,31 @@ class StringUtil
 		static::$arrSplitCache[$strKey] = $arrFragments;
 
 		return $arrFragments;
+	}
+
+	/**
+	 * Strip the Contao root dir from the given absolute path
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public static function stripRootDir($path)
+	{
+		static $length = null;
+
+		if ($length === null)
+		{
+			$length = strlen(TL_ROOT);
+		}
+
+		if (strncmp($path, TL_ROOT, $length) !== 0 || strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		{
+			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir', $path));
+		}
+
+		return (string) substr($path, $length + 1);
 	}
 }

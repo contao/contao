@@ -39,6 +39,7 @@ namespace Contao;
  * @property string  $fop
  * @property string  $forms
  * @property string  $formp
+ * @property array   $amg
  * @property boolean $disable
  * @property string  $start
  * @property string  $stop
@@ -77,6 +78,7 @@ namespace Contao;
  * @method static UserModel|null findOneByFop($val, $opt=array())
  * @method static UserModel|null findOneByForms($val, $opt=array())
  * @method static UserModel|null findOneByFormp($val, $opt=array())
+ * @method static UserModel|null findOneByAmg($val, $opt=array())
  * @method static UserModel|null findOneByDisable($val, $opt=array())
  * @method static UserModel|null findOneByStart($val, $opt=array())
  * @method static UserModel|null findOneByStop($val, $opt=array())
@@ -110,6 +112,7 @@ namespace Contao;
  * @method static Model\Collection|UserModel[]|UserModel|null findByFop($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByForms($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByFormp($val, $opt=array())
+ * @method static Model\Collection|UserModel[]|UserModel|null findByAmg($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByDisable($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByStart($val, $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByStop($val, $opt=array())
@@ -148,6 +151,7 @@ namespace Contao;
  * @method static integer countByFop($val, $opt=array())
  * @method static integer countByForms($val, $opt=array())
  * @method static integer countByFormp($val, $opt=array())
+ * @method static integer countByAmg($val, $opt=array())
  * @method static integer countByDisable($val, $opt=array())
  * @method static integer countByStart($val, $opt=array())
  * @method static integer countByStop($val, $opt=array())

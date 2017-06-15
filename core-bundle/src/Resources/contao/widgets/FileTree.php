@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DcaFilterInterface;
+
 
 /**
  * Provide methods to handle input field "file tree".
@@ -18,10 +20,14 @@ namespace Contao;
  * @property boolean $multiple
  * @property boolean $isGallery
  * @property boolean $isDownloads
+ * @property boolean $files
+ * @property boolean $filesOnly
+ * @property string  $path
+ * @property string  $extensions
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileTree extends \Widget
+class FileTree extends \Widget implements DcaFilterInterface
 {
 
 	/**
@@ -77,6 +83,35 @@ class FileTree extends \Widget
 
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getDcaFilter()
+	{
+		$arrFilters = array();
+
+		// Only folders can be selected
+		if ($this->files === false)
+		{
+			$arrFilters['hideFiles'] = true;
+		}
+
+		// Only files within a custom path can be selected
+		if ($this->path)
+		{
+			$arrFilters['root'] = array($this->path);
+		}
+
+		// Only certain file types can be selected
+		if ($this->extensions)
+		{
+			$arrFilters['extensions'] = $this->extensions;
+		}
+
+		return $arrFilters;
+	}
+
+
+	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -85,6 +120,13 @@ class FileTree extends \Widget
 	 */
 	protected function validator($varInput)
 	{
+		$this->checkValue($varInput);
+
+		if ($this->hasErrors())
+		{
+			return '';
+		}
+
 		// Store the order value
 		if ($this->orderField != '')
 		{
@@ -121,6 +163,73 @@ class FileTree extends \Widget
 			$arrValue = array_filter(explode(',', $varInput));
 
 			return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : \StringUtil::uuidToBin($arrValue[0]);
+		}
+	}
+
+
+	/**
+	 * Check the selected value
+	 *
+	 * @param mixed $varInput
+	 */
+	protected function checkValue($varInput)
+	{
+		if ($varInput == '')
+		{
+			return;
+		}
+
+		if (strpos($varInput, ',') === false)
+		{
+			$arrUuids = array($varInput);
+		}
+		else
+		{
+			$arrUuids = array_filter(explode(',', $varInput));
+		}
+
+		$objFiles = \FilesModel::findMultipleByUuids($arrUuids);
+
+		if ($objFiles === null)
+		{
+			return;
+		}
+
+		foreach ($objFiles as $objFile)
+		{
+			// Only files can be selected
+			if ($this->filesOnly && is_dir(TL_ROOT . '/' . $objFile->path))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['filesOnly']);
+				break;
+			}
+
+			// Only folders can be selected
+			if ($this->files === false && !is_dir(TL_ROOT . '/' . $objFile->path))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['foldersOnly']);
+				break;
+			}
+
+			// Only files within a custom path can be selected
+			if ($this->path && strpos($objFile->path, $this->path . '/') !== 0)
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
+				break;
+			}
+
+			// Only certain file types can be selected
+			if ($this->extensions && !is_dir(TL_ROOT . '/' . $objFile->path))
+			{
+				$objFile = new \File($objFile->path);
+				$extensions = \StringUtil::trimsplit(',', $this->extensions);
+
+				if (!in_array($objFile->extension, $extensions))
+				{
+					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extensionsOnly'], $this->extensions));
+					break;
+				}
+			}
 		}
 	}
 
@@ -167,14 +276,7 @@ class FileTree extends \Widget
 
 							if ($objFile->isImage)
 							{
-								$image = \Image::getPath('placeholder.svg');
-
-								if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
-								{
-									$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
-								}
-
-								$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
 							}
 							else
 							{
@@ -211,14 +313,7 @@ class FileTree extends \Widget
 									// Only show images
 									if ($objFile->isImage)
 									{
-										$image = \Image::getPath('placeholder.svg');
-
-										if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
-										{
-											$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objSubfiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
-										}
-
-										$arrValues[$objSubfiles->uuid] = \Image::getHtml($image, '', 'class="gimage" title="' . \StringUtil::specialchars($strInfo) . '"');
+										$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
 									}
 								}
 								else
@@ -241,14 +336,7 @@ class FileTree extends \Widget
 								// Only show images
 								if ($objFile->isImage)
 								{
-									$image = \Image::getPath('placeholder.svg');
-
-									if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
-									{
-										$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFiles->path, array(80, 60, 'center_center'))->getUrl(TL_ROOT);
-									}
-
-									$arrValues[$objFiles->uuid] = \Image::getHtml($image, '', 'class="gimage removable" title="' . \StringUtil::specialchars($strInfo) . '"');
+									$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
 								}
 							}
 							else
@@ -307,15 +395,67 @@ class FileTree extends \Widget
 		}
 
 		$return .= '</ul>
-    <p><a href="contao/file.php?do='.\Input::get('do').'&amp;table='.$this->strTable.'&amp;field='.$this->strField.'&amp;act=show&amp;id='.$this->activeRecord->id.'&amp;value='.implode(',', array_keys($arrSet)).'&amp;rt='.REQUEST_TOKEN.'" class="tl_submit" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])).'\',\'url\':this.href,\'id\':\''.$this->strId.'\'});return false">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>' . ($blnHasOrder ? '
+    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'files', 'context'=>'file', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', array_keys($arrSet)), 'popup'=>1))) . '" class="tl_submit" id="ft_' . $this->strField . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <script>
+      $("ft_' . $this->strField . '").addEvent("click", function(e) {
+        e.preventDefault();
+        Backend.openModalSelector({
+          "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
+          "url": this.href,
+          "callback": function(table, value) {
+            new Request.Contao({
+              evalScripts: false,
+              onSuccess: function(txt, json) {
+                $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
+                json.javascript && Browser.exec(json.javascript);
+              }
+            }).post({"action":"reloadFiletree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+          }
+        });
+      });
+    </script>' . ($blnHasOrder ? '
     <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '') . '
   </div>';
 
-		if (!\Environment::get('isAjaxRequest'))
-		{
-			$return = '<div>' . $return . '</div>';
-		}
+		$return = '<div>' . $return . '</div>';
 
 		return $return;
+	}
+
+
+	/**
+	 * Return the preview image
+	 *
+	 * @param File   $objFile
+	 * @param string $strInfo
+	 * @param string $strClass
+	 *
+	 * @return string
+	 */
+	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
+	{
+		if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
+		{
+			// Inline the image if no preview image will be generated (see #636)
+			if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 75)
+			{
+				$image = $objFile->dataUri;
+			}
+			else
+			{
+				$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(75, 50, 'center_center'))->getUrl(TL_ROOT);
+			}
+		}
+		else
+		{
+			$image = \Image::getPath('placeholder.svg');
+		}
+
+		if (strpos($image, 'data:') === 0)
+		{
+			return '<img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '">';
+		}
+
+		return \Image::getHtml($image, '', 'class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '"');
 	}
 }

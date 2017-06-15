@@ -46,7 +46,7 @@
                   <?= Image::getHtml('edit_.svg', '', 'style="padding:0 2px"') ?>
                 <?php endif; ?>
                 <?php if ($version['to'] > 1): ?>
-                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'width':768,'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Image::getHtml('diff.svg') ?></a>
+                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Image::getHtml('diff.svg') ?></a>
                 <?php else: ?>
                   <?= Image::getHtml('diff_.svg') ?>
                 <?php endif; ?>

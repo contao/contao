@@ -42,11 +42,11 @@ class FormCaptcha extends \Widget
 	protected $strCaptchaKey;
 
 	/**
-	 * Security questions
+	 * Captcha values
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $strQuestion;
+	protected $arrCaptcha = array();
 
 	/**
 	 * The CSS class prefix
@@ -116,7 +116,7 @@ class FormCaptcha extends \Widget
 				break;
 
 			case 'question':
-				return $this->strQuestion;
+				return $this->getQuestion();
 				break;
 
 			default:
@@ -136,7 +136,7 @@ class FormCaptcha extends \Widget
 
 		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
 
-		if (!is_array($arrCaptcha) || !strlen($arrCaptcha['key']) || !strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3))
+		if (!is_array($arrCaptcha) || !strlen($arrCaptcha['key']) || !strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3) || \Input::post($arrCaptcha['key'].'_name'))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
@@ -147,27 +147,44 @@ class FormCaptcha extends \Widget
 
 
 	/**
+	 * Generate the captcha values and store them in the session
+	 */
+	protected function generateCaptcha()
+	{
+		if ($this->arrCaptcha) {
+			return;
+		}
+
+		$int1 = rand(1, 9);
+		$int2 = rand(1, 9);
+
+		$this->arrCaptcha = array
+		(
+			'int1' => $int1,
+			'int2' => $int2,
+			'sum' => $int1 + $int2,
+			'key' => $this->strCaptchaKey,
+			'time' => time()
+		);
+
+		/** @var SessionInterface $objSession */
+		$objSession = \System::getContainer()->get('session');
+
+		$objSession->set('captcha_' . $this->strId, $this->arrCaptcha);
+	}
+
+
+	/**
 	 * Generate the captcha question
 	 *
 	 * @return string The question string
 	 */
 	protected function getQuestion()
 	{
-		$int1 = rand(1, 9);
-		$int2 = rand(1, 9);
+		$this->generateCaptcha();
 
 		$question = $GLOBALS['TL_LANG']['SEC']['question' . rand(1, 3)];
-		$question = sprintf($question, $int1, $int2);
-
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
-
-		$objSession->set('captcha_' . $this->strId, array
-		(
-			'sum' => $int1 + $int2,
-			'key' => $this->strCaptchaKey,
-			'time' => time()
-		));
+		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';
 		$arrCharacters = Utf8::str_split($question);
@@ -178,6 +195,19 @@ class FormCaptcha extends \Widget
 		}
 
 		return $strEncoded;
+	}
+
+
+	/**
+	 * Get the correct sum for the current session
+	 *
+	 * @return int The sum
+	 */
+	protected function getSum()
+	{
+		$this->generateCaptcha();
+
+		return $this->arrCaptcha['sum'];
 	}
 
 
@@ -209,10 +239,11 @@ class FormCaptcha extends \Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value=""%s%s',
+		return sprintf('<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
 						$this->strCaptchaKey,
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						$this->strId,
 						$this->getAttributes(),
 						$this->strTagEnding);
 	}
@@ -225,7 +256,8 @@ class FormCaptcha extends \Widget
 	 */
 	public function generateQuestion()
 	{
-		return sprintf('<span class="captcha_text%s">%s</span>',
+		return sprintf('<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
+						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
 						$this->getQuestion());
 	}

@@ -8,9 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Session\Attribute;
+namespace Contao\CoreBundle\Tests\Session\Attribute;
 
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
  * @author Yanick Witschi <https://github.com/toflar>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ArrayAttributeBagTest extends \PHPUnit_Framework_TestCase
+class ArrayAttributeBagTest extends TestCase
 {
     /**
      * Tests the object instantiation.

@@ -8,16 +8,17 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Event;
+namespace Contao\CoreBundle\Tests\Event;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the PreviewUrlConvertEvent class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlConvertEventTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlConvertEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -40,6 +41,6 @@ class PreviewUrlConvertEventTest extends \PHPUnit_Framework_TestCase
 
         $event->setUrl('http://localhost');
 
-        $this->assertEquals('http://localhost', $event->getUrl());
+        $this->assertSame('http://localhost', $event->getUrl());
     }
 }

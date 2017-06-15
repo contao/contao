@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\CoreBundle\Test\Fixtures\Adapter;
+namespace Contao\CoreBundle\Tests\Fixtures\Adapter;
 
 class LegacySingletonClass
 {

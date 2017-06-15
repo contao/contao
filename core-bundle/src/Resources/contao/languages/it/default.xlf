@@ -205,6 +205,21 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>Il file &quot;%s&quot; è già presente!</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Destinazione non valida</target>
@@ -885,6 +900,13 @@
         <source>Delete the element</source>
         <target>Elimina l'elemento</target>
       </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>Importa CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
+      </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
         <target>Importa CSV</target>
@@ -1379,6 +1401,9 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Toggle navigation</source>
         <target>Modifica navigazione</target>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Utente</target>
@@ -1663,6 +1688,9 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Relative path</source>
         <target>Path relativo</target>
       </trans-unit>
+      <trans-unit id="MSC.fileMeta">
+        <source>Meta data</source>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Versione</target>
@@ -1686,10 +1714,6 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
         <target>Modalità manutenzione abilitata.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-        <target>Modalità manutenzione disabilitata.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1748,20 +1772,23 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Annulla selezione</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Utilizza la selezione file</target>
+        <source>Files</source>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Utilizza il selettore pagina</target>
+        <source>Pages</source>
+        <target>Pagine</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Articoli</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Apri gestione file</target>
+        <source>File manager</source>
+        <target>Gestione file</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Modifica la struttura del sito</target>
+        <source>Site structure</source>
+        <target>Struttura sito</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1770,10 +1797,6 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Torna alla selezione pagina</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Ritorna alla selezione della pagina o alla selezione file ed effettua una selezione prima di chiudere la finestra di dialogo.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
@@ -2223,6 +2246,15 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Invalid token</source>
         <target>Token non valido</target>
       </trans-unit>
+      <trans-unit id="MSC.versionConflict">
+        <source>Version conflict</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict1">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict2">
+        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+      </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
         <target>Trascina gli elementi per riordinarli</target>
@@ -2240,8 +2272,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to store file meta information.</source>
-        <target>È necessario aggiungere una pagina root nella struttura del sito per archiviare le meta informazioni sui file</target>
+        <source>You have to add a root page in the site structure to enter file meta data.</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

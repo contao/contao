@@ -8,16 +8,17 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Exception;
+namespace Contao\CoreBundle\Tests\Exception;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the RedirectResponseException class.
  *
  * @author Christian Schiffler <https://github.com/discordier>
  */
-class RedirectResponseExceptionTest extends \PHPUnit_Framework_TestCase
+class RedirectResponseExceptionTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -37,7 +38,7 @@ class RedirectResponseExceptionTest extends \PHPUnit_Framework_TestCase
         $exception = new RedirectResponseException('http://example.org');
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertEquals(303, $exception->getResponse()->getStatusCode());
-        $this->assertEquals('http://example.org', $exception->getResponse()->headers->get('Location'));
+        $this->assertSame(303, $exception->getResponse()->getStatusCode());
+        $this->assertSame('http://example.org', $exception->getResponse()->headers->get('Location'));
     }
 }

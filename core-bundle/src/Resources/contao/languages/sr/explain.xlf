@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
-        <target>Уметање тагова</target>
+        <target>Уметни тагове</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
         <source>For more information on insert tags please visit &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt;.</source>
-        <target>За више информација о таговима које можете уметнути, посетите &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt;.</target>
+        <target>За више информација о таговима за уметање, посетите &lt;a href=&quot;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&quot; title=&quot;Contao online documentation&quot; target=&quot;_blank&quot;&gt;https://docs.contao.org/books/manual/current/en/04-managing-content/insert-tags.html&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
         <source>For more information about Ace please visit &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot;&gt;http://ace.c9.io&lt;/a&gt;.</source>
-        <target>За више информација о Ace, посетите &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot;&gt;http://ace.c9.io&lt;/a&gt;.</target>
+        <target>За више инфомрација о Ace, посетите &lt;a href=&quot;http://ace.c9.io&quot; title=&quot;Ace - The High Performance Code Editor for the Web&quot; target=&quot;_blank&quot;&gt;http://ace.c9.io&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.2.1">
         <source>MM/DD/YYYY, English format, e.g. 01/28/2005</source>
-        <target>MM/DD/YYYY, Енглески формат, нпр. 01/28/2005</target>
+        <target>MM/DD/YYYY, Енглески формат, нпр., 01/28/2005</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.3.0">
         <source>d.m.Y</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.3.1">
         <source>DD.MM.YYYY, German format, e.g. 28.01.2005</source>
-        <target>DD.MM.YYYY, Немачки формат, нпр. 28.01.2005</target>
+        <target>DD.MM.YYYY, Немачки формат, нпр., 28.01.2005</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.4.0">
         <source>y-n-j</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.4.1">
         <source>YY-M-D, without leading zeros, e.g. 05-1-28</source>
-        <target>YY-M-D, без водећих нула, нпр. 05-1-28</target>
+        <target>YY-M-D, без водећих нула, нпр., 05-1-28</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.5.0">
         <source>Ymd</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.5.1">
         <source>YYYYMMDD, timestamp, e.g. 20050128</source>
-        <target>YYYYMMDD, timestamp, нпр. 20050128</target>
+        <target>YYYYMMDD, timestamp, нпр., 20050128</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.6.0">
         <source>H:i:s</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.6.1">
         <source>24 hours, minutes and seconds, e.g. 20:36:59</source>
-        <target>24 часа, минуте и секунде, нпр. 20:36:59</target>
+        <target>24 часа, минуте и секунде, нпр., 20:36:59</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.7.0">
         <source>g:i</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="XPL.dateFormat.7.1">
         <source>12 hours without leading zeros and minutes, e.g. 8:36</source>
-        <target>12 часова без водеће нуле и минуте, нпр. 8:36</target>
+        <target>12 часова без водеће нуле и минуте, нпр., 8:36</target>
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.0.0">
         <source>Sizes attribute</source>

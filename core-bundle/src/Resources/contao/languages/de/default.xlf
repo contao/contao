@@ -205,6 +205,26 @@
         <source>The file &quot;%s&quot; already exists!</source>
         <target>Die Datei &quot;%s&quot; existiert bereits!</target>
       </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+        <target>Sie können nur Dateien auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+        <target>Sie können nur Ordner auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+        <target>Sie können nur Dateien oder Ordner innerhalb von &quot;%s&quot; auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+        <target>Sie können nur &quot;%s&quot;-Dateien auswählen!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+        <target>Ihre Auswahl enthält ungültige Seiten-IDs!</target>
+      </trans-unit>
       <trans-unit id="ERR.circularReference">
         <source>Invalid redirect target (circular reference)!</source>
         <target>Ungültiges Weiterleitungsziel (Zirkelbezug)!</target>
@@ -885,6 +905,14 @@
         <source>Delete the element</source>
         <target>Das Element löschen</target>
       </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>CSV-Import</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
+        <target>Optionen aus einer CSV-Datei importieren</target>
+      </trans-unit>
       <trans-unit id="MSC.tw_import.0">
         <source>CSV import</source>
         <target>CSV-Import</target>
@@ -1379,6 +1407,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>Toggle navigation</source>
         <target>Navigation umschalten</target>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+        <target>Mehr erfahren auf %s</target>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Benutzer</target>
@@ -1517,7 +1549,7 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       </trans-unit>
       <trans-unit id="MSC.pw_change">
         <source>Please enter a new password.</source>
-        <target>Bitte geben Sie ein neues Passwort ein</target>
+        <target>Bitte geben Sie ein neues Passwort ein.</target>
       </trans-unit>
       <trans-unit id="MSC.pw_changed">
         <source>The password has been updated.</source>
@@ -1663,6 +1695,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>Relative path</source>
         <target>Relativer Pfad</target>
       </trans-unit>
+      <trans-unit id="MSC.fileMeta">
+        <source>Meta data</source>
+        <target>Metadaten</target>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Version</target>
@@ -1686,10 +1722,6 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.maintenanceEnabled">
         <source>The maintenance mode is currently enabled.</source>
         <target>Der Wartungsmodus ist aktiv.</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceDisabled">
-        <source>The maintenance mode is currently disabled.</source>
-        <target>Der Wartungsmodus ist nicht aktiv.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -1748,20 +1780,24 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Auswahl aufheben</target>
       </trans-unit>
       <trans-unit id="MSC.filePicker">
-        <source>Switch to file picker</source>
-        <target>Zum Dateiwähler</target>
+        <source>Files</source>
+        <target>Dateien</target>
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
-        <source>Switch to page picker</source>
-        <target>Zum Seitenwähler</target>
+        <source>Pages</source>
+        <target>Seiten</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>Artikel</target>
       </trans-unit>
       <trans-unit id="MSC.fileManager">
-        <source>Open the file manager</source>
-        <target>Die Dateiverwaltung öffnen</target>
+        <source>File manager</source>
+        <target>Dateiverwaltung</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
-        <source>Modify the site structure</source>
-        <target>Die Seitenstruktur bearbeiten</target>
+        <source>Site structure</source>
+        <target>Seitenstruktur</target>
       </trans-unit>
       <trans-unit id="MSC.filePickerHome">
         <source>Back to the file picker</source>
@@ -1770,10 +1806,6 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.pagePickerHome">
         <source>Back to the page picker</source>
         <target>Zurück zum Seitenwähler</target>
-      </trans-unit>
-      <trans-unit id="MSC.pickerNoSelection">
-        <source>Please go back to the page or file picker and make a selection before you close the dialog.</source>
-        <target>Bitte gehen Sie zurück zum Seiten- bzw. Dateiwähler und nehmen Sie dort eine Auswahl vor, bevor Sie den Dialog schließen.</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Notifications</source>
@@ -2223,6 +2255,18 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>Invalid token</source>
         <target>Ungültiges Token</target>
       </trans-unit>
+      <trans-unit id="MSC.versionConflict">
+        <source>Version conflict</source>
+        <target>Versionskonflikt</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict1">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
+        <target>Ein anderer Benutzer hat die Version %s erstellt, während Sie die Version %s des Datensatzes bearbeitet haben.</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict2">
+        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+        <target>Ihre Änderungen wurden nun als Version %s gespeichert und haben die Änderungen der Version %s potentiell überschrieben, daher sollten Sie die nachstehenden Versionen vergleichen:</target>
+      </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
         <target>Elemente können durch Ziehen umsortiert werden</target>
@@ -2240,8 +2284,8 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Die Datei %s herunterladen</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to store file meta information.</source>
-        <target>Sie müssen einen Startpunkt in der Seitenstruktur anlegen, um Meta-Informationen zu speichern.</target>
+        <source>You have to add a root page in the site structure to enter file meta data.</source>
+        <target>Sie müssen einen Startpunkt in der Seitenstruktur anlegen, um Metadaten einzugeben.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

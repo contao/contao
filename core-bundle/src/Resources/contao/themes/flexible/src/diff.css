@@ -29,12 +29,11 @@ h2 {
 	max-width:220px;
 }
 .formbody .tl_submit {
-	padding-top:6px;
+	padding-top:5px;
 	padding-bottom:6px;
 }
 .formbody .arrow {
-	position:relative;
-	top:1px;
+	vertical-align:middle;
 }
 .formbody .static-version {
 	margin-right:3px;
@@ -45,7 +44,7 @@ h2 {
 	padding:6px 6px 6px 28px;
 	border-radius:2px;
 	background:url("icons/show.svg") no-repeat left center;
-	color:#427aae;
+	color:#006494;
 	line-height:1.2;
 }
 
@@ -79,6 +78,12 @@ h2 {
 }
 #diff dt,#diff dd {
 	margin:0;
-	padding:3px 6px;
-	font: 300 .75rem/1.25 "Roboto Mono", monospace;
+	padding:0 6px;
+	line-height:1.25;
+}
+#diff dl dt:first-of-type,#diff dl dd:first-of-type {
+	padding-top:3px;
+}
+#diff dl dt:last-of-type,#diff dl dd:last-of-type {
+	padding-bottom:3px;
 }

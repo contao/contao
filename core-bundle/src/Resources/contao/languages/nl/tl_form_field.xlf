@@ -326,8 +326,8 @@
         <target>Gebruik home directory</target>
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
-        <source>Store the file in the home directory if there is an authenticated user.</source>
-        <target>Als de gebruiker is ingelogd, sla het bestand dan op in zijn home directory in plaats van in de upload map.</target>
+        <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>Als een lid is ingelogd, sla het bestand dan op in zijn home directory.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -552,6 +552,10 @@
       <trans-unit id="tl_form_field.toggle.1">
         <source>Toggle the visibility of field ID %s</source>
         <target>Zichtbaarheid aanzetten van veld ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+        <target>Importeer van een CSV bestand</target>
       </trans-unit>
     </body>
   </file>
