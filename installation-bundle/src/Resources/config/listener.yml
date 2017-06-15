@@ -1,0 +1,7 @@
+services:
+    contao.listener.initialize_application:
+        class: Contao\InstallationBundle\EventListener\InitializeApplicationListener
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: contao_installation.initialize_application, method: onInitialize }

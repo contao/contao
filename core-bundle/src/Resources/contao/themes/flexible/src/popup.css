@@ -1,0 +1,79 @@
+/**
+ * Contao Open Source CMS
+ *
+ * Copyright (c) 2005-2017 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
+/* Body */
+body {
+	background:#fff;
+}
+
+/* Preview table */
+.tl_show {
+	width:96%;
+	margin:18px 2%;
+	padding:9px 0 18px;
+}
+.tl_show td {
+	padding:4px 6px;
+	line-height:18px;
+}
+.tl_show td:first-child {
+	width:34%;
+}
+.tl_show tr:nth-child(even) td {
+	background:#f6f6f8;
+}
+.tl_label {
+	margin-right:12px;
+	font-weight:bold;
+	white-space:nowrap;
+}
+.meta p {
+	margin:.5em 0 0;
+}
+.meta p:first-child {
+	margin-top:0;
+}
+#preview {
+	margin:18px;
+}
+#preview .checkerbox {
+	background-color:#fff;
+	background-image:linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd),linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd);
+	background-size:30px 30px;
+	background-position:0 0,15px 15px;
+}
+#preview .checkerbox,#preview .checkerbox img {
+	max-width:100%;
+	height:auto !important;
+}
+#download {
+	margin:24px 18px 12px;
+}
+#download img {
+	position:relative;
+	top:-2px;
+}
+.tl_submit {
+	padding:8px 12px 4px 10px;
+}
+
+@media (max-width:767px) {
+	.tl_show td {
+		word-break:break-word;
+	}
+}
+
+@media (max-width:459px) {
+	.meta {
+		display:none;
+	}
+	#preview {
+		margin-left:12px;
+		margin-right:12px;
+	}
+}
