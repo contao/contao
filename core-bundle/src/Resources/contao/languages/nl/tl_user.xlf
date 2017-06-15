@@ -41,6 +41,14 @@
         <source>Here you can override the global back end theme.</source>
         <target>Hier kunt u het standaard back-end thema overschrijven.</target>
       </trans-unit>
+      <trans-unit id="tl_user.limitWidth.0">
+        <source>Limit width</source>
+        <target>Maximum breedte</target>
+      </trans-unit>
+      <trans-unit id="tl_user.limitWidth.1">
+        <source>Limit the maximum width of the back end.</source>
+        <target>Maximum breedte van het backend instellen.</target>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
         <target>Bestand uploader</target>
@@ -207,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>Leden van deze groepen kunnen gebruikt worden in het frontend voorbeeld.</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>

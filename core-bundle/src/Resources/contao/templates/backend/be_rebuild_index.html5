@@ -43,9 +43,11 @@
     </script>
 
     <form action="<?= $this->action ?>" class="tl_form" method="get">
-      <div class="tl_submit_container">
-        <input type="hidden" name="do" value="maintenance">
-        <button type="submit" id="index" class="tl_submit"><?= $this->indexContinue ?></button>
+      <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+          <input type="hidden" name="do" value="maintenance">
+          <button type="submit" id="index" class="tl_submit"><?= $this->indexContinue ?></button>
+        </div>
       </div>
     </form>
 

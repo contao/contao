@@ -1,10 +1,11 @@
+
+<?= Message::generate() ?>
+
 <div id="tl_buttons">
   <a href="<?= ampersand($this->backUrl) ?>" class="header_back" title="<?= StringUtil::specialchars($this->backBTTitle) ?>" accesskey="b"><?= $this->backBT ?></a>
 </div>
 
-<?= Message::generate() ?>
-
-<form action="<?= ampersand($this->action) ?>" id="<?= $this->formId ?>" class="tl_form" method="post" enctype="multipart/form-data">
+<form action="<?= ampersand($this->action) ?>" id="<?= $this->formId ?>" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
   <div class="tl_formbody_edit">
     <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">

@@ -1,8 +1,24 @@
 # Contao core bundle change log
 
+### 4.4.0 (2017-06-15)
+
+ * Fix the "save and go back" function (see #870).
+
+### 4.4.0-RC2 (2017-06-12)
+
+ * Update all Contao components to their latest version.
+ * Regenerate the symlinks after importing a theme (see #867).
+ * Only check "gdMaxImgWidth" and "gdMaxImgHeight" if the GDlib is used to resize images (see #826).
+ * Improve the accessibility of the CAPTCHA widget (see contao/core#8709).
+ * Re-add the "reset selection" buttons to the picker (see #856).
+ * Trigger all the callbacks in the toggleVisibility() methods (see #756).
+ * Only execute the command scheduler upon the "contao_backend" and "contao_frontend" routes (see #736).
+ * Correctly set the important part in "edit multiple" mode (see #839).
+ * Remove the broken alias transliteration see (#848).
+
 ### 4.4.0-RC1 (2017-05-23)
 
- * Tweak the back end template. 
+ * Tweak the back end template.
  * Add the "allowed member groups" setting (see contao/core#8528).
  * Hide the CAPTCHA field by default by adding a honeypot field (see #832).
  * Add the "href" parameter to the article list (see #694).

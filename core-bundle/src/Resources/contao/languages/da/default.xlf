@@ -1384,6 +1384,9 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Bruger</target>

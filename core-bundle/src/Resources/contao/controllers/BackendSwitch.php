@@ -70,11 +70,14 @@ class BackendSwitch extends \Backend
 			}
 		}
 
+		$blnCanSwitchUser = ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg));
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');
 		$objTemplate->user = $strUser;
 		$objTemplate->show = \Input::cookie('FE_PREVIEW');
 		$objTemplate->update = false;
+		$objTemplate->canSwitchUser = $blnCanSwitchUser;
 
 		// Switch
 		if (\Input::post('FORM_SUBMIT') == 'tl_switch')
@@ -96,10 +99,8 @@ class BackendSwitch extends \Backend
 			}
 
 			// Switch user accounts
-			if ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg))
+			if ($blnCanSwitchUser)
 			{
-				$objTemplate->canSwitchUser = true;
-
 				// Remove old sessions
 				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
 							   ->execute(($time - \Config::get('sessionTimeout')), $strHash);

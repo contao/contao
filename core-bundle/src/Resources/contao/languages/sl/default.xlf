@@ -1395,6 +1395,9 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Uporabnik</target>

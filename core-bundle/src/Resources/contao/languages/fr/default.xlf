@@ -1406,6 +1406,9 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
       </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Utilisateur</target>

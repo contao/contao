@@ -1005,12 +1005,11 @@ class StringUtil
 	 */
 	public static function standardize($strString, $blnPreserveUppercase=false)
 	{
-		$arrSearch = array('/[^a-zA-Z0-9 \.\&\/_-]+/', '/[ \.\&\/-]+/');
+		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
 		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
 		$strString = static::stripInsertTags($strString);
-		$strString = Utf8::toAscii($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
 		if (is_numeric(substr($strString, 0, 1)))
@@ -1020,7 +1019,7 @@ class StringUtil
 
 		if (!$blnPreserveUppercase)
 		{
-			$strString = strtolower($strString);
+			$strString = Utf8::strtolower($strString);
 		}
 
 		return trim($strString, '-');

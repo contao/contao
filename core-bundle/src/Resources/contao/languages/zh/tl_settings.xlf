@@ -62,8 +62,7 @@
         <target>禁用命令调度</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
-        <source>Disable the periodic command scheduler and execute the cron.php script by a real cron job (which you have to set up manually).</source>
-        <target>禁用周期性的命令调度，并通过一个实际的调度工作(您必须进行手动配置)来执行cron.php。</target>
+        <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.0">
         <source>Minify the markup</source>

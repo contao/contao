@@ -15,6 +15,7 @@ use Contao\System;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class ContaoTableHandler extends AbstractProcessingHandler
+class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 

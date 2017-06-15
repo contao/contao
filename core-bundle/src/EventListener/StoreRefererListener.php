@@ -104,6 +104,7 @@ class StoreRefererListener
 
         // Move current to last if the referer is in both the URL and the session
         if ('' !== $ref && isset($referers[$ref])) {
+            $referers[$refererId] = array_merge($referers[$refererId], $referers[$ref]);
             $referers[$refererId]['last'] = $referers[$ref]['current'];
         }
 

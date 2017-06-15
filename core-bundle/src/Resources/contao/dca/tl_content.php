@@ -1107,7 +1107,7 @@ class tl_content extends Backend
 				break;
 
 			case 'player':
-				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'j_mediaelement'));
+				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_mediaelement'));
 				break;
 
 			case 'table':
@@ -1601,6 +1601,24 @@ class tl_content extends Backend
 
 
 	/**
+	 * Return the link picker wizard
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.
+	 *             Set the "dcaPicker" eval attribute instead.
+	 */
+	public function pagePicker(DataContainer $dc)
+	{
+		@trigger_error('Using tl_content::pagePicker() has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.', E_USER_DEPRECATED);
+
+		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->id, $dc->value, $dc->inputName);
+	}
+
+
+	/**
 	 * Return the delete content element button
 	 *
 	 * @param array  $row
@@ -1786,18 +1804,7 @@ class tl_content extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
-		$this->checkPermission();
-
-		// Check the field access
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
-		}
-
-		// Reverse the logic (elements have invisible=1)
-		$blnVisible = !$blnVisible;
-
-		// The onload_callbacks vary depending on the dynamic parent table (see #4894)
+		// Trigger the onload_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
@@ -1805,17 +1812,39 @@ class tl_content extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}(($dc ?: $this));
+					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$callback(($dc ?: $this));
+					$callback($dc);
 				}
+			}
+		}
+
+		// Check the field access
+		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
 			}
 		}
 
 		$objVersions = new Versions('tl_content', $intId);
 		$objVersions->initialize();
+
+		// Reverse the logic (elements have invisible=1)
+		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
@@ -1825,18 +1854,43 @@ class tl_content extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+					$blnVisible = $callback($blnVisible, $dc);
 				}
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=". time() .", invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_content SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
 
 		$objVersions->create();
 	}

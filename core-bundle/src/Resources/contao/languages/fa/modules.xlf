@@ -139,6 +139,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
+        <target>المان‌های محتوایی</target>
       </trans-unit>
       <trans-unit id="MOD.tl_form_field">
         <source>Fields</source>

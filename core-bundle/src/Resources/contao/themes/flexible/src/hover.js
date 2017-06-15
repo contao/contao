@@ -27,7 +27,7 @@ var Theme = {
 		var items = $(el).getChildren();
 		for (var i=0; i<items.length; i++) {
 			if (items[i].nodeName.toLowerCase() == 'td') {
-				items[i].setStyle('background-color', (state ? '#ebfdd7' : ''));
+				items[i].setStyle('background-color', (state ? '#fffce1' : ''));
 			}
 		}
 		window.console && console.warn('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
@@ -46,7 +46,7 @@ var Theme = {
 		if (!state) {
 			el.removeAttribute('data-visited');
 		}
-		$(el).setStyle('background-color', (state ? '#ebfdd7' : ''));
+		$(el).setStyle('background-color', (state ? '#fffce1' : ''));
 		window.console && console.warn('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
 	},
 

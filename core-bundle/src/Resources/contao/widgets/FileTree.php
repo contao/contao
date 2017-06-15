@@ -417,10 +417,7 @@ class FileTree extends \Widget implements DcaFilterInterface
     <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '') . '
   </div>';
 
-		if (!\Environment::get('isAjaxRequest'))
-		{
-			$return = '<div>' . $return . '</div>';
-		}
+		$return = '<div>' . $return . '</div>';
 
 		return $return;
 	}

@@ -86,7 +86,7 @@ class BackendMain extends \Backend
 		$packages = System::getContainer()->getParameter('kernel.packages');
 
 		$this->Template = new \BackendTemplate('be_main');
-		$this->Template->version = $packages['contao/core-bundle'];
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $packages['contao/core-bundle'];
 		$this->Template->main = '';
 
 		// Ajax request
@@ -229,6 +229,7 @@ class BackendMain extends \Backend
 		$this->Template->isPopup = \Input::get('popup');
 		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
+		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank">contao.org</a>');
 
 		$strSystemMessages = \Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');

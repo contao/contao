@@ -14,6 +14,8 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
  * Triggers the Contao command scheduler after the response has been sent.
@@ -46,10 +48,12 @@ class CommandSchedulerListener
 
     /**
      * Runs the command scheduler.
+     *
+     * @param PostResponseEvent $event
      */
-    public function onKernelTerminate()
+    public function onKernelTerminate(PostResponseEvent $event)
     {
-        if (!$this->framework->isInitialized() || !$this->canRunController()) {
+        if (!$this->framework->isInitialized() || !$this->canRunController($event->getRequest())) {
             return;
         }
 
@@ -61,15 +65,18 @@ class CommandSchedulerListener
     /**
      * Checks whether the controller can be run.
      *
+     * @param Request $request
+     *
      * @return bool
      */
-    private function canRunController()
+    private function canRunController(Request $request)
     {
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         return $config->isComplete()
             && !$config->get('disableCron')
+            && in_array($request->attributes->get('_route'), ['contao_backend', 'contao_frontend'], true)
             && $this->connection->isConnected()
             && $this->connection->getSchemaManager()->tablesExist(['tl_cron'])
         ;

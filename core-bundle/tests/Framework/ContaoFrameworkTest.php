@@ -341,13 +341,8 @@ class ContaoFrameworkTest extends TestCase
         $rtAdapter = $this
             ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
-            ->setMethods(['get', 'validate'])
+            ->setMethods(['validate'])
             ->getMock()
-        ;
-
-        $rtAdapter
-            ->method('get')
-            ->willReturn('nonsense')
         ;
 
         $rtAdapter

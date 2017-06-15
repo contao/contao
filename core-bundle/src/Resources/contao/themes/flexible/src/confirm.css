@@ -13,28 +13,30 @@ body {
 
 /* Container */
 #container {
-	width:640px;
+	width:620px;
 	margin:15em auto 0;
 	background:#fff;
+	border-radius:2px;
 }
 
 /* Elements */
 h1 {
-	padding:14px 18px 12px;
-	line-height:22px;
-	border-bottom:1px solid #ddd;
+	margin-bottom:1em;
 }
 p {
 	line-height:1.3;
-}
-p a {
-	vertical-align:middle;
 }
 .link {
 	word-wrap:break-word;
 }
 .tl_formbody_edit {
-	padding:18px 18px 6px;
+	padding:45px;
+}
+.submit_container {
+	margin-top:1.5em;
+}
+.submit_container a {
+	vertical-align:middle;
 }
 .tl_submit {
 	margin-right:6px;
