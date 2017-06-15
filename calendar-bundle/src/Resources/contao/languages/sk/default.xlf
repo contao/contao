@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>až do</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Kalendár/Udalosti</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

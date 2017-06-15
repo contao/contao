@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.0">
         <source>Redirect page</source>
-        <target>Преусмерење странице</target>
+        <target>Страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.notify.0">
         <source>Notify</source>
-        <target>Обавештења</target>
+        <target>Обавести</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.1">
         <source>Please choose who to notify when comments are added.</source>
@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Редослед сортирања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>По основној поставци, коментари се сортирају у растућем редоследу, почев од најстаријег.</target>
+        <target>Подразумевана поставка је да се коментари сортирају у растућем редоследу, почевши од насјстаријег.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Датум и време последње ревизије</target>
+        <target>Датум и време последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.source_text">
         <source>Full articles</source>
-        <target>Комплетан чланак</target>
+        <target>Комплетни чланци</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New calendar</source>

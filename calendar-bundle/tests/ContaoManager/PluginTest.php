@@ -8,17 +8,21 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Test\ContaoManager;
+namespace Contao\CalendarBundle\Tests\ContaoManager;
 
+use Contao\CalendarBundle\ContaoCalendarBundle;
 use Contao\CalendarBundle\ContaoManager\Plugin;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Plugin class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PluginTest extends \PHPUnit_Framework_TestCase
+class PluginTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -35,14 +39,14 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetBundles()
     {
-        $parser = $this->getMock('Contao\ManagerPlugin\Bundle\Parser\ParserInterface');
+        $parser = $this->createMock(ParserInterface::class);
 
         /** @var BundleConfig $config */
         $config = (new Plugin())->getBundles($parser)[0];
 
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
-        $this->assertEquals('Contao\CalendarBundle\ContaoCalendarBundle', $config->getName());
-        $this->assertEquals(['Contao\CoreBundle\ContaoCoreBundle'], $config->getLoadAfter());
-        $this->assertEquals(['calendar'], $config->getReplace());
+        $this->assertSame(ContaoCalendarBundle::class, $config->getName());
+        $this->assertSame([ContaoCoreBundle::class], $config->getLoadAfter());
+        $this->assertSame(['calendar'], $config->getReplace());
     }
 }

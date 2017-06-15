@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>တိုင် %s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>အဖြစ်အပျက်များ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

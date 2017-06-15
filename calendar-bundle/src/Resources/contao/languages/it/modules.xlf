@@ -13,6 +13,10 @@
         <source>Calendar feeds</source>
         <target>Feed RSS Eventi</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_calendar_events">
+        <source>Events</source>
+        <target>Calendario/Eventi</target>
+      </trans-unit>
       <trans-unit id="FMD.events">
         <source>Events</source>
         <target>Calendario/Eventi</target>

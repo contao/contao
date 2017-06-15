@@ -8,12 +8,15 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Test\EventListener;
+namespace Contao\CalendarBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
+use Contao\CalendarEventsModel;
+use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Events;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
+class PreviewUrlConverterListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -52,7 +55,7 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new PreviewUrlConvertListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlConvert($event);
 
-        $this->assertEquals('http://localhost/events/winter-holidays.html', $event->getUrl());
+        $this->assertSame('http://localhost/events/winter-holidays.html', $event->getUrl());
     }
 
     /**
@@ -118,42 +121,33 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($isInitialized = true)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn($isInitialized)
         ;
 
         $eventsAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['generateEventUrl'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['generateEventUrl'])
             ->getMock()
         ;
 
         $eventsAdapter
-            ->expects($this->any())
             ->method('generateEventUrl')
             ->willReturn('events/winter-holidays.html')
         ;
 
         $eventsModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
-            ->setMethods(['findByPk'])
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
+            ->setMethods(['findByPk'])
             ->getMock()
         ;
 
         $eventsModelAdapter
-            ->expects($this->any())
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
                 switch ($id) {
@@ -167,14 +161,13 @@ class PreviewUrlConverterListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($eventsAdapter, $eventsModelAdapter) {
                 switch ($key) {
-                    case 'Contao\Events':
+                    case Events::class:
                         return $eventsAdapter;
 
-                    case 'Contao\CalendarEventsModel':
+                    case CalendarEventsModel::class:
                         return $eventsModelAdapter;
 
                     default:

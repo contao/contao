@@ -13,6 +13,10 @@
         <source>Calendar feeds</source>
         <target>日历源</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_calendar_events">
+        <source>Events</source>
+        <target>活动</target>
+      </trans-unit>
       <trans-unit id="FMD.events">
         <source>Events</source>
         <target>活动</target>

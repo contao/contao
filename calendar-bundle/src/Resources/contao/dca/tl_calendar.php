@@ -357,11 +357,11 @@ class tl_calendar extends Backend
 													   ->limit(1)
 													   ->execute($this->User->id);
 
-							$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
+							$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
 
 							if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
 							{
-								$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
+								$arrCalendars = StringUtil::deserialize($objUser->calendars, true);
 								$arrCalendars[] = Input::get('id');
 
 								$this->Database->prepare("UPDATE tl_user SET calendars=? WHERE id=?")

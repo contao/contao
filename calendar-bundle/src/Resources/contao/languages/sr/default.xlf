@@ -7,14 +7,15 @@
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>&amp;lt;</source>
-        <target>&lt;</target>
+        <target>&amp;lt;</target>
       </trans-unit>
       <trans-unit id="MSC.cal_next">
         <source>&amp;gt;</source>
-        <target>&gt;</target>
+        <target>&amp;gt;</target>
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">
         <source>–</source>
+        <target>–</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
@@ -55,6 +56,10 @@
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
         <target>до %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Догађаји</target>
       </trans-unit>
     </body>
   </file>

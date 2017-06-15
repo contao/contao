@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>直到%s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>活动</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

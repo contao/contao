@@ -17,6 +17,12 @@
         <source>Show events only once even if they span multiple days.</source>
         <target>Vis kun en begivenhed én gang selv om den strækker sig over flere dage.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_hideRunning.0">
+        <source>Hide running events</source>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_hideRunning.1">
+        <source>Do not show running events in the list of upcoming events.</source>
+      </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
         <target>Ugens startdag</target>

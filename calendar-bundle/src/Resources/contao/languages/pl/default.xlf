@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>aż do %s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Kalendarz/Wydarzenia</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

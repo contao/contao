@@ -320,7 +320,7 @@ class ModuleEventlist extends \Events
 					}
 
 					$event['singleSRC'] = $objModel->path;
-					$this->addImageToTemplate($objTemplate, $event);
+					$this->addImageToTemplate($objTemplate, $event, null, null, $objModel);
 				}
 			}
 

@@ -13,6 +13,10 @@
         <source>Calendar feeds</source>
         <target>Kalendorių srautai</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_calendar_events">
+        <source>Events</source>
+        <target>Įvykiai</target>
+      </trans-unit>
       <trans-unit id="FMD.events">
         <source>Events</source>
         <target>Įvykiai</target>

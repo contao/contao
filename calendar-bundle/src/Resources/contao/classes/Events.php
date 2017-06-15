@@ -212,7 +212,6 @@ abstract class Events extends \Module
 		{
 			@trigger_error('Calling Events::addEvent() with 7 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $strUrl as 4th argument anymore.', E_USER_DEPRECATED);
 
-			$intBegin = func_get_arg(4);
 			$intLimit = func_get_arg(5);
 			$intCalendar = func_get_arg(6);
 		}

@@ -44,6 +44,9 @@
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

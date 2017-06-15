@@ -1,36 +1,11 @@
 # Contao calendar bundle change log
 
-### 4.3.8 (2017-04-24)
+### 4.4.0-RC2 (2017-06-12)
 
- * Correctly use the en dash in the calendar modules (see contao/core#8690).
- * Correctly support 64 character template names everywhere (see contao/core#6819).
+ * Trigger all the callbacks in the toggleVisibility() methods (see contao/core-bundle#756).
 
-### 4.3.6 (2017-03-22)
+### 4.4.0-beta1 (2017-05-05)
 
- * Correctly add the author name in the Atom feeds (contao/news-bundle#9)
-
-### 4.3.4 (2016-01-23)
-
- * Fix the version contraints of the manager plugin.
-
-### 4.3.3 (2016-01-18)
-
- * Correctly add new resources to the user/group permissions (see contao/core#8583).
-
-### 4.3.2 (2016-12-22)
-
- * Correctly show running repeated events in the event list (see #7).
-
-### 4.3.1 (2016-12-21)
-
- * Add the missing w50 classes.
- * Correctly show running repeated events in the event list (see contao/core#8588).
-
-### 4.3.0 (2016-11-25)
-
- * Only evaluate `hasDetails()` and `hasText()` upon the first call.
-
-### 4.3.0-RC1 (2016-10-31)
-
- * Do not show protected elements if "show unpublished elements" is enabled (see contao/core#8149).
- * Allow to select whether to show or hide running events in the event list (see contao/core#8497).
+ * Use the file meta data by default when adding an image (see contao/core-bundle#807).
+ * Add the DCA picker (see contao/core-bundle#755).
+ * Improve the findByIdOrAlias() method (see contao/core-bundle#729).

@@ -1,9 +1,4 @@
 services:
-    contao_calendar.listener.file_meta_information:
-        class: Contao\CalendarBundle\EventListener\FileMetaInformationListener
-        arguments:
-            - "@contao.framework"
-
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:

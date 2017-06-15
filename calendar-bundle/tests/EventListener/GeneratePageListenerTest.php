@@ -8,21 +8,24 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CalendarBundle\Test\EventListener;
+namespace Contao\CalendarBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CalendarBundle\EventListener\GeneratePageListener;
+use Contao\CalendarFeedModel;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use Contao\Template;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the GeneratePageListener class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
+class GeneratePageListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -39,22 +42,10 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnGeneratePage()
     {
-        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
-        $pageModel = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $layoutModel = $this
-            ->getMockBuilder('Contao\LayoutModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $pageModel = $this->createMock(PageModel::class);
+        $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -72,7 +63,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener->onGeneratePage($pageModel, $layoutModel);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 '<link type="application/rss+xml" rel="alternate" href="http://localhost/share/events.xml" title="Upcoming events">',
             ],
@@ -85,22 +76,10 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnIfNoFeeds()
     {
-        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
-        $pageModel = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $layoutModel = $this
-            ->getMockBuilder('Contao\LayoutModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $pageModel = $this->createMock(PageModel::class);
+        $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -126,22 +105,10 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnIfNoModels()
     {
-        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
-        $pageModel = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $layoutModel = $this
-            ->getMockBuilder('Contao\LayoutModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $pageModel = $this->createMock(PageModel::class);
+        $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -171,29 +138,16 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($noModels = false)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $feedModel = $this
-            ->getMockBuilder('Contao\CalendarFeedModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $feedModel = $this->createMock(CalendarFeedModel::class);
 
         $feedModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -216,28 +170,26 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $calendarFeedModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
             ->setMethods(['findByIds'])
-            ->setConstructorArgs(['Contao\CalendarFeedModel'])
             ->getMock()
         ;
 
         $calendarFeedModelAdapter
-            ->expects($this->any())
             ->method('findByIds')
             ->willReturn($noModels ? null : new Collection([$feedModel], 'tl_calendar_feeds'))
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($calendarFeedModelAdapter) {
                 switch ($key) {
-                    case 'Contao\CalendarFeedModel':
+                    case CalendarFeedModel::class:
                         return $calendarFeedModelAdapter;
 
-                    case 'Contao\Template':
-                        return new Adapter('Contao\Template');
+                    case Template::class:
+                        return new Adapter(Template::class);
 
                     default:
                         return null;

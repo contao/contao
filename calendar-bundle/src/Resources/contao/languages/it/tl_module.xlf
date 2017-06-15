@@ -17,6 +17,14 @@
         <source>Show events only once even if they span multiple days.</source>
         <target>Visualizza gli eventi una sola volta anche se durano più giorni.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_hideRunning.0">
+        <source>Hide running events</source>
+        <target>Nascondi gli eventi in corso</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_hideRunning.1">
+        <source>Do not show running events in the list of upcoming events.</source>
+        <target>Non mostrare gli eventi in corso nell'elenco di eventi prossimi.</target>
+      </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
         <target>Primo giorno della settimana</target>

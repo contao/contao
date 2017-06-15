@@ -56,6 +56,10 @@
         <source>until %s</source>
         <target>do %s</target>
       </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Događanja</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

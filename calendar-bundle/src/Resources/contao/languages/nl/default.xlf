@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">
         <source>–</source>
+        <target>–</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
@@ -55,6 +56,10 @@
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
         <target>tot %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.eventPicker">
+        <source>Events</source>
+        <target>Kalender/Evenementen</target>
       </trans-unit>
     </body>
   </file>
