@@ -41,6 +41,10 @@
         <source>&amp;gt;</source>
         <target>&gt;</target>
       </trans-unit>
+      <trans-unit id="MSC.newsPicker">
+        <source>News</source>
+        <target>Jaunumi</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

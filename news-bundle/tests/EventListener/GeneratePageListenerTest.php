@@ -8,21 +8,23 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\NewsBundle\Test\EventListener;
+namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\NewsBundle\EventListener\GeneratePageListener;
+use Contao\LayoutModel;
 use Contao\Model\Collection;
+use Contao\NewsBundle\EventListener\GeneratePageListener;
+use Contao\NewsFeedModel;
 use Contao\PageModel;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the GeneratePageListener class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
+class GeneratePageListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
@@ -39,22 +41,9 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnGeneratePage()
     {
-        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
-        $pageModel = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $layoutModel = $this
-            ->getMockBuilder('Contao\LayoutModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -70,9 +59,9 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['TL_HEAD'] = [];
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 '<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">',
             ],
@@ -85,22 +74,9 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnIfNoFeeds()
     {
-        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
-        $pageModel = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $layoutModel = $this
-            ->getMockBuilder('Contao\LayoutModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -116,7 +92,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['TL_HEAD'] = [];
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
@@ -126,22 +102,9 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnIfNoModels()
     {
-        /** @var PageModel|\PHPUnit_Framework_MockObject_MockObject $pageModel */
-        $pageModel = $this
-            ->getMockBuilder('Contao\PageModel')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $layoutModel = $this
-            ->getMockBuilder('Contao\LayoutModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -157,7 +120,7 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['TL_HEAD'] = [];
 
         $listener = new GeneratePageListener($this->mockContaoFramework(true));
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
@@ -171,29 +134,16 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function mockContaoFramework($noModels = false)
     {
-        /** @var ContaoFramework|\PHPUnit_Framework_MockObject_MockObject $framework */
-        $framework = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\ContaoFramework')
-            ->disableOriginalConstructor()
-            ->setMethods(['isInitialized', 'getAdapter'])
-            ->getMock()
-        ;
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
-            ->expects($this->any())
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $feedModel = $this
-            ->getMockBuilder('Contao\NewsFeedModel')
-            ->setMethods(['__get'])
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $feedModel = $this->createMock(NewsFeedModel::class);
 
         $feedModel
-            ->expects($this->any())
             ->method('__get')
             ->willReturnCallback(function ($key) {
                 switch ($key) {
@@ -216,20 +166,18 @@ class GeneratePageListenerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $newsFeedModelAdapter = $this
-            ->getMockBuilder('Contao\CoreBundle\Framework\Adapter')
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
             ->setMethods(['findByIds'])
-            ->setConstructorArgs(['Contao\NewsFeedModel'])
             ->getMock()
         ;
 
         $newsFeedModelAdapter
-            ->expects($this->any())
             ->method('findByIds')
             ->willReturn($noModels ? null : new Collection([$feedModel], 'tl_news_feeds'))
         ;
 
         $framework
-            ->expects($this->any())
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($newsFeedModelAdapter) {
                 switch ($key) {

@@ -13,6 +13,10 @@
         <source>News feeds</source>
         <target>Flux RSS d'actualités</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_news">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>
         <target>Actualités</target>

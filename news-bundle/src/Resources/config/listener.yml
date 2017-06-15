@@ -1,9 +1,4 @@
 services:
-    contao_news.listener.file_meta_information:
-        class: Contao\NewsBundle\EventListener\FileMetaInformationListener
-        arguments:
-            - "@contao.framework"
-
     contao_news.listener.generate_page:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:

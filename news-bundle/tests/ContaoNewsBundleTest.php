@@ -8,16 +8,17 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\NewsBundle\Test;
+namespace Contao\NewsBundle\Tests;
 
 use Contao\NewsBundle\ContaoNewsBundle;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ContaoNewsBundle class.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContaoNewsBundleTest extends \PHPUnit_Framework_TestCase
+class ContaoNewsBundleTest extends TestCase
 {
     /**
      * Tests the object instantiation.

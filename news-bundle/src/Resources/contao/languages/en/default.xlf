@@ -32,6 +32,9 @@
       <trans-unit id="MSC.news_next">
         <source>&amp;gt;</source>
       </trans-unit>
+      <trans-unit id="MSC.newsPicker">
+        <source>News</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

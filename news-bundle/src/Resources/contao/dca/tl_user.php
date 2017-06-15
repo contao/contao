@@ -10,10 +10,14 @@
 
 
 /**
- * Extend default palette
+ * Extend the default palettes
  */
-$GLOBALS['TL_DCA']['tl_user']['palettes']['extend'] = str_replace('fop;', 'fop;{news_legend},news,newp,newsfeeds,newsfeedp;', $GLOBALS['TL_DCA']['tl_user']['palettes']['extend']);
-$GLOBALS['TL_DCA']['tl_user']['palettes']['custom'] = str_replace('fop;', 'fop;{news_legend},news,newp,newsfeeds,newsfeedp;', $GLOBALS['TL_DCA']['tl_user']['palettes']['custom']);
+Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+    ->addLegend('news_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
+    ->addField(array('news', 'newp', 'newsfeeds', 'newsfeedp'), 'news_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('extend', 'tl_user')
+    ->applyToPalette('custom', 'tl_user')
+;
 
 
 /**

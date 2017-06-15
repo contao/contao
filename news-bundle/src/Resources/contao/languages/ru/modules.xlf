@@ -13,6 +13,10 @@
         <source>News feeds</source>
         <target>Каналы новостей</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_news">
+        <source>Articles</source>
+        <target>Статьи</target>
+      </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>
         <target>Новости</target>
