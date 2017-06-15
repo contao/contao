@@ -21,8 +21,8 @@
         "nelmio/security-bundle": "^2.2",
         "terminal42/header-replay-bundle": "^1.0",
         "contao/manager-plugin": "^2.1",
-        "contao/core-bundle": "~4.4.0@dev",
-        "contao/installation-bundle": "~4.4.0@dev"
+        "contao/core-bundle": "4.4.*",
+        "contao/installation-bundle": "4.4.*"
     },
     "require-dev": {
         "composer/composer": "^1.0",
@@ -54,9 +54,6 @@
         "bin/contao-console"
     ],
     "extra": {
-        "branch-alias": {
-            "dev-release/4.4.0": "4.4.x-dev"
-        },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
 }
