@@ -5,6 +5,10 @@
         <source>Last update on %s by %s.</source>
         <target>Son Güncelleme: %s, Güncelleyen: %s.</target>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+        <target>SSS</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

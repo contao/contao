@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.0">
         <source>Redirect page</source>
-        <target>Преусмерење странице</target>
+        <target>Страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.1">
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Одаберите кога обавестити у случају новог коментара.</target>
+        <target>Изаберите ко треба да добије обавештење у случају новог коментара.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.0">
         <source>Sort order</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>По основној поставци, коментари се сортирају у растућем редоследу, почев од најстаријег.</target>
+        <target>По подразумеваној поставци, коментари се сортирају у растућем редоследу, почев од најстаријег.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.0">
         <source>Comments per page</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.0">
         <source>Moderate comments</source>
-        <target>Модерирање коментара</target>
+        <target>Управљање коментарима</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.1">
         <source>Approve comments before they are published on the website.</source>
@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Дозволити BBCode</target>
+        <target>Дозволи BBCode</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Дозволити корисницима да користе BBCode у својим коментарима.</target>
+        <target>Дозволи корисницима да користе BBCode у својим коментарима.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.0">
         <source>Require login to comment</source>
@@ -91,11 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.0">
         <source>Revision date</source>
-        <target>Датум ревизије</target>
+        <target>Датум последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Датум и време последње ревизије</target>
+        <target>Датум и време последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_author">
         <source>Author of the FAQ</source>
-        <target>Аутор ЧПП-а</target>
+        <target>Аутор ЧПП</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.notify_both">
         <source>Author and system administrator</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.1">
         <source>Duplicate category ID %s</source>
-        <target>Копирај каегорију  ID %s</target>
+        <target>Копирај категорију  ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.delete.0">
         <source>Delete category</source>

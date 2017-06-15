@@ -1,13 +1,12 @@
 # Contao FAQ bundle change log
 
-### 4.3.2 (2016-01-23)
+### 4.4.0-RC2 (2017-06-12)
 
- * Fix the version contraints of the manager plugin.
+ * Trigger all the callbacks in the toggleVisibility() methods (see contao/core-bundle#756).
 
-### 4.3.1 (2016-01-18)
+### 4.4.0-beta1 (2017-05-05)
 
- * Correctly add new resources to the user/group permissions (see contao/core#8583).
-
-### 4.3.0-RC1 (2016-10-31)
-
- * Adjust the back end CSS classes.
+ * Optimize the element preview height (see contao/core-bundle#678).
+ * Use the file meta data by default when adding an image (see contao/core-bundle#807).
+ * Add the DCA picker (see contao/core-bundle#755).
+ * Improve the findByIdOrAlias() method (see contao/core-bundle#729).

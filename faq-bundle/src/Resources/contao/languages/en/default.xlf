@@ -5,6 +5,9 @@
       <trans-unit id="MSC.faqCreatedBy">
         <source>Last update on %s by %s.</source>
       </trans-unit>
+      <trans-unit id="MSC.faqPicker">
+        <source>FAQ</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

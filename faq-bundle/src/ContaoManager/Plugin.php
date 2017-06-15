@@ -10,8 +10,10 @@
 
 namespace Contao\FaqBundle\ContaoManager;
 
-use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 
 /**
@@ -27,8 +29,8 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('Contao\FaqBundle\ContaoFaqBundle')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle'])
+            BundleConfig::create(ContaoFaqBundle::class)
+                ->setLoadAfter([ContaoCoreBundle::class])
                 ->setReplace(['faq']),
         ];
     }

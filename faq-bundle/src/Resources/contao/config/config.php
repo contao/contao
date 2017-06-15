@@ -36,11 +36,19 @@ array_insert($GLOBALS['FE_MOD'], 3, array
 
 
 /**
+ * Style sheet
+ */
+if (TL_MODE == 'BE')
+{
+	$GLOBALS['TL_CSS'][] = 'bundles/contaofaq/style.css|static';
+}
+
+
+/**
  * Register hooks
  */
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('ModuleFaq', 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_faq.listener.insert_tags', 'onReplaceInsertTags');
-$GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'][] = array('contao_faq.listener.file_meta_information', 'onAddFileMetaInformationToRequest');
 
 
 /**

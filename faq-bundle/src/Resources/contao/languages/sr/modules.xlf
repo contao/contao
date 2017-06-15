@@ -9,6 +9,10 @@
         <source>Manage frequently asked questions</source>
         <target>Уреди ЧПП</target>
       </trans-unit>
+      <trans-unit id="MOD.tl_faq">
+        <source>Questions</source>
+        <target>Питања</target>
+      </trans-unit>
       <trans-unit id="FMD.faq">
         <source>FAQ</source>
         <target>ЧПП</target>
@@ -27,7 +31,7 @@
       </trans-unit>
       <trans-unit id="FMD.faqreader.1">
         <source>Shows the answer to a frequently asked question</source>
-        <target>Приказивање одговра на ЧПП</target>
+        <target>Приказ одговора на ЧПП</target>
       </trans-unit>
       <trans-unit id="FMD.faqpage.0">
         <source>FAQ page</source>
@@ -35,7 +39,7 @@
       </trans-unit>
       <trans-unit id="FMD.faqpage.1">
         <source>Shows the FAQ list and FAQ reader on the same page</source>
-        <target>Приказивање листе ЧПП у читача ЧПП на истој страници</target>
+        <target>Приказ листе ЧПП и читача ЧПП на истој страници</target>
       </trans-unit>
     </body>
   </file>

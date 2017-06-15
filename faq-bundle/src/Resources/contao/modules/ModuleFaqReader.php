@@ -134,7 +134,7 @@ class ModuleFaqReader extends \Module
 				$arrFaq = $objFaq->row();
 				$arrFaq['singleSRC'] = $objModel->path;
 
-				$this->addImageToTemplate($this->Template, $arrFaq);
+				$this->addImageToTemplate($this->Template, $arrFaq, null, null, $objModel);
 			}
 		}
 

@@ -8,7 +8,6 @@ cache:
 
 init:
   - SET PATH=c:\php;%PATH%
-  - SET SYMFONY_DEPRECATIONS_HELPER=weak
 
 install:
   - mkdir c:\php && cd c:\php

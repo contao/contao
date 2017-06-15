@@ -106,7 +106,7 @@ class ModuleFaqPage extends \Module
 					$arrFaq['singleSRC'] = $objModel->path;
 					$strLightboxId = 'lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']'; // see #5810
 
-					$this->addImageToTemplate($objTemp, $arrFaq, null, $strLightboxId);
+					$this->addImageToTemplate($objTemp, $arrFaq, null, $strLightboxId, $objModel);
 				}
 			}
 
