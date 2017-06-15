@@ -106,8 +106,8 @@ Annuller: %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
-        <target>En ny kommentar er blevet skrevet til %s</target>
+        <source>New comment on %s</source>
+        <target>Ny kommentar til %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
         <source>Hello %s,
@@ -132,6 +132,22 @@ En ny kommentar er blevet skrevet på en side du har tilmeldt underretning om:
 Afmelde underretninger:
 %s
 </target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
       </trans-unit>
     </body>
   </file>

@@ -106,7 +106,7 @@ Atšaukti: %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
+        <source>New comment on %s</source>
         <target>Naujas komentaras apie %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
@@ -132,6 +132,22 @@ puslapyje, kurį sekate, pridėtas naujas komentaras&quot;
 Jei nebenorite sekti, spauskite čia:
 %s
 </target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
       </trans-unit>
     </body>
   </file>

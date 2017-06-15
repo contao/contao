@@ -1,18 +1,13 @@
 # Contao comments bundle change log
 
-### 4.3.8 (2017-04-24)
+### 4.4.0-RC2 (2017-06-12)
 
- * Correctly support 64 character template names everywhere (see contao/core#6819).
+ * Trigger all the callbacks in the toggleVisibility() methods (see contao/core-bundle#756).
 
-### 4.3.2 (2016-01-23)
+### 4.4.0-RC1 (2017-05-23)
 
- * Fix the version contraints of the manager plugin.
+ * Notify subscribers of replies (see contao/core#8565).
 
-### 4.3.1 (2017-01-18)
+### 4.4.0-beta1 (2017-05-05)
 
- * Require version 0.2 of the manager plugin.
-
-### 4.3.0-RC1 (2016-10-31)
-
- * Do not show protected elements if "show unpublished elements" is enabled (see contao/core#8149).
- * Adjust the mod_comment_form.html5 template (see contao/core-bundle#519).
+ * Optimize the element preview height (see contao/core-bundle#678).

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_content.com_order.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Редослед сортирања</target>
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Одобравање коментара прије него што постану видљиви на сајту.</target>
+        <target>Одобри коментаре прије него што постану видљиви на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>

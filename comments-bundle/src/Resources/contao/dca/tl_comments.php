@@ -26,6 +26,10 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			array('tl_comments', 'checkPermission')
 		),
+		'onsubmit_callback' => array
+		(
+			array('tl_comments', 'notifyOfReply')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -231,6 +235,11 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['notified'],
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'notifiedReply' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['notifiedReply'],
+			'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)
 );
@@ -320,6 +329,41 @@ class tl_comments extends Backend
 				}
 				break;
 		}
+	}
+
+
+	/**
+	 * Notify subscribers of a reply
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function notifyOfReply(DataContainer $dc)
+	{
+		// Return if there is no active record (override all) or no reply or the notification has been sent already
+		if (!$dc->activeRecord || !$dc->activeRecord->addReply || $dc->activeRecord->notifyReply)
+		{
+			return;
+		}
+
+		$objNotify = \CommentsNotifyModel::findActiveBySourceAndParent($dc->activeRecord->source, $dc->activeRecord->parent);
+
+		if ($objNotify !== null)
+		{
+			while ($objNotify->next())
+			{
+				// Prepare the URL
+				$strUrl = \Idna::decode(\Environment::get('base')) . $objNotify->url;
+
+				$objEmail = new \Email();
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], \Idna::decode(\Environment::get('host')));
+				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove);
+				$objEmail->sendTo($objNotify->email);
+			}
+		}
+
+		$this->Database->prepare("UPDATE tl_comments SET notifiedReply='1' WHERE id=?")->execute($dc->id);
 	}
 
 
@@ -530,7 +574,7 @@ class tl_comments extends Backend
 		return '
 <div class="comment_wrap">
 <div class="cte_type ' . $key . '"><strong><a href="mailto:' . Idna::decodeEmail($arrRow['email']) . '" title="' . StringUtil::specialchars(Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a></strong>' . (($arrRow['website'] != '') ? ' (<a href="' . $arrRow['website'] . '" title="' . StringUtil::specialchars($arrRow['website']) . '" target="_blank">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' - ' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ' - IP ' . StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="limit_height mark_links' . (!Config::get('doNotCollapse') ? ' h52' : '') . '">
+<div class="limit_height mark_links' . (!Config::get('doNotCollapse') ? ' h38' : '') . '">
 ' . $arrRow['comment'] . '
 </div>
 </div>' . "\n    ";
@@ -635,12 +679,40 @@ class tl_comments extends Backend
 			$dc->id = $intId; // see #8043
 		}
 
-		$this->checkPermission();
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_comments']['config']['onload_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_comments']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
 
 		// Check the field access
 		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$objRow = $this->Database->prepare("SELECT * FROM tl_comments WHERE id=?")
+									 ->limit(1)
+									 ->execute($intId);
+
+			if ($objRow->numRows)
+			{
+				$dc->activeRecord = $objRow;
+			}
 		}
 
 		$objVersions = new Versions('tl_comments', $intId);
@@ -654,18 +726,43 @@ class tl_comments extends Backend
 				if (is_array($callback))
 				{
 					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
 				elseif (is_callable($callback))
 				{
-					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+					$blnVisible = $callback($blnVisible, $dc);
 				}
 			}
 		}
 
+		$time = time();
+
 		// Update the database
-		$this->Database->prepare("UPDATE tl_comments SET tstamp=". time() .", published='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_comments SET tstamp=$time, published='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->time = $time;
+			$dc->activeRecord->published = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_comments']['config']['onsubmit_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_comments']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
 
 		$objVersions->create();
 	}

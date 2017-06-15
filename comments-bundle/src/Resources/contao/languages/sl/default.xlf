@@ -118,8 +118,8 @@ Preklic: %s⏎
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
-        <target>Na %s je bil dodan nov komentar</target>
+        <source>New comment on %s</source>
+        <target>Nov komentar na %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
         <source>Hello %s,
@@ -143,6 +143,22 @@ nov komentar je bil dodan na strani, na katero ste naročeni:
 
 Za preklic vaše naročnine, prosim kliknite tukaj:
 %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
       </trans-unit>
     </body>
   </file>

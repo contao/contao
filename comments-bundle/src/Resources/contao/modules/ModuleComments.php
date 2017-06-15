@@ -33,7 +33,7 @@ class ModuleComments extends \Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_comments';
+	protected $strTemplate = 'mod_comments';
 
 
 	/**

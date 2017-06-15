@@ -118,8 +118,8 @@ Cancel: %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
-        <source>A new comment has been added on %s</source>
-        <target>Новый комментарий был добавлен к %s</target>
+        <source>New comment on %s</source>
+        <target>Новый комментарий к %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
         <source>Hello %s,
@@ -142,6 +142,34 @@ To cancel your subscription, please click here:
 ---
 
 Для отмены вашей подписки, нажмите сюда:
+%s
+</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+        <target>Новый ответ на комментарий %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+To cancel your subscription, please click here:
+%s
+</source>
+        <target>Здравствуйте %s,
+
+на странице, на которую вы подписаны, добавлен новый ответ на комментарий:
+
+%s
+
+---
+
+Чтобы отменить подписку, нажмите здесь:
 %s
 </target>
       </trans-unit>

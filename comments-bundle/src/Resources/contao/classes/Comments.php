@@ -601,29 +601,26 @@ class Comments extends \Frontend
 
 		$objNotify = \CommentsNotifyModel::findActiveBySourceAndParent($objComment->source, $objComment->parent);
 
-		// No subscriptions
-		if ($objNotify === null)
+		if ($objNotify !== null)
 		{
-			return;
-		}
-
-		while ($objNotify->next())
-		{
-			// Don't notify the commentor about his own comment
-			if ($objNotify->email == $objComment->email)
+			while ($objNotify->next())
 			{
-				continue;
+				// Don't notify the commentor about his own comment
+				if ($objNotify->email == $objComment->email)
+				{
+					continue;
+				}
+
+				// Prepare the URL
+				$strUrl = \Idna::decode(\Environment::get('base')) . $objNotify->url;
+
+				$objEmail = new \Email();
+				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
+				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
+				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], \Idna::decode(\Environment::get('host')));
+				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
+				$objEmail->sendTo($objNotify->email);
 			}
-
-			// Prepare the URL
-			$strUrl = \Idna::decode(\Environment::get('base')) . $objNotify->url;
-
-			$objEmail = new \Email();
-			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], \Idna::decode(\Environment::get('host')));
-			$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl, $strUrl . '?token=' . $objNotify->tokenRemove);
-			$objEmail->sendTo($objNotify->email);
 		}
 
 		$objComment->notified = 1;

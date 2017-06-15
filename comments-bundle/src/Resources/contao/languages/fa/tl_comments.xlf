@@ -98,12 +98,17 @@
         <target>نشانی آی‌پی نویسنده</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
-        <source>Notified</source>
-        <target>آگاه‌سازی شده</target>
+        <source>Notified (comment)</source>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
         <target>آگاه‌سازی این دیدگاه ارسال شده است.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>

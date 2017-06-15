@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
         <source>E-mail address</source>
-        <target>E-mail адреса</target>
+        <target>Имејл адреса</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.1">
         <source>The e-mail address will not be published.</source>
-        <target>Адреса е-maila неће бити објављена.</target>
+        <target>Адреса имејла неће бити објављена.</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
@@ -98,12 +98,20 @@
         <target>IP адреса аутора</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
-        <source>Notified</source>
-        <target>Обавештен</target>
+        <source>Notified (comment)</source>
+        <target>Обавештен (коментар)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
         <target>Обавештење о овом коментару је послато.</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.0">
+        <source>Notified (reply)</source>
+        <target>Обавештен (одговор)</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.notifiedReply.1">
+        <source>The notification of the reply to this comment has been sent.</source>
+        <target>Обавештење о одговору на овај коментар је послато.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
