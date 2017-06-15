@@ -147,6 +147,7 @@ To cancel your subscription, please click here:
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
+        <target>Нови одговор на коментар у %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplyMessage">
         <source>Hello %s,
@@ -160,6 +161,17 @@ a new reply to a comment has been added on a page you have subscribed to:
 To cancel your subscription, please click here:
 %s
 </source>
+        <target>Здраво %s,
+
+додат је нови коментар на страници на коју сте се претплатили:
+
+%s
+
+---
+
+Да откажете претплату, кликните овде:
+%s
+</target>
       </trans-unit>
     </body>
   </file>

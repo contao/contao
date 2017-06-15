@@ -135,7 +135,7 @@ To cancel your subscription, please click here:
 </source>
         <target>こんにちは、%sさん。
 
-登録しているページに新しいコメントの追加がありました:
+登録しているページに新しいコメントが追加されました:
 
 %s
 
@@ -147,6 +147,7 @@ To cancel your subscription, please click here:
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
+        <target>%sで新しい返信</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplyMessage">
         <source>Hello %s,
@@ -160,6 +161,17 @@ a new reply to a comment has been added on a page you have subscribed to:
 To cancel your subscription, please click here:
 %s
 </source>
+        <target>こんにちは、%sさん。
+
+登録しているページに新しい返信が追加されました:
+
+%s
+
+---
+
+登録を取り消すには、次をクリックしてください:
+%s
+</target>
       </trans-unit>
     </body>
   </file>
