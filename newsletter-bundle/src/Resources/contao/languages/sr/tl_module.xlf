@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_module.newsletters.0">
         <source>Subscribable newsletters</source>
-        <target>&quot;Newsletter&quot;-и на које је могуће претплатити се</target>
+        <target>Билтени на које се могуће претплатити</target>
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
@@ -31,11 +31,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>Можете да користите џокере &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) и &lt;em&gt;##link##&lt;/em&gt; (activation link).</target>
+        <target>Можете да користите џокере &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) и &lt;em&gt;##link##&lt;/em&gt; (линк за активацију).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>Порука о прекиду претплате</target>
+        <target>Порука о отказивању претплате</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Шаблон newsletter-а</target>
+        <target>Шаблон билтена</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
-        <target>Овде можете изабрати шаблон за newsletter.</target>
+        <target>Овде можете изабрати шаблон за билтен.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -64,7 +64,7 @@ Please click ##link## to activate your subscription. If you did not subscribe yo
 
 ##channels##
 
-Кликните ##link## да активирате Вашу претплату. Ако нисте тражили да се претплатите, молимо Вас да игноришете ову поруку.
+Кликните ##link## да активирате вашу претплату. Ако нисте тражили да се претплатите, молимо вас да игноришете ову поруку.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">

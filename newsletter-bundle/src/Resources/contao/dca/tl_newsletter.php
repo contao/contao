@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['send'],
 				'href'                => 'key=send',
-				'icon'                => 'bundles/contaonewsletter/icon.svg'
+				'icon'                => 'bundles/contaonewsletter/send.svg'
 			)
 		)
 	),
@@ -419,7 +419,7 @@ class tl_newsletter extends Backend
 	{
 		return '
 <div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h128' : '') . '">' . (!$arrRow['sendText'] ? '
+<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h85' : '') . '">' . (!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '' ) . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";

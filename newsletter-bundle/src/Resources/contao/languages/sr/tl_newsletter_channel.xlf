@@ -11,27 +11,27 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.0">
         <source>Redirect page</source>
-        <target>Преусмерење странице</target>
+        <target>Страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
-        <target>Одаберите страницу на којој се налази читач newsletter-а и на коју ће посетиоци бити преусмерени кликом на ставку вести.</target>
+        <target>Одаберите страницу на којој се налази читач билтена и на коју ће посетиоци бити преусмерени кликом на билтен.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.0">
         <source>E-mail template</source>
-        <target>Email шаблон</target>
+        <target>Имејл шаблон</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can choose the e-mail template.</source>
-        <target>Овде можете одабрати шаблон за email.</target>
+        <target>Овде можете одабрати шаблон за имејл.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>
-        <target>E-mail пошиљаоца</target>
+        <target>Имејл пошиљаоца</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.1">
         <source>Please enter the e-mail address of the sender.</source>
-        <target>Унесите e-mail адресу пошиљаоца.</target>
+        <target>Унесите имејл адресу пошиљаоца.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.0">
         <source>Sender name</source>
@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.1">
         <source>Here you can enter an optional sender name.</source>
-        <target>Овде можете додати, ако желите, име пошиљаоца. </target>
+        <target>Ако желите, овде можете унети име пошиљаоца.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
-        <target>Датум ревизије</target>
+        <target>Датум последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Датум и време последње ревизије</target>
+        <target>Датум и време последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title_legend">
         <source>Title and redirect</source>
