@@ -27,7 +27,7 @@ if (file_exists(__DIR__.'/../.env')) {
     (new Dotenv())->load(__DIR__.'/../.env');
 }
 
-$accessKey = getenv('APP_DEV_ACCESSKEY', true);
+$accessKey = @getenv('APP_DEV_ACCESSKEY', true);
 
 if (isset($_SERVER['HTTP_CLIENT_IP'])
     || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
