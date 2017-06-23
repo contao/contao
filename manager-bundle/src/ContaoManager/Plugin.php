@@ -15,6 +15,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
+use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\ConnectionException;
@@ -31,12 +32,20 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface
 {
     /**
      * @var string|null
      */
     private static $autoloadModules = null;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPackageDependencies()
+    {
+        return ['contao/core-bundle'];
+    }
 
     /**
      * {@inheritdoc}
