@@ -74,7 +74,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     }
 
     /**
-     * Checks if the database connection and the table exist.
+     * Checks if a database connection can be established and the table exist.
      *
      * @return bool
      */
