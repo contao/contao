@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Always show the "show from" and "show until" fields (see #908).
+
 ### 4.4.0 (2017-06-15)
 
  * Fix the "save and go back" function (see #870).
