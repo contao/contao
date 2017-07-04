@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly show the DCA picker in the site structure (see #906).
  * Correctly update the style sheets if a format definition is enabled/disabled (see #893).
  * Always show the "show from" and "show until" fields (see #908).
 
