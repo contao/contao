@@ -588,15 +588,13 @@ class InstallationController implements ContainerAwareInterface
      */
     private function getRequestToken()
     {
-        if (!$this->container->hasParameter('contao.csrf_token_name')) {
+        $tokenName = $this->getContainerParameter('contao.csrf_token_name');
+
+        if (null === $tokenName) {
             return '';
         }
 
-        return $this->container
-            ->get('security.csrf.token_manager')
-            ->getToken($this->getContainerParameter('contao.csrf_token_name'))
-            ->getValue()
-        ;
+        return $this->container->get('security.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
     /**
