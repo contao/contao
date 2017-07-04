@@ -1217,14 +1217,14 @@ var Backend =
 		new Tips.Contao($$('a[title][class^="group-"]').filter(function(i) {
 			return i.title != '';
 		}), {
-			offset: {x:8, y:38}
+			offset: {x:3, y:27}
 		});
 
 		// Navigation links
 		new Tips.Contao($$('a[title].navigation').filter(function(i) {
 			return i.title != '';
 		}), {
-			offset: {x:8, y:34}
+			offset: {x:34, y:32}
 		});
 
 		// Images
