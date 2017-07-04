@@ -428,7 +428,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
+					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
 			}
 		}
@@ -2504,25 +2504,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		$blnProtected = true;
-		$strPath = $strFolder;
-
-		// Check for public parent folders (see #213)
-		while ($strPath != '' && $strPath != '.')
-		{
-			if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
-			{
-				$blnProtected = false;
-				break;
-			}
-
-			$strPath = dirname($strPath);
-		}
-
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $blnProtected, ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
 	}
 
 
