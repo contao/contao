@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly update the style sheets if a format definition is enabled/disabled (see #893).
  * Always show the "show from" and "show until" fields (see #908).
 
 ### 4.4.0 (2017-06-15)
