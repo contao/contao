@@ -900,60 +900,21 @@ abstract class DataContainer extends \Backend
 
 		\Controller::loadDataContainer($this->strPickerTable);
 
-		$this->setPickerValue();
-
-		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$this->strPickerTable]['config']['dataContainer'];
-		$objDca = new $strDriver($this->strPickerTable);
-		$objDca->id = $this->intPickerId;
-		$objDca->field = $this->strPickerField;
-
-		// Set the active record
-		if ($this->intPickerId && $this->Database->tableExists($this->strPickerTable))
-		{
-			/** @var Model $strModel */
-			$strModel = \Model::getClassFromTable($this->strPickerTable);
-
-			if (class_exists($strModel))
-			{
-				$objModel = $strModel::findByPk($this->intPickerId);
-
-				if ($objModel !== null)
-				{
-					$objDca->activeRecord = $objModel;
-				}
-			}
-		}
-
-		// Call the load_callback
-		if (is_array($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['load_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['load_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->arrPickerValue = $this->{$callback[0]}->{$callback[1]}($this->arrPickerValue, $objDca);
-				}
-				elseif (is_callable($callback))
-				{
-					$this->arrPickerValue = $callback($this->arrPickerValue, $objDca);
-				}
-			}
-		}
-
 		if (!isset($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]))
 		{
 			throw new InternalServerErrorException('Target field "' . $this->strPickerTable . '.' . $this->strPickerField . '" does not exist.');
 		}
 
+		$this->setPickerValue();
+
 		/** @var Widget $strClass */
 		$strClass = $GLOBALS['BE_FFL'][$GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['inputType']];
 
-		/** @var Widget $objWidget */
-		$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField], $this->strPickerField, $this->arrPickerValue, $this->strPickerField, $this->strPickerTable, $objDca));
-
-		if ($objWidget instanceof DcaFilterInterface)
+		if (is_a($strClass, DcaFilterInterface::class, true))
 		{
+			/** @var DcaFilterInterface $objWidget */
+			$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField], $this->strPickerField, $this->arrPickerValue, $this->strPickerField, $this->strPickerTable));
+
 			$this->setDcaFilter($objWidget->getDcaFilter());
 		}
 
@@ -1045,6 +1006,7 @@ abstract class DataContainer extends \Backend
 	 * @return string
 	 */
 	abstract public function getPalette();
+
 
 	/**
 	 * Save the current value
