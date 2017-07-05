@@ -44,7 +44,7 @@ class PurgeData extends \Backend implements \executable
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_purge_data');
 		$objTemplate->isActive = $this->isActive();
-		$objTemplate->message = \Message::generateUnwrapped();
+		$objTemplate->message = \Message::generateUnwrapped(__CLASS__);
 
 		// Run the jobs
 		if (\Input::post('FORM_SUBMIT') == 'tl_purge')
@@ -64,7 +64,7 @@ class PurgeData extends \Backend implements \executable
 				}
 			}
 
-			\Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['cacheCleared']);
+			\Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['cacheCleared'], __CLASS__);
 			$this->reload();
 		}
 
