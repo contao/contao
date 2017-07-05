@@ -4704,6 +4704,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		else
 		{
 			$result = $objRow->fetchAllAssoc();
+
 			$return .= ((\Input::get('act') == 'select') ? '
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
