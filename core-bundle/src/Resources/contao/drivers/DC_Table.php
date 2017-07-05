@@ -93,12 +93,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	protected $treeView = false;
 
 	/**
-	 * True if a new version has to be created
-	 * @var boolean
-	 */
-	protected $blnCreateNewVersion = false;
-
-	/**
 	 * The current back end module
 	 * @var array
 	 */
@@ -266,27 +260,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 
 	/**
-	 * Set an object property
-	 *
-	 * @param string $strKey
-	 * @param mixed  $varValue
-	 */
-	public function __set($strKey, $varValue)
-	{
-		switch ($strKey)
-		{
-			case 'createNewVersion':
-				$this->blnCreateNewVersion = (bool) $varValue;
-				break;
-
-			default;
-				parent::__set($strKey, $varValue);
-				break;
-		}
-	}
-
-
-	/**
 	 * Return an object property
 	 *
 	 * @param string $strKey
@@ -297,10 +270,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		switch ($strKey)
 		{
-			case 'id':
-				return $this->intId;
-				break;
-
 			case 'parentTable':
 				return $this->ptable;
 				break;
@@ -311,10 +280,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			case 'rootIds':
 				return $this->root;
-				break;
-
-			case 'createNewVersion':
-				return $this->blnCreateNewVersion;
 				break;
 		}
 

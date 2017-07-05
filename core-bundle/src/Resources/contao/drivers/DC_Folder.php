@@ -71,12 +71,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected $arrCounts = array();
 
 	/**
-	 * True if a new version has to be created
-	 * @var boolean
-	 */
-	protected $blnCreateNewVersion = false;
-
-	/**
 	 * Database assisted
 	 * @var boolean
 	 */
@@ -216,27 +210,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 
 	/**
-	 * Set an object property
-	 *
-	 * @param string $strKey
-	 * @param mixed  $varValue
-	 */
-	public function __set($strKey, $varValue)
-	{
-		switch ($strKey)
-		{
-			case 'createNewVersion':
-				$this->blnCreateNewVersion = (bool) $varValue;
-				break;
-
-			default;
-				parent::__set($strKey, $varValue);
-				break;
-		}
-	}
-
-
-	/**
 	 * Return an object property
 	 *
 	 * @param string $strKey
@@ -253,10 +226,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 			case 'extension':
 				return $this->strExtension;
-				break;
-
-			case 'createNewVersion':
-				return $this->blnCreateNewVersion;
 				break;
 
 			case 'isDbAssisted':

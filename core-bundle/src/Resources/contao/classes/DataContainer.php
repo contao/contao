@@ -136,6 +136,12 @@ abstract class DataContainer extends \Backend
 	 */
 	protected $arrPickerValue = array();
 
+	/**
+	 * True if a new version has to be created
+	 * @var boolean
+	 */
+	protected $blnCreateNewVersion = false;
+
 
 	/**
 	 * Set an object property
@@ -151,7 +157,11 @@ abstract class DataContainer extends \Backend
 				$this->objActiveRecord = $varValue;
 				break;
 
-			default;
+			case 'createNewVersion':
+				$this->blnCreateNewVersion = (bool) $varValue;
+				break;
+
+			default:
 				$this->$strKey = $varValue; // backwards compatibility
 				break;
 		}
@@ -195,6 +205,10 @@ abstract class DataContainer extends \Backend
 
 			case 'activeRecord':
 				return $this->objActiveRecord;
+				break;
+
+			case 'createNewVersion':
+				return $this->blnCreateNewVersion;
 				break;
 		}
 
