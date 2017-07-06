@@ -77,10 +77,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected $blnIsDbAssisted = false;
 
 	/**
-	 * Hide files
+	 * Show files
 	 * @var boolean
 	 */
-	protected $blnHideFiles = false;
+	protected $blnFiles = false;
+
+	/**
+	 * Only select files
+	 * @var boolean
+	 */
+	protected $blnFilesOnly = false;
 
 
 	/**
@@ -433,13 +439,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
 <ul class="tl_listing tl_file_manager'.($this->strPickerField ? ' picker unselectable' : '').'"'.$this->getPickerAttributes().'>
   <li class="tl_folder_top cf"><div class="tl_left">'.\Image::getHtml('filemounts.svg').' '.$GLOBALS['TL_LANG']['MSC']['filetree'].'</div> <div class="tl_right">'.(($blnClipboard && empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false) ? '<a href="'.$this->addToUrl('&amp;act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.\Config::get('uploadPath').(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1]).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a>' : '&nbsp;').'</div></li>'.$return.'
-</ul>'.(($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+</ul>'.(($this->strPickerField && $this->strPickerFieldType == 'radio') ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '').'
@@ -2571,7 +2577,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif ($this->blnHideFiles && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				elseif (!$this->blnFiles && !$this->blnShowFiles && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
 				{
 					--$countFiles;
 				}
@@ -2646,7 +2652,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if ($this->strPickerField)
 				{
-					$return .= $this->getPickerInputField($currentEncoded, $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['filesOnly'] ? ' disabled' : '');
+					$return .= $this->getPickerInputField($currentEncoded, $this->blnFilesOnly ? ' disabled' : '');
 				}
 			}
 
@@ -2661,7 +2667,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		if ($this->blnHideFiles)
+		if (!$this->blnFiles && !$this->blnFilesOnly)
 		{
 			return $return;
 		}
@@ -2751,7 +2757,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if ($this->strPickerField)
 				{
-					$_buttons .= $this->getPickerInputField($currentEncoded, ($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['files'] || $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['filesOnly']) ? '' : ' disabled');
+					$_buttons .= $this->getPickerInputField($currentEncoded);
 				}
 			}
 
@@ -3044,9 +3050,14 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		parent::setDcaFilter($arrFilter);
 
-		if (isset($arrFilter['hideFiles']) && $arrFilter['hideFiles'] === true)
+		if (isset($arrFilter['files']) && $arrFilter['files'] === true)
 		{
-			$this->blnHideFiles = true;
+			$this->blnFiles = true;
+		}
+
+		if (isset($arrFilter['filesOnly']) && $arrFilter['filesOnly'] === true)
+		{
+			$this->blnFilesOnly = true;
 		}
 
 		if (isset($arrFilter['extensions']))

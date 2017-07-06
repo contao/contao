@@ -24,6 +24,7 @@ use Contao\CoreBundle\DataContainer\DcaFilterInterface;
  * @property boolean $filesOnly
  * @property string  $path
  * @property string  $extensions
+ * @property string  $fieldType
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -89,10 +90,16 @@ class FileTree extends \Widget implements DcaFilterInterface
 	{
 		$arrFilters = array();
 
-		// Only folders can be selected
-		if ($this->files === false)
+		// Show files in file tree
+		if ($this->files)
 		{
-			$arrFilters['hideFiles'] = true;
+			$arrFilters['files'] = true;
+		}
+
+		// Only files can be selected
+		if ($this->filesOnly)
+		{
+			$arrFilters['filesOnly'] = true;
 		}
 
 		// Only files within a custom path can be selected
@@ -105,6 +112,11 @@ class FileTree extends \Widget implements DcaFilterInterface
 		if ($this->extensions)
 		{
 			$arrFilters['extensions'] = $this->extensions;
+		}
+
+		if ($this->fieldType)
+		{
+			$arrFilters['fieldType'] = $this->fieldType;
 		}
 
 		return $arrFilters;
