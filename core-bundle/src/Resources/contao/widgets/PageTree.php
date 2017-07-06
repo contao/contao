@@ -255,9 +255,9 @@ class PageTree extends \Widget implements DcaFilterInterface
 		}
 
 		$return .= '</ul>
-    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'page', 'context'=>'page', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', $arrSet), 'popup'=>1))) . '" class="tl_submit" id="pt_' . $this->strField . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'page', 'context'=>'page', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', $arrSet), 'popup'=>1))) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
     <script>
-      $("pt_' . $this->strField . '").addEvent("click", function(e) {
+      $("pt_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
         Backend.openModalSelector({
           "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",

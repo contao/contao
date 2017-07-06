@@ -395,9 +395,9 @@ class FileTree extends \Widget implements DcaFilterInterface
 		}
 
 		$return .= '</ul>
-    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'files', 'context'=>'file', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', array_keys($arrSet)), 'popup'=>1))) . '" class="tl_submit" id="ft_' . $this->strField . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'files', 'context'=>'file', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', array_keys($arrSet)), 'popup'=>1))) . '" class="tl_submit" id="ft_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
     <script>
-      $("ft_' . $this->strField . '").addEvent("click", function(e) {
+      $("ft_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
         Backend.openModalSelector({
           "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
