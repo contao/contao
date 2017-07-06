@@ -2577,7 +2577,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif (!$this->blnFiles && !$this->blnShowFiles && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				elseif ($this->strPickerField && !$this->blnFiles && !$this->blnFilesOnly && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
 				{
 					--$countFiles;
 				}
@@ -2667,7 +2667,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		if (!$this->blnFiles && !$this->blnFilesOnly)
+		if ($this->strPickerField && !$this->blnFiles && !$this->blnFilesOnly)
 		{
 			return $return;
 		}
