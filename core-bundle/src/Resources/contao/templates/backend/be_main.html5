@@ -99,12 +99,14 @@
         parent.document.getElements('.simple-modal-footer a').addClass('btn-disabled');
       }
     </script>
-  <?php elseif ($this->pageOffset): ?>
-    <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 20 ?> : <?= $this->pageOffset ?>)</script>
-    <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
   <?php endif; ?>
 
   <?= $this->mootools ?>
+
+  <?php if ($this->pageOffset): ?>
+    <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 40 ?> : <?= $this->pageOffset ?>)</script>
+    <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
+  <?php endif; ?>
 
 </body>
 </html>
