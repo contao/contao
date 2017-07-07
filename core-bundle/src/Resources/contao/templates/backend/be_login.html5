@@ -10,6 +10,7 @@
   <meta name="referrer" content="origin">
   <meta name="robots" content="noindex,follow">
 
+  <link rel="icon" type="image/png" href="<?= TL_ASSETS_URL ?>bundles/contaocore/favicon.ico">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/login.css">
