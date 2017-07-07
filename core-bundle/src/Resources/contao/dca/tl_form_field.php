@@ -288,7 +288,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['extensions'],
 			'exclude'                 => true,
-			'default'                 => 'jpg,jpeg,gif,png,pdf,doc,xls,ppt',
+			'default'                 => 'jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,ppt,pptx',
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
