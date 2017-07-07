@@ -77,16 +77,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected $blnIsDbAssisted = false;
 
 	/**
-	 * Show files
+	 * Hide files
 	 * @var boolean
 	 */
-	protected $blnFiles = false;
+	protected $blnHideFiles = false;
 
 	/**
-	 * Only select files
+	 * Select folders
 	 * @var boolean
 	 */
-	protected $blnFilesOnly = false;
+	protected $blnSelectFolders = false;
 
 
 	/**
@@ -2577,7 +2577,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif ($this->strPickerField && !$this->blnFiles && !$this->blnFilesOnly && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				elseif ($this->blnHideFiles && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
 				{
 					--$countFiles;
 				}
@@ -2652,7 +2652,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if ($this->strPickerField)
 				{
-					$return .= $this->getPickerInputField($currentEncoded, $this->blnFilesOnly ? ' disabled' : '');
+					$return .= $this->getPickerInputField($currentEncoded, $this->blnSelectFolders ? '' : ' disabled');
 				}
 			}
 
@@ -2667,7 +2667,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		if ($this->strPickerField && !$this->blnFiles && !$this->blnFilesOnly)
+		if ($this->blnHideFiles)
 		{
 			return $return;
 		}
@@ -3050,14 +3050,18 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		parent::setDcaFilter($arrFilter);
 
-		if (isset($arrFilter['files']) && $arrFilter['files'] === true)
+		$blnHideFiles = !isset($arrFilter['files']) && !isset($arrFilter['filesOnly']);
+
+		if (isset($arrFilter['files']) && $arrFilter['files'] === false)
 		{
-			$this->blnFiles = true;
+			$blnHideFiles = true;
 		}
 
-		if (isset($arrFilter['filesOnly']) && $arrFilter['filesOnly'] === true)
+		$this->blnHideFiles = $blnHideFiles;
+
+		if (!isset($arrFilter['filesOnly']) || $arrFilter['filesOnly'] === false)
 		{
-			$this->blnFilesOnly = true;
+			$this->blnSelectFolders = true;
 		}
 
 		if (isset($arrFilter['extensions']))
