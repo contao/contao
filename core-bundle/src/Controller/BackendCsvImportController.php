@@ -190,7 +190,7 @@ class BackendCsvImportController
             );
 
             $response = new RedirectResponse($this->getBackUrl($request));
-            $response->headers->setCookie(new Cookie('BE_PAGE_OFFSET', 0, 0));
+            $response->headers->setCookie(new Cookie('BE_PAGE_OFFSET', 0, 0, $request->getBasePath(), null, false, false));
 
             return $response;
         }
