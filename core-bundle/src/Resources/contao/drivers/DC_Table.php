@@ -2396,7 +2396,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$strAjax = '';
 				$blnAjax = false;
 				$return .= '
-<div class="'.$class.'">';
+<div class="'.$class.' cf">';
 
 				$class = 'tl_box';
 				$formFields = array();
