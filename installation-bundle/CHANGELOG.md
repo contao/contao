@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.4.1 (2017-07-12)
 
  * Correctly set the "overwriteMeta" field during the database update (see contao/core-bundle#888).
 
