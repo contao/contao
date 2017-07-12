@@ -98,7 +98,27 @@ class ParameterDumper
 
         $this->filesystem->dumpFile(
             $this->rootDir.'/config/parameters.yml',
-            "# This file has been auto-generated during installation\n".Yaml::dump($this->parameters)
+            "# This file has been auto-generated during installation\n".Yaml::dump($this->getEscapedValues())
         );
+    }
+
+    /**
+     * Escapes % and @.
+     *
+     * @return array<string,array>
+     */
+    private function getEscapedValues()
+    {
+        $parameters = [];
+
+        foreach ($this->parameters['parameters'] as $key => $value) {
+            if (false !== strpos($value, '%')) {
+                $parameters[$key] = str_replace('%', '%%', $value);
+            } else {
+                $parameters[$key] = $value;
+            }
+        }
+
+        return ['parameters' => $parameters];
     }
 }

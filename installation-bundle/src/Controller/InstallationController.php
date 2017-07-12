@@ -229,7 +229,7 @@ class InstallationController implements ContainerAwareInterface
      */
     private function purgeSymfonyCache()
     {
-        $fs = new Filesystem();
+        $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
         /** @var SplFileInfo[] $finder */
@@ -239,8 +239,23 @@ class InstallationController implements ContainerAwareInterface
             ->in(dirname($cacheDir))
         ;
 
-        foreach ($finder as $dir) {
-            $fs->remove($dir);
+        foreach ($finder as $realCacheDir) {
+            // the old cache dir name must not be longer than the real one to avoid exceeding
+            // the maximum length of a directory or file path within it (esp. Windows MAX_PATH)
+            $oldCacheDir = substr($realCacheDir, 0, -1).('~' === substr($realCacheDir, -1) ? '+' : '~');
+
+            if (!is_writable($realCacheDir)) {
+                throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $realCacheDir));
+            }
+
+            if ($filesystem->exists($oldCacheDir)) {
+                $filesystem->remove($oldCacheDir);
+            }
+
+            $this->container->get('cache_clearer')->clear($realCacheDir);
+
+            $filesystem->rename($realCacheDir, $oldCacheDir);
+            $filesystem->remove($oldCacheDir);
         }
 
         // Zend OPcache
@@ -588,15 +603,13 @@ class InstallationController implements ContainerAwareInterface
      */
     private function getRequestToken()
     {
-        if (!$this->container->hasParameter('contao.csrf_token_name')) {
+        $tokenName = $this->getContainerParameter('contao.csrf_token_name');
+
+        if (null === $tokenName) {
             return '';
         }
 
-        return $this->container
-            ->get('security.csrf.token_manager')
-            ->getToken($this->getContainerParameter('contao.csrf_token_name'))
-            ->getValue()
-        ;
+        return $this->container->get('security.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
     /**
