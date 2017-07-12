@@ -42,6 +42,12 @@ class Email
 {
 
 	/**
+	 * Mailer object
+	 * @var \Swift_Mailer
+	 */
+	protected $objMailer;
+
+	/**
 	 * Message object
 	 * @var \Swift_Message
 	 */
@@ -116,9 +122,12 @@ class Email
 
 	/**
 	 * Instantiate the object and load the mailer framework
+	 *
+	 * @param \Swift_Mailer|null $objMailer
 	 */
-	public function __construct()
+	public function __construct(\Swift_Mailer $objMailer = null)
 	{
+		$this->objMailer = $objMailer ?: \System::getContainer()->get('swiftmailer.mailer');
 		$this->strCharset = \Config::get('characterSet');
 
 		// Instantiate Swift_Message
@@ -459,7 +468,7 @@ class Email
 		$this->objMessage->setReturnPath($this->strSender);
 
 		// Send the e-mail
-		$intSent = \System::getContainer()->get('swiftmailer.mailer')->send($this->objMessage, $this->arrFailures);
+		$intSent = $this->objMailer->send($this->objMessage, $this->arrFailures);
 
 		// Log failures
 		if (!empty($this->arrFailures))

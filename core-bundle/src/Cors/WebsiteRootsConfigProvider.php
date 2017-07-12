@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Cors;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Nelmio\CorsBundle\Options\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,7 +42,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     public function getOptions(Request $request)
     {
-        if (!$this->hasOrigin($request) || !$this->canRunDbQuery()) {
+        if (!$this->isCorsRequest($request) || !$this->canRunDbQuery()) {
             return [];
         }
 
@@ -67,18 +68,24 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      *
      * @return bool
      */
-    private function hasOrigin(Request $request)
+    private function isCorsRequest(Request $request)
     {
-        return $request->headers->has('Origin') && '' !== $request->headers->get('Origin');
+        return $request->headers->has('Origin')
+            && $request->headers->get('Origin') !== $request->getSchemeAndHttpHost()
+        ;
     }
 
     /**
-     * Checks if the database connection and the table exist.
+     * Checks if a database connection can be established and the table exist.
      *
      * @return bool
      */
     private function canRunDbQuery()
     {
-        return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_page']);
+        try {
+            return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_page']);
+        } catch (ConnectionException $e) {
+            return false;
+        }
     }
 }

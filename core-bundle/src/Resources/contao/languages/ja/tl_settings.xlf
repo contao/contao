@@ -214,8 +214,8 @@
         <target>フロントエンドの最大幅</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
-        <target>この値を画像や動画の幅が超えると、自動的に幅を調整します。</target>
+        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
+        <target> 画像や動画の大きさがこの値を超えている場合は自動的に調整します。0にすると制限を無効にします。</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>

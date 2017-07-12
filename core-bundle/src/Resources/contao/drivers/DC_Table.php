@@ -93,12 +93,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	protected $treeView = false;
 
 	/**
-	 * True if a new version has to be created
-	 * @var boolean
-	 */
-	protected $blnCreateNewVersion = false;
-
-	/**
 	 * The current back end module
 	 * @var array
 	 */
@@ -219,12 +213,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Initialize the picker
 		if (isset($_GET['target']) && \Input::get('act') != 'select' && \Input::get('act') != 'paste')
 		{
-			list($table) = explode('.', \Input::get('target'), 2);
-
-			if ($this->strTable != $table)
-			{
-				$this->initPicker();
-			}
+			$this->initPicker();
 		}
 
 		// Get the IDs of all root records (tree view)
@@ -271,27 +260,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 
 	/**
-	 * Set an object property
-	 *
-	 * @param string $strKey
-	 * @param mixed  $varValue
-	 */
-	public function __set($strKey, $varValue)
-	{
-		switch ($strKey)
-		{
-			case 'createNewVersion':
-				$this->blnCreateNewVersion = (bool) $varValue;
-				break;
-
-			default;
-				parent::__set($strKey, $varValue);
-				break;
-		}
-	}
-
-
-	/**
 	 * Return an object property
 	 *
 	 * @param string $strKey
@@ -302,10 +270,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		switch ($strKey)
 		{
-			case 'id':
-				return $this->intId;
-				break;
-
 			case 'parentTable':
 				return $this->ptable;
 				break;
@@ -316,10 +280,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			case 'rootIds':
 				return $this->root;
-				break;
-
-			case 'createNewVersion':
-				return $this->blnCreateNewVersion;
 				break;
 		}
 
@@ -2436,7 +2396,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$strAjax = '';
 				$blnAjax = false;
 				$return .= '
-<div class="'.$class.'">';
+<div class="'.$class.' cf">';
 
 				$class = 'tl_box';
 				$formFields = array();
@@ -3250,7 +3210,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						}
 					}
 
-					if ($trigger != '')
+					if ($trigger)
 					{
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
 						{
@@ -3584,7 +3544,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
@@ -3618,7 +3578,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		// End table
 		$return .= $_buttons . '</div></li>'.$tree.'
-</ul>'.(($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+</ul>'.(($this->strPickerField && $this->strPickerFieldType == 'radio') ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '').'
@@ -4135,7 +4095,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$imageEditHeader = \Image::getHtml('header.svg', $GLOBALS['TL_LANG'][$this->strTable]['editheader'][0]);
 
 			$return .= '
-<div class="tl_content_right">'.((\Input::get('act') == 'select' || ($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'checkbox')) ? '
+<div class="tl_content_right">'.((\Input::get('act') == 'select' || ($this->strPickerField && $this->strPickerFieldType == 'checkbox')) ? '
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? ' <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$objParent->id . (!$blnMultiboard ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>' : ((!$GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] && $this->User->canEditFieldsOf($this->ptable)) ? '
 <a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(\Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.\StringUtil::specialchars(isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1]) ? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] : $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a>' : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? ' <a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]).'">'.$imagePasteNew.'</a>' : ''))) . '
 </div>';
@@ -4529,7 +4489,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 </script>';
 		}
 
-		$return .= (($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+		$return .= (($this->strPickerField && $this->strPickerFieldType == 'radio') ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '').'
@@ -4744,12 +4704,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		else
 		{
 			$result = $objRow->fetchAllAssoc();
+
 			$return .= ((\Input::get('act') == 'select') ? '
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').'
-<div class="tl_listing_container list_view">'.((\Input::get('act') == 'select' || ($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'checkbox')) ? '
+<div class="tl_listing_container list_view">'.((\Input::get('act') == 'select' || ($this->strPickerField && $this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
@@ -4974,7 +4935,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			// Close the table
 			$return .= '
-</table>'.(($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+</table>'.(($this->strPickerField && $this->strPickerFieldType == 'radio') ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '').'

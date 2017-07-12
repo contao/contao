@@ -405,7 +405,7 @@ class Ajax extends \Backend
 
 						if (\Input::post('load'))
 						{
-							echo $dc->editAll($this->strAjaxId, \Input::post('id'));
+							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, \Input::post('id'))));
 						}
 					}
 					else

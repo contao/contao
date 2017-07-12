@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
-        <target>Очистить кэш изображений</target>
+        <target>Очистить кеш изображений</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>

@@ -491,7 +491,7 @@ input[type=search]::-webkit-search-decoration {
 }
 
 /* Rebuild the search index */
-#tl_maintenance_index {
+#tl_maintenance_index.maintenance_active {
 	display:flex;
 	flex-direction:column;
 	flex-grow:1;
@@ -1170,6 +1170,9 @@ ul.sgallery li {
 }
 .tl_metawizard li.odd {
 	background:#f9f9fb;
+}
+.tl_metawizard span img {
+	cursor:pointer;
 }
 .tl_metawizard label {
 	float:left;

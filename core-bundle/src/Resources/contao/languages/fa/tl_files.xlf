@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_files.name.1">
         <source>The file or folder name (without extension).</source>
+        <target>نام پرونده یا پوشه (بدون پسوند).</target>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>

@@ -390,3 +390,10 @@ In Contao 3, the user files in the `files/` directory were publicly available
 via HTTP by default and it was possible to protect certain subfolders. Now, due
 to a technical change, the user files are protected by default and subfolders
 have to be published explicitly to be available via HTTP.
+
+
+### Article CSS IDs
+
+In Contao 3, the alias of an article was automatically used as its CSS ID, if
+no custom CSS ID was defined. In Contao 4 the default CSS ID will be generated
+from its numeric ID, e.g. `article-1`.

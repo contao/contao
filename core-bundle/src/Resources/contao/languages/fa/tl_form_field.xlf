@@ -554,6 +554,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
+        <target>وارد کردن گزینه‌ها از پرونده‌ی CSV</target>
       </trans-unit>
     </body>
   </file>

@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
@@ -77,8 +78,21 @@ class CommandSchedulerListener
         return $config->isComplete()
             && !$config->get('disableCron')
             && in_array($request->attributes->get('_route'), ['contao_backend', 'contao_frontend'], true)
-            && $this->connection->isConnected()
-            && $this->connection->getSchemaManager()->tablesExist(['tl_cron'])
+            && $this->canRunDbQuery()
         ;
+    }
+
+    /**
+     * Checks if a database connection can be established and the table exist.
+     *
+     * @return bool
+     */
+    private function canRunDbQuery()
+    {
+        try {
+            return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_cron']);
+        } catch (ConnectionException $e) {
+            return false;
+        }
     }
 }

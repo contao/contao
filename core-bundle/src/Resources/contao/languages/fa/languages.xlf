@@ -355,11 +355,11 @@
       </trans-unit>
       <trans-unit id="LNG.fa">
         <source>Persian</source>
-        <target>پارسی</target>
+        <target>فارسی</target>
       </trans-unit>
       <trans-unit id="LNG.fa_IR">
         <source>Persian (Iran)</source>
-        <target>پارسی (ایران)</target>
+        <target>فارسی (ایران)</target>
       </trans-unit>
       <trans-unit id="LNG.ff">
         <source>Fulah</source>

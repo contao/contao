@@ -326,7 +326,7 @@ Contao 4.0 and will no longer be supported in Contao 5.0. Add the DCA files
 with your modifications to the `app/Resources/contao/dca` folder instead.
 
 
-#### initconfig.php
+### initconfig.php
 
 Using the `initconfig.php` file to customize the initialization process is
 deprecated in Contao 4.0 and will no longer be supported in Contao 5.0.

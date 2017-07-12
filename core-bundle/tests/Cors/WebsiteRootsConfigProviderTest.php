@@ -118,12 +118,12 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * Tests that no configuration is provided if the origin is empty.
+     * Tests that no configuration is provided if the origin equals the host.
      */
-    public function testNoConfigProvidedIfOriginEmpty()
+    public function testNoConfigProvidedIfOriginEqualsHost()
     {
         $request = Request::create('https://foobar.com');
-        $request->headers->set('Origin', '');
+        $request->headers->set('Origin', 'https://foobar.com');
 
         $connection = $this->createMock(Connection::class);
 
