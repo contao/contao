@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Prevent arbitrary PHP file inclusions in the back end (see CVE-2017-10993).
  * Correctly handle subpalettes in "edit multiple" mode (see #946). 
  * Correctly show the DCA picker in the site structure (see #906).
  * Correctly update the style sheets if a format definition is enabled/disabled (see #893).
