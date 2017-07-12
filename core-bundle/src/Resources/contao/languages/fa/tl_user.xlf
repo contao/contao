@@ -43,6 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.0">
         <source>Limit width</source>
+        <target>عرض محدود</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
         <source>Limit the maximum width of the back end.</source>

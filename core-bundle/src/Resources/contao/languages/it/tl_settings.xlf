@@ -213,8 +213,8 @@
         <target>Massima larghezza immagini</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
-        <target>E' possibile definire la larghezza massima delle immagini e dei file multimediali. Se la larghezza dell'elemento contenuto eccede questo valore verrà ridotta automaticamente.</target>
+        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
+        <target>Se la larghezza di un'immagine o di un video supera questo valore, verrà reimpostata automaticamente. Impostare 0 per disattivare il limite.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>

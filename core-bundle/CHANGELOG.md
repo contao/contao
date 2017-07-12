@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.1 (2017-07-12)
 
  * Prevent arbitrary PHP file inclusions in the back end (see CVE-2017-10993).
  * Correctly handle subpalettes in "edit multiple" mode (see #946). 
