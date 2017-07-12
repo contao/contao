@@ -9,6 +9,7 @@ nelmio_security:
         enabled: true
         policies:
             - 'origin-when-cross-origin'
+            - 'strict-origin-when-cross-origin'
     xss_protection:
         enabled: true
         mode_block: true

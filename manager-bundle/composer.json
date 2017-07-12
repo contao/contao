@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
+        "php": "^5.6|^7.0",
         "symfony/symfony": "^3.3",
         "symfony/monolog-bundle": "^2.8",
         "symfony/swiftmailer-bundle": "^2.3",
@@ -19,6 +19,7 @@
         "friendsofsymfony/http-cache": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
+        "php-http/guzzle6-adapter": "^1.1",
         "terminal42/header-replay-bundle": "^1.0",
         "contao/manager-plugin": "^2.1",
         "contao/core-bundle": "4.4.*",
