@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
+  <link rel="icon" type="image/png" href="<?= TL_ASSETS_URL ?>bundles/contaocore/favicon.ico">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/colorpicker/css/mooRainbow.min.css">
   <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>assets/chosen/css/chosen.min.css">
@@ -99,12 +100,14 @@
         parent.document.getElements('.simple-modal-footer a').addClass('btn-disabled');
       }
     </script>
-  <?php elseif ($this->pageOffset): ?>
-    <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 20 ?> : <?= $this->pageOffset ?>)</script>
-    <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
   <?php endif; ?>
 
   <?= $this->mootools ?>
+
+  <?php if ($this->pageOffset): ?>
+    <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 40 ?> : <?= $this->pageOffset ?>)</script>
+    <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
+  <?php endif; ?>
 
 </body>
 </html>

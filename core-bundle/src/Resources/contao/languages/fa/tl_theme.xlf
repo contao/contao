@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.defaultImageDensities.0">
         <source>Default image pixel densities</source>
+        <target>چگالی پیکسلی پیش‌فرض تصویر</target>
       </trans-unit>
       <trans-unit id="tl_theme.defaultImageDensities.1">
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>

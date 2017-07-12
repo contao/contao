@@ -35,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.0">
         <source>Media query</source>
-        <target>پرسش رسانه</target>
+        <target>مدیا کوئری</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.1">
         <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
-        <target>اینجا می‌توانید گونه‌های رسانه را با یک پرسش رسانه مثل &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt; تعریف نمایید. گونه‌ی رسانه‌های تعریف شده در بالا رونویسی خواهند شد.</target>
+        <target>اینجا می‌توانید گونه‌های رسانه را با یک مدیا کوئری مثل &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt; تعریف نمایید. گونه‌ی رسانه‌های تعریف شده در بالا رونویسی خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.0">
         <source>Global variables</source>

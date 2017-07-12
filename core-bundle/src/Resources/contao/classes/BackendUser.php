@@ -484,15 +484,7 @@ class BackendUser extends \User
 				$arrModules[$strGroupName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>\Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>TL_REFERER_ID));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
-				$arrModules[$strGroupName]['isClosed'] = false;
-
-				// Do not show the modules if the group is closed
-				if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
-				{
-					$arrModules[$strGroupName]['class'] = ' node-collapsed';
-					$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
-					$arrModules[$strGroupName]['isClosed'] = true;
-				}
+				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
 
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
@@ -505,13 +497,6 @@ class BackendUser extends \User
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>TL_REFERER_ID));
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;
-
-						// Mark the active module and its group
-						if (\Input::get('do') == $strModuleName)
-						{
-							$arrModules[$strGroupName]['class'] .= ' trail';
-							$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = true;
-						}
 					}
 				}
 			}
@@ -523,7 +508,33 @@ class BackendUser extends \User
 			foreach ($GLOBALS['TL_HOOKS']['getUserNavigation'] as $callback)
 			{
 				$this->import($callback[0]);
-				$arrModules = $this->{$callback[0]}->{$callback[1]}($arrModules, $blnShowAll);
+				$arrModules = $this->{$callback[0]}->{$callback[1]}($arrModules, true);
+			}
+		}
+
+		foreach ($arrModules as $strGroupName => $arrGroupModules)
+		{
+			$arrModules[$strGroupName]['isClosed'] = false;
+
+			// Do not show the modules if the group is closed
+			if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
+			{
+				$arrModules[$strGroupName]['class'] = str_replace('node-expanded', '', $arrModules[$strGroupName]['class']) . ' node-collapsed';
+				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
+				$arrModules[$strGroupName]['isClosed'] = true;
+			}
+
+			if (isset($arrGroupModules['modules']) && is_array($arrGroupModules['modules']))
+			{
+				foreach ($arrGroupModules['modules'] as $strModuleName => $arrModuleConfig)
+				{
+					// Mark the active module and its group
+					if (\Input::get('do') == $strModuleName)
+					{
+						$arrModules[$strGroupName]['class'] .= ' trail';
+						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = true;
+					}
+				}
 			}
 		}
 

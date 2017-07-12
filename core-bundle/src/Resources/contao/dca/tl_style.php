@@ -703,7 +703,7 @@ class tl_style extends Backend
 	public function scheduleUpdate()
 	{
 		// Return if there is no ID
-		if (!CURRENT_ID || Input::get('act') == 'copy' || Environment::get('isAjaxRequest'))
+		if (!CURRENT_ID || Input::get('act') == 'copy')
 		{
 			return;
 		}

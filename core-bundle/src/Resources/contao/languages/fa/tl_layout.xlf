@@ -226,6 +226,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.0">
         <source>Combine scripts</source>
+        <target>ترکیب اسکریپت‌ها</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
@@ -280,6 +281,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
         <source>Viewport tag</source>
+        <target>برچسب ویوپورت</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
         <source>Here you can set a custom viewport tag.</source>

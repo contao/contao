@@ -112,7 +112,15 @@ class MetaWizard extends \Widget
 
 		// Only show the root page languages (see #7112, #7667)
 		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
-		$languages = array_intersect_key($languages, array_flip($objRootLangs->fetchEach('language')));
+		$existing = $objRootLangs->fetchEach('language');
+
+		// Also add the existing keys (see #878)
+		if (!empty($this->varValue))
+		{
+			$existing = array_unique(array_merge($existing, array_keys($this->varValue)));
+		}
+
+		$languages = array_intersect_key($languages, array_flip($existing));
 
 		// Make sure there is at least an empty array
 		if (!is_array($this->varValue) || empty($this->varValue))
@@ -138,7 +146,7 @@ class MetaWizard extends \Widget
 				$return .= '
     <li class="' . (($count % 2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '">';
 
-				$return .= '<span class="lang">' . (isset($languages[$lang]) ? $languages[$lang] : $lang) . ' ' . \Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" onclick="Backend.metaDelete(this)"') . '</span>';
+				$return .= '<span class="lang">' . (isset($languages[$lang]) ? $languages[$lang] : $lang) . ' ' . \Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" onclick="Backend.metaDelete(this)"') . '</span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$attributes)

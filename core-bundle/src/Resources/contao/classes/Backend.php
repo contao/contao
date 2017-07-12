@@ -318,6 +318,12 @@ abstract class Backend extends \Controller
 			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $this->User->username . '".');
 		}
 
+		// The module does not exist
+		if (empty($arrModule))
+		{
+			throw new \InvalidArgumentException('Back end module "' . $module . '" is not defined in the BE_MOD array');
+		}
+
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 

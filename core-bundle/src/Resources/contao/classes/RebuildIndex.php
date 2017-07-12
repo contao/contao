@@ -51,7 +51,7 @@ class RebuildIndex extends \Backend implements \executable
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->indexHeadline = $GLOBALS['TL_LANG']['tl_maintenance']['searchIndex'];
 		$objTemplate->isActive = $this->isActive();
-		$objTemplate->message = \Message::generateUnwrapped();
+		$objTemplate->message = \Message::generateUnwrapped(__CLASS__);
 
 		// Rebuild the index
 		if (\Input::get('act') == 'index')
@@ -81,7 +81,7 @@ class RebuildIndex extends \Backend implements \executable
 			// Return if there are no pages
 			if (empty($arrPages))
 			{
-				\Message::addError($GLOBALS['TL_LANG']['tl_maintenance']['noSearchable']);
+				\Message::addError($GLOBALS['TL_LANG']['tl_maintenance']['noSearchable'], __CLASS__);
 				$this->redirect($this->getReferer());
 			}
 

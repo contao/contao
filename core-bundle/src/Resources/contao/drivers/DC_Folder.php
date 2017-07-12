@@ -71,12 +71,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected $arrCounts = array();
 
 	/**
-	 * True if a new version has to be created
-	 * @var boolean
-	 */
-	protected $blnCreateNewVersion = false;
-
-	/**
 	 * Database assisted
 	 * @var boolean
 	 */
@@ -87,6 +81,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	 * @var boolean
 	 */
 	protected $blnHideFiles = false;
+
+	/**
+	 * Select folders
+	 * @var boolean
+	 */
+	protected $blnSelectFolders = false;
 
 
 	/**
@@ -204,39 +204,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Initialize the picker
 		if (isset($_GET['target']) && \Input::get('act') != 'select' && \Input::get('act') != 'paste')
 		{
-			list($table) = explode('.', \Input::get('target'), 2);
-
-			if ($this->strTable != $table)
-			{
-				$this->initPicker();
-			}
+			$this->initPicker();
 		}
 
 		// Get all filemounts (root folders)
 		if (is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))
 		{
 			$this->arrFilemounts = $this->eliminateNestedPaths($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']);
-		}
-	}
-
-
-	/**
-	 * Set an object property
-	 *
-	 * @param string $strKey
-	 * @param mixed  $varValue
-	 */
-	public function __set($strKey, $varValue)
-	{
-		switch ($strKey)
-		{
-			case 'createNewVersion':
-				$this->blnCreateNewVersion = (bool) $varValue;
-				break;
-
-			default;
-				parent::__set($strKey, $varValue);
-				break;
 		}
 	}
 
@@ -258,10 +232,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 			case 'extension':
 				return $this->strExtension;
-				break;
-
-			case 'createNewVersion':
-				return $this->blnCreateNewVersion;
 				break;
 
 			case 'isDbAssisted':
@@ -428,7 +398,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
+					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
 			}
 		}
@@ -469,13 +439,13 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
 <ul class="tl_listing tl_file_manager'.($this->strPickerField ? ' picker unselectable' : '').'"'.$this->getPickerAttributes().'>
   <li class="tl_folder_top cf"><div class="tl_left">'.\Image::getHtml('filemounts.svg').' '.$GLOBALS['TL_LANG']['MSC']['filetree'].'</div> <div class="tl_right">'.(($blnClipboard && empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false) ? '<a href="'.$this->addToUrl('&amp;act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.\Config::get('uploadPath').(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1]).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a>' : '&nbsp;').'</div></li>'.$return.'
-</ul>'.(($this->strPickerField && $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['fieldType'] == 'radio') ? '
+</ul>'.(($this->strPickerField && $this->strPickerFieldType == 'radio') ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '').'
@@ -2504,25 +2474,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		$blnProtected = true;
-		$strPath = $strFolder;
-
-		// Check for public parent folders (see #213)
-		while ($strPath != '' && $strPath != '.')
-		{
-			if (file_exists(TL_ROOT . '/' . $strPath . '/.public'))
-			{
-				$blnProtected = false;
-				break;
-			}
-
-			$strPath = dirname($strPath);
-		}
-
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $blnProtected, ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
 	}
 
 
@@ -2697,7 +2652,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if ($this->strPickerField)
 				{
-					$return .= $this->getPickerInputField($currentEncoded, $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['filesOnly'] ? ' disabled' : '');
+					$return .= $this->getPickerInputField($currentEncoded, $this->blnSelectFolders ? '' : ' disabled');
 				}
 			}
 
@@ -2802,7 +2757,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 				if ($this->strPickerField)
 				{
-					$_buttons .= $this->getPickerInputField($currentEncoded, ($GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['files'] || $GLOBALS['TL_DCA'][$this->strPickerTable]['fields'][$this->strPickerField]['eval']['filesOnly']) ? '' : ' disabled');
+					$_buttons .= $this->getPickerInputField($currentEncoded);
 				}
 			}
 
@@ -3095,9 +3050,18 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		parent::setDcaFilter($arrFilter);
 
-		if (isset($arrFilter['hideFiles']) && $arrFilter['hideFiles'] === true)
+		$blnHideFiles = !isset($arrFilter['files']) && !isset($arrFilter['filesOnly']);
+
+		if (isset($arrFilter['files']) && $arrFilter['files'] === false)
 		{
-			$this->blnHideFiles = true;
+			$blnHideFiles = true;
+		}
+
+		$this->blnHideFiles = $blnHideFiles;
+
+		if (!isset($arrFilter['filesOnly']) || $arrFilter['filesOnly'] === false)
+		{
+			$this->blnSelectFolders = true;
 		}
 
 		if (isset($arrFilter['extensions']))

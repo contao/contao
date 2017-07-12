@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.gzipScripts.1">
         <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>Создать сжатую версию объединенных CSS и JavaScript файлов. Требует корректировки .htaccess файла.</target>
+        <target>Создать сжатую версию объединенных CSS и JavaScript файлов. Требует корректировки файла .htaccess</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -214,8 +214,7 @@
         <target>Максимальная ширина во внешнем интерфейсе</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically.</source>
-        <target>Если ширина изображения или ролика превысит это значение, то он будет автоматически масштабирован.</target>
+        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>

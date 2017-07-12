@@ -977,7 +977,7 @@ var Backend =
 	openModalBrowser: function(field_name, url, type, win, reference) {
 		Backend.openModalSelector({
 			'title': win.document.getElement('div.mce-title').get('text'),
-			'url': document.location.pathname.replace('/contao', '/_contao') + '/picker?target=' + (reference || 'tl_content.singleSRC') + '&amp;value=' + url + (type == 'file' ? '&amp;context=link' : '&amp;do=files&amp;context=file') + '&amp;popup=1',
+			'url': document.location.pathname.replace('/contao', '/_contao') + '/picker?' + (type == 'file' ? 'do=page&amp;context=link' : 'do=files&amp;context=file') + '&amp;target=' + (reference || 'tl_content.singleSRC') + '&amp;value=' + url + '&amp;popup=1',
 			'callback': function(table, value) {
 				new Request.Contao({
 					evalScripts: false,
@@ -1217,14 +1217,14 @@ var Backend =
 		new Tips.Contao($$('a[title][class^="group-"]').filter(function(i) {
 			return i.title != '';
 		}), {
-			offset: {x:8, y:38}
+			offset: {x:3, y:27}
 		});
 
 		// Navigation links
 		new Tips.Contao($$('a[title].navigation').filter(function(i) {
 			return i.title != '';
 		}), {
-			offset: {x:8, y:34}
+			offset: {x:34, y:32}
 		});
 
 		// Images

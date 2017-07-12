@@ -1695,6 +1695,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
         <source>Meta data</source>
+        <target>Meta-données</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
