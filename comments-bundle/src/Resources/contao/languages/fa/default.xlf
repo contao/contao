@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_email">
         <source>E-mail (not published)</source>
-        <target>ایمیل (منتشر نشده)</target>
+        <target>ایمیل (منتشر نمی‌شود)</target>
       </trans-unit>
       <trans-unit id="MSC.com_website">
         <source>Website</source>

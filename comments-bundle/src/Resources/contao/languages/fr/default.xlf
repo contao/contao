@@ -147,6 +147,7 @@ Pour annuler votre abonnement, veuillez cliquer ici :
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
+        <target>Nouvelle réponse à un commentaire sur %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplyMessage">
         <source>Hello %s,
@@ -160,6 +161,17 @@ a new reply to a comment has been added on a page you have subscribed to:
 To cancel your subscription, please click here:
 %s
 </source>
+        <target>Bonjour %s,
+
+Une nouvelle réponse à un commentaire a été ajoutée sur une page à laquelle vous vous êtes abonné :
+
+%s
+
+---
+
+Pour annuler votre abonnement, cliquez ici :
+%s
+</target>
       </trans-unit>
     </body>
   </file>
