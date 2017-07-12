@@ -61,9 +61,21 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s dodał nowy komentarz na twojej stronie.
+
+---
+
+%s
+
+---
+
+Zobacz: %s
+Edytuj: %s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>Ten komentarz musi zostać opublikowany w backendzie zanim pojawi się na stronie!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
@@ -135,6 +147,7 @@ Aby anulować subskrypcję, kliknij tutaj:
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
+        <target>Nowa odpowiedź do komentarza w %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplyMessage">
         <source>Hello %s,
@@ -148,6 +161,17 @@ a new reply to a comment has been added on a page you have subscribed to:
 To cancel your subscription, please click here:
 %s
 </source>
+        <target>Witaj %s,
+
+została dodana nowa odpowiedź na komentarz na stornie, którą subskrybujesz:
+
+%s
+
+---
+
+Aby anulować subskrypcję, kliknij tutaj:
+%s
+</target>
       </trans-unit>
     </body>
   </file>
