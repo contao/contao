@@ -183,7 +183,7 @@ class Installer
         $needle = $schema->getName().'.tl_';
 
         foreach ($schema->getTableNames() as $tableName) {
-            if (0 !== strpos($tableName, $needle)) {
+            if (0 !== stripos($tableName, $needle)) {
                 $schema->dropTable($tableName);
             }
         }

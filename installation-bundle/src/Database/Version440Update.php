@@ -39,5 +39,6 @@ class Version440Update extends AbstractVersionUpdate
     public function run()
     {
         $this->connection->query("ALTER TABLE `tl_content` CHANGE `title` `imageTitle` varchar(255) NOT NULL DEFAULT ''");
+        $this->connection->query("UPDATE tl_content SET overwriteMeta='1' WHERE alt!='' OR imageTitle!='' OR imageUrl!='' OR caption!=''");
     }
 }
