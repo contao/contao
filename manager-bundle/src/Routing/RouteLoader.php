@@ -69,8 +69,11 @@ class RouteLoader
             new RouteCollection()
         );
 
-        if ($catchAll = $collection->get('contao_catch_all')) {
-            $collection->add('contao_catch_all', $catchAll);
+        // Make sure the Contao frontend routes are always loaded last
+        foreach (['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'] as $name) {
+            if ($route = $collection->get($name)) {
+                $collection->add($name, $route);
+            }
         }
 
         return $collection;
