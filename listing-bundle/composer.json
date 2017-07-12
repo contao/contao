@@ -41,6 +41,5 @@
     },
     "extra": {
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
-    },
-    "minimum-stability": "RC"
+    }
 }
