@@ -1,269 +1,269 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter.php" source-language="en" target-language="lv">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter.php" source-language="en" target-language="pl">
     <body>
       <trans-unit id="tl_newsletter.subject.0">
         <source>Subject</source>
-        <target>Temats</target>
+        <target>Temat</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.subject.1">
         <source>Please enter the newsletter subject.</source>
-        <target>Lūdzu ievadiet apkārtraksta tematu.</target>
+        <target>Wpisz temat newlettera.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.alias.0">
         <source>Newsletter alias</source>
-        <target>Biļetena aizstājējvārds</target>
+        <target>Alias tego newslettera</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.alias.1">
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
-        <target>Biļetens aizstājējvārds ir unikāla atsauce uz jaunumiem, ko var izsaukt pēc tā nosaukuma, nevis pēc tā ciparu ID.</target>
+        <target>Alias tego newslettera jest unikalnym odwołaniem do tego newslettera, który może być używany zamiast jego ID.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
-        <target>HTML saturs</target>
+        <target>Treść</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.1">
         <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
-        <target>Šeit varat ievadīt HTML saturu biļetenam. Izmantojiet aizstājējzīmes &lt;em&gt;##email##&lt;/em&gt;, lai ievietotu adresāta e-pasta adresi.</target>
+        <target>Wprowadź treść newslettera. Użyj tagu &lt;em&gt;##email##&lt;/em&gt; do umieszczenia adresu e-mail odbiorcy. Link do anulowania subskrypcji &lt;em&gt;http://www.domena.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.0">
         <source>Text content</source>
-        <target>Teksta saturs</target>
+        <target>Treść</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text.1">
         <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
-        <target>Šeit varat ievadīt biļetenā saturu, jeb - tekstu. Izmantojiet aizstājējzīmes &lt;em&gt;##email##&lt;/em&gt;, lai ievietotu adresāta e-pasta adresi.</target>
+        <target>Wprowadź treść newslettera. Użyj tagu &lt;em&gt;##email##&lt;/em&gt; do umieszczenia adresu e-mail odbiorcy. Link do anulowania subskrypcji &lt;em&gt;http://www.domena.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.0">
         <source>Add attachments</source>
-        <target>Pievienot pielikumus</target>
+        <target>Dodaj załącznik</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.1">
         <source>Attach one or more files to the newsletter.</source>
-        <target>Pievienot vienu vai vairākas datnes apkārtrakstam.</target>
+        <target>Dodaj jeden lub więcej załączników</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.0">
         <source>Attachments</source>
-        <target>Pielikums</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.1">
         <source>Please choose the files to be attached from the files directory.</source>
-        <target>Lūdzu, izvēlieties failus, ko pievienot no failiem direktorijā.</target>
+        <target>Wybierz pliki, które chcesz dołączyć do newslettera.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.0">
         <source>Custom e-mail template</source>
-        <target>Pielāgota e-pasta veidne</target>
+        <target>Własny szablon e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the default e-mail template of the channel.</source>
-        <target>Šeit jūs varat pārlabot kanāla noklusējuma e-pasta veidni.</target>
+        <target>Tutaj możesz nadpisać domyślny szablon e-mail tego kanału.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
-        <target>Sūtīt kā vienkāršu tekstu</target>
+        <target>Wyślij jako tekst</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.1">
         <source>Send the newsletter as plain text e-mail without the HTML content.</source>
-        <target>Sūtīt biļetenu kā vienkārša teksta e-pastu, neizmantojot HTML saturu.</target>
+        <target>Jeśli wybierzesz tę opcję, e-mail zostanie wysłany jako zwykły tekst. Treść zostanie pozbawiona wszystkich tagów HTML.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.0">
         <source>External images</source>
-        <target>Ārējie attēli</target>
+        <target>Zewnętrzne obrazki</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.1">
         <source>Do not embed images in HTML newsletters.</source>
-        <target>Neieguldiet HTML biļetenos attēlus.</target>
+        <target>Nie osadzaj obrazków w newsletterach HTML.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
-        <target>Pielāgota sūtītāja e-pasta adrese</target>
+        <target>Własny adres e-mail nadawcy</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.1">
         <source>Here you can override the default sender e-mail address of the channel.</source>
-        <target>Šeit jūs varat pārlabot kanāla noklusējuma nosūtītāja e-pasta adresi.</target>
+        <target>Tutaj możesz nadpisać domyślny adres e-mail nadawcy tego kanału.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.0">
         <source>Custom sender name</source>
-        <target>Pielāgots nosūtītāja vārds</target>
+        <target>Własna nazwa nadawcy</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.senderName.1">
         <source>Here you can override the default sender name of the channel.</source>
-        <target>Šeit jūs varat pārlabot kanāla noklusējuma nosūtītāja vārdu.</target>
+        <target>Tutaj możesz nadpisać domyślną nazwę nadawcy tego kanału.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.0">
         <source>Mails per cycle</source>
-        <target>Vēstules ciklā</target>
+        <target>Maili w cyklu</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.1">
         <source>The sending process is split into several cycles to prevent the script from timing out.</source>
-        <target>Sūtīšanas process ir sadalīts vairākos ciklos, lai novērstu skripta izpildes noildzi.</target>
+        <target>By uniemożliwić skryptowi przekroczenia dozwolonego czasu wykonania, proces wysyłania został podzielony na kilka cykli. Tutaj możesz zdefiniować ilość wysyłanych maili w ciągu jednego cyklu, jest to uzależnione od zdefiniowanego w pliku php.ini maksymalnego czasu wykonywania jednego skryptu.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.0">
         <source>Timeout in seconds</source>
-        <target>Noildze sekundēs</target>
+        <target>Przerwa w sekundach</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.1">
         <source>Here you can modify the waiting time between each cycle to control the number of e-mails per minute.</source>
-        <target>Šeit jūs varat mainīt gaidīšanas laiks starp katru ciklu, lai kontrolētu minūtē nosūtāmo e-pastu skaitu.</target>
+        <target>Niektóre mail serwery mają limit maili, które mogą wysłać w ciągu jednej minuty. Tutaj możesz ustawić przerwę w sekundach pomiędzy każdym cyklem w celu większej kontroli operacji w ramach danego czasu.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.0">
         <source>Offset</source>
-        <target>Kompensācija (Offset)</target>
+        <target>Offset</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Gadījumā, ja nosūtīšanas process ir pārtraukts, jūs varat šeit ievadīt skaitlisku kompensāciju, lai turpinātu ar konkrētu adresātu. Jūs varat pārbaudīt, cik daudzas vēstules ir nosūtītas  &lt;em&gt;newsletter_%s.log&lt;/em&gt; failā. Piem. ja nosūtīti 120 e-pasti, ievadiet &quot;120&quot;, lai turpinātu ar 121. adresātu (skaitīšana sākas ar 0).</target>
+        <target>W przypadku, gdy proces wysyłki jest przerwany, tutaj możesz wprowadzić offset, od którego wysyłka będzie kontynuowana. Możesz sprawdzić ile e-maili zostało wysłanych w pliku &lt;em&gt;newsletter_%s.log&lt;/em&gt;. Np. jeśli wysłane zostało 120 mejli, wprowadź 120 aby kontynuować ze 121 odbiorcą (liczenie zaczyna się od zera).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
-        <target>Nosūtīt priekšskatījumu</target>
+        <target>Wyślij podgląd do</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.1">
         <source>Send the preview of the newsletter to this e-mail address.</source>
-        <target>Nosūtīt apkārtraksta priekšskatījumu uz šo e-pasta adresi.</target>
+        <target>Wyślij podgląd newslettera na ten adres email.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.title_legend">
         <source>Title and subject</source>
-        <target>Virsraksts un temats</target>
+        <target>Tytuł i temat</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.html_legend">
         <source>HTML content</source>
-        <target>HTML saturs</target>
+        <target>Treść</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.text_legend">
         <source>Text content</source>
-        <target>Teksta saturs</target>
+        <target>Treść</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachment_legend">
         <source>Attachments</source>
-        <target>Pielikums</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.template_legend">
         <source>Template settings</source>
-        <target>Veidnes uzstadījumi</target>
+        <target>Ustawienia szablonów</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender_legend">
         <source>Sender settings</source>
-        <target>Nosūtītāja iestatījumi</target>
+        <target>Ustawienia nadawcy</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.expert_legend">
         <source>Expert settings</source>
-        <target>Eksperta iestatījumi</target>
+        <target>Zaawansowane ustawienia</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sent">
         <source>Sent</source>
-        <target>Nosūtīts</target>
+        <target>Wysłany</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
         <source>Sent on %s</source>
-        <target>Nosūtīts %s</target>
+        <target>Wysłano %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>
-        <target>Nav vel izsūtīts</target>
+        <target>Jeszcze nie wysłany</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailingDate">
         <source>Mailing date</source>
-        <target>Izsūtīšanas datums</target>
+        <target>Data wysyłki</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.confirm">
         <source>The newsletter has been sent to %s recipients.</source>
-        <target>Biļetens ir nosūtīts% s saņēmējiem.</target>
+        <target>Newsletter został wysłany do %s odbiorców.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>% s nederīga e-pasta adrese (-es) ir/tika izslēgta (sk. sistēmas log).</target>
+        <target>%s błędny/e adres/y e-mail zostały wyłączone.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
-        <target>Nav aktīvo abonentu uz kanālu.</target>
+        <target>Nie ma żadnych aktywnych subskrybentów tego kanału.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.from">
         <source>From</source>
-        <target>No</target>
+        <target>Od</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.attachments">
         <source>Attachments</source>
-        <target>Pielikums</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.preview">
         <source>Send preview</source>
-        <target>Sūtīt priekšskatījumu</target>
+        <target>Wyślij podgląd</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendConfirm">
         <source>Do you really want to send the newsletter?</source>
-        <target>Vai tiešām vēlaties nosūtīt apkārtrakstu?</target>
+        <target>Czy na pewno chcesz wysłać newsletter?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New newsletter</source>
-        <target>Jauns apkārtraksts</target>
+        <target>Nowy newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
-        <target>Izveidot jaunu apkārtrakstu</target>
+        <target>Utwórz nowy newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.show.0">
         <source>Newsletter details</source>
-        <target>Apkārtraksta detaļas</target>
+        <target>Szczegóły newslettera</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
-        <target>Parādīt apkārtraksta ID %s detaļas</target>
+        <target>Pokaż szczegóły newslettera ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit.0">
         <source>Edit newsletter</source>
-        <target>Rediģēt apkārtrakstu</target>
+        <target>Edytuj newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
-        <target>Rediģēt apkārtrakstu ID %s</target>
+        <target>Edytuj newsletter ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.copy.0">
         <source>Duplicate newsletter</source>
-        <target>Dublēt apkārtrakstu</target>
+        <target>Kopiuj newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
-        <target>Dublēt apkārtrakstu ID %s</target>
+        <target>Kopiuj newsletter ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.cut.0">
         <source>Move newsletter</source>
-        <target>Pārvietot apkārtrakstu</target>
+        <target>Przenieś newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.cut.1">
         <source>Move newsletter ID %s</source>
-        <target>Pārvietot apkārtrakstu ID %s</target>
+        <target>Przenieś newsletter ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.delete.0">
         <source>Delete newsletter</source>
-        <target>Dzēst apkārtrakstu</target>
+        <target>Skasuj newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
-        <target>Dzēst apkārtrakstu ID %s</target>
+        <target>Skasuj newsletter ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.editheader.0">
         <source>Edit channel</source>
-        <target>Rediģēt kanālu</target>
+        <target>Edytuj kanał</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.editheader.1">
         <source>Edit the channel settings</source>
-        <target>Rediģēt kanāla uzstādījumus</target>
+        <target>Edytuj kanał</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
-        <target>Ielīmēt šajā kanāla</target>
+        <target>Wklej do tego kanału</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.1">
         <source>Paste after newsletter ID %s</source>
-        <target>Ielīmēt aiz apkārtraksta ID %s</target>
+        <target>Wklej po newsletterze ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send newsletter</source>
-        <target>Sūtīt apkārtrakstu</target>
+        <target>Wyślij newsletter</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
-        <target>Sūtīt apkārtrakstu ID %s</target>
+        <target>Wyślij newsletter ID %s</target>
       </trans-unit>
     </body>
   </file>
