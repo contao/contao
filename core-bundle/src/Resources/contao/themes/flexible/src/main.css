@@ -875,7 +875,7 @@ table.tl_listing {
 .tl_left > a:first-child {
 	vertical-align:bottom;
 }
-.tl_file_manager .tl_file .tl_left > a:first-child,.tl_file_manager .tl_folder_top .tl_left > img {
+.tl_file_manager .tl_file .tl_left > a:first-child,.tl_file_manager .tl_left > img {
 	vertical-align:text-top;
 }
 .tl_listing .tl_right {
