@@ -38,6 +38,23 @@ class Version440Update extends AbstractVersionUpdate
      */
     public function run()
     {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if ($schemaManager->tablesExist(['tl_calendar_events'])) {
+            $this->connection->query("ALTER TABLE tl_calendar_events ADD overwriteMeta CHAR(1) DEFAULT '' NOT NULL");
+            $this->connection->query("UPDATE tl_calendar_events SET overwriteMeta='1' WHERE alt!='' OR imageUrl!='' OR caption!=''");
+        }
+
+        if ($schemaManager->tablesExist(['tl_faq'])) {
+            $this->connection->query("ALTER TABLE tl_faq ADD overwriteMeta CHAR(1) DEFAULT '' NOT NULL");
+            $this->connection->query("UPDATE tl_faq SET overwriteMeta='1' WHERE alt!='' OR imageUrl!='' OR caption!=''");
+        }
+
+        if ($schemaManager->tablesExist(['tl_news'])) {
+            $this->connection->query("ALTER TABLE tl_news ADD overwriteMeta CHAR(1) DEFAULT '' NOT NULL");
+            $this->connection->query("UPDATE tl_news SET overwriteMeta='1' WHERE alt!='' OR imageUrl!='' OR caption!=''");
+        }
+
         $this->connection->query("ALTER TABLE `tl_content` CHANGE `title` `imageTitle` varchar(255) NOT NULL DEFAULT ''");
         $this->connection->query("ALTER TABLE tl_content ADD overwriteMeta CHAR(1) DEFAULT '' NOT NULL");
         $this->connection->query("UPDATE tl_content SET overwriteMeta='1' WHERE alt!='' OR imageTitle!='' OR imageUrl!='' OR caption!=''");
