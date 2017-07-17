@@ -10,6 +10,8 @@
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\StringUtil;
+
 /**
  * Runs the version 4.4.0 update.
  *
@@ -38,8 +40,23 @@ class Version440Update extends AbstractVersionUpdate
      */
     public function run()
     {
+        // Add the js_autofocus.html5 template
+        $statement = $this->connection->query("SELECT id, scripts FROM tl_layout");
+
+        while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $scripts = StringUtil::deserialize($layout->scripts);
+
+            if (!empty($scripts) && is_array($scripts)) {
+                $scripts[] = 'js_autofocus';
+
+                $stmt = $this->connection->prepare('UPDATE tl_layout SET scripts=:scripts WHERE id=:id');
+                $stmt->execute([':scripts' => serialize(array_values(array_unique($scripts))), ':id' => $layout->id]);
+            }
+        }
+
         $schemaManager = $this->connection->getSchemaManager();
 
+        // Enable the overwriteMeta field
         if ($schemaManager->tablesExist(['tl_calendar_events'])) {
             $this->connection->query("ALTER TABLE tl_calendar_events ADD overwriteMeta CHAR(1) DEFAULT '' NOT NULL");
             $this->connection->query("UPDATE tl_calendar_events SET overwriteMeta='1' WHERE alt!='' OR imageUrl!='' OR caption!=''");
