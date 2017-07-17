@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Do not generate duplicate form IDs (see contao/core#8538).
+
 ### 4.4.1 (2017-07-12)
 
  * Prevent arbitrary PHP file inclusions in the back end (see CVE-2017-10993).
