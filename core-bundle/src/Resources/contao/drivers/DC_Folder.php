@@ -994,8 +994,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
-		if (is_array($ids) && strlen($ids[0]))
+		if (!empty($ids) && is_array($ids))
 		{
+			$ids = $this->eliminateNestedPaths($ids); // see #941
+
 			foreach ($ids as $id)
 			{
 				$this->delete($id); // do not urldecode() here (see #6840)

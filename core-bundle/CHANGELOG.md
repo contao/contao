@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Eliminate nested paths when deleting folders in the file manager (see #941).
  * Do not generate duplicate form IDs (see contao/core#8538).
 
 ### 4.4.1 (2017-07-12)
