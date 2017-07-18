@@ -56,8 +56,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['Content-Type: text/html']);
+        $listener = new MergeHttpHeadersListener($framework, ['Content-Type: text/html']);
         $listener->onKernelResponse($responseEvent);
 
         $this->assertFalse($responseEvent->getResponse()->headers->has('Content-Type'));
@@ -83,8 +82,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['Content-Type: text/html']);
+        $listener = new MergeHttpHeadersListener($framework, ['Content-Type: text/html']);
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
@@ -116,8 +114,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new MergeHttpHeadersListener($framework);
-        $listener->setHeaders(['set-cookie: new-content=foobar']); // test a lower-case key here
+        $listener = new MergeHttpHeadersListener($framework, ['set-cookie: new-content=foobar']); // lower-case key
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
