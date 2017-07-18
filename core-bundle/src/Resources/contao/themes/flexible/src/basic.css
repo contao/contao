@@ -159,12 +159,11 @@ p {
 .widget > div > * {
 	font-size:.875rem;
 }
+.widget h3 {
+	min-height:16px;
+}
 .widget h3 label {
 	margin-right:3px;
-}
-.widget h3 a {
-	position:absolute;
-	margin-top:-1px;
 }
 .widget h3 img {
 	margin-right:3px;
