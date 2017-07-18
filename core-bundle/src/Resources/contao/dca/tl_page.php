@@ -1808,7 +1808,7 @@ class tl_page extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->published = ($blnVisible ? '1' : '');
 		}
 

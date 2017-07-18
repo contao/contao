@@ -411,7 +411,7 @@ class tl_image_size_item extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
 		}
 

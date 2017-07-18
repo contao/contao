@@ -1871,7 +1871,7 @@ class tl_content extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
 		}
 

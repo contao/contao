@@ -338,7 +338,7 @@ class tl_member_group extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->disable = ($blnVisible ? '1' : '');
 		}
 
