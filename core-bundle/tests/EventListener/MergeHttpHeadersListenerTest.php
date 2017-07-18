@@ -126,8 +126,8 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $allHeaders = $response->headers->get('Set-Cookie', null, false);
 
-        $this->assertSame('content=foobar; path=/; httponly', $allHeaders[0]);
-        $this->assertSame('new-content=foobar; path=/; httponly', $allHeaders[1]);
+        $this->assertSame('content=foobar; path=/', $allHeaders[0]);
+        $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
     }
 
     /**
