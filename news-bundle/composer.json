@@ -49,6 +49,12 @@
     "config": {
         "preferred-install": "dist"
     },
+    "support": {
+        "docs": "https://docs.contao.org",
+        "forum": "https://community.contao.org",
+        "issues": "https://github.com/contao/news-bundle/issues",
+        "source": "https://github.com/contao/news-bundle"
+    },
     "extra": {
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     }
