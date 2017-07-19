@@ -39,8 +39,13 @@
     "config": {
         "preferred-install": "dist"
     },
+    "support": {
+        "docs": "https://docs.contao.org",
+        "forum": "https://community.contao.org",
+        "issues": "https://github.com/contao/newsletter-bundle/issues",
+        "source": "https://github.com/contao/newsletter-bundle"
+    },
     "extra": {
         "contao-manager-plugin": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
-    },
-    "minimum-stability": "RC"
+    }
 }
