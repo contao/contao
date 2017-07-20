@@ -12,7 +12,9 @@ namespace Contao\CoreBundle\Tests\Cors;
 
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,7 +152,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $connection
             ->method('isConnected')
-            ->willReturn(false)
+            ->willThrowException(new ConnectionException('Could not connect', new MysqliException('Invalid password')))
         ;
 
         $connection

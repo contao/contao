@@ -16,6 +16,8 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Mysqli\MysqliException;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -236,6 +238,47 @@ class CommandSchedulerListenerTest extends TestCase
 
         $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
         $listener->onKernelTerminate($this->mockPostResponseEvent('contao_install'));
+    }
+
+    /**
+     * Tests that the listener does nothing if the database connection fails.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testDatabaseConnectionError()
+    {
+        $this->framework
+            ->expects($this->once())
+            ->method('getAdapter')
+        ;
+
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $controller = $this->createMock(FrontendCron::class);
+
+        $controller
+            ->expects($this->never())
+            ->method('run')
+        ;
+
+        $this->framework
+            ->method('createInstance')
+            ->willReturn($controller)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('isConnected')
+            ->willThrowException(new ConnectionException('Could not connect', new MysqliException('Invalid password')))
+        ;
+
+        $listener = new CommandSchedulerListener($this->framework, $connection);
+        $listener->onKernelTerminate($this->mockPostResponseEvent('contao_backend'));
     }
 
     /**
