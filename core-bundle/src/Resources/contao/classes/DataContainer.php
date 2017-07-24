@@ -933,7 +933,8 @@ abstract class DataContainer extends \Backend
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
 
-		if (isset($attributes['value'])) {
+		if (isset($attributes['value']))
+		{
 			$this->arrPickerValue = (array) $attributes['value'];
 		}
 

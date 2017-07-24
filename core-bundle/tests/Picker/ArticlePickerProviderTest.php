@@ -92,7 +92,7 @@ class ArticlePickerProviderTest extends TestCase
                 'routeParameters' => [
                     'popup' => '1',
                     'do' => 'article',
-                    'picker' => base64_encode($picker),
+                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
                 ],
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'))
         );

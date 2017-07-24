@@ -154,7 +154,7 @@ class PickerConfig implements \JsonSerializable
             $data = $encoded;
         }
 
-        return base64_encode($data);
+        return strtr(base64_encode($data), '+/=', '-_,');
     }
 
     /**
@@ -168,7 +168,7 @@ class PickerConfig implements \JsonSerializable
      */
     public static function urlDecode($data)
     {
-        $data = base64_decode($data, true);
+        $data = base64_decode(strtr($data, '-_,', '+/='), true);
 
         if (function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($data))) {
             $data = $uncompressed;

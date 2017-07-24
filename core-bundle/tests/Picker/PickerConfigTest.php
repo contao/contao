@@ -113,7 +113,7 @@ class PickerConfigTest extends TestCase
             $data = $encoded;
         }
 
-        $this->assertSame(base64_encode($data), $this->config->urlEncode());
+        $this->assertSame(strtr(base64_encode($data), '+/=', '-_,'), $this->config->urlEncode());
     }
 
     /**
@@ -132,7 +132,7 @@ class PickerConfigTest extends TestCase
             $data = $encoded;
         }
 
-        $config = $this->config->urlDecode(base64_encode($data));
+        $config = $this->config->urlDecode(base64_encode(strtr($data, '-_,', '+/=')));
 
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $config);
         $this->assertSame('link', $config->getContext());

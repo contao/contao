@@ -139,7 +139,7 @@ class FilePickerProviderTest extends TestCase
                 'routeParameters' => [
                     'popup' => '1',
                     'do' => 'files',
-                    'picker' => base64_encode($picker),
+                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
                 ],
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'))
         );
