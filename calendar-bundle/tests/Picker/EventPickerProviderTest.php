@@ -15,6 +15,7 @@ use Contao\CalendarBundle\Picker\EventPickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\FactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -44,7 +45,18 @@ class EventPickerProviderTest extends TestCase
             ->willReturnArgument(1)
         ;
 
-        $this->provider = new EventPickerProvider($menuFactory);
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                function ($name, array $params) {
+                    return $name.'?'.http_build_query($params);
+                }
+            )
+        ;
+
+        $this->provider = new EventPickerProvider($menuFactory, $router);
 
         $GLOBALS['TL_LANG']['MSC']['eventPicker'] = 'Event picker';
     }
@@ -88,12 +100,7 @@ class EventPickerProviderTest extends TestCase
                 'label' => 'Event picker',
                 'linkAttributes' => ['class' => 'eventPicker'],
                 'current' => true,
-                'route' => 'contao_backend',
-                'routeParameters' => [
-                    'popup' => '1',
-                    'do' => 'calendar',
-                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
-                ],
+                'uri' => 'contao_backend?do=calendar&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'))
         );
     }

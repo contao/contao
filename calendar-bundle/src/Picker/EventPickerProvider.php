@@ -84,17 +84,19 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config)
+    protected function getRouteParameters(PickerConfig $config = null)
     {
         $params = ['do' => 'calendar'];
 
-        if ($config->getValue() && false !== strpos($config->getValue(), '{{event_url::')) {
-            $value = str_replace(['{{event_url::', '}}'], '', $config->getValue());
+        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{event_url::')) {
+            return $params;
+        }
 
-            if (null !== ($calendarId = $this->getCalendarId($value))) {
-                $params['table'] = 'tl_calendar_events';
-                $params['id'] = $calendarId;
-            }
+        $value = str_replace(['{{event_url::', '}}'], '', $config->getValue());
+
+        if (null !== ($calendarId = $this->getCalendarId($value))) {
+            $params['table'] = 'tl_calendar_events';
+            $params['id'] = $calendarId;
         }
 
         return $params;

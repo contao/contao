@@ -9,6 +9,7 @@ services:
         public: false
         arguments:
             - "@knp_menu.factory"
+            - "@router"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:
