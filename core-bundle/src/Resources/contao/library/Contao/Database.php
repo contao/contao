@@ -80,7 +80,8 @@ class Database
 				'port'      => $arrConfig['dbPort'],
 				'user'      => $arrConfig['dbUser'],
 				'password'  => $arrConfig['dbPass'],
-				'dbname'    => $arrConfig['dbDatabase']
+				'dbname'    => $arrConfig['dbDatabase'],
+				'charset'   => $arrConfig['dbCharset']
 			);
 
 			$this->resConnection = DriverManager::getConnection($arrParams);
