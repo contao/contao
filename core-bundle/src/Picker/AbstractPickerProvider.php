@@ -142,7 +142,10 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     {
         $params = array_merge(
             $this->getRouteParameters($ignoreValue ? null : $config),
-            ['popup' => '1', 'picker' => $config->cloneForCurrent($this->getName())->urlEncode()]
+            [
+                'popup' => '1',
+                'picker' => $config->cloneForCurrent($this->getName())->urlEncode(),
+            ]
         );
 
         return $this->router->generate('contao_backend', $params);
