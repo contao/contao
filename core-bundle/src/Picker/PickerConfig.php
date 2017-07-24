@@ -80,7 +80,7 @@ class PickerConfig implements \JsonSerializable
      */
     public function getValue()
     {
-        return $this->value;
+        return (string) $this->value;
     }
 
     /**

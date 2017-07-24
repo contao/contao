@@ -16,6 +16,7 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Provides the file picker.
@@ -35,11 +36,12 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      * Constructor.
      *
      * @param FactoryInterface $menuFactory
+     * @param RouterInterface  $router
      * @param string           $uploadPath
      */
-    public function __construct(FactoryInterface $menuFactory, $uploadPath)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, $uploadPath)
     {
-        parent::__construct($menuFactory);
+        parent::__construct($menuFactory, $router);
 
         $this->uploadPath = $uploadPath;
     }
@@ -149,7 +151,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config)
+    protected function getRouteParameters(PickerConfig $config = null)
     {
         return ['do' => 'files'];
     }

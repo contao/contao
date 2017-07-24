@@ -74,10 +74,7 @@ class Picker implements PickerInterface
         $this->menu = $this->menuFactory->createItem('picker');
 
         foreach ($this->providers as $provider) {
-            $item = $provider->createMenuItem($this->config);
-            $item->setExtra('provider', $provider);
-
-            $this->menu->addChild($item);
+            $this->menu->addChild($provider->createMenuItem($this->config));
         }
 
         return $this->menu;
@@ -102,19 +99,16 @@ class Picker implements PickerInterface
      */
     public function getCurrentUrl()
     {
+        foreach ($this->providers as $provider) {
+            if ($provider->supportsValue($this->config)) {
+                return $provider->getUrl($this->config);
+            }
+        }
+
         $menu = $this->getMenu();
 
         if (!$menu->count()) {
-            throw new \RuntimeException('No picker menu items found.');
-        }
-
-        /** @var ItemInterface[] $menu */
-        foreach ($menu as $item) {
-            $picker = $item->getExtra('provider');
-
-            if ($picker instanceof PickerProviderInterface && $picker->supportsValue($this->config)) {
-                return $item->getUri();
-            }
+            throw new \RuntimeException('No picker menu items found');
         }
 
         return $menu->getFirstChild()->getUri();

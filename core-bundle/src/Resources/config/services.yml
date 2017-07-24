@@ -169,6 +169,7 @@ services:
         public: false
         arguments:
             - "@knp_menu.factory"
+            - "@router"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:
@@ -179,6 +180,7 @@ services:
         public: false
         arguments:
             - "@knp_menu.factory"
+            - "@router"
             - "%contao.upload_path%"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
@@ -190,6 +192,7 @@ services:
         public: false
         arguments:
             - "@knp_menu.factory"
+            - "@router"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:

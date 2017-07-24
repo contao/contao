@@ -15,6 +15,7 @@ use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\FactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -44,7 +45,18 @@ class ArticlePickerProviderTest extends TestCase
             ->willReturnArgument(1)
         ;
 
-        $this->provider = new ArticlePickerProvider($menuFactory);
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                function ($name, array $params) {
+                    return $name.'?'.http_build_query($params);
+                }
+            )
+        ;
+
+        $this->provider = new ArticlePickerProvider($menuFactory, $router);
 
         $GLOBALS['TL_LANG']['MSC']['articlePicker'] = 'Article picker';
     }
@@ -88,12 +100,7 @@ class ArticlePickerProviderTest extends TestCase
                 'label' => 'Article picker',
                 'linkAttributes' => ['class' => 'articlePicker'],
                 'current' => true,
-                'route' => 'contao_backend',
-                'routeParameters' => [
-                    'popup' => '1',
-                    'do' => 'article',
-                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
-                ],
+                'uri' => 'contao_backend?do=article&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'))
         );
     }

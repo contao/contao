@@ -98,7 +98,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config)
+    protected function getRouteParameters(PickerConfig $config = null)
     {
         return ['do' => 'page'];
     }

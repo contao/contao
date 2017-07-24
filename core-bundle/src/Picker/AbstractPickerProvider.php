@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Picker;
 
 use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -27,6 +28,11 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     private $menuFactory;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
@@ -35,10 +41,20 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      * Constructor.
      *
      * @param FactoryInterface $menuFactory
+     * @param RouterInterface  $router
      */
-    public function __construct(FactoryInterface $menuFactory)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
     {
         $this->menuFactory = $menuFactory;
+        $this->router = $router;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUrl(PickerConfig $config)
+    {
+        return $this->generateUrl($config, false);
     }
 
     /**
@@ -48,20 +64,13 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     {
         $name = $this->getName();
 
-        $params = array_merge(
-            ['popup' => '1'],
-            $this->getRouteParameters($config),
-            ['picker' => $config->cloneForCurrent($name)->urlEncode()]
-        );
-
         return $this->menuFactory->createItem(
             $name,
             [
                 'label' => $GLOBALS['TL_LANG']['MSC'][$name] ?: $name,
                 'linkAttributes' => ['class' => $name],
                 'current' => $this->isCurrent($config),
-                'route' => 'contao_backend',
-                'routeParameters' => $params,
+                'uri' => $this->generateUrl($config, true),
             ]
         );
     }
@@ -115,9 +124,27 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Returns the routing parameters for the backend picker.
      *
-     * @param PickerConfig $config
+     * @param PickerConfig|null $config
      *
      * @return array
      */
-    abstract protected function getRouteParameters(PickerConfig $config);
+    abstract protected function getRouteParameters(PickerConfig $config = null);
+
+    /**
+     * Generates the URL for the picker.
+     *
+     * @param PickerConfig $config
+     * @param bool         $ignoreValue
+     *
+     * @return string
+     */
+    private function generateUrl(PickerConfig $config, $ignoreValue)
+    {
+        $params = array_merge(
+            $this->getRouteParameters($ignoreValue ? null : $config),
+            ['popup' => '1', 'picker' => $config->cloneForCurrent($this->getName())->urlEncode()]
+        );
+
+        return $this->router->generate('contao_backend', $params);
+    }
 }

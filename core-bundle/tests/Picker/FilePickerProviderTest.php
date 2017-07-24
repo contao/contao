@@ -19,6 +19,7 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Knp\Menu\FactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -46,6 +47,17 @@ class FilePickerProviderTest extends TestCase
         $menuFactory
             ->method('createItem')
             ->willReturnArgument(1)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                function ($name, array $params) {
+                    return $name.'?'.http_build_query($params);
+                }
+            )
         ;
 
         $filesModel = $this->createMock(FilesModel::class);
@@ -90,7 +102,7 @@ class FilePickerProviderTest extends TestCase
             ->willReturn($filesAdapter)
         ;
 
-        $this->provider = new FilePickerProvider($menuFactory, __DIR__);
+        $this->provider = new FilePickerProvider($menuFactory, $router, __DIR__);
         $this->provider->setFramework($framwork);
 
         $GLOBALS['TL_LANG']['MSC']['filePicker'] = 'File picker';
@@ -135,12 +147,7 @@ class FilePickerProviderTest extends TestCase
                 'label' => 'File picker',
                 'linkAttributes' => ['class' => 'filePicker'],
                 'current' => true,
-                'route' => 'contao_backend',
-                'routeParameters' => [
-                    'popup' => '1',
-                    'do' => 'files',
-                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
-                ],
+                'uri' => 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'))
         );
     }

@@ -15,6 +15,7 @@ use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\FactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -44,7 +45,18 @@ class PagePickerProviderTest extends TestCase
             ->willReturnArgument(1)
         ;
 
-        $this->provider = new PagePickerProvider($menuFactory);
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                function ($name, array $params) {
+                    return $name.'?'.http_build_query($params);
+                }
+            )
+        ;
+
+        $this->provider = new PagePickerProvider($menuFactory, $router);
 
         $GLOBALS['TL_LANG']['MSC']['pagePicker'] = 'Page picker';
     }
@@ -88,12 +100,7 @@ class PagePickerProviderTest extends TestCase
                 'label' => 'Page picker',
                 'linkAttributes' => ['class' => 'pagePicker'],
                 'current' => true,
-                'route' => 'contao_backend',
-                'routeParameters' => [
-                    'popup' => '1',
-                    'do' => 'page',
-                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
-                ],
+                'uri' => 'contao_backend?do=page&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'))
         );
     }

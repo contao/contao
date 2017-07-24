@@ -64,11 +64,14 @@ class PickerBuilderTest extends TestCase
      */
     public function testCreate()
     {
-        $provider = new PagePickerProvider(new MenuFactory());
+        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
 
         $this->builder->addProvider($provider);
-        $this->builder->addProvider(new FilePickerProvider(new MenuFactory(), __DIR__));
+
+        $this->builder->addProvider(
+            new FilePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class), __DIR__)
+        );
 
         $picker = $this->builder->create(new PickerConfig('page', ['providers' => ['pagePicker']]));
 
@@ -93,7 +96,7 @@ class PickerBuilderTest extends TestCase
      */
     public function testCreateFromData()
     {
-        $provider = new PagePickerProvider(new MenuFactory());
+        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
 
         $this->builder->addProvider($provider);
@@ -109,7 +112,7 @@ class PickerBuilderTest extends TestCase
      */
     public function testCreateFromDataWithInvalidArgument()
     {
-        $provider = new PagePickerProvider(new MenuFactory());
+        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
 
         $this->builder->addProvider($provider);
@@ -122,7 +125,7 @@ class PickerBuilderTest extends TestCase
      */
     public function testSupportsContext()
     {
-        $provider = new PagePickerProvider(new MenuFactory());
+        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
 
         $this->builder->addProvider($provider);
@@ -137,7 +140,7 @@ class PickerBuilderTest extends TestCase
      */
     public function testGetUrl()
     {
-        $provider = new PagePickerProvider(new MenuFactory());
+        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
 
         $this->builder->addProvider($provider);

@@ -74,7 +74,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config)
+    protected function getRouteParameters(PickerConfig $config = null)
     {
         return ['do' => 'article'];
     }

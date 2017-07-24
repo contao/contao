@@ -851,6 +851,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(PagePickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
 
         $calls = $definition->getMethodCalls();
 
@@ -875,7 +876,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(FilePickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(2));
 
         $calls = $definition->getMethodCalls();
 
@@ -900,6 +902,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ArticlePickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
 
         $calls = $definition->getMethodCalls();
 
