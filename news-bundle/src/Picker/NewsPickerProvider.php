@@ -84,14 +84,6 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getLinkClass()
-    {
-        return 'news';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config)
     {
         $params = ['do' => 'news'];

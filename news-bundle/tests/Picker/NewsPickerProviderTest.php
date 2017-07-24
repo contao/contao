@@ -86,7 +86,7 @@ class NewsPickerProviderTest extends TestCase
         $this->assertSame(
             [
                 'label' => 'News picker',
-                'linkAttributes' => ['class' => 'news'],
+                'linkAttributes' => ['class' => 'newsPicker'],
                 'current' => true,
                 'route' => 'contao_backend',
                 'routeParameters' => [
