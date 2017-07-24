@@ -2,13 +2,12 @@
 
 ### DEV
 
- * Eliminate nested paths when deleting folders in the file manager (see #941).
- * Do not generate duplicate form IDs (see contao/core#8538).
+ * Rewrite the DCA picker (see #950).
 
 ### 4.4.1 (2017-07-12)
 
  * Prevent arbitrary PHP file inclusions in the back end (see CVE-2017-10993).
- * Correctly handle subpalettes in "edit multiple" mode (see #946). 
+ * Correctly handle subpalettes in "edit multiple" mode (see #946).
  * Correctly show the DCA picker in the site structure (see #906).
  * Correctly update the style sheets if a format definition is enabled/disabled (see #893).
  * Always show the "show from" and "show until" fields (see #908).

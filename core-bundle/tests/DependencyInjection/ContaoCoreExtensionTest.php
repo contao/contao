@@ -45,12 +45,12 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
-use Contao\CoreBundle\Menu\ArticlePickerProvider;
-use Contao\CoreBundle\Menu\FilePickerProvider;
-use Contao\CoreBundle\Menu\PagePickerProvider;
-use Contao\CoreBundle\Menu\PickerMenuBuilder;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
+use Contao\CoreBundle\Picker\ArticlePickerProvider;
+use Contao\CoreBundle\Picker\FilePickerProvider;
+use Contao\CoreBundle\Picker\PagePickerProvider;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Referer\TokenGenerator;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -761,89 +761,6 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * Tests the contao.menu.picker_menu_builder service.
-     */
-    public function testPickerMenuBuilder()
-    {
-        $this->assertTrue($this->container->has('contao.menu.picker_menu_builder'));
-
-        $definition = $this->container->getDefinition('contao.menu.picker_menu_builder');
-
-        $this->assertSame(PickerMenuBuilder::class, $definition->getClass());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('contao.menu.renderer', (string) $definition->getArgument(1));
-        $this->assertSame('router', (string) $definition->getArgument(2));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('knp_menu.menu_builder', $tags);
-        $this->assertSame('createMenu', $tags['knp_menu.menu_builder'][0]['method']);
-        $this->assertSame('picker', $tags['knp_menu.menu_builder'][0]['alias']);
-    }
-
-    /**
-     * Tests the contao.menu.page_picker_provider service.
-     */
-    public function testPagePickerProvider()
-    {
-        $this->assertTrue($this->container->has('contao.menu.page_picker_provider'));
-
-        $definition = $this->container->getDefinition('contao.menu.page_picker_provider');
-
-        $this->assertSame(PagePickerProvider::class, $definition->getClass());
-        $this->assertFalse($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertSame(192, $tags['contao.picker_menu_provider'][0]['priority']);
-    }
-
-    /**
-     * Tests the contao.menu.file_picker_provider service.
-     */
-    public function testFilePickerProvider()
-    {
-        $this->assertTrue($this->container->has('contao.menu.file_picker_provider'));
-
-        $definition = $this->container->getDefinition('contao.menu.file_picker_provider');
-
-        $this->assertSame(FilePickerProvider::class, $definition->getClass());
-        $this->assertFalse($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertSame(160, $tags['contao.picker_menu_provider'][0]['priority']);
-    }
-
-    /**
-     * Tests the contao.menu.article_picker_provider service.
-     */
-    public function testArticlePickerProvider()
-    {
-        $this->assertTrue($this->container->has('contao.menu.article_picker_provider'));
-
-        $definition = $this->container->getDefinition('contao.menu.article_picker_provider');
-
-        $this->assertSame(ArticlePickerProvider::class, $definition->getClass());
-        $this->assertFalse($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-    }
-
-    /**
      * Tests the contao.menu.renderer service.
      */
     public function testMenuRenderer()
@@ -853,7 +770,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.menu.renderer');
 
         $this->assertSame(ListRenderer::class, $definition->getClass());
-        $this->assertFalse($definition->isPublic());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.menu.matcher', (string) $definition->getArgument(0));
     }
 
@@ -904,6 +821,93 @@ class ContaoCoreExtensionTest extends TestCase
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('monolog.processor', $tags);
+    }
+
+    /**
+     * Tests the contao.picker.builder service.
+     */
+    public function testPickerBuilder()
+    {
+        $this->assertTrue($this->container->has('contao.picker.builder'));
+
+        $definition = $this->container->getDefinition('contao.picker.builder');
+
+        $this->assertSame(PickerBuilder::class, $definition->getClass());
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('request_stack', (string) $definition->getArgument(2));
+    }
+
+    /**
+     * Tests the contao.picker.page_provider service.
+     */
+    public function testPagePickerProvider()
+    {
+        $this->assertTrue($this->container->has('contao.picker.page_provider'));
+
+        $definition = $this->container->getDefinition('contao.picker.page_provider');
+
+        $this->assertSame(PagePickerProvider::class, $definition->getClass());
+        $this->assertFalse($definition->isPublic());
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+
+        $calls = $definition->getMethodCalls();
+
+        $this->assertSame('setTokenStorage', $calls[0][0]);
+        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertSame(192, $tags['contao.picker_provider'][0]['priority']);
+    }
+
+    /**
+     * Tests the contao.picker.file_provider service.
+     */
+    public function testFilePickerProvider()
+    {
+        $this->assertTrue($this->container->has('contao.picker.file_provider'));
+
+        $definition = $this->container->getDefinition('contao.picker.file_provider');
+
+        $this->assertSame(FilePickerProvider::class, $definition->getClass());
+        $this->assertFalse($definition->isPublic());
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(1));
+
+        $calls = $definition->getMethodCalls();
+
+        $this->assertSame('setTokenStorage', $calls[0][0]);
+        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertSame(160, $tags['contao.picker_provider'][0]['priority']);
+    }
+
+    /**
+     * Tests the contao.picker.article_provider service.
+     */
+    public function testArticlePickerProvider()
+    {
+        $this->assertTrue($this->container->has('contao.picker.article_provider'));
+
+        $definition = $this->container->getDefinition('contao.picker.article_provider');
+
+        $this->assertSame(ArticlePickerProvider::class, $definition->getClass());
+        $this->assertFalse($definition->isPublic());
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+
+        $calls = $definition->getMethodCalls();
+
+        $this->assertSame('setTokenStorage', $calls[0][0]);
+        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
     }
 
     /**

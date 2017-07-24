@@ -113,7 +113,22 @@ class BackendMain extends \Backend
 		// Open a module
 		elseif (\Input::get('do'))
 		{
-			$this->Template->main .= $this->getBackendModule(\Input::get('do'));
+			$picker = null;
+
+			if (isset($_GET['picker']))
+			{
+				$picker = \System::getContainer()->get('contao.picker.builder')->createFromData(\Input::get('picker', true));
+
+				if ($picker !== null)
+				{
+					if (($menu = $picker->getMenu()) && $menu->count() > 1)
+					{
+						$this->Template->pickerMenu = \System::getContainer()->get('contao.menu.renderer')->render($menu);
+					}
+				}
+			}
+
+			$this->Template->main .= $this->getBackendModule(\Input::get('do'), $picker);
 			$this->Template->title = $this->Template->headline;
 		}
 
@@ -189,12 +204,6 @@ class BackendMain extends \Backend
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
-		}
-
-		// Picker menu
-		if (\Input::get('popup') && \Input::get('context'))
-		{
-			$this->Template->pickerMenu = \System::getContainer()->get('contao.menu.picker_menu_builder')->createMenu(\Input::get('context'));
 		}
 
 		// Website title

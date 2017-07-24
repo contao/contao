@@ -133,49 +133,8 @@ services:
         class: Knp\Menu\Matcher\Matcher
         public: false
 
-    contao.menu.picker_menu_builder:
-        class: Contao\CoreBundle\Menu\PickerMenuBuilder
-        arguments:
-            - "@knp_menu.factory"
-            - "@contao.menu.renderer"
-            - "@router"
-        tags:
-            - { name: knp_menu.menu_builder, method: createMenu, alias: picker }
-
-    contao.menu.page_picker_provider:
-        class: Contao\CoreBundle\Menu\PagePickerProvider
-        public: false
-        arguments:
-            - "@router"
-            - "@request_stack"
-            - "@security.token_storage"
-        tags:
-            - { name: contao.picker_menu_provider, priority: 192 }
-
-    contao.menu.file_picker_provider:
-        class: Contao\CoreBundle\Menu\FilePickerProvider
-        public: false
-        arguments:
-            - "@router"
-            - "@request_stack"
-            - "@security.token_storage"
-            - "%contao.upload_path%"
-        tags:
-            - { name: contao.picker_menu_provider, priority: 160 }
-
-    contao.menu.article_picker_provider:
-        class: Contao\CoreBundle\Menu\ArticlePickerProvider
-        public: false
-        arguments:
-            - "@router"
-            - "@request_stack"
-            - "@security.token_storage"
-        tags:
-            - { name: contao.picker_menu_provider }
-
     contao.menu.renderer:
         class: Knp\Menu\Renderer\ListRenderer
-        public: false
         arguments:
             - "@contao.menu.matcher"
 
@@ -197,6 +156,44 @@ services:
             - "@contao.routing.scope_matcher"
         tags:
             - { name: monolog.processor }
+
+    contao.picker.builder:
+        class: Contao\CoreBundle\Picker\PickerBuilder
+        arguments:
+            - "@knp_menu.factory"
+            - "@router"
+            - "@request_stack"
+
+    contao.picker.page_provider:
+        class: Contao\CoreBundle\Picker\PagePickerProvider
+        public: false
+        arguments:
+            - "@knp_menu.factory"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
+        tags:
+            - { name: contao.picker_provider, priority: 192 }
+
+    contao.picker.file_provider:
+        class: Contao\CoreBundle\Picker\FilePickerProvider
+        public: false
+        arguments:
+            - "@knp_menu.factory"
+            - "%contao.upload_path%"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
+        tags:
+            - { name: contao.picker_provider, priority: 160 }
+
+    contao.picker.article_provider:
+        class: Contao\CoreBundle\Picker\ArticlePickerProvider
+        public: false
+        arguments:
+            - "@knp_menu.factory"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
+        tags:
+            - { name: contao.picker_provider }
 
     contao.referer_id.manager:
          class: Symfony\Component\Security\Csrf\CsrfTokenManager

@@ -1614,7 +1614,7 @@ class tl_content extends Backend
 	{
 		@trigger_error('Using tl_content::pagePicker() has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.', E_USER_DEPRECATED);
 
-		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->id, $dc->value, $dc->inputName);
+		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->inputName);
 	}
 
 
