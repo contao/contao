@@ -86,7 +86,7 @@ class EventPickerProviderTest extends TestCase
         $this->assertSame(
             [
                 'label' => 'Event picker',
-                'linkAttributes' => ['class' => 'events'],
+                'linkAttributes' => ['class' => 'eventPicker'],
                 'current' => true,
                 'route' => 'contao_backend',
                 'routeParameters' => [

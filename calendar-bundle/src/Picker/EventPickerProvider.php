@@ -84,14 +84,6 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    protected function getLinkClass()
-    {
-        return 'events';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config)
     {
         $params = ['do' => 'calendar'];
