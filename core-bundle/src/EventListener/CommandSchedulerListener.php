@@ -36,15 +36,22 @@ class CommandSchedulerListener
     private $connection;
 
     /**
+     * @var string
+     */
+    private $fragmentPath;
+
+    /**
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
      * @param Connection               $connection
+     * @param string                   $fragmentPath
      */
-    public function __construct(ContaoFrameworkInterface $framework, Connection $connection)
+    public function __construct(ContaoFrameworkInterface $framework, Connection $connection, $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
         $this->connection = $connection;
+        $this->fragmentPath = $fragmentPath;
     }
 
     /**
@@ -72,14 +79,17 @@ class CommandSchedulerListener
      */
     private function canRunController(Request $request)
     {
+        $pathInfo = $request->getPathInfo();
+
+        // Skip the listener in the install tool and upon fragment URLs
+        if (preg_match('~(?:^|/)(?:contao/install$|'.preg_quote($this->fragmentPath, '~').'/)~', $pathInfo)) {
+            return false;
+        }
+
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
-        return $config->isComplete()
-            && !$config->get('disableCron')
-            && in_array($request->attributes->get('_route'), ['contao_backend', 'contao_frontend'], true)
-            && $this->canRunDbQuery()
-        ;
+        return $config->isComplete() && !$config->get('disableCron') && $this->canRunDbQuery();
     }
 
     /**

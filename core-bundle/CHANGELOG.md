@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Adjust the command scheduler listener so it does not rely on request parameters (see #955).
  * Rewrite the DCA picker (see #950).
 
 ### 4.4.1 (2017-07-12)

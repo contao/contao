@@ -115,6 +115,72 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing in the install tool.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testInstallTool()
+    {
+        $this->framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $ref = new \ReflectionClass(Request::class);
+
+        /** @var Request $request */
+        $request = $ref->newInstance();
+
+        $pathInfo = $ref->getProperty('pathInfo');
+        $pathInfo->setAccessible(true);
+        $pathInfo->setValue($request, '/contao/install');
+
+        $event = new PostResponseEvent($this->createMock(KernelInterface::class), $request, new Response());
+
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
+     * Tests that the listener does nothing upon a fragment URL.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testFragmentUrl()
+    {
+        $this->framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $ref = new \ReflectionClass(Request::class);
+
+        /** @var Request $request */
+        $request = $ref->newInstance();
+
+        $pathInfo = $ref->getProperty('pathInfo');
+        $pathInfo->setAccessible(true);
+        $pathInfo->setValue($request, '/foo/_fragment/bar');
+
+        $event = new PostResponseEvent($this->createMock(KernelInterface::class), $request, new Response());
+
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
      * Tests that the listener does nothing if the installation is incomplete.
      *
      * @runInSeparateProcess
@@ -204,40 +270,6 @@ class CommandSchedulerListenerTest extends TestCase
 
         $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
         $listener->onKernelTerminate($this->mockPostResponseEvent('contao_frontend'));
-    }
-
-    /**
-     * Tests that the listener does nothing if the route does not match.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testRouteNotMatching()
-    {
-        $this->framework
-            ->expects($this->once())
-            ->method('getAdapter')
-        ;
-
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $controller = $this->createMock(FrontendCron::class);
-
-        $controller
-            ->expects($this->never())
-            ->method('run')
-        ;
-
-        $this->framework
-            ->method('createInstance')
-            ->willReturn($controller)
-        ;
-
-        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
-        $listener->onKernelTerminate($this->mockPostResponseEvent('contao_install'));
     }
 
     /**
