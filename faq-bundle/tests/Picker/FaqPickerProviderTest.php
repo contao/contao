@@ -86,7 +86,7 @@ class FaqPickerProviderTest extends TestCase
         $this->assertSame(
             [
                 'label' => 'Faq picker',
-                'linkAttributes' => ['class' => 'faq'],
+                'linkAttributes' => ['class' => 'faqPicker'],
                 'current' => true,
                 'route' => 'contao_backend',
                 'routeParameters' => [

@@ -19,6 +19,7 @@
         "doctrine/doctrine-cache-bundle": "^1.3",
         "friendsofphp/php-cs-fixer": "^2.0",
         "phpunit/phpunit": "^5.0",
+        "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.2"

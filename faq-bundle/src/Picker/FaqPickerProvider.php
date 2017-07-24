@@ -84,14 +84,6 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    protected function getLinkClass()
-    {
-        return 'faq';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config)
     {
         $params = ['do' => 'faq'];
