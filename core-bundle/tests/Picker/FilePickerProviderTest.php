@@ -133,7 +133,7 @@ class FilePickerProviderTest extends TestCase
         $this->assertSame(
             [
                 'label' => 'File picker',
-                'linkAttributes' => ['class' => 'filemounts'],
+                'linkAttributes' => ['class' => 'filePicker'],
                 'current' => true,
                 'route' => 'contao_backend',
                 'routeParameters' => [

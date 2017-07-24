@@ -86,7 +86,7 @@ class PagePickerProviderTest extends TestCase
         $this->assertSame(
             [
                 'label' => 'Page picker',
-                'linkAttributes' => ['class' => 'pagemounts'],
+                'linkAttributes' => ['class' => 'pagePicker'],
                 'current' => true,
                 'route' => 'contao_backend',
                 'routeParameters' => [

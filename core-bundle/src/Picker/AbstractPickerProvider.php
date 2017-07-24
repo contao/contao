@@ -58,7 +58,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
             $name,
             [
                 'label' => $GLOBALS['TL_LANG']['MSC'][$name] ?: $name,
-                'linkAttributes' => ['class' => $this->getLinkClass()],
+                'linkAttributes' => ['class' => $name],
                 'current' => $this->isCurrent($config),
                 'route' => 'contao_backend',
                 'routeParameters' => $params,
@@ -111,13 +111,6 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
 
         return $user;
     }
-
-    /**
-     * Returns the link class for the picker menu item.
-     *
-     * @return string
-     */
-    abstract protected function getLinkClass();
 
     /**
      * Returns the routing parameters for the backend picker.

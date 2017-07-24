@@ -86,7 +86,7 @@ class ArticlePickerProviderTest extends TestCase
         $this->assertSame(
             [
                 'label' => 'Article picker',
-                'linkAttributes' => ['class' => 'articles'],
+                'linkAttributes' => ['class' => 'articlePicker'],
                 'current' => true,
                 'route' => 'contao_backend',
                 'routeParameters' => [

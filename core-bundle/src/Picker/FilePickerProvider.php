@@ -149,14 +149,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getLinkClass()
-    {
-        return 'filemounts';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getRouteParameters(PickerConfig $config)
     {
         return ['do' => 'files'];

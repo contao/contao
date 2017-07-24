@@ -80,7 +80,7 @@
     <div id="main">
       <h1 class="main_headline"><?= $this->headline ?></h1>
       <?php if ($this->pickerMenu): ?>
-        <div id="manager">
+        <div id="picker-menu">
           <?= $this->pickerMenu ?>
         </div>
       <?php endif; ?>

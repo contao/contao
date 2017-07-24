@@ -1325,15 +1325,11 @@ ul.sortable button[disabled] {
 ul.sortable button[disabled]:hover {
 	background:rgba(255,255,255,.7);
 }
-#manager {
+#picker-menu {
 	padding:9px 6px 0;
 	border-bottom:1px solid #ddd;
 }
-#manager.legacy {
-	padding:6px 0;
-	background-color:#f9f9fb;
-}
-#manager li {
+#picker-menu li {
 	display:inline-block;
 	padding:8px 0;
 	background-color:#f9f9fb;
@@ -1342,33 +1338,33 @@ ul.sortable button[disabled]:hover {
 	position:relative;
 	top:1px;
 }
-#manager li:hover {
+#picker-menu li:hover {
 	background-color:#f3f3f5;
 }
-#manager li.current {
+#picker-menu li.current {
 	background-color:#f3f3f5;
 	border-bottom-color:#f3f3f5;
 }
-#manager a {
+#picker-menu a {
 	padding:3px 12px 3px 32px;
 	background:url("icons/manager.svg") 12px center no-repeat;
 }
-#manager a:hover {
+#picker-menu a:hover {
 	color:#222;
 }
-#manager a.pagemounts {
+#picker-menu a.pagePicker {
 	background-image:url("icons/pagemounts.svg");
 	background-size:16px;
 }
-#manager a.filemounts {
+#picker-menu a.filePicker {
 	background-image:url("icons/filemounts.svg");
 	background-size:14px;
 }
-#manager a.articles {
+#picker-menu a.articlePicker {
 	background-image:url("icons/articles.svg");
 	background-size:16px;
 }
-#manager a.close {
+#picker-menu a.close {
 	background-image:url("icons/back.svg");
 }
 .ace_editor {
@@ -1405,6 +1401,16 @@ time[title] {
 }
 .float_right {
 	float:right;
+}
+
+/* Backwards compatiblity */
+#manager {
+	padding:9px 6px 0;
+	border-bottom:1px solid #ddd;
+}
+#manager a {
+	padding:3px 12px 3px 32px;
+	background:url("icons/manager.svg") 12px center no-repeat;
 }
 
 /* Default icon classes */
