@@ -13,7 +13,7 @@ namespace Contao\FaqBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
-use Contao\FaqBundle\Menu\FaqPickerProvider;
+use Contao\FaqBundle\Picker\FaqPickerProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -68,19 +68,17 @@ class ContaoFaqExtensionTest extends TestCase
     }
 
     /**
-     * Tests the contao_faq.listener.faq_picker_provider service.
+     * Tests the contao_faq.picker.faq_provider service.
      */
-    public function testFaqPickerProvider()
+    public function testEventPickerProvider()
     {
-        $this->assertTrue($this->container->has('contao_faq.listener.faq_picker_provider'));
+        $this->assertTrue($this->container->has('contao_faq.picker.faq_provider'));
 
-        $definition = $this->container->getDefinition('contao_faq.listener.faq_picker_provider');
+        $definition = $this->container->getDefinition('contao_faq.picker.faq_provider');
 
         $this->assertSame(FaqPickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -89,13 +87,13 @@ class ContaoFaqExtensionTest extends TestCase
         /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
 
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setFramework', $methodCalls[0][0]);
+        $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);
 
         $tags = $definition->getTags();
 
-        $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertSame(64, $tags['contao.picker_menu_provider'][0]['priority']);
+        $this->assertSame('setTokenStorage', $definition->getMethodCalls()[0][0]);
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertSame(64, $tags['contao.picker_provider'][0]['priority']);
     }
 }

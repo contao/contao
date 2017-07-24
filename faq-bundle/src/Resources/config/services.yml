@@ -4,12 +4,12 @@ services:
             calls:
                 - ["setFramework", ["@contao.framework"]]
 
-    contao_faq.listener.faq_picker_provider:
-        class: Contao\FaqBundle\Menu\FaqPickerProvider
+    contao_faq.picker.faq_provider:
+        class: Contao\FaqBundle\Picker\FaqPickerProvider
         public: false
         arguments:
-            - "@router"
-            - "@request_stack"
-            - "@security.token_storage"
+            - "@knp_menu.factory"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
         tags:
-            - { name: contao.picker_menu_provider, priority: 64 }
+            - { name: contao.picker_provider, priority: 64 }
