@@ -4,12 +4,12 @@ services:
             calls:
                 - ["setFramework", ["@contao.framework"]]
 
-    contao_news.listener.news_picker_provider:
-        class: Contao\NewsBundle\Menu\NewsPickerProvider
+    contao_news.picker.news_provider:
+        class: Contao\NewsBundle\Picker\NewsPickerProvider
         public: false
         arguments:
-            - "@router"
-            - "@request_stack"
-            - "@security.token_storage"
+            - "@knp_menu.factory"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
         tags:
-            - { name: contao.picker_menu_provider, priority: 128 }
+            - { name: contao.picker_provider, priority: 128 }
