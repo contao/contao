@@ -23,7 +23,7 @@ interface DcaPickerProviderInterface extends PickerProviderInterface
     /**
      * Returns the DCA table for this provider.
      *
-     * @return bool
+     * @return string
      */
     public function getDcaTable();
 
