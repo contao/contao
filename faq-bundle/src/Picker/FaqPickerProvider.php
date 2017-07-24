@@ -84,17 +84,19 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config)
+    protected function getRouteParameters(PickerConfig $config = null)
     {
         $params = ['do' => 'faq'];
 
-        if ($config->getValue() && false !== strpos($config->getValue(), '{{faq_url::')) {
-            $value = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
+        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{faq_url::')) {
+            return $params;
+        }
 
-            if (null !== ($faqId = $this->getFaqCategoryId($value))) {
-                $params['table'] = 'tl_faq';
-                $params['id'] = $faqId;
-            }
+        $value = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
+
+        if (null !== ($faqId = $this->getFaqCategoryId($value))) {
+            $params['table'] = 'tl_faq';
+            $params['id'] = $faqId;
         }
 
         return $params;

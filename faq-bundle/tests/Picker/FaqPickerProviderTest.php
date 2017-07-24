@@ -15,6 +15,7 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
 use Knp\Menu\FactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -44,7 +45,18 @@ class FaqPickerProviderTest extends TestCase
             ->willReturnArgument(1)
         ;
 
-        $this->provider = new FaqPickerProvider($menuFactory);
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                function ($name, array $params) {
+                    return $name.'?'.http_build_query($params);
+                }
+            )
+        ;
+
+        $this->provider = new FaqPickerProvider($menuFactory, $router);
 
         $GLOBALS['TL_LANG']['MSC']['faqPicker'] = 'Faq picker';
     }
@@ -88,12 +100,7 @@ class FaqPickerProviderTest extends TestCase
                 'label' => 'Faq picker',
                 'linkAttributes' => ['class' => 'faqPicker'],
                 'current' => true,
-                'route' => 'contao_backend',
-                'routeParameters' => [
-                    'popup' => '1',
-                    'do' => 'faq',
-                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
-                ],
+                'uri' => 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($picker), '+/=', '-_,')),
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'))
         );
     }
