@@ -84,17 +84,19 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config)
+    protected function getRouteParameters(PickerConfig $config = null)
     {
         $params = ['do' => 'news'];
 
-        if ($config->getValue() && false !== strpos($config->getValue(), '{{news_url::')) {
-            $value = str_replace(['{{news_url::', '}}'], '', $config->getValue());
+        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{news_url::')) {
+            return $params;
+        }
 
-            if (null !== ($newsArchiveId = $this->getNewsArchiveId($value))) {
-                $params['table'] = 'tl_news';
-                $params['id'] = $newsArchiveId;
-            }
+        $value = str_replace(['{{news_url::', '}}'], '', $config->getValue());
+
+        if (null !== ($newsArchiveId = $this->getNewsArchiveId($value))) {
+            $params['table'] = 'tl_news';
+            $params['id'] = $newsArchiveId;
         }
 
         return $params;

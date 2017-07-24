@@ -15,6 +15,7 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\NewsBundle\Picker\NewsPickerProvider;
 use Knp\Menu\FactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -44,7 +45,18 @@ class NewsPickerProviderTest extends TestCase
             ->willReturnArgument(1)
         ;
 
-        $this->provider = new NewsPickerProvider($menuFactory);
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                function ($name, array $params) {
+                    return $name.'?'.http_build_query($params);
+                }
+            )
+        ;
+
+        $this->provider = new NewsPickerProvider($menuFactory, $router);
 
         $GLOBALS['TL_LANG']['MSC']['newsPicker'] = 'News picker';
     }
@@ -88,12 +100,7 @@ class NewsPickerProviderTest extends TestCase
                 'label' => 'News picker',
                 'linkAttributes' => ['class' => 'newsPicker'],
                 'current' => true,
-                'route' => 'contao_backend',
-                'routeParameters' => [
-                    'popup' => '1',
-                    'do' => 'news',
-                    'picker' => strtr(base64_encode($picker), '+/=', '-_,'),
-                ],
+                'uri' => 'contao_backend?do=news&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
             ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'newsPicker'))
         );
     }
