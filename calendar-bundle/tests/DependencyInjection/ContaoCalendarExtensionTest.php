@@ -15,9 +15,10 @@ use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
-use Contao\CalendarBundle\Menu\EventPickerProvider;
+use Contao\CalendarBundle\Picker\EventPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -123,32 +124,32 @@ class ContaoCalendarExtensionTest extends TestCase
     }
 
     /**
-     * Tests the contao_calendar.listener.event_picker_provider service.
+     * Tests the contao_calendar.picker.event_provider service.
      */
     public function testEventPickerProvider()
     {
-        $this->assertTrue($this->container->has('contao_calendar.listener.event_picker_provider'));
+        $this->assertTrue($this->container->has('contao_calendar.picker.event_provider'));
 
-        $definition = $this->container->getDefinition('contao_calendar.listener.event_picker_provider');
+        $definition = $this->container->getDefinition('contao_calendar.picker.event_provider');
 
         $this->assertSame(EventPickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
 
         $conditionals = $definition->getInstanceofConditionals();
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
+        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
-        $methodCalls = $childDefinition->getMethodCalls();
 
-        $this->assertSame('setFramework', $methodCalls[0][0]);
+        $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);
 
         $tags = $definition->getTags();
 
-        $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertSame(96, $tags['contao.picker_menu_provider'][0]['priority']);
+        $this->assertSame('setTokenStorage', $definition->getMethodCalls()[0][0]);
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertSame(96, $tags['contao.picker_provider'][0]['priority']);
     }
 }

@@ -4,12 +4,12 @@ services:
             calls:
                 - ["setFramework", ["@contao.framework"]]
 
-    contao_calendar.listener.event_picker_provider:
-        class: Contao\CalendarBundle\Menu\EventPickerProvider
+    contao_calendar.picker.event_provider:
+        class: Contao\CalendarBundle\Picker\EventPickerProvider
         public: false
         arguments:
-            - "@router"
-            - "@request_stack"
-            - "@security.token_storage"
+            - "@knp_menu.factory"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
         tags:
-            - { name: contao.picker_menu_provider, priority: 96 }
+            - { name: contao.picker_provider, priority: 96 }
