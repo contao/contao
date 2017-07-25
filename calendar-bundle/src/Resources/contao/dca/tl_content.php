@@ -300,7 +300,7 @@ class tl_content_calendar extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
 		}
 
