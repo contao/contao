@@ -549,7 +549,7 @@ class tl_faq extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->published = ($blnVisible ? '1' : '');
 		}
 
