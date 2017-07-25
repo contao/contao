@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_calendar_events">
         <source>Event</source>
-        <target>Догађај</target>
+        <target>Дешавање</target>
       </trans-unit>
       <trans-unit id="tl_comments.show.0">
         <source>Comment details</source>
