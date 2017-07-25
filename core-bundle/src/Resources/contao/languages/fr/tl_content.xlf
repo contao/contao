@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
+        <target>Titre de l'image</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
@@ -342,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Utilisez le répertoire personnel comme source de fichiers s'il existe un membre authentifié.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>

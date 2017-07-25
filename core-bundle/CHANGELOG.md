@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.2 (2017-07-25)
 
  * Adjust the command scheduler listener so it does not rely on request parameters (see #955).
  * Rewrite the DCA picker (see #950).
