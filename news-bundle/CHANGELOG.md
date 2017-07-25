@@ -1,5 +1,9 @@
 # Contao news bundle change log
 
+### 4.4.2 (2017-07-25)
+
+ * Rewrite the DCA picker (see contao/core-bundle#950).
+
 ### 4.4.1 (2017-07-12)
 
  * Always show the "show from" and "show until" fields (see contao/core-bundle#908).

@@ -16,7 +16,7 @@ use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
-use Contao\NewsBundle\Menu\NewsPickerProvider;
+use Contao\NewsBundle\Picker\NewsPickerProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -128,15 +128,13 @@ class ContaoNewsExtensionTest extends TestCase
      */
     public function testNewsPickerProvider()
     {
-        $this->assertTrue($this->container->has('contao_news.listener.news_picker_provider'));
+        $this->assertTrue($this->container->has('contao_news.picker.news_provider'));
 
-        $definition = $this->container->getDefinition('contao_news.listener.news_picker_provider');
+        $definition = $this->container->getDefinition('contao_news.picker.news_provider');
 
         $this->assertSame(NewsPickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -145,13 +143,13 @@ class ContaoNewsExtensionTest extends TestCase
         /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
 
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setFramework', $methodCalls[0][0]);
+        $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);
 
         $tags = $definition->getTags();
 
-        $this->assertArrayHasKey('contao.picker_menu_provider', $tags);
-        $this->assertSame(128, $tags['contao.picker_menu_provider'][0]['priority']);
+        $this->assertSame('setTokenStorage', $definition->getMethodCalls()[0][0]);
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertSame(128, $tags['contao.picker_provider'][0]['priority']);
     }
 }
