@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="MSC.cal_events">
         <source>%d event(s)</source>
-        <target>%d догађај(а)</target>
+        <target>%d дешавање(а)</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>&amp;lt;</source>
@@ -19,39 +19,39 @@
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
-        <target>Данас нема догађаја.</target>
+        <target>Данас нема дешавања.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyWeek">
         <source>There are no events for this week.</source>
-        <target>Нема догађаја ове недеље.</target>
+        <target>Нема дешавања ове недеље.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyMonth">
         <source>There are no events for this month.</source>
-        <target>Нема догађаја овог месеца.</target>
+        <target>Нема дешавања овог месеца.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyYear">
         <source>There are no events for this year.</source>
-        <target>Нема догађаја у овој години.</target>
+        <target>Нема дешавања у овој години.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
-        <target>Тренутно нема догађаја.</target>
+        <target>Тренутно нема дешавања.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_days">
         <source>This event is repeated every %s. day</source>
-        <target>Овај догађај се понавља сваки %s. дан</target>
+        <target>Ово дешавање се понавља сваки %s. дан</target>
       </trans-unit>
       <trans-unit id="MSC.cal_weeks">
         <source>This event is repeated every %s. week</source>
-        <target>Овај догађај се понавља сваку %s. недељу.</target>
+        <target>Ово дешавање се понавља сваку %s. недељу.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_months">
         <source>This event is repeated every %s. month</source>
-        <target>Овај догађај се понавља сваки %s. месец</target>
+        <target>Ово дешавање се понавља сваки %s. месец</target>
       </trans-unit>
       <trans-unit id="MSC.cal_years">
         <source>This event is repeated every %s. year</source>
-        <target>Овај догађај се понавља сваку %s. годину</target>
+        <target>Ово дешавање се понавља сваку %s. годину</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="MSC.eventPicker">
         <source>Events</source>
-        <target>Догађаји</target>
+        <target>Дешавања</target>
       </trans-unit>
     </body>
   </file>

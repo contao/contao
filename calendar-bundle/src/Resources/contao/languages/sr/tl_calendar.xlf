@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Изаберите страницу читача догађаја на коју ће посетиоци бити преусмерени кликом на догађај.</target>
+        <target>Изаберите страницу читача дешавања на коју ће посетиоци бити преусмерени кликом на дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.1">
         <source>Allow visitors to comment events.</source>
-        <target>Дозволи посетиоцима да коментаришу догађај.</target>
+        <target>Дозволи посетиоцима да коментаришу дешавање.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.notify.0">
         <source>Notify</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Подразумевана поставка је да се коментари сортирају у растућем редоследу, почевши од насјстаријег.</target>
+        <target>Подразумевана поставка је да се коментари сортирају у растућем редоследу, почевши од најстаријег.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Одобри коментаре прије него што постану видљиви на сајту.</target>
+        <target>Одобри коментаре пре него што постану видљиви на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected.1">
         <source>Show events to certain member groups only.</source>
-        <target>Прикажи догађаје само одређеним групама корисника.</target>
+        <target>Прикажи дешавања само одређеним групама корисника.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.groups.0">
         <source>Allowed member groups</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.groups.1">
         <source>These groups will be able to see the events in this calendar.</source>
-        <target>Ове групе ће моћи да виде догађаје у овом календару.</target>
+        <target>Ове групе ће моћи да виде дешавања у овом календару.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
-        <target>Назив и страница преусмерења</target>
+        <target>Назив и страница преусмеравања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.comments_legend">
         <source>Comments</source>
