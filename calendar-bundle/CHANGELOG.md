@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### DEV
+### 4.4.2 (2017-07-25)
 
  * Rewrite the DCA picker (see contao/core-bundle#950).
 
