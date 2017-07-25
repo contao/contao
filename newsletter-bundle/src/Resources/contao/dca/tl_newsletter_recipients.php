@@ -529,7 +529,7 @@ class tl_newsletter_recipients extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->active = ($blnVisible ? '1' : '');
 		}
 
