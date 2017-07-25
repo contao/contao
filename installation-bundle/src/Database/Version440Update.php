@@ -41,7 +41,7 @@ class Version440Update extends AbstractVersionUpdate
     public function run()
     {
         // Add the js_autofocus.html5 template
-        $statement = $this->connection->query("SELECT id, scripts FROM tl_layout");
+        $statement = $this->connection->query('SELECT id, scripts FROM tl_layout');
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $scripts = StringUtil::deserialize($layout->scripts);
