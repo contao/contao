@@ -18,7 +18,7 @@
         "symfony/filesystem": "^3.3",
         "symfony/finder": "^3.3",
         "symfony/framework-bundle": "^3.3",
-        "symfony/http-foundation": "^3.3",
+        "symfony/http-foundation": "^3.3.5",
         "symfony/security": "^3.3",
         "symfony/yaml": "^3.3",
         "sensio/framework-extra-bundle": "^3.0.2",
@@ -122,6 +122,12 @@
     },
     "config": {
         "preferred-install": "dist"
+    },
+    "support": {
+        "docs": "https://docs.contao.org",
+        "forum": "https://community.contao.org",
+        "issues": "https://github.com/contao/core-bundle/issues",
+        "source": "https://github.com/contao/core-bundle"
     },
     "extra": {
         "branch-alias": {

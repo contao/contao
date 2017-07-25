@@ -21,11 +21,13 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
+use Contao\CoreBundle\Picker\PickerConfig;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Handles the Contao backend routes.
@@ -214,9 +216,12 @@ class BackendController extends Controller
     }
 
     /**
-     * Handles the picker redirect.
+     * Redirects the user to the Contao back end and includes the picker query parameter. It will determine
+     * the current provider URL based on the value (usually read dynamically via JavaScript).
      *
      * @param Request $request
+     *
+     * @throws BadRequestHttpException
      *
      * @return RedirectResponse
      *
@@ -224,8 +229,23 @@ class BackendController extends Controller
      */
     public function pickerAction(Request $request)
     {
-        $pickerBuilder = $this->container->get('contao.menu.picker_menu_builder');
+        $extras = [];
 
-        return new RedirectResponse($pickerBuilder->getPickerUrl($request));
+        if ($request->query->has('extras')) {
+            $extras = $request->query->get('extras');
+
+            if (!is_array($extras)) {
+                throw new BadRequestHttpException('Invalid picker extras');
+            }
+        }
+
+        $config = new PickerConfig($request->query->get('context'), $extras, $request->query->get('value'));
+        $picker = $this->container->get('contao.picker.builder')->create($config);
+
+        if (null === $picker) {
+            throw new BadRequestHttpException('Unsupported picker context');
+        }
+
+        return new RedirectResponse($picker->getCurrentUrl());
     }
 }

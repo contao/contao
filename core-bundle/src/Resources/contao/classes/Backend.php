@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -285,13 +286,14 @@ abstract class Backend extends \Controller
 	/**
 	 * Open a back end module and return it as HTML
 	 *
-	 * @param string $module
+	 * @param string               $module
+	 * @param PickerInterface|null $picker
 	 *
 	 * @return string
 	 *
 	 * @throws AccessDeniedException
 	 */
-	protected function getBackendModule($module)
+	protected function getBackendModule($module, PickerInterface $picker = null)
 	{
 		$arrModule = array();
 
@@ -403,6 +405,11 @@ abstract class Backend extends \Controller
 
 			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
+
+			if ($picker !== null && $dc instanceof DataContainer)
+			{
+				$dc->initPicker($picker);
+			}
 		}
 
 		// Wrap the existing headline
@@ -1077,49 +1084,42 @@ abstract class Backend extends \Controller
 	/**
 	 * Generate the DCA picker wizard
 	 *
-	 * @param boolean|array $config
+	 * @param boolean|array $extras
 	 * @param string        $table
 	 * @param string        $field
-	 * @param integer       $id
-	 * @param string        $value
 	 * @param string        $inputName
 	 *
 	 * @return string
 	 */
-	public static function getDcaPickerWizard($config, $table, $field, $id, $value, $inputName)
+	public static function getDcaPickerWizard($extras, $table, $field, $inputName)
 	{
-		$params = array();
+		$context = 'link';
+		$extras = is_array($extras) ? $extras : array();
+		$providers = (isset($extras['providers']) && is_array($extras['providers'])) ? $extras['providers'] : null;
 
-		if (is_array($config) && isset($config['do']))
+		if (isset($extras['context']))
 		{
-			$params['do'] = $config['do'];
+			$context = 'link';
+			unset($extras['context']);
 		}
 
-		$params['context'] = 'link';
-		$params['target'] = $table.'.'.$field.'.'.$id;
-		$params['value'] = $value;
-		$params['popup'] = 1;
+		$factory = \System::getContainer()->get('contao.picker.builder');
 
-		if (is_array($config) && isset($config['context']))
+		if (!$factory->supportsContext($context, $providers))
 		{
-			$params['context'] = $config['context'];
+			return '';
 		}
 
-		return ' <a href="' . ampersand(System::getContainer()->get('router')->generate('contao_backend_picker', $params)) . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . \Image::getHtml((is_array($config) && isset($config['icon']) ? $config['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . ampersand($factory->getUrl($context, $extras)) . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . \Image::getHtml((is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
       Backend.openModalSelector({
+        "id": "tl_listing",
         "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0])) . '",
-        "url": this.href,
-        "callback": function(table, value) {
-          new Request.Contao({
-            evalScripts: false,
-            onSuccess: function(txt, json) {
-              $("ctrl_' . $inputName . '").value = (json.tag || json.content);
-              this.set("href", this.get("href").replace(/&value=[^&]*/, "&value=" + (json.tag || json.content)));
-            }.bind(this)
-          }).post({"action":"processPickerSelection", "table":table, "value":value.join(","), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+        "url": this.href + "&value=" + document.getElementById("ctrl_'.$inputName.'").value,
+        "callback": function(picker, value) {
+          $("ctrl_' . $inputName . '").value = value.join(",");
         }.bind(this)
       });
     });

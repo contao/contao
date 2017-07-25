@@ -53,6 +53,7 @@ services:
         arguments:
             - "@contao.framework"
             - "@database_connection"
+            - "%fragment.path%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 

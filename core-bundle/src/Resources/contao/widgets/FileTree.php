@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DataContainer\DcaFilterInterface;
-
-
 /**
  * Provide methods to handle input field "file tree".
  *
@@ -28,7 +25,7 @@ use Contao\CoreBundle\DataContainer\DcaFilterInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileTree extends \Widget implements DcaFilterInterface
+class FileTree extends \Widget
 {
 
 	/**
@@ -80,46 +77,6 @@ class FileTree extends \Widget implements DcaFilterInterface
 			$tmp = \StringUtil::deserialize($objRow->{$this->orderField});
 			$this->{$this->orderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
 		}
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getDcaFilter()
-	{
-		$arrFilters = array();
-
-		// Show files in file tree
-		if ($this->files)
-		{
-			$arrFilters['files'] = true;
-		}
-
-		// Only files can be selected
-		if ($this->filesOnly)
-		{
-			$arrFilters['filesOnly'] = true;
-		}
-
-		// Only files within a custom path can be selected
-		if ($this->path)
-		{
-			$arrFilters['root'] = array($this->path);
-		}
-
-		// Only certain file types can be selected
-		if ($this->extensions)
-		{
-			$arrFilters['extensions'] = $this->extensions;
-		}
-
-		if ($this->fieldType)
-		{
-			$arrFilters['fieldType'] = $this->fieldType;
-		}
-
-		return $arrFilters;
 	}
 
 
@@ -406,14 +363,46 @@ class FileTree extends \Widget implements DcaFilterInterface
 			$return .= '<li data-id="'.\StringUtil::binToUuid($k).'">'.$v.'</li>';
 		}
 
-		$return .= '</ul>
-    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'files', 'context'=>'file', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', array_keys($arrSet)), 'popup'=>1))) . '" class="tl_submit" id="ft_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+		$return .= '</ul>';
+
+		if (!\System::getContainer()->get('contao.picker.builder')->supportsContext('file'))
+		{
+			$return .= '
+	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
+		}
+		else
+		{
+			$extras = array('fieldType'=>$this->fieldType);
+
+			if ($this->files)
+			{
+				$extras['files'] = (bool) $this->files;
+			}
+
+			if ($this->filesOnly)
+			{
+				$extras['filesOnly'] = (bool) $this->filesOnly;
+			}
+
+			if ($this->path)
+			{
+				$extras['path'] = (string) $this->path;
+			}
+
+			if ($this->extensions)
+			{
+				$extras['extensions'] = (string) $this->extensions;
+			}
+
+			$return .= '
+    <p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
     <script>
       $("ft_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
         Backend.openModalSelector({
+          "id": "tl_listing",
           "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
-          "url": this.href,
+          "url": this.href + document.getElementById("ctrl_'.$this->strId.'").value,
           "callback": function(table, value) {
             new Request.Contao({
               evalScripts: false,
@@ -426,10 +415,10 @@ class FileTree extends \Widget implements DcaFilterInterface
         });
       });
     </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '') . '
-  </div>';
+    <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
+		}
 
-		$return = '<div>' . $return . '</div>';
+		$return = '<div>' . $return . '</div></div>';
 
 		return $return;
 	}

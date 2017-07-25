@@ -605,7 +605,7 @@ class tl_form_field extends Backend
 	 */
 	public function optionImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.gif', $GLOBALS['TL_LANG']['MSC']['ow_import'][0], 'style="vertical-align:text-bottom"') . '</a>';
+		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.gif', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
 	}
 
 
@@ -755,7 +755,7 @@ class tl_form_field extends Backend
 
 		if ($dc)
 		{
-			$dc->activeRecord->time = $time;
+			$dc->activeRecord->tstamp = $time;
 			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
 		}
 

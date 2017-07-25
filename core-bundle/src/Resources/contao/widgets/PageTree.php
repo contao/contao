@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DataContainer\DcaFilterInterface;
-
 
 /**
  * Provide methods to handle input field "page tree".
@@ -23,7 +21,7 @@ use Contao\CoreBundle\DataContainer\DcaFilterInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageTree extends \Widget implements DcaFilterInterface
+class PageTree extends \Widget
 {
 
 	/**
@@ -75,44 +73,6 @@ class PageTree extends \Widget implements DcaFilterInterface
 			$tmp = \StringUtil::deserialize($objRow->{$this->orderField});
 			$this->{$this->orderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
 		}
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getDcaFilter()
-	{
-		$arrFilters = array();
-
-		// Predefined node set (see #3563)
-		if (is_array($this->rootNodes))
-		{
-			// Allow only those roots that are allowed in root nodes
-			if (!empty($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']))
-			{
-				$root = array_intersect(array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')), $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root']);
-
-				if (empty($root))
-				{
-					$root = $this->rootNodes;
-					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ''; // hide the breadcrumb menu
-				}
-
-				$arrFilters['root'] = $this->eliminateNestedPages($root);
-			}
-			else
-			{
-				$arrFilters['root'] = $this->eliminateNestedPages($this->rootNodes);
-			}
-		}
-
-		if ($this->fieldType)
-		{
-			$arrFilters['fieldType'] = $this->fieldType;
-		}
-
-		return $arrFilters;
 	}
 
 
@@ -260,30 +220,47 @@ class PageTree extends \Widget implements DcaFilterInterface
 			$return .= '<li data-id="'.$k.'">'.$v.'</li>';
 		}
 
-		$return .= '</ul>
-    <p><a href="' . ampersand(\System::getContainer()->get('router')->generate('contao_backend_picker', array('do'=>'page', 'context'=>'page', 'target'=>$this->strTable.'.'.$this->strField.'.'.$this->activeRecord->id, 'value'=>implode(',', $arrSet), 'popup'=>1))) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
-    <script>
-      $("pt_' . $this->strName . '").addEvent("click", function(e) {
-        e.preventDefault();
-        Backend.openModalSelector({
-          "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
-          "url": this.href,
-          "callback": function(table, value) {
-            new Request.Contao({
-              evalScripts: false,
-              onSuccess: function(txt, json) {
-                $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
-                json.javascript && Browser.exec(json.javascript);
-              }
-            }).post({"action":"reloadPagetree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
-          }
-        });
-      });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '') . '
-  </div>';
+		$return .= '</ul>';
 
-		$return = '<div>' . $return . '</div>';
+		if (!\System::getContainer()->get('contao.picker.builder')->supportsContext('page'))
+		{
+			$return .= '
+	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
+		}
+		else
+		{
+			$extras = ['fieldType' => $this->fieldType];
+
+			if (is_array($this->rootNodes))
+			{
+				$extras['rootNodes'] = array_values($this->rootNodes);
+			}
+
+			$return .= '
+	<p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+	<script>
+	  $("pt_' . $this->strName . '").addEvent("click", function(e) {
+		e.preventDefault();
+		Backend.openModalSelector({
+		  "id": "tl_listing",
+		  "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
+		  "url": this.href + document.getElementById("ctrl_'.$this->strId.'").value,
+		  "callback": function(table, value) {
+			new Request.Contao({
+			  evalScripts: false,
+			  onSuccess: function(txt, json) {
+				$("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
+				json.javascript && Browser.exec(json.javascript);
+			  }
+			}).post({"action":"reloadPagetree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+		  }
+		});
+	  });
+	</script>' . ($blnHasOrder ? '
+	<script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
+		}
+
+		$return = '<div>' . $return . '</div></div>';
 
 		return $return;
 	}

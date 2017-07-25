@@ -15,11 +15,12 @@ use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Registers the picker menu providers.
+ * Registers the picker providers.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
-class PickerMenuProviderPass implements CompilerPassInterface
+class PickerProviderPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
@@ -28,12 +29,12 @@ class PickerMenuProviderPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('contao.menu.picker_menu_builder')) {
+        if (!$container->has('contao.picker.builder')) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.menu.picker_menu_builder');
-        $references = $this->findAndSortTaggedServices('contao.picker_menu_provider', $container);
+        $definition = $container->findDefinition('contao.picker.builder');
+        $references = $this->findAndSortTaggedServices('contao.picker_provider', $container);
 
         foreach ($references as $reference) {
             $definition->addMethodCall('addProvider', [$reference]);

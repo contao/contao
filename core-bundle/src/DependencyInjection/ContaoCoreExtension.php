@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\DependencyInjection;
 
-use Contao\CoreBundle\Menu\PickerMenuProviderInterface;
+use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -90,8 +90,8 @@ class ContaoCoreExtension extends ConfigurableExtension
         $this->overwriteImageTargetDir($mergedConfig, $container);
 
         $container
-            ->registerForAutoconfiguration(PickerMenuProviderInterface::class)
-            ->addTag('contao.picker_menu_provider')
+            ->registerForAutoconfiguration(PickerProviderInterface::class)
+            ->addTag('contao.picker_provider')
         ;
     }
 

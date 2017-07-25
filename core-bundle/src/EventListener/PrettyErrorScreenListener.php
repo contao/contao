@@ -19,7 +19,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageError404;
 use Contao\StringUtil;
@@ -200,7 +200,7 @@ class PrettyErrorScreenListener
 
         try {
             return $pageHandler->getResponse();
-        } catch (RedirectResponseException $e) {
+        } catch (ResponseException $e) {
             return $e->getResponse();
         } catch (\Exception $e) {
             return null;

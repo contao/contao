@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Gd\Imagine;
@@ -77,16 +78,16 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	protected $blnIsDbAssisted = false;
 
 	/**
-	 * Hide files
+	 * Show files
 	 * @var boolean
 	 */
-	protected $blnHideFiles = false;
+	protected $blnFiles = true;
 
 	/**
-	 * Select folders
+	 * Only allow to select files
 	 * @var boolean
 	 */
-	protected $blnSelectFolders = false;
+	protected $blnFilesOnly = false;
 
 
 	/**
@@ -199,12 +200,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					$callback($this);
 				}
 			}
-		}
-
-		// Initialize the picker
-		if (isset($_GET['target']) && \Input::get('act') != 'select' && \Input::get('act') != 'paste')
-		{
-			$this->initPicker();
 		}
 
 		// Get all filemounts (root folders)
@@ -439,15 +434,15 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerField && $this->strPickerFieldType == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
-<ul class="tl_listing tl_file_manager'.($this->strPickerField ? ' picker unselectable' : '').'"'.$this->getPickerAttributes().'>
+<ul class="tl_listing tl_file_manager'.($this->strPickerFieldType ? ' picker unselectable' : '').'">
   <li class="tl_folder_top cf"><div class="tl_left">'.\Image::getHtml('filemounts.svg').' '.$GLOBALS['TL_LANG']['MSC']['filetree'].'</div> <div class="tl_right">'.(($blnClipboard && empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false) ? '<a href="'.$this->addToUrl('&amp;act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.\Config::get('uploadPath').(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1]).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a>' : '&nbsp;').'</div></li>'.$return.'
-</ul>'.(($this->strPickerField && $this->strPickerFieldType == 'radio') ? '
+</ul>'.($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
-<label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="'.$this->strPickerField.'" id="tl_radio_reset" value="" class="tl_tree_radio">
+<label for="tl_radio_reset" class="tl_radio_label">'.$GLOBALS['TL_LANG']['MSC']['resetSelected'].'</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '').'
 </div>';
 
@@ -994,8 +989,10 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'];
 
-		if (is_array($ids) && strlen($ids[0]))
+		if (!empty($ids) && is_array($ids))
 		{
+			$ids = $this->eliminateNestedPaths($ids); // see #941
+
 			foreach ($ids as $id)
 			{
 				$this->delete($id); // do not urldecode() here (see #6840)
@@ -2577,7 +2574,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif ($this->blnHideFiles && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				elseif (!$this->blnFiles && !$this->blnFilesOnly && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
 				{
 					--$countFiles;
 				}
@@ -2650,9 +2647,9 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					$return .= ' <a href="'.$this->addToUrl('&amp;act=move&amp;mode=2&amp;pid='.$currentEncoded).'" title="'.\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)).'">'.\Image::getHtml('new.svg', $GLOBALS['TL_LANG'][$this->strTable]['move'][0]).'</a>';
 				}
 
-				if ($this->strPickerField)
+				if ($this->strPickerFieldType)
 				{
-					$return .= $this->getPickerInputField($currentEncoded, $this->blnSelectFolders ? '' : ' disabled');
+					$return .= $this->getPickerInputField($currentEncoded, $this->blnFilesOnly ? ' disabled' : '');
 				}
 			}
 
@@ -2667,7 +2664,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		if ($this->blnHideFiles)
+		if (!$this->blnFiles && !$this->blnFilesOnly)
 		{
 			return $return;
 		}
@@ -2755,7 +2752,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			{
 				$_buttons = (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded, 'fileNameEncoded'=>$strFileNameEncoded), $this->strTable);
 
-				if ($this->strPickerField)
+				if ($this->strPickerFieldType)
 				{
 					$_buttons .= $this->getPickerInputField($currentEncoded);
 				}
@@ -3042,67 +3039,60 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 
 	/**
-	 * Set the DCA filter
-	 *
-	 * @param array $arrFilter
+	 * {@inheritdoc}
 	 */
-	protected function setDcaFilter($arrFilter)
+	public function initPicker(PickerInterface $picker)
 	{
-		parent::setDcaFilter($arrFilter);
+		$attributes = parent::initPicker($picker);
 
-		$blnHideFiles = !isset($arrFilter['files']) && !isset($arrFilter['filesOnly']);
+		$this->blnFiles = false;
+		$this->blnFilesOnly = false;
 
-		if (isset($arrFilter['files']) && $arrFilter['files'] === false)
+		if (null === $attributes)
 		{
-			$blnHideFiles = true;
+			return null;
 		}
 
-		$this->blnHideFiles = $blnHideFiles;
+		$this->blnFiles = isset($attributes['files']) && $attributes['files'];
+		$this->blnFilesOnly = isset($attributes['filesOnly']) && $attributes['filesOnly'];
 
-		if (!isset($arrFilter['filesOnly']) || $arrFilter['filesOnly'] === false)
+		if (isset($attributes['path']))
 		{
-			$this->blnSelectFolders = true;
+			$strPath = (string) $attributes['path'];
+
+			if (\Validator::isInsecurePath($strPath) || !is_dir(TL_ROOT . '/' . $strPath))
+			{
+				throw new \RuntimeException('Invalid path ' . $strPath);
+			}
+
+			// Allow only those roots that are allowed in root nodes
+			if (!empty($this->arrFilemounts))
+			{
+				$blnValid = false;
+
+				foreach ($this->arrFilemounts as $strFolder)
+				{
+					if (0 === strpos($strPath, $strFolder))
+					{
+						$blnValid = true;
+						break;
+					}
+				}
+
+				if (!$blnValid)
+				{
+					$strPath = '';
+				}
+			}
+
+			$this->arrFilemounts = array($strPath);
 		}
 
-		if (isset($arrFilter['extensions']))
+		if (isset($attributes['extensions']))
 		{
-			$this->arrValidFileTypes = \StringUtil::trimsplit(',', strtolower($arrFilter['extensions']));
-		}
-	}
-
-
-	/**
-	 * Set the picker value
-	 */
-	protected function setPickerValue()
-	{
-		$varValue = \Input::get('value', true);
-
-		if (empty($varValue))
-		{
-			return;
+			$this->arrValidFileTypes = \StringUtil::trimsplit(',', strtolower($attributes['extensions']));
 		}
 
-		$varValue = array_map(array($this, 'urlEncode'), array_filter(explode(',', $varValue)));
-
-		if (empty($varValue))
-		{
-			return;
-		}
-
-		$this->arrPickerValue = $varValue;
-
-		// TinyMCE will pass the path instead of the ID
-		if (strpos($varValue[0], \Config::get('uploadPath') . '/') === 0)
-		{
-			return;
-		}
-
-		$objFiles = \FilesModel::findMultipleByIds($varValue);
-
-		if ($objFiles !== null)
-		{
-			$this->arrPickerValue = array_map(array($this, 'urlEncode'), array_values($objFiles->fetchEach('path')));
-		}
+		return $attributes;
 	}
 }

@@ -157,11 +157,11 @@ class EnvironmentTest extends TestCase
         $agent = Environment::get('agent');
 
         $this->assertSame('mac', $agent->os);
-        $this->assertSame('mac chrome webkit ch33', $agent->class);
+        $this->assertSame('mac chrome blink ch33', $agent->class);
         $this->assertSame('chrome', $agent->browser);
         $this->assertSame('ch', $agent->shorty);
         $this->assertSame('33', $agent->version);
-        $this->assertSame('webkit', $agent->engine);
+        $this->assertSame('blink', $agent->engine);
         $this->assertSame(['33', '0', '1750', '149'], $agent->versions);
         $this->assertFalse($agent->mobile);
 

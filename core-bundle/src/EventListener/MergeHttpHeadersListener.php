@@ -27,9 +27,9 @@ class MergeHttpHeadersListener
     private $framework;
 
     /**
-     * @var array
+     * @var array|null
      */
-    private $headers = [];
+    private $headers;
 
     /**
      * @var array
@@ -46,30 +46,11 @@ class MergeHttpHeadersListener
      * Constructor.
      *
      * @param ContaoFrameworkInterface $framework
+     * @param array|null               $headers   Meant for unit testing only!
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFrameworkInterface $framework, array $headers = null)
     {
         $this->framework = $framework;
-        $this->setHeaders(headers_list());
-    }
-
-    /**
-     * Returns the headers.
-     *
-     * @return array
-     */
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /**
-     * Sets the headers.
-     *
-     * @param array $headers
-     */
-    public function setHeaders(array $headers)
-    {
         $this->headers = $headers;
     }
 
@@ -159,6 +140,16 @@ class MergeHttpHeadersListener
         }
 
         return $response;
+    }
+
+    /**
+     * Returns the headers.
+     *
+     * @return array
+     */
+    private function getHeaders()
+    {
+        return $this->headers ?: headers_list();
     }
 
     /**

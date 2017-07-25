@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.maxImageWidth.1">
         <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
+        <target>Если ширина изображения или ролика превысит это значение, то он будет автоматически масштабирован. Установите 0, чтобы отключить ограничение.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
