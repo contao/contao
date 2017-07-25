@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Одобри коментаре прије него што постану видљиви на сајту.</target>
+        <target>Одобри коментаре пре него што постану видљиви на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Дозволити корисницима да користе BBCode у својим коментарима.</target>
+        <target>Дозволи корисницима да користе BBCode у својим коментарима.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
