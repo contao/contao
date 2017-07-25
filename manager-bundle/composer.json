@@ -53,6 +53,12 @@
     "bin": [
         "bin/contao-console"
     ],
+    "support": {
+        "docs": "https://docs.contao.org",
+        "forum": "https://community.contao.org",
+        "issues": "https://github.com/contao/manager-bundle/issues",
+        "source": "https://github.com/contao/manager-bundle"
+    },
     "extra": {
         "branch-alias": {
             "dev-develop": "4.5.x-dev"
