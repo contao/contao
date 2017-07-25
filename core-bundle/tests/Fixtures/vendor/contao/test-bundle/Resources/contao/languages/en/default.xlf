@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+    <file datatype="php" original="contao/languages/en/default.php" source-language="en">
+        <body>
+            <trans-unit id="MSC.empty">
+            </trans-unit>
+            <trans-unit id="MSC.first">
+                <source>This is the first source</source>
+                <target>This is the first target</target>
+            </trans-unit>
+            <trans-unit id="MSC.second.0">
+                <source>This is the second source</source>
+                <target>This is the second target</target>
+            </trans-unit>
+            <trans-unit id="MSC.third.with.1">
+                <source>This is the third source</source>
+                <target>This is the third target</target>
+            </trans-unit>
+            <trans-unit id="tl_layout.responsive.css.1">
+                <source>This is the fourth source</source>
+                <target>This is the fourth target</target>
+            </trans-unit>
+            <trans-unit id="MSC.fifth">
+                <source>This is the\nfifth source</source>
+                <target>This is the\nfifth target</target>
+            </trans-unit>
+            <trans-unit id="MSC.only_source">
+                <source>This is the source</source>
+            </trans-unit>
+            <trans-unit id="MSC.only_target">
+                <target>This is the target</target>
+            </trans-unit>
+            <group>
+                <trans-unit id="MSC.in_group_1">
+                    <source>This is in group 1 source</source>
+                    <target>This is in group 1 target</target>
+                </trans-unit>
+                <group>
+                    <trans-unit id="MSC.in_group_2">
+                        <source>This is in group 2 source</source>
+                        <target>This is in group 2 target</target>
+                    </trans-unit>
+                </group>
+            </group>
+        </body>
+    </file>
+    <file datatype="php" original="contao/languages/de/default.php" source-language="de">
+        <body>
+            <trans-unit id="MSC.second_file">
+                <source>This is the source</source>
+                <target>This is the target</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
