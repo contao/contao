@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
@@ -418,6 +419,10 @@ abstract class DataContainer extends \Backend
 					try
 					{
 						$this->save($varValue);
+					}
+					catch (ResponseException $e)
+					{
+						throw $e;
 					}
 					catch (\Exception $e)
 					{
