@@ -54,7 +54,7 @@ class BackendSessionListener
     {
         $request = $event->getRequest();
 
-        if (!$this->scopeMatcher->isBackendRequest($request)
+        if (!$this->scopeMatcher->isFrontendRequest($request)
             || null === $request->getSession()
             || !$this->hasAuthenticatedBackendUser($request)
         ) {

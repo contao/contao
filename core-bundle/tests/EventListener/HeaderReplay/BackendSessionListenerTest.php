@@ -57,7 +57,7 @@ class BackendSessionListenerTest extends TestCase
     public function testOnReplayWithNoSession()
     {
         $request = new Request();
-        $request->attributes->set('_scope', 'backend');
+        $request->attributes->set('_scope', 'frontend');
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
@@ -76,7 +76,7 @@ class BackendSessionListenerTest extends TestCase
     public function testOnReplayWithNoAuthCookie()
     {
         $request = new Request();
-        $request->attributes->set('_scope', 'backend');
+        $request->attributes->set('_scope', 'frontend');
         $request->setSession(new Session());
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
@@ -98,7 +98,7 @@ class BackendSessionListenerTest extends TestCase
     public function testOnReplayWithNoValidCookie()
     {
         $request = new Request();
-        $request->attributes->set('_scope', 'backend');
+        $request->attributes->set('_scope', 'frontend');
         $request->cookies->set('BE_USER_AUTH', 'foobar');
         $request->setSession(new Session());
 
@@ -125,7 +125,7 @@ class BackendSessionListenerTest extends TestCase
         $session->setId('foobar-id');
 
         $request = new Request();
-        $request->attributes->set('_scope', 'backend');
+        $request->attributes->set('_scope', 'frontend');
         $request->cookies->set('BE_USER_AUTH', 'f6d5c422c903288859fb5ccf03c8af8b0fb4b70a');
         $request->setSession($session);
 
