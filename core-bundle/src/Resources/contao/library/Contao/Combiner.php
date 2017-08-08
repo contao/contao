@@ -231,7 +231,7 @@ class Combiner extends \System
 				// Add the media query (see #7070)
 				if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
 				{
-					$name .= '" media="' . $arrFile['media'];
+					$name .= '|' . $arrFile['media'];
 				}
 
 				$return[] = $name;
@@ -264,19 +264,26 @@ class Combiner extends \System
 	 * Generates the debug markup.
 	 *
 	 * @return string The debug markup
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	protected function getDebugMarkup()
 	{
+		@trigger_error('Using Combiner::getDebugMarkup() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$return = $this->getFileUrls();
 
 		if ($this->strMode == self::JS)
 		{
 			return implode('"></script><script src="', $return);
 		}
-		else
+
+		foreach ($return as $k=>$v)
 		{
-			return implode('"><link rel="stylesheet" href="', $return);
+			$return[$k] = str_replace('|', '" media="', $v);
 		}
+
+		return implode('"><link rel="stylesheet" href="', $return);
 	}
 
 

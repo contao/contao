@@ -829,7 +829,9 @@ abstract class Controller extends \System
 			{
 				foreach ($objCombiner->getFileUrls() as $strUrl)
 				{
-					$strScripts .= \Template::generateStyleTag($strUrl, 'all') . "\n";
+					list($url, $media) = explode('|', $strUrl);
+
+					$strScripts .= \Template::generateStyleTag($url, $media) . "\n";
 				}
 			}
 		}
