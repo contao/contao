@@ -229,7 +229,7 @@ class Combiner extends \System
 				}
 
 				// Add the media query (see #7070)
-				if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+				if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
 				{
 					$name .= '|' . $arrFile['media'];
 				}
@@ -481,5 +481,32 @@ class Combiner extends \System
 		}
 
 		return $strBuffer;
+	}
+
+
+	/**
+	 * Check if the file has a @media tag
+	 *
+	 * @param string $strFile
+	 *
+	 * @return boolean True if the file has a @media tag
+	 */
+	protected function hasMediaTag($strFile)
+	{
+		$return = false;
+		$fh = fopen(TL_ROOT . '/' . $strFile, 'rb');
+
+		while (($line = fgets($fh)) !== false)
+		{
+			if (strpos($line, '@media') !== false)
+			{
+				$return = true;
+				break;
+			}
+		}
+
+		fclose($fh);
+
+		return $return;
 	}
 }
