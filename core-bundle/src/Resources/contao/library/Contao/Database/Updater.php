@@ -738,6 +738,7 @@ class Updater extends \Controller
 	public function updateFileTreeFields()
 	{
 		$processed = array();
+		$arrFields = array();
 
 		/** @var SplFileInfo[] $files */
 		$files = \System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');

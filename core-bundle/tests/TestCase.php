@@ -447,11 +447,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $container->getParameter('contao.image.valid_extensions')
         );
 
-        $pictureGenerator = new PictureGenerator(
-            $resizer,
-            $container->getParameter('contao.image.bypass_cache'),
-            ($rootDir ?: $this->getRootDir())
-        );
+        $pictureGenerator = new PictureGenerator($resizer);
 
         $pictureFactory = new PictureFactory(
             $pictureGenerator,
