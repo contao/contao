@@ -410,7 +410,7 @@ class News extends \Frontend
 		{
 			$objPage = \PageModel::findByPk($objItem->getRelated('pid')->jumpTo);
 
-			if (!($objPage instanceof PageModel))
+			if (!$objPage instanceof PageModel)
 			{
 				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'), true);
 			}

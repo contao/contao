@@ -152,7 +152,7 @@ class InsertTagsListener
     private function generatePageUrl(NewsModel $news)
     {
         /** @var PageModel $targetPage */
-        if (!(($targetPage = $news->getRelated('jumpTo')) instanceof PageModel)) {
+        if (!($targetPage = $news->getRelated('jumpTo')) instanceof PageModel) {
             return '';
         }
 
@@ -169,8 +169,8 @@ class InsertTagsListener
     private function generateArticleUrl(NewsModel $news)
     {
         /** @var PageModel $targetPage */
-        if (!(($article = $news->getRelated('articleId')) instanceof ArticleModel)
-            || !(($targetPage = $article->getRelated('pid')) instanceof PageModel)
+        if (!($article = $news->getRelated('articleId')) instanceof ArticleModel
+            || !($targetPage = $article->getRelated('pid')) instanceof PageModel
         ) {
             return '';
         }
@@ -188,8 +188,8 @@ class InsertTagsListener
     private function generateNewsReaderUrl(NewsModel $news)
     {
         /** @var PageModel $targetPage */
-        if (!(($archive = $news->getRelated('pid')) instanceof NewsArchiveModel)
-            || !(($targetPage = $archive->getRelated('jumpTo')) instanceof PageModel)
+        if (!($archive = $news->getRelated('pid')) instanceof NewsArchiveModel
+            || !($targetPage = $archive->getRelated('jumpTo')) instanceof PageModel
         ) {
             return '';
         }
