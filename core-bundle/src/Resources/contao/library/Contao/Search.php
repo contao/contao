@@ -340,7 +340,7 @@ class Search
 			{
 				// Phrases
 				case '"':
-					if (($strKeyword = trim(substr($strKeyword, 1, -1))) != false)
+					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
 						$arrPhrases[] = '[[:<:]]' . str_replace(array(' ', '*'), array('[^[:alnum:]]+', ''), $strKeyword) . '[[:>:]]';
 					}
@@ -348,7 +348,7 @@ class Search
 
 				// Included keywords
 				case '+':
-					if (($strKeyword = trim(substr($strKeyword, 1))) != false)
+					if ($strKeyword = trim(substr($strKeyword, 1)))
 					{
 						$arrIncluded[] = $strKeyword;
 					}
@@ -356,7 +356,7 @@ class Search
 
 				// Excluded keywords
 				case '-':
-					if (($strKeyword = trim(substr($strKeyword, 1))) != false)
+					if ($strKeyword = trim(substr($strKeyword, 1)))
 					{
 						$arrExcluded[] = $strKeyword;
 					}

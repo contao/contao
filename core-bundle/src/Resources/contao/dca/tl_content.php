@@ -1172,7 +1172,7 @@ class tl_content extends Backend
 		// Add the headline level (see #5858)
 		if ($arrRow['type'] == 'headline')
 		{
-			if (is_array(($headline = StringUtil::deserialize($arrRow['headline']))))
+			if (is_array($headline = StringUtil::deserialize($arrRow['headline'])))
 			{
 				$type .= ' (' . $headline['unit'] . ')';
 			}

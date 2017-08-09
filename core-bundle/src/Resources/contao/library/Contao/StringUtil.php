@@ -137,7 +137,7 @@ class StringUtil
 			$buffer = $arrChunks[$i];
 
 			// Get the substring of the current text
-			if (($arrChunks[$i] = static::substr($arrChunks[$i], ($intNumberOfChars - $intCharCount), false)) == false)
+			if (!$arrChunks[$i] = static::substr($arrChunks[$i], ($intNumberOfChars - $intCharCount), false))
 			{
 				break;
 			}

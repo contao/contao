@@ -846,7 +846,7 @@ class Image
 			$imageObj->setTargetPath($target);
 			$imageObj->setForceOverride($force);
 
-			if (($path = $imageObj->executeResize()->getResizedPath()) != '')
+			if ($path = $imageObj->executeResize()->getResizedPath())
 			{
 				return $path;
 			}

@@ -307,7 +307,7 @@ class Statement
 		$this->strQuery = preg_replace('/(?<!%)%([^bcdufosxX%])/', '%%$1', $this->strQuery);
 
 		// Replace wildcards
-		if (($this->strQuery = @vsprintf($this->strQuery, $arrValues)) == false)
+		if (!$this->strQuery = @vsprintf($this->strQuery, $arrValues))
 		{
 			throw new \Exception('Too few arguments to build the query string');
 		}

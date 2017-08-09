@@ -173,13 +173,13 @@ class ModuleRssReader extends \Module
 			);
 
 			// Add author
-			if (($objAuthor = $arrItems[$i]->get_author(0)) != false)
+			if ($objAuthor = $arrItems[$i]->get_author(0))
 			{
 				$items[$i]['author'] = trim($objAuthor->name . ' ' . $objAuthor->email);
 			}
 
 			// Add enclosure
-			if (($objEnclosure = $arrItems[$i]->get_enclosure(0)) != false)
+			if ($objEnclosure = $arrItems[$i]->get_enclosure(0)))
 			{
 				$items[$i]['enclosure'] = $objEnclosure->get_link();
 			}
