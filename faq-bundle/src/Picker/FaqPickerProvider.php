@@ -114,11 +114,11 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         /** @var FaqModel $faqAdapter */
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
 
-        if (!(($faqModel = $faqAdapter->findById($id)) instanceof FaqModel)) {
+        if (!($faqModel = $faqAdapter->findById($id)) instanceof FaqModel) {
             return null;
         }
 
-        if (!(($faqCategory = $faqModel->getRelated('pid')) instanceof FaqCategoryModel)) {
+        if (!($faqCategory = $faqModel->getRelated('pid')) instanceof FaqCategoryModel) {
             return null;
         }
 
