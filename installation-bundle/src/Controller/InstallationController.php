@@ -587,7 +587,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         if (!isset($context['ua'])) {
-            $context['ua'] = Environment::get('agent')->class;
+            $context['ua'] = $this->getUserAgentString();
         }
 
         if (!isset($context['path'])) {
@@ -627,5 +627,19 @@ class InstallationController implements ContainerAwareInterface
         }
 
         return null;
+    }
+
+    /**
+     * Returns the user agent string.
+     *
+     * @return string
+     */
+    private function getUserAgentString()
+    {
+        if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
+            return '';
+        }
+
+        return Environment::get('agent')->class;
     }
 }
