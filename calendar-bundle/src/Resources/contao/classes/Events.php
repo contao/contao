@@ -440,7 +440,7 @@ abstract class Events extends \Module
 		{
 			$objPage = \PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
 
-			if (!($objPage instanceof PageModel))
+			if (!$objPage instanceof PageModel)
 			{
 				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'));
 			}

@@ -152,7 +152,7 @@ class InsertTagsListener
     private function generatePageUrl(CalendarEventsModel $event)
     {
         /** @var PageModel $targetPage */
-        if (!(($targetPage = $event->getRelated('jumpTo')) instanceof PageModel)) {
+        if (!($targetPage = $event->getRelated('jumpTo')) instanceof PageModel) {
             return '';
         }
 
@@ -169,8 +169,8 @@ class InsertTagsListener
     private function generateArticleUrl(CalendarEventsModel $event)
     {
         /** @var PageModel $targetPage */
-        if (!(($article = $event->getRelated('articleId')) instanceof ArticleModel)
-            || !(($targetPage = $article->getRelated('pid')) instanceof PageModel)
+        if (!($article = $event->getRelated('articleId')) instanceof ArticleModel
+            || !($targetPage = $article->getRelated('pid')) instanceof PageModel
         ) {
             return '';
         }
@@ -188,8 +188,8 @@ class InsertTagsListener
     private function generateEventReaderUrl(CalendarEventsModel $event)
     {
         /** @var PageModel $targetPage */
-        if (!(($calendar = $event->getRelated('pid')) instanceof CalendarModel)
-            || !(($targetPage = $calendar->getRelated('jumpTo')) instanceof PageModel)
+        if (!($calendar = $event->getRelated('pid')) instanceof CalendarModel
+            || !($targetPage = $calendar->getRelated('jumpTo')) instanceof PageModel
         ) {
             return '';
         }

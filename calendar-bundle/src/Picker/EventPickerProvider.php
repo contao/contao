@@ -114,11 +114,11 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         /** @var CalendarEventsModel $eventAdapter */
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
-        if (!(($calendarEventsModel = $eventAdapter->findById($id)) instanceof CalendarEventsModel)) {
+        if (!($calendarEventsModel = $eventAdapter->findById($id)) instanceof CalendarEventsModel) {
             return null;
         }
 
-        if (!(($calendar = $calendarEventsModel->getRelated('pid')) instanceof CalendarModel)) {
+        if (!($calendar = $calendarEventsModel->getRelated('pid')) instanceof CalendarModel) {
             return null;
         }
 
