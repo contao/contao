@@ -18,8 +18,8 @@ body {
 }
 #header h1 {
 	margin:0;
-	padding:16px 12px 16px 51px;
-	background:#f47c00 url("icons/logo.svg") no-repeat 15px center;
+	padding:12px 12px 12px 42px;
+	background:#f47c00 url("icons/logo.svg") no-repeat 9px center;
 	color:#fff;
 	font-weight:normal;
 }

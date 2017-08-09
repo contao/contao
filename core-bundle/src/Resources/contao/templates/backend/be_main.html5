@@ -44,7 +44,7 @@
           <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>TL_REFERER_ID]) ?>" class="icon-profile" title="<?= StringUtil::specialchars($this->username) ?>"><?= $this->username ?></a></li>
           <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= StringUtil::specialchars($this->preview) ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
           <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" title="<?= StringUtil::specialchars($this->logout) ?>" accesskey="q"><?= $this->logout ?></a></li>
-          <li class="burger"><button type="button" title="<?= StringUtil::specialchars($this->burger) ?>" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
+          <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
         </ul>
       </div>
     </div>
