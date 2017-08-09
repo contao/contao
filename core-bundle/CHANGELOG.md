@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Encode the username when opening the front end preview as a member (see contao/core#8762).
  * Correctly assign the CSS media type in the combiner.
 
 ### 4.4.2 (2017-07-25)
