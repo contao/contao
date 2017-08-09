@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Fix the referer management in the DC_Table class (see contao/core#6127).
  * Also check for a front end user during header replay (see #1008).
  * Encode the username when opening the front end preview as a member (see contao/core#8762).
  * Correctly assign the CSS media type in the combiner.
