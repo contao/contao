@@ -332,6 +332,7 @@ class InstallationController implements ContainerAwareInterface
         $finder = Finder::create()
             ->files()
             ->name('Version*Update.php')
+            ->sortByName()
             ->in(__DIR__.'/../Database')
         ;
 
