@@ -122,7 +122,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     }
 
     /**
-     * Returns the routing parameters for the backend picker.
+     * Returns the routing parameters for the back end picker.
      *
      * @param PickerConfig|null $config
      *

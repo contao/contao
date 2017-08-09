@@ -68,7 +68,7 @@
  * Support using objects in callback arrays (see #699).
  * Support importing form field options from a CSV file (see #444).
  * Add a Doctrine DBAL field type for UUIDs (see #415).
- * Support custom backend routes (see #512).
+ * Support custom back end routes (see #512).
  * Add the contao.image.target_dir parameter (see #684).
  * Match the security firewall based on the request scope (see #677).
  * Add the contao.web_dir parameter (see contao/installation-bundle#40).
