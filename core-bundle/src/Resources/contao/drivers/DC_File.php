@@ -29,6 +29,7 @@ class DC_File extends \DataContainer implements \editable
 	public function __construct($strTable)
 	{
 		parent::__construct();
+
 		$this->intId = \Input::get('id');
 
 		// Check whether the table is defined

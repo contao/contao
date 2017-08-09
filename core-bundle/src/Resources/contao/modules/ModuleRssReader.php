@@ -179,7 +179,7 @@ class ModuleRssReader extends \Module
 			}
 
 			// Add enclosure
-			if ($objEnclosure = $arrItems[$i]->get_enclosure(0)))
+			if ($objEnclosure = $arrItems[$i]->get_enclosure(0))
 			{
 				$items[$i]['enclosure'] = $objEnclosure->get_link();
 			}

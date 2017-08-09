@@ -253,6 +253,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             new InternalServerErrorHttpException('', new InsecureInstallationException())
         );
 
+        /** @var PrettyErrorScreenListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder(PrettyErrorScreenListener::class)
             ->disableOriginalConstructor()
