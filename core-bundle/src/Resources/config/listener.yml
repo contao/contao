@@ -70,8 +70,8 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
 
-    contao.listener.header_replay.backend_session:
-        class: Contao\CoreBundle\EventListener\HeaderReplay\BackendSessionListener
+    contao.listener.header_replay.user_session:
+        class: Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener
         arguments:
             - "@contao.routing.scope_matcher"
             - "%contao.security.disable_ip_check%"

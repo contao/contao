@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Also check for a front end user during header replay (see #1008).
  * Encode the username when opening the front end preview as a member (see contao/core#8762).
  * Correctly assign the CSS media type in the combiner.
 
