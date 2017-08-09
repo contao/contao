@@ -539,7 +539,7 @@ table.tl_listing {
 	margin-top:12px;
 }
 .tl_folder_list,.tl_folder_tlist {
-	padding:6px 0;
+	padding:7px 0;
 	border-bottom:1px solid #e9e9e9;
 	background:#f3f3f5;
 	font-weight:bold;
@@ -553,7 +553,7 @@ table.tl_listing {
 	background:#fff;
 }
 .tl_file_list {
-	padding:6px 0;
+	padding:7px 0;
 }
 .tl_file_list .ellipsis {
 	height:15px;
@@ -832,7 +832,7 @@ table.tl_listing {
 
 /* Tree view */
 .tl_folder_top {
-	padding:6px 0;
+	padding:5px 0;
 	border-top:1px solid #e3e3e3;
 	border-bottom:1px solid #e3e3e3;
 	background:#f0f0f2;
@@ -879,7 +879,7 @@ table.tl_listing {
 }
 .tl_listing .tl_right {
 	float:right;
-	padding:1px 0;
+	padding:0 0 1px;
 }
 .tl_listing,.tl_listing ul {
 	margin:0;
