@@ -579,11 +579,11 @@ abstract class DataContainer extends \Backend
 			$fileBrowserTypes = [];
 			$pickerBuilder = \System::getContainer()->get('contao.picker.builder');
 
-			foreach (['file' => 'image', 'link' => 'file'] as $context => $type)
+			foreach (['file' => 'image', 'link' => 'file'] as $context => $fileBrowserType)
 			{
 				if ($pickerBuilder->supportsContext($context))
 				{
-					$fileBrowserTypes[] = $type;
+					$fileBrowserTypes[] = $fileBrowserType;
 				}
 			}
 
@@ -598,7 +598,7 @@ abstract class DataContainer extends \Backend
 
 			$updateMode = $objTemplate->parse();
 
-			unset($file, $type, $pickerBuilder, $fileBrowserTypes);
+			unset($file, $type, $pickerBuilder, $fileBrowserTypes, $fileBrowserType);
 		}
 
 		// Handle multi-select fields in "override all" mode
