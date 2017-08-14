@@ -10,13 +10,10 @@
 
 namespace Contao\CalendarBundle\EventListener;
 
-use Contao\ArticleModel;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
-use Contao\CalendarModel;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\PageModel;
+use Contao\Events;
 use Contao\StringUtil;
 
 /**
@@ -119,90 +116,6 @@ class InsertTagsListener
     }
 
     /**
-     * Generates an event URL.
-     *
-     * @param CalendarEventsModel $event
-     *
-     * @return string
-     */
-    private function generateEventUrl(CalendarEventsModel $event)
-    {
-        if ('external' === $event->source) {
-            return $event->url;
-        }
-
-        if ('internal' === $event->source) {
-            return $this->generatePageUrl($event);
-        }
-
-        if ('article' === $event->source) {
-            return $this->generateArticleUrl($event);
-        }
-
-        return $this->generateEventReaderUrl($event);
-    }
-
-    /**
-     * Generates the URL to a page.
-     *
-     * @param CalendarEventsModel $event
-     *
-     * @return string
-     */
-    private function generatePageUrl(CalendarEventsModel $event)
-    {
-        /** @var PageModel $targetPage */
-        if (!($targetPage = $event->getRelated('jumpTo')) instanceof PageModel) {
-            return '';
-        }
-
-        return $targetPage->getFrontendUrl();
-    }
-
-    /**
-     * Generates the URL to an article.
-     *
-     * @param CalendarEventsModel $event
-     *
-     * @return string
-     */
-    private function generateArticleUrl(CalendarEventsModel $event)
-    {
-        /** @var PageModel $targetPage */
-        if (!($article = $event->getRelated('articleId')) instanceof ArticleModel
-            || !($targetPage = $article->getRelated('pid')) instanceof PageModel
-        ) {
-            return '';
-        }
-
-        return $targetPage->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
-    }
-
-    /**
-     * Generates URL to an event.
-     *
-     * @param CalendarEventsModel $event
-     *
-     * @return string
-     */
-    private function generateEventReaderUrl(CalendarEventsModel $event)
-    {
-        /** @var PageModel $targetPage */
-        if (!($calendar = $event->getRelated('pid')) instanceof CalendarModel
-            || !($targetPage = $calendar->getRelated('jumpTo')) instanceof PageModel
-        ) {
-            return '';
-        }
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        return $targetPage->getFrontendUrl(
-            ($config->get('useAutoItem') ? '/' : '/events/').($event->alias ?: $event->id)
-        );
-    }
-
-    /**
      * Generates the replacement string.
      *
      * @param CalendarEventsModel $event
@@ -212,11 +125,14 @@ class InsertTagsListener
      */
     private function generateReplacement(CalendarEventsModel $event, $insertTag)
     {
+        /** @var Events $adapter */
+        $adapter = $this->framework->getAdapter(Events::class);
+
         switch ($insertTag) {
             case 'event':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $this->generateEventUrl($event),
+                    $adapter->generateEventUrl($event),
                     StringUtil::specialchars($event->title),
                     $event->title
                 );
@@ -224,12 +140,12 @@ class InsertTagsListener
             case 'event_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $this->generateEventUrl($event),
+                    $adapter->generateEventUrl($event),
                     StringUtil::specialchars($event->title)
                 );
 
             case 'event_url':
-                return $this->generateEventUrl($event);
+                return $adapter->generateEventUrl($event);
 
             case 'event_title':
                 return StringUtil::specialchars($event->title);
