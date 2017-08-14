@@ -210,7 +210,7 @@ class Combiner extends \System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if ($this->needsRecompilation($arrFile['name'], $strPath))
+				if (\Config::get('debugMode') || !file_exists(TL_ROOT . '/' . $strPath))
 				{
 					$objFile = new \File($strPath);
 					$objFile->write($this->handleScssLess(file_get_contents(TL_ROOT . '/' . $arrFile['name']), $arrFile));
@@ -509,29 +509,5 @@ class Combiner extends \System
 		fclose($fh);
 
 		return $return;
-	}
-
-
-	/**
-	 * Check if the file needs to be recomplied
-	 *
-	 * @param string $strFile
-	 * @param string $strCacheFile
-	 *
-	 * @return boolean True if the file needs to be recomplied
-	 */
-	protected function needsRecompilation($strFile, $strCacheFile)
-	{
-		if (!file_exists(TL_ROOT . '/' . $strCacheFile))
-		{
-			return true;
-		}
-
-		if (filemtime(TL_ROOT . '/' . $strFile) > filemtime(TL_ROOT . '/' . $strCacheFile))
-		{
-			return true;
-		}
-
-		return false;
 	}
 }
