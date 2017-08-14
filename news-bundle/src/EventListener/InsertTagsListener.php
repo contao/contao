@@ -10,13 +10,10 @@
 
 namespace Contao\NewsBundle\EventListener;
 
-use Contao\ArticleModel;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\NewsArchiveModel;
+use Contao\News;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 
 /**
@@ -119,90 +116,6 @@ class InsertTagsListener
     }
 
     /**
-     * Generates a news URL.
-     *
-     * @param NewsModel $news
-     *
-     * @return string
-     */
-    private function generateNewsUrl(NewsModel $news)
-    {
-        if ('external' === $news->source) {
-            return $news->url;
-        }
-
-        if ('internal' === $news->source) {
-            return $this->generatePageUrl($news);
-        }
-
-        if ('article' === $news->source) {
-            return $this->generateArticleUrl($news);
-        }
-
-        return $this->generateNewsReaderUrl($news);
-    }
-
-    /**
-     * Generates the URL to a page.
-     *
-     * @param NewsModel $news
-     *
-     * @return string
-     */
-    private function generatePageUrl(NewsModel $news)
-    {
-        /** @var PageModel $targetPage */
-        if (!($targetPage = $news->getRelated('jumpTo')) instanceof PageModel) {
-            return '';
-        }
-
-        return $targetPage->getFrontendUrl();
-    }
-
-    /**
-     * Generates the URL to an article.
-     *
-     * @param NewsModel $news
-     *
-     * @return string
-     */
-    private function generateArticleUrl(NewsModel $news)
-    {
-        /** @var PageModel $targetPage */
-        if (!($article = $news->getRelated('articleId')) instanceof ArticleModel
-            || !($targetPage = $article->getRelated('pid')) instanceof PageModel
-        ) {
-            return '';
-        }
-
-        return $targetPage->getFrontendUrl('/articles/'.($article->alias ?: $article->id));
-    }
-
-    /**
-     * Generates URL to a news item.
-     *
-     * @param NewsModel $news
-     *
-     * @return string
-     */
-    private function generateNewsReaderUrl(NewsModel $news)
-    {
-        /** @var PageModel $targetPage */
-        if (!($archive = $news->getRelated('pid')) instanceof NewsArchiveModel
-            || !($targetPage = $archive->getRelated('jumpTo')) instanceof PageModel
-        ) {
-            return '';
-        }
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        return $targetPage->getFrontendUrl(
-            ($config->get('useAutoItem') ? '/' : '/items/').($news->alias ?: $news->id)
-        );
-    }
-
-    /**
      * Generates the replacement string.
      *
      * @param NewsModel $news
@@ -212,11 +125,14 @@ class InsertTagsListener
      */
     private function generateReplacement(NewsModel $news, $insertTag)
     {
+        /** @var News $adapter */
+        $adapter = $this->framework->getAdapter(News::class);
+
         switch ($insertTag) {
             case 'news':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $this->generateNewsUrl($news),
+                    $adapter->generateNewsUrl($news),
                     StringUtil::specialchars($news->headline),
                     $news->headline
                 );
@@ -224,12 +140,12 @@ class InsertTagsListener
             case 'news_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $this->generateNewsUrl($news),
+                    $adapter->generateNewsUrl($news),
                     StringUtil::specialchars($news->headline)
                 );
 
             case 'news_url':
-                return $this->generateNewsUrl($news);
+                return $adapter->generateNewsUrl($news);
 
             case 'news_title':
                 return StringUtil::specialchars($news->headline);
