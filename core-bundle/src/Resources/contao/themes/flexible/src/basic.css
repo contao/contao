@@ -519,7 +519,7 @@ a.tl_submit {
 }
 .subpal {
 	width:100%;
-	float:left;
+	clear:both;
 }
 .inline div {
 	display:inline;
