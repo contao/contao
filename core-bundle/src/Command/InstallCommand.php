@@ -10,6 +10,7 @@
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -104,6 +105,7 @@ class InstallCommand extends AbstractLockedCommand
         }
 
         $this->addInitializePhp();
+        $this->symlinkTcpdfConfig();
 
         return 0;
     }
@@ -204,5 +206,19 @@ EOF
         );
 
         $this->io->text("Added/updated the <comment>system/initialize.php</comment> file.\n");
+    }
+
+    /**
+     * Symlinks the tcpdf.php config file to system/config.
+     */
+    private function symlinkTcpdfConfig()
+    {
+        SymlinkUtil::symlink(
+            'vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php',
+            'system/config/tcpdf.php',
+            $this->rootDir
+        );
+
+        $this->io->text("Symlinked the <comment>system/config/tcpdf.php</comment> file.\n");
     }
 }
