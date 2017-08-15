@@ -1930,7 +1930,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 							if (count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="'.$thisId.'" class="subpal">' . $arrAjax[$thisId] . '</div>';
+								$current = "\n" . '<div id="'.$thisId.'" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
 								unset($arrAjax[$thisId]);
 								end($arrAjax);
 								$thisId = key($arrAjax);
@@ -1948,7 +1948,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="'.$thisId.'" class="subpal">';
+						$return .= "\n" . '<div id="'.$thisId.'" class="subpal cf">';
 
 						continue;
 					}
@@ -2433,7 +2433,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
-						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal">';
+						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal cf">';
 
 						continue;
 					}
