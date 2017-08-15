@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^5.6|^7.0",
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-pcre": "*",
@@ -130,9 +130,6 @@
         "source": "https://github.com/contao/core-bundle"
     },
     "extra": {
-        "branch-alias": {
-            "dev-develop": "4.5.x-dev"
-        },
         "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     }
 }
