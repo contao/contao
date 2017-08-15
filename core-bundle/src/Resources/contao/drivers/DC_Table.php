@@ -6143,9 +6143,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrRoot = (array) $attributes['rootNodes'];
 
 			// Allow only those roots that are allowed in root nodes
-			if (!empty($this->root))
+			if (!empty($this->root) && $arrRoot != $this->root)
 			{
-				$arrRoot = array_intersect($arrRoot, $this->Database->getChildRecords($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'], $this->strTable));
+				$arrRoot = array_intersect($arrRoot, array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable)));
 				$arrRoot = $this->eliminateNestedPages($arrRoot);
 			}
 
