@@ -1208,9 +1208,10 @@ ul.sgallery li {
 .tl_sectionwizard {
 	margin-top:2px;
 	width:100%;
-	max-width:600px;
+	max-width:680px;
 }
 .tl_sectionwizard td {
+	width:25%;
 	position:relative;
 	padding:0 3px 0 0;
 }
