@@ -86,11 +86,11 @@ class InstallationController implements ContainerAwareInterface
             return $this->login();
         }
 
-        $this->purgeSymfonyCache();
-
         if (!$installTool->canConnectToDatabase($this->getContainerParameter('database_name'))) {
             return $this->setUpDatabaseConnection();
         }
+
+        $this->warmupSymfonyCache();
 
         if ($installTool->hasOldDatabase()) {
             return $this->render('old_database.html.twig');
@@ -232,38 +232,57 @@ class InstallationController implements ContainerAwareInterface
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
-        /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()
-            ->directories()
-            ->depth('==0')
-            ->in(dirname($cacheDir))
-        ;
+        // the old cache dir name must not be longer than the real one to avoid exceeding
+        // the maximum length of a directory or file path within it (esp. Windows MAX_PATH)
+        $oldCacheDir = substr($cacheDir, 0, -1).('~' === substr($cacheDir, -1) ? '+' : '~');
 
-        foreach ($finder as $realCacheDir) {
-            // the old cache dir name must not be longer than the real one to avoid exceeding
-            // the maximum length of a directory or file path within it (esp. Windows MAX_PATH)
-            $oldCacheDir = substr($realCacheDir, 0, -1).('~' === substr($realCacheDir, -1) ? '+' : '~');
+        if (!is_writable($cacheDir)) {
+            throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $cacheDir));
+        }
 
-            if (!is_writable($realCacheDir)) {
-                throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $realCacheDir));
-            }
-
-            if ($filesystem->exists($oldCacheDir)) {
-                $filesystem->remove($oldCacheDir);
-            }
-
-            $this->container->get('cache_clearer')->clear($realCacheDir);
-
-            $filesystem->rename($realCacheDir, $oldCacheDir);
+        if ($filesystem->exists($oldCacheDir)) {
             $filesystem->remove($oldCacheDir);
         }
 
-        // Zend OPcache
+        $this->container->get('cache_clearer')->clear($cacheDir);
+
+        $filesystem->rename($cacheDir, $oldCacheDir);
+        $filesystem->remove($oldCacheDir);
+
         if (function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        // APC
+        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+            apc_clear_cache();
+        }
+    }
+
+    /**
+     * Warms up the Symfony cache.
+     *
+     * Since we cannot use a separate process to clear and warm up the cache, which would be the
+     * right thing to do, we can only warm up the existing cache to add the optional stuff. Hopefully,
+     * this can be improved with Symfony 3.4.
+     *
+     * @see https://github.com/symfony/symfony/pull/23792
+     */
+    private function warmUpSymfonyCache()
+    {
+        $cacheDir = $this->getContainerParameter('kernel.cache_dir');
+
+        if (file_exists($cacheDir.'/contao/config/config.php')) {
+            return;
+        }
+
+        $warmer = $this->container->get('cache_warmer');
+        $warmer->enableOptionalWarmers();
+        $warmer->warmUp($cacheDir);
+
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+
         if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
@@ -316,6 +335,8 @@ class InstallationController implements ContainerAwareInterface
         $dumper = new ParameterDumper($this->getContainerParameter('kernel.root_dir'));
         $dumper->setParameters($parameters);
         $dumper->dump();
+
+        $this->purgeSymfonyCache();
 
         return $this->getRedirectResponse();
     }
