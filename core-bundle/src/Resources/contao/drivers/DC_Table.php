@@ -247,8 +247,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Store the current referer
 		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && $route == 'contao_backend' && !\Environment::get('isAjaxRequest'))
 		{
+			$strRefererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+
 			$session = $objSession->get('referer');
-			$session[TL_REFERER_ID][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
+			$session[$strRefererId][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
 			$objSession->set('referer', $session);
 		}
 	}

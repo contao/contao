@@ -995,7 +995,7 @@ abstract class Controller extends \System
 		// Add the referer ID
 		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
 		{
-			$query = $query->merge('ref=' . TL_REFERER_ID);
+			$query = $query->merge('ref=' . \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
 		}
 
 		$uri = $query->getUriComponent();
