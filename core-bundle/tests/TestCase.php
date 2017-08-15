@@ -195,7 +195,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $tokenManager
             ->method('refreshToken')
-            ->willReturn(new CsrfToken('_csrf', 'testValue'))
+            ->willReturnOnConsecutiveCalls(new CsrfToken('_csrf', 'testValue'), new CsrfToken('_csrf', 'foo'))
         ;
 
         return $tokenManager;

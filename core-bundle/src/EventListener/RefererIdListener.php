@@ -33,6 +33,11 @@ class RefererIdListener
     private $scopeMatcher;
 
     /**
+     * @var CsrfToken
+     */
+    private $token;
+
+    /**
      * Constructor.
      *
      * @param CsrfTokenManagerInterface $tokenManager
@@ -57,9 +62,10 @@ class RefererIdListener
 
         $request = $event->getRequest();
 
-        /** @var CsrfToken $token */
-        $token = $this->tokenManager->refreshToken('contao_referer_id');
+        if (null === $this->token) {
+            $this->token = $this->tokenManager->refreshToken('contao_referer_id');
+        }
 
-        $request->attributes->set('_contao_referer_id', $token->getValue());
+        $request->attributes->set('_contao_referer_id', $this->token->getValue());
     }
 }
