@@ -129,7 +129,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if (isset($_GET['clipboard']))
 		{
 			$objSession->set('CLIPBOARD', array());
-			$this->redirect($this->getReferer(false, $strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		// Check whether the table is defined
@@ -183,7 +183,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$this->redirect(str_replace('act=select', 'act=copyAll', \Environment::get('request')));
 				}
 
-				$this->redirect($this->getReferer(false, $strTable));
+				$this->redirect($this->getReferer());
 			}
 		}
 
@@ -722,7 +722,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->redirect($this->getReferer(false, $this->strTable));
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -745,7 +745,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// ID and PID are mandatory
 		if (!$this->intId || !strlen(\Input::get('pid')))
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		// Get the new position
@@ -818,7 +818,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		if (!$blnDoNotRedirect)
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 	}
 
@@ -851,7 +851,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->redirect($this->getReferer(false, $this->strTable));
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -873,7 +873,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		if (!$this->intId)
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		/** @var SessionInterface $objSession */
@@ -1040,7 +1040,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		if (!$blnDoNotRedirect)
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		return false;
@@ -1203,7 +1203,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->redirect($this->getReferer(false, $this->strTable));
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -1473,7 +1473,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		if (!$this->intId)
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		$delete = array();
@@ -1485,7 +1485,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						   ->limit(1)
 						   ->execute($this->intId);
 
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		// If there is a PID field but no parent table
@@ -1582,7 +1582,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		if (!$blnDoNotRedirect)
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 	}
 
@@ -1614,7 +1614,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->redirect($this->getReferer(false, $this->strTable));
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -1684,7 +1684,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Check whether there is a record
 		if ($objRecords->numRows < 1)
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		$error = false;
@@ -1693,7 +1693,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		if (!is_array($data))
 		{
-			$this->redirect($this->getReferer(false, $this->strTable));
+			$this->redirect($this->getReferer());
 		}
 
 		$arrFields = array();
@@ -1754,7 +1754,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						   ->execute($this->intId);
 		}
 
-		$this->redirect($this->getReferer(false, $this->strTable));
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -1782,7 +1782,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->redirect($this->getReferer(false, $this->strTable));
+		$this->redirect($this->getReferer());
 	}
 
 
@@ -2094,7 +2094,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = $version . \Message::generate() . ($this->noReload ? '
 <p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['general'].'</p>' : '') . '
 <div id="tl_buttons">' . (\Input::get('nb') ? '&nbsp;' : '
-<a href="'.$this->getReferer(true, $this->strTable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>') . '
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>') . '
 </div>
 <form action="'.ampersand(\Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
 <div class="tl_formbody_edit">
@@ -2189,7 +2189,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				\Message::reset();
 				\System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
-				$this->redirect($this->getReferer(false, $this->strTable));
+				$this->redirect($this->getReferer());
 			}
 			elseif (isset($_POST['saveNedit']))
 			{
@@ -2627,7 +2627,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (isset($_POST['saveNclose']))
 				{
 					\System::setCookie('BE_PAGE_OFFSET', 0, 0);
-					$this->redirect($this->getReferer(false, $this->strTable));
+					$this->redirect($this->getReferer());
 				}
 
 				$this->reload();
@@ -2699,7 +2699,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Return
 		return '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true, $this->strTable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>'.$return;
 	}
 
@@ -2947,7 +2947,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (isset($_POST['saveNclose']))
 				{
 					\System::setCookie('BE_PAGE_OFFSET', 0, 0);
-					$this->redirect($this->getReferer(false, $this->strTable));
+					$this->redirect($this->getReferer());
 				}
 
 				$this->reload();
@@ -3018,7 +3018,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Return
 		return '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true, $this->strTable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>'.$return;
 	}
 
@@ -3477,7 +3477,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Begin buttons container
 		$return = \Message::generate() . '
 <div id="tl_buttons">'.((\Input::get('act') == 'select') ? '
-<a href="'.$this->getReferer(true, $this->strTable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '')) . ((\Input::get('act') != 'select' && !$blnClipboard && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
 <a href="'.$this->addToUrl('act=paste&amp;mode=create').'" class="header_new" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
@@ -4057,7 +4057,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		$return = \Message::generate() . '
 <div id="tl_buttons">' . (\Input::get('nb') ? '&nbsp;' : ($this->ptable ? '
-<a href="'.$this->getReferer(true, $table).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
+<a href="'.$this->getReferer(true, $this->ptable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>' : ''))) . ' ' . ((\Input::get('act') != 'select' && !$blnClipboard && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
 <a href="'.$this->addToUrl(($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid='.$this->intId)).'" class="header_new" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
@@ -4688,7 +4688,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$return .= \Message::generate() . '
 <div id="'.$this->bid.'">'.((\Input::get('act') == 'select' || $this->ptable) ? '
-<a href="'.$this->getReferer(true, $table).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
+<a href="'.$this->getReferer(true, $this->ptable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '')) . ((\Input::get('act') != 'select' && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
 <a href="'.(($this->ptable != '') ? $this->addToUrl('act=create' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')).'" class="header_new" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . $this->generateGlobalButtons() . '
 </div>';
