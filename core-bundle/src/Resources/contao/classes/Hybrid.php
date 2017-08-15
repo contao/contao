@@ -139,11 +139,6 @@ abstract class Hybrid extends \Frontend
 		// Get the CSS ID from the parent element (!)
 		$this->cssID = \StringUtil::deserialize($objElement->cssID, true);
 
-		if (isset($objHybrid->attributes))
-		{
-			$cssID = \StringUtil::deserialize($objHybrid->attributes, true);
-		}
-
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))
 		{
@@ -157,7 +152,6 @@ abstract class Hybrid extends \Frontend
 		}
 
 		$this->cssID = $cssID;
-
 		$this->typePrefix = $objElement->typePrefix;
 
 		$arrHeadline = \StringUtil::deserialize($objElement->headline);
