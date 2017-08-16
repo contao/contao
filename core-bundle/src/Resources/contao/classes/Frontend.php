@@ -179,7 +179,7 @@ abstract class Frontend extends \Controller
 					$arrAliases = current($arrLangs);
 				}
 				// Try to find a page matching the language parameter
-				elseif (($lang = \Input::get('language')) != '' && isset($arrLangs[$lang]))
+				elseif (($lang = \Input::get('language')) && isset($arrLangs[$lang]))
 				{
 					$arrAliases = $arrLangs[$lang];
 				}
@@ -297,7 +297,7 @@ abstract class Frontend extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback)
 			{
 				/** @var PageModel $objRootPage */
-				if (is_object(($objRootPage = static::importStatic($callback[0])->{$callback[1]}())))
+				if (is_object($objRootPage = static::importStatic($callback[0])->{$callback[1]}()))
 				{
 					return $objRootPage;
 				}

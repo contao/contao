@@ -1961,7 +1961,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				}
 
 				// Purge the script cache (see #7005)
-				if ($objFile->extension == 'css' || $objFile->extension == 'scss' || $objFile->extension == 'less')
+				if (in_array($objFile->extension, array('css', 'scss', 'less', 'js')))
 				{
 					$this->import('Automator');
 					$this->Automator->purgeScriptCache();

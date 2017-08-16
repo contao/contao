@@ -205,16 +205,17 @@ class Combiner extends \System
 
 		foreach ($this->arrFiles as $arrFile)
 		{
-			$content = file_get_contents(TL_ROOT . '/' . $arrFile['name']);
-
 			// Compile SCSS/LESS files into temporary files
 			if ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS)
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				$objFile = new \File($strPath);
-				$objFile->write($this->handleScssLess($content, $arrFile));
-				$objFile->close();
+				if (\Config::get('debugMode') || !file_exists(TL_ROOT . '/' . $strPath))
+				{
+					$objFile = new \File($strPath);
+					$objFile->write($this->handleScssLess(file_get_contents(TL_ROOT . '/' . $arrFile['name']), $arrFile));
+					$objFile->close();
+				}
 
 				$return[] = $strPath;
 			}
@@ -229,9 +230,9 @@ class Combiner extends \System
 				}
 
 				// Add the media query (see #7070)
-				if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
+				if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && !$this->hasMediaTag($arrFile['name']))
 				{
-					$name .= '" media="' . $arrFile['media'];
+					$name .= '|' . $arrFile['media'];
 				}
 
 				$return[] = $name;
@@ -264,19 +265,26 @@ class Combiner extends \System
 	 * Generates the debug markup.
 	 *
 	 * @return string The debug markup
+	 *
+	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	protected function getDebugMarkup()
 	{
+		@trigger_error('Using Combiner::getDebugMarkup() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$return = $this->getFileUrls();
 
 		if ($this->strMode == self::JS)
 		{
 			return implode('"></script><script src="', $return);
 		}
-		else
+
+		foreach ($return as $k=>$v)
 		{
-			return implode('"><link rel="stylesheet" href="', $return);
+			$return[$k] = str_replace('|', '" media="', $v);
 		}
+
+		return implode('"><link rel="stylesheet" href="', $return);
 	}
 
 
@@ -474,5 +482,32 @@ class Combiner extends \System
 		}
 
 		return $strBuffer;
+	}
+
+
+	/**
+	 * Check if the file has a @media tag
+	 *
+	 * @param string $strFile
+	 *
+	 * @return boolean True if the file has a @media tag
+	 */
+	protected function hasMediaTag($strFile)
+	{
+		$return = false;
+		$fh = fopen(TL_ROOT . '/' . $strFile, 'rb');
+
+		while (($line = fgets($fh)) !== false)
+		{
+			if (strpos($line, '@media') !== false)
+			{
+				$return = true;
+				break;
+			}
+		}
+
+		fclose($fh);
+
+		return $return;
 	}
 }

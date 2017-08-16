@@ -202,10 +202,10 @@ class Session
 		// Map the referer (see #281)
 		foreach ($this->mappedKeys as $strKey)
 		{
-			if (isset($data[$strKey]))
+			if (isset($arrData[$strKey]))
 			{
-				$this->session->set($strKey, $data[$strKey]);
-				unset($data[$strKey]);
+				$this->session->set($strKey, $arrData[$strKey]);
+				unset($arrData[$strKey]);
 			}
 		}
 

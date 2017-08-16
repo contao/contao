@@ -36,6 +36,7 @@ class AdapterTest extends TestCase
      */
     public function testMagicCall()
     {
+        /** @var LegacyClass $adapter */
         $adapter = new Adapter(LegacyClass::class);
 
         $this->assertSame(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));

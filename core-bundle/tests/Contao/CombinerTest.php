@@ -105,8 +105,8 @@ class CombinerTest extends TestCase
 
         $this->assertSame([
             'file1.css',
-            'file2.css" media="screen',
-            'file3.css" media="screen',
+            'file2.css|screen',
+            'file3.css|screen',
         ], $combiner->getFileUrls());
 
         $combinedFile = $combiner->getCombinedFile();

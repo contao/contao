@@ -92,13 +92,13 @@ class ZipWriter
 		$this->strFile = $strFile;
 
 		// Create temporary file
-		if (($this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER , 'zip')) == false)
+		if (!$this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER , 'zip'))
 		{
 			throw new \Exception("Cannot create temporary file");
 		}
 
 		// Open temporary file
-		if (($this->resFile = @fopen($this->strTemp, 'wb')) == false)
+		if (!$this->resFile = @fopen($this->strTemp, 'wb'))
 		{
 			throw new \Exception("Cannot open temporary file");
 		}

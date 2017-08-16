@@ -1,5 +1,13 @@
 # Contao core bundle change log
 
+### 4.4.3 (2017-08-16)
+
+ * Correctly assign the form CSS ID (see #956).
+ * Fix the referer management in the back end (see contao/core#6127).
+ * Also check for a front end user during header replay (see #1008).
+ * Encode the username when opening the front end preview as a member (see contao/core#8762).
+ * Correctly assign the CSS media type in the combiner.
+
 ### 4.4.2 (2017-07-25)
 
  * Adjust the command scheduler listener so it does not rely on request parameters (see #955).
@@ -61,7 +69,7 @@
  * Support using objects in callback arrays (see #699).
  * Support importing form field options from a CSV file (see #444).
  * Add a Doctrine DBAL field type for UUIDs (see #415).
- * Support custom backend routes (see #512).
+ * Support custom back end routes (see #512).
  * Add the contao.image.target_dir parameter (see #684).
  * Match the security firewall based on the request scope (see #677).
  * Add the contao.web_dir parameter (see contao/installation-bundle#40).

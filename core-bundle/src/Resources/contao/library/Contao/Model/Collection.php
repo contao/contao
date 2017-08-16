@@ -56,7 +56,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		foreach ($arrModels as $objModel)
 		{
-			if (!($objModel instanceof Model))
+			if (!$objModel instanceof Model)
 			{
 				throw new \InvalidArgumentException('Invalid type: ' . gettype($objModel));
 			}

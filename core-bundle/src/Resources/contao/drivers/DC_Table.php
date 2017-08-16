@@ -247,8 +247,10 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Store the current referer
 		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && $route == 'contao_backend' && !\Environment::get('isAjaxRequest'))
 		{
+			$strRefererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+
 			$session = $objSession->get('referer');
-			$session[TL_REFERER_ID][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
+			$session[$strRefererId][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
 			$objSession->set('referer', $session);
 		}
 	}
@@ -1930,7 +1932,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 							if (count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="'.$thisId.'" class="subpal">' . $arrAjax[$thisId] . '</div>';
+								$current = "\n" . '<div id="'.$thisId.'" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
 								unset($arrAjax[$thisId]);
 								end($arrAjax);
 								$thisId = key($arrAjax);
@@ -1948,7 +1950,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="'.$thisId.'" class="subpal">';
+						$return .= "\n" . '<div id="'.$thisId.'" class="subpal cf">';
 
 						continue;
 					}
@@ -2380,9 +2382,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						{
 							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType'] = 'text';
 						}
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']))
+						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class']))
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval'] = array('rgxp' => 'natural');
+							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class'] = 'w50';
+						}
+						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp']))
+						{
+							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp'] = 'natural';
 						}
 					}
 				}
@@ -2429,7 +2435,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
-						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal">';
+						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal cf">';
 
 						continue;
 					}
@@ -6137,9 +6143,9 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrRoot = (array) $attributes['rootNodes'];
 
 			// Allow only those roots that are allowed in root nodes
-			if (!empty($this->root))
+			if (!empty($this->root) && $arrRoot != $this->root)
 			{
-				$arrRoot = array_intersect($arrRoot, $this->Database->getChildRecords($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'], $this->strTable));
+				$arrRoot = array_intersect($arrRoot, array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable)));
 				$arrRoot = $this->eliminateNestedPages($arrRoot);
 			}
 
