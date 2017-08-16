@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.3 (2017-08-16)
 
  * Correctly assign the form CSS ID (see #956).
  * Fix the referer management in the back end (see contao/core#6127).
