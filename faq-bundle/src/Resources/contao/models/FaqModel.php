@@ -37,9 +37,9 @@ namespace Contao;
  * @property boolean $published
  *
  * @method static FaqModel|null findById($id, $opt=array())
- * @method static FaqModel|null findByPk($id, $opt=array())
- * @method static FaqModel|null findByIdOrAlias($val, $opt=array())
- * @method static FaqModel|null findOneBy($col, $val, $opt=array())
+ * @method static FaqModel|null findByPk($id, array $opt=array())
+ * @method static FaqModel|null findByIdOrAlias($val, array $opt=array())
+ * @method static FaqModel|null findOneBy($col, $val, array $opt=array())
  * @method static FaqModel|null findOneByPid($val, $opt=array())
  * @method static FaqModel|null findOneBySorting($val, $opt=array())
  * @method static FaqModel|null findOneByTstamp($val, $opt=array())
@@ -81,9 +81,9 @@ namespace Contao;
  * @method static Model\Collection|FaqModel[]|FaqModel|null findByEnclosure($val, $opt=array())
  * @method static Model\Collection|FaqModel[]|FaqModel|null findByNoComments($val, $opt=array())
  * @method static Model\Collection|FaqModel[]|FaqModel|null findByPublished($val, $opt=array())
- * @method static Model\Collection|FaqModel[]|FaqModel|null findMultipleByIds($val, $opt=array())
- * @method static Model\Collection|FaqModel[]|FaqModel|null findBy($col, $val, $opt=array())
- * @method static Model\Collection|FaqModel[]|FaqModel|null findAll($opt=array())
+ * @method static Model\Collection|FaqModel[]|FaqModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Model\Collection|FaqModel[]|FaqModel|null findBy($col, $val, array $opt=array())
+ * @method static Model\Collection|FaqModel[]|FaqModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByPid($val, $opt=array())
