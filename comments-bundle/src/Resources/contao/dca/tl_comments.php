@@ -559,7 +559,7 @@ class tl_comments extends Backend
 					{
 						$this->import($callback[0]);
 
-						if (($tmp = $this->{$callback[0]}->{$callback[1]}($arrRow)) != '')
+						if ($tmp = $this->{$callback[0]}->{$callback[1]}($arrRow))
 						{
 							$title .= $tmp;
 							break;

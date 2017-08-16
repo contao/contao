@@ -1,1 +1,1 @@
-<?php $this->extend('ce_comments'); ?>
+<?php $this->extend('ce_comments');
