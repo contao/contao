@@ -1,0 +1,11 @@
+
+<script>
+  (function() {
+    var p = document.querySelector('p.error') || document.querySelector('p.confirm');
+    if (p) {
+      try {
+        window.scrollTo(null, parseInt(p.offsetTop - 40));
+      } catch(e) {}
+    }
+  })();
+</script>

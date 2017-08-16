@@ -1,0 +1,55 @@
+{
+    "name": "contao/installation-bundle",
+    "type": "contao-bundle",
+    "description": "Required to install and update Contao 4",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": "^5.6|^7.0",
+        "symfony/filesystem": "^3.3",
+        "symfony/framework-bundle": "^3.3",
+        "contao/core-bundle": "^4.4",
+        "sensio/distribution-bundle": "^5.0",
+        "sensiolabs/ansi-to-html": "^1.1"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0",
+        "doctrine/doctrine-cache-bundle": "^1.3",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "^5.0",
+        "php-http/message-factory": "^1.0.2",
+        "satooshi/php-coveralls": "^1.0",
+        "symfony/phpunit-bridge": "^2.8|^3.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\InstallationBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\InstallationBundle\\Test\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "support": {
+        "docs": "https://docs.contao.org",
+        "forum": "https://community.contao.org",
+        "issues": "https://github.com/contao/installation-bundle/issues",
+        "source": "https://github.com/contao/installation-bundle"
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin"
+    }
+}
