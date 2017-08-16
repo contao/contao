@@ -18,21 +18,21 @@ namespace Contao;
  * @property integer $pid
  * @property string  $hash
  *
- * @method static NewsletterBlacklistModel|null findById($id, $opt=array())
- * @method static NewsletterBlacklistModel|null findByPk($id, $opt=array())
- * @method static NewsletterBlacklistModel|null findOneBy($col, $val, $opt=array())
- * @method static NewsletterBlacklistModel|null findOneByPid($val, $opt=array())
- * @method static NewsletterBlacklistModel|null findOneByHash($val, $opt=array())
+ * @method static NewsletterBlacklistModel|null findById($id, array $opt=array())
+ * @method static NewsletterBlacklistModel|null findByPk($id, array $opt=array())
+ * @method static NewsletterBlacklistModel|null findOneBy($col, $val, array $opt=array())
+ * @method static NewsletterBlacklistModel|null findOneByPid($val, array $opt=array())
+ * @method static NewsletterBlacklistModel|null findOneByHash($val, array $opt=array())
  *
- * @method static Model\Collection|NewsletterBlacklistModel|null findByPid($val, $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findByHash($val, $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findMultipleByIds($val, $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findBy($col, $val, $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findAll($opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findByPid($val, array $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findByHash($val, array $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findBy($col, $val, array $opt=array())
+ * @method static Model\Collection|NewsletterBlacklistModel|null findAll(array $opt=array())
  *
- * @method static integer countById($id, $opt=array())
- * @method static integer countByPid($val, $opt=array())
- * @method static integer countByHash($val, $opt=array())
+ * @method static integer countById($id, array $opt=array())
+ * @method static integer countByPid($val, array $opt=array())
+ * @method static integer countByHash($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
