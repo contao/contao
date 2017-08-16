@@ -43,7 +43,7 @@ class InstallCommandListener
      */
     public function onConsoleTerminate(ConsoleTerminateEvent $event)
     {
-        if (!($event->getCommand() instanceof InstallCommand)) {
+        if (!$event->getCommand() instanceof InstallCommand) {
             return;
         }
 
