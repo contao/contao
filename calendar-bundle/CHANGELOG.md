@@ -1,5 +1,7 @@
 # Contao calendar bundle change log
 
+ * Fix the setEmptyEndTime() save_callback (see #10).
+
 ### 4.4.2 (2017-07-25)
 
  * Rewrite the DCA picker (see contao/core-bundle#950).
