@@ -399,9 +399,9 @@ class PageRegular extends \Frontend
 		{
 			if ($objLayout->jSource == 'j_googleapis' || $objLayout->jSource == 'j_fallback')
 			{
-				if (($strVersion = $arrPackages['contao-components/jquery']) !== null)
+				if (isset($arrPackages['contao-components/jquery']))
 				{
-					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $strVersion . '.min.js') . "\n";
+					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $arrPackages['contao-components/jquery'] . '.min.js') . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
@@ -425,15 +425,15 @@ class PageRegular extends \Frontend
 		{
 			if ($objLayout->mooSource == 'moo_googleapis' || $objLayout->mooSource == 'moo_fallback')
 			{
-				if (($strVersion = $arrPackages['contao-components/mootools']) !== null)
+				if (isset($arrPackages['contao-components/mootools']))
 				{
-					if (version_compare($strVersion, '1.5.1', '>'))
+					if (version_compare($arrPackages['contao-components/mootools'], '1.5.1', '>'))
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools.min.js') . "\n";
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $arrPackages['contao-components/mootools'] . '/mootools.min.js') . "\n";
 					}
 					else
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $strVersion . '/mootools-yui-compressed.js') . "\n";
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $arrPackages['contao-components/mootools'] . '/mootools-yui-compressed.js') . "\n";
 					}
 
 					// Local fallback (thanks to DyaGa)
@@ -695,7 +695,7 @@ class PageRegular extends \Frontend
 		}
 
 		// Add the user <head> tags
-		if (($strHead = trim($objLayout->head)) != false)
+		if ($strHead = trim($objLayout->head))
 		{
 			$strHeadTags .= $strHead . "\n";
 		}

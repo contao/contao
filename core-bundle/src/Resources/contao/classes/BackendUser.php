@@ -475,6 +475,8 @@ class BackendUser extends \User
 			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
 		}
 
+		$strRefererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
@@ -482,7 +484,7 @@ class BackendUser extends \User
 				$arrModules[$strGroupName]['class'] = ' node-expanded';
 				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
-				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>\Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>TL_REFERER_ID));
+				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>\Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
 				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
 
@@ -495,7 +497,7 @@ class BackendUser extends \User
 						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
 						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>TL_REFERER_ID));
+						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>$strRefererId));
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;
 					}
 				}

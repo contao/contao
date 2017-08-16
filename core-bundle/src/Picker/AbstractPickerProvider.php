@@ -114,7 +114,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
 
         $user = $token->getUser();
 
-        if (!($user instanceof BackendUser)) {
+        if (!$user instanceof BackendUser) {
             throw new \RuntimeException('The token does not contain a back end user object');
         }
 
@@ -122,7 +122,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     }
 
     /**
-     * Returns the routing parameters for the backend picker.
+     * Returns the routing parameters for the back end picker.
      *
      * @param PickerConfig|null $config
      *

@@ -97,6 +97,10 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
                 array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
             );
 
+            if (!isset($attributes['fieldType'])) {
+                $attributes['fieldType'] = 'radio';
+            }
+
             if ($value) {
                 $attributes['value'] = [];
 

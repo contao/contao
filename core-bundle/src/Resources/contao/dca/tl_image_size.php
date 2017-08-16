@@ -47,8 +47,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;search,limit',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_image_size', 'listImageSize'),
-			'child_record_class'      => 'no_padding'
+			'child_record_callback'   => array('tl_image_size', 'listImageSize')
 		),
 		'global_operations' => array
 		(

@@ -276,6 +276,12 @@ adjust your templates to use `$this->route()` instead:
 ```
 
 
+### cron.php
+
+The `cron.php` entry point has been removed. Use the `/_contao/cron` route
+instead if you want to trigger the cron job manually.
+
+
 ### Disable aliases
 
 In Contao 3, it was possible to disable aliases and make Contao use numeric IDs

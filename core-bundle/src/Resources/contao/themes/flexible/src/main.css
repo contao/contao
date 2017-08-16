@@ -16,12 +16,11 @@ body.popup {
 
 /* Header */
 #header {
-	min-height:48px;
+	min-height:40px;
 	text-align:left;
 	background:#f47c00;
 }
 #header .inner {
-	padding-right:4px;
 	box-sizing:border-box;
 }
 .lw #header .inner {
@@ -34,11 +33,11 @@ body.popup {
 }
 #header h1 {
 	position:absolute;
-	left:12px;
+	left:8px;
 }
 #header h1 a {
 	display:block;
-	padding:16px 12px 16px 36px;
+	padding:12px 12px 12px 33px;
 	background:url("icons/logo.svg") no-repeat left center;
 	font-weight:normal;
 }
@@ -50,7 +49,7 @@ body.popup {
 }
 #tmenu a {
 	margin-left:18px;
-	padding:17px 10px 17px 21px;
+	padding:13px 10px 13px 21px;
 	display:inline-block;
 }
 #tmenu sup {
@@ -68,22 +67,22 @@ body.popup {
 	display:none;
 }
 #tmenu .icon-alert {
-	background:url("icons/alert.svg") left 17px no-repeat;
+	background:url("icons/alert.svg") left 13px no-repeat;
 }
 #tmenu .icon-profile {
-	background:url("icons/profile.svg") left 17px no-repeat;
+	background:url("icons/profile.svg") left 13px no-repeat;
 }
 #tmenu .icon-preview {
-	background:url("icons/preview.svg") left 17px no-repeat;
+	background:url("icons/preview.svg") left 13px no-repeat;
 }
 #tmenu .icon-logout {
-	background:url("icons/exit.svg") left 17px no-repeat;
+	background:url("icons/exit.svg") left 13px no-repeat;
 }
 
 /* Container */
 #container {
 	display:flex;
-	min-height:calc(100vh - 48px);
+	min-height:calc(100vh - 40px);
 	background:#172b3b;
 }
 .lw #container {
@@ -102,7 +101,7 @@ body.popup {
 #left {
 	float:left;
 	width:240px;
-	min-height:calc(100vh - 48px);
+	min-height:calc(100vh - 40px);
 	background:#0f1c26;
 	display:flex;
 	flex-direction:column;
@@ -123,7 +122,7 @@ body.popup {
 #main {
 	float:left;
 	width:calc(100% - 240px);
-	min-height:calc(100vh - 48px);
+	min-height:calc(100vh - 40px);
 	background:#fff;
 	display:flex;
 	flex-direction:column;
@@ -540,7 +539,7 @@ table.tl_listing {
 	margin-top:12px;
 }
 .tl_folder_list,.tl_folder_tlist {
-	padding:6px 0;
+	padding:7px 0;
 	border-bottom:1px solid #e9e9e9;
 	background:#f3f3f5;
 	font-weight:bold;
@@ -554,7 +553,7 @@ table.tl_listing {
 	background:#fff;
 }
 .tl_file_list {
-	padding:6px 0;
+	padding:7px 0;
 }
 .tl_file_list .ellipsis {
 	height:15px;
@@ -661,7 +660,7 @@ table.tl_listing {
 	line-height:1.3;
 }
 .tl_content_header {
-	padding:6px;
+	padding:7px 6px;
 	border-bottom:1px solid #e9e9e9;
 	background:#f6f6f8;
 	font-weight:bold;
@@ -724,9 +723,6 @@ table.tl_listing {
 	margin-right:40px;
 	box-shadow:-10px 0 #eaeaec,10px 0 #eaeaec,-20px 0 #f3f3f5,20px 0 #f3f3f5,-30px 0 #eaeaec,30px 0 #eaeaec,-40px 0 #f3f3f5,40px 0 #f3f3f5;
 }
-.no_padding {
-	padding:5px 6px;
-}
 .tl_content h1,.tl_content h2,.tl_content h3,.tl_content h4,.tl_content h5,.tl_content h6 {
 	font-size:.875rem;
 }
@@ -756,6 +752,7 @@ table.tl_listing {
 	float:right;
 	text-align:right;
 	margin-left:12px;
+	margin-top:-1px;
 }
 .tl_content_right button {
 	margin:0;
@@ -833,7 +830,7 @@ table.tl_listing {
 
 /* Tree view */
 .tl_folder_top {
-	padding:6px 0;
+	padding:5px 0;
 	border-top:1px solid #e3e3e3;
 	border-bottom:1px solid #e3e3e3;
 	background:#f0f0f2;
@@ -880,7 +877,7 @@ table.tl_listing {
 }
 .tl_listing .tl_right {
 	float:right;
-	padding:1px 0;
+	padding:0 0 1px;
 }
 .tl_listing,.tl_listing ul {
 	margin:0;
@@ -1211,9 +1208,10 @@ ul.sgallery li {
 .tl_sectionwizard {
 	margin-top:2px;
 	width:100%;
-	max-width:600px;
+	max-width:680px;
 }
 .tl_sectionwizard td {
+	width:25%;
 	position:relative;
 	padding:0 3px 0 0;
 }
@@ -1694,7 +1692,7 @@ fieldset.collapsed > legend {
 	}
 	#container {
 		display:block;
-		padding-top:48px;
+		padding-top:40px;
 	}
 	#main,#left {
 		float:none;
@@ -1714,7 +1712,7 @@ fieldset.collapsed > legend {
 	}
 	#left {
 		position:absolute;
-		top:48px;
+		top:40px;
 		width:240px;
 		transition:transform .2s ease;
 		-webkit-transform:translateX(-240px);
@@ -1730,7 +1728,7 @@ fieldset.collapsed > legend {
 	}
 	#tmenu .burger button {
 		margin-top:-4px;
-		padding:15px 9px 15px;
+		padding:11px 9px 11px;
 		border:0;
 		background:none;
 	}
@@ -1742,8 +1740,8 @@ fieldset.collapsed > legend {
 /* Handheld */
 @media (max-width:767px) {
 	#header.down {
-		-webkit-transform:translateY(-48px);
-		transform:translateY(-48px);
+		-webkit-transform:translateY(-40px);
+		transform:translateY(-40px);
 	}
 	#tmenu a {
 		width:18px;
@@ -1758,7 +1756,7 @@ fieldset.collapsed > legend {
 	}
 	#tmenu .icon-alert,#tmenu .icon-profile,#tmenu .icon-preview,#tmenu .icon-logout {
 		background-size:18px;
-		background-position:left 15px;
+		background-position:left 11px;
 	}
 	div.tl_tbox,div.tl_box {
 		position:relative;

@@ -90,4 +90,28 @@ class RefererIdListenerTest extends TestCase
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
     }
+
+    /**
+     * Tests that the same token is added to subsequent requests.
+     */
+    public function testSameTokenAddedToSubsequestRequests()
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
+        $listener->onKernelRequest($event);
+
+        $this->assertTrue($request->attributes->has('_contao_referer_id'));
+        $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+
+        $listener->onKernelRequest($event);
+
+        $this->assertTrue($request->attributes->has('_contao_referer_id'));
+        $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+    }
 }

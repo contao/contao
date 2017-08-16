@@ -29,6 +29,7 @@ class DC_File extends \DataContainer implements \editable
 	public function __construct($strTable)
 	{
 		parent::__construct();
+
 		$this->intId = \Input::get('id');
 
 		// Check whether the table is defined
@@ -207,7 +208,7 @@ class DC_File extends \DataContainer implements \editable
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
-						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal">';
+						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal cf">';
 
 						continue;
 					}

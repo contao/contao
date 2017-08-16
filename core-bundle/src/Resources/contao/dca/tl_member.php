@@ -542,7 +542,7 @@ class tl_member extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
 		}
 
-		return '<a href="contao/preview.php?user='.$row['username'].'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
+		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 
@@ -591,7 +591,7 @@ class tl_member extends Backend
 	public function storeDateAdded($dc)
 	{
 		// Front end call
-		if (!($dc instanceof DataContainer))
+		if (!$dc instanceof DataContainer)
 		{
 			return;
 		}
@@ -624,7 +624,7 @@ class tl_member extends Backend
 	 */
 	public function checkRemoveSession($dc)
 	{
-		if (!($dc instanceof DataContainer) || !$dc->activeRecord)
+		if (!$dc instanceof DataContainer || !$dc->activeRecord)
 		{
 			return;
 		}
@@ -643,7 +643,7 @@ class tl_member extends Backend
 	 */
 	public function removeSession($dc)
 	{
-		if (!($dc instanceof DataContainer) || !$dc->activeRecord)
+		if (!$dc instanceof DataContainer || !$dc->activeRecord)
 		{
 			return;
 		}

@@ -55,8 +55,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;search,limit',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_style_sheet', 'listStyleSheet'),
-			'child_record_class'      => 'no_padding'
+			'child_record_callback'   => array('tl_style_sheet', 'listStyleSheet')
 		),
 		'global_operations' => array
 		(

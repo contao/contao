@@ -527,18 +527,20 @@ abstract class DataContainer extends \Backend
 			}
 		}
 
+		$arrClasses = \StringUtil::trimsplit(' ', (string) $arrData['eval']['tl_class']);
+
 		if ($wizard != '')
 		{
 			$objWidget->wizard = $wizard;
 
-			if (!isset($arrData['eval']['tl_class']) || false === strpos($arrData['eval']['tl_class'], 'wizard'))
+			if (!in_array('wizard', $arrClasses))
 			{
-				$arrData['eval']['tl_class'] .= ' wizard';
+				$arrClasses[] = 'wizard';
 			}
 		}
-		elseif (isset($arrData['eval']['tl_class']) && false !== strpos($arrData['eval']['tl_class'], 'wizard'))
+		elseif (in_array('wizard', $arrClasses))
 		{
-			$arrData['eval']['tl_class'] = str_replace('wizard', '', $arrData['eval']['tl_class']);
+			unset($arrClasses[array_search('wizard', $arrClasses)]);
 		}
 
 		// Set correct form enctype
@@ -549,17 +551,22 @@ abstract class DataContainer extends \Backend
 
 		if ($arrData['inputType'] != 'password')
 		{
-			$arrData['eval']['tl_class'] .= ' widget';
+			$arrClasses[] = 'widget';
 		}
 
 		// Mark floated single checkboxes
-		if ($arrData['inputType'] == 'checkbox' && !$arrData['eval']['multiple'] && strpos($arrData['eval']['tl_class'], 'w50') !== false)
+		if ($arrData['inputType'] == 'checkbox' && !$arrData['eval']['multiple'] && in_array('w50', $arrClasses))
 		{
-			$arrData['eval']['tl_class'] .= ' cbx';
+			$arrClasses[] = 'cbx';
 		}
-		elseif ($arrData['inputType'] == 'text' && $arrData['eval']['multiple'] && strpos($arrData['eval']['tl_class'], 'wizard') !== false)
+		elseif ($arrData['inputType'] == 'text' && $arrData['eval']['multiple'] && in_array('wizard', $arrClasses))
 		{
-			$arrData['eval']['tl_class'] .= ' inline';
+			$arrClasses[] = 'inline';
+		}
+
+		if (!empty($arrClasses))
+		{
+			$arrData['eval']['tl_class'] = implode(' ', array_unique($arrClasses));
 		}
 
 		$updateMode = '';
@@ -572,11 +579,11 @@ abstract class DataContainer extends \Backend
 			$fileBrowserTypes = [];
 			$pickerBuilder = \System::getContainer()->get('contao.picker.builder');
 
-			foreach (['file' => 'image', 'link' => 'file'] as $context => $type)
+			foreach (['file' => 'image', 'link' => 'file'] as $context => $fileBrowserType)
 			{
 				if ($pickerBuilder->supportsContext($context))
 				{
-					$fileBrowserTypes[] = $type;
+					$fileBrowserTypes[] = $fileBrowserType;
 				}
 			}
 
@@ -591,7 +598,7 @@ abstract class DataContainer extends \Backend
 
 			$updateMode = $objTemplate->parse();
 
-			unset($file, $type, $pickerBuilder, $fileBrowserTypes);
+			unset($file, $type, $pickerBuilder, $fileBrowserTypes, $fileBrowserType);
 		}
 
 		// Handle multi-select fields in "override all" mode

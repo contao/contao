@@ -125,7 +125,7 @@ class FrontendUser extends \User
 		}
 
 		// Check whether auto login is enabled
-		if (\Config::get('autologin') > 0 && ($strCookie = \Input::cookie('FE_AUTO_LOGIN')) != '')
+		if (\Config::get('autologin') > 0 && ($strCookie = \Input::cookie('FE_AUTO_LOGIN')))
 		{
 			// Try to find the user by his auto login cookie
 			if ($this->findBy('autologin', $strCookie) !== false)

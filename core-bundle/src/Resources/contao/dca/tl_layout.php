@@ -44,8 +44,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_layout', 'listLayout'),
-			'child_record_class'      => 'no_padding'
+			'child_record_callback'   => array('tl_layout', 'listLayout')
 		),
 		'global_operations' => array
 		(

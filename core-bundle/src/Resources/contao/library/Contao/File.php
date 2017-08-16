@@ -431,7 +431,7 @@ class File extends \System
 		}
 
 		// Open the file
-		if (($this->resFile = $this->Files->fopen($this->strFile, 'wb')) == false)
+		if (!$this->resFile = $this->Files->fopen($this->strFile, 'wb'))
 		{
 			throw new \Exception(sprintf('Cannot create file "%s"', $this->strFile));
 		}
@@ -816,7 +816,7 @@ class File extends \System
 			}
 
 			// Open the temporary file
-			if (($this->resFile = $this->Files->fopen($this->strTmp, $strMode)) == false)
+			if (!$this->resFile = $this->Files->fopen($this->strTmp, $strMode))
 			{
 				return false;
 			}

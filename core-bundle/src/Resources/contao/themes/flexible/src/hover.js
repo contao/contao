@@ -177,7 +177,7 @@ var Theme = {
 		if (!burger) return;
 
 		burger
-			.addEvent('click', function(e) {
+			.addEvent('click', function() {
 				document.body.toggleClass('show-navigation');
 			})
 			.addEvent('keydown', function(e) {

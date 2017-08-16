@@ -104,7 +104,7 @@ class Form extends \Hybrid
 		$arrSubmitted = array();
 
 		$this->loadDataContainer('tl_form_field');
-		$formId = ($this->formID != '') ? 'auto_'.$this->formID : 'auto_form_'.$this->id;
+		$formId = $this->formID ? 'auto_'.$this->formID : 'auto_form_'.$this->id;
 
 		$this->Template->fields = '';
 		$this->Template->hidden = '';
@@ -275,6 +275,11 @@ class Form extends \Hybrid
 		$strAttributes = '';
 		$arrAttributes = \StringUtil::deserialize($this->attributes, true);
 
+		if ($arrAttributes[0] != '')
+		{
+			$strAttributes .= ' id="' . $arrAttributes[0] . '"';
+		}
+
 		if ($arrAttributes[1] != '')
 		{
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
@@ -283,7 +288,6 @@ class Form extends \Hybrid
 		$this->Template->hasError = $doNotSubmit;
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->formId = $arrAttributes[0];
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';

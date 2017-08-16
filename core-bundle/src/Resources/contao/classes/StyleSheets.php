@@ -160,7 +160,7 @@ class StyleSheets extends \Backend
 		// Merge the global style sheet variables
 		if ($row['vars'] != '')
 		{
-			if (is_array(($tmp = \StringUtil::deserialize($row['vars']))))
+			if (is_array($tmp = \StringUtil::deserialize($row['vars'])))
 			{
 				foreach ($tmp as $v)
 				{

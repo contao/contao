@@ -92,7 +92,7 @@ class UserSessionListener
 
         $user = $this->getUserObject();
 
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return;
         }
 
@@ -122,7 +122,7 @@ class UserSessionListener
 
         $user = $this->getUserObject();
 
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return;
         }
 

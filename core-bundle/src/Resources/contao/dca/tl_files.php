@@ -691,7 +691,7 @@ class tl_files extends Backend
 		// Check if a parent folder is public
 		while ($strCheck != '.' && !$blnPublic)
 		{
-			if (!($blnPublic = file_exists(TL_ROOT . '/' . $strCheck . '/.public')))
+			if (!$blnPublic = file_exists(TL_ROOT . '/' . $strCheck . '/.public'))
 			{
 				$strCheck = dirname($strCheck);
 			}
