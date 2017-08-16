@@ -114,11 +114,11 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
         /** @var NewsModel $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
 
-        if (!(($newsModel = $newsAdapter->findById($id)) instanceof NewsModel)) {
+        if (!($newsModel = $newsAdapter->findById($id)) instanceof NewsModel) {
             return null;
         }
 
-        if (!(($newsArchive = $newsModel->getRelated('pid')) instanceof NewsArchiveModel)) {
+        if (!($newsArchive = $newsModel->getRelated('pid')) instanceof NewsArchiveModel) {
             return null;
         }
 

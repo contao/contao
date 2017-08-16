@@ -61,7 +61,7 @@ class GeneratePageListener
         /** @var NewsFeedModel $adapter */
         $adapter = $this->framework->getAdapter(NewsFeedModel::class);
 
-        if (!(($feeds = $adapter->findByIds($newsfeeds)) instanceof Collection)) {
+        if (!($feeds = $adapter->findByIds($newsfeeds)) instanceof Collection) {
             return;
         }
 
