@@ -30,7 +30,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new PreviewUrlConvertListener(new RequestStack(), $this->mockContaoFramework());
 
