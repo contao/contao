@@ -63,6 +63,8 @@ class InsecureInstallationListenerTest extends TestCase
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
@@ -80,6 +82,8 @@ class InsecureInstallationListenerTest extends TestCase
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**

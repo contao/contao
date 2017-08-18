@@ -359,6 +359,8 @@ class UserSessionListenerTest extends TestCase
         );
 
         $listener->onKernelRequest($responseEvent);
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
@@ -397,6 +399,8 @@ class UserSessionListenerTest extends TestCase
         );
 
         $listener->onKernelResponse($responseEvent);
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**

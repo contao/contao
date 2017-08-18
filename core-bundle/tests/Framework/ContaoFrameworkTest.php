@@ -262,6 +262,8 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
@@ -320,6 +322,8 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->setContainer($container);
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
@@ -507,6 +511,8 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->setContainer($container);
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
