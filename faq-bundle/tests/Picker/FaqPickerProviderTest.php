@@ -74,7 +74,7 @@ class FaqPickerProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\FaqBundle\Picker\FaqPickerProvider', $this->provider);
     }
