@@ -29,7 +29,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new GeneratePageListener($this->mockContaoFramework());
 
