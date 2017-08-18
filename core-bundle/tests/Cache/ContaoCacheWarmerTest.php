@@ -185,6 +185,8 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $warmer->warmUp($this->getCacheDir());
+
+        $this->assertFileNotExists($this->getCacheDir().'/contao');
     }
 
     /**
