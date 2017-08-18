@@ -54,7 +54,7 @@ class CommandSchedulerListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
 

@@ -24,7 +24,7 @@ class MigrationsSchemaProviderTest extends DcaSchemaProviderTest
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $provider = new MigrationsSchemaProvider(
             $this->createMock(ContaoFrameworkInterface::class),

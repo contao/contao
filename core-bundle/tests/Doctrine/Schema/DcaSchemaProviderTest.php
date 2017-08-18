@@ -26,7 +26,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $provider = new DcaSchemaProvider(
             $this->createMock(ContaoFrameworkInterface::class),

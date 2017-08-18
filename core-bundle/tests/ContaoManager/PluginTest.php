@@ -43,7 +43,7 @@ class PluginTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $plugin = new Plugin();
 

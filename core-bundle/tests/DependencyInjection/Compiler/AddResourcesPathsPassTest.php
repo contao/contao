@@ -27,7 +27,7 @@ class AddResourcesPathsPassTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $pass = new AddResourcesPathsPass();
 

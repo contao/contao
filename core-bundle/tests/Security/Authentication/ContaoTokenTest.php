@@ -31,7 +31,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $token = new ContaoToken(FrontendUser::getInstance());
 

@@ -42,7 +42,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $framework = $this->mockContaoFramework(
             new RequestStack(),

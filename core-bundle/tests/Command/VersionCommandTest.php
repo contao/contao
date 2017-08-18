@@ -25,7 +25,7 @@ class VersionCommandTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $command = new VersionCommand('contao:version');
 
@@ -34,9 +34,9 @@ class VersionCommandTest extends TestCase
     }
 
     /**
-     * Tests the output.
+     * Tests that the version number is printed.
      */
-    public function testOutput()
+    public function testOutputsTheVersionNumber()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.packages', ['contao/core-bundle' => '4.0.2']);
@@ -52,9 +52,9 @@ class VersionCommandTest extends TestCase
     }
 
     /**
-     * Tests the output without the version set.
+     * Tests that the command fails if the version is not set.
      */
-    public function testOutputWithoutVersion()
+    public function testFailsIfVersionNotSet()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.packages', []);

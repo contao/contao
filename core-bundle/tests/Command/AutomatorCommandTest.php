@@ -26,7 +26,7 @@ class AutomatorCommandTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $command = new AutomatorCommand('contao:automator');
 
@@ -35,9 +35,9 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests the output.
+     * Tests that the task list is generated.
      */
-    public function testOutput()
+    public function testGeneratesTheTaskList()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
@@ -47,16 +47,17 @@ class AutomatorCommandTest extends TestCase
         $tester->setInputs(["\n"]);
 
         $code = $tester->execute(['command' => $command->getName()]);
+        $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains('Please select a task:', $tester->getDisplay());
-        $this->assertContains('[10]', $tester->getDisplay());
+        $this->assertContains('Please select a task:', $output);
+        $this->assertContains('[10]', $output);
     }
 
     /**
-     * Tests the __toString() method.
+     * Tests that the object can be converted to string.
      */
-    public function testToString()
+    public function testCanBeConvertedToString()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setFramework($this->mockContaoFramework());
@@ -65,9 +66,9 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests the lock.
+     * Tests that the command is locked while running.
      */
-    public function testLock()
+    public function testIsLockedWhileRunning()
     {
         $lock = new LockHandler('contao:automator');
         $lock->lock();
@@ -88,9 +89,9 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests an argument.
+     * Tests that a task name can be passed as argument.
      */
-    public function testArgument()
+    public function testTakesTaskNameAsArgument()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
@@ -107,9 +108,9 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests an invalid task.
+     * Tests selecting an invalid number.
      */
-    public function testInvalidTask()
+    public function testHandlesInvalidSelection()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
@@ -125,9 +126,9 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests an invalid argument.
+     * Tests passing an invalid task name.
      */
-    public function testInvalidArgument()
+    public function testHandlesInvalidTaskName()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());

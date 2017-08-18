@@ -27,7 +27,7 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
 

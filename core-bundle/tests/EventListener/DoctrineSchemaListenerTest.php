@@ -31,7 +31,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $provider = $this->createMock(DcaSchemaProvider::class);
         $listener = new DoctrineSchemaListener($provider);

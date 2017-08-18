@@ -25,7 +25,7 @@ class CombinedFileDumperTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $filesystem = $this->createMock(Filesystem::class);
         $fileLoader = $this->createMock(PhpFileLoader::class);

@@ -23,7 +23,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 

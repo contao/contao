@@ -24,7 +24,7 @@ class HtaccessAnalyzerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $file = new SplFileInfo(
             $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
@@ -38,9 +38,9 @@ class HtaccessAnalyzerTest extends TestCase
     }
 
     /**
-     * Tests a file that grants access.
+     * Tests reading the access configuration.
      */
-    public function testGrantsAccess()
+    public function testReadsAccessConfigurationFromHtaccesFile()
     {
         $file = new SplFileInfo(
             $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
@@ -61,13 +61,7 @@ class HtaccessAnalyzerTest extends TestCase
         $htaccess = new HtaccessAnalyzer($file);
 
         $this->assertTrue($htaccess->grantsAccess());
-    }
 
-    /**
-     * Tests a file that does not grant access.
-     */
-    public function testDoesNotGrantAccess()
-    {
         $file = new SplFileInfo(
             $this->getRootDir().'/system/modules/foobar/private/.htaccess',
             'system/modules/foobar/private',
@@ -82,7 +76,7 @@ class HtaccessAnalyzerTest extends TestCase
     /**
      * Tests adding an invalid file.
      */
-    public function testInvalidFile()
+    public function testThrowsExceptionForInvalidFile()
     {
         $this->expectException('InvalidArgumentException');
 

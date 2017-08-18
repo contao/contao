@@ -43,12 +43,13 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/system/tmp');
         $fs->remove($this->getRootDir().'/templates');
         $fs->remove($this->getRootDir().'/web/share');
+        $fs->remove($this->getRootDir().'/web/system');
     }
 
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $command = new InstallCommand('contao:install');
 
@@ -57,9 +58,9 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests the installation.
+     * Tests that the Contao folders are created.
      */
-    public function testInstallation()
+    public function testCreatesTheContaoFolders()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getRootDir());
@@ -72,23 +73,23 @@ class InstallCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
-        $display = $tester->getDisplay();
+        $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains(' * templates', $display);
-        $this->assertContains(' * web/system', $display);
-        $this->assertContains(' * assets/css', $display);
-        $this->assertContains(' * assets/images', $display);
-        $this->assertContains(' * assets/js', $display);
-        $this->assertContains(' * system/cache', $display);
-        $this->assertContains(' * system/config', $display);
-        $this->assertContains(' * system/tmp', $display);
+        $this->assertContains(' * templates', $output);
+        $this->assertContains(' * web/system', $output);
+        $this->assertContains(' * assets/css', $output);
+        $this->assertContains(' * assets/images', $output);
+        $this->assertContains(' * assets/js', $output);
+        $this->assertContains(' * system/cache', $output);
+        $this->assertContains(' * system/config', $output);
+        $this->assertContains(' * system/tmp', $output);
     }
 
     /**
-     * Tests the installation with a custom files and images directory.
+     * Tests that a custom files and images directory is considered.
      */
-    public function testInstallationWithCustomPaths()
+    public function testHandlesCustomFilesAndImagesPaths()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getRootDir());
@@ -109,9 +110,9 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests the lock.
+     * Tests that the command is locked while running.
      */
-    public function testLock()
+    public function testIsLockedWhileRunning()
     {
         $lock = new LockHandler('contao:install');
         $lock->lock();

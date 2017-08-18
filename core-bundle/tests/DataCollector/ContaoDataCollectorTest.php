@@ -30,7 +30,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $collector = new ContaoDataCollector([]);
 

@@ -33,7 +33,7 @@ class ContaoCacheClearerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $clearer = new ContaoCacheClearer(new Filesystem());
 
@@ -41,9 +41,9 @@ class ContaoCacheClearerTest extends TestCase
     }
 
     /**
-     * Tests the clear() method.
+     * Tests if the cache folder is removed.
      */
-    public function testClear()
+    public function testCacheFolderIsRemoved()
     {
         $cacheDir = $this->getCacheDir();
 

@@ -54,7 +54,7 @@ class ToggleViewListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
 

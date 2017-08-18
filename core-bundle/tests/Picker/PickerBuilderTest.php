@@ -54,7 +54,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerBuilder', $this->builder);
     }

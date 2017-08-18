@@ -28,7 +28,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
         $listener = new MergeHttpHeadersListener($framework);

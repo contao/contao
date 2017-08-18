@@ -29,7 +29,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $connection = $this->createMock(Connection::class);
         $configProvider = new WebsiteRootsConfigProvider($connection);

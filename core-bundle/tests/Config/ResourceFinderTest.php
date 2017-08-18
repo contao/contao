@@ -24,7 +24,7 @@ class ResourceFinderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $finder = new ResourceFinder();
 

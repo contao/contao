@@ -45,7 +45,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
 

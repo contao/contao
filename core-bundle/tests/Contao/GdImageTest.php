@@ -67,7 +67,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);

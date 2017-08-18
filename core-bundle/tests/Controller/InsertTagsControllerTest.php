@@ -25,7 +25,7 @@ class InsertTagsControllerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $controller = new InsertTagsController($this->mockContaoFramework());
 
