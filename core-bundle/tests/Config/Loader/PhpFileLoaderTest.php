@@ -46,9 +46,9 @@ class PhpFileLoaderTest extends TestCase
     }
 
     /**
-     * Tests the supports() method.
+     * Tests that only PHP files are supported.
      */
-    public function testSupports()
+    public function testSupportsOnlyPhpFiles()
     {
         $this->assertTrue(
             $this->loader->supports(
@@ -64,9 +64,9 @@ class PhpFileLoaderTest extends TestCase
     }
 
     /**
-     * Tests the load() method.
+     * Tests that PHP files can be loaded.
      */
-    public function testLoad()
+    public function testCanLoadPhpFiles()
     {
         $expects = <<<'EOF'
 
@@ -106,9 +106,9 @@ EOF;
     }
 
     /**
-     * Test loading a file with a custom namespace.
+     * Tests that custom namespaces are added.
      */
-    public function testLoadNamespace()
+    public function testAddsCustomNamespaces()
     {
         $expects = <<<'EOF'
 
@@ -144,13 +144,13 @@ EOF;
     }
 
     /**
-     * Tests loading a file with a declare(strict_types=1) statement.
+     * Tests that a declare(strict_types=1) statement is stripped.
      *
      * @param string $file
      *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
-    public function testLoadWithDeclareStatementsStrictType($file)
+    public function testStripsDeclareStrictTypes($file)
     {
         $content = <<<'EOF'
 
@@ -179,11 +179,48 @@ EOF;
     }
 
     /**
-     * Tests loading a file with a declare(strict_types=1) statement and a comment.
+     * Tests that other definitions than strict_types are preserved.
+     *
+     * @param string $file
+     *
+     * @dataProvider loadWithDeclareStatementsMultipleDefined
+     */
+    public function testPreservesOtherDeclareDefinitions($file)
+    {
+        $content = <<<'EOF'
+
+declare(ticks=1);
+
+$GLOBALS['TL_DCA']['tl_test'] = [
+    'config' => [
+        'dataContainer' => 'DC_Table',
+        'sql' => [
+            'keys' => [
+                'id' => 'primary',
+            ],
+        ],
+    ],
+    'fields' => [
+        'id' => [
+            'sql' => "int(10) unsigned NOT NULL auto_increment"
+        ],
+    ],
+];
+
+EOF;
+
+        $this->assertSame(
+            $content,
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
+        );
+    }
+
+    /**
+     * Tests that a declare(strict_types=1) statement in a comment is ignored.
      *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
-    public function testLoadWithDeclareStatementsCommentsAreIgnored()
+    public function testIgnoresDeclareStatementsInComments()
     {
         $content = <<<'EOF'
 
@@ -214,43 +251,6 @@ EOF;
         $this->assertSame(
             $content,
             $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_declare3.php')
-        );
-    }
-
-    /**
-     * Tests loading a file with a declare(strict_types=1,ticks=1) statement.
-     *
-     * @param string $file
-     *
-     * @dataProvider loadWithDeclareStatementsMultipleDefined
-     */
-    public function testLoadWithDeclareStatementsMultipleDefined($file)
-    {
-        $content = <<<'EOF'
-
-declare(ticks=1);
-
-$GLOBALS['TL_DCA']['tl_test'] = [
-    'config' => [
-        'dataContainer' => 'DC_Table',
-        'sql' => [
-            'keys' => [
-                'id' => 'primary',
-            ],
-        ],
-    ],
-    'fields' => [
-        'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
-        ],
-    ],
-];
-
-EOF;
-
-        $this->assertSame(
-            $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
         );
     }
 

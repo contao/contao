@@ -33,7 +33,7 @@ class ValidatorTest extends TestCase
      *
      * @dataProvider emailProvider
      */
-    public function testEmail($email, $expected)
+    public function testValidatesEmailAddresses($email, $expected)
     {
         $this->assertSame(
             $expected,
@@ -45,7 +45,7 @@ class ValidatorTest extends TestCase
     /**
      * Tests the StringUtil::extactEmail() method.
      */
-    public function testExtractEmail()
+    public function testExtractsEmailAddressesFromText()
     {
         $text = <<<EOF
 This is a niceandsimple@example.com and this a very.common@example.com. Another little.lengthy.but.fine@dept.example.com and also a disposable.style.email.with+symbol@example.com or an other.email-with-dash@example.com. There are "very.unusual.@.unusual.com"@example.com and "very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com and even !#$%&'*+-/=?^_`{}|~@example.org or "()<>[]:,;@\\"!#$%&'*+-/=?^_`{}|~.a"@example.org but they are all valid.

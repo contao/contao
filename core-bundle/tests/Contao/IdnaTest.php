@@ -26,7 +26,7 @@ class IdnaTest extends TestCase
     /**
      * Tests the encode() method.
      */
-    public function testEncode()
+    public function testEncodesUnicodeDomain()
     {
         $this->assertSame('xn--fbar-5qaa.de', Idna::encode('fööbar.de'));
         $this->assertSame('', Idna::encode(''));
@@ -40,7 +40,7 @@ class IdnaTest extends TestCase
     /**
      * Tests the decode() method.
      */
-    public function testDecode()
+    public function testDecodesPunycodeDomain()
     {
         $this->assertSame('fööbar.de', Idna::decode('xn--fbar-5qaa.de'));
         $this->assertSame('', Idna::decode(''));
@@ -54,7 +54,7 @@ class IdnaTest extends TestCase
     /**
      * Tests the encodeEmail() method.
      */
-    public function testEncodeEmail()
+    public function testEncodesEmailAddresses()
     {
         $this->assertSame('info@xn--fbar-5qaa.de', Idna::encodeEmail('info@fööbar.de'));
         $this->assertSame('', Idna::encodeEmail(''));
@@ -70,7 +70,7 @@ class IdnaTest extends TestCase
     /**
      * Tests the decodeEmail() method.
      */
-    public function testDecodeEmail()
+    public function testDecodesEmailAddresses()
     {
         $this->assertSame('info@fööbar.de', Idna::decodeEmail('info@xn--fbar-5qaa.de'));
         $this->assertSame('', Idna::decodeEmail(''));
@@ -86,7 +86,7 @@ class IdnaTest extends TestCase
     /**
      * Tests the encodeUrl() method.
      */
-    public function testEncodeUrl()
+    public function testEncodesUrls()
     {
         $this->assertSame('http://www.xn--fbar-5qaa.de', Idna::encodeUrl('http://www.fööbar.de'));
         $this->assertSame('', Idna::encodeUrl(''));
@@ -102,7 +102,7 @@ class IdnaTest extends TestCase
     /**
      * Tests the decodeUrl() method.
      */
-    public function testDecodeUrl()
+    public function testDecodesUrls()
     {
         $this->assertSame('http://www.fööbar.de', Idna::decodeUrl('http://www.xn--fbar-5qaa.de'));
         $this->assertSame('', Idna::decodeUrl(''));

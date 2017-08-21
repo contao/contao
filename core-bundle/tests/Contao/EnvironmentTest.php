@@ -50,7 +50,7 @@ class EnvironmentTest extends TestCase
     /**
      * Tests the mod_php environment.
      */
-    public function testApache()
+    public function testHandlesModPhp()
     {
         $this->setSapi('apache');
 
@@ -79,7 +79,7 @@ class EnvironmentTest extends TestCase
     /**
      * Tests the cgi_fcgi environment.
      */
-    public function testCgiFcgi()
+    public function testHandlesCgiFcgi()
     {
         $this->setSapi('cgi_fcgi');
 
@@ -112,7 +112,7 @@ class EnvironmentTest extends TestCase
     /**
      * Tests the fpm_fcgi environment.
      */
-    public function testFpmFcgi()
+    public function testHandlesFpmFcgi()
     {
         $this->setSapi('fpm_fcgi');
 

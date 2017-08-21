@@ -32,20 +32,14 @@ class ResourceFinderTest extends TestCase
     }
 
     /**
-     * Tests the find() method.
+     * Tests that the find() and findIn() methods return a finder object.
      */
-    public function testFind()
+    public function testReturnsFinderObject()
     {
         $finder = new ResourceFinder([]);
 
         $this->assertInstanceOf(Finder::class, $finder->find());
-    }
 
-    /**
-     * Tests the findIn() method.
-     */
-    public function testFindIn()
-    {
         $finder = new ResourceFinder([
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
             $this->getRootDir().'/system/modules/foobar',
@@ -55,9 +49,9 @@ class ResourceFinderTest extends TestCase
     }
 
     /**
-     * Tests the findIn() method with an invalid subpath.
+     * Tests that an invalid subpath triggers an exception.
      */
-    public function testFindInInvalidSubpath()
+    public function testFailsWithInvalidSubpath()
     {
         $finder = new ResourceFinder([
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',

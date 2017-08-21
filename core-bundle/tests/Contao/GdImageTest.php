@@ -77,9 +77,9 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the fromDimensions() method.
+     * Tests creating an image from dimensions.
      */
-    public function testFromDimension()
+    public function testCreatesImageFromDimensions()
     {
         $image = GdImage::fromDimensions(100, 100);
 
@@ -102,13 +102,13 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the fromFile() method.
+     * Tests creating an image from a file.
      *
      * @param string $type
      *
      * @dataProvider getImageTypes
      */
-    public function testFromFile($type)
+    public function testCreatesImageFromFile($type)
     {
         $image = imagecreatetruecolor(100, 100);
         imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
@@ -125,9 +125,9 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the fromFile() method with an invalid type.
+     * Tests that an invalid file type triggers an exception.
      */
-    public function testFromFileInvalidType()
+    public function testFailsWithInvalidFileType()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -135,13 +135,13 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the saveToFile() method.
+     * Tests that the image can be saved to a file.
      *
      * @param string $type
      *
      * @dataProvider getImageTypes
      */
-    public function testSaveToFile($type)
+    public function testSavesImageToFile($type)
     {
         $file = self::$rootDir.'/test.'.$type;
 
@@ -156,9 +156,9 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the copyTo() method.
+     * Tests that the image can be copied.
      */
-    public function testCopyTo()
+    public function testCopiesImage()
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -214,9 +214,9 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the convertToPaletteImage() method.
+     * Tests that an image can be converted to a palette image.
      */
-    public function testConvertToPaletteImage()
+    public function testConvertsImageToPaletteImage()
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -247,9 +247,9 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the convertToPaletteImage() method from a true color image.
+     * Tests that a true color image can be converted to a palette image.
      */
-    public function testConvertToPaletteImageFromTrueColor()
+    public function testConvertsTrueColorImageToPaletteImage()
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -278,9 +278,9 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the countColors() method.
+     * Tests the colors can be counted.
      */
-    public function testCountColors()
+    public function testCountsColors()
     {
         $image = imagecreatetruecolor(100, 100);
         imagealphablending($image, false);
@@ -300,7 +300,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the isSemitransparent() method.
      */
-    public function testIsSemitransparent()
+    public function testRecognizesSemitransparentImages()
     {
         $image = imagecreatetruecolor(100, 100);
         imagealphablending($image, false);

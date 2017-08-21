@@ -89,7 +89,7 @@ class ImageTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testConstruct()
+    public function testCanBeInstantiated()
     {
         $fileMock = $this->createMock(File::class);
 

@@ -54,7 +54,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testGeneratesRandomSecret()
+    public function testGeneratesRandomSecretIfConfigurationFileDoesNotExist()
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -72,38 +72,13 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests generating a random secret with an array of configuration files.
-     *
-     * @runInSeparateProcess
+     * Tests that no secret is generated if no configuration file has been defined.
      */
-    public function testGeneratesRandomSecretArray()
+    public function testGeneratesNoRandomSecretIfNoConfigurationFileIsDefined()
     {
         $this->assertRandomSecretDoesNotExist();
 
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent(
-                [
-                    'incenteev-parameters' => [
-                        ['file' => __DIR__.'/../Fixtures/app/config/parameters.yml'],
-                        ['file' => __DIR__.'/../Fixtures/app/config/test.yml'],
-                    ],
-                ]
-            )
-        );
-
-        $this->assertRandomSecretIsValid();
-    }
-
-    /**
-     * Tests that no secret is generated if there is no configuration file.
-     */
-    public function testGeneratesNoRandomSecretWithoutFileConfig()
-    {
-        $this->assertRandomSecretDoesNotExist();
-
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent([])
-        );
+        $this->handler->generateRandomSecret($this->getComposerEvent([]));
 
         $this->assertRandomSecretDoesNotExist();
 
@@ -121,7 +96,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Tests that no secret is generated if the configuration file exists.
      */
-    public function testGeneratesNoRandomSecretIfFileExists()
+    public function testGeneratesNoRandomSecretIfConfigurationFileExists()
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -143,39 +118,14 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests that no secret is generated if at least one of multiple configuration files exists.
-     */
-    public function testGeneratesNoRandomSecretIfFileExistsArray()
-    {
-        $this->assertRandomSecretDoesNotExist();
-
-        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
-
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent(
-                [
-                    'incenteev-parameters' => [
-                        ['file' => __DIR__.'/../Fixtures/app/config/parameters.yml'],
-                        ['file' => __DIR__.'/../Fixtures/app/config/test.yml'],
-                    ],
-                ]
-            )
-        );
-
-        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
-
-        $this->assertRandomSecretDoesNotExist();
-    }
-
-    /**
-     * Tests the getBinDir() method.
+     * Tests that the bin dir is read from the configuration.
      *
      * @param array  $extra
      * @param string $expected
      *
      * @dataProvider binDirProvider
      */
-    public function testGetBinDir(array $extra, $expected)
+    public function testReadsBinDirFromConfiguration(array $extra, $expected)
     {
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
@@ -214,14 +164,14 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests the getWebDir() method.
+     * Tests that the web dir is read from the configuration.
      *
      * @param array  $extra
      * @param string $expected
      *
      * @dataProvider webDirProvider
      */
-    public function testGetWebDir(array $extra, $expected)
+    public function testReadsWebDirFromConfiguration(array $extra, $expected)
     {
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
@@ -249,9 +199,9 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests the getVerbosityFlag() method.
+     * Tests that the verbosity flag is considered.
      */
-    public function testGetVerbosityFlag()
+    public function testHandlesVerbosityFlag()
     {
         $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
         $method->setAccessible(true);

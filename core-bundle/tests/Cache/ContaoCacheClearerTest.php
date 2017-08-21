@@ -43,7 +43,7 @@ class ContaoCacheClearerTest extends TestCase
     /**
      * Tests if the cache folder is removed.
      */
-    public function testCacheFolderIsRemoved()
+    public function testRemovesTheCacheFolder()
     {
         $cacheDir = $this->getCacheDir();
 

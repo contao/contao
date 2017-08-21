@@ -50,7 +50,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests the generateAlias() method.
      */
-    public function testGenerateAlias()
+    public function testGeneratesAliases()
     {
         $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
 
@@ -74,7 +74,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensProvider
      */
-    public function testParseSimpleTokens($string, array $tokens, $expected)
+    public function testParsesSimpleTokens($string, array $tokens, $expected)
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
@@ -88,7 +88,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensCorrectNewlines
      */
-    public function testParseSimpleTokensCorrectNewlines($string, array $tokens, $expected)
+    public function testHandlesLineBreaks($string, array $tokens, $expected)
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
@@ -101,7 +101,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
-    public function testParseSimpleTokensDoesntExecutePhp($string)
+    public function testDoesNotExecutePhpCodeInText($string)
     {
         $this->assertSame($string, StringUtil::parseSimpleTokens($string, []));
     }
@@ -114,7 +114,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
-    public function testParseSimpleTokensDoesntExecutePhpInToken(array $tokens)
+    public function testDoesNotExecutePhpCodeInToken(array $tokens)
     {
         $this->assertSame($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
@@ -123,7 +123,7 @@ class StringUtilTest extends TestCase
      * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
      * contain PHP code that is generated only after replacing the tokens.
      */
-    public function testParseSimpleTokensDoesntExecutePhpInCombinedToken()
+    public function testDoesNotExecutePhpCodeInCombinedToken()
     {
         $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
             'open' => '<',
@@ -139,7 +139,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensInvalidComparison
      */
-    public function testParseSimpleTokensInvalidComparison($string)
+    public function testFailsForInvalidComparison($string)
     {
         $this->expectException('InvalidArgumentException');
 
@@ -487,7 +487,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests the stripRootDir() method.
      */
-    public function testStripRootDir()
+    public function testStripsRootDirectory()
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'/'));
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'\\'));
@@ -500,9 +500,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that a path outside the root directory triggers an exception.
      */
-    public function testStripRootDirDifferentPath()
+    public function testFailsWithPathOutsideRootDirectory()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -510,9 +510,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that a parent path triggers an exception.
      */
-    public function testStripRootDirParentPath()
+    public function testFailsWithParentPath()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -520,9 +520,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that a longer path triggers an exception.
      */
-    public function testStripRootDirSuffix()
+    public function testFailsWithLongerPath()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -530,9 +530,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that omitting the trailing slash triggers an exception.
      */
-    public function testStripRootDirNoSlash()
+    public function testFailsWithoutTrailingSlash()
     {
         $this->expectException('InvalidArgumentException');
 

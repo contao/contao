@@ -37,9 +37,9 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Tests dumping a file.
+     * Tests that the content is dumped into a file.
      */
-    public function testDump()
+    public function testDumpsContentIntoFile()
     {
         $dumper = new CombinedFileDumper(
             $this->mockFilesystem("<?php\n\necho 'test';\n"),
@@ -51,9 +51,9 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Tests setting a valid header.
+     * Tests that a custom header can be set.
      */
-    public function testValidHeader()
+    public function testHandlesCustomHeaders()
     {
         $dumper = new CombinedFileDumper(
             $this->mockFilesystem("<?php\necho 'foo';\necho 'test';\n"),
@@ -66,9 +66,9 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Tests setting an invalid header.
+     * Tests that an invalid header triggers an exception.
      */
-    public function testInvalidHeader()
+    public function testFailsWithInvalidHeader()
     {
         $this->expectException('InvalidArgumentException');
 

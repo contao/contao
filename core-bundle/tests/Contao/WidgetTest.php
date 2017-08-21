@@ -48,7 +48,7 @@ class WidgetTest extends TestCase
      *
      * @dataProvider postProvider
      */
-    public function testGetPost($key, $input, $value, $expected)
+    public function testReadsPostData($key, $input, $value, $expected)
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
@@ -73,7 +73,7 @@ class WidgetTest extends TestCase
     /**
      * Tests the validate() method.
      */
-    public function testValidate()
+    public function testValidatesPostData()
     {
         /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
         $widget = $this
