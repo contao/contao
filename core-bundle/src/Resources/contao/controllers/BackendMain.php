@@ -239,6 +239,7 @@ class BackendMain extends \Backend
 		$this->Template->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
 		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank">contao.org</a>');
+		$this->Template->ref = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$strSystemMessages = \Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');

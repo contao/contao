@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Do not add the referer ID in the Template::route() method (see #1033). 
+
 ### 4.4.3 (2017-08-16)
 
  * Correctly assign the form CSS ID (see #956).
