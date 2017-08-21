@@ -3045,9 +3045,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	{
 		$attributes = parent::initPicker($picker);
 
-		$this->blnFiles = false;
-		$this->blnFilesOnly = false;
-
 		if (null === $attributes)
 		{
 			return null;
