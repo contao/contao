@@ -169,7 +169,8 @@ class BackendUser extends \User
 			return true;
 		}
 
-		$route = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_route');
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$route = $request->attributes->get('_route');
 
 		if ($route == 'contao_backend_login')
 		{
@@ -179,9 +180,9 @@ class BackendUser extends \User
 		$parameters = array();
 
 		// Redirect to the last page visited upon login
-		if ($route == 'contao_backend' || $route == 'contao_backend_preview')
+		if ($request->query->count() > 0 && in_array($route, array('contao_backend', 'contao_backend_preview')))
 		{
-			$parameters['referer'] = base64_encode(\Environment::get('request'));
+			$parameters['referer'] = base64_encode($request->getRequestUri());
 		}
 
 		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
