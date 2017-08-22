@@ -40,7 +40,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that a configuration is provided if the host matches.
      */
-    public function testConfigProvidedIfHostMatches()
+    public function testProvidesConfigurationIfHostMatches()
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'http://origin.com');
@@ -74,7 +74,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the host does not match.
      */
-    public function testNoConfigProvidedIfHostDoesNotMatch()
+    public function testProvidesNoConfigurationIfHostDoesNotMatch()
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
@@ -101,7 +101,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if there is no origin header.
      */
-    public function testNoConfigProvidedIfNoOrigin()
+    public function testProvidesNoConfigurationIfNoOrigin()
     {
         $request = Request::create('http://foobar.com');
         $request->headers->remove('Origin');
@@ -122,7 +122,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the origin equals the host.
      */
-    public function testNoConfigProvidedIfOriginEqualsHost()
+    public function testProvidesNoConfigurationIfOriginEqualsHost()
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://foobar.com');
@@ -143,7 +143,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the database is not connected.
      */
-    public function testNoConfigProvidedIfDatabaseNotConnected()
+    public function testProvidesNoConfigurationIfDatabaseNotConnected()
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
@@ -169,7 +169,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the table does not exist.
      */
-    public function testNoConfigProvidedIfTableDoesNotExist()
+    public function testProvidesNoConfigurationIfTableDoesNotExist()
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');

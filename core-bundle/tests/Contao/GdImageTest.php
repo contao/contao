@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\File;
 use Contao\GdImage;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
@@ -117,7 +118,7 @@ class GdImageTest extends TestCase
         $method($image, self::$rootDir.'/test.'.$type);
         imagedestroy($image);
 
-        $image = GdImage::fromFile(new \File('test.'.$type));
+        $image = GdImage::fromFile(new File('test.'.$type));
 
         $this->assertInternalType('resource', $image->getResource());
         $this->assertSame(100, imagesx($image->getResource()));
@@ -131,7 +132,7 @@ class GdImageTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
 
-        GdImage::fromFile(new \File('test.xyz'));
+        GdImage::fromFile(new File('test.xyz'));
     }
 
     /**
@@ -280,7 +281,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the colors can be counted.
      */
-    public function testCountsColors()
+    public function testCountsImageColors()
     {
         $image = imagecreatetruecolor(100, 100);
         imagealphablending($image, false);

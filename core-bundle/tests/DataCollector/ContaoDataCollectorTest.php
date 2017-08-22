@@ -40,7 +40,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests the collect() method in the back end scope.
      */
-    public function testCollectWitoutPageObject()
+    public function testCollectsDataInBackEnd()
     {
         $GLOBALS['TL_DEBUG'] = [
             'classes_set' => [System::class],
@@ -79,7 +79,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests the collect() method in the front end scope.
      */
-    public function testCollectWithPageObject()
+    public function testCollectsDataInFrontEnd()
     {
         $layout = new \stdClass();
         $layout->name = 'Default';
@@ -127,7 +127,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests that an empty array is returned if $this->data is not an array.
      */
-    public function testWithNonArrayData()
+    public function testReturnsEmtpyArrayIfDataIsNotAnArray()
     {
         $collector = new ContaoDataCollector([]);
         $collector->unserialize('N;');
@@ -138,7 +138,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests that an empty array is returned if the key is unknown.
      */
-    public function testWithUnknownKey()
+    public function testReturnsEmptyArrayIfTheKeyIsUnknown()
     {
         $collector = new ContaoDataCollector([]);
 

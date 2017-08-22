@@ -35,7 +35,7 @@ class InsertTagsControllerTest extends TestCase
     /**
      * Tests the renderNonCacheableInsertTag() action.
      */
-    public function testRenderNonCacheableInsertTag()
+    public function testRendersNonCacheableInsertTag()
     {
         /** @var Adapter|\PHPUnit_Framework_MockObject_MockObject $insertTagAdapter */
         $insertTagAdapter = $this

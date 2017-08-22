@@ -53,9 +53,9 @@ class TemplateTest extends TestCase
     }
 
     /**
-     * Tests the parse() method.
+     * Tests that variables are replaced.
      */
-    public function testParse()
+    public function testReplacesVariables()
     {
         file_put_contents(
             $this->getRootDir().'/templates/test_template.html5',
@@ -71,9 +71,9 @@ class TemplateTest extends TestCase
     }
 
     /**
-     * Tests the parse() method.
+     * Tests throwing an exceptions inside a template.
      */
-    public function testParseWithException()
+    public function testHandlesExceptions()
     {
         file_put_contents(
             $this->getRootDir().'/templates/test_template.html5',
@@ -97,9 +97,9 @@ class TemplateTest extends TestCase
     }
 
     /**
-     * Tests the parse() method.
+     * Tests throwing an exceptions inside a template block.
      */
-    public function testParseWithExceptionInBlock()
+    public function testHandlesExceptionsInsideBlocks()
     {
         file_put_contents($this->getRootDir().'/templates/test_template.html5', <<<'EOF'
 <?php
@@ -131,9 +131,9 @@ EOF
     }
 
     /**
-     * Tests the parse() method.
+     * Tests throwing an exceptions inside a parent template.
      */
-    public function testParseWithExceptionInBlockExtended()
+    public function testHandlesExceptionsInParentTemplate()
     {
         file_put_contents($this->getRootDir().'/templates/test_parent.html5', <<<'EOF'
 <?php
@@ -189,9 +189,9 @@ EOF
     }
 
     /**
-     * Tests the parse() method.
+     * Tests parsing nested blocks.
      */
-    public function testParseNestedBlock()
+    public function testParsesNestedBlocks()
     {
         file_put_contents($this->getRootDir().'/templates/test_parent.html5', '');
 

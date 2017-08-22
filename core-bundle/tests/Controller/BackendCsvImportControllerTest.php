@@ -54,7 +54,7 @@ class BackendCsvImportControllerTest extends TestCase
     /**
      * Tests the list wizard import.
      */
-    public function testImportListWizard()
+    public function testRendersListWizardMarkup()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -90,7 +90,7 @@ EOF;
     /**
      * Tests the table wizard import.
      */
-    public function testImportTableWizard()
+    public function testRendersTableWizardMarkup()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -126,7 +126,7 @@ EOF;
     /**
      * Tests the option wizard import.
      */
-    public function testImportOptionWizard()
+    public function testRendersOptionWizardMarkup()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -162,7 +162,7 @@ EOF;
     /**
      * Tests the list wizard import with POST data.
      */
-    public function testImportListWizardWithPostData()
+    public function testImportsListWizardData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -215,7 +215,7 @@ EOF;
     /**
      * Tests the table wizard import with POST data.
      */
-    public function testImportTableWizardWithPostData()
+    public function testImportsTableWizardData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -268,7 +268,7 @@ EOF;
     /**
      * Tests the option wizard import with POST data.
      */
-    public function testImportOptionWizardWithPostData()
+    public function testImportsOptionWizardData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -325,7 +325,7 @@ EOF;
     /**
      * Tests the list wizard import with incomplete POST data.
      */
-    public function testImportWizardWithIncompletePostData()
+    public function testRedirectsIfIncompleteData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -358,7 +358,7 @@ EOF;
     /**
      * Tests the wizard import without a request object.
      */
-    public function testImportWizardWithoutRequest()
+    public function testFailsWithoutRequestObject()
     {
         $dc = $this->createMock(DataContainer::class);
 

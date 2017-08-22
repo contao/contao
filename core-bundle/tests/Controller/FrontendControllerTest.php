@@ -34,7 +34,7 @@ class FrontendControllerTest extends TestCase
     /**
      * Tests the controller actions.
      */
-    public function testActions()
+    public function testReturnsResponseInActions()
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 

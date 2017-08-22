@@ -53,7 +53,7 @@ class PluginTest extends TestCase
     /**
      * Tests the getBundles() method.
      */
-    public function testGetBundles()
+    public function testReturnsTheBundles()
     {
         $plugin = new Plugin();
 
@@ -99,7 +99,7 @@ class PluginTest extends TestCase
     /**
      * Tests the getRouteCollection() method.
      */
-    public function testGetRouteCollection()
+    public function testReturnsTheRouteCollection()
     {
         $loader = $this->createMock(LoaderInterface::class);
 
