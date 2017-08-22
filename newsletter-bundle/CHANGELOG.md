@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### DEV
+
+ * Correctly read the newsletter channel target page in the newsletter list (see #7).
+
 ### 4.4.0-RC2 (2017-06-12)
 
  * Trigger all the callbacks in the toggleVisibility() methods (see contao/core-bundle#756).
