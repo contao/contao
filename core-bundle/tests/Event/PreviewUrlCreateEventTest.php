@@ -33,7 +33,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the getId() method.
      */
-    public function testGetId()
+    public function testSupportsReadingTheId()
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
@@ -43,7 +43,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the getKey() method.
      */
-    public function testGetKey()
+    public function testSupportsReadingTheKey()
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
@@ -53,7 +53,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the query getter and setter.
      */
-    public function testQueryGetterSetter()
+    public function testSupportsReadingAndWritingTheQueryString()
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 

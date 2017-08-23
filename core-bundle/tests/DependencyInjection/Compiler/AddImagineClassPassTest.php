@@ -33,9 +33,9 @@ class AddImagineClassPassTest extends TestCase
     }
 
     /**
-     * Tests processing the pass.
+     * Tests adding the Imagine class.
      */
-    public function testProcess()
+    public function testAddsTheImagineClass()
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.image.imagine', new Definition());

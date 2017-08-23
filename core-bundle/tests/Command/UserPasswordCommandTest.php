@@ -87,7 +87,7 @@ class UserPasswordCommandTest extends TestCase
     /**
      * Tests that a password can be passed as argument.
      */
-    public function testTakesPasswordAsArgument()
+    public function testTakesAPasswordAsArgument()
     {
         $code = (new CommandTester($this->command))
             ->execute(
@@ -102,9 +102,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests that the password is asked interactively if not given.
+     * Tests that the password is asked for interactively if not given.
      */
-    public function testAsksForPasswordIfNotGiven()
+    public function testAsksForThePasswordIfNotGiven()
     {
         $question = $this->createMock(QuestionHelper::class);
 
@@ -169,7 +169,7 @@ class UserPasswordCommandTest extends TestCase
     /**
      * Tests that a minimum password length is required.
      */
-    public function testRequiresMinimumPasswordLength()
+    public function testRequiresAMinimumPasswordLength()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 8 characters long.');
@@ -188,7 +188,7 @@ class UserPasswordCommandTest extends TestCase
     /**
      * Tests that the minimum password length is read from the Config object.
      */
-    public function testHandlesCustomPasswordLength()
+    public function testHandlesACustomMinimumPasswordLength()
     {
         $framework = $this->mockContaoFramework(
             null,
@@ -223,7 +223,7 @@ class UserPasswordCommandTest extends TestCase
     /**
      * Tests that the command fails if the username is unknown.
      */
-    public function testFailsIfUsernameIsUnknown()
+    public function testFailsIfTheUsernameIsUnknown()
     {
         $connection = $this->container->get('database_connection');
 
@@ -255,7 +255,7 @@ class UserPasswordCommandTest extends TestCase
      *
      * @dataProvider usernamePasswordProvider
      */
-    public function testUpdatesDatabaseOnSuccess($username, $password)
+    public function testUpdatesTheDatabaseOnSuccess($username, $password)
     {
         $connection = $this->container->get('database_connection');
 

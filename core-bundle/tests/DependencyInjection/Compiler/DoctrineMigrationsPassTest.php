@@ -38,9 +38,9 @@ class DoctrineMigrationsPassTest extends TestCase
     }
 
     /**
-     * Tests the pass with the migrations bundle.
+     * Tests adding the definition if the migrations bundle is installed.
      */
-    public function testWithMigrationsBundle()
+    public function testAddsTheDefinitionIfTheMigrationsBundleIsInstalled()
     {
         $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
@@ -51,9 +51,9 @@ class DoctrineMigrationsPassTest extends TestCase
     }
 
     /**
-     * Tests the pass without the migrations bundle.
+     * Tests adding the definition if the migrations bundle is not installed.
      */
-    public function testWithoutMigrationsBundle()
+    public function testDoesNotAddTheDefinitionIfTheMigrationsBundleIsNotInstalled()
     {
         $container = $this->createContainerBuilder();
 
@@ -64,9 +64,9 @@ class DoctrineMigrationsPassTest extends TestCase
     }
 
     /**
-     * Tests that the command is added to the "console.command" tags.
+     * Tests adding the command to the "console.command" tags.
      */
-    public function testAddsCommandId()
+    public function testAddsTheCommandIdToTheConsoleCommandIds()
     {
         $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 

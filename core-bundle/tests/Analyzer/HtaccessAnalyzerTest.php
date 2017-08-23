@@ -40,7 +40,7 @@ class HtaccessAnalyzerTest extends TestCase
     /**
      * Tests reading the access configuration.
      */
-    public function testReadsAccessConfigurationFromHtaccesFile()
+    public function testReadsTheAccessConfigurationFromTheHtaccesFile()
     {
         $file = new SplFileInfo(
             $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
@@ -76,7 +76,7 @@ class HtaccessAnalyzerTest extends TestCase
     /**
      * Tests adding an invalid file.
      */
-    public function testThrowsExceptionForInvalidFile()
+    public function testThrowsAnExceptionIfTheFileIsNotAnHtaccessFile()
     {
         $this->expectException('InvalidArgumentException');
 

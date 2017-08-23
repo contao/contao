@@ -54,7 +54,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testGeneratesRandomSecretIfConfigurationFileDoesNotExist()
+    public function testGeneratesARandomSecretIfTheConfigurationFileDoesNotExist()
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -72,31 +72,9 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests that no secret is generated if no configuration file has been defined.
-     */
-    public function testGeneratesNoRandomSecretIfNoConfigurationFileIsDefined()
-    {
-        $this->assertRandomSecretDoesNotExist();
-
-        $this->handler->generateRandomSecret($this->getComposerEvent([]));
-
-        $this->assertRandomSecretDoesNotExist();
-
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent(
-                [
-                    'incenteev-parameters' => [],
-                ]
-            )
-        );
-
-        $this->assertRandomSecretDoesNotExist();
-    }
-
-    /**
      * Tests that no secret is generated if the configuration file exists.
      */
-    public function testGeneratesNoRandomSecretIfConfigurationFileExists()
+    public function testDoesNotGenerateARandomSecretIfTheConfigurationFileExists()
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -118,6 +96,28 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
+     * Tests that no secret is generated if no configuration file has been defined.
+     */
+    public function testDoesNotGenerateARandomSecretIfNoConfigurationFileIsDefined()
+    {
+        $this->assertRandomSecretDoesNotExist();
+
+        $this->handler->generateRandomSecret($this->getComposerEvent([]));
+
+        $this->assertRandomSecretDoesNotExist();
+
+        $this->handler->generateRandomSecret(
+            $this->getComposerEvent(
+                [
+                    'incenteev-parameters' => [],
+                ]
+            )
+        );
+
+        $this->assertRandomSecretDoesNotExist();
+    }
+
+    /**
      * Tests that the bin dir is read from the configuration.
      *
      * @param array  $extra
@@ -125,7 +125,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @dataProvider binDirProvider
      */
-    public function testReadsBinDirFromConfiguration(array $extra, $expected)
+    public function testReadsTheBinDirFromTheConfiguration(array $extra, $expected)
     {
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
@@ -171,7 +171,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @dataProvider webDirProvider
      */
-    public function testReadsWebDirFromConfiguration(array $extra, $expected)
+    public function testReadsTheWebDirFromTheConfiguration(array $extra, $expected)
     {
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
@@ -201,7 +201,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Tests that the verbosity flag is considered.
      */
-    public function testHandlesVerbosityFlag()
+    public function testHandlesTheVerbosityFlag()
     {
         $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
         $method->setAccessible(true);

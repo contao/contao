@@ -31,7 +31,7 @@ class ContaoContextTest extends TestCase
     /**
      * Tests the setter and getter methods.
      */
-    public function testSettersAndGetters()
+    public function testSupportsReadingAndWritingValues()
     {
         $context = new ContaoContext('foo');
 
@@ -63,7 +63,7 @@ class ContaoContextTest extends TestCase
     /**
      * Tests passing an empty function name.
      */
-    public function testEmptyFunctionName()
+    public function testFailsIfTheFunctionNameIsEmpty()
     {
         $this->expectException('InvalidArgumentException');
 

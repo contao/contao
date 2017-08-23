@@ -34,7 +34,7 @@ class ResponseExceptionTest extends TestCase
     /**
      * Tests the getResponse() method.
      */
-    public function testGetResponse()
+    public function testSetsTheResponseStatusCodeAndContent()
     {
         $exception = new ResponseException(new Response('Hello world'));
 

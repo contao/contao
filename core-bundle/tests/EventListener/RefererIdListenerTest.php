@@ -37,9 +37,9 @@ class RefererIdListenerTest extends TestCase
     }
 
     /**
-     * Tests that the token is added to the request.
+     * Tests adding the token to the request.
      */
-    public function testTokenAddedToRequest()
+    public function testAddsTheTokenToTheRequest()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -58,7 +58,7 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests that the token is not added to a front end request.
      */
-    public function testTokenNotAddedToFrontendRequest()
+    public function testDoesNotAddTheTokenInFrontEndScope()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -76,7 +76,7 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests that the token is not added to a subrequest.
      */
-    public function testTokenNotAddedToSubrequest()
+    public function testDoesNotAddTheTokenToASubrequest()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -94,7 +94,7 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests that the same token is added to subsequent requests.
      */
-    public function testSameTokenAddedToSubsequestRequests()
+    public function testAddsTheSameTokenToSubsequestRequests()
     {
         $kernel = $this->createMock(KernelInterface::class);
 

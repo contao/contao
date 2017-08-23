@@ -80,7 +80,7 @@ class GdImageTest extends TestCase
     /**
      * Tests creating an image from dimensions.
      */
-    public function testCreatesImageFromDimensions()
+    public function testCreatesImagesFromDimensions()
     {
         $image = GdImage::fromDimensions(100, 100);
 
@@ -109,7 +109,7 @@ class GdImageTest extends TestCase
      *
      * @dataProvider getImageTypes
      */
-    public function testCreatesImageFromFile($type)
+    public function testCreatesImagesFromFiles($type)
     {
         $image = imagecreatetruecolor(100, 100);
         imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
@@ -126,23 +126,13 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests that an invalid file type triggers an exception.
-     */
-    public function testFailsWithInvalidFileType()
-    {
-        $this->expectException('InvalidArgumentException');
-
-        GdImage::fromFile(new File('test.xyz'));
-    }
-
-    /**
      * Tests that the image can be saved to a file.
      *
      * @param string $type
      *
      * @dataProvider getImageTypes
      */
-    public function testSavesImageToFile($type)
+    public function testSavesImagesToFiles($type)
     {
         $file = self::$rootDir.'/test.'.$type;
 
@@ -157,9 +147,33 @@ class GdImageTest extends TestCase
     }
 
     /**
+     * Provides the image types for the tests.
+     *
+     * @return array
+     */
+    public function getImageTypes()
+    {
+        return [
+            ['gif'],
+            ['jpeg'],
+            ['png'],
+        ];
+    }
+
+    /**
+     * Tests that an invalid file type triggers an exception.
+     */
+    public function testFailsIfTheFileTypeIsInvalid()
+    {
+        $this->expectException('InvalidArgumentException');
+
+        GdImage::fromFile(new File('test.xyz'));
+    }
+
+    /**
      * Tests that the image can be copied.
      */
-    public function testCopiesImage()
+    public function testCopiesImages()
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -217,7 +231,7 @@ class GdImageTest extends TestCase
     /**
      * Tests that an image can be converted to a palette image.
      */
-    public function testConvertsImageToPaletteImage()
+    public function testConvertsImagesToPaletteImages()
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -250,7 +264,7 @@ class GdImageTest extends TestCase
     /**
      * Tests that a true color image can be converted to a palette image.
      */
-    public function testConvertsTrueColorImageToPaletteImage()
+    public function testConvertsTrueColorImagesToPaletteImages()
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -281,7 +295,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the colors can be counted.
      */
-    public function testCountsImageColors()
+    public function testCountsTheImageColors()
     {
         $image = imagecreatetruecolor(100, 100);
         imagealphablending($image, false);
@@ -322,19 +336,5 @@ class GdImageTest extends TestCase
 
         imagefill($image->getResource(), 0, 0, imagecolorallocatealpha($image->getResource(), 0, 0, 0, 0));
         $this->assertFalse($image->isSemitransparent());
-    }
-
-    /**
-     * Provides the image types for the tests.
-     *
-     * @return array
-     */
-    public function getImageTypes()
-    {
-        return [
-            ['gif'],
-            ['jpeg'],
-            ['png'],
-        ];
     }
 }

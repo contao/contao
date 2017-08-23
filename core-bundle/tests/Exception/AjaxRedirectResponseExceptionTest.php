@@ -33,7 +33,7 @@ class AjaxRedirectResponseExceptionTest extends TestCase
     /**
      * Tests the getResponse() method.
      */
-    public function testGetResponse()
+    public function testSetsTheResponseStatusCodeAndAjaxLocation()
     {
         $exception = new AjaxRedirectResponseException('http://example.org');
 

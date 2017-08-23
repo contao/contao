@@ -33,7 +33,7 @@ class PreviewUrlConvertEventTest extends TestCase
     /**
      * Tests the URL getter and setter.
      */
-    public function testUrlGetterSetter()
+    public function testSupportsReadingAndWritingTheUrl()
     {
         $event = new PreviewUrlConvertEvent();
 

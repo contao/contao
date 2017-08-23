@@ -44,7 +44,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testFrontendUser()
+    public function testHandlesFrontEndUsers()
     {
         $token = new ContaoToken(FrontendUser::getInstance());
 
@@ -64,7 +64,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testBackendUser()
+    public function testHandlesBackEndUsers()
     {
         $token = new ContaoToken(BackendUser::getInstance());
 
@@ -85,7 +85,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testUnauthenticatedUser()
+    public function testFailsIfTheUserIsNotAuthenticated()
     {
         /** @var FrontendUser|object $user */
         $user = FrontendUser::getInstance();

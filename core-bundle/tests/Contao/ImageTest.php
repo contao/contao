@@ -122,7 +122,7 @@ class ImageTest extends TestCase
     /**
      * Tests the object instantiation with a non-existent file.
      */
-    public function testFailsWithNonexistentFile()
+    public function testFailsIfTheFileDoesNotExist()
     {
         $fileMock = $this->createMock(File::class);
 
@@ -139,7 +139,7 @@ class ImageTest extends TestCase
     /**
      * Tests the object instantiation with an invalid extension.
      */
-    public function testFailsWithInvalidFileExtension()
+    public function testFailsIfTheFileExtensionIsInvalid()
     {
         $fileMock = $this->createMock(File::class);
 
@@ -818,7 +818,7 @@ class ImageTest extends TestCase
     /**
      * Tests the setters and getters.
      */
-    public function testSupportsSettingAndGettingValues()
+    public function testSupportsReadingAndWritingValues()
     {
         $fileMock = $this->createMock(File::class);
 
@@ -955,7 +955,7 @@ class ImageTest extends TestCase
      *
      * @dataProvider getCacheName
      */
-    public function testReturnsCacheName($arguments, $expectedCacheName)
+    public function testReturnsTheCacheName($arguments, $expectedCacheName)
     {
         $fileMock = $this->createMock(File::class);
 
@@ -1056,9 +1056,13 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the setZoomLevel() with a negative out of bounds value.
+     * Tests the setZoomLevel() with an out of bounds value.
+     *
+     * @param int $value
+     *
+     * @dataProvider getZoomLevel
      */
-    public function testFailsIfZoomOutOfBoundsNegative()
+    public function testFailsIfTheZoomValueIsOutOfBounds($value)
     {
         $fileMock = $this->createMock(File::class);
 
@@ -1086,41 +1090,20 @@ class ImageTest extends TestCase
 
         $this->expectException('InvalidArgumentException');
 
-        $imageObj->setZoomLevel(-1);
+        $imageObj->setZoomLevel($value);
     }
 
     /**
-     * Tests the setZoomLevel() method with a positive out of bounds value.
+     * Returns the zoom level for the testFailsIfTheZoomValueIsOutOfBounds() method.
+     *
+     * @return array
      */
-    public function testFailsIfZoomOutOfBoundsPositive()
+    public function getZoomLevel()
     {
-        $fileMock = $this->createMock(File::class);
-
-        $fileMock
-            ->method('exists')
-            ->will($this->returnValue(true))
-        ;
-
-        $fileMock
-            ->method('__get')
-            ->will($this->returnCallback(
-                function ($key) {
-                    switch ($key) {
-                        case 'extension':
-                            return 'jpg';
-
-                        default:
-                            return null;
-                    }
-                }
-            ))
-        ;
-
-        $imageObj = new Image($fileMock);
-
-        $this->expectException('InvalidArgumentException');
-
-        $imageObj->setZoomLevel(101);
+        return [
+            'Underflow' => [-1],
+            'Overflow' => [101],
+        ];
     }
 
     /**
@@ -1131,7 +1114,7 @@ class ImageTest extends TestCase
      *
      * @dataProvider getGetLegacy
      */
-    public function testFactorsImagesInLegacyMethod($arguments, $expectedResult)
+    public function testFactorsImagesInTheLegacyMethod($arguments, $expectedResult)
     {
         $result = Image::get($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
 
@@ -1162,7 +1145,7 @@ class ImageTest extends TestCase
     /**
      * Tests the deprecated methods of the Image class.
      */
-    public function testDoesNotFactorImagesInLegacyMethodIfArgumentInvalid()
+    public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid()
     {
         $this->assertNull(Image::get('', 100, 100));
         $this->assertNull(Image::get(0, 100, 100));
@@ -1177,7 +1160,7 @@ class ImageTest extends TestCase
      *
      * @dataProvider getResizeLegacy
      */
-    public function testResizesImagesInLegacyMethod($arguments, $expectedResult)
+    public function testResizesImagesInTheLegacyMethod($arguments, $expectedResult)
     {
         $result = Image::resize($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
 
@@ -1208,7 +1191,7 @@ class ImageTest extends TestCase
     /**
      * Tests resizing an image which already matches the given dimensions.
      */
-    public function testDoesNotResizeMatchingImage()
+    public function testDoesNotResizeMatchingImages()
     {
         $file = new File('dummy.jpg');
 
@@ -1225,7 +1208,7 @@ class ImageTest extends TestCase
     /**
      * Tests resizing an image which has to be cropped.
      */
-    public function testCropsImage()
+    public function testCropsImages()
     {
         $file = new File('dummy.jpg');
 
@@ -1242,7 +1225,7 @@ class ImageTest extends TestCase
     /**
      * Tests resizing an image which has to be cropped and has a target defined.
      */
-    public function testCropsImageWithTargetPath()
+    public function testCropsImagesWithTargetPath()
     {
         $file = new File('dummy.jpg');
 
@@ -1260,7 +1243,7 @@ class ImageTest extends TestCase
     /**
      * Tests resizing an image which has to be cropped and has an existing target defined.
      */
-    public function testCropsImageWithExistingTargetPath()
+    public function testCropsImagesWithExistingTargetPath()
     {
         $file = new File('dummy.jpg');
 

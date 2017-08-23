@@ -34,7 +34,7 @@ class VersionCommandTest extends TestCase
     }
 
     /**
-     * Tests that the version number is printed.
+     * Tests printing the version number.
      */
     public function testOutputsTheVersionNumber()
     {
@@ -52,9 +52,9 @@ class VersionCommandTest extends TestCase
     }
 
     /**
-     * Tests that the command fails if the version is not set.
+     * Tests that an empty string is printed if the version is not set.
      */
-    public function testFailsIfVersionNotSet()
+    public function testOutputsAnEmptyStringIfTheVersionIsNotSet()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.packages', []);

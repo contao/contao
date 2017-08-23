@@ -58,7 +58,7 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests that the Contao folders are created.
+     * Tests creating the the Contao folders.
      */
     public function testCreatesTheContaoFolders()
     {
@@ -87,7 +87,7 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests that a custom files and images directory is considered.
+     * Tests adding a custom files and images directory.
      */
     public function testHandlesCustomFilesAndImagesPaths()
     {

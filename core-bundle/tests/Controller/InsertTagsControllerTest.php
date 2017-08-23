@@ -33,7 +33,7 @@ class InsertTagsControllerTest extends TestCase
     }
 
     /**
-     * Tests the renderNonCacheableInsertTag() action.
+     * Tests rendering non-cacheable insert tags.
      */
     public function testRendersNonCacheableInsertTag()
     {

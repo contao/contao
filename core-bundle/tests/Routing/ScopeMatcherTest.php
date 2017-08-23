@@ -57,7 +57,7 @@ class ScopeMatcherTest extends TestCase
      *
      * @dataProvider masterRequestProvider
      */
-    public function testRequestMethods($scope, $requestType, $isMaster, $isFrontend, $isBackend)
+    public function testRecognizesTheContaoScopes($scope, $requestType, $isMaster, $isFrontend, $isBackend)
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

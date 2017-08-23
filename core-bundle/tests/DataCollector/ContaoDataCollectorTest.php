@@ -38,7 +38,7 @@ class ContaoDataCollectorTest extends TestCase
     }
 
     /**
-     * Tests the collect() method in the back end scope.
+     * Tests collecting data in the back end.
      */
     public function testCollectsDataInBackEnd()
     {
@@ -77,7 +77,7 @@ class ContaoDataCollectorTest extends TestCase
     }
 
     /**
-     * Tests the collect() method in the front end scope.
+     * Tests collecting data in the front end.
      */
     public function testCollectsDataInFrontEnd()
     {
@@ -127,7 +127,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests that an empty array is returned if $this->data is not an array.
      */
-    public function testReturnsEmtpyArrayIfDataIsNotAnArray()
+    public function testReturnsAnEmtpyArrayIfTheDataIsNotAnArray()
     {
         $collector = new ContaoDataCollector([]);
         $collector->unserialize('N;');
@@ -138,7 +138,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests that an empty array is returned if the key is unknown.
      */
-    public function testReturnsEmptyArrayIfTheKeyIsUnknown()
+    public function testReturnsAnEmptyArrayIfTheKeyIsUnknown()
     {
         $collector = new ContaoDataCollector([]);
 

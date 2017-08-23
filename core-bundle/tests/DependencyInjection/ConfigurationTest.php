@@ -45,9 +45,9 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * Tests the path resolving.
+     * Tests resolving the paths.
      */
-    public function testPathResolving()
+    public function testResolvesThePaths()
     {
         $params = [
             'contao' => [
@@ -75,7 +75,7 @@ class ConfigurationTest extends TestCase
      *
      * @dataProvider invalidUploadPathProvider
      */
-    public function testInvalidUploadPath($uploadPath)
+    public function testFailsIfTheUploadPathIsInvalid($uploadPath)
     {
         $params = [
             'contao' => [

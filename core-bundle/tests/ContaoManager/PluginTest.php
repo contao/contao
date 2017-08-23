@@ -51,7 +51,7 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Tests the getBundles() method.
+     * Tests returning the bundles.
      */
     public function testReturnsTheBundles()
     {
@@ -97,7 +97,7 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Tests the getRouteCollection() method.
+     * Tests returning the route collection.
      */
     public function testReturnsTheRouteCollection()
     {

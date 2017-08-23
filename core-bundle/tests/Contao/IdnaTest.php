@@ -24,7 +24,7 @@ use TrueBV\Exception\DomainOutOfBoundsException;
 class IdnaTest extends TestCase
 {
     /**
-     * Tests the encode() method.
+     * Tests encoding unicode domains.
      */
     public function testEncodesUnicodeDomain()
     {
@@ -38,7 +38,7 @@ class IdnaTest extends TestCase
     }
 
     /**
-     * Tests the decode() method.
+     * Tests decoding punycode domains.
      */
     public function testDecodesPunycodeDomain()
     {
@@ -52,7 +52,7 @@ class IdnaTest extends TestCase
     }
 
     /**
-     * Tests the encodeEmail() method.
+     * Tests encoding e-mail addresses.
      */
     public function testEncodesEmailAddresses()
     {
@@ -68,7 +68,7 @@ class IdnaTest extends TestCase
     }
 
     /**
-     * Tests the decodeEmail() method.
+     * Tests decoding e-mail addresses.
      */
     public function testDecodesEmailAddresses()
     {
@@ -84,7 +84,7 @@ class IdnaTest extends TestCase
     }
 
     /**
-     * Tests the encodeUrl() method.
+     * Tests encoding URLs.
      */
     public function testEncodesUrls()
     {
@@ -100,7 +100,7 @@ class IdnaTest extends TestCase
     }
 
     /**
-     * Tests the decodeUrl() method.
+     * Tests decoding URLs.
      */
     public function testDecodesUrls()
     {

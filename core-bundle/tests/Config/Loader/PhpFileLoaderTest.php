@@ -48,7 +48,7 @@ class PhpFileLoaderTest extends TestCase
     /**
      * Tests that only PHP files are supported.
      */
-    public function testSupportsOnlyPhpFiles()
+    public function testSupportsPhpFiles()
     {
         $this->assertTrue(
             $this->loader->supports(
@@ -64,9 +64,9 @@ class PhpFileLoaderTest extends TestCase
     }
 
     /**
-     * Tests that PHP files can be loaded.
+     * Tests loading a PHP file.
      */
-    public function testCanLoadPhpFiles()
+    public function testLoadsPhpFiles()
     {
         $expects = <<<'EOF'
 
@@ -179,43 +179,6 @@ EOF;
     }
 
     /**
-     * Tests that other definitions than strict_types are preserved.
-     *
-     * @param string $file
-     *
-     * @dataProvider loadWithDeclareStatementsMultipleDefined
-     */
-    public function testPreservesOtherDeclareDefinitions($file)
-    {
-        $content = <<<'EOF'
-
-declare(ticks=1);
-
-$GLOBALS['TL_DCA']['tl_test'] = [
-    'config' => [
-        'dataContainer' => 'DC_Table',
-        'sql' => [
-            'keys' => [
-                'id' => 'primary',
-            ],
-        ],
-    ],
-    'fields' => [
-        'id' => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
-        ],
-    ],
-];
-
-EOF;
-
-        $this->assertSame(
-            $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
-        );
-    }
-
-    /**
      * Tests that a declare(strict_types=1) statement in a comment is ignored.
      *
      * @dataProvider loadWithDeclareStatementsStrictType
@@ -265,6 +228,43 @@ EOF;
             ['tl_test_with_declare1'],
             ['tl_test_with_declare2'],
         ];
+    }
+
+    /**
+     * Tests that other definitions than strict_types are preserved.
+     *
+     * @param string $file
+     *
+     * @dataProvider loadWithDeclareStatementsMultipleDefined
+     */
+    public function testPreservesOtherDeclareDefinitions($file)
+    {
+        $content = <<<'EOF'
+
+declare(ticks=1);
+
+$GLOBALS['TL_DCA']['tl_test'] = [
+    'config' => [
+        'dataContainer' => 'DC_Table',
+        'sql' => [
+            'keys' => [
+                'id' => 'primary',
+            ],
+        ],
+    ],
+    'fields' => [
+        'id' => [
+            'sql' => "int(10) unsigned NOT NULL auto_increment"
+        ],
+    ],
+];
+
+EOF;
+
+        $this->assertSame(
+            $content,
+            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
+        );
     }
 
     /**

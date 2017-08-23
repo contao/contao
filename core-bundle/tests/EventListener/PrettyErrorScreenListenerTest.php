@@ -83,7 +83,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Tests rendering a back end exception.
      */
-    public function testBackendException()
+    public function testRendersBackEndExceptions()
     {
         $twig = $this->createMock('Twig_Environment');
         $logger = $this->createMock(LoggerInterface::class);
@@ -121,7 +121,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      *
      * @dataProvider getErrorTypes
      */
-    public function testContaoPageHandler($type, \Exception $exception)
+    public function testRendersTheContaoPageHandler($type, \Exception $exception)
     {
         $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
 
@@ -145,9 +145,22 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
+     * Provides the data for the testContaoPageHandler() method.
+     *
+     * @return array
+     */
+    public function getErrorTypes()
+    {
+        return [
+            [403, new AccessDeniedHttpException('', new AccessDeniedException())],
+            [404, new NotFoundHttpException('', new PageNotFoundException())],
+        ];
+    }
+
+    /**
      * Tests rendering a service unavailable HTTP exception.
      */
-    public function testServiceUnavailableHttpException()
+    public function testRendersServiceUnavailableHttpExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -169,7 +182,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Tests rendering an unknown HTTP exception.
      */
-    public function testUnknownHttpException()
+    public function testRendersUnknownHttpExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -191,7 +204,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Tests rendering the error screen.
      */
-    public function testErrorScreen()
+    public function testRendersTheErrorScreen()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -241,7 +254,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if the request format is not "html".
      */
-    public function testBypassUponWrongRequestFormat()
+    public function testDoesNothingIfTheFormatIsNotHtml()
     {
         $request = new Request();
         $request->attributes->set('_format', 'json');
@@ -272,7 +285,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Tests rendering a non existing page handler.
      */
-    public function testNonExistingPageHandler()
+    public function testDoesNothingIfThePageHandlerDoesNotExist()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -284,19 +297,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
-    }
-
-    /**
-     * Provides the data for the testContaoPageHandler() method.
-     *
-     * @return array
-     */
-    public function getErrorTypes()
-    {
-        return [
-            [403, new AccessDeniedHttpException('', new AccessDeniedException())],
-            [404, new NotFoundHttpException('', new PageNotFoundException())],
-        ];
     }
 
     /**

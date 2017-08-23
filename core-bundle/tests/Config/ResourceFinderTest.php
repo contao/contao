@@ -34,7 +34,7 @@ class ResourceFinderTest extends TestCase
     /**
      * Tests that the find() and findIn() methods return a finder object.
      */
-    public function testReturnsFinderObject()
+    public function testReturnsAFinderObject()
     {
         $finder = new ResourceFinder([]);
 
@@ -51,7 +51,7 @@ class ResourceFinderTest extends TestCase
     /**
      * Tests that an invalid subpath triggers an exception.
      */
-    public function testFailsWithInvalidSubpath()
+    public function testFailsIfTheSubpathIsInvalid()
     {
         $finder = new ResourceFinder([
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',

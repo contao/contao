@@ -62,31 +62,12 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing if the Contao framework is not booted.
-     */
-    public function testWithoutContaoFramework()
-    {
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(false)
-        ;
-
-        $this->framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
-        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
-        $listener->onKernelTerminate($this->mockPostResponseEvent('contao_backend'));
-    }
-
-    /**
      * Tests that the listener does use the response if the Contao framework is booted.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testWithContaoFramework()
+    public function testRunsTheCommandScheduler()
     {
         $this->framework
             ->expects($this->once())
@@ -115,12 +96,31 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing if the Contao framework is not booted.
+     */
+    public function testDoesNotRunTheCommandSchedulerIfTheContaoFrameworkIsNotInitialized()
+    {
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
+        $this->framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
+        $listener->onKernelTerminate($this->mockPostResponseEvent('contao_backend'));
+    }
+
+    /**
      * Tests that the listener does nothing in the install tool.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testInstallTool()
+    public function testDoesNotRunTheCommandSchedulerInTheInstallTool()
     {
         $this->framework
             ->expects($this->never())
@@ -153,7 +153,7 @@ class CommandSchedulerListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testFragmentUrl()
+    public function testDoesNotRunTheCommandSchedulerUponFragmentRequests()
     {
         $this->framework
             ->expects($this->never())
@@ -186,7 +186,7 @@ class CommandSchedulerListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testIncompleteInstallation()
+    public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete()
     {
         $adapter = $this
             ->getMockBuilder(Adapter::class)
@@ -232,7 +232,7 @@ class CommandSchedulerListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testDisableCron()
+    public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled()
     {
         $adapter = $this
             ->getMockBuilder(Adapter::class)
@@ -278,7 +278,7 @@ class CommandSchedulerListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testDatabaseConnectionError()
+    public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError()
     {
         $this->framework
             ->expects($this->once())

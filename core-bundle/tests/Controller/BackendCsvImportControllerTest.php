@@ -54,7 +54,7 @@ class BackendCsvImportControllerTest extends TestCase
     /**
      * Tests the list wizard import.
      */
-    public function testRendersListWizardMarkup()
+    public function testRendersTheListWizardMarkup()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -88,81 +88,9 @@ EOF;
     }
 
     /**
-     * Tests the table wizard import.
-     */
-    public function testRendersTableWizardMarkup()
-    {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $expect = <<<'EOF'
-<form id="tl_csv_import_tw">
-  <div class="uploader"></div>
-</form>
-
-EOF;
-
-        $request = new Request();
-        $request->query->set('key', 'tw');
-
-        $this->assertSame($expect, $this->getController($request)->importTableWizard($dc)->getContent());
-    }
-
-    /**
-     * Tests the option wizard import.
-     */
-    public function testRendersOptionWizardMarkup()
-    {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $expect = <<<'EOF'
-<form id="tl_csv_import_ow">
-  <div class="uploader"></div>
-</form>
-
-EOF;
-
-        $request = new Request();
-        $request->query->set('key', 'ow');
-
-        $this->assertSame($expect, $this->getController($request)->importOptionWizard($dc)->getContent());
-    }
-
-    /**
      * Tests the list wizard import with POST data.
      */
-    public function testImportsListWizardData()
+    public function testImportsTheListWizardData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -213,9 +141,45 @@ EOF;
     }
 
     /**
+     * Tests the table wizard import.
+     */
+    public function testRendersTheTableWizardMarkup()
+    {
+        $dc = $this->createMock(DataContainer::class);
+
+        $dc
+            ->method('__get')
+            ->willReturnCallback(function ($key) {
+                switch ($key) {
+                    case 'id':
+                        return 1;
+
+                    case 'table':
+                        return 'tl_content';
+
+                    default:
+                        return null;
+                }
+            })
+        ;
+
+        $expect = <<<'EOF'
+<form id="tl_csv_import_tw">
+  <div class="uploader"></div>
+</form>
+
+EOF;
+
+        $request = new Request();
+        $request->query->set('key', 'tw');
+
+        $this->assertSame($expect, $this->getController($request)->importTableWizard($dc)->getContent());
+    }
+
+    /**
      * Tests the table wizard import with POST data.
      */
-    public function testImportsTableWizardData()
+    public function testImportsTheTableWizardData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -266,9 +230,45 @@ EOF;
     }
 
     /**
+     * Tests the option wizard import.
+     */
+    public function testRendersTheOptionWizardMarkup()
+    {
+        $dc = $this->createMock(DataContainer::class);
+
+        $dc
+            ->method('__get')
+            ->willReturnCallback(function ($key) {
+                switch ($key) {
+                    case 'id':
+                        return 1;
+
+                    case 'table':
+                        return 'tl_content';
+
+                    default:
+                        return null;
+                }
+            })
+        ;
+
+        $expect = <<<'EOF'
+<form id="tl_csv_import_ow">
+  <div class="uploader"></div>
+</form>
+
+EOF;
+
+        $request = new Request();
+        $request->query->set('key', 'ow');
+
+        $this->assertSame($expect, $this->getController($request)->importOptionWizard($dc)->getContent());
+    }
+
+    /**
      * Tests the option wizard import with POST data.
      */
-    public function testImportsOptionWizardData()
+    public function testImportsTheOptionWizardData()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -325,7 +325,7 @@ EOF;
     /**
      * Tests the list wizard import with incomplete POST data.
      */
-    public function testRedirectsIfIncompleteData()
+    public function testRedirectsIfThePostDataIsIncomplete()
     {
         $dc = $this->createMock(DataContainer::class);
 
@@ -358,7 +358,7 @@ EOF;
     /**
      * Tests the wizard import without a request object.
      */
-    public function testFailsWithoutRequestObject()
+    public function testFailsIfThereIsNoRequestObject()
     {
         $dc = $this->createMock(DataContainer::class);
 

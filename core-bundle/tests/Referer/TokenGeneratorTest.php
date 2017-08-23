@@ -21,9 +21,19 @@ use PHPUnit\Framework\TestCase;
 class TokenGeneratorTest extends TestCase
 {
     /**
+     * Tests the object instantiation.
+     */
+    public function testCanBeInstantiated()
+    {
+        $generator = new TokenGenerator(1000);
+
+        $this->assertInstanceOf('Contao\CoreBundle\Referer\TokenGenerator', $generator);
+    }
+
+    /**
      * Tests whether the generated token is eight characters long.
      */
-    public function testGeneratedTokenHasLengthOfEight()
+    public function testGeneratesAnEightCharacterToken()
     {
         $generator = new TokenGenerator(1000);
 

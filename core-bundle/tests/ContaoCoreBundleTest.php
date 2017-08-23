@@ -38,7 +38,7 @@ class ContaoCoreBundleTest extends TestCase
     /**
      * Tests the getContainerExtension() method.
      */
-    public function testGetContainerExtension()
+    public function testReturnsTheContainerExtension()
     {
         $bundle = new ContaoCoreBundle();
 
@@ -51,7 +51,7 @@ class ContaoCoreBundleTest extends TestCase
     /**
      * Tests the build() method.
      */
-    public function testBuild()
+    public function testAddsTheCompilerPaths()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');

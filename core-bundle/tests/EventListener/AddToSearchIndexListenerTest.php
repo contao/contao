@@ -69,33 +69,12 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing if the Contao framework is not booted.
-     */
-    public function testWithoutContaoFramework()
-    {
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(false)
-        ;
-
-        $listener = new AddToSearchIndexListener($this->framework);
-        $event = $this->mockPostResponseEvent();
-
-        $event
-            ->expects($this->never())
-            ->method('getResponse')
-        ;
-
-        $listener->onKernelTerminate($event);
-    }
-
-    /**
      * Tests that the listener does use the response if the Contao framework is booted.
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testWithContaoFramework()
+    public function testIndexesTheResponse()
     {
         $this->framework
             ->method('isInitialized')
@@ -115,9 +94,30 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing if the Contao framework is not booted.
+     */
+    public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized()
+    {
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
+        $listener = new AddToSearchIndexListener($this->framework);
+        $event = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
+
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
      * Tests that the listener does nothing if the request is a fragment.
      */
-    public function testWithFragment()
+    public function testDoesNotIndexTheResponseUponFragmentRequests()
     {
         $this->framework
             ->method('isInitialized')

@@ -35,7 +35,7 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests that the task list is generated.
+     * Tests generating the task list.
      */
     public function testGeneratesTheTaskList()
     {
@@ -55,7 +55,7 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests that the object can be converted to string.
+     * Tests that the object can be converted to a string.
      */
     public function testCanBeConvertedToString()
     {
@@ -89,9 +89,9 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Tests that a task name can be passed as argument.
+     * Tests that the task name can be passed as argument.
      */
-    public function testTakesTaskNameAsArgument()
+    public function testTakesTheTaskNameAsArgument()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
@@ -110,7 +110,7 @@ class AutomatorCommandTest extends TestCase
     /**
      * Tests selecting an invalid number.
      */
-    public function testHandlesInvalidSelection()
+    public function testHandlesAnInvalidSelection()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());
@@ -128,7 +128,7 @@ class AutomatorCommandTest extends TestCase
     /**
      * Tests passing an invalid task name.
      */
-    public function testHandlesInvalidTaskName()
+    public function testHandlesAnInvalidTaskName()
     {
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->getApplication());

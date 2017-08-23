@@ -41,7 +41,7 @@ class ContaoCacheClearerTest extends TestCase
     }
 
     /**
-     * Tests if the cache folder is removed.
+     * Tests removing the cache folder.
      */
     public function testRemovesTheCacheFolder()
     {

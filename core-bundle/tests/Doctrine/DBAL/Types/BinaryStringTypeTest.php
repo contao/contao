@@ -54,7 +54,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests that getSqlDeclaration() returns a binary definition for fixed length fields.
      */
-    public function testGetSQLDeclarationWithFixedLength()
+    public function testReturnsABinaryDefinitionForAFixedLengthField()
     {
         $fieldDefinition = ['fixed' => true];
 
@@ -81,7 +81,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests that getSqlDeclaration() returns a blob definition for variable length fields.
      */
-    public function testGetSQLDeclarationWithVariableLength()
+    public function testReturnsABlobDefinitionForAVariableLengthField()
     {
         $fieldDefinition = ['fixed' => false];
 
@@ -108,7 +108,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests the name.
      */
-    public function testName()
+    public function testReturnsTheCorrectName()
     {
         $this->assertSame(BinaryStringType::NAME, $this->type->getName());
     }
@@ -116,7 +116,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests the custom type requires an SQL hint.
      */
-    public function testRequiresSQLCommentHint()
+    public function testRequiresAnSqlCommentHintForTheCustomType()
     {
         $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
 

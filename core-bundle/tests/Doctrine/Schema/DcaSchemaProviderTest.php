@@ -39,7 +39,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests that the schema is empty.
      */
-    public function testEmptySchema()
+    public function testHasAnEmptySchema()
     {
         $this->assertCount(0, $this->getProvider()->createSchema()->getTableNames());
     }
@@ -52,7 +52,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      *
      * @dataProvider createSchemaProvider
      */
-    public function testCreateSchema(array $dca = [], array $sql = [])
+    public function testCreatesASchema(array $dca = [], array $sql = [])
     {
         $schema = $this->getProvider($dca, $sql)->createSchema();
 
@@ -216,7 +216,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Test the table options.
      */
-    public function testTableOptions()
+    public function testReadsTheTableOptions()
     {
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
         $schema = $provider->createSchema();
@@ -249,7 +249,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests the table create definitions.
      */
-    public function testTableCreateDefinitions()
+    public function testCreatesTheTableDefinitions()
     {
         $provider = $this->getProvider(
             [
@@ -298,7 +298,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests adding an index with a key length.
      */
-    public function testIndexWithKeyLength()
+    public function testHandlesIndexesWithKeyLength()
     {
         $provider = $this->getProvider(
             [
@@ -332,7 +332,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests adding a fulltext index.
      */
-    public function testFulltextIndex()
+    public function testHandlesFulltextIndexes()
     {
         $provider = $this->getProvider(
             [
@@ -368,7 +368,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests parsing an invalid primary key.
      */
-    public function testInvalidPrimaryKey()
+    public function testFailsIfThePrimaryKeyIsInvalid()
     {
         $provider = $this->getProvider(
             [
@@ -391,7 +391,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests parsing an invalid key.
      */
-    public function testInvalidKey()
+    public function testFailsIfAKeyIsInvalid()
     {
         $provider = $this->getProvider(
             [

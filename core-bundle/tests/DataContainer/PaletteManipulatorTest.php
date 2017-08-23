@@ -33,7 +33,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests prepending a field.
      */
-    public function testPrependsFieldToPalette()
+    public function testPrependsAFieldToAPalette()
     {
         $pm = PaletteManipulator::create()
             ->addField('foo', 'config_legend', PaletteManipulator::POSITION_PREPEND, 'config_legend')
@@ -58,7 +58,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests appending a field.
      */
-    public function testAppendsFieldToPalette()
+    public function testAppendsAFieldToAPalette()
     {
         $pm = PaletteManipulator::create()
             ->addField('bar', 'config_legend', PaletteManipulator::POSITION_APPEND, 'config_legend')
@@ -83,7 +83,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a legend before another legend.
      */
-    public function testAddsLegendBeforeLegend()
+    public function testAddsALegendBeforeAnotherLegend()
     {
         $pm = PaletteManipulator::create()
             ->addLegend('config_legend', 'foo_legend', PaletteManipulator::POSITION_BEFORE)
@@ -104,7 +104,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a legend after another legend.
      */
-    public function testAddsLegendAfterLegend()
+    public function testAddsALegendAfterAnotherLegend()
     {
         $pm = PaletteManipulator::create()
             ->addLegend('config_legend', 'foo_legend', PaletteManipulator::POSITION_AFTER)
@@ -125,7 +125,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field before another field.
      */
-    public function testAddsFieldBeforeField()
+    public function testAddsAFieldBeforeAnotherField()
     {
         $pm = PaletteManipulator::create()
             ->addField('bar', 'foo', PaletteManipulator::POSITION_BEFORE)
@@ -145,7 +145,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field after another field.
      */
-    public function testAddsFieldAfterField()
+    public function testAddsAFieldAfterAnotherField()
     {
         $pm = PaletteManipulator::create()
             ->addField('bar', 'foo', PaletteManipulator::POSITION_AFTER)
@@ -165,7 +165,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests skipping legends.
      */
-    public function testSkipsLegendsIfConfigured()
+    public function testSkipsTheLegendsIfConfigured()
     {
         $pm = PaletteManipulator::create()
             ->addLegend('foobar_legend', '', PaletteManipulator::POSITION_APPEND)
@@ -185,7 +185,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field to multiple parents.
      */
-    public function testAddsFieldToMultipleParents()
+    public function testAddsAFieldToMultipleParents()
     {
         $pm = PaletteManipulator::create()
             ->addField('bar', ['baz', 'foo'])
@@ -200,7 +200,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field to an empty palette.
      */
-    public function testAddsFieldToEmptyPalette()
+    public function testAddsAFieldToAnEmptyPalette()
     {
         $pm = PaletteManipulator::create()
             ->addLegend('name_legend', '', PaletteManipulator::POSITION_PREPEND)
@@ -234,7 +234,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field to a nameless legend.
      */
-    public function testAddsFieldToNamelessLegend()
+    public function testAddsAFieldToANamelessLegend()
     {
         $pm = PaletteManipulator::create()
             ->addField('bar', 'foo', PaletteManipulator::POSITION_AFTER)
@@ -297,7 +297,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests applying the changes to a DCA palette.
      */
-    public function testAppliesChangesToDcaPalette()
+    public function testAppliesChangesToADcaPalette()
     {
         $pm = PaletteManipulator::create()
             ->addLegend('foobar_legend', '', PaletteManipulator::POSITION_APPEND)
@@ -317,7 +317,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests applying the changes to a DCA subpalette.
      */
-    public function testAppliesChangesToDcaSubpalette()
+    public function testAppliesChangesToADcaSubpalette()
     {
         $pm = PaletteManipulator::create()
             ->addField(['foo', 'bar'], 'lastname')
@@ -336,7 +336,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests that the fallback creates a palette.
      */
-    public function testAddsFieldToFallbackPalette()
+    public function testAddsAFieldToTheFallbackPalette()
     {
         $pm = PaletteManipulator::create()
             ->addField(
@@ -356,7 +356,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests the fallback callback.
      */
-    public function testCallsFallbackClosure()
+    public function testCallsTheFallbackClosure()
     {
         $closureCalled = false;
 
@@ -387,7 +387,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests applying changes to a missing palette.
      */
-    public function testFailsIfDcaPaletteDoesNotExist()
+    public function testFailsIfTheDcaPaletteDoesNotExist()
     {
         $pm = PaletteManipulator::create()
             ->addLegend('foobar_legend', '', PaletteManipulator::POSITION_APPEND)
@@ -405,7 +405,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests applying changes to a missing subpalette.
      */
-    public function testFailsIfDcaSubpaletteDoesNotExist()
+    public function testFailsIfTheDcaSubpaletteDoesNotExist()
     {
         $pm = PaletteManipulator::create()
             ->addField(['foo', 'bar'], 'lastname')
@@ -422,7 +422,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field at an invalid position.
      */
-    public function testFailsIfPositionIsInvalid()
+    public function testFailsIfThePositionIsInvalid()
     {
         $this->expectException('LogicException');
 
@@ -435,7 +435,7 @@ class PaletteManipulatorTest extends TestCase
     /**
      * Tests adding a field with a fallback at an invalid position.
      */
-    public function testFailsIfFallbackPositionIsInvalid()
+    public function testFailsIfTheFallbackPositionIsInvalid()
     {
         $this->expectException('InvalidArgumentException');
 

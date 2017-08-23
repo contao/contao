@@ -51,7 +51,7 @@ class SymlinksCommandTest extends TestCase
     }
 
     /**
-     * Tests that the Contao folders are symlinked.
+     * Tests symlinking the Contao folders.
      */
     public function testSymlinksTheContaoFolders()
     {

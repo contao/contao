@@ -82,7 +82,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the createMenuItem() method.
      */
-    public function testCreateMenuItem()
+    public function testCreatesTheMenuItem()
     {
         $picker = json_encode([
             'context' => 'link',
@@ -108,7 +108,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the isCurrent() method.
      */
-    public function testIsCurrent()
+    public function testChecksIfAMenuItemIsCurrent()
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('page', [], '', 'pagePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('page', [], '', 'filePicker')));
@@ -120,7 +120,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the getName() method.
      */
-    public function testGetName()
+    public function testReturnsTheCorrectName()
     {
         $this->assertSame('pagePicker', $this->provider->getName());
     }
@@ -128,7 +128,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method.
      */
-    public function testSupportsContext()
+    public function testChecksIfAContextIsSupported()
     {
         $user = $this
             ->getMockBuilder(BackendUser::class)
@@ -166,7 +166,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without token storage.
      */
-    public function testSupportsContextWithoutTokenStorage()
+    public function testFailsToCheckTheContextIfThereIsNoTokenStorage()
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('No token storage provided');
@@ -177,7 +177,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without token.
      */
-    public function testSupportsContextWithoutToken()
+    public function testFailsToCheckTheContextIfThereIsNoToken()
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
@@ -197,7 +197,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without a user object.
      */
-    public function testSupportsContextWithoutUser()
+    public function testFailsToCheckTheContextIfThereIsNoUser()
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -224,7 +224,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the supportsValue() method.
      */
-    public function testSupportsValue()
+    public function testChecksIfAValueIsSupported()
     {
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('page', [], 5)));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('page', [], '{{article_url::5}}')));
@@ -236,7 +236,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the getDcaTable() method.
      */
-    public function testGetDcaTable()
+    public function testReturnsTheDcaTable()
     {
         $this->assertSame('tl_page', $this->provider->getDcaTable());
     }
@@ -244,7 +244,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the getDcaAttributes() method.
      */
-    public function testGetDcaAttributes()
+    public function testReturnsTheDcaAttributes()
     {
         $extra = [
             'fieldType' => 'checkbox',
@@ -277,7 +277,7 @@ class PagePickerProviderTest extends TestCase
     /**
      * Tests the convertDcaValue() method.
      */
-    public function testConvertDcaValue()
+    public function testConvertsTheDcaValue()
     {
         $this->assertSame(5, $this->provider->convertDcaValue(new PickerConfig('page'), 5));
         $this->assertSame('{{link_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));

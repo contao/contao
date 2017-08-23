@@ -34,7 +34,7 @@ class XliffFileLoaderTest extends TestCase
     /**
      * Tests that only XLF files are supported.
      */
-    public function testSupportsOnlyXlfFiles()
+    public function testSupportsXlfFiles()
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app');
 
@@ -54,7 +54,7 @@ class XliffFileLoaderTest extends TestCase
     /**
      * Tests loading a file into a string.
      */
-    public function testLoadsFileIntoString()
+    public function testLoadsXlfFilesIntoAString()
     {
         $loader = new XliffFileLoader($this->getRootDir(), false);
 
@@ -111,7 +111,7 @@ TXT;
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testLoadsFileIntoGlobalVariable()
+    public function testLoadsXlfFilesIntoTheGlobalVariables()
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', true);
 
@@ -137,7 +137,7 @@ TXT;
     /**
      * Tests that too many nesting levels trigger an exception.
      */
-    public function testFailsWithTooManyNestingLevels()
+    public function testFailsIfThereAreTooManyNestingLevels()
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
 

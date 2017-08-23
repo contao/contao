@@ -38,16 +38,6 @@ class EnvironmentTest extends TestCase
     }
 
     /**
-     * Returns the normalized root directory.
-     *
-     * @return string
-     */
-    public function getRootDir()
-    {
-        return strtr(parent::getRootDir(), '\\', '/');
-    }
-
-    /**
      * Tests the mod_php environment.
      */
     public function testHandlesModPhp()
@@ -138,6 +128,16 @@ class EnvironmentTest extends TestCase
         $_SERVER['PATH_INFO'] = '/en/academy.html';
 
         $this->runTests();
+    }
+
+    /**
+     * Returns the normalized root directory.
+     *
+     * @return string
+     */
+    public function getRootDir()
+    {
+        return strtr(parent::getRootDir(), '\\', '/');
     }
 
     /**

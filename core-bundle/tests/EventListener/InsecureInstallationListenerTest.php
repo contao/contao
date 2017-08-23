@@ -36,9 +36,9 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method.
+     * Tests throwing the exception if the document root is insecure.
      */
-    public function testOnKernelRequest()
+    public function testThrowsAnExceptionIfTheDocumentRootIsInsecure()
     {
         $kernel = $this->mockKernel();
         $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
@@ -50,14 +50,15 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method on localhost.
+     * Tests that there is no exception if the document root is secure.
      */
-    public function testOnKernelRequestOnLocalhost()
+    public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure()
     {
         $kernel = $this->mockKernel();
 
         $request = $this->getRequestObject();
-        $request->server->set('REMOTE_ADDR', '127.0.0.1');
+        $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
+        $request->server->set('SCRIPT_FILENAME', $this->getRootDir().'/app_dev.php');
 
         $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
 
@@ -68,15 +69,14 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method with a secure document root.
+     * Tests that there is no exception on localhost.
      */
-    public function testOnKernelRequestWithSecureDocumentRoot()
+    public function testDoesNotThrowAnExceptionOnLocalhost()
     {
         $kernel = $this->mockKernel();
 
         $request = $this->getRequestObject();
-        $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
-        $request->server->set('SCRIPT_FILENAME', $this->getRootDir().'/app_dev.php');
+        $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
         $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
 

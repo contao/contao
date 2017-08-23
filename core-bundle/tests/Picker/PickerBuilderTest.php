@@ -62,7 +62,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the create() method.
      */
-    public function testCreate()
+    public function testCreatesAPickerObject()
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
@@ -86,7 +86,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the create() method without providers.
      */
-    public function testCreateWithoutProviders()
+    public function testDoesNotCreateAPickerObjectIfThereAreNoProviders()
     {
         $this->assertNull($this->builder->create(new PickerConfig('page')));
     }
@@ -94,7 +94,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the createFromData() method.
      */
-    public function testCreateFromData()
+    public function testCreatesAPickerObjectFromData()
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
@@ -110,7 +110,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the createFromData() method with an invalid argument.
      */
-    public function testCreateFromDataWithInvalidArgument()
+    public function testDoesNotCreateAPickerObjectFromDataIfTheArgumentIsInvalid()
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
@@ -123,7 +123,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the supportsContext() method.
      */
-    public function testSupportsContext()
+    public function testChecksIfAContextIsSupported()
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
@@ -138,7 +138,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the getUrl() method.
      */
-    public function testGetUrl()
+    public function testReturnsThePickerUrl()
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
         $provider->setTokenStorage($this->mockTokenStorage());
@@ -151,7 +151,7 @@ class PickerBuilderTest extends TestCase
     /**
      * Tests the getUrl() method without a supported context.
      */
-    public function testGetUrlWithoutSupportedContext()
+    public function testReturnsAnEmptyPickerUrlIfTheContextIsNotSupported()
     {
         $this->assertSame('', $this->builder->getUrl('foo'));
     }

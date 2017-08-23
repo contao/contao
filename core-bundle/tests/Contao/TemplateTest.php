@@ -53,9 +53,9 @@ class TemplateTest extends TestCase
     }
 
     /**
-     * Tests that variables are replaced.
+     * Tests replacing variables.
      */
-    public function testReplacesVariables()
+    public function testReplacesTheVariables()
     {
         file_put_contents(
             $this->getRootDir().'/templates/test_template.html5',

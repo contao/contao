@@ -120,7 +120,7 @@ class PictureTest extends TestCase
     /**
      * Tests returning the template data.
      */
-    public function testReturnsTemplateData()
+    public function testReturnsTheTemplateData()
     {
         $picture = new Picture(new File('dummy.jpg'));
 
