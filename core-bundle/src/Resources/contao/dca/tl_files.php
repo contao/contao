@@ -43,6 +43,10 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	// List
 	'list' => array
 	(
+		'sorting' => array
+		(
+			'panelLayout'             => 'search'
+		),
 		'global_operations' => array
 		(
 			'sync' => array
