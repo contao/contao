@@ -903,16 +903,20 @@ label.tl_change_selected {
 /* Breadcrumb */
 #tl_breadcrumb {
 	margin:0 0 12px;
-	padding:9px 6px;
+	padding:0 6px;
 	overflow:hidden;
 	background:#fffce1;
 	border:1px solid #d68c23;
+	line-height:34px;
 }
 #tl_breadcrumb li {
 	margin:0;
 	padding:0 3px;
 	list-style-type:none;
 	float:left;
+}
+#tl_breadcrumb li a {
+	display:inline-block;
 }
 #tl_breadcrumb li img {
 	width:16px;

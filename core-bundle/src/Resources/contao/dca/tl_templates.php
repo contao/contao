@@ -226,7 +226,7 @@ class tl_templates extends Backend
 		$GLOBALS['TL_DCA']['tl_templates']['list']['sorting']['breadcrumb'] .= '
 
 <ul id="tl_breadcrumb">
-  <li>' . implode(' &gt; </li><li>', $arrLinks) . '</li>
+  <li>' . implode(' › </li><li>', $arrLinks) . '</li>
 </ul>';
 	}
 

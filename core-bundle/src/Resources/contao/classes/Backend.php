@@ -1054,7 +1054,7 @@ abstract class Backend extends \Controller
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] .= '
 
 <ul id="tl_breadcrumb">
-  <li>' . implode(' &gt; </li><li>', $arrLinks) . '</li>
+  <li>' . implode(' › </li><li>', $arrLinks) . '</li>
 </ul>';
 	}
 
