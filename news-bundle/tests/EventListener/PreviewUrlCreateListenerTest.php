@@ -38,7 +38,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests the onPreviewUrlCreate() method.
      */
-    public function testOnPreviewUrlCreate()
+    public function testCreatesThePreviewUrl()
     {
         $request = Request::createFromGlobals();
 
@@ -56,7 +56,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if the framework is not initialized.
      */
-    public function testBypassIfFrameworkNotInitialized()
+    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized()
     {
         $event = new PreviewUrlCreateEvent('news', 1);
 
@@ -69,7 +69,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if the key is not "news".
      */
-    public function testBypassUponForeignKey()
+    public function testDoesNotCreateThePreviewUrlIfTheNewsParameterIsNotSet()
     {
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
@@ -82,7 +82,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed on the news archive list page.
      */
-    public function testBypassOnNewsArchiveListPage()
+    public function testDoesNotCreateThePreviewUrlOnTheArchiveListPage()
     {
         $request = Request::createFromGlobals();
         $request->query->set('table', 'tl_news');
@@ -101,7 +101,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the ID is overwritten if the news settings are edited.
      */
-    public function testIdOverwrittenInNewsSettings()
+    public function testOverwritesTheIdIfTheArchiveSettingsAreEdited()
     {
         $request = Request::createFromGlobals();
         $request->query->set('act', 'edit');
@@ -122,7 +122,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if there is no news item.
      */
-    public function testBypassIfNoNewsItem()
+    public function testDoesNotCreateThePreviewUrlIfThereIsNoNewsItem()
     {
         $request = Request::createFromGlobals();
 
