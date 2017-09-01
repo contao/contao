@@ -39,7 +39,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns a replacement string.
      */
-    public function testReturnReplacementString()
+    public function testReplacesTheFaqTags()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -67,7 +67,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns false if the tag is unknown.
      */
-    public function testReturnFalseIfTagUnknown()
+    public function testReturnsFalseIfTheTagIsUnknown()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -77,7 +77,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns an empty string if there is no model.
      */
-    public function testReturnEmptyStringIfNoModel()
+    public function testReturnsAnEmptyStringIfThereIsNoModel()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(true));
 
@@ -87,7 +87,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns an empty string if there is no category model.
      */
-    public function testReturnEmptyStringIfNoCategoryModel()
+    public function testReturnsAnEmptyStringIfThereIsNoCategoryModel()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(false, true));
 

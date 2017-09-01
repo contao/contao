@@ -57,7 +57,7 @@ class ContaoFaqExtensionTest extends TestCase
     /**
      * Tests the contao_faq.listener.insert_tags service.
      */
-    public function testInsertTagsListener()
+    public function testRegistersTheInsertTagsListener()
     {
         $this->assertTrue($this->container->has('contao_faq.listener.insert_tags'));
 
@@ -70,7 +70,7 @@ class ContaoFaqExtensionTest extends TestCase
     /**
      * Tests the contao_faq.picker.faq_provider service.
      */
-    public function testEventPickerProvider()
+    public function testRegistersTheEventPickerProvider()
     {
         $this->assertTrue($this->container->has('contao_faq.picker.faq_provider'));
 
