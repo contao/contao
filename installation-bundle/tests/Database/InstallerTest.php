@@ -30,32 +30,15 @@ class InstallerTest extends TestCase
      */
     public function testCanBeInstantiated()
     {
-        $installer = $this->createInstaller();
+        $installer = $this->getInstaller();
 
         $this->assertInstanceOf('Contao\InstallationBundle\Database\Installer', $installer);
     }
 
     /**
-     * Tests two identical schemes.
-     */
-    public function testIdenticalSchema()
-    {
-        $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
-
-        $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
-
-        $installer = $this->createInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
-
-        $this->assertEmpty($commands);
-    }
-
-    /**
      * Tests dropping a column.
      */
-    public function testAlterTableDropColumn()
+    public function testReturnsTheAlterTableDropCommand()
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
@@ -64,7 +47,7 @@ class InstallerTest extends TestCase
         $toSchema = new Schema();
         $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
 
-        $installer = $this->createInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_DROP', $commands);
@@ -74,7 +57,7 @@ class InstallerTest extends TestCase
     /**
      * Tests adding a column.
      */
-    public function testAlterTableAddColumn()
+    public function testReturnsTheAlterTableAddCommand()
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
@@ -83,7 +66,7 @@ class InstallerTest extends TestCase
         $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
         $toSchema->getTable('tl_foobar')->addColumn('bar', 'string');
 
-        $installer = $this->createInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -96,7 +79,7 @@ class InstallerTest extends TestCase
     /**
      * Tests adding a decimal column.
      */
-    public function testAlterTableWithDecimal()
+    public function testHandlesDecimalsInTheAlterTableDropCommand()
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar');
@@ -104,7 +87,7 @@ class InstallerTest extends TestCase
         $toSchema = new Schema();
         $toSchema->createTable('tl_foobar')->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2]);
 
-        $installer = $this->createInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -117,7 +100,7 @@ class InstallerTest extends TestCase
     /**
      * Tests adding a default value with a comma.
      */
-    public function testAlterTableWithCommaDefaultValue()
+    public function testHandlesDefaultsInTheAlterTableDropCommand()
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar');
@@ -125,7 +108,7 @@ class InstallerTest extends TestCase
         $toSchema = new Schema();
         $toSchema->createTable('tl_foobar')->addColumn('foo', 'string', ['default' => ',']);
 
-        $installer = $this->createInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -138,7 +121,7 @@ class InstallerTest extends TestCase
     /**
      * Tests adding various columns.
      */
-    public function testAlterTableAddMixedColumns()
+    public function testHandlesMixedColumnsInTheAlterTableDropCommand()
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar');
@@ -149,7 +132,7 @@ class InstallerTest extends TestCase
         $toSchema->getTable('tl_foobar')->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2]);
         $toSchema->getTable('tl_foobar')->addColumn('foo4', 'string', ['default' => ',']);
 
-        $installer = $this->createInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -164,14 +147,31 @@ class InstallerTest extends TestCase
     }
 
     /**
-     * Creates an installer.
+     * Tests two identical schemes.
+     */
+    public function testReturnsNoCommandsIfTheSchemasAreIdentical()
+    {
+        $fromSchema = new Schema();
+        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $toSchema = new Schema();
+        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $installer = $this->getInstaller($fromSchema, $toSchema);
+        $commands = $installer->getCommands();
+
+        $this->assertEmpty($commands);
+    }
+
+    /**
+     * Returns an installer.
      *
      * @param Schema|null $fromSchema
      * @param Schema|null $toSchema
      *
      * @return Installer
      */
-    private function createInstaller(Schema $fromSchema = null, Schema $toSchema = null)
+    private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null)
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
 
