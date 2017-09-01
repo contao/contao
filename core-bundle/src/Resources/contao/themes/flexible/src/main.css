@@ -903,11 +903,11 @@ label.tl_change_selected {
 /* Breadcrumb */
 #tl_breadcrumb {
 	margin:0 0 12px;
-	padding:0 6px;
+	padding:4px 6px;
 	overflow:hidden;
 	background:#fffce1;
 	border:1px solid #d68c23;
-	line-height:34px;
+	line-height:24px;
 }
 #tl_breadcrumb li {
 	margin:0;
