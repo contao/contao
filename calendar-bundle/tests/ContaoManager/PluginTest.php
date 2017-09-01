@@ -35,9 +35,9 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Tests the getBundles() method.
+     * Tests returning the bundles.
      */
-    public function testGetBundles()
+    public function testReturnsTheBundles()
     {
         $parser = $this->createMock(ParserInterface::class);
 

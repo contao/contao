@@ -40,7 +40,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests that the listener returns a replacement string for a calendar feed.
      */
-    public function testOnGeneratePage()
+    public function testAddsTheCalendarFeedLink()
     {
         $pageModel = $this->createMock(PageModel::class);
         $layoutModel = $this->createMock(LayoutModel::class);
@@ -74,7 +74,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests that the listener returns if there are no feeds.
      */
-    public function testReturnIfNoFeeds()
+    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoFeeds()
     {
         $pageModel = $this->createMock(PageModel::class);
         $layoutModel = $this->createMock(LayoutModel::class);
@@ -103,7 +103,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests that the listener returns if there are no models.
      */
-    public function testReturnIfNoModels()
+    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoModels()
     {
         $pageModel = $this->createMock(PageModel::class);
         $layoutModel = $this->createMock(LayoutModel::class);

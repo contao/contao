@@ -39,7 +39,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests the onPreviewUrlCreate() method.
      */
-    public function testOnPreviewUrlCreate()
+    public function testCreatesThePreviewUrl()
     {
         $request = Request::createFromGlobals();
 
@@ -57,7 +57,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if the framework is not initialized.
      */
-    public function testBypassIfFrameworkNotInitialized()
+    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized()
     {
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
@@ -70,7 +70,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if the key is not "calendar".
      */
-    public function testBypassUponForeignKey()
+    public function testDoesNotCreateThePreviewUrlIfTheCalendarParameterIsNotSet()
     {
         $event = new PreviewUrlCreateEvent('news', 1);
 
@@ -83,7 +83,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed on the calendar list page.
      */
-    public function testBypassOnCalendarListPage()
+    public function testDoesNotCreateThePreviewUrlOnTheCalendarListPage()
     {
         $request = Request::createFromGlobals();
         $request->query->set('table', 'tl_calendar_events');
@@ -102,7 +102,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the ID is overwritten if the event settings are edited.
      */
-    public function testIdOverwrittenInEventSettings()
+    public function testOverwritesTheIdIfTheEventSettingsAreEdited()
     {
         $request = Request::createFromGlobals();
         $request->query->set('act', 'edit');
@@ -123,7 +123,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if there is no event.
      */
-    public function testBypassIfNoEvent()
+    public function testDoesNotCreateThePreviewUrlIfThereIsNoEvent()
     {
         $request = Request::createFromGlobals();
 
