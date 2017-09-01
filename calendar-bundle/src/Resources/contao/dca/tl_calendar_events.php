@@ -676,15 +676,14 @@ class tl_calendar_events extends Backend
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=?")
 								   ->execute($varValue);
 
-		// Check whether the alias exists
-		if ($objAlias->numRows > 1 && !$autoAlias)
+		// Check whether the event alias exists
+		if ($objAlias->numRows > 1)
 		{
-			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
+			if (!$autoAlias)
+			{
+				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+			}
 
-		// Add ID to alias
-		if ($objAlias->numRows && $autoAlias)
-		{
 			$varValue .= '-' . $dc->id;
 		}
 
