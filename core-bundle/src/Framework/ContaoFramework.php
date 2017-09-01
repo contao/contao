@@ -99,6 +99,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     ];
 
     /**
+     * @var array
+     */
+    private $installRoutes = [
+        'contao_install',
+        'contao_install_redirect',
+    ];
+
+    /**
      * Constructor.
      *
      * @param RequestStack     $requestStack
@@ -377,7 +385,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function validateInstallation()
     {
-        if (null === $this->request || 'contao_install' === $this->request->attributes->get('_route')) {
+        if (null === $this->request
+            || in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
+        ) {
             return;
         }
 

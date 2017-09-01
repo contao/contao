@@ -465,12 +465,15 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests initializing the framework with an incomplete installation on the install route.
      *
+     * @var string $route
+     *
      * @runInSeparateProcess
+     * @dataProvider getInstallRoutes
      */
-    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool()
+    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool($route)
     {
         $request = new Request();
-        $request->attributes->set('_route', 'contao_install');
+        $request->attributes->set('_route', $route);
 
         $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
@@ -513,6 +516,19 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->addToAssertionCount(1);  // does not throw an exception
+    }
+
+    /**
+     * Provides the data for the testAllowsTheInstallationToBeIncompleteInTheInstallTool() method.
+     *
+     * @return array
+     */
+    public function getInstallRoutes()
+    {
+        return [
+            'contao_install' => ['contao_install'],
+            'contao_install_redirect' => ['contao_install_redirect'],
+        ];
     }
 
     /**
