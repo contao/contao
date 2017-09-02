@@ -51,7 +51,8 @@
         }
     },
     "bin": [
-        "bin/contao-console"
+        "bin/contao-console",
+        "bin/contao-api"
     ],
     "support": {
         "docs": "https://docs.contao.org",

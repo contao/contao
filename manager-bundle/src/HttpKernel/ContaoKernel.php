@@ -10,6 +10,7 @@
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\ConfigResolverFactory;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
@@ -22,7 +23,6 @@ use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -45,7 +45,7 @@ class ContaoKernel extends Kernel
     private $bundleLoader;
 
     /**
-     * @var array
+     * @var ManagerConfig
      */
     private $managerConfig;
 
@@ -111,7 +111,7 @@ class ContaoKernel extends Kernel
         if (null === $this->pluginLoader) {
             $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
 
-            $config = $this->getManagerConfig();
+            $config = $this->getManagerConfig()->all();
             if (isset($config['contao_manager']['disabled_packages'])
                 && is_array($config['contao_manager']['disabled_packages'])
             ) {
@@ -160,33 +160,28 @@ class ContaoKernel extends Kernel
         $this->bundleLoader = $bundleLoader;
     }
 
-
     /**
-     * Gets the manager configuration.
+     * Gets the manager config.
      *
-     * @return array
+     * @return ManagerConfig
      */
     public function getManagerConfig()
     {
         if (null === $this->managerConfig) {
-            if (file_exists($this->getRootDir().'/config/contao-manager.yml')) {
-                $this->managerConfig = Yaml::parse(file_get_contents($this->getRootDir().'/config/contao-manager.yml'));
-            } else {
-                $this->managerConfig = [];
-            }
+            $this->managerConfig = new ManagerConfig($this->getProjectDir());
         }
 
         return $this->managerConfig;
     }
 
     /**
-     * Sets the manager configuration.
+     * Sets the manager config.
      *
-     * @param array $config
+     * @param ManagerConfig $managerConfig
      */
-    public function setManagerConfig(array $config)
+    public function setManagerConfig(ManagerConfig $managerConfig)
     {
-        $this->managerConfig = $config;
+        $this->managerConfig = $managerConfig;
     }
 
     /**
@@ -202,7 +197,7 @@ class ContaoKernel extends Kernel
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
         foreach ($plugins as $plugin) {
-            $plugin->registerContainerConfiguration($loader, []);
+            $plugin->registerContainerConfiguration($loader, $this->getManagerConfig()->all());
         }
 
         if (file_exists($this->getRootDir().'/config/parameters.yml')) {
