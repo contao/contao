@@ -22,6 +22,7 @@ use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -42,6 +43,11 @@ class ContaoKernel extends Kernel
      * @var BundleLoader
      */
     private $bundleLoader;
+
+    /**
+     * @var array
+     */
+    private $managerConfig;
 
     /**
      * {@inheritdoc}
@@ -104,6 +110,13 @@ class ContaoKernel extends Kernel
     {
         if (null === $this->pluginLoader) {
             $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
+
+            $config = $this->getManagerConfig();
+            if (isset($config['contao_manager']['disabled_packages'])
+                && is_array($config['contao_manager']['disabled_packages'])
+            ) {
+                $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
+            }
         }
 
         return $this->pluginLoader;
@@ -145,6 +158,35 @@ class ContaoKernel extends Kernel
     public function setBundleLoader(BundleLoader $bundleLoader)
     {
         $this->bundleLoader = $bundleLoader;
+    }
+
+
+    /**
+     * Gets the manager configuration.
+     *
+     * @return array
+     */
+    public function getManagerConfig()
+    {
+        if (null === $this->managerConfig) {
+            if (file_exists($this->getRootDir().'/config/contao-manager.yml')) {
+                $this->managerConfig = Yaml::parse(file_get_contents($this->getRootDir().'/config/contao-manager.yml'));
+            } else {
+                $this->managerConfig = [];
+            }
+        }
+
+        return $this->managerConfig;
+    }
+
+    /**
+     * Sets the manager configuration.
+     *
+     * @param array $config
+     */
+    public function setManagerConfig(array $config)
+    {
+        $this->managerConfig = $config;
     }
 
     /**
