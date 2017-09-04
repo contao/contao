@@ -38,11 +38,12 @@
       <div class="inner">
         <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
         <ul id="tmenu">
+          <li class="username"><?= $this->username ?></li>
+          <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile" title="<?= $this->profileTitle ?>"><?= $this->profile ?></a></li>
+          <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
           <?php if ($this->systemMessagesCount > 0): ?>
             <li><?php if ($this->systemErrorMessagesCount > 0) echo '<sup>' . $this->systemErrorMessagesCount . '</sup>'; ?><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?></a></li>
           <?php endif; ?>
-          <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile" title="<?= StringUtil::specialchars($this->username) ?>"><?= $this->username ?></a></li>
-          <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= StringUtil::specialchars($this->preview) ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
           <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" title="<?= StringUtil::specialchars($this->logout) ?>" accesskey="q"><?= $this->logout ?></a></li>
           <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
         </ul>
@@ -79,15 +80,17 @@
 
     <div id="main">
       <h1 class="main_headline"><?= $this->headline ?></h1>
-      <?php if ($this->pickerMenu): ?>
-        <div id="picker-menu">
-          <?= $this->pickerMenu ?>
-        </div>
-      <?php endif; ?>
-      <?php if ($this->error): ?>
-        <p class="tl_gerror"><?= $this->error ?></p>
-      <?php endif; ?>
-      <?= $this->main ?>
+      <div class="content">
+        <?php if ($this->pickerMenu): ?>
+          <div id="picker-menu">
+            <?= $this->pickerMenu ?>
+          </div>
+        <?php endif; ?>
+        <?php if ($this->error): ?>
+          <p class="tl_gerror"><?= $this->error ?></p>
+        <?php endif; ?>
+        <?= $this->main ?>
+      </div>
     </div>
   </div>
 

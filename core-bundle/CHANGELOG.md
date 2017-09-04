@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Show the form submit buttons at the end of the form instead of at the end of the page.
  * Do not add the referer ID in the Template::route() method (see #1033). 
 
 ### 4.4.3 (2017-08-16)
