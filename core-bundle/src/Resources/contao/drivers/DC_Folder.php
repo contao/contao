@@ -2766,51 +2766,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 
 	/**
-	 * Build the sort panel and return it as string
-	 *
-	 * @return string
-	 */
-	protected function panel()
-	{
-		// Reset all filters
-		if (isset($_POST['filter_reset']) && \Input::post('FORM_SUBMIT') == 'tl_filters')
-		{
-			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
-
-			$data = $objSessionBag->all();
-
-			unset($data['search'][$this->strTable]);
-
-			$objSessionBag->replace($data);
-
-			$this->reload();
-		}
-
-		$search = $this->searchMenu();
-
-		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
-		{
-			$this->reload();
-		}
-
-		return '
-<form action="'.ampersand(\Environment::get('request'), true).'" class="tl_form" method="post">
-<div class="tl_formbody">
-  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-  <div class="tl_panel cf">
-    <div class="tl_submit_panel tl_subpanel">
-      <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-      <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-    </div>'.$search.'
-  </div>
-</div>
-</form>';
-	}
-
-
-	/**
 	 * Return a search form that allows to search results using regular expressions
 	 *
 	 * @return string
@@ -3044,9 +2999,6 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 	public function initPicker(PickerInterface $picker)
 	{
 		$attributes = parent::initPicker($picker);
-
-		$this->blnFiles = false;
-		$this->blnFilesOnly = false;
 
 		if (null === $attributes)
 		{

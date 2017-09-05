@@ -24,7 +24,7 @@ class ImageSizesEventTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $event = new ImageSizesEvent([1]);
 
@@ -34,7 +34,7 @@ class ImageSizesEventTest extends TestCase
     /**
      * Tests the image sizes setter and getter.
      */
-    public function testImageSizesSetterGetter()
+    public function testSupportsReadingAndWritingImageSizes()
     {
         $event = new ImageSizesEvent([1]);
 
@@ -48,7 +48,7 @@ class ImageSizesEventTest extends TestCase
     /**
      * Tests the getUser() method.
      */
-    public function testGetUser()
+    public function testSupportsReadingTheUserObject()
     {
         $user = $this->createMock(BackendUser::class);
         $event = new ImageSizesEvent([1], $user);

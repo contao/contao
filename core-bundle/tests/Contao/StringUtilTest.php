@@ -48,9 +48,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the generateAlias() method.
+     * Tests generating aliases.
      */
-    public function testGenerateAlias()
+    public function testGeneratesAliases()
     {
         $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
 
@@ -66,7 +66,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the parseSimpleTokens() method.
+     * Tests parsing simple tokens.
      *
      * @param string $string
      * @param array  $tokens
@@ -74,76 +74,9 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensProvider
      */
-    public function testParseSimpleTokens($string, array $tokens, $expected)
+    public function testParsesSimpleTokens($string, array $tokens, $expected)
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
-    }
-
-    /**
-     * Tests that the parseSimpleTokens() method works correctly with newlines.
-     *
-     * @param string $string
-     * @param array  $tokens
-     * @param string $expected
-     *
-     * @dataProvider parseSimpleTokensCorrectNewlines
-     */
-    public function testParseSimpleTokensCorrectNewlines($string, array $tokens, $expected)
-    {
-        $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
-    }
-
-    /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code.
-     *
-     * @param string $string
-     * @param bool
-     *
-     * @dataProvider parseSimpleTokensDoesntExecutePhp
-     */
-    public function testParseSimpleTokensDoesntExecutePhp($string)
-    {
-        $this->assertSame($string, StringUtil::parseSimpleTokens($string, []));
-    }
-
-    /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code inside tokens.
-     *
-     * @param array $tokens
-     * @param bool
-     *
-     * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
-     */
-    public function testParseSimpleTokensDoesntExecutePhpInToken(array $tokens)
-    {
-        $this->assertSame($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
-    }
-
-    /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
-     * contain PHP code that is generated only after replacing the tokens.
-     */
-    public function testParseSimpleTokensDoesntExecutePhpInCombinedToken()
-    {
-        $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
-            'open' => '<',
-            'open2' => '?php echo "I am evil";',
-            'close' => '?>',
-        ]));
-    }
-
-    /**
-     * Tests that the parseSimpleTokens() method fails for invalid comparisons.
-     *
-     * @param $string
-     *
-     * @dataProvider parseSimpleTokensInvalidComparison
-     */
-    public function testParseSimpleTokensInvalidComparison($string)
-    {
-        $this->expectException('InvalidArgumentException');
-
-        StringUtil::parseSimpleTokens($string, ['foo' => 'bar']);
     }
 
     /**
@@ -353,6 +286,20 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * Tests that the parseSimpleTokens() method works correctly with newlines.
+     *
+     * @param string $string
+     * @param array  $tokens
+     * @param string $expected
+     *
+     * @dataProvider parseSimpleTokensCorrectNewlines
+     */
+    public function testHandlesLineBreaksWhenParsingSimpleTokens($string, array $tokens, $expected)
+    {
+        $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokensCorrectNewlines() method.
      *
      * @return array
@@ -394,6 +341,19 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * Tests that the parseSimpleTokens() method does not execute PHP code.
+     *
+     * @param string $string
+     * @param bool
+     *
+     * @dataProvider parseSimpleTokensDoesntExecutePhp
+     */
+    public function testDoesNotExecutePhpCode($string)
+    {
+        $this->assertSame($string, StringUtil::parseSimpleTokens($string, []));
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokens() method.
      *
      * @return array
@@ -426,6 +386,19 @@ class StringUtilTest extends TestCase
                 version_compare(PHP_VERSION, '7.0.0', '>='),
             ],
         ];
+    }
+
+    /**
+     * Tests that the parseSimpleTokens() method does not execute PHP code inside tokens.
+     *
+     * @param array $tokens
+     * @param bool
+     *
+     * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
+     */
+    public function testDoesNotExecutePhpCodeInTokens(array $tokens)
+    {
+        $this->assertSame($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
 
     /**
@@ -464,6 +437,33 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
+     * contain PHP code that is generated only after replacing the tokens.
+     */
+    public function testDoesNotExecutePhpCodeInCombinedTokens()
+    {
+        $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
+            'open' => '<',
+            'open2' => '?php echo "I am evil";',
+            'close' => '?>',
+        ]));
+    }
+
+    /**
+     * Tests that the parseSimpleTokens() method fails for invalid comparisons.
+     *
+     * @param $string
+     *
+     * @dataProvider parseSimpleTokensInvalidComparison
+     */
+    public function testFailsIfTheComparisonOperatorIsInvalid($string)
+    {
+        $this->expectException('InvalidArgumentException');
+
+        StringUtil::parseSimpleTokens($string, ['foo' => 'bar']);
+    }
+
+    /**
      * Provides the data for the testParseSimpleTokens() method.
      *
      * @return array
@@ -487,7 +487,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests the stripRootDir() method.
      */
-    public function testStripRootDir()
+    public function testStripsTheRootDirectory()
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'/'));
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'\\'));
@@ -500,9 +500,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that a path outside the root directory triggers an exception.
      */
-    public function testStripRootDirDifferentPath()
+    public function testFailsIfThePathIsOutsideTheRootDirectory()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -510,9 +510,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that a parent path triggers an exception.
      */
-    public function testStripRootDirParentPath()
+    public function testFailsIfThePathIsTheParentFolder()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -520,9 +520,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that a longer path triggers an exception.
      */
-    public function testStripRootDirSuffix()
+    public function testFailsIfThePathDoesNotMatch()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -530,9 +530,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests the stripRootDir() method.
+     * Tests that omitting the trailing slash triggers an exception.
      */
-    public function testStripRootDirNoSlash()
+    public function testFailsIfThePathHasNoTrailingSlash()
     {
         $this->expectException('InvalidArgumentException');
 

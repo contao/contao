@@ -30,7 +30,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableHandler', new ContaoTableHandler());
     }
@@ -38,7 +38,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests setting and retrieving the DBAL service name.
      */
-    public function testSetAndGetDbalServiceName()
+    public function testSupportsReadingAndWritingTheDbalServiceName()
     {
         $handler = new ContaoTableHandler();
 
@@ -56,7 +56,7 @@ class ContaoTableHandlerTest extends TestCase
      *
      * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
      */
-    public function testHandle()
+    public function testHandlesContaoRecords()
     {
         $record = [
             'level' => Logger::DEBUG,
@@ -148,7 +148,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests that the handler does nothing if the log level does not match.
      */
-    public function testNotHandlingLogLevel()
+    public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch()
     {
         $handler = new ContaoTableHandler();
         $handler->setLevel(Logger::INFO);
@@ -159,7 +159,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests that the handle() method returns false if there is no Contao context.
      */
-    public function testFalseWithoutContaoContext()
+    public function testDoesNotHandleARecordWithoutContaoContext()
     {
         $record = [
             'level' => Logger::DEBUG,
@@ -175,7 +175,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests the handle() method.
      */
-    public function testHandleWithoutContainer()
+    public function testDoesNotHandleTheRecordIfThereIsNoContainer()
     {
         $record = [
             'level' => Logger::DEBUG,

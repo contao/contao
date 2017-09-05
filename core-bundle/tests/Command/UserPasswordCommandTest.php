@@ -65,16 +65,16 @@ class UserPasswordCommandTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Command\UserPasswordCommand', $this->command);
         $this->assertSame('contao:user:password', $this->command->getName());
     }
 
     /**
-     * Tests the command configuration.
+     * Tests that the command defines username and password.
      */
-    public function testConfiguration()
+    public function testDefinesUsernameAndPassword()
     {
         $this->assertNotEmpty($this->command->getDescription());
 
@@ -85,9 +85,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the execution with a password argument.
+     * Tests that a password can be passed as argument.
      */
-    public function testExecutionWithPasswordArgument()
+    public function testTakesAPasswordAsArgument()
     {
         $code = (new CommandTester($this->command))
             ->execute(
@@ -102,9 +102,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the execution with the password dialog.
+     * Tests that the password is asked for interactively if not given.
      */
-    public function testExecutionWithPasswordDialog()
+    public function testAsksForThePasswordIfNotGiven()
     {
         $question = $this->createMock(QuestionHelper::class);
 
@@ -121,9 +121,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the execution with differing passwords.
+     * Tests that the command fails if the passwords do not match.
      */
-    public function testExecutionWithDifferingPasswords()
+    public function testFailsIfThePasswordsDoNotMatch()
     {
         $question = $this->createMock(QuestionHelper::class);
 
@@ -141,9 +141,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the command without a username.
+     * Tests that the command fails if no username is given.
      */
-    public function testExceptionWhenMissingUsername()
+    public function testFailsWithoutUsername()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Please provide the username as argument.');
@@ -152,9 +152,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the command without a password.
+     * Tests that the command fails without a password if not interactive.
      */
-    public function testExitCodeWithoutPassword()
+    public function testFailsWithoutPasswordIfNotInteractive()
     {
         $code = (new CommandTester($this->command))
             ->execute(
@@ -167,9 +167,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the minimum password length.
+     * Tests that a minimum password length is required.
      */
-    public function testMinimumPasswordLength()
+    public function testRequiresAMinimumPasswordLength()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 8 characters long.');
@@ -186,9 +186,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests a custom minimum password length.
+     * Tests that the minimum password length is read from the Config object.
      */
-    public function testCustomPasswordLength()
+    public function testHandlesACustomMinimumPasswordLength()
     {
         $framework = $this->mockContaoFramework(
             null,
@@ -221,9 +221,9 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests an invalid username.
+     * Tests that the command fails if the username is unknown.
      */
-    public function testDatabaseUserNotFound()
+    public function testFailsIfTheUsernameIsUnknown()
     {
         $connection = $this->container->get('database_connection');
 
@@ -248,14 +248,14 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the database update.
+     * Tests that the database is updated on success.
      *
      * @param string $username
      * @param string $password
      *
      * @dataProvider usernamePasswordProvider
      */
-    public function testDatabaseUpdate($username, $password)
+    public function testUpdatesTheDatabaseOnSuccess($username, $password)
     {
         $connection = $this->container->get('database_connection');
 

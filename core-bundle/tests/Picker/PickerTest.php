@@ -60,15 +60,15 @@ class PickerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\Picker', $this->picker);
     }
 
     /**
-     * Tests the getConfig() method.
+     * Tests returning the configuration.
      */
-    public function testGetConfig()
+    public function testReturnsTheConfiguration()
     {
         $config = $this->picker->getConfig();
 
@@ -77,9 +77,9 @@ class PickerTest extends TestCase
     }
 
     /**
-     * Tests the getMenu() method.
+     * Tests returning the menu.
      */
-    public function testGetMenu()
+    public function testReturnsTheMenu()
     {
         $menu = $this->picker->getMenu();
 
@@ -97,9 +97,9 @@ class PickerTest extends TestCase
     }
 
     /**
-     * Tests the getCurrentProvider() method.
+     * Tests returning the current provider.
      */
-    public function testGetCurrentProvider()
+    public function testReturnsTheCurrentProvider()
     {
         $provider = $this->picker->getCurrentProvider();
 
@@ -108,9 +108,9 @@ class PickerTest extends TestCase
     }
 
     /**
-     * Tests the getCurrentProvider() method without an active provider.
+     * Tests returning the current provider if there is no current provider.
      */
-    public function testGetCurrentProviderWithoutActiveProvider()
+    public function testReturnsNullIfThereIsNoCurrentProvider()
     {
         $factory = new MenuFactory();
 
@@ -124,30 +124,17 @@ class PickerTest extends TestCase
     }
 
     /**
-     * Tests the getCurrentUrl() method.
+     * Tests returning the current URL.
      */
-    public function testGetCurrentUrl()
+    public function testReturnsTheCurrentUrl()
     {
         $this->assertSame(null, $this->picker->getCurrentUrl());
     }
 
     /**
-     * Tests the getCurrentUrl() method without menu items.
+     * Tests returning the current URL if there is no current menu item.
      */
-    public function testGetCurrentUrlWithoutMenuItems()
-    {
-        $picker = new Picker(new MenuFactory(), [], new PickerConfig('page', [], 5, 'pagePicker'));
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('No picker menu items found');
-
-        $picker->getCurrentUrl();
-    }
-
-    /**
-     * Tests the getCurrentUrl() method without an active menu item.
-     */
-    public function testGetCurrentUrlWithoutActiveMenuItem()
+    public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem()
     {
         $factory = new MenuFactory();
 
@@ -158,5 +145,18 @@ class PickerTest extends TestCase
         );
 
         $this->assertSame(null, $picker->getCurrentUrl());
+    }
+
+    /**
+     * Tests returning the current URL if there are no menu items.
+     */
+    public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems()
+    {
+        $picker = new Picker(new MenuFactory(), [], new PickerConfig('page', [], 5, 'pagePicker'));
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('No picker menu items found');
+
+        $picker->getCurrentUrl();
     }
 }

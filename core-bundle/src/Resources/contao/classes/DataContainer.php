@@ -16,6 +16,7 @@ use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Gd\Imagine;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
 /**
@@ -976,6 +977,137 @@ abstract class DataContainer extends \Backend
 		}
 
 		return '';
+	}
+
+
+	/**
+	 * Build the sort panel and return it as string
+	 *
+	 * @return string
+	 */
+	protected function panel()
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] == '')
+		{
+			return '';
+		}
+
+		// Reset all filters
+		if (isset($_POST['filter_reset']) && \Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			/** @var AttributeBagInterface $objSessionBag */
+			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+
+			$data = $objSessionBag->all();
+
+			unset($data['filter'][$this->strTable]);
+			unset($data['filter'][$this->strTable.'_'.CURRENT_ID]);
+			unset($data['sorting'][$this->strTable]);
+			unset($data['search'][$this->strTable]);
+
+			$objSessionBag->replace($data);
+
+			$this->reload();
+		}
+
+		$intFilterPanel = 0;
+		$arrPanels = array();
+		$arrPanes = \StringUtil::trimsplit(';', $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout']);
+
+		foreach ($arrPanes as $strPanel)
+		{
+			$panels = '';
+			$arrSubPanels = \StringUtil::trimsplit(',', $strPanel);
+
+			foreach ($arrSubPanels as $strSubPanel)
+			{
+				$panel = '';
+
+				// Regular panels
+				if ($strSubPanel == 'search' || $strSubPanel == 'limit' || $strSubPanel == 'sort')
+				{
+					$panel = $this->{$strSubPanel . 'Menu'}();
+				}
+
+				// Multiple filter subpanels can be defined to split the fields across panels
+				elseif ($strSubPanel == 'filter')
+				{
+					$panel = $this->{$strSubPanel . 'Menu'}(++$intFilterPanel);
+				}
+
+				// Call the panel_callback
+				else
+				{
+					$arrCallback = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panel_callback'][$strSubPanel];
+
+					if (is_array($arrCallback))
+					{
+						$this->import($arrCallback[0]);
+						$panel = $this->{$arrCallback[0]}->{$arrCallback[1]}($this);
+					}
+					elseif (is_callable($arrCallback))
+					{
+						$panel = $arrCallback($this);
+					}
+				}
+
+				// Add the panel if it is not empty
+				if ($panel != '')
+				{
+					$panels = $panel . $panels;
+				}
+			}
+
+			// Add the group if it is not empty
+			if ($panels != '')
+			{
+				$arrPanels[] = $panels;
+			}
+		}
+
+		if (empty($arrPanels))
+		{
+			return '';
+		}
+
+		if (\Input::post('FORM_SUBMIT') == 'tl_filters')
+		{
+			$this->reload();
+		}
+
+		$return = '';
+		$intTotal = count($arrPanels);
+		$intLast = $intTotal - 1;
+
+		for ($i=0; $i<$intTotal; $i++)
+		{
+			$submit = '';
+
+			if ($i == $intLast)
+			{
+				$submit = '
+<div class="tl_submit_panel tl_subpanel">
+  <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
+  <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+</div>';
+			}
+
+			$return .= '
+<div class="tl_panel cf">
+  ' . $submit . $arrPanels[$i] . '
+</div>';
+		}
+
+		$return = '
+<form action="'.ampersand(\Environment::get('request'), true).'" class="tl_form" method="post">
+<div class="tl_formbody">
+  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+  <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+  ' . $return . '
+</div>
+</form>';
+
+		return $return;
 	}
 
 

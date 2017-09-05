@@ -121,7 +121,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\FilePickerProvider', $this->provider);
     }
@@ -129,7 +129,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the createMenuItem() method.
      */
-    public function testCreateMenuItem()
+    public function testCreatesTheMenuItem()
     {
         $picker = json_encode([
             'context' => 'link',
@@ -155,7 +155,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the isCurrent() method.
      */
-    public function testIsCurrent()
+    public function testChecksIfAMenuItemIsCurrent()
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('file', [], '', 'filePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('file', [], '', 'pagePicker')));
@@ -167,7 +167,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the getName() method.
      */
-    public function testGetName()
+    public function testReturnsTheCorrectName()
     {
         $this->assertSame('filePicker', $this->provider->getName());
     }
@@ -175,7 +175,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method.
      */
-    public function testSupportsContext()
+    public function testChecksIfAContextIsSupported()
     {
         $user = $this
             ->getMockBuilder(BackendUser::class)
@@ -213,7 +213,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without token storage.
      */
-    public function testSupportsContextWithoutTokenStorage()
+    public function testFailsToCheckTheContextIfThereIsNoTokenStorage()
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('No token storage provided');
@@ -224,7 +224,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without token.
      */
-    public function testSupportsContextWithoutToken()
+    public function testFailsToCheckTheContextIfThereIsNoToken()
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
@@ -244,7 +244,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without a user object.
      */
-    public function testSupportsContextWithoutUser()
+    public function testFailsToCheckTheContextIfThereIsNoUser()
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -271,7 +271,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the supportsValue() method.
      */
-    public function testSupportsValue()
+    public function testChecksIfAValueIsSupported()
     {
         $uuid = '82243f46-a4c3-11e3-8e29-000c29e44aea';
 
@@ -285,7 +285,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the getDcaTable() method.
      */
-    public function testGetDcaTable()
+    public function testReturnsTheDcaTable()
     {
         $this->assertSame('tl_files', $this->provider->getDcaTable());
     }
@@ -293,7 +293,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the getDcaAttributes() method.
      */
-    public function testGetDcaAttributes()
+    public function testReturnsTheDcaAttributes()
     {
         $extra = [
             'fieldType' => 'checkbox',
@@ -342,7 +342,7 @@ class FilePickerProviderTest extends TestCase
     /**
      * Tests the convertDcaValue() method.
      */
-    public function testConvertDcaValue()
+    public function testConvertsTheDcaValue()
     {
         $this->assertSame(
             '/foobar',

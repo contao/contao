@@ -37,7 +37,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new ExceptionConverterListener();
 
@@ -47,7 +47,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an AccessDeniedException exception.
      */
-    public function testConvertAccessDeniedException()
+    public function testConvertsAccessDeniedExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -68,7 +68,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an ForwardPageNotFoundException exception.
      */
-    public function testConvertForwardPageNotFoundException()
+    public function testConvertsForwardPageNotFoundExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -89,7 +89,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an IncompleteInstallationException exception.
      */
-    public function testConvertIncompleteInstallationException()
+    public function testConvertsIncompleteInstallationExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -114,7 +114,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an InsecureInstallationException exception.
      */
-    public function testConvertInsecureInstallationException()
+    public function testConvertsInsecureInstallationExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -135,7 +135,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an InvalidRequestTokenException exception.
      */
-    public function testConvertInvalidRequestTokenException()
+    public function testConvertsInvalidRequestTokenExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -156,7 +156,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an NoActivePageFoundException exception.
      */
-    public function testConvertNoActivePageFoundException()
+    public function testConvertsNoActivePageFoundExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -177,7 +177,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an NoLayoutSpecifiedException exception.
      */
-    public function testConvertNoLayoutSpecifiedException()
+    public function testConvertsNoLayoutSpecifiedExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -198,7 +198,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an NoRootPageFoundException exception.
      */
-    public function testConvertNoRootPageFoundException()
+    public function testConvertsNoRootPageFoundExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -219,7 +219,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an PageNotFoundException exception.
      */
-    public function testConvertPageNotFoundException()
+    public function testConvertsPageNotFoundExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -240,7 +240,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an ServiceUnavailableException exception.
      */
-    public function testConvertServiceUnavailableException()
+    public function testConvertsServiceUnavailableExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -265,7 +265,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting an unknown exception.
      */
-    public function testConvertUnknownException()
+    public function testConvertsUnknownExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -285,7 +285,7 @@ class ExceptionConverterListenerTest extends TestCase
     /**
      * Tests converting the derived PageNotFoundException exception.
      */
-    public function testConvertDerivedPageNotFoundException()
+    public function testConvertsDerivedPageNotFoundExceptions()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),

@@ -60,7 +60,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Image\ImageSizes', $this->imageSizes);
     }
@@ -68,7 +68,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting all options with image sizes.
      */
-    public function testGetAllOptionsWithImageSizes()
+    public function testReturnsAllOptionsWithImageSizes()
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectExampleImageSizes();
@@ -83,7 +83,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting all options without image sizes.
      */
-    public function testGetAllOptionsWithoutImageSizes()
+    public function testReturnsAllOptionsWithoutImageSizes()
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectImageSizes([]);
@@ -97,7 +97,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting the options for an admin user.
      */
-    public function testGetOptionsForAdminUser()
+    public function testReturnsTheAdminUserOptions()
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
@@ -115,7 +115,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting all options for a regular user.
      */
-    public function testGetOptionsForRegularUser()
+    public function testReturnsTheRegularUserOptions()
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();

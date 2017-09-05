@@ -1380,8 +1380,14 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
         <target>Podgląd</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
-        <source>Preview of the website in a new window</source>
-        <target>Podgląd strony w nowym oknie</target>
+        <source>Front end preview</source>
+        <target>Podgląd strony</target>
+      </trans-unit>
+      <trans-unit id="MSC.profile">
+        <source>Profile</source>
+      </trans-unit>
+      <trans-unit id="MSC.profileTitle">
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>

@@ -25,7 +25,7 @@ class ArrayAttributeBagTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $adapter = new ArrayAttributeBag(new AttributeBag('foobar_storageKey'));
 
@@ -36,7 +36,7 @@ class ArrayAttributeBagTest extends TestCase
     /**
      * Tests the offsetSet() method.
      */
-    public function testOffsetSet()
+    public function testCanWriteTheOffset()
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
@@ -48,7 +48,7 @@ class ArrayAttributeBagTest extends TestCase
     /**
      * Tests the offsetExists() method.
      */
-    public function testOffsetExists()
+    public function testChecksIfTheOffsetExists()
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
@@ -60,7 +60,7 @@ class ArrayAttributeBagTest extends TestCase
     /**
      * Tests the offsetGet() method.
      */
-    public function testOffsetGet()
+    public function testCanReadTheOffset()
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
@@ -72,7 +72,7 @@ class ArrayAttributeBagTest extends TestCase
     /**
      * Tests the offsetUnset() method.
      */
-    public function testOffsetUnset()
+    public function testCanUnsetTheOffset()
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
         $bag->set('foo', 'bar');

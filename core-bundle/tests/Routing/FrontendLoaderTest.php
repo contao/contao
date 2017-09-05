@@ -29,7 +29,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $loader = new FrontendLoader(false);
 
@@ -39,7 +39,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests the supports() method.
      */
-    public function testSupports()
+    public function testSupportsTheContaoFrontEndRoute()
     {
         $loader = new FrontendLoader(false);
 
@@ -49,7 +49,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests that the dynamic routes have the correct scope.
      */
-    public function testContainerScope()
+    public function testReturnsTheCorrectScope()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
@@ -68,7 +68,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests that the dynamic routes are mapped to the correct controller.
      */
-    public function testController()
+    public function testReturnsTheDefaultController()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
@@ -84,7 +84,7 @@ class FrontendLoaderTest extends TestCase
         );
     }
 
-    public function testGenerateFrontendWithMissingAlias()
+    public function testFailsToGenerateTheFrontEndUrlIfTheAliasIsMissing()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
@@ -98,7 +98,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests generating  generating the "contao_frontend" route without locale.
      */
-    public function testGenerateFrontendWithoutLocale()
+    public function testGeneratesTheFrontEndUrlWithoutLocale()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
@@ -113,7 +113,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests generating  generating the "contao_frontend" route with locale.
      */
-    public function testGenerateFrontendWithLocale()
+    public function testGeneratesTheFrontEndUrlWithLocale()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
@@ -128,7 +128,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests generating the "contao_frontend" route with missing locale.
      */
-    public function testGenerateFrontendWithMissingLocale()
+    public function testFailsToGenerateTheFrontEndUrlIfTheLocaleIsMissing()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
@@ -142,7 +142,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests generating the "contao_index" route without locale.
      */
-    public function testGenerateIndexWithoutLocale()
+    public function testGeneratesTheIndexUrlWithoutLocale()
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
@@ -157,7 +157,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests generating the "contao_index" route with locale.
      */
-    public function testGenerateIndexWithLocale()
+    public function testGeneratesTheIndexUrlWithLocale()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
@@ -172,7 +172,7 @@ class FrontendLoaderTest extends TestCase
     /**
      * Tests generating the "contao_index" route with missing locale.
      */
-    public function testGenerateIndexWithMissingLocale()
+    public function testFailsToGenerateTheIndexUrlIfTheLocaleIsMissing()
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');

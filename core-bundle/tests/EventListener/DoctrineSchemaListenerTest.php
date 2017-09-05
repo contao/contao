@@ -31,7 +31,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $provider = $this->createMock(DcaSchemaProvider::class);
         $listener = new DoctrineSchemaListener($provider);
@@ -40,9 +40,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Tests the postGenerateSchema() method.
+     * Tests appending to an existing scheme.
      */
-    public function testPostGenerateSchema()
+    public function testAppendsToAnExistingSchema()
     {
         $framework = $this->mockContaoFrameworkWithInstaller(
             [
@@ -72,9 +72,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Tests the onSchemaIndexDefinition() method with subpart.
+     * Tests that the index is changed if there is a subpart.
      */
-    public function testOnSchemaIndexDefinitionWithSubpart()
+    public function testChangesTheIndexIfThereIsASubpart()
     {
         $connection = $this->createMock(Connection::class);
 
@@ -145,9 +145,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Tests the onSchemaIndexDefinition() method without subpart.
+     * Tests that the index is not changed if there is no subpart.
      */
-    public function testOnSchemaIndexDefinitionWithoutSubpart()
+    public function testDoesNotChangeTheIndexIfThereIsNoSubpart()
     {
         $connection = $this->createMock(Connection::class);
 
@@ -204,9 +204,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Tests that the onSchemaIndexDefinition() method ignores the primary key.
+     * Tests that the index of the primary index column is not changed .
      */
-    public function testOnSchemaIndexDefinitionIgnoresPrimaryKey()
+    public function testDoesNotChangeTheIndexOfThePrimaryKeyColumn()
     {
         $connection = $this->createMock(Connection::class);
 
@@ -242,9 +242,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Tests that the onSchemaIndexDefinition() method ignores non MySQL platforms.
+     * Tests that the index is not changed on patforms other than MySQL.
      */
-    public function testOnSchemaIndexDefinitionIgnoresNonMySqlPlatform()
+    public function testDoesNotChangeTheIndexOnDatabasePlatformsOtherThanMysql()
     {
         $connection = $this->createMock(Connection::class);
 

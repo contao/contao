@@ -454,7 +454,7 @@ class tl_form extends Backend
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_form WHERE id=? OR alias=?")
 								   ->execute($dc->id, $varValue);
 
-		// Check whether the page alias exists
+		// Check whether the form alias exists
 		if ($objAlias->numRows > 1)
 		{
 			if (!$autoAlias)

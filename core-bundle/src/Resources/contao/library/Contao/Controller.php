@@ -1550,7 +1550,7 @@ abstract class Controller extends \System
 		}
 
 		// Image dimensions
-		if (($imgSize = $objFile->imageSize) !== false)
+		if ($objFile->exists() && ($imgSize = $objFile->imageSize) !== false)
 		{
 			$objTemplate->arrSize = $imgSize;
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';

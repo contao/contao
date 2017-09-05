@@ -27,7 +27,7 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
 
@@ -42,7 +42,7 @@ class LocaleListenerTest extends TestCase
      *
      * @dataProvider localeTestData
      */
-    public function testWithRequestAttribute($locale, $expected)
+    public function testAddsTheRequestLocaleToTheSession($locale, $expected)
     {
         $session = $this->mockSession();
 
@@ -68,7 +68,7 @@ class LocaleListenerTest extends TestCase
      *
      * @dataProvider localeTestData
      */
-    public function testWithSessionValue($locale, $expected)
+    public function testAddsTheSessionLocaleToTheRequest($locale, $expected)
     {
         // The session values are already formatted, so we're passing in $expected here
         $session = $this->mockSession();
@@ -88,6 +88,23 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
+     * Provides the test data for the locale tests.
+     *
+     * @return array
+     */
+    public function localeTestData()
+    {
+        return [
+            [null, 'en'], // see #264
+            ['en', 'en'],
+            ['de', 'de'],
+            ['de-CH', 'de_CH'],
+            ['de_CH', 'de_CH'],
+            ['zh-tw', 'zh_TW'],
+        ];
+    }
+
+    /**
      * Tests the onKernelRequest() method with an accept language header.
      *
      * @param string $locale
@@ -96,7 +113,7 @@ class LocaleListenerTest extends TestCase
      *
      * @dataProvider acceptLanguageTestData
      */
-    public function testWithLanguageHeader($locale, $expected, array $available)
+    public function testReadsTheLocaleFromTheAcceptLanguageHeader($locale, $expected, array $available)
     {
         $session = $this->mockSession();
 
@@ -115,9 +132,27 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
+     * Provides the test data for the accept language header tests.
+     *
+     * @return array
+     */
+    public function acceptLanguageTestData()
+    {
+        return [
+            [null, 'de', ['de', 'en']], // see #264
+            ['de', 'de', ['de', 'en']],
+            ['de, en', 'en', ['en']],
+            ['de', 'en', ['en']],
+            ['de-de, en', 'de', ['de', 'en']],
+            ['de, fr, en', 'fr', ['en', 'fr']],
+            ['fr, de-ch, en', 'de_CH', ['en', 'de_CH']],
+        ];
+    }
+
+    /**
      * Tests the onKernelRequest() method without a request scope.
      */
-    public function testWithoutRequestScope()
+    public function testDoesNotAddTheSessionLocaleIfThereIsNoRequestScope()
     {
         $session = $this->mockSession();
 
@@ -142,7 +177,7 @@ class LocaleListenerTest extends TestCase
      *
      * @dataProvider localeTestData
      */
-    public function testWithoutSession($locale, $expected)
+    public function testDoesNotAddTheSessionLocaleIfThereIsNoSession($locale, $expected)
     {
         $request = Request::create('/');
         $request->attributes->set('_locale', $locale);
@@ -160,7 +195,7 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the onKernelRequest() method with an invalid locale.
      */
-    public function testInvalidLocale()
+    public function testFailsIfTheLocaleIsInvalid()
     {
         $request = Request::create('/');
         $request->attributes->set('_locale', 'invalid');
@@ -177,7 +212,7 @@ class LocaleListenerTest extends TestCase
     /**
      * Tests the createWithLocales() method.
      */
-    public function testCreateWithLocales()
+    public function testCreatesANewInstanceWithTheInstalledLocales()
     {
         $listener = LocaleListener::createWithLocales($this->mockScopeMatcher(), 'de', $this->getRootDir().'/app');
 
@@ -191,40 +226,5 @@ class LocaleListenerTest extends TestCase
         $this->assertContains('de', $locales);
         $this->assertContains('en', $locales);
         $this->assertContains('it', $locales);
-    }
-
-    /**
-     * Provides the test data for the locale tests.
-     *
-     * @return array
-     */
-    public function localeTestData()
-    {
-        return [
-            [null, 'en'], // see #264
-            ['en', 'en'],
-            ['de', 'de'],
-            ['de-CH', 'de_CH'],
-            ['de_CH', 'de_CH'],
-            ['zh-tw', 'zh_TW'],
-        ];
-    }
-
-    /**
-     * Provides the test data for the accept language header tests.
-     *
-     * @return array
-     */
-    public function acceptLanguageTestData()
-    {
-        return [
-            [null, 'de', ['de', 'en']], // see #264
-            ['de', 'de', ['de', 'en']],
-            ['de, en', 'en', ['en']],
-            ['de', 'en', ['en']],
-            ['de-de, en', 'de', ['de', 'en']],
-            ['de, fr, en', 'fr', ['en', 'fr']],
-            ['fr, de-ch, en', 'de_CH', ['en', 'de_CH']],
-        ];
     }
 }

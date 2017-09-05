@@ -61,32 +61,11 @@ class AddToSearchIndexListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new AddToSearchIndexListener($this->framework);
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
-    }
-
-    /**
-     * Tests that the listener does nothing if the Contao framework is not booted.
-     */
-    public function testWithoutContaoFramework()
-    {
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(false)
-        ;
-
-        $listener = new AddToSearchIndexListener($this->framework);
-        $event = $this->mockPostResponseEvent();
-
-        $event
-            ->expects($this->never())
-            ->method('getResponse')
-        ;
-
-        $listener->onKernelTerminate($event);
     }
 
     /**
@@ -95,7 +74,7 @@ class AddToSearchIndexListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testWithContaoFramework()
+    public function testIndexesTheResponse()
     {
         $this->framework
             ->method('isInitialized')
@@ -115,9 +94,30 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing if the Contao framework is not booted.
+     */
+    public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized()
+    {
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
+        $listener = new AddToSearchIndexListener($this->framework);
+        $event = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
+
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
      * Tests that the listener does nothing if the request is a fragment.
      */
-    public function testWithFragment()
+    public function testDoesNotIndexTheResponseUponFragmentRequests()
     {
         $this->framework
             ->method('isInitialized')

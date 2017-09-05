@@ -27,7 +27,7 @@ class AddSessionBagsPassTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $pass = new AddSessionBagsPass();
 
@@ -35,9 +35,9 @@ class AddSessionBagsPassTest extends TestCase
     }
 
     /**
-     * Tests processing the pass.
+     * Tests adding the session bags.
      */
-    public function testProcess()
+    public function testAddsTheSessionBags()
     {
         $container = new ContainerBuilder();
         $container->setDefinition('session', new Definition(Session::class));
@@ -69,7 +69,7 @@ class AddSessionBagsPassTest extends TestCase
     /**
      * Tests processing the pass without a session.
      */
-    public function testProcessWithoutSession()
+    public function testDoesNotAddsTheSessionBagsIfThereIsNoSession()
     {
         $container = new ContainerBuilder();
 

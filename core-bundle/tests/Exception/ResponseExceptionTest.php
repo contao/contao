@@ -24,7 +24,7 @@ class ResponseExceptionTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $exception = new ResponseException(new Response('Hello world'));
 
@@ -34,7 +34,7 @@ class ResponseExceptionTest extends TestCase
     /**
      * Tests the getResponse() method.
      */
-    public function testGetResponse()
+    public function testSetsTheResponseStatusCodeAndContent()
     {
         $exception = new ResponseException(new Response('Hello world'));
 

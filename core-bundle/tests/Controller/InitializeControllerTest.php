@@ -27,7 +27,7 @@ class InitializeControllerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $controller = new InitializeController();
 
@@ -41,7 +41,7 @@ class InitializeControllerTest extends TestCase
      *
      * @expectedDeprecation Custom entry points are deprecated and will no longer work in Contao 5.0.
      */
-    public function testIndexAction()
+    public function testReturnsAResponseInTheIndexActionMethod()
     {
         if (!defined('TL_MODE')) {
             define('TL_MODE', 'BE');

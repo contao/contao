@@ -23,7 +23,7 @@ class PreviewUrlConvertEventTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $event = new PreviewUrlConvertEvent();
 
@@ -33,7 +33,7 @@ class PreviewUrlConvertEventTest extends TestCase
     /**
      * Tests the URL getter and setter.
      */
-    public function testUrlGetterSetter()
+    public function testSupportsReadingAndWritingTheUrl()
     {
         $event = new PreviewUrlConvertEvent();
 

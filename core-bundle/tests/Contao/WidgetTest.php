@@ -39,7 +39,7 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * Tests the getPost() method.
+     * Tests reading the POST data.
      *
      * @param string $key
      * @param string $input
@@ -48,7 +48,7 @@ class WidgetTest extends TestCase
      *
      * @dataProvider postProvider
      */
-    public function testGetPost($key, $input, $value, $expected)
+    public function testReadsThePostData($key, $input, $value, $expected)
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
@@ -71,9 +71,34 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * Tests the validate() method.
+     * Provides the data for the testGetPost() method.
+     *
+     * @return array
      */
-    public function testValidate()
+    public function postProvider()
+    {
+        return [
+            ['foo', 'foo', 'bar', 'bar'],
+            ['foo[0]', 'foo', ['bar'], 'bar'],
+            [
+                'foo[k1][k2][k3]',
+                'foo',
+                ['k1' => ['k2' => ['k3' => 'bar']]],
+                'bar',
+            ],
+            ['foo[0]', 'foo', ['k1' => 'bar'], null],
+            ['foo[k1][0]', 'foo', ['k1' => 'bar'], 'bar'],
+            ['foo', 'nofoo', 'bar', null],
+            ['', 'foo', 'bar', null],
+            ['', '', 'bar', 'bar'],
+            ['[0]', '', ['bar'], 'bar'],
+        ];
+    }
+
+    /**
+     * Tests validating the POST data.
+     */
+    public function testValidatesThePostData()
     {
         /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
         $widget = $this
@@ -113,30 +138,5 @@ class WidgetTest extends TestCase
             ->setInputCallback(null)
             ->validate() // getPost() should be called once here
         ;
-    }
-
-    /**
-     * Provides the data for the testGetPost() method.
-     *
-     * @return array
-     */
-    public function postProvider()
-    {
-        return [
-            ['foo', 'foo', 'bar', 'bar'],
-            ['foo[0]', 'foo', ['bar'], 'bar'],
-            [
-                'foo[k1][k2][k3]',
-                'foo',
-                ['k1' => ['k2' => ['k3' => 'bar']]],
-                'bar',
-            ],
-            ['foo[0]', 'foo', ['k1' => 'bar'], null],
-            ['foo[k1][0]', 'foo', ['k1' => 'bar'], 'bar'],
-            ['foo', 'nofoo', 'bar', null],
-            ['', 'foo', 'bar', null],
-            ['', '', 'bar', 'bar'],
-            ['[0]', '', ['bar'], 'bar'],
-        ];
     }
 }

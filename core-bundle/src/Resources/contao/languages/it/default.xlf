@@ -1374,8 +1374,14 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Anteprima</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
-        <source>Preview of the website in a new window</source>
-        <target>Anteprima del sito web in una nuova finestra</target>
+        <source>Front end preview</source>
+        <target>Anteprima frontend</target>
+      </trans-unit>
+      <trans-unit id="MSC.profile">
+        <source>Profile</source>
+      </trans-unit>
+      <trans-unit id="MSC.profileTitle">
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>

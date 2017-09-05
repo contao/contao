@@ -44,7 +44,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Composer\ScriptHandler', $this->handler);
     }
@@ -54,7 +54,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testGeneratesRandomSecret()
+    public function testGeneratesARandomSecretIfTheConfigurationFileDoesNotExist()
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -72,38 +72,37 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests generating a random secret with an array of configuration files.
-     *
-     * @runInSeparateProcess
+     * Tests that no secret is generated if the configuration file exists.
      */
-    public function testGeneratesRandomSecretArray()
+    public function testDoesNotGenerateARandomSecretIfTheConfigurationFileExists()
     {
         $this->assertRandomSecretDoesNotExist();
+
+        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
 
         $this->handler->generateRandomSecret(
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        ['file' => __DIR__.'/../Fixtures/app/config/parameters.yml'],
-                        ['file' => __DIR__.'/../Fixtures/app/config/test.yml'],
+                        'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
                     ],
                 ]
             )
         );
 
-        $this->assertRandomSecretIsValid();
+        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
+
+        $this->assertRandomSecretDoesNotExist();
     }
 
     /**
-     * Tests that no secret is generated if there is no configuration file.
+     * Tests that no secret is generated if no configuration file has been defined.
      */
-    public function testGeneratesNoRandomSecretWithoutFileConfig()
+    public function testDoesNotGenerateARandomSecretIfNoConfigurationFileIsDefined()
     {
         $this->assertRandomSecretDoesNotExist();
 
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent([])
-        );
+        $this->handler->generateRandomSecret($this->getComposerEvent([]));
 
         $this->assertRandomSecretDoesNotExist();
 
@@ -119,63 +118,14 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests that no secret is generated if the configuration file exists.
-     */
-    public function testGeneratesNoRandomSecretIfFileExists()
-    {
-        $this->assertRandomSecretDoesNotExist();
-
-        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
-
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent(
-                [
-                    'incenteev-parameters' => [
-                        'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
-                    ],
-                ]
-            )
-        );
-
-        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
-
-        $this->assertRandomSecretDoesNotExist();
-    }
-
-    /**
-     * Tests that no secret is generated if at least one of multiple configuration files exists.
-     */
-    public function testGeneratesNoRandomSecretIfFileExistsArray()
-    {
-        $this->assertRandomSecretDoesNotExist();
-
-        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
-
-        $this->handler->generateRandomSecret(
-            $this->getComposerEvent(
-                [
-                    'incenteev-parameters' => [
-                        ['file' => __DIR__.'/../Fixtures/app/config/parameters.yml'],
-                        ['file' => __DIR__.'/../Fixtures/app/config/test.yml'],
-                    ],
-                ]
-            )
-        );
-
-        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
-
-        $this->assertRandomSecretDoesNotExist();
-    }
-
-    /**
-     * Tests the getBinDir() method.
+     * Tests that the bin dir is read from the configuration.
      *
      * @param array  $extra
      * @param string $expected
      *
      * @dataProvider binDirProvider
      */
-    public function testGetBinDir(array $extra, $expected)
+    public function testReadsTheBinDirFromTheConfiguration(array $extra, $expected)
     {
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
@@ -214,14 +164,14 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests the getWebDir() method.
+     * Tests that the web dir is read from the configuration.
      *
      * @param array  $extra
      * @param string $expected
      *
      * @dataProvider webDirProvider
      */
-    public function testGetWebDir(array $extra, $expected)
+    public function testReadsTheWebDirFromTheConfiguration(array $extra, $expected)
     {
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
@@ -249,9 +199,9 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests the getVerbosityFlag() method.
+     * Tests that the verbosity flag is considered.
      */
-    public function testGetVerbosityFlag()
+    public function testHandlesTheVerbosityFlag()
     {
         $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
         $method->setAccessible(true);

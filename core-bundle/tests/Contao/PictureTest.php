@@ -87,7 +87,7 @@ class PictureTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $fileMock = $this->createMock(File::class);
 
@@ -118,11 +118,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method.
+     * Tests returning the template data.
      */
-    public function testGetTemplateData()
+    public function testReturnsTheTemplateData()
     {
-        $picture = new Picture(new \File('dummy.jpg'));
+        $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 0,
@@ -141,11 +141,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method with an img tag only.
+     * Tests returning the template data for an image.
      */
-    public function testGetTemplateDataImgOnly()
+    public function testHandlesImages()
     {
-        $picture = new Picture(new \File('dummy.jpg'));
+        $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 100,
@@ -169,11 +169,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method with sources.
+     * Tests returning the template data for an image with sources.
      */
-    public function testGetTemplateDataWithSources()
+    public function testHandlesImagesWithSources()
     {
-        $picture = new Picture(new \File('dummy.jpg'));
+        $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 100,
@@ -232,11 +232,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method with densities.
+     * Tests returning the template data for an image with densities.
      */
-    public function testGetTemplateDataWithDensities()
+    public function testHandlesImagesWithDensities()
     {
-        $picture = new Picture(new \File('dummy.jpg'));
+        $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 100,
@@ -259,11 +259,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method with densities and sizes.
+     * Tests returning the template data for an image with densities and sizes.
      */
-    public function testGetTemplateDataWithDensitiesSizes()
+    public function testHandlesImagesWithDensitiesAndSizes()
     {
-        $picture = new Picture(new \File('dummy.jpg'));
+        $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 100,
@@ -288,13 +288,13 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method with encoded file names.
+     * Tests that file names are encoded.
      */
-    public function testGetTemplateDataUrlEncoded()
+    public function testEncodesFileNames()
     {
         copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy with spaces.jpg');
 
-        $picture = new Picture(new \File('dummy with spaces.jpg'));
+        $picture = new Picture(new File('dummy with spaces.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 0,
@@ -313,11 +313,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the getTemplateData() method with an old resize mode.
+     * Tests the old resize mode.
      */
-    public function testGetTemplateDataOldResizeMode()
+    public function testSupportsTheOldResizeMode()
     {
-        $picture = new Picture(new \File('dummy.jpg'));
+        $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
             'width' => 100,

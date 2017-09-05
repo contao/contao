@@ -42,7 +42,7 @@ class SymlinksCommandTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $command = new SymlinksCommand('contao:symlinks');
 
@@ -51,9 +51,9 @@ class SymlinksCommandTest extends TestCase
     }
 
     /**
-     * Tests the output.
+     * Tests symlinking the Contao folders.
      */
-    public function testOutput()
+    public function testSymlinksTheContaoFolders()
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.logs_dir', $this->getRootDir().'/var/logs');
@@ -91,9 +91,9 @@ class SymlinksCommandTest extends TestCase
     }
 
     /**
-     * Tests the lock.
+     * Tests that the command is locked while running.
      */
-    public function testLock()
+    public function testIsLockedWhileRunning()
     {
         $lock = new LockHandler('contao:symlinks');
         $lock->lock();
@@ -110,9 +110,9 @@ class SymlinksCommandTest extends TestCase
     }
 
     /**
-     * Tests the getRelativePath() method.
+     * Tests that absolute paths are converted to relative paths.
      */
-    public function testGetRelativePath()
+    public function testConvertsAbsolutePathsToRelativePaths()
     {
         $command = new SymlinksCommand('contao:symlinks');
 

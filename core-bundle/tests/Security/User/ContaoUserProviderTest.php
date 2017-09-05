@@ -45,7 +45,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
 
@@ -58,7 +58,7 @@ class ContaoUserProviderTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testLoadUserBackend()
+    public function testProvidesTheBackEndUser()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
@@ -72,7 +72,7 @@ class ContaoUserProviderTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testLoadUserFrontend()
+    public function testProvidesTheFrontEndUser()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -83,7 +83,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests an invalid container scope.
      */
-    public function testLoadWithInvalidScope()
+    public function testFailsIfTheScopeIsInvalid()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes('invalid'));
@@ -96,7 +96,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests an unsupported username.
      */
-    public function testLoadUnsupportedUsername()
+    public function testFailsIfTheUsernameIsNotSupported()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -109,7 +109,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests refreshing a user.
      */
-    public function testRefreshUser()
+    public function testFailsIfTheUserIsRefreshed()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -122,7 +122,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests the supportsClass() method.
      */
-    public function testSupportsClass()
+    public function testChecksIfAClassIsSupported()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
         $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -133,7 +133,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests loading the user "backend" without a container.
      */
-    public function testBackendUserWithoutContainer()
+    public function testFailsToLoadTheBackEndUserIfThereIsNoContainer()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
 
@@ -145,7 +145,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Tests loading the user "frontend" without a container.
      */
-    public function testFrontendUserWithoutContainer()
+    public function testFailsToLoadTheFrontEndUserIfThereIsNoContainer()
     {
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
 

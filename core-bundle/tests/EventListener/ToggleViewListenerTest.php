@@ -54,7 +54,7 @@ class ToggleViewListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
 
@@ -62,65 +62,9 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests that there is no response if the request scope is not set.
-     */
-    public function testWithoutRequestScope()
-    {
-        $kernel = $this->createMock(KernelInterface::class);
-
-        $request = new Request(['toggle_view' => 'desktop']);
-        $request->attributes->set('_route', 'dummy');
-
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
-
-        $this->assertFalse($event->hasResponse());
-    }
-
-    /**
-     * Tests that there is no repsonse if the scope is not "frontend".
-     */
-    public function testNotInFrontend()
-    {
-        $kernel = $this->createMock(KernelInterface::class);
-
-        $request = new Request(['toggle_view' => 'desktop']);
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
-
-        $this->assertFalse($event->hasResponse());
-    }
-
-    /**
-     * Tests that there is no repsonse if there are no query parameters.
-     */
-    public function testNoView()
-    {
-        $kernel = $this->createMock(KernelInterface::class);
-
-        $request = new Request();
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
-
-        $this->assertFalse($event->hasResponse());
-    }
-
-    /**
      * Tests that there is a repsonse with a correct cookie for the desktop view.
      */
-    public function testDesktopView()
+    public function testRedirectsToDesktopView()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -140,7 +84,7 @@ class ToggleViewListenerTest extends TestCase
     /**
      * Tests that there is a repsonse with a correct cookie for the mobile view.
      */
-    public function testMobileView()
+    public function testRedirectsToMobileView()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -158,9 +102,65 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
+     * Tests that there is no response if the request scope is not set.
+     */
+    public function testDoesNotSetAResponseIfThereIsNoRequestScope()
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        $request = new Request(['toggle_view' => 'desktop']);
+        $request->attributes->set('_route', 'dummy');
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Tests that there is no repsonse if the scope is not "frontend".
+     */
+    public function testDoesNotSetAResponseIfNotInFrontEndScope()
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        $request = new Request(['toggle_view' => 'desktop']);
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Tests that there is no repsonse if there are no query parameters.
+     */
+    public function testDoesNotSetAResponseIfThereAreNoQueryParameters()
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+
+        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener->onKernelRequest($event);
+
+        $this->assertFalse($event->hasResponse());
+    }
+
+    /**
      * Tests that there is a repsonse with a correct cookie for an invalid view.
      */
-    public function testInvalidView()
+    public function testFallsBackToDesktopIfTheRequestedViewDoesNotExist()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -180,7 +180,7 @@ class ToggleViewListenerTest extends TestCase
     /**
      * Tests the cookie path.
      */
-    public function testCookiePath()
+    public function testSetsTheCorrectCookiePath()
     {
         $kernel = $this->createMock(KernelInterface::class);
 
