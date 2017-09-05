@@ -29,7 +29,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $controller = new BackendController();
 
@@ -39,7 +39,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the controller actions.
      */
-    public function testActions()
+    public function testReturnsAResponseInTheActionMethods()
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -66,7 +66,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the pickerAction() method.
      */
-    public function testPickerAction()
+    public function testReturnsAResponseInThePickerActionMethod()
     {
         $picker = $this->createMock(PickerInterface::class);
 
@@ -107,7 +107,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the pickerAction() method with invalid picker extras.
      */
-    public function testPickerActionWithInvalidPickerExtras()
+    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid()
     {
         $controller = new BackendController();
 
@@ -123,7 +123,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the pickerAction() method with an unsupported context.
      */
-    public function testPickerActionWithUnsupportedContext()
+    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported()
     {
         $builder = $this->createMock(PickerBuilderInterface::class);
 

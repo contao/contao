@@ -23,7 +23,7 @@ class SymlinkUtilTest extends TestCase
     /**
      * Tests an empty source file.
      */
-    public function testEmptySource()
+    public function testFailsToCreateTheSymlinkIfTheSourceFileIsEmpty()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -33,7 +33,7 @@ class SymlinkUtilTest extends TestCase
     /**
      * Tests an empty target file.
      */
-    public function testEmptyTarget()
+    public function testFailsToCreateTheSymlinkIfTheTargetFileIsEmpty()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -43,7 +43,7 @@ class SymlinkUtilTest extends TestCase
     /**
      * Tests an invalid target file.
      */
-    public function testInvalidTarget()
+    public function testFailsToCreateTheSymlinkIfTheTargetIsInvalid()
     {
         $this->expectException('InvalidArgumentException');
 
@@ -53,7 +53,7 @@ class SymlinkUtilTest extends TestCase
     /**
      * Tests an existing target file.
      */
-    public function testExistingTarget()
+    public function testFailsToCreateTheSymlinkIfTheTargetExists()
     {
         $this->expectException('LogicException');
 

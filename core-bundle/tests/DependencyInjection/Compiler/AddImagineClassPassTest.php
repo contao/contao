@@ -25,7 +25,7 @@ class AddImagineClassPassTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $pass = new AddImagineClassPass();
 
@@ -33,9 +33,9 @@ class AddImagineClassPassTest extends TestCase
     }
 
     /**
-     * Tests processing the pass.
+     * Tests adding the Imagine class.
      */
-    public function testProcess()
+    public function testAddsTheImagineClass()
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.image.imagine', new Definition());

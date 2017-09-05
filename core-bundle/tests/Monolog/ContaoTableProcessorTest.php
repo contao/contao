@@ -31,7 +31,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $this->createContaoTableProcessor());
     }
@@ -39,7 +39,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * Tests the __invoke() method.
      */
-    public function testInvokation()
+    public function testCanBeInvoked()
     {
         $processor = $this->createContaoTableProcessor();
 
@@ -56,7 +56,7 @@ class ContaoTableProcessorTest extends TestCase
      *
      * @dataProvider actionLevelProvider
      */
-    public function testActionOnErrorLevel($logLevel, $expectedAction)
+    public function testReturnsDifferentActionsForDifferentErrorLevels($logLevel, $expectedAction)
     {
         $processor = $this->createContaoTableProcessor();
 
@@ -80,7 +80,7 @@ class ContaoTableProcessorTest extends TestCase
      *
      * @dataProvider actionLevelProvider
      */
-    public function testExistingActionIsNotChanged($logLevel)
+    public function testDoesNotChangeAnExistingAction($logLevel)
     {
         $processor = $this->createContaoTableProcessor();
 
@@ -98,9 +98,28 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
+     * Provides the test action levels.
+     *
+     * @return array
+     */
+    public function actionLevelProvider()
+    {
+        return [
+            [Logger::DEBUG, ContaoContext::GENERAL],
+            [Logger::INFO, ContaoContext::GENERAL],
+            [Logger::NOTICE, ContaoContext::GENERAL],
+            [Logger::WARNING, ContaoContext::GENERAL],
+            [Logger::ERROR, ContaoContext::ERROR],
+            [Logger::CRITICAL, ContaoContext::ERROR],
+            [Logger::ALERT, ContaoContext::ERROR],
+            [Logger::EMERGENCY, ContaoContext::ERROR],
+        ];
+    }
+
+    /**
      * Tests that an IP is added if there is no request.
      */
-    public function testIpOnEmptyRequest()
+    public function testAddsAnIpAddressIfThereIsNoRequest()
     {
         $processor = $this->createContaoTableProcessor();
 
@@ -118,7 +137,7 @@ class ContaoTableProcessorTest extends TestCase
      *
      * @dataProvider anonymizedIpProvider
      */
-    public function testAnonymizesIp($input, $expected)
+    public function testAnonymizesIpAddresses($input, $expected)
     {
         $request = new Request([], [], [], [], [], ['REMOTE_ADDR' => $input]);
 
@@ -141,9 +160,30 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
+     * Provides the anonymized IPs.
+     *
+     * @return array
+     */
+    public function anonymizedIpProvider()
+    {
+        return [
+            ['127.0.0.1', '127.0.0.1'],
+            ['::1', '::1'],
+            ['192.168.1.111', '192.168.1.0'],
+            ['10.10.10.10', '10.10.10.0'],
+            ['FE80:0000:0000:0000:0202:B3FF:FE1E:8329', 'FE80:0000:0000:0000:0202:B3FF:FE1E:0000'],
+            ['FE80::0202:B3FF:FE1E:8329', 'FE80::0202:B3FF:FE1E:0000'],
+            ['2001:DB8:0:1', '2001:DB8:0:0000'],
+            ['3ffe:1900:4545:3:200:f8ff:fe21:67cf', '3ffe:1900:4545:3:200:f8ff:fe21:0000'],
+            ['fe80:0:0:0:200:f8ff:fe21:67cf', 'fe80:0:0:0:200:f8ff:fe21:0000'],
+            ['fe80::200:f8ff:fe21:67cf', 'fe80::200:f8ff:fe21:0000'],
+        ];
+    }
+
+    /**
      * Tests that the browser is added.
      */
-    public function testBrowser()
+    public function testAddsTheUserAgent()
     {
         $request = new Request([], [], [], [], [], ['HTTP_USER_AGENT' => 'Contao test']);
 
@@ -175,7 +215,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * Tests that the username is added.
      */
-    public function testUsername()
+    public function testAddsTheUsername()
     {
         $token = $this->createMock(ContaoToken::class);
 
@@ -218,7 +258,7 @@ class ContaoTableProcessorTest extends TestCase
      *
      * @dataProvider sourceProvider
      */
-    public function testSource($scope, $contextSource, $expectedSource)
+    public function testAddsTheSource($scope, $contextSource, $expectedSource)
     {
         $requestStack = new RequestStack();
 
@@ -239,46 +279,6 @@ class ContaoTableProcessorTest extends TestCase
         $context = $result['extra']['contao'];
 
         $this->assertSame($expectedSource, $context->getSource());
-    }
-
-    /**
-     * Provides the test action levels.
-     *
-     * @return array
-     */
-    public function actionLevelProvider()
-    {
-        return [
-            [Logger::DEBUG, ContaoContext::GENERAL],
-            [Logger::INFO, ContaoContext::GENERAL],
-            [Logger::NOTICE, ContaoContext::GENERAL],
-            [Logger::WARNING, ContaoContext::GENERAL],
-            [Logger::ERROR, ContaoContext::ERROR],
-            [Logger::CRITICAL, ContaoContext::ERROR],
-            [Logger::ALERT, ContaoContext::ERROR],
-            [Logger::EMERGENCY, ContaoContext::ERROR],
-        ];
-    }
-
-    /**
-     * Provides the anonymized IPs.
-     *
-     * @return array
-     */
-    public function anonymizedIpProvider()
-    {
-        return [
-            ['127.0.0.1', '127.0.0.1'],
-            ['::1', '::1'],
-            ['192.168.1.111', '192.168.1.0'],
-            ['10.10.10.10', '10.10.10.0'],
-            ['FE80:0000:0000:0000:0202:B3FF:FE1E:8329', 'FE80:0000:0000:0000:0202:B3FF:FE1E:0000'],
-            ['FE80::0202:B3FF:FE1E:8329', 'FE80::0202:B3FF:FE1E:0000'],
-            ['2001:DB8:0:1', '2001:DB8:0:0000'],
-            ['3ffe:1900:4545:3:200:f8ff:fe21:67cf', '3ffe:1900:4545:3:200:f8ff:fe21:0000'],
-            ['fe80:0:0:0:200:f8ff:fe21:67cf', 'fe80:0:0:0:200:f8ff:fe21:0000'],
-            ['fe80::200:f8ff:fe21:67cf', 'fe80::200:f8ff:fe21:0000'],
-        ];
     }
 
     /**

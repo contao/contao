@@ -25,7 +25,7 @@ class InsertTagsControllerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $controller = new InsertTagsController($this->mockContaoFramework());
 
@@ -33,9 +33,9 @@ class InsertTagsControllerTest extends TestCase
     }
 
     /**
-     * Tests the renderNonCacheableInsertTag() action.
+     * Tests rendering non-cacheable insert tags.
      */
-    public function testRenderNonCacheableInsertTag()
+    public function testRendersNonCacheableInsertTag()
     {
         /** @var Adapter|\PHPUnit_Framework_MockObject_MockObject $insertTagAdapter */
         $insertTagAdapter = $this

@@ -26,7 +26,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->setParameter('contao.resources_paths', $this->getResourcesPath($container));
+        $container->setParameter('contao.resources_paths', $this->getResourcesPaths($container));
     }
 
     /**
@@ -36,7 +36,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getResourcesPath(ContainerBuilder $container)
+    private function getResourcesPaths(ContainerBuilder $container)
     {
         $paths = [];
         $rootDir = $container->getParameter('kernel.project_dir');

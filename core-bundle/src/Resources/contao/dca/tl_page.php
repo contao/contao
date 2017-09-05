@@ -1092,14 +1092,12 @@ class tl_page extends Backend
 			// Check if there are multiple results for the current domain
 			if (!empty($arrCheck))
 			{
-				if ($autoAlias)
-				{
-					$varValue .= '-' . $dc->id;
-				}
-				else
+				if (!$autoAlias)
 				{
 					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 				}
+
+				$varValue .= '-' . $dc->id;
 			}
 		}
 

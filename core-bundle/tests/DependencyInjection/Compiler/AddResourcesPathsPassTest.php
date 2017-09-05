@@ -27,7 +27,7 @@ class AddResourcesPathsPassTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $pass = new AddResourcesPathsPass();
 
@@ -35,9 +35,9 @@ class AddResourcesPathsPassTest extends TestCase
     }
 
     /**
-     * Tests the getResourcesPath() method.
+     * Tests adding the resources paths.
      */
-    public function testGetResourcesPath()
+    public function testAddsTheResourcesPaths()
     {
         $pass = new AddResourcesPathsPass();
 

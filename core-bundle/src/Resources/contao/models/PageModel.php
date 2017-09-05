@@ -758,6 +758,14 @@ class PageModel extends \Model
 			return null;
 		}
 
+		$objRegistry = \Model\Registry::getInstance();
+
+		/** @var PageModel|Model $objPage */
+		if ($objPage = $objRegistry->fetch('tl_page', $objResult->id))
+		{
+			return $objPage;
+		}
+
 		return new static($objResult);
 	}
 

@@ -42,7 +42,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $framework = $this->mockContaoFramework(
             new RequestStack(),
@@ -58,7 +58,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testFrontendRequest()
+    public function testInitializesTheFrameworkWithAFrontEndRequest()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -94,7 +94,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testBackendRequest()
+    public function testInitializesTheFrameworkWithABackEndRequest()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -130,7 +130,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testWithoutRequest()
+    public function testInitializesTheFrameworkWithoutARequest()
     {
         $container = $this->mockContainerWithContaoScopes();
         $container->set('request_stack', new RequestStack());
@@ -159,7 +159,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testWithoutRoute()
+    public function testInitializesTheFrameworkWithoutARoute()
     {
         $request = new Request();
         $request->setLocale('de');
@@ -200,7 +200,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testWithoutScope()
+    public function testInitializesTheFrameworkWithoutAScope()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -233,7 +233,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testNotInitializedTwice()
+    public function testDoesNotInitializeTheFrameworkTwice()
     {
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'foobar');
@@ -262,6 +262,8 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
@@ -269,7 +271,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testErrorLevelOverride()
+    public function testOverridesTheErrorLevel()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -302,7 +304,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testValidRequestToken()
+    public function testValidatesTheRequestToken()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -320,6 +322,8 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->setContainer($container);
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**
@@ -327,7 +331,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testInvalidRequestToken()
+    public function testFailsIfTheRequestTokenIsInvalid()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -367,7 +371,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testRequestTokenCheckSkippedIfAttributeFalse()
+    public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -410,7 +414,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testIncompleteInstallation()
+    public function testFailsIfTheInstallationIsIncomplete()
     {
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
@@ -461,12 +465,15 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests initializing the framework with an incomplete installation on the install route.
      *
+     * @var string $route
+     *
      * @runInSeparateProcess
+     * @dataProvider getInstallRoutes
      */
-    public function testIncompleteInstallationOnInstallRoute()
+    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool($route)
     {
         $request = new Request();
-        $request->attributes->set('_route', 'contao_install');
+        $request->attributes->set('_route', $route);
 
         $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
@@ -507,6 +514,21 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->setContainer($container);
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
+    }
+
+    /**
+     * Provides the data for the testAllowsTheInstallationToBeIncompleteInTheInstallTool() method.
+     *
+     * @return array
+     */
+    public function getInstallRoutes()
+    {
+        return [
+            'contao_install' => ['contao_install'],
+            'contao_install_redirect' => ['contao_install_redirect'],
+        ];
     }
 
     /**
@@ -514,7 +536,7 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testContainerNotSet()
+    public function testFailsIfTheContainerIsNotSet()
     {
         $framework = $this->mockContaoFramework(
             new RequestStack(),
@@ -530,7 +552,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests the createInstance method.
      */
-    public function testCreateInstance()
+    public function testCreatesAnObjectInstance()
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
         $framework = $reflection->newInstanceWithoutConstructor();
@@ -545,7 +567,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests the createInstance method for a singleton class.
      */
-    public function testCreateInstanceSingelton()
+    public function testCreateASingeltonObjectInstance()
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
         $framework = $reflection->newInstanceWithoutConstructor();
@@ -560,7 +582,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests the getAdapter method.
      */
-    public function testGetAdapter()
+    public function testCreatesAdaptersForLegacyClasses()
     {
         $class = LegacyClass::class;
 

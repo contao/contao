@@ -33,13 +33,15 @@ class UrlGeneratorTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         unset($GLOBALS['TL_AUTO_ITEM']);
     }
 
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $this->getGenerator());
     }
@@ -47,7 +49,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the setContext() method.
      */
-    public function testSetContext()
+    public function testCanWriteTheContext()
     {
         $generator = new UrlGenerator(
             new ParentUrlGenerator(new RouteCollection(), new RequestContext()),
@@ -64,7 +66,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the router.
      */
-    public function testRoute()
+    public function testGeneratesUrls()
     {
         $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar'));
         $this->assertSame('contao_frontend', $this->getGenerator(true, 0)->generate('foobar'));
@@ -74,7 +76,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the router without parameters.
      */
-    public function testWithoutParameters()
+    public function testGeneratesUrlsWithoutParameters()
     {
         $this->assertSame('foobar', $this->getGenerator()->generate('foobar')['alias']);
         $this->assertSame('foobar/test', $this->getGenerator()->generate('foobar/test')['alias']);
@@ -84,7 +86,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests that the index fragment is omitted.
      */
-    public function testIndex()
+    public function testOmitsTheIndexFragment()
     {
         $this->assertSame('contao_index', $this->getGenerator(false, 0)->generate('index'));
         $this->assertSame('contao_index', $this->getGenerator(true, 0)->generate('index'));
@@ -105,7 +107,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests that the locale is removed if prepend_locale is not set.
      */
-    public function testRemovesLocale()
+    public function testRemovesTheLocaleIfPrependLocaleIsNotSet()
     {
         $params = $this->getGenerator(false)->generate('foobar', ['_locale' => 'en']);
 
@@ -119,7 +121,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the parameter replacement.
      */
-    public function testReplaceParameters()
+    public function testReplacesParameters()
     {
         $params = ['items' => 'bar', 'article' => 'test'];
 
@@ -139,7 +141,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the auto_item support.
      */
-    public function testAutoItem()
+    public function testHandlesAutoItems()
     {
         $this->assertSame(
             'foo/bar',
@@ -179,7 +181,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the router with auto_item being disabled.
      */
-    public function testAutoItemDisabled()
+    public function testIgnoresAutoItemsIfTheyAreDisabled()
     {
         $this->assertSame(
             'foo/items/bar',
@@ -219,7 +221,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests that an exception is thrown if a parameter is missing.
      */
-    public function testThrowsExceptionOnMissingParameter()
+    public function testFailsIfAParameterIsMissing()
     {
         $this->expectException(MissingMandatoryParametersException::class);
 
@@ -229,7 +231,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests setting the context from a domain.
      */
-    public function testSetContextFromDomain()
+    public function testReadsTheContextFromTheDomain()
     {
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
@@ -266,7 +268,7 @@ class UrlGeneratorTest extends TestCase
      * To tests this case, we omit the _ssl parameter and set the scheme to "https" in the context. If the
      * generator still returns a HTTPS URL, we know that the context has not been modified.
      */
-    public function testContextNotModifiedIfHostnameIsSet()
+    public function testDoesNotModifyTheContextIfThereIsAHostname()
     {
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
@@ -290,7 +292,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the generator with non-array parameters.
      */
-    public function testWithNonArrayParameters()
+    public function testHandlesNonArrayParameters()
     {
         $this->assertSame('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
     }

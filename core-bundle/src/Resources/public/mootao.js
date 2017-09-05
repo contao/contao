@@ -142,8 +142,9 @@ Tips.Contao = new Class(
 			obj[props[z]] = event.page[z] + this.options.offset[z];
 			if (obj[props[z]] < 0) bounds[z] = true;
 			if ((obj[props[z]] + tip[z] - scroll[z]) > size[z] - this.options.windowPadding[z]) {
-				if (z == 'x') // Ignore vertical boundaries
+				if (z == 'x') { // ignore vertical boundaries
 					obj[props[z]] = event.page[z] - this.options.offset[z] - tip[z];
+				}
 				bounds[z+'2'] = true;
 			}
 		}

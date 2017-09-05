@@ -28,7 +28,7 @@ class ResponseExceptionListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new ResponseExceptionListener();
 
@@ -38,7 +38,7 @@ class ResponseExceptionListenerTest extends TestCase
     /**
      * Tests passing a response exception.
      */
-    public function testResponseException()
+    public function testAddsAResponseToTheEvent()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -61,7 +61,7 @@ class ResponseExceptionListenerTest extends TestCase
     /**
      * Tests passing a non-response exception.
      */
-    public function testNonResponseException()
+    public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException()
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),

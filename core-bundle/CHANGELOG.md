@@ -1,5 +1,10 @@
 # Contao core bundle change log
 
+### 4.4.4 (2017-09-05)
+
+ * Show the form submit buttons at the end of the form instead of at the end of the page.
+ * Do not add the referer ID in the Template::route() method (see #1033). 
+
 ### 4.4.3 (2017-08-16)
 
  * Correctly assign the form CSS ID (see #956).

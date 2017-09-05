@@ -23,7 +23,7 @@ class AjaxRedirectResponseExceptionTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $exception = new AjaxRedirectResponseException('http://example.org');
 
@@ -33,7 +33,7 @@ class AjaxRedirectResponseExceptionTest extends TestCase
     /**
      * Tests the getResponse() method.
      */
-    public function testGetResponse()
+    public function testSetsTheResponseStatusCodeAndAjaxLocation()
     {
         $exception = new AjaxRedirectResponseException('http://example.org');
 

@@ -33,7 +33,7 @@ class ContaoAuthenticatorTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 
@@ -43,7 +43,7 @@ class ContaoAuthenticatorTest extends TestCase
     /**
      * Tests creating an authentication token.
      */
-    public function testCreateToken()
+    public function testCreatesTheToken()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $token = $authenticator->createToken(new Request(), 'frontend');
@@ -56,7 +56,7 @@ class ContaoAuthenticatorTest extends TestCase
     /**
      * Tests authenticating a token.
      */
-    public function testAuthenticateToken()
+    public function testAuthenticatesTheToken()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -81,7 +81,7 @@ class ContaoAuthenticatorTest extends TestCase
     /**
      * Tests authenticating an invalid token.
      */
-    public function testAuthenticateInvalidToken()
+    public function testFailsToAuthenticateAnInvalidToken()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
@@ -96,7 +96,7 @@ class ContaoAuthenticatorTest extends TestCase
     /**
      * Tests authenticating a token without the container being set.
      */
-    public function testAuthenticateTokenWithoutContainer()
+    public function testFailsToAuthenticateATokenIfThereIsNoContainerContainer()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 
@@ -110,7 +110,7 @@ class ContaoAuthenticatorTest extends TestCase
     /**
      * Tests the token support.
      */
-    public function testSupportsToken()
+    public function testChecksIfATokenIsSupported()
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
 

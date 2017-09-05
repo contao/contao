@@ -24,7 +24,7 @@ class FrontendControllerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $controller = new FrontendController();
 
@@ -34,7 +34,7 @@ class FrontendControllerTest extends TestCase
     /**
      * Tests the controller actions.
      */
-    public function testActions()
+    public function testReturnsAResponseInTheActionMethods()
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 

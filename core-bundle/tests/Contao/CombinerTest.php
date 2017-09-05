@@ -84,7 +84,7 @@ class CombinerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testConstruct()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\Combiner', new Combiner());
     }
@@ -92,7 +92,7 @@ class CombinerTest extends TestCase
     /**
      * Tests the CSS combiner.
      */
-    public function testCombineCss()
+    public function testCombinesCssFiles()
     {
         file_put_contents(static::$rootDir.'/file1.css', 'file1 { background: url("foo.bar") }');
         file_put_contents(static::$rootDir.'/web/file2.css', 'web/file2');
@@ -131,7 +131,7 @@ class CombinerTest extends TestCase
     /**
      * Tests the SCSS combiner.
      */
-    public function testCombineScss()
+    public function testCombinesScssFiles()
     {
         file_put_contents(static::$rootDir.'/file1.scss', '$color: red; @import "file1_sub";');
         file_put_contents(static::$rootDir.'/file1_sub.scss', 'body { color: $color }');
@@ -168,7 +168,7 @@ class CombinerTest extends TestCase
     /**
      * Tests the JS Combiner.
      */
-    public function testCombineJs()
+    public function testCombinesJsFiles()
     {
         file_put_contents(static::$rootDir.'/file1.js', 'file1();');
         file_put_contents(static::$rootDir.'/web/file2.js', 'file2();');

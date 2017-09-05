@@ -40,15 +40,15 @@ class PhpFileLoaderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
     }
 
     /**
-     * Tests the supports() method.
+     * Tests that only PHP files are supported.
      */
-    public function testSupports()
+    public function testSupportsPhpFiles()
     {
         $this->assertTrue(
             $this->loader->supports(
@@ -64,9 +64,9 @@ class PhpFileLoaderTest extends TestCase
     }
 
     /**
-     * Tests the load() method.
+     * Tests loading a PHP file.
      */
-    public function testLoad()
+    public function testLoadsPhpFiles()
     {
         $expects = <<<'EOF'
 
@@ -106,9 +106,9 @@ EOF;
     }
 
     /**
-     * Test loading a file with a custom namespace.
+     * Tests that custom namespaces are added.
      */
-    public function testLoadNamespace()
+    public function testAddsCustomNamespaces()
     {
         $expects = <<<'EOF'
 
@@ -144,13 +144,13 @@ EOF;
     }
 
     /**
-     * Tests loading a file with a declare(strict_types=1) statement.
+     * Tests that a declare(strict_types=1) statement is stripped.
      *
      * @param string $file
      *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
-    public function testLoadWithDeclareStatementsStrictType($file)
+    public function testStripsDeclareStrictTypes($file)
     {
         $content = <<<'EOF'
 
@@ -179,11 +179,11 @@ EOF;
     }
 
     /**
-     * Tests loading a file with a declare(strict_types=1) statement and a comment.
+     * Tests that a declare(strict_types=1) statement in a comment is ignored.
      *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
-    public function testLoadWithDeclareStatementsCommentsAreIgnored()
+    public function testIgnoresDeclareStatementsInComments()
     {
         $content = <<<'EOF'
 
@@ -218,13 +218,26 @@ EOF;
     }
 
     /**
-     * Tests loading a file with a declare(strict_types=1,ticks=1) statement.
+     * Provides the data for the declare(strict_types=1) tests.
+     *
+     * @return array
+     */
+    public function loadWithDeclareStatementsStrictType()
+    {
+        return [
+            ['tl_test_with_declare1'],
+            ['tl_test_with_declare2'],
+        ];
+    }
+
+    /**
+     * Tests that other definitions than strict_types are preserved.
      *
      * @param string $file
      *
      * @dataProvider loadWithDeclareStatementsMultipleDefined
      */
-    public function testLoadWithDeclareStatementsMultipleDefined($file)
+    public function testPreservesOtherDeclareDefinitions($file)
     {
         $content = <<<'EOF'
 
@@ -252,19 +265,6 @@ EOF;
             $content,
             $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
         );
-    }
-
-    /**
-     * Provides the data for the declare(strict_types=1) tests.
-     *
-     * @return array
-     */
-    public function loadWithDeclareStatementsStrictType()
-    {
-        return [
-            ['tl_test_with_declare1'],
-            ['tl_test_with_declare2'],
-        ];
     }
 
     /**

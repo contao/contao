@@ -1371,8 +1371,14 @@ Ezt az e-mail a Contao rendszer generálta. Nem tud rá közvetlenül válaszoln
         <target>Előnézet</target>
       </trans-unit>
       <trans-unit id="MSC.fePreviewTitle">
-        <source>Preview of the website in a new window</source>
-        <target>Weboldal előnézete új ablakban</target>
+        <source>Front end preview</source>
+        <target>Felhasználói felület előnézete</target>
+      </trans-unit>
+      <trans-unit id="MSC.profile">
+        <source>Profile</source>
+      </trans-unit>
+      <trans-unit id="MSC.profileTitle">
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>

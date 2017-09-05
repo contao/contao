@@ -60,6 +60,7 @@ abstract class Template extends \Controller
 	 */
 	protected $arrData = array();
 
+
 	/**
 	 * Valid JavaScipt types
 	 * @var array
@@ -332,15 +333,7 @@ abstract class Template extends \Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		$container = \System::getContainer();
-
-		// Always add the referer ID in the back end
-		if (!isset($arrParams['ref']) && TL_MODE == 'BE')
-		{
-			$arrParams['ref'] = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		}
-
-		$strUrl = $container->get('router')->generate($strName, $arrParams);
+		$strUrl = \System::getContainer()->get('router')->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
 
 		return ampersand($strUrl);

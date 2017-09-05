@@ -28,24 +28,11 @@ class PageLayoutListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new PageLayoutListener($this->mockScopeMatcher(), $this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener', $listener);
-    }
-
-    /**
-     * Tests that no header is added outside the Contao front end scope.
-     */
-    public function testOnReplayWithNoFrontendScope()
-    {
-        $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());
-
-        $listener = new PageLayoutListener($this->mockScopeMatcher(), $this->mockContaoFramework());
-        $listener->onReplay($event);
-
-        $this->assertArrayNotHasKey('contao-page-layout', $event->getHeaders()->all());
     }
 
     /**
@@ -58,7 +45,7 @@ class PageLayoutListenerTest extends TestCase
      *
      * @dataProvider onReplayProvider
      */
-    public function testOnReplay($agentIsMobile, $tlViewCookie, $expectedHeaderValue)
+    public function testAddsThePageLayoutHeader($agentIsMobile, $tlViewCookie, $expectedHeaderValue)
     {
         $envAdapter = $this
             ->getMockBuilder(Adapter::class)
@@ -114,5 +101,18 @@ class PageLayoutListenerTest extends TestCase
             'Cookie desktop -> desktop when agent match' => [true, 'desktop', 'desktop'],
             'Cookie desktop -> desktop when agent does not match' => [false, 'desktop', 'desktop'],
         ];
+    }
+
+    /**
+     * Tests that no header is added outside the Contao front end scope.
+     */
+    public function testDoesNotAddThePageLayoutHeaderIfNotInFrontEndScope()
+    {
+        $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());
+
+        $listener = new PageLayoutListener($this->mockScopeMatcher(), $this->mockContaoFramework());
+        $listener->onReplay($event);
+
+        $this->assertArrayNotHasKey('contao-page-layout', $event->getHeaders()->all());
     }
 }

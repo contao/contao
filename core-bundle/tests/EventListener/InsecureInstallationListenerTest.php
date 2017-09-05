@@ -28,7 +28,7 @@ class InsecureInstallationListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new InsecureInstallationListener();
 
@@ -36,9 +36,9 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method.
+     * Tests throwing the exception if the document root is insecure.
      */
-    public function testOnKernelRequest()
+    public function testThrowsAnExceptionIfTheDocumentRootIsInsecure()
     {
         $kernel = $this->mockKernel();
         $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
@@ -50,25 +50,9 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method on localhost.
+     * Tests that there is no exception if the document root is secure.
      */
-    public function testOnKernelRequestOnLocalhost()
-    {
-        $kernel = $this->mockKernel();
-
-        $request = $this->getRequestObject();
-        $request->server->set('REMOTE_ADDR', '127.0.0.1');
-
-        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
-
-        $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($event);
-    }
-
-    /**
-     * Tests the onKernelRequest() method with a secure document root.
-     */
-    public function testOnKernelRequestWithSecureDocumentRoot()
+    public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure()
     {
         $kernel = $this->mockKernel();
 
@@ -80,6 +64,26 @@ class InsecureInstallationListenerTest extends TestCase
 
         $listener = new InsecureInstallationListener();
         $listener->onKernelRequest($event);
+
+        $this->addToAssertionCount(1);  // does not throw an exception
+    }
+
+    /**
+     * Tests that there is no exception on localhost.
+     */
+    public function testDoesNotThrowAnExceptionOnLocalhost()
+    {
+        $kernel = $this->mockKernel();
+
+        $request = $this->getRequestObject();
+        $request->server->set('REMOTE_ADDR', '127.0.0.1');
+
+        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
+
+        $listener = new InsecureInstallationListener();
+        $listener->onKernelRequest($event);
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     /**

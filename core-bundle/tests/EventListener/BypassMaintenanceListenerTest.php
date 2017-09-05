@@ -26,7 +26,7 @@ class BypassMaintenanceListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new BypassMaintenanceListener($this->mockSession(), false);
 
@@ -34,9 +34,9 @@ class BypassMaintenanceListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method.
+     * Tests adding the request attribute.
      */
-    public function testOnKernelRequest()
+    public function testAddsTheRequestAttribute()
     {
         $request = new Request();
         $request->cookies->set('BE_USER_AUTH', 'da6c1abd61155f4ce98c6b5f1fbbf0ebeb43638e');
@@ -56,7 +56,7 @@ class BypassMaintenanceListenerTest extends TestCase
     /**
      * Tests that the request attribute is not set if there is no back end user.
      */
-    public function testWithoutBackendUser()
+    public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser()
     {
         $event = new GetResponseEvent(
             $this->mockKernel(),

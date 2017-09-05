@@ -38,7 +38,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $this->config);
     }
@@ -46,7 +46,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the getter methods.
      */
-    public function testGetters()
+    public function testCanReadValues()
     {
         $this->assertSame('link', $this->config->getContext());
         $this->assertSame(['fieldType' => 'radio'], $this->config->getExtras());
@@ -57,7 +57,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the getExtra() and setExtra() methods.
      */
-    public function testGetAndSetExtra()
+    public function testCanReadAndWriteExtras()
     {
         $this->assertSame('radio', $this->config->getExtra('fieldType'));
         $this->assertNull($this->config->getExtra('foo'));
@@ -70,7 +70,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the cloneForCurrent() method.
      */
-    public function testCloneForCurrent()
+    public function testClonesTheCurrentObject()
     {
         $clone = $this->config->cloneForCurrent('new-alias');
 
@@ -84,7 +84,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the jsonSerialize() method.
      */
-    public function testJsonSerialize()
+    public function testSerializesItselfToAnArray()
     {
         $this->assertSame(
             [
@@ -100,7 +100,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the urlEncode() method.
      */
-    public function testUrlEncode()
+    public function testCreatesAnEncodedJsonString()
     {
         $data = json_encode([
             'context' => 'link',
@@ -119,7 +119,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the urlDecode() method.
      */
-    public function testUrlDecode()
+    public function testDecodesAnEncodedJsonString()
     {
         $data = json_encode([
             'context' => 'link',
@@ -144,7 +144,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the urlDecode() method with invalid JSON data.
      */
-    public function testUrlDecodeWithInvalidJson()
+    public function testFailsToDecodeAnEncodedJsonStringIfTheJsonIsInvalid()
     {
         $data = '{"invalid';
 

@@ -117,8 +117,13 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
 
-        $dumper->dump($this->findConfigFiles('autoload.php'), 'config/autoload.php', ['type' => 'namespaced']);
-        $dumper->dump($this->findConfigFiles('config.php'), 'config/config.php', ['type' => 'namespaced']);
+        foreach (['autoload.php', 'config.php'] as $file) {
+            $files = $this->findConfigFiles($file);
+
+            if (!empty($files)) {
+                $dumper->dump($files, 'config/'.$file, ['type' => 'namespaced']);
+            }
+        }
     }
 
     /**
@@ -236,8 +241,13 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateTemplateMapper($cacheDir)
     {
-        $mapper = [];
         $files = $this->findTemplateFiles();
+
+        if (empty($files)) {
+            return;
+        }
+
+        $mapper = [];
 
         foreach ($files as $file) {
             $mapper[$file->getBasename('.html5')] = rtrim(

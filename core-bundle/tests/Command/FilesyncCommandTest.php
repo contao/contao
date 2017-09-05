@@ -25,7 +25,7 @@ class FilesyncCommandTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $command = new FilesyncCommand('contao:filesync');
 
@@ -34,9 +34,9 @@ class FilesyncCommandTest extends TestCase
     }
 
     /**
-     * Tests the output.
+     * Tests that the confirmation message is printed.
      */
-    public function testOutput()
+    public function testOutputsTheConfirmationMessage()
     {
         $command = new FilesyncCommand('contao:filesync');
         $command->setFramework($this->mockContaoFramework());
@@ -49,9 +49,9 @@ class FilesyncCommandTest extends TestCase
     }
 
     /**
-     * Tests the lock.
+     * Tests that the command is locked while running.
      */
-    public function testLock()
+    public function testIsLockedWhileRunning()
     {
         $lock = new LockHandler('contao:filesync');
         $lock->lock();
