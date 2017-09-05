@@ -82,7 +82,7 @@ class ModuleNewsletterList extends \Module
 			while ($objNewsletter->next())
 			{
 				/** @var NewsletterChannelModel $objTarget */
-				if (!$objTarget = $objNewsletter->getRelated('pid') instanceof NewsletterChannelModel)
+				if (!($objTarget = $objNewsletter->getRelated('pid')) instanceof NewsletterChannelModel)
 				{
 					continue;
 				}
