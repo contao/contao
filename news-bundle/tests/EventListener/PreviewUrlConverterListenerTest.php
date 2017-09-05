@@ -30,7 +30,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new PreviewUrlConvertListener(new RequestStack(), $this->mockContaoFramework());
 
@@ -40,7 +40,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     /**
      * Tests the onPreviewUrlConvert() method.
      */
-    public function testOnPreviewUrlConvert()
+    public function testConvertsThePreviewUrl()
     {
         $request = Request::createFromGlobals();
         $request->query->set('news', 1);
@@ -61,7 +61,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if the framework is not initialized.
      */
-    public function testBypassIfFrameworkNotInitialized()
+    public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized()
     {
         $event = new PreviewUrlConvertEvent();
 
@@ -74,7 +74,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if there is no "news" parameter.
      */
-    public function testBypassIfNoNewsParameter()
+    public function testDoesNotConvertThePreviewUrlIfTheNewsParameterIsNotSet()
     {
         $request = Request::createFromGlobals();
         $request->server->set('SERVER_NAME', 'localhost');
@@ -94,7 +94,7 @@ class PreviewUrlConverterListenerTest extends TestCase
     /**
      * Tests that the listener is bypassed if there is no news item.
      */
-    public function testBypassIfNoNewsItem()
+    public function testDoesNotConvertThePreviewUrlIfThereIsNoNewsItem()
     {
         $request = Request::createFromGlobals();
         $request->query->set('news', null);

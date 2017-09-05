@@ -74,7 +74,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $this->assertInstanceOf('Contao\NewsBundle\Picker\NewsPickerProvider', $this->provider);
     }
@@ -82,7 +82,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the createMenuItem() method.
      */
-    public function testCreateMenuItem()
+    public function testCreatesTheMenuItem()
     {
         $picker = json_encode([
             'context' => 'link',
@@ -108,7 +108,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the isCurrent() method.
      */
-    public function testIsCurrent()
+    public function testChecksIfAMenuItemIsCurrent()
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'newsPicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
@@ -117,7 +117,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the getName() method.
      */
-    public function testGetName()
+    public function testReturnsTheCorrectName()
     {
         $this->assertSame('newsPicker', $this->provider->getName());
     }
@@ -125,7 +125,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method.
      */
-    public function testSupportsContext()
+    public function testChecksIfAContextIsSupported()
     {
         $user = $this
             ->getMockBuilder(BackendUser::class)
@@ -162,7 +162,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without token storage.
      */
-    public function testSupportsContextWithoutTokenStorage()
+    public function testFailsToCheckTheContextIfThereIsNoTokenStorage()
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('No token storage provided');
@@ -173,7 +173,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without token.
      */
-    public function testSupportsContextWithoutToken()
+    public function testFailsToCheckTheContextIfThereIsNoToken()
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
@@ -193,7 +193,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the supportsContext() method without a user object.
      */
-    public function testSupportsContextWithoutUser()
+    public function testFailsToCheckTheContextIfThereIsNoUser()
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -220,7 +220,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the supportsValue() method.
      */
-    public function testSupportsValue()
+    public function testChecksIfAValueIsSupported()
     {
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{news_url::5}}')));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
@@ -229,7 +229,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the getDcaTable() method.
      */
-    public function testGetDcaTable()
+    public function testReturnsTheDcaTable()
     {
         $this->assertSame('tl_news', $this->provider->getDcaTable());
     }
@@ -237,7 +237,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the getDcaAttributes() method.
      */
-    public function testGetDcaAttributes()
+    public function testReturnsTheDcaAttributes()
     {
         $this->assertSame(
             [
@@ -256,7 +256,7 @@ class NewsPickerProviderTest extends TestCase
     /**
      * Tests the convertDcaValue() method.
      */
-    public function testConvertDcaValue()
+    public function testConvertsTheDcaValue()
     {
         $this->assertSame('{{news_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
     }
