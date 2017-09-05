@@ -50,7 +50,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $extension = new ContaoNewsExtension();
 
@@ -60,7 +60,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * Tests the contao_news.listener.generate_page service.
      */
-    public function testGeneratePageListener()
+    public function testRegistersTheGeneratePageListener()
     {
         $this->assertTrue($this->container->has('contao_news.listener.generate_page'));
 
@@ -73,7 +73,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * Tests the contao_news.listener.insert_tags service.
      */
-    public function testInsertTagsListener()
+    public function testRegistersTheInsertTagsListener()
     {
         $this->assertTrue($this->container->has('contao_news.listener.insert_tags'));
 
@@ -86,7 +86,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * Tests the contao_news.listener.preview_url_create service.
      */
-    public function testPreviewUrlCreateListener()
+    public function testRegistersThePreviewUrlCreateListener()
     {
         $this->assertTrue($this->container->has('contao_news.listener.preview_url_create'));
 
@@ -106,7 +106,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * Tests the contao_news.listener.preview_url_convert service.
      */
-    public function testPreviewUrlConvertListener()
+    public function testRegistersThePreviewUrlConvertListener()
     {
         $this->assertTrue($this->container->has('contao_news.listener.preview_url_convert'));
 
@@ -126,7 +126,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * Tests the contao_news.listener.news_picker_provider service.
      */
-    public function testNewsPickerProvider()
+    public function testRegistersTheNewsPickerProvider()
     {
         $this->assertTrue($this->container->has('contao_news.picker.news_provider'));
 

@@ -29,7 +29,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new GeneratePageListener($this->mockContaoFramework());
 
@@ -39,7 +39,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests that the listener returns a replacement string for a calendar feed.
      */
-    public function testOnGeneratePage()
+    public function testAddsTheNewsFeedLink()
     {
         $layoutModel = $this->createMock(LayoutModel::class);
 
@@ -72,7 +72,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests that the listener returns if there are no feeds.
      */
-    public function testReturnIfNoFeeds()
+    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds()
     {
         $layoutModel = $this->createMock(LayoutModel::class);
 
@@ -100,7 +100,7 @@ class GeneratePageListenerTest extends TestCase
     /**
      * Tests that the listener returns if there are no models.
      */
-    public function testReturnIfNoModels()
+    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels()
     {
         $layoutModel = $this->createMock(LayoutModel::class);
 
