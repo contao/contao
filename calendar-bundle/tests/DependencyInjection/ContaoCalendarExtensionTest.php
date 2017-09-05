@@ -50,7 +50,7 @@ class ContaoCalendarExtensionTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $extension = new ContaoCalendarExtension();
 
@@ -60,7 +60,7 @@ class ContaoCalendarExtensionTest extends TestCase
     /**
      * Tests the contao_calendar.listener.generate_page service.
      */
-    public function testGeneratePageListener()
+    public function testRegistersTheGeneratePageListener()
     {
         $this->assertTrue($this->container->has('contao_calendar.listener.generate_page'));
 
@@ -73,7 +73,7 @@ class ContaoCalendarExtensionTest extends TestCase
     /**
      * Tests the contao_calendar.listener.insert_tags service.
      */
-    public function testInsertTagsListener()
+    public function testRegistersTheInsertTagsListener()
     {
         $this->assertTrue($this->container->has('contao_calendar.listener.insert_tags'));
 
@@ -86,7 +86,7 @@ class ContaoCalendarExtensionTest extends TestCase
     /**
      * Tests the contao_calendar.listener.preview_url_create service.
      */
-    public function testPreviewUrlCreateListener()
+    public function testRegistersThePreviewUrlCreateListener()
     {
         $this->assertTrue($this->container->has('contao_calendar.listener.preview_url_create'));
 
@@ -106,7 +106,7 @@ class ContaoCalendarExtensionTest extends TestCase
     /**
      * Tests the contao_calendar.listener.preview_url_convert service.
      */
-    public function testPreviewUrlConvertListener()
+    public function testRegistersThePreviewUrlConvertListener()
     {
         $this->assertTrue($this->container->has('contao_calendar.listener.preview_url_convert'));
 
@@ -126,7 +126,7 @@ class ContaoCalendarExtensionTest extends TestCase
     /**
      * Tests the contao_calendar.picker.event_provider service.
      */
-    public function testEventPickerProvider()
+    public function testRegistersTheEventPickerProvider()
     {
         $this->assertTrue($this->container->has('contao_calendar.picker.event_provider'));
 

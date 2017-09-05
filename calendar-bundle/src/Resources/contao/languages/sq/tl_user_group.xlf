@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.calendars_legend">
         <source>Calendar permissions</source>
-        <target>Leja kalendarit</target>
+        <target>Lejet e kalendarit</target>
       </trans-unit>
     </body>
   </file>
