@@ -476,15 +476,14 @@ class tl_newsletter extends Backend
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=?")
 								   ->execute($varValue);
 
-		// Check whether the news alias exists
-		if ($objAlias->numRows > 1 && !$autoAlias)
+		// Check whether the newsletter alias exists
+		if ($objAlias->numRows > 1)
 		{
-			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
+			if (!$autoAlias)
+			{
+				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+			}
 
-		// Add ID to alias
-		if ($objAlias->numRows && $autoAlias)
-		{
 			$varValue .= '-' . $dc->id;
 		}
 
