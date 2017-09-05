@@ -1,0 +1,35 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="get">
+    <div class="formbody">
+      <?php if ($this->id): ?>
+        <input type="hidden" name="id" value="<?= $this->id ?>">
+      <?php endif; ?>
+      <div class="widget widget-text">
+        <label for="ctrl_keywords_<?= $this->uniqueId ?>" class="invisible"><?= $this->keywordLabel ?></label>
+        <input type="search" name="keywords" id="ctrl_keywords_<?= $this->uniqueId ?>" class="text" value="<?= $this->keyword ?>">
+      </div>
+      <div class="widget widget-submit">
+        <button type="submit" id="ctrl_submit_<?= $this->uniqueId ?>" class="submit"><?= $this->search ?></button>
+      </div>
+      <?php if ($this->advanced): ?>
+        <div class="widget widget-radio">
+          <fieldset class="radio_container">
+            <legend class="invisible"><?= $this->optionsLabel ?></legend>
+            <span><input type="radio" name="query_type" id="matchAll_<?= $this->uniqueId ?>" class="radio" value="and"<?php if ($this->queryType == 'and'): ?> checked="checked"<?php endif; ?>> <label for="matchAll_<?= $this->uniqueId ?>"><?= $this->matchAll ?></label></span>
+            <span><input type="radio" name="query_type" id="matchAny_<?= $this->uniqueId ?>" class="radio" value="or"<?php if ($this->queryType == 'or'): ?> checked="checked"<?php endif; ?>> <label for="matchAny_<?= $this->uniqueId ?>"><?= $this->matchAny ?></label></span>
+          </fieldset>
+        </div>
+      <?php endif; ?>
+    </div>
+  </form>
+
+  <?php if ($this->header): ?>
+    <p class="header"><?= $this->header ?> (<?= $this->duration ?>)</p>
+  <?php endif; ?>
+
+  <?= $this->results . $this->pagination ?>
+
+<?php $this->endblock(); ?>
