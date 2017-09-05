@@ -28,7 +28,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testInstantiation()
+    public function testCanBeInstantiated()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -38,7 +38,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns a replacement string for a calendar feed.
      */
-    public function testReturnFeedReplacementString()
+    public function testReplacesTheCalendarFeedTag()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -51,7 +51,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns a replacement string for an event.
      */
-    public function testReturnEventReplacementString()
+    public function testReplacesTheEventTags()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -84,7 +84,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns false if the tag is unknown.
      */
-    public function testReturnFalseIfTagUnknown()
+    public function testReturnsFalseIfTheTagIsUnknown()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -94,7 +94,7 @@ class InsertTagsListenerTest extends TestCase
     /**
      * Tests that the listener returns an empty string if there is no model.
      */
-    public function testReturnEmptyStringIfNoModel()
+    public function testReturnsAnEmptyStringIfThereIsNoModel()
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
 
