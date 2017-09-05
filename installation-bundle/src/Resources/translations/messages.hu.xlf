@@ -112,246 +112,250 @@
         
       </trans-unit>
       <trans-unit id="23">
+        <source>database_dot_in_dbname</source>
+        
+      </trans-unit>
+      <trans-unit id="24">
         <source>database_could_not_connect</source>
         <target>Nem sikerült kapcsolódni az adatbázishoz!</target>
         
       </trans-unit>
-      <trans-unit id="24">
+      <trans-unit id="25">
         <source>database_connection_explain</source>
         <target>Adja meg az adatbázis kapcsolat paramétereit.</target>
         
       </trans-unit>
-      <trans-unit id="25">
+      <trans-unit id="26">
         <source>database_host</source>
         <target>Kiszolgáló</target>
         
       </trans-unit>
-      <trans-unit id="26">
+      <trans-unit id="27">
         <source>database_port</source>
         <target>Port száma</target>
         
       </trans-unit>
-      <trans-unit id="27">
+      <trans-unit id="28">
         <source>database_user</source>
         <target>Felhasználó név</target>
         
       </trans-unit>
-      <trans-unit id="28">
+      <trans-unit id="29">
         <source>database_password</source>
         <target>Jelszó</target>
         
       </trans-unit>
-      <trans-unit id="29">
+      <trans-unit id="30">
         <source>database_name</source>
         <target>Adatbázis neve</target>
         
       </trans-unit>
-      <trans-unit id="30">
+      <trans-unit id="31">
         <source>save_settings</source>
         <target>Beállítások mentése</target>
         
       </trans-unit>
-      <trans-unit id="31">
+      <trans-unit id="32">
         <source>update_tables</source>
         <target>Adatbázis frissítése</target>
         
       </trans-unit>
-      <trans-unit id="32">
+      <trans-unit id="33">
         <source>update_tables_explain</source>
         <target>Vegye figyelembe, hogy a frissítési asszisztens csak a  &lt;code&gt;tl_&lt;/code&gt; kezdetű táblákat kezeli.</target>
         
       </trans-unit>
-      <trans-unit id="33">
+      <trans-unit id="34">
         <source>update_tables_confirm</source>
         <target>Az adatbázis naprakész.</target>
         
       </trans-unit>
-      <trans-unit id="34">
+      <trans-unit id="35">
         <source>update_save</source>
         <target>Adatbázis frissítése</target>
         
       </trans-unit>
-      <trans-unit id="35">
+      <trans-unit id="36">
         <source>CREATE</source>
         <target>Táblák létrehozása</target>
         
       </trans-unit>
-      <trans-unit id="36">
+      <trans-unit id="37">
         <source>ALTER_ADD</source>
         <target>Oszlopok hozzáadása</target>
         
       </trans-unit>
-      <trans-unit id="37">
+      <trans-unit id="38">
         <source>ALTER_CHANGE</source>
         <target>Oszlopok cseréje</target>
         
       </trans-unit>
-      <trans-unit id="38">
+      <trans-unit id="39">
         <source>ALTER_DROP</source>
         <target>Oszlopok eldobása</target>
         
       </trans-unit>
-      <trans-unit id="39">
+      <trans-unit id="40">
         <source>DROP</source>
         <target>Táblák eldobása</target>
         
       </trans-unit>
-      <trans-unit id="40">
+      <trans-unit id="41">
         <source>select_all</source>
         <target>Mindet kijelöl</target>
         
       </trans-unit>
-      <trans-unit id="41">
+      <trans-unit id="42">
         <source>template_import</source>
         <target>Sablon importálása</target>
         
       </trans-unit>
-      <trans-unit id="42">
+      <trans-unit id="43">
         <source>template_import_explain</source>
         <target>Itt lehet importálni egy &lt;code&gt;.sql&lt;/ code&gt; fájlt a &lt;code&gt;templates&lt;/ code&gt; könyvtárból. Minden meglévő adat törlésre kerül! Ha csak témát szeretne importálni, használja a Contao admin panel Téma kezelőjét.</target>
         
       </trans-unit>
-      <trans-unit id="43">
+      <trans-unit id="44">
         <source>import_exception</source>
         <target>Az importálás nem sikerült! Az adatbázis naprakész és a Téma fájl kompatibilis a Contao verziójával?</target>
         
       </trans-unit>
-      <trans-unit id="44">
+      <trans-unit id="45">
         <source>import_empty_source</source>
         <target>Kérjük, válasszon egy sablon fájl!</target>
         
       </trans-unit>
-      <trans-unit id="45">
+      <trans-unit id="46">
         <source>import_data_will_be_deleted</source>
         <target>A meglévő adatok törlésre kerülnek!</target>
         
       </trans-unit>
-      <trans-unit id="46">
+      <trans-unit id="47">
         <source>imported_on</source>
         <target>A Téma importálva a %s oldalon</target>
         
       </trans-unit>
-      <trans-unit id="47">
+      <trans-unit id="48">
         <source>templates</source>
         <target>Sablonok</target>
         
       </trans-unit>
-      <trans-unit id="48">
+      <trans-unit id="49">
         <source>do_not_truncate</source>
         <target>Nem sikerült a táblák ürítése</target>
         
       </trans-unit>
-      <trans-unit id="49">
+      <trans-unit id="50">
         <source>import_confirm</source>
         <target>A meglévő adatok törlésre kerülnek! Valóban folytatni akarja?</target>
         
       </trans-unit>
-      <trans-unit id="50">
+      <trans-unit id="51">
         <source>template_save</source>
         <target>Sablon importálása</target>
         
       </trans-unit>
-      <trans-unit id="51">
+      <trans-unit id="52">
         <source>admin_create</source>
         <target>Adminisztrátor létrehozása</target>
         
       </trans-unit>
-      <trans-unit id="52">
+      <trans-unit id="53">
         <source>admin_create_explain</source>
         <target>Itt hozhat létre admin felhasználót a Contao admin panel bejelentkezéshez.</target>
         
       </trans-unit>
-      <trans-unit id="53">
+      <trans-unit id="54">
         <source>admin_confirm</source>
         <target>Adminisztrátor létrehozva.</target>
         
       </trans-unit>
-      <trans-unit id="54">
+      <trans-unit id="55">
         <source>admin_username</source>
         <target>Felhasználó név</target>
         
       </trans-unit>
-      <trans-unit id="55">
+      <trans-unit id="56">
         <source>admin_name</source>
         <target>Név</target>
         
       </trans-unit>
-      <trans-unit id="56">
+      <trans-unit id="57">
         <source>admin_email</source>
         <target>E-mail</target>
         
       </trans-unit>
-      <trans-unit id="57">
+      <trans-unit id="58">
         <source>admin_save</source>
         <target>Adminisztrátor létrehozása</target>
         
       </trans-unit>
-      <trans-unit id="58">
+      <trans-unit id="59">
         <source>admin_error_extnd</source>
         <target>Biztonsági okokból nem tudja használni a következő karaktereket: # () / &lt;=&gt;</target>
         
       </trans-unit>
-      <trans-unit id="59">
+      <trans-unit id="60">
         <source>admin_error_no_space</source>
         <target>A felhasználónév nem tartalmazhat szóköz karaktert!</target>
         
       </trans-unit>
-      <trans-unit id="60">
+      <trans-unit id="61">
         <source>admin_error_email</source>
         <target>Adjon meg egy érvényes email címet!</target>
         
       </trans-unit>
-      <trans-unit id="61">
+      <trans-unit id="62">
         <source>admin_error_password_match</source>
         <target>A jelszavak nem egyeznek!</target>
         
       </trans-unit>
-      <trans-unit id="62">
+      <trans-unit id="63">
         <source>admin_error_password_user</source>
         <target>A felhasználónév és a jelszó nem lehet azonos!</target>
         
       </trans-unit>
-      <trans-unit id="63">
+      <trans-unit id="64">
         <source>admin_error</source>
         <target>Kérem töltse ki az összes mezőt az adminisztrátor létrehozásához!</target>
         
       </trans-unit>
-      <trans-unit id="64">
+      <trans-unit id="65">
         <source>congratulations</source>
         <target>Gratulálunk!</target>
         
       </trans-unit>
-      <trans-unit id="65">
+      <trans-unit id="66">
         <source>congratulations_explain</source>
         <target>Sikeresen telepítette a Contao rendszert.</target>
         
       </trans-unit>
-      <trans-unit id="66">
+      <trans-unit id="67">
         <source>installation_complete</source>
         <target>Telepítés elkészült!</target>
         
       </trans-unit>
-      <trans-unit id="67">
+      <trans-unit id="68">
         <source>installation_complete_explain</source>
         <target>Most lépjen be a Contao Admin panelra és ellenőrizze a beállításokat.</target>
         
       </trans-unit>
-      <trans-unit id="68">
+      <trans-unit id="69">
         <source>back_end</source>
         <target>Contao admin panel</target>
         
       </trans-unit>
-      <trans-unit id="69">
+      <trans-unit id="70">
         <source>old_database</source>
         <target>Az adatbázis túl régi!</target>
         
       </trans-unit>
-      <trans-unit id="70">
+      <trans-unit id="71">
         <source>old_database_explanation</source>
         <target>Legalább Contao 3.2 szükséges a Contao 4 frissítéséhez.</target>
         
       </trans-unit>
-      <trans-unit id="71">
+      <trans-unit id="72">
         <source>console_explanation</source>
         <target>A telepítés utáni feladatok nem kötelezőek!</target>
         

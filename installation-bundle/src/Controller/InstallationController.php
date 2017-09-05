@@ -322,6 +322,13 @@ class InstallationController implements ContainerAwareInterface
             $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
         }
 
+        if (false !== strpos($parameters['parameters']['database_name'], '.')) {
+            return $this->render('database.html.twig', array_merge(
+                $parameters,
+                ['database_error' => $this->trans('database_dot_in_dbname')]
+            ));
+        }
+
         $installTool = $this->container->get('contao.install_tool');
         $installTool->setConnection(ConnectionFactory::create($parameters));
 
