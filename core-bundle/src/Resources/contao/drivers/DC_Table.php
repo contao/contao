@@ -579,7 +579,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$count = 0;
 					$return .= '
   <tr>
-    <td colspan="2" style="padding:0"><div style="margin-bottom:26px;line-height:24px;border-bottom:1px dotted #ccc">&nbsp;</div></td>
+    <td colspan="2" style="height:5em"></td>
   </tr>';
 
 					foreach ($arrRow as $i=>$v)
