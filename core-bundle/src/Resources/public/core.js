@@ -832,7 +832,7 @@ var Backend =
 			'width': width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .5,
+			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		}).show({
@@ -854,7 +854,7 @@ var Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .5,
+			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -879,7 +879,7 @@ var Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .5,
+			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -905,7 +905,7 @@ var Backend =
 			'width': opt.width,
 			'btn_ok': Contao.lang.close,
 			'draggable': false,
-			'overlayOpacity': .5,
+			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});

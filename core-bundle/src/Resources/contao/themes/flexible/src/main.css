@@ -50,13 +50,14 @@ body.popup {
 }
 #tmenu a {
 	width:38px;
-	margin:0 -4px -2px 0;
+	margin-right:-4px;
 	padding:13px 0;
 	display:inline-block;
 	border-left:1px solid #fff0e0;
 	text-indent:100%;
 	white-space:nowrap;
 	overflow:hidden;
+	vertical-align:top;
 }
 #tmenu .username {
 	margin-right:15px;
@@ -67,7 +68,7 @@ body.popup {
 }
 #tmenu sup {
 	position:absolute;
-	top:-1px;
+	top:10px;
 	left:20px;
 	z-index:1;
 	font-size:.5rem;
@@ -150,7 +151,7 @@ body.popup {
 	display:initial;
 }
 #main .content {
-	margin:20px 30px;
+	margin:20px 15px;
 	background:#fff;
 	border:1px solid #d0d0d2;
 }
@@ -232,8 +233,8 @@ body.popup {
 /* Data container */
 h1.main_headline {
 	margin:0;
-	padding:20px 31px 0;
-	line-height:22px;
+	padding:20px 16px 0;
+	font-size:1.1rem;
 }
 .lw h1.main_headline {
 	max-width:900px;
@@ -1690,12 +1691,14 @@ fieldset.collapsed > legend {
 	color:#ccc;
 }
 
+/* Widescreen */
 @media (min-width:1400px) {
 	#main {
 		border-right:1px solid #ddd;
 	}
 }
 
+/* Limit width */
 @media (min-width:1140px) {
 	.lw #main {
 		border-right:1px solid #ddd;
@@ -1737,12 +1740,6 @@ fieldset.collapsed > legend {
 		transform:none;
 		will-change:transform;
 	}
-	#main .content {
-		margin:20px;
-	}
-	h1.main_headline {
-		padding:20px 21px 0;
-	}
 	.show-navigation #main {
 		-webkit-transform:translateX(240px);
 		transform:translateX(240px);
@@ -1764,15 +1761,15 @@ fieldset.collapsed > legend {
 		display:inline;
 	}
 	#tmenu .burger button {
-		margin:-4px -4px 0 0;
+		margin-right:-6px;
 		padding:10px 10px 11px;
 		background:none;
-		border:solid #f2f2f5;
+		border:solid #fff0e0;
 		border-width:0 0 0 1px;
-		vertical-align:bottom;
+		vertical-align:top;
 	}
 	#tmenu .burger img {
-		margin-top:1px;
+		margin-bottom:-1px;
 	}
 }
 
@@ -1851,10 +1848,6 @@ fieldset.collapsed > legend {
 	}
 	.tl_show td {
 		word-break:break-word;
-	}
-	#tl_buttons {
-		padding:6px 15px 0;
-		line-height:20px;
 	}
 	#tl_breadcrumb li {
 		padding:3px;
