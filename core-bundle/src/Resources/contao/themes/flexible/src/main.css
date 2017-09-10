@@ -151,7 +151,7 @@ body.popup {
 	display:initial;
 }
 #main .content {
-	margin:20px 15px;
+	margin:15px;
 	background:#fff;
 	border:1px solid #d0d0d2;
 }
@@ -232,8 +232,8 @@ body.popup {
 
 /* Data container */
 h1.main_headline {
-	margin:0;
-	padding:20px 16px 0;
+	margin:20px 0;
+	padding:0 16px;
 	font-size:1.1rem;
 }
 .lw h1.main_headline {
@@ -1786,7 +1786,8 @@ fieldset.collapsed > legend {
 		margin:15px 10px;
 	}
 	h1.main_headline {
-		padding:15px 11px 0;
+		margin:15px 0;
+		padding:0 11px;
 	}
 	div.tl_tbox,div.tl_box {
 		position:relative;
