@@ -97,6 +97,8 @@ class UrlGenerator implements UrlGeneratorInterface
         $this->prepareAlias($name, $parameters);
         $this->prepareDomain($context, $parameters, $referenceType);
 
+        unset($parameters['auto_item']);
+
         $url = $this->router->generate(
             'index' === $name ? 'contao_index' : 'contao_frontend',
             $parameters,
