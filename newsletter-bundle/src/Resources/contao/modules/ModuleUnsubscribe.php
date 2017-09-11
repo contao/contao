@@ -120,10 +120,11 @@ class ModuleUnsubscribe extends \Module
 			$this->Template->captcha = $objWidget->parse();
 		}
 
-		$flashBag = \System::getContainer()->get('session')->getFlashBag();
+		$session = \System::getContainer()->get('session');
+		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
-		if ($flashBag->has('nl_removed'))
+		if ($session->isStarted() && $flashBag->has('nl_removed'))
 		{
 			$arrMessages = $flashBag->get('nl_removed');
 

@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### DEV
+
+ * Check if the session has been started before using the flash bag.
+
 ### 4.4.4 (2017-09-05)
 
  * Correctly read the newsletter channel target page in the newsletter list (see #7).
