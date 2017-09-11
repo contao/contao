@@ -465,7 +465,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests initializing the framework with an incomplete installation on the install route.
      *
-     * @var string $route
+     * @param string $route
      *
      * @runInSeparateProcess
      * @dataProvider getInstallRoutes
