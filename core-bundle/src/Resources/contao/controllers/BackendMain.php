@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -51,7 +52,10 @@ class BackendMain extends \Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		$this->User->authenticate();
+		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		{
+			throw new AccessDeniedException('Access denied');
+		}
 
 		// Password change required
 		if ($this->User->pwChange)

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -35,7 +36,11 @@ class BackendSwitch extends \Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		$this->User->authenticate();
+		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		{
+			throw new AccessDeniedException('Access denied');
+		}
+
 		\System::loadLanguageFile('default');
 	}
 
