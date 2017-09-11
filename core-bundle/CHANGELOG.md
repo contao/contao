@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Check if the session has been started before using the flash bag.
+
 ### 4.4.4 (2017-09-05)
 
  * Show the form submit buttons at the end of the form instead of at the end of the page.
