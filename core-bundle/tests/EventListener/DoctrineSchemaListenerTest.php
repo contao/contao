@@ -290,9 +290,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     {
         return [
             'name' => $name,
-            'columns' => [($name === 'PRIMARY' ? 'id' : $name)],
+            'columns' => ['PRIMARY' === $name ? 'id' : $name],
             'unique' => false,
-            'primary' => ($name === 'PRIMARY'),
+            'primary' => 'PRIMARY' === $name,
             'flags' => [],
             'options' => [],
         ];

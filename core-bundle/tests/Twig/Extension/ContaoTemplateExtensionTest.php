@@ -85,7 +85,7 @@ class ContaoTemplateExtensionTest extends TestCase
         $functions = $extension->getFunctions();
 
         $renderBaseTemplateFunction = array_filter($functions, function (\Twig_SimpleFunction $function) {
-            return $function->getName() === 'render_contao_backend_template';
+            return 'render_contao_backend_template' === $function->getName();
         });
 
         $this->assertCount(1, $renderBaseTemplateFunction);
