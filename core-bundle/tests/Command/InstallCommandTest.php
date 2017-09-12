@@ -27,6 +27,22 @@ class InstallCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    public function setUp()
+    {
+        $tcpdfPath = $this->getRootDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php';
+
+        if (!file_exists($tcpdfPath)) {
+            if (!file_exists(dirname($tcpdfPath))) {
+                mkdir(dirname($tcpdfPath), 0777, true);
+            }
+
+            file_put_contents($tcpdfPath, '');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function tearDown()
     {
         $fs = new Filesystem();
@@ -44,6 +60,7 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/templates');
         $fs->remove($this->getRootDir().'/web/share');
         $fs->remove($this->getRootDir().'/web/system');
+        $fs->remove($this->getRootDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
     }
 
     /**
