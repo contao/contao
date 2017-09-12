@@ -15,8 +15,8 @@
 # Exception listener
 #
 # The priority of the exception listeners must be higher than the one of the
-# Twig exception listener (defaults to -128). The pretty error screen listener should be
-# very late to not interfere with the exception bubbling.
+# Twig exception listener (defaults to -128). The pretty error screen listener
+# should be very late to not interfere with the exception bubbling.
 #
 # -  96: ExceptionConverterListener
 # -  64: ResponseExceptionListener
@@ -25,9 +25,10 @@
 # Maintenance listener
 #
 # The priority of the maintenance listener must be higher than the one of the
-# Lexik maintenance bundle (defaults to 0).
+# Lexik maintenance bundle (defaults to 0) and lower than the header reply
+# header (defaults to 7).
 #
-# - 10: BypassMaintenanceListener
+# - 6: BypassMaintenanceListener
 #
 # Do not change the priorities unless you know what you are doing!
 ##
@@ -46,7 +47,7 @@ services:
             - "@session"
             - "%contao.security.disable_ip_check%"
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
 
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
