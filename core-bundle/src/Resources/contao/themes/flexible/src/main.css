@@ -996,7 +996,7 @@ ul.sgallery li {
 	text-decoration:underline;
 }
 #tl_versions {
-	margin-top:24px;
+	margin:24px 0 15px;
 }
 #tl_versions th {
 	background:#f6f6f8;
