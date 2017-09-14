@@ -265,7 +265,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         try {
             $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
-        } catch (\InvalidArgumentException $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
