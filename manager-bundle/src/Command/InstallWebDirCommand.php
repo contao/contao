@@ -67,26 +67,28 @@ class InstallWebDirCommand extends AbstractLockedCommand
             ->addArgument(
                 'path',
                 InputArgument::OPTIONAL,
-                'The installation root directory (defaults to the current working directory).',
+                'The installation root directory',
                 getcwd()
             )
             ->addOption(
                 'no-dev',
                 null,
                 InputOption::VALUE_NONE,
-                'Do not copy the app_dev.php entry point to the web folder.'
+                'Do not copy the app_dev.php entry point to the web folder'
             )
             ->addOption(
                 'user',
                 'u',
                 InputOption::VALUE_REQUIRED,
-                'Username for the app_dev.php entry point.'
+                'Set the username for the app_dev.php entry point',
+                false
             )
             ->addOption(
                 'password',
                 'p',
                 InputOption::VALUE_OPTIONAL,
-                'Password for the app_dev.php entry point.'
+                'Set the password for the app_dev.php entry point',
+                false
             )
         ;
     }
@@ -99,22 +101,19 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $user = $input->getOption('user');
         $password = $input->getOption('password');
 
-        if (true === $input->getOption('no-dev') && (null !== $user || null !== $password)) {
+        if (true === $input->getOption('no-dev') && (false !== $user || false !== $password)) {
             throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
         }
 
-        if (null === $password && null !== $user) {
-            throw new \InvalidArgumentException('Cannot set a username without password.');
-        }
-
-        if (true !== $password) {
+        // Return if both username and password are set or both are not set
+        if ($user && $password || false === $user && false === $password) {
             return;
         }
 
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
-        if (null === $input->getOption('user')) {
+        if (false === $input->getOption('user')) {
             $input->setOption(
                 'user',
                 $helper->ask($input, $output, new Question('Please enter a username:'))
@@ -198,15 +197,15 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $user = $input->getOption('user');
         $password = $input->getOption('password');
 
-        if (null === $password && null === $user) {
+        if (false === $password && false === $user) {
             return;
         }
 
-        if (true === $input->getOption('no-dev') && (null !== $user || null !== $password)) {
+        if (true === $input->getOption('no-dev') && ($user || $password)) {
             throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
         }
 
-        if ((null === $password && null !== $user) || (null === $user && null !== $password)) {
+        if (!$user || !$password) {
             throw new \InvalidArgumentException('Must have username and password to set the access key.');
         }
 
