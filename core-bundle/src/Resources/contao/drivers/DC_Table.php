@@ -962,7 +962,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Mark the new record with "copy of" (see #2938)
 			foreach (array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']) as $strKey)
 			{
-				if (in_array($strKey, array('headline', 'name', 'subject', 'title')))
+				if (!empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strKey]['eval']['doNotCopy']))
+				{
+					continue;
+				}
+
+				if (in_array($strKey, array('headline', 'name', 'subject', 'title', 'question', 'label')))
 				{
 					if ($strKey == 'headline')
 					{
@@ -972,14 +977,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						{
 							$headline['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $headline['value']);
 							$this->set['headline'] = serialize($headline);
+
+							continue;
 						}
 					}
-					else
+
+					if ($this->set[$strKey] != '')
 					{
-						if ($this->set[$strKey] != '')
-						{
-							$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
-						}
+						$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
 					}
 
 					break;
