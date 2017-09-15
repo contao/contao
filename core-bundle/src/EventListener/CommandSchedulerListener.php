@@ -14,7 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
@@ -101,7 +101,7 @@ class CommandSchedulerListener
     {
         try {
             return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_cron']);
-        } catch (ConnectionException $e) {
+        } catch (DriverException $e) {
             return false;
         }
     }

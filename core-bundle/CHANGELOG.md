@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Catch the DriverException if the database connection fails (see contao/managed-edition#27).
  * Fix the back end theme.
  * Check if the session has been started before using the flash bag.
 
