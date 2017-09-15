@@ -15,6 +15,8 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use League\Uri\Components\Query;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\Glob;
 
 
 /**
@@ -101,7 +103,7 @@ abstract class Controller extends \System
 		}
 
 		$strBrace = '{' . implode(',', \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')))) . '}';
-		$arrCustomized = glob(TL_ROOT . '/templates/' . $strPrefix . '*.' . $strBrace, GLOB_BRACE);
+		$arrCustomized = self::braceGlob(TL_ROOT . '/templates/' . $strPrefix . '*.' . $strBrace);
 
 		// Add the customized templates
 		if (is_array($arrCustomized))
@@ -133,7 +135,7 @@ abstract class Controller extends \System
 				{
 					if ($objTheme->templates != '')
 					{
-						$arrThemeTemplates = glob(TL_ROOT . '/' . $objTheme->templates . '/' . $strPrefix . '*.' . $strBrace, GLOB_BRACE);
+						$arrThemeTemplates = self::braceGlob(TL_ROOT . '/' . $objTheme->templates . '/' . $strPrefix . '*.' . $strBrace);
 
 						if (is_array($arrThemeTemplates))
 						{
@@ -2340,5 +2342,44 @@ abstract class Controller extends \System
 
 		$objVersions = new \Versions($strTable, $intId);
 		$objVersions->create();
+	}
+
+	/**
+	 * Return the files matching a GLOB pattern
+	 *
+	 * @param string $pattern
+	 *
+	 * @return array
+	 */
+	protected static function braceGlob($pattern)
+	{
+		// Use glob() if possible
+		if (false === strpos($pattern, '/**/') && (defined('GLOB_BRACE') || false === strpos($pattern, '{')))
+		{
+			return glob($pattern, defined('GLOB_BRACE') ? GLOB_BRACE : 0);
+		}
+
+		$finder = new Finder();
+		$regex = Glob::toRegex($pattern);
+
+		// All files in the given template folder
+		$filesIterator = $finder
+			->files()
+			->followLinks()
+			->sortByName()
+			->in(dirname($pattern))
+		;
+
+		// Match the actual regex and filter the files
+		$filesIterator = $filesIterator->filter(function (\SplFileInfo $info) use ($regex)
+		{
+			$path = $info->getPathname();
+
+			return preg_match($regex, $path) && $info->isFile();
+		});
+
+		$files = iterator_to_array($filesIterator);
+
+		return array_keys($files);
 	}
 }
