@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Fix the back end theme.
  * Check if the session has been started before using the flash bag.
 
 ### 4.4.4 (2017-09-05)

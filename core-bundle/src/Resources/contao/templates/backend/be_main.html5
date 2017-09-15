@@ -38,13 +38,16 @@
       <div class="inner">
         <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
         <ul id="tmenu">
-          <li class="username"><?= $this->username ?></li>
-          <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile" title="<?= $this->profileTitle ?>"><?= $this->profile ?></a></li>
+          <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0) echo ' <sup>' . $this->systemErrorMessagesCount . '</sup>'; ?></a></li>
           <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
-          <?php if ($this->systemMessagesCount > 0): ?>
-            <li><?php if ($this->systemErrorMessagesCount > 0) echo '<sup>' . $this->systemErrorMessagesCount . '</sup>'; ?><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?></a></li>
-          <?php endif; ?>
-          <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" title="<?= StringUtil::specialchars($this->logout) ?>" accesskey="q"><?= $this->logout ?></a></li>
+          <li class="submenu">
+            <h2><?= $this->username ?></h2>
+            <ul class="level_2">
+              <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
+              <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
+              <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
+            </ul>
+          </li>
           <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
         </ul>
       </div>

@@ -25,9 +25,11 @@
 <body class="<?= $this->ua ?> popup">
 
   <div id="container" class="cf">
-    <div id="tl_soverview">
-      <div id="tl_messages">
-        <?= $this->messages ?>
+    <div id="main">
+      <div id="tl_soverview">
+        <div id="tl_messages">
+          <?= $this->messages ?: $this->noMessages ?>
+        </div>
       </div>
     </div>
   </div>
