@@ -605,9 +605,6 @@ input[type=search]::-webkit-search-decoration {
 }
 
 /* Listing */
-.tl_listing {
-	margin:2px 0 !important;
-}
 table.tl_listing {
 	width:100%;
 }
@@ -1073,6 +1070,9 @@ ul.sgallery li {
 }
 #tl_shortcuts p a {
 	text-decoration:underline;
+}
+#tl_versions {
+	margin-bottom:18px;
 }
 #tl_versions th {
 	background:#f6f6f8;
