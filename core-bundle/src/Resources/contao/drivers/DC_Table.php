@@ -6014,13 +6014,17 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Predefined node set (see #3563)
 		if (isset($attributes['rootNodes']))
 		{
-			$arrRoot = (array) $attributes['rootNodes'];
+			$arrRoot = $this->eliminateNestedPages((array) $attributes['rootNodes']);
 
-			// Allow only those roots that are allowed in root nodes
+			// Calculate the intersection of the root nodes with the mounted nodes (see #1001)
 			if (!empty($this->root) && $arrRoot != $this->root)
 			{
-				$arrRoot = array_intersect($arrRoot, array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable)));
-				$arrRoot = $this->eliminateNestedPages($arrRoot);
+				$arrRoot = $this->eliminateNestedPages(
+					array_intersect(
+						array_merge($arrRoot, $this->Database->getChildRecords($arrRoot, $this->strTable)),
+						array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable))
+					)
+				);
 			}
 
 			$this->root = $arrRoot;
