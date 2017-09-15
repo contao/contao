@@ -473,11 +473,11 @@ class tl_newsletter extends Backend
 			$varValue = StringUtil::generateAlias($dc->activeRecord->subject);
 		}
 
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=?")
-								   ->execute($varValue);
+		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")
+								   ->execute($varValue, $dc->id);
 
 		// Check whether the newsletter alias exists
-		if ($objAlias->numRows > 1)
+		if ($objAlias->numRows)
 		{
 			if (!$autoAlias)
 			{
