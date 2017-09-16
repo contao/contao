@@ -94,7 +94,7 @@ body.popup {
 	position:absolute;
 	right:3px;
 	margin-top:5px;
-	padding:6px 0;
+	padding:6px 0 9px;
 	background:#fff;
 	box-shadow:0 0 3px #999;
 	z-index:1;
@@ -110,17 +110,17 @@ body.popup {
 	display:block;
 	margin-right:0;
 	color:inherit;
-	padding:6px 15px 6px 35px;
+	padding:6px 20px 6px 40px;
 }
 #tmenu ul.level_2 li a:hover {
 	background-color:#eee;
 }
 #tmenu ul.level_2 .info {
 	color:#808080;
-	padding:6px 15px 12px;
+	padding:9px 20px 15px;
 	border-bottom:1px solid #e6e6e8;
 	line-height:1.4;
-	margin-bottom:6px;
+	margin-bottom:9px;
 }
 #tmenu ul.level_2 strong {
 	color:#222;
@@ -151,10 +151,10 @@ body.popup {
 	text-indent:100%;
 }
 #tmenu .icon-profile {
-	background:url("icons/profile_dark.svg") 15px center no-repeat;
+	background:url("icons/profile_dark.svg") 20px center no-repeat;
 }
 #tmenu .icon-logout {
-	background:url("icons/exit_dark.svg") 15px center no-repeat;
+	background:url("icons/exit_dark.svg") 20px center no-repeat;
 }
 
 /* Container */
@@ -610,7 +610,7 @@ table.tl_listing {
 }
 .tl_listing_container {
 	padding:2px 0;
-	margin:20px 15px 20px;
+	margin:20px 15px 16px;
 }
 #tl_buttons + .tl_listing_container {
 	margin-top:10px;
@@ -1051,7 +1051,7 @@ ul.sgallery li {
 	padding:0 15px 4px;
 	border-bottom:1px solid #e6e6e8;
 }
-#tl_soverview div:last-child {
+#tl_soverview > div:last-child {
 	border-bottom:0;
 }
 #tl_soverview table {
@@ -1072,7 +1072,7 @@ ul.sgallery li {
 	text-decoration:underline;
 }
 #tl_versions {
-	margin-bottom:18px;
+	margin-bottom:14px;
 }
 #tl_versions th {
 	background:#f6f6f8;
@@ -1689,7 +1689,6 @@ fieldset.collapsed > legend {
 	overflow:hidden;
 	background:#f6f6f8;
 	margin-top:10px;
-	margin-bottom:15px;
 	border:solid #e9e9e9;
 	border-width:1px 0;
 	padding:12px 15px;
