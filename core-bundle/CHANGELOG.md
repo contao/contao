@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Fall back to the URL if there is no link title (see #1081).
  * Correctly calculate the intersection of the root nodes with the mounted nodes (see #1001).
  * Catch the DriverException if the database connection fails (see contao/managed-edition#27).
  * Fix the back end theme.

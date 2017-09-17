@@ -67,6 +67,11 @@ class ContentHyperlink extends \ContentElement
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->rel = $this->rel;
 
+		if ($this->linkTitle == '')
+		{
+			$this->linkTitle = $this->url;
+		}
+
 		$this->Template->href = $this->url;
 		$this->Template->embed_pre = $embed[0];
 		$this->Template->embed_post = $embed[1];
