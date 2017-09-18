@@ -1801,8 +1801,10 @@ Ezt az e-mail a Contao rendszer generálta. Nem tud rá közvetlenül válaszoln
         <target>Vissza az oldal választóhoz</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Értesítések</target>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

@@ -130,8 +130,7 @@
         <target>Ripristina record eliminati</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>Dati personali</target>
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
@@ -139,6 +138,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
+        <target>Elemento di contenuto</target>
       </trans-unit>
       <trans-unit id="MOD.tl_form_field">
         <source>Fields</source>
@@ -150,6 +150,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
         <source>Media queries</source>
+        <target>Media queries</target>
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
@@ -161,6 +162,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_style">
         <source>Format definitions</source>
+        <target>Definizione dei formati</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>

@@ -1814,8 +1814,10 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
         <target>Powrót do wyboru strony</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Powiadomienia</target>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

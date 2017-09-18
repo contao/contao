@@ -230,6 +230,7 @@ class BackendMain extends \Backend
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
 		$this->Template->logoutTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);
 		$this->Template->backendModules = $GLOBALS['TL_LANG']['MSC']['backendModules'];
+		$this->Template->user = $this->User;
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['user'] . ' ' . $GLOBALS['TL_USERNAME'];
 		$this->Template->skipNavigation = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->request = ampersand(\Environment::get('request'));

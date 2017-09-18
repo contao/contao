@@ -11,6 +11,8 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
+use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
@@ -18,6 +20,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
  * Adds HTTP headers sent by Contao to the Symfony response.
  *
  * @author Yanick Witschi <https://github.com/toflar>
+ * @author Andreas Schempp <https://github.com/aschempp>
  */
 class MergeHttpHeadersListener
 {
@@ -27,9 +30,14 @@ class MergeHttpHeadersListener
     private $framework;
 
     /**
-     * @var array|null
+     * @var HeaderStorageInterface
      */
-    private $headers;
+    private $headerStorage;
+
+    /**
+     * @var array
+     */
+    private $headers = [];
 
     /**
      * @var array
@@ -45,13 +53,13 @@ class MergeHttpHeadersListener
     /**
      * Constructor.
      *
-     * @param ContaoFrameworkInterface $framework
-     * @param array|null               $headers   Meant for unit testing only!
+     * @param ContaoFrameworkInterface    $framework
+     * @param HeaderStorageInterface|null $headerStorage
      */
-    public function __construct(ContaoFrameworkInterface $framework, array $headers = null)
+    public function __construct(ContaoFrameworkInterface $framework, HeaderStorageInterface $headerStorage = null)
     {
         $this->framework = $framework;
-        $this->headers = $headers;
+        $this->headerStorage = $headerStorage ?: new NativeHeaderStorage();
     }
 
     /**
@@ -111,45 +119,41 @@ class MergeHttpHeadersListener
             return;
         }
 
-        $event->setResponse($this->mergeHttpHeaders($event->getResponse()));
+        // Fetch remaining headers and add them to the response
+        $this->fetchHttpHeaders();
+        $this->setResponseHeaders($event->getResponse());
     }
 
     /**
-     * Merges the HTTP headers.
+     * Fetches and stores HTTP headers from PHP.
+     */
+    private function fetchHttpHeaders()
+    {
+        $this->headers = array_merge($this->headers, $this->headerStorage->all());
+        $this->headerStorage->clear();
+    }
+
+    /**
+     * Sets the response headers.
      *
      * @param Response $response
-     *
-     * @return Response
      */
-    private function mergeHttpHeaders(Response $response)
+    private function setResponseHeaders(Response $response)
     {
-        foreach ($this->getHeaders() as $header) {
-            list($name, $content) = explode(':', $header, 2);
+        $allowOverrides = [];
 
-            if ('cli' !== PHP_SAPI && !headers_sent()) {
-                header_remove($name);
-            }
+        foreach ($this->headers as $header) {
+            list($name, $content) = explode(':', $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
 
             if (in_array($uniqueKey, $this->multiHeaders, true)) {
                 $response->headers->set($uniqueKey, trim($content), false);
-            } elseif (!$response->headers->has($uniqueKey)) {
+            } elseif (isset($allowOverrides[$uniqueKey]) || !$response->headers->has($uniqueKey)) {
+                $allowOverrides[$uniqueKey] = true;
                 $response->headers->set($uniqueKey, trim($content));
             }
         }
-
-        return $response;
-    }
-
-    /**
-     * Returns the headers.
-     *
-     * @return array
-     */
-    private function getHeaders()
-    {
-        return $this->headers ?: headers_list();
     }
 
     /**

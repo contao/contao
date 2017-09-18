@@ -130,8 +130,8 @@
         <target>Восстановление удаленных записей</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>Личные данные</target>
+        <source>User profile</source>
+        <target>Профиль пользователя</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

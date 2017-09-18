@@ -93,8 +93,9 @@ class ModuleChangePassword extends \Module
 		$doNotSubmit = false;
 		$objMember = \MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
-		$flashBag = \System::getContainer()->get('session')->getFlashBag();
 		$strTable = $objMember->getTable();
+		$session = \System::getContainer()->get('session');
+		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #8301)
 		$objVersions = new \Versions($strTable, $objMember->id);
@@ -213,7 +214,7 @@ class ModuleChangePassword extends \Module
 		}
 
 		// Confirmation message
-		if ($flashBag->has('mod_changePassword_confirm'))
+		if ($session->isStarted() && $flashBag->has('mod_changePassword_confirm'))
 		{
 			$arrMessages = $flashBag->get('mod_changePassword_confirm');
 			$this->Template->message = $arrMessages[0];

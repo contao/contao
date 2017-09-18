@@ -99,7 +99,7 @@
         <source>Restore deleted records</source>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

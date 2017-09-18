@@ -282,6 +282,11 @@ class StringUtilTest extends TestCase
                 ['value' => 'foobar'],
                 'Output 3',
             ],
+            'Test {{iflng}} insert tag or similar constructs are ignored' => [
+                '{if value=="foobar"}{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}{elseif value=="foo"}{{iflng::en}}hi2{{iflng}}{else}ok{endif}',
+                ['value' => 'foobar'],
+                '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
+            ],
         ];
     }
 

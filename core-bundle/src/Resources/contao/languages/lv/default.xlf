@@ -1807,8 +1807,10 @@ Konts tika bloķēts %d minūtes, jo lietotājs ievadīja nederīgu paroli trīs
         <target>Atpakaļ uz lapu atlasītāju</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Paziņojumi</target>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

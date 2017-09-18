@@ -1798,8 +1798,10 @@ To sporočilo je bilo avtomatično generirarno iz Contao. Ne odgovarjajte na spo
         <target>Nazaj na izbiro strani</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Obvestila</target>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

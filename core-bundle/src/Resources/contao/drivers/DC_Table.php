@@ -579,7 +579,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					$count = 0;
 					$return .= '
   <tr>
-    <td colspan="2" style="padding:0"><div style="margin-bottom:26px;line-height:24px;border-bottom:1px dotted #ccc">&nbsp;</div></td>
+    <td colspan="2" style="height:5em"></td>
   </tr>';
 
 					foreach ($arrRow as $i=>$v)
@@ -962,7 +962,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			// Mark the new record with "copy of" (see #2938)
 			foreach (array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']) as $strKey)
 			{
-				if (in_array($strKey, array('headline', 'name', 'subject', 'title')))
+				if (!empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strKey]['eval']['doNotCopy']))
+				{
+					continue;
+				}
+
+				if (in_array($strKey, array('headline', 'name', 'subject', 'title', 'question', 'label')))
 				{
 					if ($strKey == 'headline')
 					{
@@ -972,14 +977,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						{
 							$headline['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $headline['value']);
 							$this->set['headline'] = serialize($headline);
+
+							continue;
 						}
 					}
-					else
+
+					if ($this->set[$strKey] != '')
 					{
-						if ($this->set[$strKey] != '')
-						{
-							$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
-						}
+						$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
 					}
 
 					break;
@@ -3538,7 +3543,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$return .= ((\Input::get('act') == 'select') ? '
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
+<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
@@ -4075,7 +4080,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 		$return .= ((\Input::get('act') == 'select') ? '
 
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
+<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
@@ -4707,7 +4712,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$result = $objRow->fetchAllAssoc();
 
 			$return .= ((\Input::get('act') == 'select') ? '
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
+<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form'.((\Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').'
@@ -6009,13 +6014,17 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Predefined node set (see #3563)
 		if (isset($attributes['rootNodes']))
 		{
-			$arrRoot = (array) $attributes['rootNodes'];
+			$arrRoot = $this->eliminateNestedPages((array) $attributes['rootNodes']);
 
-			// Allow only those roots that are allowed in root nodes
+			// Calculate the intersection of the root nodes with the mounted nodes (see #1001)
 			if (!empty($this->root) && $arrRoot != $this->root)
 			{
-				$arrRoot = array_intersect($arrRoot, array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable)));
-				$arrRoot = $this->eliminateNestedPages($arrRoot);
+				$arrRoot = $this->eliminateNestedPages(
+					array_intersect(
+						array_merge($arrRoot, $this->Database->getChildRecords($arrRoot, $this->strTable)),
+						array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable))
+					)
+				);
 			}
 
 			$this->root = $arrRoot;

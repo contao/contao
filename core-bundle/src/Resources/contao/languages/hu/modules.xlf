@@ -130,8 +130,7 @@
         <target>Törölt rekordok visszaállítása</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>Személyes adatok</target>
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

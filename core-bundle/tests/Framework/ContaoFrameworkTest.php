@@ -367,6 +367,46 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
+     * Tests if the request token check is skipped upon an Ajax request.
+     *
+     * @runInSeparateProcess
+     */
+    public function testDoesNotValidateTheRequestTokenUponAjaxRequests()
+    {
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_token_check', true);
+        $request->setMethod('POST');
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
+        $container->get('request_stack')->push($request);
+
+        $rtAdapter = $this
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['validate'])
+            ->getMock()
+        ;
+
+        $rtAdapter
+            ->expects($this->never())
+            ->method('validate')
+        ;
+
+        $framework = $this->mockContaoFramework(
+            $container->get('request_stack'),
+            null,
+            [RequestToken::class => $rtAdapter]
+        );
+
+        $framework->setContainer($container);
+        $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
+    }
+
+    /**
      * Tests if the request token check is skipped if the attribute is false.
      *
      * @runInSeparateProcess
@@ -465,7 +505,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * Tests initializing the framework with an incomplete installation on the install route.
      *
-     * @var string $route
+     * @param string $route
      *
      * @runInSeparateProcess
      * @dataProvider getInstallRoutes
