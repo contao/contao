@@ -34,8 +34,7 @@
         <target>Megadhatóak a naptár hírfolyam jogosultságai.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Naptár jogosultságok</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

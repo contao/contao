@@ -34,8 +34,7 @@
         <target>Zde můžete určit přístupová práva k danému kanálu.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Práva kalendáře</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

@@ -34,8 +34,7 @@
         <target>Här kan du definiera behörigheter för kalender-flöde.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Kalenderbehörigheter</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

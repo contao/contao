@@ -34,8 +34,7 @@
         <target>カレンダーのフィードの権限を設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>カレンダーの権限</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>
