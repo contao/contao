@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-### DEV
+### 4.4.5 (2017-09-18)
 
  * Check if the session has been started before using the flash bag.
 
