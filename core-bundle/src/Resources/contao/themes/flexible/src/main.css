@@ -121,6 +121,7 @@ body.popup {
 	border-bottom:1px solid #e6e6e8;
 	line-height:1.4;
 	margin-bottom:9px;
+	white-space:nowrap;
 }
 #tmenu ul.level_2 strong {
 	color:#222;
