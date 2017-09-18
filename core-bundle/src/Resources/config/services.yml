@@ -281,6 +281,13 @@ services:
         calls:
             - ["setName", ["contao_frontend"]]
 
+    contao.translation.translator:
+        class: Contao\CoreBundle\Translation\Translator
+        decorates: translator
+        arguments:
+            - "@contao.translation.translator.inner"
+            - "@contao.framework"
+
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
         public: false
