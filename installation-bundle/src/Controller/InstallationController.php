@@ -276,7 +276,11 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $warmer = $this->container->get('cache_warmer');
-        $warmer->enableOptionalWarmers();
+
+        if (!$this->getContainerParameter('kernel.debug')) {
+            $warmer->enableOptionalWarmers();
+        }
+
         $warmer->warmUp($cacheDir);
 
         if (function_exists('opcache_reset')) {
