@@ -18,7 +18,7 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -168,7 +168,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $connection = DriverManager::getConnection($params);
             $connection->connect();
             $connection->close();
-        } catch (ConnectionException $e) {
+        } catch (DriverException $e) {
             $extensionConfigs[] = [
                 'dbal' => [
                     'connections' => [
