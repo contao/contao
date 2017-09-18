@@ -34,8 +34,7 @@
         <target>Овде можете дефинисати подешавања сажетка календара.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Дозволе календара</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

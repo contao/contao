@@ -34,8 +34,7 @@
         <target>Εδώ μπορείτε να ορίζετε τα δικαιώματα των feed των ημερολογίων.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Δικαιώματα ημερολογίου</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

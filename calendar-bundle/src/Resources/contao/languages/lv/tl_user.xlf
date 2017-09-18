@@ -34,8 +34,7 @@
         <target>Šeit jūs varat noteikt jaunumu barotnes atļaujas.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Kalendāra atļaujas</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

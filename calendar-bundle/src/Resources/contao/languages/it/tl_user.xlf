@@ -34,8 +34,7 @@
         <target>Qui è possibile definire le autorizzazioni per i feed dei calendari.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Permessi calendario</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

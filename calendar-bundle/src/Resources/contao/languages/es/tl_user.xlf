@@ -34,8 +34,7 @@
         <target>Definir los permisos del flujo del calendario.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Permisos de calendario</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

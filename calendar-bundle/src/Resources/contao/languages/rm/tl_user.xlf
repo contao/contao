@@ -34,8 +34,7 @@
         <target>Qua pos ti definir ils dretgs per il feed RSS.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Autorisaziun da chalenders</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

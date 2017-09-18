@@ -34,8 +34,7 @@
         <target>Har kan du definere tilladelser for kalender feedet.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Kalender tilladelser</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>
