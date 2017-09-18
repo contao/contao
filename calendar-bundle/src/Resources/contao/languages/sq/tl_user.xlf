@@ -34,8 +34,7 @@
         <target>k!etu mund të definiohen lejet për furnizim kalendari.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Leja kalendarit</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

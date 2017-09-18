@@ -34,8 +34,7 @@
         <target>Tutaj możesz ustalić uprawnienia kanału kalendarza.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Uprawnienia kalednarzy</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

@@ -34,8 +34,8 @@
         <target>Hier können Sie die RSS-Feed-Rechte festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Kalenderrechte</target>
+        <source>Events permissions</source>
+        <target>Events-Rechte</target>
       </trans-unit>
     </body>
   </file>

@@ -34,8 +34,7 @@
         <target>Визначення дозволів для RSS-каналів.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Параметри доступу до календаря</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

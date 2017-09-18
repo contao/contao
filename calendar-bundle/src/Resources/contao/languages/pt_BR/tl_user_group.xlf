@@ -2,8 +2,7 @@
   <file datatype="php" original="src/Resources/contao/languages/en/tl_user_group.php" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="tl_user_group.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Permissões de calendários</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

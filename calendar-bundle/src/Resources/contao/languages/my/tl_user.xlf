@@ -34,8 +34,7 @@
         <target>ပြက္ခဒိန်ကုန်ကြမ်းခွင့်ပြုချက်များကိုသတ်မှတ်နိုင်။</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>ပြက္ခဒိန်ခွင့်ပြုချက်များ</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>

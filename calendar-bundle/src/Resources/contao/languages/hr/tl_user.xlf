@@ -34,8 +34,7 @@
         <target>Definirajte dozvole kalendara</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
-        <source>Calendar permissions</source>
-        <target>Dozvole kalendara</target>
+        <source>Events permissions</source>
       </trans-unit>
     </body>
   </file>
