@@ -113,6 +113,7 @@
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
+        <target>Le nom de la base de données ne doit pas contenir de points !</target>
         
       </trans-unit>
       <trans-unit id="24">
