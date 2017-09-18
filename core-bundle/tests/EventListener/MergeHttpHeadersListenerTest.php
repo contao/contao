@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     }
 
     /**
-     * Tests that the headers sent using header() are merged into the response object.
+     * Tests that the headers are merged into the response object.
      */
     public function testMergesTheHeadersSent()
     {
@@ -56,7 +57,7 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new MergeHttpHeadersListener($framework, ['Content-Type: text/html']);
+        $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage(['Content-Type: text/html']));
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
@@ -85,14 +86,14 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new MergeHttpHeadersListener($framework, ['Content-Type: text/html']);
+        $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage(['Content-Type: text/html']));
         $listener->onKernelResponse($responseEvent);
 
         $this->assertFalse($responseEvent->getResponse()->headers->has('Content-Type'));
     }
 
     /**
-     * Tests that multi-value headers are not overriden.
+     * Tests that multi-value headers are not overridden.
      */
     public function testDoesNotOverrideMultiValueHeaders()
     {
@@ -114,7 +115,9 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new MergeHttpHeadersListener($framework, ['set-cookie: new-content=foobar']); // lower-case key
+        $headers = new MemoryHeaderStorage(['set-cookie: new-content=foobar']); // lower-case key
+
+        $listener = new MergeHttpHeadersListener($framework, $headers);
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
@@ -182,5 +185,93 @@ class MergeHttpHeadersListenerTest extends TestCase
                 'cache-control',
             ]
         );
+    }
+
+    /**
+     * Tests that headers are inherited from a subrequest.
+     */
+    public function testInheritsHeadersFromSubrequest()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $headerStorage = new MemoryHeaderStorage(['Content-Type: text/html']);
+
+        $listener = new MergeHttpHeadersListener($framework, $headerStorage);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertTrue($response->headers->has('Content-Type'));
+        $this->assertSame('text/html', $response->headers->get('Content-Type'));
+
+        $headerStorage->add('Content-Type: application/json');
+
+        $responseEvent->setResponse(new Response());
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertTrue($response->headers->has('Content-Type'));
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+    }
+
+    /**
+     * Tests that multi headers are inherited from a subrequest.
+     */
+    public function testInheritsMultiHeadersFromSubrequest()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $headerStorage = new MemoryHeaderStorage(['Set-Cookie: content=foobar']);
+
+        $listener = new MergeHttpHeadersListener($framework, $headerStorage);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+        $allHeaders = $response->headers->get('Set-Cookie', null, false);
+
+        $this->assertTrue($response->headers->has('Set-Cookie'));
+        $this->assertCount(1, $allHeaders);
+        $this->assertSame('content=foobar; path=/', $allHeaders[0]);
+
+        $headerStorage->add('Set-Cookie: new-content=foobar');
+
+        $responseEvent->setResponse(new Response());
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $allHeaders = $response->headers->get('Set-Cookie', null, false);
+
+        $this->assertTrue($response->headers->has('Set-Cookie'));
+        $this->assertCount(2, $allHeaders);
+        $this->assertSame('content=foobar; path=/', $allHeaders[0]);
+        $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
     }
 }

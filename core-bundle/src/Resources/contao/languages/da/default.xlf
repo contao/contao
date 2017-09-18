@@ -1783,7 +1783,10 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
         <target>Tilbage til sidevælgeren</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

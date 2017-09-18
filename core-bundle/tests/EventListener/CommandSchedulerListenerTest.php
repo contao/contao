@@ -17,7 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\MysqliException;
-use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -306,7 +306,7 @@ class CommandSchedulerListenerTest extends TestCase
 
         $connection
             ->method('isConnected')
-            ->willThrowException(new ConnectionException('Could not connect', new MysqliException('Invalid password')))
+            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
         ;
 
         $listener = new CommandSchedulerListener($this->framework, $connection);

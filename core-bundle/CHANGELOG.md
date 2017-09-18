@@ -1,5 +1,13 @@
 # Contao core bundle change log
 
+### 4.4.5 (2017-09-18)
+
+ * Fall back to the URL if there is no link title (see #1081).
+ * Correctly calculate the intersection of the root nodes with the mounted nodes (see #1001).
+ * Catch the DriverException if the database connection fails (see contao/managed-edition#27).
+ * Fix the back end theme.
+ * Check if the session has been started before using the flash bag.
+
 ### 4.4.4 (2017-09-05)
 
  * Show the form submit buttons at the end of the form instead of at the end of the page.

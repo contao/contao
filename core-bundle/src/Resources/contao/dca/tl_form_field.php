@@ -167,6 +167,15 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
+		'label' => array // "label" needs to come before "name" so it gets the "(copy)" suffix (see #1062)
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['label'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'name' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['name'],
@@ -175,15 +184,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'fieldname', 'spaceToUnderscore'=>true, 'maxlength'=>64, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'label' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['label'],
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'text' => array
 		(

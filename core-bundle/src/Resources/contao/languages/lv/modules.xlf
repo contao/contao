@@ -130,8 +130,7 @@
         <target>Ja datubāzes ieraksts tika izdzēst kļūdas dēļ, šis modulis ļauj jums to atjaunot. Tas neatiecas uz datnēm un mapēm.</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>Personīgie dati</target>
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

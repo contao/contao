@@ -43,7 +43,10 @@ class UrlGeneratorTest extends TestCase
      */
     public function testCanBeInstantiated()
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $this->getGenerator());
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\Routing\UrlGenerator',
+            new UrlGenerator($this->mockRouter('foo'), $this->mockContaoFramework(), false)
+        );
     }
 
     /**
@@ -68,9 +71,20 @@ class UrlGeneratorTest extends TestCase
      */
     public function testGeneratesUrls()
     {
-        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar'));
-        $this->assertSame('contao_frontend', $this->getGenerator(true, 0)->generate('foobar'));
-        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('foobar/test'));
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar']))
+            ->generate('foobar', ['_locale' => 'de'])
+        ;
+
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar', '_locale' => 'de']), true)
+            ->generate('foobar', ['_locale' => 'de'])
+        ;
+
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar/test']))
+            ->generate('foobar/test')
+        ;
     }
 
     /**
@@ -78,9 +92,20 @@ class UrlGeneratorTest extends TestCase
      */
     public function testGeneratesUrlsWithoutParameters()
     {
-        $this->assertSame('foobar', $this->getGenerator()->generate('foobar')['alias']);
-        $this->assertSame('foobar/test', $this->getGenerator()->generate('foobar/test')['alias']);
-        $this->assertSame('foobar/article/test', $this->getGenerator()->generate('foobar/article/test')['alias']);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar']))
+            ->generate('foobar')
+        ;
+
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar/test']))
+            ->generate('foobar/test')
+        ;
+
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar/article/test']))
+            ->generate('foobar/article/test')
+        ;
     }
 
     /**
@@ -88,20 +113,25 @@ class UrlGeneratorTest extends TestCase
      */
     public function testOmitsTheIndexFragment()
     {
-        $this->assertSame('contao_index', $this->getGenerator(false, 0)->generate('index'));
-        $this->assertSame('contao_index', $this->getGenerator(true, 0)->generate('index'));
-        $this->assertArrayNotHasKey('alias', $this->getGenerator()->generate('index'));
+        $this
+            ->getGenerator($this->getRouter([], 'contao_index'))
+            ->generate('index')
+        ;
 
-        $this->assertSame('contao_frontend', $this->getGenerator(false, 0)->generate('index/foobar'));
-        $this->assertArrayHasKey('alias', $this->getGenerator()->generate('index/foobar'));
+        $this
+            ->getGenerator($this->getRouter([], 'contao_index'), true)
+            ->generate('index')
+        ;
 
-        $this->assertSame(
-            'contao_frontend',
-            $this->getGenerator(false, 0)->generate('index/{foo}', ['foo' => 'bar'])
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'index/foobar']))
+            ->generate('index/foobar')
+        ;
 
-        $this->assertArrayHasKey('alias', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar']));
-        $this->assertSame('index/foo/bar', $this->getGenerator()->generate('index/{foo}', ['foo' => 'bar'])['alias']);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'index/foo/bar']))
+            ->generate('index/{foo}', ['foo' => 'bar'])
+        ;
     }
 
     /**
@@ -109,13 +139,15 @@ class UrlGeneratorTest extends TestCase
      */
     public function testRemovesTheLocaleIfPrependLocaleIsNotSet()
     {
-        $params = $this->getGenerator(false)->generate('foobar', ['_locale' => 'en']);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar']))
+            ->generate('foobar', ['_locale' => 'en'])
+        ;
 
-        $this->assertArrayNotHasKey('_locale', $params);
-
-        $params = $this->getGenerator(true)->generate('foobar', ['_locale' => 'en']);
-
-        $this->assertArrayHasKey('_locale', $params);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foobar', '_locale' => 'en']), true)
+            ->generate('foobar', ['_locale' => 'en'])
+        ;
     }
 
     /**
@@ -125,17 +157,15 @@ class UrlGeneratorTest extends TestCase
     {
         $params = ['items' => 'bar', 'article' => 'test'];
 
-        $result = $this->getGenerator()->generate('foo/{article}', $params);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/article/test', 'items' => 'bar']))
+            ->generate('foo/{article}', $params)
+        ;
 
-        $this->assertSame('foo/article/test', $result['alias']);
-        $this->assertArrayNotHasKey('article', $result);
-        $this->assertArrayHasKey('items', $result);
-
-        $result = $this->getGenerator()->generate('foo/{items}/{article}', $params);
-
-        $this->assertSame('foo/items/bar/article/test', $result['alias']);
-        $this->assertArrayNotHasKey('article', $result);
-        $this->assertArrayNotHasKey('items', $result);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/items/bar/article/test']))
+            ->generate('foo/{items}/{article}', $params)
+        ;
     }
 
     /**
@@ -143,39 +173,27 @@ class UrlGeneratorTest extends TestCase
      */
     public function testHandlesAutoItems()
     {
-        $this->assertSame(
-            'foo/bar',
-            $this->getGenerator()->generate(
-                'foo/{items}',
-                ['items' => 'bar', 'auto_item' => 'items']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/bar']))
+            ->generate('foo/{items}', ['items' => 'bar', 'auto_item' => 'items'])
+        ;
 
-        $this->assertSame(
-            'foo/bar/article/test',
-            $this->getGenerator()->generate(
-                'foo/{items}/{article}',
-                ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/bar/article/test']))
+            ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
+        ;
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
-        $this->assertSame(
-            'foo/bar',
-            $this->getGenerator()->generate(
-                'foo/{items}',
-                ['items' => 'bar']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/bar']))
+            ->generate('foo/{items}', ['items' => 'bar'])
+        ;
 
-        $this->assertSame(
-            'foo/bar/article/test',
-            $this->getGenerator()->generate(
-                'foo/{items}/{article}',
-                ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/bar/article/test']))
+            ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
+        ;
     }
 
     /**
@@ -183,39 +201,27 @@ class UrlGeneratorTest extends TestCase
      */
     public function testIgnoresAutoItemsIfTheyAreDisabled()
     {
-        $this->assertSame(
-            'foo/items/bar',
-            $this->getGenerator(false, 1, false)->generate(
-                'foo/{items}',
-                ['items' => 'bar', 'auto_item' => 'items']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/items/bar']), false, false)
+            ->generate('foo/{items}', ['items' => 'bar', 'auto_item' => 'items'])
+        ;
 
-        $this->assertSame(
-            'foo/items/bar/article/test',
-            $this->getGenerator(false, 1, false)->generate(
-                'foo/{items}/{article}',
-                ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/items/bar/article/test']), false, false)
+            ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
+        ;
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
-        $this->assertSame(
-            'foo/items/bar',
-            $this->getGenerator(false, 1, false)->generate(
-                'foo/{items}',
-                ['items' => 'bar']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/items/bar']), false, false)
+            ->generate('foo/{items}', ['items' => 'bar'])
+        ;
 
-        $this->assertSame(
-            'foo/items/bar/article/test',
-            $this->getGenerator(false, 1, false)->generate(
-                'foo/{items}/{article}',
-                ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items']
-            )['alias']
-        );
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo/items/bar/article/test']), false, false)
+            ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
+        ;
     }
 
     /**
@@ -223,9 +229,16 @@ class UrlGeneratorTest extends TestCase
      */
     public function testFailsIfAParameterIsMissing()
     {
+        $router = $this->createMock(UrlGeneratorInterface::class);
+
+        $router
+            ->method('getContext')
+            ->willReturn(new RequestContext())
+        ;
+
         $this->expectException(MissingMandatoryParametersException::class);
 
-        $this->getGenerator()->generate('foo/{article}');
+        $this->getGenerator($router)->generate('foo/{article}');
     }
 
     /**
@@ -294,32 +307,23 @@ class UrlGeneratorTest extends TestCase
      */
     public function testHandlesNonArrayParameters()
     {
-        $this->assertSame('foo', $this->getGenerator()->generate('foo', 'bar')['alias']);
+        $this
+            ->getGenerator($this->getRouter(['alias' => 'foo']))
+            ->generate('foo', 'bar')
+        ;
     }
 
     /**
      * Returns an UrlGenerator object.
      *
-     * @param bool $prependLocale
-     * @param int  $returnArgument
-     * @param bool $useAutoItem
+     * @param UrlGeneratorInterface $router
+     * @param bool                  $prependLocale
+     * @param bool                  $useAutoItem
      *
      * @return UrlGenerator
      */
-    private function getGenerator($prependLocale = false, $returnArgument = 1, $useAutoItem = true)
+    private function getGenerator(UrlGeneratorInterface $router, $prependLocale = false, $useAutoItem = true)
     {
-        $router = $this->createMock(UrlGeneratorInterface::class);
-
-        $router
-            ->method('generate')
-            ->willReturnArgument($returnArgument)
-        ;
-
-        $router
-            ->method('getContext')
-            ->willReturn(new RequestContext())
-        ;
-
         $configAdapter = $this
             ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
@@ -363,5 +367,32 @@ class UrlGeneratorTest extends TestCase
             $this->mockContaoFramework(null, null, [Config::class => $configAdapter]),
             $prependLocale
         );
+    }
+
+    /**
+     * Returns the router object.
+     *
+     * @param array  $expectedParameters
+     * @param string $expectedRoute
+     * @param int    $referenceType
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|UrlGeneratorInterface
+     */
+    private function getRouter(array $expectedParameters = [], $expectedRoute = 'contao_frontend', $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        $router = $this->createMock(UrlGeneratorInterface::class);
+
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with($expectedRoute, $expectedParameters, $referenceType)
+        ;
+
+        $router
+            ->method('getContext')
+            ->willReturn(new RequestContext())
+        ;
+
+        return $router;
     }
 }

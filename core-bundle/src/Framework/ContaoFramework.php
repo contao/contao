@@ -265,7 +265,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         try {
             $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
-        } catch (\InvalidArgumentException $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -450,10 +450,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
-        if ($this->request->isXmlHttpRequest()) {
-            throw new AjaxRedirectResponseException($this->router->generate('contao_backend'));
-        }
-
         throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
     }
 
@@ -479,6 +475,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         return null === $this->request
             || 'POST' !== $this->request->getRealMethod()
+            || $this->request->isXmlHttpRequest()
             || !$this->request->attributes->has('_token_check')
             || false === $this->request->attributes->get('_token_check')
         ;

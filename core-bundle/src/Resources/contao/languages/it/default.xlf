@@ -1805,8 +1805,10 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Torna alla selezione pagina</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Notifiche</target>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

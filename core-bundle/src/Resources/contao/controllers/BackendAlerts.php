@@ -56,6 +56,7 @@ class BackendAlerts extends \Backend
 		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['systemMessages']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->messages = \Message::generateUnwrapped() . \Backend::getSystemMessages();
+		$objTemplate->noMessages = $GLOBALS['TL_LANG']['MSC']['noSystemMessages'];
 
 		return $objTemplate->getResponse();
 	}
