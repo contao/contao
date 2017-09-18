@@ -51,7 +51,9 @@ class ContaoCoreExtension extends ConfigurableExtension
 
         return new Configuration(
             $container->getParameter('kernel.debug'),
-            $container->getParameter('kernel.project_dir')
+            $container->getParameter('kernel.project_dir'),
+            $container->getParameter('kernel.root_dir'),
+            $container->getParameter('kernel.default_locale')
         );
     }
 
@@ -77,6 +79,7 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.csrf_token_name', $mergedConfig['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
         $container->setParameter('contao.error_level', $mergedConfig['error_level']);
+        $container->setParameter('contao.locales', $mergedConfig['locales']);
         $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
         $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);

@@ -29,7 +29,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false, $this->getRootDir().'/app');
+        $this->configuration = new Configuration(false, $this->getRootDir(), $this->getRootDir().'/app', 'en');
     }
 
     /**

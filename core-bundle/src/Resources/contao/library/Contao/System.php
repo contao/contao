@@ -552,7 +552,8 @@ abstract class System
 		}
 
 		asort($arrAux);
-		$arrBackendLanguages = scan(__DIR__ . '/../../languages');
+
+		$arrBackendLanguages = \System::getContainer()->getParameter('contao.locales');
 
 		foreach (array_keys($arrAux) as $strKey)
 		{

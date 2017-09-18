@@ -11,8 +11,6 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -20,6 +18,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * Persists the locale from the accept header or the request in the session.
  *
  * @author Andreas Schempp <https://github.com/aschempp>
+ * @author Leo Feyer <https://github.com/leofeyer>
  */
 class LocaleListener
 {
@@ -57,48 +56,7 @@ class LocaleListener
         }
 
         $request = $event->getRequest();
-        $locale = $this->getLocale($request);
-
-        $request->attributes->set('_locale', $locale);
-
-        if ($request->hasSession()) {
-            $request->getSession()->set('_locale', $locale);
-        }
-    }
-
-    /**
-     * Creates a new instance with the installed languages.
-     *
-     * @param ScopeMatcher $scopeMatcher
-     * @param string       $defaultLocale
-     * @param string       $rootDir
-     *
-     * @return static
-     */
-    public static function createWithLocales(ScopeMatcher $scopeMatcher, $defaultLocale, $rootDir)
-    {
-        $dirs = [__DIR__.'/../Resources/contao/languages'];
-
-        // app/Resources/contao/languages
-        if (is_dir($rootDir.'/Resources/contao/languages')) {
-            $dirs[] = $rootDir.'/Resources/contao/languages';
-        }
-
-        $finder = Finder::create()->directories()->depth(0)->in($dirs);
-
-        $languages = array_values(
-            array_map(
-                function (SplFileInfo $file) {
-                    return $file->getFilename();
-                },
-                iterator_to_array($finder)
-            )
-        );
-
-        // The default locale must be the first supported language (see contao/core#6533)
-        array_unshift($languages, $defaultLocale);
-
-        return new static($scopeMatcher, array_unique($languages));
+        $request->attributes->set('_locale', $this->getLocale($request));
     }
 
     /**

@@ -98,6 +98,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.debug' => false,
                 'kernel.project_dir' => $this->getRootDir(),
                 'kernel.root_dir' => $this->getRootDir().'/app',
+                'kernel.default_locale' => 'en',
             ])
         );
 
@@ -305,9 +306,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LocaleListener::class, $definition->getClass());
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(0));
-        $this->assertSame('%kernel.default_locale%', (string) $definition->getArgument(1));
-        $this->assertSame('%kernel.root_dir%', (string) $definition->getArgument(2));
-        $this->assertSame([LocaleListener::class, 'createWithLocales'], $definition->getFactory());
+        $this->assertSame('%contao.locales%', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 
@@ -1187,6 +1186,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.debug' => false,
                 'kernel.project_dir' => $this->getRootDir(),
                 'kernel.root_dir' => $this->getRootDir().'/app',
+                'kernel.default_locale' => 'en',
             ])
         );
 

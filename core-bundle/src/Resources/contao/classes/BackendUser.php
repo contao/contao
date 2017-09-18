@@ -357,11 +357,25 @@ class BackendUser extends \User
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
 
-		\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
-		\System::getContainer()->get('translator')->setLocale($this->language);
+		// Set the language
+		if ($this->language)
+		{
+			if (\System::getContainer()->has('session'))
+			{
+				$session = \System::getContainer()->get('session');
 
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
+				if ($session->isStarted())
+				{
+					$session->set('_locale', $this->language);
+				}
+			}
+
+			\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
+			\System::getContainer()->get('translator')->setLocale($this->language);
+
+			// Deprecated since Contao 4.0, to be removed in Contao 5.0
+			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
+		}
 
 		\Config::set('showHelp', $this->showHelp);
 		\Config::set('useRTE', $this->useRTE);

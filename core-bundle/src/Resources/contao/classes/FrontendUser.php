@@ -270,9 +270,19 @@ class FrontendUser extends \User
 			}
 		}
 
-		// Set language
-		if ($this->language != '')
+		// Set the language
+		if ($this->language)
 		{
+			if (\System::getContainer()->has('session'))
+			{
+				$session = \System::getContainer()->get('session');
+
+				if ($session->isStarted())
+				{
+					$session->set('_locale', $this->language);
+				}
+			}
+
 			\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
 			\System::getContainer()->get('translator')->setLocale($this->language);
 

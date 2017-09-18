@@ -80,7 +80,7 @@ class BackendIndex extends \Backend
 		$objTemplate->messages = \Message::generate();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->languages = \System::getLanguages(true);
+		$objTemplate->languages = \System::getLanguages(true); // backwards compatibility
 		$objTemplate->title = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['loginTo'], \Config::get('websiteTitle')));
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->action = ampersand(\Environment::get('request'));

@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -30,18 +31,32 @@ class Configuration implements ConfigurationInterface
     /**
      * @var string
      */
+    private $projectDir;
+
+    /**
+     * @var string
+     */
     private $rootDir;
+
+    /**
+     * @var string
+     */
+    private $defaultLocale;
 
     /**
      * Constructor.
      *
      * @param bool   $debug
+     * @param string $projectDir
      * @param string $rootDir
+     * @param string $defaultLocale
      */
-    public function __construct($debug, $rootDir)
+    public function __construct($debug, $projectDir, $rootDir, $defaultLocale)
     {
         $this->debug = (bool) $debug;
+        $this->projectDir = $projectDir;
         $this->rootDir = $rootDir;
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -58,7 +73,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('web_dir')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->resolvePath($this->rootDir.'/web'))
+                    ->defaultValue($this->resolvePath($this->projectDir.'/web'))
                     ->validate()
                         ->always(function ($value) {
                             return $this->resolvePath($value);
@@ -100,6 +115,10 @@ class Configuration implements ConfigurationInterface
                     ->max(32767)
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
+                ->arrayNode('locales')
+                    ->prototype('scalar')->end()
+                    ->defaultValue($this->getLocales())
+                ->end()
                 ->arrayNode('image')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -111,7 +130,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('target_dir')
                             ->cannotBeEmpty()
-                            ->defaultValue($this->resolvePath($this->rootDir.'/assets/images'))
+                            ->defaultValue($this->resolvePath($this->projectDir.'/assets/images'))
                             ->validate()
                                 ->always(function ($value) {
                                     return $this->resolvePath($value);
@@ -167,5 +186,31 @@ class Configuration implements ConfigurationInterface
         }
 
         return $path;
+    }
+
+    /**
+     * Returns the Contao locales.
+     *
+     * @return array
+     */
+    private function getLocales()
+    {
+        $dirs = [__DIR__.'/../Resources/contao/languages'];
+
+        // app/Resources/contao/languages
+        if (is_dir($this->rootDir.'/Resources/contao/languages')) {
+            $dirs[] = $this->rootDir.'/Resources/contao/languages';
+        }
+
+        // The default locale must be the first supported language (see contao/core#6533)
+        $languages = [$this->defaultLocale];
+
+        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2}(_[A-Z]{2})?$/')->in($dirs);
+
+        foreach ($finder as $file) {
+            $languages[] = $file->getFilename();
+        }
+
+        return array_values(array_unique($languages));
     }
 }
