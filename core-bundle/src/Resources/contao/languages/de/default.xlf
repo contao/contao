@@ -1816,8 +1816,12 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <target>Zurück zum Seitenwähler</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Mitteilungen</target>
+        <source>Alerts</source>
+        <target>Hinweise</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
+        <target>Zurzeit sind keine Hinweise vorhanden.</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

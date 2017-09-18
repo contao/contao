@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.5 (2017-09-18)
 
  * Fall back to the URL if there is no link title (see #1081).
  * Correctly calculate the intersection of the root nodes with the mounted nodes (see #1001).

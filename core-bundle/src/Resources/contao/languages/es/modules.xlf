@@ -130,8 +130,7 @@
         <target>Si un registro de la base de datos fue eliminado por error, este módulo te permite recuperarlo. Eso no incluye archivos ni carpetas.</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>Datos personales</target>
+        <source>User profile</source>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

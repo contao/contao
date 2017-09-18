@@ -130,8 +130,8 @@
         <target>削除した項目を復元</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>個人データ</target>
+        <source>User profile</source>
+        <target>ユーザーのプロフィール</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

@@ -1814,8 +1814,10 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
         <target>Terug naar de paginakiezer</target>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
-        <source>Notifications</source>
-        <target>Meldingen</target>
+        <source>Alerts</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

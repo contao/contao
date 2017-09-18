@@ -130,8 +130,8 @@
         <target>Gelöschte Datensätze wiederherstellen</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
-        <source>Personal data</source>
-        <target>Personendaten</target>
+        <source>User profile</source>
+        <target>Benutzerprofil</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
