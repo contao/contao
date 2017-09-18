@@ -1,6 +1,6 @@
 # Contao manager bundle change log
 
-### DEV
+### 4.4.5 (2017-09-18)
 
  * Catch the DriverException if the database connection fails (see contao/managed-edition#27).
 
