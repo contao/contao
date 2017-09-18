@@ -389,11 +389,11 @@ class tl_faq extends Backend
 			$varValue = StringUtil::generateAlias($dc->activeRecord->question);
 		}
 
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_faq WHERE alias=?")
-								   ->execute($varValue);
+		$objAlias = $this->Database->prepare("SELECT id FROM tl_faq WHERE alias=? AND id!=?")
+								   ->execute($varValue, $dc->id);
 
 		// Check whether the FAQ alias exists
-		if ($objAlias->numRows > 1)
+		if ($objAlias->numRows)
 		{
 			if (!$autoAlias)
 			{
