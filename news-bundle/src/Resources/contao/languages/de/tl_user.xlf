@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
-        <target>Archivrechte</target>
+        <target>Nachrichtenrechte</target>
       </trans-unit>
     </body>
   </file>
