@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,8 +22,6 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Tests the ContaoToken class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoTokenTest extends TestCase
 {
@@ -31,7 +31,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $token = new ContaoToken(FrontendUser::getInstance());
 
@@ -44,7 +44,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testHandlesFrontEndUsers()
+    public function testHandlesFrontEndUsers(): void
     {
         $token = new ContaoToken(FrontendUser::getInstance());
 
@@ -64,7 +64,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testHandlesBackEndUsers()
+    public function testHandlesBackEndUsers(): void
     {
         $token = new ContaoToken(BackendUser::getInstance());
 
@@ -85,7 +85,7 @@ class ContaoTokenTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testFailsIfTheUserIsNotAuthenticated()
+    public function testFailsIfTheUserIsNotAuthenticated(): void
     {
         /** @var FrontendUser|object $user */
         $user = FrontendUser::getInstance();

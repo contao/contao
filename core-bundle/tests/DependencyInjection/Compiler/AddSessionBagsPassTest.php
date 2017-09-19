@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,15 +21,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Tests the AddSessionBagsPass class.
- *
- * @author Leo Feyer <https:/github.com/leofeyer>
  */
 class AddSessionBagsPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $pass = new AddSessionBagsPass();
 
@@ -37,7 +37,7 @@ class AddSessionBagsPassTest extends TestCase
     /**
      * Tests adding the session bags.
      */
-    public function testAddsTheSessionBags()
+    public function testAddsTheSessionBags(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('session', new Definition(Session::class));
@@ -69,7 +69,7 @@ class AddSessionBagsPassTest extends TestCase
     /**
      * Tests processing the pass without a session.
      */
-    public function testDoesNotAddsTheSessionBagsIfThereIsNoSession()
+    public function testDoesNotAddsTheSessionBagsIfThereIsNoSession(): void
     {
         $container = new ContainerBuilder();
 

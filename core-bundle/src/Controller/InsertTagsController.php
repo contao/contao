@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,8 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
  * Do not just call this Controller directly! It is supposed to be used within ESI requests that are protected by
  * the fragment uri signer of Symfony. If you call it directly, make sure you check for all permissions needed because
  * insert tags can contain arbitrary data!
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class InsertTagsController extends Controller
 {
@@ -48,7 +48,7 @@ class InsertTagsController extends Controller
      *
      * @return Response
      */
-    public function renderAction($insertTag)
+    public function renderAction(string $insertTag): Response
     {
         $this->framework->initialize();
 

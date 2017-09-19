@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,15 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the AddPackagesPass class.
- *
- * @author Andreas Schempp <http://github.com/aschempp>
  */
 class AddPackagesPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
 
@@ -34,7 +34,7 @@ class AddPackagesPassTest extends TestCase
     /**
      * Tests adding the packages.
      */
-    public function testAddsThePackages()
+    public function testAddsThePackages(): void
     {
         $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
         $container = new ContainerBuilder();
@@ -57,7 +57,7 @@ class AddPackagesPassTest extends TestCase
     /**
      * Tests adding packages without a JSON file.
      */
-    public function testAddsAnEmptyArrayIfThereIsNoJsonFile()
+    public function testAddsAnEmptyArrayIfThereIsNoJsonFile(): void
     {
         $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/invalid.json');
         $container = new ContainerBuilder();

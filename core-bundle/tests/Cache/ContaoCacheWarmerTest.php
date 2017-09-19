@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,8 +23,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the ContaoCacheWarmer class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoCacheWarmerTest extends TestCase
 {
@@ -34,7 +34,7 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,8 +51,10 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
+        parent::tearDown();
+
         $fs = new Filesystem();
         $fs->remove($this->getCacheDir().'/contao');
     }
@@ -60,7 +62,7 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheWarmer', $this->warmer);
     }
@@ -68,7 +70,7 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * Tests creating the cache folder.
      */
-    public function testCreatesTheCacheFolder()
+    public function testCreatesTheCacheFolder(): void
     {
         $class1 = new \stdClass();
         $class1->language = 'en-US';
@@ -144,7 +146,7 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * Tests that the warmer is optional.
      */
-    public function testIsAnOptionalWarmer()
+    public function testIsAnOptionalWarmer(): void
     {
         $this->assertTrue($this->warmer->isOptional());
     }
@@ -152,7 +154,7 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * Tests that no cache is generated if there are no Contao resources.
      */
-    public function testDoesNotCreateTheCacheFolderIfThereAreNoContaoResources()
+    public function testDoesNotCreateTheCacheFolderIfThereAreNoContaoResources(): void
     {
         $class1 = new \stdClass();
         $class1->language = 'en-US';
@@ -192,7 +194,7 @@ class ContaoCacheWarmerTest extends TestCase
     /**
      * Tests that no cache is generated if the installation is incomplete.
      */
-    public function testDoesNotCreateTheCacheFolderIfTheInstallationIsIncomplete()
+    public function testDoesNotCreateTheCacheFolderIfTheInstallationIsIncomplete(): void
     {
         $connection = $this->createMock(Connection::class);
 

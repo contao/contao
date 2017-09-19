@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,15 +19,13 @@ use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Tests the FilesyncCommand class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class FilesyncCommandTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $command = new FilesyncCommand('contao:filesync');
 
@@ -36,7 +36,7 @@ class FilesyncCommandTest extends TestCase
     /**
      * Tests that the confirmation message is printed.
      */
-    public function testOutputsTheConfirmationMessage()
+    public function testOutputsTheConfirmationMessage(): void
     {
         $command = new FilesyncCommand('contao:filesync');
         $command->setFramework($this->mockContaoFramework());
@@ -51,7 +51,7 @@ class FilesyncCommandTest extends TestCase
     /**
      * Tests that the command is locked while running.
      */
-    public function testIsLockedWhileRunning()
+    public function testIsLockedWhileRunning(): void
     {
         $lock = new LockHandler('contao:filesync');
         $lock->lock();

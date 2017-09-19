@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,8 +14,6 @@ namespace Contao\CoreBundle\Framework;
 
 /**
  * Interface for framework aware services.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 interface FrameworkAwareInterface
 {

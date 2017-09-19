@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -22,15 +24,13 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Tests the DoctrineMigrationsPass class.
- *
- * @author Andreas Schempp <http://github.com/aschempp>
  */
 class DoctrineMigrationsPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $pass = new DoctrineMigrationsPass();
 
@@ -40,7 +40,7 @@ class DoctrineMigrationsPassTest extends TestCase
     /**
      * Tests adding the definition if the migrations bundle is installed.
      */
-    public function testAddsTheDefinitionIfTheMigrationsBundleIsInstalled()
+    public function testAddsTheDefinitionIfTheMigrationsBundleIsInstalled(): void
     {
         $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
@@ -53,7 +53,7 @@ class DoctrineMigrationsPassTest extends TestCase
     /**
      * Tests adding the definition if the migrations bundle is not installed.
      */
-    public function testDoesNotAddTheDefinitionIfTheMigrationsBundleIsNotInstalled()
+    public function testDoesNotAddTheDefinitionIfTheMigrationsBundleIsNotInstalled(): void
     {
         $container = $this->createContainerBuilder();
 
@@ -66,7 +66,7 @@ class DoctrineMigrationsPassTest extends TestCase
     /**
      * Tests adding the command to the "console.command" tags.
      */
-    public function testAddsTheCommandIdToTheConsoleCommandIds()
+    public function testAddsTheCommandIdToTheConsoleCommandIds(): void
     {
         $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
 
@@ -94,7 +94,7 @@ class DoctrineMigrationsPassTest extends TestCase
      *
      * @return ContainerBuilder
      */
-    private function createContainerBuilder(array $bundles = [])
+    private function createContainerBuilder(array $bundles = []): ContainerBuilder
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.bundles', $bundles);

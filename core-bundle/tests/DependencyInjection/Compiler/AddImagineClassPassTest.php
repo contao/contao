@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,15 +19,13 @@ use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Tests the AddImagineClassPass class.
- *
- * @author Leo Feyer <http://github.com/leofeyer>
  */
 class AddImagineClassPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $pass = new AddImagineClassPass();
 
@@ -35,7 +35,7 @@ class AddImagineClassPassTest extends TestCase
     /**
      * Tests adding the Imagine class.
      */
-    public function testAddsTheImagineClass()
+    public function testAddsTheImagineClass(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('contao.image.imagine', new Definition());

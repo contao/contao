@@ -2,7 +2,6 @@
 
 namespace Contao\Fixtures;
 
-use Contao\CoreBundle\Tests\LanguageHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class System
@@ -72,6 +71,6 @@ class System
 
     public static function loadLanguageFile()
     {
-        $GLOBALS['TL_LANG'] = new LanguageHelper();
+        // ignore
     }
 }

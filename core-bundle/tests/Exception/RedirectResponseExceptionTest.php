@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the RedirectResponseException class.
- *
- * @author Christian Schiffler <https://github.com/discordier>
  */
 class RedirectResponseExceptionTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $exception = new RedirectResponseException('http://example.org');
 
@@ -33,7 +33,7 @@ class RedirectResponseExceptionTest extends TestCase
     /**
      * Tests the getResponse() method.
      */
-    public function testSetsTheResponseStatusCodeAndLocation()
+    public function testSetsTheResponseStatusCodeAndLocation(): void
     {
         $exception = new RedirectResponseException('http://example.org');
 

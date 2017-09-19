@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,9 +19,6 @@ use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
 /**
  * Disables the reverse proxy based on the terminal42/header-replay-bundle.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class UserSessionListener
 {
@@ -39,7 +38,7 @@ class UserSessionListener
      * @param ScopeMatcher $scopeMatcher
      * @param bool         $disableIpCheck
      */
-    public function __construct(ScopeMatcher $scopeMatcher, $disableIpCheck)
+    public function __construct(ScopeMatcher $scopeMatcher, bool $disableIpCheck)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->disableIpCheck = $disableIpCheck;
@@ -51,7 +50,7 @@ class UserSessionListener
      *
      * @param HeaderReplayEvent $event
      */
-    public function onReplay(HeaderReplayEvent $event)
+    public function onReplay(HeaderReplayEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -69,7 +68,7 @@ class UserSessionListener
      *
      * @return bool
      */
-    private function hasContaoUser(Request $request)
+    private function hasContaoUser(Request $request): bool
     {
         if (!$request->hasSession()) {
             return false;
@@ -85,7 +84,7 @@ class UserSessionListener
      *
      * @return bool
      */
-    private function hasFrontendUser(Request $request)
+    private function hasFrontendUser(Request $request): bool
     {
         if (!$request->cookies->has('FE_USER_AUTH')) {
             return false;
@@ -109,7 +108,7 @@ class UserSessionListener
      *
      * @return bool
      */
-    private function hasBackendUser(Request $request)
+    private function hasBackendUser(Request $request): bool
     {
         if (!$request->cookies->has('BE_USER_AUTH')) {
             return false;

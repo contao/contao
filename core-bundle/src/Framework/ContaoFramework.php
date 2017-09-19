@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -29,12 +31,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Initializes the Contao framework.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Dominik Tomasi <https://github.com/dtomasi>
- * @author Andreas Schempp <https://github.com/aschempp>
  *
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
  */
@@ -116,7 +112,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @param string           $rootDir
      * @param int              $errorLevel
      */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, $rootDir, $errorLevel)
+    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->router = $router;
@@ -129,7 +125,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * {@inheritdoc}
      */
-    public function isInitialized()
+    public function isInitialized(): bool
     {
         return self::$initialized;
     }
@@ -139,7 +135,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws \LogicException
      */
-    public function initialize()
+    public function initialize(): void
     {
         if ($this->isInitialized()) {
             return;
@@ -176,7 +172,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * {@inheritdoc}
      */
-    public function getAdapter($class)
+    public function getAdapter($class): Adapter
     {
         if (!isset($this->adapterCache[$class])) {
             $this->adapterCache[$class] = new Adapter($class);
@@ -190,7 +186,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
      */
-    private function setConstants()
+    private function setConstants(): void
     {
         if (!defined('TL_MODE')) {
             define('TL_MODE', $this->getMode());
@@ -219,7 +215,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @return string|null
      */
-    private function getMode()
+    private function getMode(): ?string
     {
         if (null === $this->request) {
             return null;
@@ -241,7 +237,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @return string|null
      */
-    private function getRefererId()
+    private function getRefererId(): ?string
     {
         if (null === $this->request) {
             return null;
@@ -255,7 +251,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @return string|null
      */
-    private function getRoute()
+    private function getRoute(): ?string
     {
         if (null === $this->request) {
             return null;
@@ -277,7 +273,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @return string|null
      */
-    private function getPath()
+    private function getPath(): ?string
     {
         if (null === $this->request) {
             return null;
@@ -289,7 +285,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Initializes the framework.
      */
-    private function initializeFramework()
+    private function initializeFramework(): void
     {
         // Set the error_reporting level
         error_reporting($this->errorLevel);
@@ -328,7 +324,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Includes some helper files.
      */
-    private function includeHelpers()
+    private function includeHelpers(): void
     {
         require __DIR__.'/../Resources/contao/helper/functions.php';
         require __DIR__.'/../Resources/contao/config/constants.php';
@@ -339,7 +335,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Includes the basic classes required for further processing.
      */
-    private function includeBasicClasses()
+    private function includeBasicClasses(): void
     {
         foreach ($this->basicClasses as $class) {
             if (!class_exists($class, false)) {
@@ -352,7 +348,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
      */
-    private function initializeLegacySessionAccess()
+    private function initializeLegacySessionAccess(): void
     {
         if (!$this->session->isStarted()) {
             return;
@@ -365,7 +361,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Sets the default language.
      */
-    private function setDefaultLanguage()
+    private function setDefaultLanguage(): void
     {
         $language = 'en';
 
@@ -383,7 +379,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws IncompleteInstallationException If the installation has not been completed
      */
-    private function validateInstallation()
+    private function validateInstallation(): void
     {
         if (null === $this->request
             || in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
@@ -405,19 +401,19 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Sets the time zone.
      */
-    private function setTimezone()
+    private function setTimezone(): void
     {
         /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
-        $this->iniSet('date.timezone', $config->get('timeZone'));
-        date_default_timezone_set($config->get('timeZone'));
+        $this->iniSet('date.timezone', (string) $config->get('timeZone'));
+        date_default_timezone_set((string) $config->get('timeZone'));
     }
 
     /**
      * Triggers the initializeSystem hook (see #5665).
      */
-    private function triggerInitializeSystemHook()
+    private function triggerInitializeSystemHook(): void
     {
         if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
@@ -436,7 +432,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws AjaxRedirectResponseException|InvalidRequestTokenException
      */
-    private function handleRequestToken()
+    private function handleRequestToken(): void
     {
         /** @var RequestToken $requestToken */
         $requestToken = $this->getAdapter(RequestToken::class);
@@ -457,9 +453,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * Tries to set a php.ini configuration option.
      *
      * @param string $key
-     * @param mixed  $value
+     * @param string $value
      */
-    private function iniSet($key, $value)
+    private function iniSet(string $key, string $value): void
     {
         if (function_exists('ini_set')) {
             ini_set($key, $value);
@@ -469,9 +465,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Checks if the token check can be skipped.
      *
-     * @return bool True
+     * @return bool
      */
-    private function canSkipTokenCheck()
+    private function canSkipTokenCheck(): bool
     {
         return null === $this->request
             || 'POST' !== $this->request->getRealMethod()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,15 +20,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the BypassMaintenanceListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BypassMaintenanceListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new BypassMaintenanceListener($this->mockSession(), false);
 
@@ -36,7 +36,7 @@ class BypassMaintenanceListenerTest extends TestCase
     /**
      * Tests adding the request attribute.
      */
-    public function testAddsTheRequestAttribute()
+    public function testAddsTheRequestAttribute(): void
     {
         $request = new Request();
         $request->cookies->set('BE_USER_AUTH', 'da6c1abd61155f4ce98c6b5f1fbbf0ebeb43638e');
@@ -56,7 +56,7 @@ class BypassMaintenanceListenerTest extends TestCase
     /**
      * Tests that the request attribute is not set if there is no back end user.
      */
-    public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser()
+    public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser(): void
     {
         $event = new GetResponseEvent(
             $this->mockKernel(),

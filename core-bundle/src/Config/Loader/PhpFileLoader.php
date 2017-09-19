@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,10 +16,6 @@ use Symfony\Component\Config\Loader\Loader;
 
 /**
  * Reads PHP files and returns the content without the opening and closing PHP tags.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PhpFileLoader extends Loader
 {
@@ -29,9 +27,9 @@ class PhpFileLoader extends Loader
      *
      * @return string
      */
-    public function load($file, $type = null)
+    public function load($file, $type = null): string
     {
-        list($code, $namespace) = $this->parseFile($file);
+        list($code, $namespace) = $this->parseFile((string) $file);
 
         $code = $this->stripLegacyCheck($code);
 
@@ -45,9 +43,9 @@ class PhpFileLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
-        return 'php' === pathinfo($resource, PATHINFO_EXTENSION);
+        return 'php' === pathinfo((string) $resource, PATHINFO_EXTENSION);
     }
 
     /**
@@ -57,7 +55,7 @@ class PhpFileLoader extends Loader
      *
      * @return array
      */
-    private function parseFile($file)
+    private function parseFile(string $file): array
     {
         $code = '';
         $namespace = '';
@@ -109,7 +107,7 @@ class PhpFileLoader extends Loader
      *
      * @return string
      */
-    private function handleDeclare($code)
+    private function handleDeclare(string $code): string
     {
         $code = preg_replace('/(,\s*)?strict_types\s*=\s*1(\s*,)?/', '', $code);
 
@@ -127,7 +125,7 @@ class PhpFileLoader extends Loader
      *
      * @return string
      */
-    private function stripLegacyCheck($code)
+    private function stripLegacyCheck(string $code): string
     {
         $code = str_replace(
             [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,8 +14,6 @@ namespace Contao\CoreBundle\HttpKernel\Header;
 
 /**
  * Interface for HTTP header storage.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 interface HeaderStorageInterface
 {
@@ -22,17 +22,17 @@ interface HeaderStorageInterface
      *
      * @return array
      */
-    public function all();
+    public function all(): array;
 
     /**
      * Adds a header to the storage.
      *
      * @param string $header
      */
-    public function add($header);
+    public function add(string $header): void;
 
     /**
      * Clears the storage.
      */
-    public function clear();
+    public function clear(): void;
 }

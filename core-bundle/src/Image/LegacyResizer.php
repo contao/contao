@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -25,8 +27,6 @@ use Imagine\Gd\Imagine as GdImagine;
 
 /**
  * Resizes Image objects via Contao\Image\Resizer and executes legacy hooks.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
  */
 class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 {
@@ -40,7 +40,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options)
+    public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options): ImageInterface
     {
         if (!empty($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize'])
             || !empty($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage'])
@@ -96,7 +96,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options)
+    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options): ImageInterface
     {
         if (isset($GLOBALS['TL_HOOKS']['getImage'])
             && is_array($GLOBALS['TL_HOOKS']['getImage'])

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -76,8 +78,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * Tests the ContaoCoreExtension class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoCoreExtensionTest extends TestCase
 {
@@ -89,7 +89,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -116,7 +116,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $extension = new ContaoCoreExtension();
 
@@ -126,7 +126,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the getAlias() method.
      */
-    public function testReturnsTheCorrectAlias()
+    public function testReturnsTheCorrectAlias(): void
     {
         $extension = new ContaoCoreExtension();
 
@@ -141,7 +141,7 @@ class ContaoCoreExtensionTest extends TestCase
      *
      * @dataProvider getCommandTestData
      */
-    public function testRegistersTheCommands($key, $class)
+    public function testRegistersTheCommands(string $key, string $class): void
     {
         $this->assertTrue($this->container->has($key));
 
@@ -165,7 +165,7 @@ class ContaoCoreExtensionTest extends TestCase
      *
      * @return array
      */
-    public function getCommandTestData()
+    public function getCommandTestData(): array
     {
         return [
             ['contao.command.automator', AutomatorCommand::class],
@@ -180,7 +180,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.add_to_search_index service.
      */
-    public function testRegistersTheAddToSearchIndexListener()
+    public function testRegistersTheAddToSearchIndexListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.add_to_search_index'));
 
@@ -200,7 +200,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.bypass_maintenance service.
      */
-    public function testRegistersTheBypassMaintenanceListener()
+    public function testRegistersTheBypassMaintenanceListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.bypass_maintenance'));
 
@@ -221,7 +221,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.command_scheduler service.
      */
-    public function testRegistersTheCommandSchedulerListener()
+    public function testRegistersTheCommandSchedulerListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.command_scheduler'));
 
@@ -242,7 +242,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.doctrine_schema service.
      */
-    public function testRegistersTheDoctrineSchemaListener()
+    public function testRegistersTheDoctrineSchemaListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.doctrine_schema'));
 
@@ -261,7 +261,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.exception_converter service.
      */
-    public function testRegistersTheExceptionConverterListener()
+    public function testRegistersTheExceptionConverterListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.exception_converter'));
 
@@ -280,7 +280,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.insecure_installation service.
      */
-    public function testRegistersTheInsecureInstallationListener()
+    public function testRegistersTheInsecureInstallationListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.insecure_installation'));
 
@@ -298,7 +298,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.locale service.
      */
-    public function testRegistersTheLocaleListener()
+    public function testRegistersTheLocaleListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.locale'));
 
@@ -319,7 +319,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.merge_http_headers service.
      */
-    public function testRegistersTheMergeHttpHeadersListener()
+    public function testRegistersTheMergeHttpHeadersListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.merge_http_headers'));
 
@@ -339,7 +339,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.pretty_error_screens service.
      */
-    public function testRegistersThePrettyErrorScreensListener()
+    public function testRegistersThePrettyErrorScreensListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.pretty_error_screens'));
 
@@ -363,7 +363,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.referer_id service.
      */
-    public function testRegistersTheRefererIdListener()
+    public function testRegistersTheRefererIdListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.referer_id'));
 
@@ -384,7 +384,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.response_exception service.
      */
-    public function testRegistersTheResponseExceptionListener()
+    public function testRegistersTheResponseExceptionListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.response_exception'));
 
@@ -403,7 +403,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.store_referer service.
      */
-    public function testRegistersTheStoreRefererListener()
+    public function testRegistersTheStoreRefererListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.store_referer'));
 
@@ -425,7 +425,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.toggle_view service.
      */
-    public function testRegistersTheToggleViewListener()
+    public function testRegistersTheToggleViewListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.toggle_view'));
 
@@ -445,7 +445,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.listener.user_session service.
      */
-    public function testRegistersTheUserSessionListener()
+    public function testRegistersTheUserSessionListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.user_session'));
 
@@ -470,7 +470,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.cache service.
      */
-    public function testRegistersTheContaoCache()
+    public function testRegistersTheContaoCache(): void
     {
         $this->assertTrue($this->container->has('contao.cache'));
 
@@ -485,7 +485,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.cache.clear_internal service.
      */
-    public function testRegistersTheContaoCacheClearer()
+    public function testRegistersTheContaoCacheClearer(): void
     {
         $this->assertTrue($this->container->has('contao.cache.clear_internal'));
 
@@ -502,7 +502,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.cache.warm_internal service.
      */
-    public function testRegistersTheContaoCacheWarmer()
+    public function testRegistersTheContaoCacheWarmer(): void
     {
         $this->assertTrue($this->container->has('contao.cache.warm_internal'));
 
@@ -524,7 +524,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.controller.backend_csv_import service.
      */
-    public function testRegistersTheBackendCsvImportController()
+    public function testRegistersTheBackendCsvImportController(): void
     {
         $this->assertTrue($this->container->has('contao.controller.backend_csv_import'));
 
@@ -540,7 +540,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.controller.insert_tags service.
      */
-    public function tesRegistersThetInsertTagsController()
+    public function tesRegistersThetInsertTagsController(): void
     {
         $this->assertTrue($this->container->has('contao.controller.insert_tags'));
 
@@ -553,7 +553,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.cors_website_roots_config_provider service.
      */
-    public function testRegistersTheCorsWebsiteRootsConfigProvider()
+    public function testRegistersTheCorsWebsiteRootsConfigProvider(): void
     {
         $this->assertTrue($this->container->has('contao.cors_website_roots_config_provider'));
 
@@ -570,7 +570,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.data_collector service.
      */
-    public function testRegistersTheDataCollector()
+    public function testRegistersTheDataCollector(): void
     {
         $this->assertTrue($this->container->has('contao.data_collector'));
 
@@ -599,7 +599,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.doctrine.schema_provider service.
      */
-    public function testRegistersTheDoctrineSchemaProvider()
+    public function testRegistersTheDoctrineSchemaProvider(): void
     {
         $this->assertTrue($this->container->has('contao.doctrine.schema_provider'));
 
@@ -613,7 +613,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.imagine service.
      */
-    public function testRegistersTheImageImagineService()
+    public function testRegistersTheImageImagineService(): void
     {
         $this->assertTrue($this->container->has('contao.image.imagine'));
 
@@ -625,7 +625,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.imagine_svg service.
      */
-    public function testRegistersTheImageImagineSvgService()
+    public function testRegistersTheImageImagineSvgService(): void
     {
         $this->assertTrue($this->container->has('contao.image.imagine_svg'));
 
@@ -637,7 +637,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.resize_calculator service.
      */
-    public function testRegistersTheImageResizeCalculator()
+    public function testRegistersTheImageResizeCalculator(): void
     {
         $this->assertTrue($this->container->has('contao.image.resize_calculator'));
 
@@ -650,7 +650,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.resizer service.
      */
-    public function testRegistersTheImageResizer()
+    public function testRegistersTheImageResizer(): void
     {
         $this->assertTrue($this->container->has('contao.image.resizer'));
 
@@ -675,7 +675,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.image_factory service.
      */
-    public function testRegistersTheImageFactory()
+    public function testRegistersTheImageFactory(): void
     {
         $this->assertTrue($this->container->has('contao.image.image_factory'));
 
@@ -695,7 +695,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.image_sizes service.
      */
-    public function testRegistersTheImageSizesService()
+    public function testRegistersTheImageSizesService(): void
     {
         $this->assertTrue($this->container->has('contao.image.image_sizes'));
 
@@ -710,7 +710,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.picture_generator service.
      */
-    public function testRegistersTheImagePictureGenerator()
+    public function testRegistersTheImagePictureGenerator(): void
     {
         $this->assertTrue($this->container->has('contao.image.picture_generator'));
 
@@ -723,7 +723,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.image.picture_factory service.
      */
-    public function testRegistersTheImagePictureFactory()
+    public function testRegistersTheImagePictureFactory(): void
     {
         $this->assertTrue($this->container->has('contao.image.picture_factory'));
 
@@ -740,7 +740,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.framework service.
      */
-    public function testRegistersTheContaoFramework()
+    public function testRegistersTheContaoFramework(): void
     {
         $this->assertTrue($this->container->has('contao.framework'));
 
@@ -767,7 +767,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.menu.matcher service.
      */
-    public function testRegistersTheMenuMatcher()
+    public function testRegistersTheMenuMatcher(): void
     {
         $this->assertTrue($this->container->has('contao.menu.matcher'));
 
@@ -780,7 +780,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.menu.renderer service.
      */
-    public function testRegistersTheMenuRenderer()
+    public function testRegistersTheMenuRenderer(): void
     {
         $this->assertTrue($this->container->has('contao.menu.renderer'));
 
@@ -794,7 +794,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.monolog.handler service.
      */
-    public function testRegistersTheMonologHandler()
+    public function testRegistersTheMonologHandler(): void
     {
         $this->assertTrue($this->container->has('contao.monolog.handler'));
 
@@ -823,7 +823,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.monolog.processor service.
      */
-    public function testRegistersTheMonologProcessor()
+    public function testRegistersTheMonologProcessor(): void
     {
         $this->assertTrue($this->container->has('contao.monolog.processor'));
 
@@ -843,7 +843,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.picker.builder service.
      */
-    public function testRegistersThePickerBuilder()
+    public function testRegistersThePickerBuilder(): void
     {
         $this->assertTrue($this->container->has('contao.picker.builder'));
 
@@ -858,7 +858,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.picker.page_provider service.
      */
-    public function testRegistersThePagePickerProvider()
+    public function testRegistersThePagePickerProvider(): void
     {
         $this->assertTrue($this->container->has('contao.picker.page_provider'));
 
@@ -883,7 +883,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.picker.file_provider service.
      */
-    public function testRegistersTheFilePickerProvider()
+    public function testRegistersTheFilePickerProvider(): void
     {
         $this->assertTrue($this->container->has('contao.picker.file_provider'));
 
@@ -909,7 +909,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.picker.article_provider service.
      */
-    public function testRegistersTheArticlePickerProvider()
+    public function testRegistersTheArticlePickerProvider(): void
     {
         $this->assertTrue($this->container->has('contao.picker.article_provider'));
 
@@ -933,7 +933,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.referer_id.manager service.
      */
-    public function testRegistersTheRefererIdManager()
+    public function testRegistersTheRefererIdManager(): void
     {
         $this->assertTrue($this->container->has('contao.referer_id.manager'));
 
@@ -948,7 +948,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.referer_id.token_generator service.
      */
-    public function testRegistersTheRefererIdTokenGenerator()
+    public function testRegistersTheRefererIdTokenGenerator(): void
     {
         $this->assertTrue($this->container->has('contao.referer_id.token_generator'));
 
@@ -961,7 +961,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.resource_finder service.
      */
-    public function testRegistersTheResourceFinder()
+    public function testRegistersTheResourceFinder(): void
     {
         $this->assertTrue($this->container->has('contao.resource_finder'));
 
@@ -974,7 +974,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.resource_locator service.
      */
-    public function testRegistersTheResourceLocator()
+    public function testRegistersTheResourceLocator(): void
     {
         $this->assertTrue($this->container->has('contao.resource_locator'));
 
@@ -987,7 +987,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.routing.frontend_loader service.
      */
-    public function testRegistersTheRoutingFrontendLoader()
+    public function testRegistersTheRoutingFrontendLoader(): void
     {
         $this->assertTrue($this->container->has('contao.routing.frontend_loader'));
 
@@ -1005,7 +1005,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.routing.url_generator service.
      */
-    public function testRegistersTheRoutingUrlGenerator()
+    public function testRegistersTheRoutingUrlGenerator(): void
     {
         $this->assertTrue($this->container->has('contao.routing.url_generator'));
 
@@ -1020,7 +1020,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.routing.scope_matcher service.
      */
-    public function testRegistersTheRoutingScopeMatcher()
+    public function testRegistersTheRoutingScopeMatcher(): void
     {
         $this->assertTrue($this->container->has('contao.routing.scope_matcher'));
 
@@ -1034,7 +1034,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.routing.backend_matcher service.
      */
-    public function testRegistersTheRoutingBackendMatcher()
+    public function testRegistersTheRoutingBackendMatcher(): void
     {
         $this->assertTrue($this->container->has('contao.routing.backend_matcher'));
 
@@ -1052,7 +1052,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.routing.frontend_matcher service.
      */
-    public function testRegistersTheRoutingFrontendMatcher()
+    public function testRegistersTheRoutingFrontendMatcher(): void
     {
         $this->assertTrue($this->container->has('contao.routing.frontend_matcher'));
 
@@ -1070,7 +1070,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.security.authenticator service.
      */
-    public function testRegistersTheSecurityAuthenticator()
+    public function testRegistersTheSecurityAuthenticator(): void
     {
         $this->assertTrue($this->container->has('contao.security.authenticator'));
 
@@ -1093,7 +1093,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.security.user_provider service.
      */
-    public function testRegistersTheSecurityUserProvider()
+    public function testRegistersTheSecurityUserProvider(): void
     {
         $this->assertTrue($this->container->has('contao.security.user_provider'));
 
@@ -1117,7 +1117,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.session.contao_backend service.
      */
-    public function testRegistersTheContaoBackendSession()
+    public function testRegistersTheContaoBackendSession(): void
     {
         $this->assertTrue($this->container->has('contao.session.contao_backend'));
 
@@ -1136,7 +1136,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.session.contao_frontend service.
      */
-    public function testRegistersTheContaoFrontendSession()
+    public function testRegistersTheContaoFrontendSession(): void
     {
         $this->assertTrue($this->container->has('contao.session.contao_frontend'));
 
@@ -1155,7 +1155,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * Tests the contao.twig.template_extension service.
      */
-    public function testRegistersTheTwigTemplateExtension()
+    public function testRegistersTheTwigTemplateExtension(): void
     {
         $this->assertTrue($this->container->has('contao.twig.template_extension'));
 
@@ -1179,7 +1179,7 @@ class ContaoCoreExtensionTest extends TestCase
      *
      * @expectedDeprecation Using the contao.image.target_path parameter has been deprecated %s.
      */
-    public function testRegistersTheImageTargetPath()
+    public function testRegistersTheImageTargetPath(): void
     {
         $container = new ContainerBuilder(
             new ParameterBag([

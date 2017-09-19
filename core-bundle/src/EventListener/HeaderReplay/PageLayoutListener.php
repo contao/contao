@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
 /**
  * Adds the Contao-Page-Layout header based on the terminal42/header-replay-bundle.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class PageLayoutListener
 {
@@ -52,7 +52,7 @@ class PageLayoutListener
      *
      * @param HeaderReplayEvent $event
      */
-    public function onReplay(HeaderReplayEvent $event)
+    public function onReplay(HeaderReplayEvent $event): void
     {
         $request = $event->getRequest();
 

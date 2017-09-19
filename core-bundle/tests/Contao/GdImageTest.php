@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,9 +21,6 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Tests the GdImage class.
  *
- * @author Martin Auswöger <https://github.com/ausi>
- * @author Yanick Witschi <https://github.com/Toflar>
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -37,8 +36,10 @@ class GdImageTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         self::$rootDir = __DIR__.'/../../tmp';
 
         $fs = new Filesystem();
@@ -48,16 +49,21 @@ class GdImageTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
+        parent::tearDownAfterClass();
+
         $fs = new Filesystem();
-        $fs->remove(self::$rootDir);
+
+        if ($fs->exists(self::$rootDir)) {
+            $fs->remove(self::$rootDir);
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -68,7 +74,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);
@@ -80,7 +86,7 @@ class GdImageTest extends TestCase
     /**
      * Tests creating an image from dimensions.
      */
-    public function testCreatesImagesFromDimensions()
+    public function testCreatesImagesFromDimensions(): void
     {
         $image = GdImage::fromDimensions(100, 100);
 
@@ -109,7 +115,7 @@ class GdImageTest extends TestCase
      *
      * @dataProvider getImageTypes
      */
-    public function testCreatesImagesFromFiles($type)
+    public function testCreatesImagesFromFiles(string $type): void
     {
         $image = imagecreatetruecolor(100, 100);
         imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
@@ -132,7 +138,7 @@ class GdImageTest extends TestCase
      *
      * @dataProvider getImageTypes
      */
-    public function testSavesImagesToFiles($type)
+    public function testSavesImagesToFiles(string $type): void
     {
         $file = self::$rootDir.'/test.'.$type;
 
@@ -151,7 +157,7 @@ class GdImageTest extends TestCase
      *
      * @return array
      */
-    public function getImageTypes()
+    public function getImageTypes(): array
     {
         return [
             ['gif'],
@@ -163,7 +169,7 @@ class GdImageTest extends TestCase
     /**
      * Tests that an invalid file type triggers an exception.
      */
-    public function testFailsIfTheFileTypeIsInvalid()
+    public function testFailsIfTheFileTypeIsInvalid(): void
     {
         $this->expectException('InvalidArgumentException');
 
@@ -173,7 +179,7 @@ class GdImageTest extends TestCase
     /**
      * Tests that the image can be copied.
      */
-    public function testCopiesImages()
+    public function testCopiesImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -231,7 +237,7 @@ class GdImageTest extends TestCase
     /**
      * Tests that an image can be converted to a palette image.
      */
-    public function testConvertsImagesToPaletteImages()
+    public function testConvertsImagesToPaletteImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -264,7 +270,7 @@ class GdImageTest extends TestCase
     /**
      * Tests that a true color image can be converted to a palette image.
      */
-    public function testConvertsTrueColorImagesToPaletteImages()
+    public function testConvertsTrueColorImagesToPaletteImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
 
@@ -295,7 +301,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the colors can be counted.
      */
-    public function testCountsTheImageColors()
+    public function testCountsTheImageColors(): void
     {
         $image = imagecreatetruecolor(100, 100);
         imagealphablending($image, false);
@@ -315,7 +321,7 @@ class GdImageTest extends TestCase
     /**
      * Tests the isSemitransparent() method.
      */
-    public function testRecognizesSemitransparentImages()
+    public function testRecognizesSemitransparentImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
         imagealphablending($image, false);

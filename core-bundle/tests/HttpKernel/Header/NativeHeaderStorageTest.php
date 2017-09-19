@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,15 +15,12 @@ namespace Contao\CoreBundle\Tests\HttpKernel\Header;
 use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class NativeHeaderStorageTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $storage = new NativeHeaderStorage();
 

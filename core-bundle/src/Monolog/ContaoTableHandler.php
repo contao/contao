@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,8 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Sends logs to the Contao tl_log table.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
 {
@@ -42,7 +42,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      *
      * @return string
      */
-    public function getDbalServiceName()
+    public function getDbalServiceName(): string
     {
         return $this->dbalServiceName;
     }
@@ -52,7 +52,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      *
      * @param string $name
      */
-    public function setDbalServiceName($name)
+    public function setDbalServiceName(string $name): void
     {
         $this->dbalServiceName = $name;
     }
@@ -60,7 +60,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
@@ -88,7 +88,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->createStatement();
 
@@ -113,7 +113,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): LineFormatter
     {
         return new LineFormatter('%message%');
     }
@@ -123,7 +123,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      *
      * @throws \RuntimeException
      */
-    private function createStatement()
+    private function createStatement(): void
     {
         if (null !== $this->statement) {
             return;
@@ -145,7 +145,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      * @param string        $message
      * @param ContaoContext $context
      */
-    private function executeHook($message, ContaoContext $context)
+    private function executeHook(string $message, ContaoContext $context): void
     {
         if (null === $this->container || !$this->container->has('contao.framework')) {
             return;

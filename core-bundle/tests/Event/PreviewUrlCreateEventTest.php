@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the PreviewUrlCreateEvent class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PreviewUrlCreateEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
@@ -33,7 +33,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the getId() method.
      */
-    public function testSupportsReadingTheId()
+    public function testSupportsReadingTheId(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
@@ -43,7 +43,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the getKey() method.
      */
-    public function testSupportsReadingTheKey()
+    public function testSupportsReadingTheKey(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
@@ -53,7 +53,7 @@ class PreviewUrlCreateEventTest extends TestCase
     /**
      * Tests the query getter and setter.
      */
-    public function testSupportsReadingAndWritingTheQueryString()
+    public function testSupportsReadingAndWritingTheQueryString(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 

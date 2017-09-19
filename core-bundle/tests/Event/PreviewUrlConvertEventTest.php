@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the PreviewUrlConvertEvent class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PreviewUrlConvertEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $event = new PreviewUrlConvertEvent();
 
@@ -33,7 +33,7 @@ class PreviewUrlConvertEventTest extends TestCase
     /**
      * Tests the URL getter and setter.
      */
-    public function testSupportsReadingAndWritingTheUrl()
+    public function testSupportsReadingAndWritingTheUrl(): void
     {
         $event = new PreviewUrlConvertEvent();
 

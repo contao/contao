@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,9 +21,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 /**
  * Provides methods to test the request scope.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5; use the
  *             contao.routing.scope_matcher service instead
  */
@@ -36,7 +35,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    protected function isContaoMasterRequest(KernelEvent $event)
+    protected function isContaoMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isContaoScope();
     }
@@ -48,7 +47,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    protected function isBackendMasterRequest(KernelEvent $event)
+    protected function isBackendMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isBackendScope();
     }
@@ -60,7 +59,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    protected function isFrontendMasterRequest(KernelEvent $event)
+    protected function isFrontendMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isFrontendScope();
     }
@@ -70,7 +69,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    protected function isContaoScope()
+    protected function isContaoScope(): bool
     {
         return $this->isBackendScope() || $this->isFrontendScope();
     }
@@ -80,7 +79,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    protected function isBackendScope()
+    protected function isBackendScope(): bool
     {
         return $this->isScope(ContaoCoreBundle::SCOPE_BACKEND);
     }
@@ -90,7 +89,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    protected function isFrontendScope()
+    protected function isFrontendScope(): bool
     {
         return $this->isScope(ContaoCoreBundle::SCOPE_FRONTEND);
     }
@@ -102,7 +101,7 @@ trait ScopeAwareTrait
      *
      * @return bool
      */
-    private function isScope($scope)
+    private function isScope(string $scope): bool
     {
         if (null === $this->container
             || null === ($request = $this->container->get('request_stack')->getCurrentRequest())
@@ -112,15 +111,14 @@ trait ScopeAwareTrait
 
         $matcher = $this->container->get('contao.routing.scope_matcher');
 
-        switch ($scope) {
-            case ContaoCoreBundle::SCOPE_BACKEND:
-                return $matcher->isBackendRequest($request);
-
-            case ContaoCoreBundle::SCOPE_FRONTEND:
-                return $matcher->isFrontendRequest($request);
-
-            default:
-                return false;
+        if (ContaoCoreBundle::SCOPE_BACKEND === $scope) {
+            return $matcher->isBackendRequest($request);
         }
+
+        if (ContaoCoreBundle::SCOPE_FRONTEND === $scope) {
+            return $matcher->isFrontendRequest($request);
+        }
+
+        return false;
     }
 }

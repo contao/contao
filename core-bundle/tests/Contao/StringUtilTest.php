@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,10 +19,6 @@ use Contao\System;
 /**
  * Tests the StringUtil class.
  *
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Martin Auswöger <martin@auswoeger.com>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @group contao3
  */
 class StringUtilTest extends TestCase
@@ -28,8 +26,10 @@ class StringUtilTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         if (!defined('TL_ERROR')) {
             define('TL_ERROR', 'ERROR');
         }
@@ -38,8 +38,10 @@ class StringUtilTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
+        parent::setUp();
+
         if (!defined('TL_ROOT')) {
             define('TL_ROOT', $this->getRootDir());
         }
@@ -50,7 +52,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests generating aliases.
      */
-    public function testGeneratesAliases()
+    public function testGeneratesAliases(): void
     {
         $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
 
@@ -74,7 +76,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensProvider
      */
-    public function testParsesSimpleTokens($string, array $tokens, $expected)
+    public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
@@ -84,7 +86,7 @@ class StringUtilTest extends TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensProvider()
+    public function parseSimpleTokensProvider(): array
     {
         return [
             'Test regular token replacement' => [
@@ -299,7 +301,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensCorrectNewlines
      */
-    public function testHandlesLineBreaksWhenParsingSimpleTokens($string, array $tokens, $expected)
+    public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
@@ -309,7 +311,7 @@ class StringUtilTest extends TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensCorrectNewlines()
+    public function parseSimpleTokensCorrectNewlines(): array
     {
         return [
             'Test newlines are kept end of token' => [
@@ -353,7 +355,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
-    public function testDoesNotExecutePhpCode($string)
+    public function testDoesNotExecutePhpCode(string $string): void
     {
         $this->assertSame($string, StringUtil::parseSimpleTokens($string, []));
     }
@@ -363,7 +365,7 @@ class StringUtilTest extends TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensDoesntExecutePhp()
+    public function parseSimpleTokensDoesntExecutePhp(): array
     {
         return [
             '(<?php)' => [
@@ -401,7 +403,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
-    public function testDoesNotExecutePhpCodeInTokens(array $tokens)
+    public function testDoesNotExecutePhpCodeInTokens(array $tokens): void
     {
         $this->assertSame($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
@@ -411,7 +413,7 @@ class StringUtilTest extends TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensDoesntExecutePhpInToken()
+    public function parseSimpleTokensDoesntExecutePhpInToken(): array
     {
         return [
             '(<?php)' => [
@@ -445,7 +447,7 @@ class StringUtilTest extends TestCase
      * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
      * contain PHP code that is generated only after replacing the tokens.
      */
-    public function testDoesNotExecutePhpCodeInCombinedTokens()
+    public function testDoesNotExecutePhpCodeInCombinedTokens(): void
     {
         $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
             'open' => '<',
@@ -461,7 +463,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider parseSimpleTokensInvalidComparison
      */
-    public function testFailsIfTheComparisonOperatorIsInvalid($string)
+    public function testFailsIfTheComparisonOperatorIsInvalid($string): void
     {
         $this->expectException('InvalidArgumentException');
 
@@ -473,7 +475,7 @@ class StringUtilTest extends TestCase
      *
      * @return array
      */
-    public function parseSimpleTokensInvalidComparison()
+    public function parseSimpleTokensInvalidComparison(): array
     {
         return [
             'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'],
@@ -492,7 +494,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests the stripRootDir() method.
      */
-    public function testStripsTheRootDirectory()
+    public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'/'));
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'\\'));
@@ -507,7 +509,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests that a path outside the root directory triggers an exception.
      */
-    public function testFailsIfThePathIsOutsideTheRootDirectory()
+    public function testFailsIfThePathIsOutsideTheRootDirectory(): void
     {
         $this->expectException('InvalidArgumentException');
 
@@ -517,7 +519,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests that a parent path triggers an exception.
      */
-    public function testFailsIfThePathIsTheParentFolder()
+    public function testFailsIfThePathIsTheParentFolder(): void
     {
         $this->expectException('InvalidArgumentException');
 
@@ -527,7 +529,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests that a longer path triggers an exception.
      */
-    public function testFailsIfThePathDoesNotMatch()
+    public function testFailsIfThePathDoesNotMatch(): void
     {
         $this->expectException('InvalidArgumentException');
 
@@ -537,7 +539,7 @@ class StringUtilTest extends TestCase
     /**
      * Tests that omitting the trailing slash triggers an exception.
      */
-    public function testFailsIfThePathHasNoTrailingSlash()
+    public function testFailsIfThePathHasNoTrailingSlash(): void
     {
         $this->expectException('InvalidArgumentException');
 

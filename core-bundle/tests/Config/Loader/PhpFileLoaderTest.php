@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,10 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the PhpFileLoader class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Yanick Witschi <https://github.com/Toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PhpFileLoaderTest extends TestCase
 {
@@ -30,7 +28,7 @@ class PhpFileLoaderTest extends TestCase
     /**
      * Creates the PhpFileLoader object.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -40,7 +38,7 @@ class PhpFileLoaderTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
     }
@@ -48,7 +46,7 @@ class PhpFileLoaderTest extends TestCase
     /**
      * Tests that only PHP files are supported.
      */
-    public function testSupportsPhpFiles()
+    public function testSupportsPhpFiles(): void
     {
         $this->assertTrue(
             $this->loader->supports(
@@ -66,7 +64,7 @@ class PhpFileLoaderTest extends TestCase
     /**
      * Tests loading a PHP file.
      */
-    public function testLoadsPhpFiles()
+    public function testLoadsPhpFiles(): void
     {
         $expects = <<<'EOF'
 
@@ -108,7 +106,7 @@ EOF;
     /**
      * Tests that custom namespaces are added.
      */
-    public function testAddsCustomNamespaces()
+    public function testAddsCustomNamespaces(): void
     {
         $expects = <<<'EOF'
 
@@ -150,7 +148,7 @@ EOF;
      *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
-    public function testStripsDeclareStrictTypes($file)
+    public function testStripsDeclareStrictTypes(string $file): void
     {
         $content = <<<'EOF'
 
@@ -183,7 +181,7 @@ EOF;
      *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
-    public function testIgnoresDeclareStatementsInComments()
+    public function testIgnoresDeclareStatementsInComments(): void
     {
         $content = <<<'EOF'
 
@@ -222,7 +220,7 @@ EOF;
      *
      * @return array
      */
-    public function loadWithDeclareStatementsStrictType()
+    public function loadWithDeclareStatementsStrictType(): array
     {
         return [
             ['tl_test_with_declare1'],
@@ -237,7 +235,7 @@ EOF;
      *
      * @dataProvider loadWithDeclareStatementsMultipleDefined
      */
-    public function testPreservesOtherDeclareDefinitions($file)
+    public function testPreservesOtherDeclareDefinitions(string $file): void
     {
         $content = <<<'EOF'
 
@@ -272,7 +270,7 @@ EOF;
      *
      * @return array
      */
-    public function loadWithDeclareStatementsMultipleDefined()
+    public function loadWithDeclareStatementsMultipleDefined(): array
     {
         return [
             ['tl_test_with_declare4'],

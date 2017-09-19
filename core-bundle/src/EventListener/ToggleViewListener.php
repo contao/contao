@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,9 +21,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Sets the TL_VIEW cookie based on the "toggle_view" query parameter.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ToggleViewListener
 {
@@ -52,7 +51,7 @@ class ToggleViewListener
      *
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -76,7 +75,7 @@ class ToggleViewListener
      *
      * @return Cookie The cookie object
      */
-    private function getCookie($value, $basePath)
+    private function getCookie(string $value, string $basePath): Cookie
     {
         if ('mobile' !== $value) {
             $value = 'desktop';

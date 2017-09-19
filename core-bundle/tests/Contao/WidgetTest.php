@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,10 +19,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests the Widget class.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -31,8 +29,10 @@ class WidgetTest extends TestCase
     /**
      * Includes the helper functions if they have not yet been included.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         if (!function_exists('utf8_decode_entities')) {
             include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
         }
@@ -48,7 +48,7 @@ class WidgetTest extends TestCase
      *
      * @dataProvider postProvider
      */
-    public function testReadsThePostData($key, $input, $value, $expected)
+    public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
@@ -75,7 +75,7 @@ class WidgetTest extends TestCase
      *
      * @return array
      */
-    public function postProvider()
+    public function postProvider(): array
     {
         return [
             ['foo', 'foo', 'bar', 'bar'],
@@ -98,7 +98,7 @@ class WidgetTest extends TestCase
     /**
      * Tests validating the POST data.
      */
-    public function testValidatesThePostData()
+    public function testValidatesThePostData(): void
     {
         /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
         $widget = $this
@@ -121,14 +121,22 @@ class WidgetTest extends TestCase
         ;
 
         $widget
-            ->setInputCallback(function () { return 'foobar'; })
+            ->setInputCallback(
+                function (): string {
+                    return 'foobar';
+                }
+            )
             ->validate()
         ;
 
         $this->assertSame('foobar', $widget->value);
 
         $widget
-            ->setInputCallback(function () { return null; })
+            ->setInputCallback(
+                function () {
+                    return null;
+                }
+            )
             ->validate()
         ;
 

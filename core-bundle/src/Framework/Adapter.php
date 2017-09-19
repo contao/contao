@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,8 +14,6 @@ namespace Contao\CoreBundle\Framework;
 
 /**
  * Wraps unmockable classes and delegates the method calls.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  *
  * @internal Do not instantiate this class in your code; use ContaoFramework::getAdapter() instead
  */
@@ -29,7 +29,7 @@ class Adapter
      *
      * @param string $class
      */
-    public function __construct($class)
+    public function __construct(string $class)
     {
         $this->class = $class;
     }
@@ -42,7 +42,7 @@ class Adapter
      *
      * @return mixed
      */
-    public function __call($name, array $arguments = [])
+    public function __call(string $name, array $arguments = [])
     {
         return call_user_func_array([$this->class, $name], $arguments);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,9 +17,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Ensures that the document root is secure.
- *
- * @author Dominik Tomasi <https://github.com/dtomasi>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsecureInstallationListener
 {
@@ -33,7 +32,7 @@ class InsecureInstallationListener
      *
      * @throws InsecureInstallationException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         $request = $event->getRequest();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -25,8 +27,6 @@ use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterfa
 
 /**
  * Authenticates a Contao token.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthenticatorInterface
 {
@@ -55,7 +55,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      *
      * @return AnonymousToken
      */
-    public function createToken(Request $request, $providerKey)
+    public function createToken(Request $request, $providerKey): AnonymousToken
     {
         return new AnonymousToken($providerKey, 'anon.');
     }
@@ -71,7 +71,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      *
      * @return TokenInterface|ContaoToken|AnonymousToken
      */
-    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
+    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey): TokenInterface
     {
         if ($this->canSkipAuthentication($token)) {
             return $token;
@@ -102,7 +102,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      *
      * @return bool
      */
-    public function supportsToken(TokenInterface $token, $providerKey)
+    public function supportsToken(TokenInterface $token, $providerKey): bool
     {
         return $token instanceof ContaoToken || $token instanceof AnonymousToken;
     }
@@ -116,7 +116,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
      *
      * @return bool
      */
-    private function canSkipAuthentication(TokenInterface $token)
+    private function canSkipAuthentication(TokenInterface $token): bool
     {
         if ($token instanceof ContaoToken) {
             return true;

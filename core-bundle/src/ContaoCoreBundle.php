@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -23,19 +25,16 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Configures the Contao core bundle.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ContaoCoreBundle extends Bundle
 {
-    const SCOPE_BACKEND = 'backend';
-    const SCOPE_FRONTEND = 'frontend';
+    public const SCOPE_BACKEND = 'backend';
+    public const SCOPE_FRONTEND = 'frontend';
 
     /**
      * {@inheritdoc}
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ContaoCoreExtension
     {
         return new ContaoCoreExtension();
     }
@@ -43,7 +42,7 @@ class ContaoCoreBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function registerCommands(Application $application)
+    public function registerCommands(Application $application): void
     {
         // disable automatic command registration
     }
@@ -51,7 +50,7 @@ class ContaoCoreBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 

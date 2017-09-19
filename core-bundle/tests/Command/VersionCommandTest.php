@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,15 +19,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the VersionCommand class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class VersionCommandTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $command = new VersionCommand('contao:version');
 
@@ -36,7 +36,7 @@ class VersionCommandTest extends TestCase
     /**
      * Tests printing the version number.
      */
-    public function testOutputsTheVersionNumber()
+    public function testOutputsTheVersionNumber(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.packages', ['contao/core-bundle' => '4.0.2']);
@@ -54,7 +54,7 @@ class VersionCommandTest extends TestCase
     /**
      * Tests that an empty string is printed if the version is not set.
      */
-    public function testOutputsAnEmptyStringIfTheVersionIsNotSet()
+    public function testOutputsAnEmptyStringIfTheVersionIsNotSet(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.packages', []);

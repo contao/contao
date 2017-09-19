@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,9 +17,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Allows to filter image sizes.
- *
- * @author Kamil Kuzminski <https://github.com/qzminski>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ImageSizesEvent extends Event
 {
@@ -48,7 +47,7 @@ class ImageSizesEvent extends Event
      *
      * @return array
      */
-    public function getImageSizes()
+    public function getImageSizes(): array
     {
         return $this->imageSizes;
     }
@@ -58,7 +57,7 @@ class ImageSizesEvent extends Event
      *
      * @param array $imageSizes
      */
-    public function setImageSizes(array $imageSizes)
+    public function setImageSizes(array $imageSizes): void
     {
         $this->imageSizes = $imageSizes;
     }
@@ -68,7 +67,7 @@ class ImageSizesEvent extends Event
      *
      * @return BackendUser
      */
-    public function getUser()
+    public function getUser(): BackendUser
     {
         return $this->user;
     }

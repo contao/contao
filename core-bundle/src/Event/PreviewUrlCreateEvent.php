@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,8 +16,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Allows to create a preview URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PreviewUrlCreateEvent extends Event
 {
@@ -40,7 +40,7 @@ class PreviewUrlCreateEvent extends Event
      * @param string $key
      * @param int    $id
      */
-    public function __construct($key, $id)
+    public function __construct(string $key, int $id)
     {
         $this->key = $key;
         $this->id = $id;
@@ -51,7 +51,7 @@ class PreviewUrlCreateEvent extends Event
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -61,7 +61,7 @@ class PreviewUrlCreateEvent extends Event
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -69,9 +69,9 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Returns the query string.
      *
-     * @return string
+     * @return string|null
      */
-    public function getQuery()
+    public function getQuery(): ?string
     {
         return $this->query;
     }
@@ -81,7 +81,7 @@ class PreviewUrlCreateEvent extends Event
      *
      * @param string $query
      */
-    public function setQuery($query)
+    public function setQuery(string $query): void
     {
         $this->query = $query;
     }

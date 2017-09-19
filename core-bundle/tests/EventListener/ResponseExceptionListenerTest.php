@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,15 +22,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the ResponseExceptionListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ResponseExceptionListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new ResponseExceptionListener();
 
@@ -38,7 +38,7 @@ class ResponseExceptionListenerTest extends TestCase
     /**
      * Tests passing a response exception.
      */
-    public function testAddsAResponseToTheEvent()
+    public function testAddsAResponseToTheEvent(): void
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -61,7 +61,7 @@ class ResponseExceptionListenerTest extends TestCase
     /**
      * Tests passing a non-response exception.
      */
-    public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException()
+    public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException(): void
     {
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),

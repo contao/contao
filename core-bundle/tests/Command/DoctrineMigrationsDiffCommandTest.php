@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the DoctrineMigrationsDiffCommand class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class DoctrineMigrationsDiffCommandTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $command = new DoctrineMigrationsDiffCommand();
 

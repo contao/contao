@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Doctrine\DBAL\Types\Type;
 
 /**
  * Tests the BinaryStringType class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class BinaryStringTypeTest extends TestCase
 {
@@ -30,23 +30,27 @@ class BinaryStringTypeTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         Type::addType(BinaryStringType::NAME, BinaryStringType::class);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $this->type = Type::getType(BinaryStringType::NAME);
     }
 
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType', $this->type);
     }
@@ -54,7 +58,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests that getSqlDeclaration() returns a binary definition for fixed length fields.
      */
-    public function testReturnsABinaryDefinitionForAFixedLengthField()
+    public function testReturnsABinaryDefinitionForAFixedLengthField(): void
     {
         $fieldDefinition = ['fixed' => true];
 
@@ -81,7 +85,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests that getSqlDeclaration() returns a blob definition for variable length fields.
      */
-    public function testReturnsABlobDefinitionForAVariableLengthField()
+    public function testReturnsABlobDefinitionForAVariableLengthField(): void
     {
         $fieldDefinition = ['fixed' => false];
 
@@ -108,7 +112,7 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests the name.
      */
-    public function testReturnsTheCorrectName()
+    public function testReturnsTheCorrectName(): void
     {
         $this->assertSame(BinaryStringType::NAME, $this->type->getName());
     }
@@ -116,10 +120,10 @@ class BinaryStringTypeTest extends TestCase
     /**
      * Tests the custom type requires an SQL hint.
      */
-    public function testRequiresAnSqlCommentHintForTheCustomType()
+    public function testRequiresAnSqlCommentHintForTheCustomType(): void
     {
-        $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
-
-        $this->assertTrue($this->type->requiresSQLCommentHint($platform));
+        $this->assertTrue(
+            $this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class))
+        );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the XliffFileLoader class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class XliffFileLoaderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'Contao\CoreBundle\Config\Loader\XliffFileLoader',
@@ -34,7 +34,7 @@ class XliffFileLoaderTest extends TestCase
     /**
      * Tests that only XLF files are supported.
      */
-    public function testSupportsXlfFiles()
+    public function testSupportsXlfFiles(): void
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app');
 
@@ -54,7 +54,7 @@ class XliffFileLoaderTest extends TestCase
     /**
      * Tests loading a file into a string.
      */
-    public function testLoadsXlfFilesIntoAString()
+    public function testLoadsXlfFilesIntoAString(): void
     {
         $loader = new XliffFileLoader($this->getRootDir(), false);
 
@@ -111,7 +111,7 @@ TXT;
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testLoadsXlfFilesIntoTheGlobalVariables()
+    public function testLoadsXlfFilesIntoTheGlobalVariables(): void
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', true);
 
@@ -137,7 +137,7 @@ TXT;
     /**
      * Tests that too many nesting levels trigger an exception.
      */
-    public function testFailsIfThereAreTooManyNestingLevels()
+    public function testFailsIfThereAreTooManyNestingLevels(): void
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);
 

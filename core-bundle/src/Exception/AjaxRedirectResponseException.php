@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,9 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Initializes a response exception with an Ajax compatible redirect response.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class AjaxRedirectResponseException extends ResponseException
 {
@@ -27,7 +26,7 @@ class AjaxRedirectResponseException extends ResponseException
      * @param int             $status
      * @param \Exception|null $previous
      */
-    public function __construct($location, $status = 302, \Exception $previous = null)
+    public function __construct(string $location, int $status = 302, \Exception $previous = null)
     {
         parent::__construct(new Response($location, $status, ['X-Ajax-Location' => $location]), $previous);
     }

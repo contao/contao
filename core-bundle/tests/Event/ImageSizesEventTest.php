@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,15 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ImageSizesEvent class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ImageSizesEventTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $event = new ImageSizesEvent([1]);
 
@@ -34,7 +34,7 @@ class ImageSizesEventTest extends TestCase
     /**
      * Tests the image sizes setter and getter.
      */
-    public function testSupportsReadingAndWritingImageSizes()
+    public function testSupportsReadingAndWritingImageSizes(): void
     {
         $event = new ImageSizesEvent([1]);
 
@@ -48,7 +48,7 @@ class ImageSizesEventTest extends TestCase
     /**
      * Tests the getUser() method.
      */
-    public function testSupportsReadingTheUserObject()
+    public function testSupportsReadingTheUserObject(): void
     {
         $user = $this->createMock(BackendUser::class);
         $event = new ImageSizesEvent([1], $user);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the TokenGenerator class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class TokenGeneratorTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $generator = new TokenGenerator(1000);
 
@@ -33,7 +33,7 @@ class TokenGeneratorTest extends TestCase
     /**
      * Tests whether the generated token is eight characters long.
      */
-    public function testGeneratesAnEightCharacterToken()
+    public function testGeneratesAnEightCharacterToken(): void
     {
         $generator = new TokenGenerator(1000);
 

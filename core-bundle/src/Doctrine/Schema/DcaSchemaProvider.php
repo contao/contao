@@ -51,7 +51,7 @@ class DcaSchemaProvider
      *
      * @return Schema
      */
-    public function createSchema()
+    public function createSchema(): Schema
     {
         if (0 !== count($this->doctrine->getManagerNames())) {
             return $this->createSchemaFromOrm();
@@ -65,7 +65,7 @@ class DcaSchemaProvider
      *
      * @param Schema $schema
      */
-    public function appendToSchema(Schema $schema)
+    public function appendToSchema(Schema $schema): void
     {
         $config = $this->getSqlDefinitions();
 
@@ -109,7 +109,7 @@ class DcaSchemaProvider
      *
      * @return Schema
      */
-    private function createSchemaFromOrm()
+    private function createSchemaFromOrm(): Schema
     {
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
@@ -129,7 +129,7 @@ class DcaSchemaProvider
      *
      * @return Schema
      */
-    private function createSchemaFromDca()
+    private function createSchemaFromDca(): Schema
     {
         $schema = new Schema();
 
@@ -145,7 +145,7 @@ class DcaSchemaProvider
      * @param string $columnName
      * @param string $sql
      */
-    private function parseColumnSql(Table $table, $columnName, $sql)
+    private function parseColumnSql(Table $table, string $columnName, string $sql): void
     {
         list($dbType, $def) = explode(' ', $sql, 2);
 
@@ -188,14 +188,14 @@ class DcaSchemaProvider
     /**
      * Sets the length, scale, precision and fixed values by field type.
      *
-     * @param string $type
-     * @param string $dbType
-     * @param int    $length
-     * @param int    $scale
-     * @param int    $precision
-     * @param bool   $fixed
+     * @param string   $type
+     * @param string   $dbType
+     * @param int      $length
+     * @param int|null $scale
+     * @param int|null $precision
+     * @param bool     $fixed
      */
-    private function setLengthAndPrecisionByType($type, $dbType, &$length, &$scale, &$precision, &$fixed)
+    private function setLengthAndPrecisionByType(string $type, string $dbType, int &$length, ?int &$scale, ?int &$precision, bool &$fixed): void
     {
         switch ($type) {
             case 'char':
@@ -258,7 +258,7 @@ class DcaSchemaProvider
      * @param string $keyName
      * @param string $sql
      */
-    private function parseIndexSql(Table $table, $keyName, $sql)
+    private function parseIndexSql(Table $table, string $keyName, string $sql): void
     {
         if ('PRIMARY' === $keyName) {
             if (!preg_match_all('/`([^`]+)`/', $sql, $matches)) {
@@ -305,7 +305,7 @@ class DcaSchemaProvider
      *
      * @return array
      */
-    private function getSqlDefinitions()
+    private function getSqlDefinitions(): array
     {
         $this->framework->initialize();
 

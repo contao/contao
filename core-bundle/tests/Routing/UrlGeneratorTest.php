@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -23,15 +25,13 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Tests the UrlGenerator class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class UrlGeneratorTest extends TestCase
 {
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -41,7 +41,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'Contao\CoreBundle\Routing\UrlGenerator',
@@ -52,7 +52,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the setContext() method.
      */
-    public function testCanWriteTheContext()
+    public function testCanWriteTheContext(): void
     {
         $generator = new UrlGenerator(
             new ParentUrlGenerator(new RouteCollection(), new RequestContext()),
@@ -69,7 +69,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the router.
      */
-    public function testGeneratesUrls()
+    public function testGeneratesUrls(): void
     {
         $this
             ->getGenerator($this->getRouter(['alias' => 'foobar']))
@@ -90,7 +90,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the router without parameters.
      */
-    public function testGeneratesUrlsWithoutParameters()
+    public function testGeneratesUrlsWithoutParameters(): void
     {
         $this
             ->getGenerator($this->getRouter(['alias' => 'foobar']))
@@ -111,7 +111,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests that the index fragment is omitted.
      */
-    public function testOmitsTheIndexFragment()
+    public function testOmitsTheIndexFragment(): void
     {
         $this
             ->getGenerator($this->getRouter([], 'contao_index'))
@@ -137,7 +137,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests that the locale is removed if prepend_locale is not set.
      */
-    public function testRemovesTheLocaleIfPrependLocaleIsNotSet()
+    public function testRemovesTheLocaleIfPrependLocaleIsNotSet(): void
     {
         $this
             ->getGenerator($this->getRouter(['alias' => 'foobar']))
@@ -153,7 +153,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the parameter replacement.
      */
-    public function testReplacesParameters()
+    public function testReplacesParameters(): void
     {
         $params = ['items' => 'bar', 'article' => 'test'];
 
@@ -171,7 +171,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the auto_item support.
      */
-    public function testHandlesAutoItems()
+    public function testHandlesAutoItems(): void
     {
         $this
             ->getGenerator($this->getRouter(['alias' => 'foo/bar']))
@@ -199,7 +199,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the router with auto_item being disabled.
      */
-    public function testIgnoresAutoItemsIfTheyAreDisabled()
+    public function testIgnoresAutoItemsIfTheyAreDisabled(): void
     {
         $this
             ->getGenerator($this->getRouter(['alias' => 'foo/items/bar']), false, false)
@@ -227,7 +227,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests that an exception is thrown if a parameter is missing.
      */
-    public function testFailsIfAParameterIsMissing()
+    public function testFailsIfAParameterIsMissing(): void
     {
         $router = $this->createMock(UrlGeneratorInterface::class);
 
@@ -244,7 +244,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests setting the context from a domain.
      */
-    public function testReadsTheContextFromTheDomain()
+    public function testReadsTheContextFromTheDomain(): void
     {
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
@@ -281,7 +281,7 @@ class UrlGeneratorTest extends TestCase
      * To tests this case, we omit the _ssl parameter and set the scheme to "https" in the context. If the
      * generator still returns a HTTPS URL, we know that the context has not been modified.
      */
-    public function testDoesNotModifyTheContextIfThereIsAHostname()
+    public function testDoesNotModifyTheContextIfThereIsAHostname(): void
     {
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
@@ -305,7 +305,7 @@ class UrlGeneratorTest extends TestCase
     /**
      * Tests the generator with non-array parameters.
      */
-    public function testHandlesNonArrayParameters()
+    public function testHandlesNonArrayParameters(): void
     {
         $this
             ->getGenerator($this->getRouter(['alias' => 'foo']))
@@ -322,49 +322,36 @@ class UrlGeneratorTest extends TestCase
      *
      * @return UrlGenerator
      */
-    private function getGenerator(UrlGeneratorInterface $router, $prependLocale = false, $useAutoItem = true)
+    private function getGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator
     {
-        $configAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
-            ->getMock()
-        ;
+        $adapter = $this->createMock(Adapter::class);
 
-        $configAdapter
-            ->method('isComplete')
-            ->willReturn(true)
-        ;
+        $adapter
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $key, array $params) use ($useAutoItem) {
+                    if ('isComplete' === $key) {
+                        return true;
+                    }
 
-        $configAdapter
-            ->method('preload')
-            ->willReturn(null)
-        ;
+                    if ('get' === $key) {
+                        switch ($params[0]) {
+                            case 'useAutoItem':
+                                return $useAutoItem;
 
-        $configAdapter
-            ->method('getInstance')
-            ->willReturn(null)
-        ;
+                            case 'timeZone':
+                                return 'Europe/Berlin';
+                        }
+                    }
 
-        $configAdapter
-            ->method('get')
-            ->willReturnCallback(function ($key) use ($useAutoItem) {
-                switch ($key) {
-                    case 'useAutoItem':
-                        return $useAutoItem;
-
-                    case 'timeZone':
-                        return 'Europe/Berlin';
-
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return new UrlGenerator(
             $router,
-            $this->mockContaoFramework(null, null, [Config::class => $configAdapter]),
+            $this->mockContaoFramework(null, null, [Config::class => $adapter]),
             $prependLocale
         );
     }
@@ -376,9 +363,9 @@ class UrlGeneratorTest extends TestCase
      * @param string $expectedRoute
      * @param int    $referenceType
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|UrlGeneratorInterface
+     * @return UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function getRouter(array $expectedParameters = [], $expectedRoute = 'contao_frontend', $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    private function getRouter(array $expectedParameters = [], $expectedRoute = 'contao_frontend', $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): UrlGeneratorInterface
     {
         $router = $this->createMock(UrlGeneratorInterface::class);
 

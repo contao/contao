@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,9 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Adds the composer packages and versions to the container.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class AddPackagesPass implements CompilerPassInterface
 {
@@ -31,7 +30,7 @@ class AddPackagesPass implements CompilerPassInterface
      *
      * @param string $jsonFile
      */
-    public function __construct($jsonFile)
+    public function __construct(string $jsonFile)
     {
         $this->jsonFile = $jsonFile;
     }
@@ -39,7 +38,7 @@ class AddPackagesPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $packages = [];
 
@@ -61,7 +60,7 @@ class AddPackagesPass implements CompilerPassInterface
      *
      * @return array
      */
-    private function getVersions(array $json)
+    private function getVersions(array $json): array
     {
         $packages = [];
 

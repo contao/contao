@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,12 +16,11 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Webmozart\PathUtil\Path;
 
 /**
  * Adds the Contao configuration structure.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Configuration implements ConfigurationInterface
 {
@@ -51,7 +52,7 @@ class Configuration implements ConfigurationInterface
      * @param string $rootDir
      * @param string $defaultLocale
      */
-    public function __construct($debug, $projectDir, $rootDir, $defaultLocale)
+    public function __construct(bool $debug, string $projectDir, string $rootDir, string $defaultLocale)
     {
         $this->debug = (bool) $debug;
         $this->projectDir = $projectDir;
@@ -64,7 +65,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return TreeBuilder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('contao');
@@ -75,9 +76,11 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue($this->resolvePath($this->projectDir.'/web'))
                     ->validate()
-                        ->always(function ($value) {
-                            return $this->resolvePath($value);
-                        })
+                        ->always(
+                            function (string $value): string {
+                                return $this->resolvePath($value);
+                            }
+                        )
                     ->end()
                 ->end()
                 ->booleanNode('prepend_locale')
@@ -94,12 +97,14 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('files')
                     ->validate()
-                        ->ifTrue(function ($v) {
-                            return preg_match(
-                                '@^(app|assets|bin|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
-                                $v
-                            );
-                        })
+                        ->ifTrue(
+                            function (string $v): int {
+                                return preg_match(
+                                    '@^(app|assets|bin|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
+                                    $v
+                                );
+                            }
+                        )
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
@@ -132,9 +137,11 @@ class Configuration implements ConfigurationInterface
                             ->cannotBeEmpty()
                             ->defaultValue($this->resolvePath($this->projectDir.'/assets/images'))
                             ->validate()
-                                ->always(function ($value) {
-                                    return $this->resolvePath($value);
-                                })
+                                ->always(
+                                    function (string $value): string {
+                                        return $this->resolvePath($value);
+                                    }
+                                )
                             ->end()
                         ->end()
                         ->arrayNode('valid_extensions')
@@ -177,7 +184,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return string
      */
-    private function resolvePath($value)
+    private function resolvePath(string $value): string
     {
         $path = Path::canonicalize($value);
 
@@ -193,7 +200,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return array
      */
-    private function getLocales()
+    private function getLocales(): array
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
@@ -205,6 +212,7 @@ class Configuration implements ConfigurationInterface
         // The default locale must be the first supported language (see contao/core#6533)
         $languages = [$this->defaultLocale];
 
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2}(_[A-Z]{2})?$/')->in($dirs);
 
         foreach ($finder as $file) {

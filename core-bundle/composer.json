@@ -41,7 +41,7 @@
         "psr/log": "^1.0",
         "simplepie/simplepie": "^1.3",
         "tecnickcom/tcpdf": "^6.0",
-        "true/punycode": "^2.0",
+        "true/punycode": "^2.1",
         "terminal42/header-replay-bundle": "^1.2",
         "twig/twig": "^1.26",
         "webmozart/path-util": "^2.0",
@@ -78,11 +78,11 @@
         "friendsofphp/php-cs-fixer": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "monolog/monolog": "^1.22",
-        "phpunit/phpunit": "^5.0",
+        "phpunit/phpunit": "^6.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "satooshi/php-coveralls": "^1.0",
-        "symfony/phpunit-bridge": "^3.2"
+        "symfony/phpunit-bridge": "^3.3"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,8 +17,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
  * Creates a response from an exception.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ResponseExceptionListener
 {
@@ -25,7 +25,7 @@ class ResponseExceptionListener
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
 

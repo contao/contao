@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,9 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Handles the Contao frontend routes.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
  */
 class FrontendController extends Controller
@@ -33,7 +32,7 @@ class FrontendController extends Controller
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -49,7 +48,7 @@ class FrontendController extends Controller
      *
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction()
+    public function cronAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -65,7 +64,7 @@ class FrontendController extends Controller
      *
      * @Route("/_contao/share", name="contao_frontend_share")
      */
-    public function shareAction()
+    public function shareAction(): RedirectResponse
     {
         $this->container->get('contao.framework')->initialize();
 

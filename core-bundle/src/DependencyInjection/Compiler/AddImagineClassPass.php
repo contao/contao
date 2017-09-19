@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Sets the available Imagine class name in the container.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
  */
 class AddImagineClassPass implements CompilerPassInterface
 {
@@ -30,7 +30,7 @@ class AddImagineClassPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $container->getDefinition('contao.image.imagine')->setClass($this->getImagineImplementation());
     }
@@ -40,7 +40,7 @@ class AddImagineClassPass implements CompilerPassInterface
      *
      * @return string
      */
-    private function getImagineImplementation()
+    private function getImagineImplementation(): string
     {
         foreach ($this->magicks as $name) {
             $class = 'Imagine\\'.$name.'\Imagine';

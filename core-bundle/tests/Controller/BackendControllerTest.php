@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,15 +23,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Tests the BackendControllerTest class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendControllerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $controller = new BackendController();
 
@@ -39,7 +39,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the controller actions.
      */
-    public function testReturnsAResponseInTheActionMethods()
+    public function testReturnsAResponseInTheActionMethods(): void
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -66,7 +66,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the pickerAction() method.
      */
-    public function testReturnsAResponseInThePickerActionMethod()
+    public function testReturnsAResponseInThePickerActionMethod(): void
     {
         $picker = $this->createMock(PickerInterface::class);
 
@@ -107,7 +107,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the pickerAction() method with invalid picker extras.
      */
-    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid()
+    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid(): void
     {
         $controller = new BackendController();
 
@@ -123,7 +123,7 @@ class BackendControllerTest extends TestCase
     /**
      * Tests the pickerAction() method with an unsupported context.
      */
-    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported()
+    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported(): void
     {
         $builder = $this->createMock(PickerBuilderInterface::class);
 

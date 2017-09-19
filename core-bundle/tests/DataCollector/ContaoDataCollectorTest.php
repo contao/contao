@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,21 +18,20 @@ use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
+use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the ContaoDataCollector class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoDataCollectorTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $collector = new ContaoDataCollector([]);
 
@@ -40,7 +41,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests collecting data in the back end.
      */
-    public function testCollectsDataInBackEnd()
+    public function testCollectsDataInBackEnd(): void
     {
         $GLOBALS['TL_DEBUG'] = [
             'classes_set' => [System::class],
@@ -79,30 +80,45 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests collecting data in the front end.
      */
-    public function testCollectsDataInFrontEnd()
+    public function testCollectsDataInFrontEnd(): void
     {
-        $layout = new \stdClass();
-        $layout->name = 'Default';
-        $layout->id = 2;
-        $layout->template = 'fe_page';
+        $layout = $this->createMock(LayoutModel::class);
 
-        $adapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->setMethods(['__call'])
-            ->disableOriginalConstructor()
-            ->getMock()
+        $layout
+            ->method('__get')
+            ->willReturnCallback(
+                function (string $key) {
+                    switch ($key) {
+                        case 'name':
+                            return 'Default';
+
+                        case 'id':
+                            return 2;
+
+                        case 'template':
+                            return 'fe_page';
+                    }
+
+                    return null;
+                }
+            )
         ;
 
+        $adapter = $this->createMock(Adapter::class);
+
         $adapter
-            ->expects($this->any())
             ->method('__call')
             ->willReturn($layout)
         ;
 
         global $objPage;
 
-        $objPage = new \stdClass();
-        $objPage->layoutId = 2;
+        $objPage = $this->createMock(PageModel::class);
+
+        $objPage
+            ->method('__get')
+            ->willReturn(2)
+        ;
 
         $collector = new ContaoDataCollector([]);
         $collector->setFramework($this->mockContaoFramework(null, null, [LayoutModel::class => $adapter]));
@@ -127,7 +143,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests that an empty array is returned if $this->data is not an array.
      */
-    public function testReturnsAnEmtpyArrayIfTheDataIsNotAnArray()
+    public function testReturnsAnEmtpyArrayIfTheDataIsNotAnArray(): void
     {
         $collector = new ContaoDataCollector([]);
         $collector->unserialize('N;');
@@ -138,7 +154,7 @@ class ContaoDataCollectorTest extends TestCase
     /**
      * Tests that an empty array is returned if the key is unknown.
      */
-    public function testReturnsAnEmptyArrayIfTheKeyIsUnknown()
+    public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
         $collector = new ContaoDataCollector([]);
 

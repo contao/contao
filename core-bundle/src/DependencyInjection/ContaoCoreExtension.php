@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,9 +20,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
  * Adds the bundle services to the container.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class ContaoCoreExtension extends ConfigurableExtension
 {
@@ -36,7 +35,7 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'contao';
     }
@@ -44,7 +43,7 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         // Add the resource to the container
         parent::getConfiguration($config, $container);
@@ -60,7 +59,7 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
             $container,
@@ -104,7 +103,7 @@ class ContaoCoreExtension extends ConfigurableExtension
      * @param array            $mergedConfig
      * @param ContainerBuilder $container
      */
-    private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container)
+    private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container): void
     {
         if (!isset($mergedConfig['image']['target_path'])) {
             return;

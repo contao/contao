@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,6 +17,7 @@ use Contao\FilesModel;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
+use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
@@ -27,8 +30,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Creates Image objects.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
  */
 class ImageFactory implements ImageFactoryInterface
 {
@@ -84,7 +85,7 @@ class ImageFactory implements ImageFactoryInterface
      * @param array                    $imagineOptions
      * @param array                    $validExtensions
      */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions)
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -99,7 +100,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create($path, $size = null, $targetPath = null)
+    public function create($path, $size = null, $targetPath = null): ImageInterface
     {
         if ($path instanceof ImageInterface) {
             $image = $path;
@@ -153,7 +154,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode)
+    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPartInterface
     {
         if (1 !== substr_count($mode, '_')) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
@@ -196,7 +197,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @return array
      */
-    private function createConfig($size, ImageInterface $image)
+    private function createConfig($size, ImageInterface $image): array
     {
         if (!is_array($size)) {
             $size = [0, 0, $size];
@@ -248,7 +249,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @return ImportantPart|null
      */
-    private function createImportantPart(ImageInterface $image)
+    private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
         /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -22,8 +24,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests the ScriptHandler class.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
- *
  * @preserveGlobalState disabled
  */
 class ScriptHandlerTest extends TestCase
@@ -36,15 +36,17 @@ class ScriptHandlerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->handler = new ScriptHandler();
     }
 
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Composer\ScriptHandler', $this->handler);
     }
@@ -54,7 +56,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function testGeneratesARandomSecretIfTheConfigurationFileDoesNotExist()
+    public function testGeneratesARandomSecretIfTheConfigurationFileDoesNotExist(): void
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -74,7 +76,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Tests that no secret is generated if the configuration file exists.
      */
-    public function testDoesNotGenerateARandomSecretIfTheConfigurationFileExists()
+    public function testDoesNotGenerateARandomSecretIfTheConfigurationFileExists(): void
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -98,7 +100,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Tests that no secret is generated if no configuration file has been defined.
      */
-    public function testDoesNotGenerateARandomSecretIfNoConfigurationFileIsDefined()
+    public function testDoesNotGenerateARandomSecretIfNoConfigurationFileIsDefined(): void
     {
         $this->assertRandomSecretDoesNotExist();
 
@@ -125,7 +127,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @dataProvider binDirProvider
      */
-    public function testReadsTheBinDirFromTheConfiguration(array $extra, $expected)
+    public function testReadsTheBinDirFromTheConfiguration(array $extra, string $expected): void
     {
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
@@ -138,7 +140,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @return array
      */
-    public function binDirProvider()
+    public function binDirProvider(): array
     {
         return [
             [
@@ -171,7 +173,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @dataProvider webDirProvider
      */
-    public function testReadsTheWebDirFromTheConfiguration(array $extra, $expected)
+    public function testReadsTheWebDirFromTheConfiguration(array $extra, string $expected): void
     {
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
@@ -184,7 +186,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @return array
      */
-    public function webDirProvider()
+    public function webDirProvider(): array
     {
         return [
             [
@@ -201,7 +203,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Tests that the verbosity flag is considered.
      */
-    public function testHandlesTheVerbosityFlag()
+    public function testHandlesTheVerbosityFlag(): void
     {
         $method = new \ReflectionMethod($this->handler, 'getVerbosityFlag');
         $method->setAccessible(true);
@@ -230,7 +232,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Asserts that the random secret environment variable is not set.
      */
-    private function assertRandomSecretDoesNotExist()
+    private function assertRandomSecretDoesNotExist(): void
     {
         $this->assertEmpty(getenv(ScriptHandler::RANDOM_SECRET_NAME));
     }
@@ -238,7 +240,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * Asserts that the random secret environment variable is set and valid.
      */
-    private function assertRandomSecretIsValid()
+    private function assertRandomSecretIsValid(): void
     {
         $this->assertNotFalse(getenv(ScriptHandler::RANDOM_SECRET_NAME));
         $this->assertGreaterThanOrEqual(64, strlen(getenv(ScriptHandler::RANDOM_SECRET_NAME)));
@@ -252,7 +254,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @return Event
      */
-    private function getComposerEvent(array $extra = [], $method = null)
+    private function getComposerEvent(array $extra = [], string $method = null): Event
     {
         $package = $this->mockPackage($extra);
 
@@ -266,20 +268,18 @@ class ScriptHandlerTest extends TestCase
      *
      * @return Composer|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockComposer(PackageInterface $package)
+    private function mockComposer(PackageInterface $package): Composer
     {
-        $config = $this->createMock(Config::class);
-        $downloadManager = $this->createMock(DownloadManager::class);
         $composer = $this->createMock(Composer::class);
 
         $composer
             ->method('getConfig')
-            ->willReturn($config)
+            ->willReturn($this->createMock(Config::class))
         ;
 
         $composer
             ->method('getDownloadManager')
-            ->willReturn($downloadManager)
+            ->willReturn($this->createMock(DownloadManager::class))
         ;
 
         $composer
@@ -297,7 +297,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockIO($method = null)
+    private function mockIO(string $method = null): IOInterface
     {
         $io = $this->createMock(IOInterface::class);
 
@@ -315,7 +315,7 @@ class ScriptHandlerTest extends TestCase
      *
      * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockPackage(array $extras = [])
+    private function mockPackage(array $extras = []): PackageInterface
     {
         $package = $this->createMock(PackageInterface::class);
 

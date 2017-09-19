@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -28,7 +30,7 @@ class ContaoCoreBundleTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $bundle = new ContaoCoreBundle();
 
@@ -38,7 +40,7 @@ class ContaoCoreBundleTest extends TestCase
     /**
      * Tests the getContainerExtension() method.
      */
-    public function testReturnsTheContainerExtension()
+    public function testReturnsTheContainerExtension(): void
     {
         $bundle = new ContaoCoreBundle();
 
@@ -51,7 +53,7 @@ class ContaoCoreBundleTest extends TestCase
     /**
      * Tests the build() method.
      */
-    public function testAddsTheCompilerPaths()
+    public function testAddsTheCompilerPaths(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');

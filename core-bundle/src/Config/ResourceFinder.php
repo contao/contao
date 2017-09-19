@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,8 +16,6 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * Creates a Finder object with the bundle paths set.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ResourceFinder implements ResourceFinderInterface
 {
@@ -37,7 +37,7 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * {@inheritdoc}
      */
-    public function find()
+    public function find(): Finder
     {
         return Finder::create()->in($this->paths);
     }
@@ -45,7 +45,7 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * {@inheritdoc}
      */
-    public function findIn($subpath)
+    public function findIn($subpath): Finder
     {
         return Finder::create()->in($this->getExistingSubpaths($subpath));
     }
@@ -59,7 +59,7 @@ class ResourceFinder implements ResourceFinderInterface
      *
      * @return array
      */
-    private function getExistingSubpaths($subpath)
+    private function getExistingSubpaths(string $subpath): array
     {
         $paths = [];
 

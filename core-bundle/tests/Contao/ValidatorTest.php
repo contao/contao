@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,9 +20,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests the Validator class.
  *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @group contao3
  */
 class ValidatorTest extends TestCase
@@ -28,12 +27,12 @@ class ValidatorTest extends TestCase
     /**
      * Tests validating e-mail addresses.
      *
-     * @param string $email
-     * @param bool   $expected
+     * @param string   $email
+     * @param int|bool $expected
      *
      * @dataProvider emailProvider
      */
-    public function testValidatesEmailAddresses($email, $expected)
+    public function testValidatesEmailAddresses(string $email, $expected): void
     {
         $this->assertSame(
             $expected,
@@ -47,7 +46,7 @@ class ValidatorTest extends TestCase
      *
      * @return array
      */
-    public function emailProvider()
+    public function emailProvider(): array
     {
         return [
             // Valid ASCII
@@ -183,7 +182,7 @@ class ValidatorTest extends TestCase
     /**
      * Tests extracting e-mail addresses from text.
      */
-    public function testExtractsEmailAddressesFromText()
+    public function testExtractsEmailAddressesFromText(): void
     {
         $text = <<<EOF
 This is a niceandsimple@example.com and this a very.common@example.com. Another little.lengthy.but.fine@dept.example.com and also a disposable.style.email.with+symbol@example.com or an other.email-with-dash@example.com. There are "very.unusual.@.unusual.com"@example.com and "very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com and even !#$%&'*+-/=?^_`{}|~@example.org or "()<>[]:,;@\\"!#$%&'*+-/=?^_`{}|~.a"@example.org but they are all valid.

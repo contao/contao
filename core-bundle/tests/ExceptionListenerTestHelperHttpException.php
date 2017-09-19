@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,8 +16,6 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Helps testing that unknown HTTP exceptions are handled correctly.
- *
- * @author Christian Schiffler <https://github.com/discordier>
  */
 abstract class ExceptionListenerTestHelperHttpException extends \Exception implements HttpExceptionInterface
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -44,8 +46,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Abstract TestCase class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -54,7 +54,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return string
      */
-    public function getRootDir()
+    public function getRootDir(): string
     {
         return __DIR__.DIRECTORY_SEPARATOR.'Fixtures';
     }
@@ -64,7 +64,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return string
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getRootDir().'/var/cache';
     }
@@ -77,9 +77,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @param array                $adapters
      * @param array                $instances
      *
-     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject The object instance
+     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = [])
+    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = []): ContaoFramework
     {
         $container = $this->mockContainerWithContaoScopes();
 
@@ -120,16 +120,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($adapters) {
-                return $adapters[$key];
-            })
+            ->willReturnCallback(
+                function (string $key) use ($adapters): ?Adapter {
+                    return $adapters[$key];
+                }
+            )
         ;
 
         $framework
             ->method('createInstance')
-            ->willReturnCallback(function ($key) use ($instances) {
-                return $instances[$key];
-            })
+            ->willReturnCallback(
+                function (string $key) use ($instances) {
+                    return $instances[$key];
+                }
+            )
         ;
 
         $framework->setContainer($container);
@@ -142,8 +146,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return Kernel|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockKernel()
+    protected function mockKernel(): Kernel
     {
+        /** @var Kernel|\PHPUnit_Framework_MockObject_MockObject $kernel */
         $kernel = $this
             ->getMockBuilder(Kernel::class)
             ->setConstructorArgs(['test', false])
@@ -167,7 +172,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockRouter($url)
+    protected function mockRouter(string $url): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
 
@@ -184,7 +189,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockTokenManager()
+    protected function mockTokenManager(): CsrfTokenManagerInterface
     {
         $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
 
@@ -206,7 +211,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return SessionInterface
      */
-    protected function mockSession()
+    protected function mockSession(): SessionInterface
     {
         $session = new Session(new MockArraySessionStorage());
         $session->setId('session_test');
@@ -230,7 +235,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return ScopeMatcher
      */
-    protected function mockScopeMatcher()
+    protected function mockScopeMatcher(): ScopeMatcher
     {
         return new ScopeMatcher(
             new RequestMatcher(null, null, null, null, ['_scope' => 'backend']),
@@ -243,9 +248,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @param string|null $scope
      *
-     * @return Container|\PHPUnit_Framework_MockObject_MockObject
+     * @return Container
      */
-    protected function mockContainerWithContaoScopes($scope = null)
+    protected function mockContainerWithContaoScopes(string $scope = null): Container
     {
         $container = new Container();
         $container->setParameter('kernel.cache_dir', $this->getCacheDir());
@@ -313,57 +318,44 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockConfigAdapter($minPasswordLength = null)
+    protected function mockConfigAdapter(int $minPasswordLength = null): Adapter
     {
-        $configAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
-            ->getMock()
-        ;
+        $adapter = $this->createMock(Adapter::class);
 
-        $configAdapter
-            ->method('isComplete')
-            ->willReturn(true)
-        ;
+        $adapter
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $method, array $arguments) use ($minPasswordLength) {
+                    if ('isComplete' === $method) {
+                        return true;
+                    }
 
-        $configAdapter
-            ->method('preload')
-            ->willReturn(null)
-        ;
+                    if ('get' === $method) {
+                        switch ($arguments[0]) {
+                            case 'characterSet':
+                                return 'UTF-8';
 
-        $configAdapter
-            ->method('getInstance')
-            ->willReturn(null)
-        ;
+                            case 'timeZone':
+                                return 'Europe/Berlin';
 
-        $configAdapter
-            ->method('get')
-            ->willReturnCallback(function ($key) use ($minPasswordLength) {
-                switch ($key) {
-                    case 'characterSet':
-                        return 'UTF-8';
+                            case 'gdMaxImgWidth':
+                            case 'gdMaxImgHeight':
+                                return 3000;
 
-                    case 'timeZone':
-                        return 'Europe/Berlin';
+                            case 'minPasswordLength':
+                                return $minPasswordLength;
 
-                    case 'gdMaxImgWidth':
-                    case 'gdMaxImgHeight':
-                        return 3000;
+                            case 'disableCron':
+                                return false;
+                        }
+                    }
 
-                    case 'minPasswordLength':
-                        return $minPasswordLength;
-
-                    case 'disableCron':
-                        return false;
-
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        return $configAdapter;
+        return $adapter;
     }
 
     /**
@@ -371,26 +363,28 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockRequestTokenAdapter()
+    protected function mockRequestTokenAdapter(): Adapter
     {
-        $rtAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['get', 'validate'])
-            ->getMock()
+        $adapter = $this->createMock(Adapter::class);
+
+        $adapter
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $method) {
+                    switch ($method) {
+                        case 'get':
+                            return 'foobar';
+
+                        case 'validate':
+                            return true;
+                    }
+
+                    return null;
+                }
+            )
         ;
 
-        $rtAdapter
-            ->method('get')
-            ->willReturn('foobar')
-        ;
-
-        $rtAdapter
-            ->method('validate')
-            ->willReturn(true)
-        ;
-
-        return $rtAdapter;
+        return $adapter;
     }
 
     /**
@@ -398,7 +392,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockFilesModelAdapter()
+    protected function mockFilesModelAdapter(): Adapter
     {
         $adapter = $this->createMock(Adapter::class);
 
@@ -413,10 +407,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Adds image services to the container.
      *
-     * @param Container $container
-     * @param string    $rootDir
+     * @param Container   $container
+     * @param string|null $rootDir
      */
-    protected function addImageServicesToContainer(Container $container, $rootDir = null)
+    protected function addImageServicesToContainer(Container $container, string $rootDir = null): void
     {
         $imagine = new ImagineGd();
         $imagineSvg = new ImagineSvg();

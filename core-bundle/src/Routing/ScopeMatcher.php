@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,8 +18,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Checks the request for a Contao scope.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ScopeMatcher
 {
@@ -50,7 +50,7 @@ class ScopeMatcher
      *
      * @return bool
      */
-    public function isContaoMasterRequest(KernelEvent $event)
+    public function isContaoMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isContaoRequest($event->getRequest());
     }
@@ -62,7 +62,7 @@ class ScopeMatcher
      *
      * @return bool
      */
-    public function isBackendMasterRequest(KernelEvent $event)
+    public function isBackendMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isBackendRequest($event->getRequest());
     }
@@ -74,7 +74,7 @@ class ScopeMatcher
      *
      * @return bool
      */
-    public function isFrontendMasterRequest(KernelEvent $event)
+    public function isFrontendMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isFrontendRequest($event->getRequest());
     }
@@ -86,7 +86,7 @@ class ScopeMatcher
      *
      * @return bool
      */
-    public function isContaoRequest(Request $request)
+    public function isContaoRequest(Request $request): bool
     {
         return $this->isBackendRequest($request) || $this->isFrontendRequest($request);
     }
@@ -98,7 +98,7 @@ class ScopeMatcher
      *
      * @return bool
      */
-    public function isBackendRequest(Request $request)
+    public function isBackendRequest(Request $request): bool
     {
         return $this->backendMatcher->matches($request);
     }
@@ -110,7 +110,7 @@ class ScopeMatcher
      *
      * @return bool
      */
-    public function isFrontendRequest(Request $request)
+    public function isFrontendRequest(Request $request): bool
     {
         return $this->frontendMatcher->matches($request);
     }

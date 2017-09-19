@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,8 +16,6 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * Interface for resource finders.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 interface ResourceFinderInterface
 {

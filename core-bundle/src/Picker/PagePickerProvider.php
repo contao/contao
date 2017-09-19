@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,15 +14,13 @@ namespace Contao\CoreBundle\Picker;
 
 /**
  * Provides the page picker.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'pagePicker';
     }
@@ -28,7 +28,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context)
+    public function supportsContext($context): bool
     {
         return in_array($context, ['page', 'link'], true) && $this->getUser()->hasAccess('page', 'modules');
     }
@@ -36,7 +36,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config)
+    public function supportsValue(PickerConfig $config): bool
     {
         if ('page' === $config->getContext()) {
             return is_numeric($config->getValue());
@@ -48,7 +48,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable()
+    public function getDcaTable(): string
     {
         return 'tl_page';
     }
@@ -56,7 +56,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config)
+    public function getDcaAttributes(PickerConfig $config): array
     {
         $value = $config->getValue();
         $attributes = ['fieldType' => 'radio'];
@@ -99,7 +99,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null)
+    protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'page'];
     }

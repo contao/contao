@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -32,15 +34,13 @@ use Symfony\Component\Security\Core\User\User;
 
 /**
  * Tests the UserSessionListener class.
- *
- * @author Yanick Witschi <https:/github.com/toflar>
  */
 class UserSessionListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->getListener());
     }
@@ -54,7 +54,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @dataProvider scopeBagProvider
      */
-    public function testReplacesTheSessionUponKernelRequest($scope, $userClass, $sessionBagName)
+    public function testReplacesTheSessionUponKernelRequest(string $scope, string $userClass, string $sessionBagName): void
     {
         $sessionValuesToBeSet = [
             'foo' => 'bar',
@@ -112,7 +112,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @return array
      */
-    public function scopeBagProvider()
+    public function scopeBagProvider(): array
     {
         return [
             [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'],
@@ -129,7 +129,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @dataProvider scopeTableProvider
      */
-    public function testStoresTheSessionUponKernelResponse($scope, $userClass, $userTable)
+    public function testStoresTheSessionUponKernelResponse($scope, $userClass, $userTable): void
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);
@@ -182,7 +182,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @return array
      */
-    public function scopeTableProvider()
+    public function scopeTableProvider(): array
     {
         return [
             [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'],
@@ -197,7 +197,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @dataProvider noUserProvider
      */
-    public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null)
+    public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
     {
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -234,7 +234,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @dataProvider noUserProvider
      */
-    public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null)
+    public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
     {
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -287,7 +287,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @return array
      */
-    public function noUserProvider()
+    public function noUserProvider(): array
     {
         return [
             [null],
@@ -298,7 +298,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that the session bag is not requested upon a sub request.
      */
-    public function testDoesNotReplaceTheSessionUponSubrequests()
+    public function testDoesNotReplaceTheSessionUponSubrequests(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -323,7 +323,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that neither the session bag nor doctrine is requested upon a subrequest.
      */
-    public function testDoesNotStoreTheSessionUponSubrequests()
+    public function testDoesNotStoreTheSessionUponSubrequests(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -366,7 +366,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that the session bag is not requested if there is no Contao user upon kernel.request.
      */
-    public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser()
+    public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -405,7 +405,7 @@ class UserSessionListenerTest extends TestCase
     /**
      * Tests that neither the session bag nor doctrine is requested if there is no Contao user upon kernel.response.
      */
-    public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser()
+    public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
@@ -451,7 +451,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @return UserSessionListener
      */
-    private function getListener(SessionInterface $session = null, Connection $connection = null, TokenStorageInterface $tokenStorage = null)
+    private function getListener(SessionInterface $session = null, Connection $connection = null, TokenStorageInterface $tokenStorage = null): UserSessionListener
     {
         if (null === $session) {
             $session = $this->mockSession();

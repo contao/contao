@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,18 +23,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the WebsiteRootsConfigProvider class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class WebsiteRootsConfigProviderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $configProvider = new WebsiteRootsConfigProvider($connection);
+        $configProvider = new WebsiteRootsConfigProvider($this->createMock(Connection::class));
 
         $this->assertInstanceOf('Contao\CoreBundle\Cors\WebsiteRootsConfigProvider', $configProvider);
     }
@@ -40,10 +39,11 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that a configuration is provided if the host matches.
      */
-    public function testProvidesTheConfigurationIfTheHostMatches()
+    public function testProvidesTheConfigurationIfTheHostMatches(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'http://origin.com');
+
         $statement = $this->createMock(Statement::class);
 
         $statement
@@ -74,10 +74,11 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the host does not match.
      */
-    public function testDoesNotProvideTheConfigurationIfTheHostDoesNotMatch()
+    public function testDoesNotProvideTheConfigurationIfTheHostDoesNotMatch(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
+
         $statement = $this->createMock(Statement::class);
 
         $statement
@@ -101,7 +102,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if there is no origin header.
      */
-    public function testDoesNotProvideTheConfigurationIfThereIsNoOriginHeader()
+    public function testDoesNotProvideTheConfigurationIfThereIsNoOriginHeader(): void
     {
         $request = Request::create('http://foobar.com');
         $request->headers->remove('Origin');
@@ -122,7 +123,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the origin equals the host.
      */
-    public function testDoesNotProvideTheConfigurationIfTheOriginEqualsTheHost()
+    public function testDoesNotProvideTheConfigurationIfTheOriginEqualsTheHost(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://foobar.com');
@@ -143,7 +144,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the database is not connected.
      */
-    public function testDoesNotProvideTheConfigurationIfTheDatabaseIsNotConnected()
+    public function testDoesNotProvideTheConfigurationIfTheDatabaseIsNotConnected(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
@@ -169,7 +170,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Tests that no configuration is provided if the table does not exist.
      */
-    public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist()
+    public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
@@ -208,11 +209,11 @@ class WebsiteRootsConfigProviderTest extends TestCase
     /**
      * Mocks a database connection object.
      *
-     * @param string $statement
+     * @param Statement $statement
      *
      * @return Connection|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function getConnection($statement)
+    private function getConnection(Statement $statement): Connection
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
 

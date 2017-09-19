@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,8 +20,6 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 /**
  * Abstract DoctrineTestCase class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 abstract class DoctrineTestCase extends TestCase
 {
@@ -28,7 +28,7 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistry()
+    protected function mockDoctrineRegistry(): Registry
     {
         $connection = $this->createMock(Connection::class);
 
@@ -65,7 +65,7 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = [])
+    protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFrameworkInterface
     {
         $installer = $this->createMock(Installer::class);
 

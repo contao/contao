@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,15 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Adapter class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class AdapterTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $adapter = new Adapter('Dummy');
 
@@ -34,7 +34,7 @@ class AdapterTest extends TestCase
     /**
      * Tests the __call method.
      */
-    public function testImplementsTheMagicCallMethod()
+    public function testImplementsTheMagicCallMethod(): void
     {
         /** @var LegacyClass $adapter */
         $adapter = new Adapter(LegacyClass::class);
@@ -45,11 +45,11 @@ class AdapterTest extends TestCase
     /**
      * Tests the __call method of a non-existent function.
      */
-    public function testFailsIfAMethodDoesNotExist()
+    public function testFailsIfAMethodDoesNotExist(): void
     {
         $adapter = new Adapter(LegacyClass::class);
 
-        $this->expectException('PHPUnit_Framework_Error');
+        $this->expectException('TypeError');
 
         $adapter->missingMethod();
     }

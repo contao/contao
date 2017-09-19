@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Contao template extension.
- *
- * @author Jim Schmid <https://github.com/sheeep>
  */
 class ContaoTemplateExtension extends \Twig_Extension
 {
@@ -54,7 +54,7 @@ class ContaoTemplateExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new \Twig_SimpleFunction('render_contao_backend_template', [$this, 'renderContaoBackendTemplate']),
@@ -68,7 +68,7 @@ class ContaoTemplateExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function renderContaoBackendTemplate(array $blocks = [])
+    public function renderContaoBackendTemplate(array $blocks = []): string
     {
         $request = $this->requestStack->getCurrentRequest();
 

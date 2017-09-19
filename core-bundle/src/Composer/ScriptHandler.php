@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,19 +18,17 @@ use Symfony\Component\Process\Process;
 
 /**
  * Sets up the Contao environment in a Symfony app.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ScriptHandler
 {
-    const RANDOM_SECRET_NAME = 'CONTAO_RANDOM_SECRET';
+    public const RANDOM_SECRET_NAME = 'CONTAO_RANDOM_SECRET';
 
     /**
      * Adds the Contao directories.
      *
      * @param Event $event
      */
-    public static function addDirectories(Event $event)
+    public static function addDirectories(Event $event): void
     {
         self::executeCommand('contao:install', $event);
     }
@@ -38,7 +38,7 @@ class ScriptHandler
      *
      * @param Event $event
      */
-    public static function generateSymlinks(Event $event)
+    public static function generateSymlinks(Event $event): void
     {
         self::executeCommand('contao:symlinks', $event);
     }
@@ -48,7 +48,7 @@ class ScriptHandler
      *
      * @param Event $event
      */
-    public static function generateRandomSecret(Event $event)
+    public static function generateRandomSecret(Event $event): void
     {
         $extra = $event->getComposer()->getPackage()->getExtra();
 
@@ -71,7 +71,7 @@ class ScriptHandler
      *
      * @throws \RuntimeException
      */
-    private static function executeCommand($cmd, Event $event)
+    private static function executeCommand(string $cmd, Event $event): void
     {
         $phpFinder = new PhpExecutableFinder();
 
@@ -92,7 +92,7 @@ class ScriptHandler
         );
 
         $process->run(
-            function ($type, $buffer) use ($event) {
+            function (string $type, string $buffer) use ($event): void {
                 $event->getIO()->write($buffer, false);
             }
         );
@@ -109,16 +109,16 @@ class ScriptHandler
      *
      * @return string
      */
-    private static function getBinDir(Event $event)
+    private static function getBinDir(Event $event): string
     {
         $extra = $event->getComposer()->getPackage()->getExtra();
 
         // Symfony assumes the new directory structure if symfony-var-dir is set
         if (isset($extra['symfony-var-dir']) && is_dir($extra['symfony-var-dir'])) {
-            return isset($extra['symfony-bin-dir']) ? $extra['symfony-bin-dir'] : 'bin';
+            return $extra['symfony-bin-dir'] ?? 'bin';
         }
 
-        return isset($extra['symfony-app-dir']) ? $extra['symfony-app-dir'] : 'app';
+        return $extra['symfony-app-dir'] ?? 'app';
     }
 
     /**
@@ -128,11 +128,11 @@ class ScriptHandler
      *
      * @return string
      */
-    private static function getWebDir(Event $event)
+    private static function getWebDir(Event $event): string
     {
         $extra = $event->getComposer()->getPackage()->getExtra();
 
-        return isset($extra['symfony-web-dir']) ? $extra['symfony-web-dir'] : 'web';
+        return $extra['symfony-web-dir'] ?? 'web';
     }
 
     /**
@@ -142,7 +142,7 @@ class ScriptHandler
      *
      * @return string
      */
-    private static function getVerbosityFlag(Event $event)
+    private static function getVerbosityFlag(Event $event): string
     {
         $io = $event->getIO();
 
@@ -168,7 +168,7 @@ class ScriptHandler
      *
      * @return bool
      */
-    private static function canGenerateSecret(array $config)
+    private static function canGenerateSecret(array $config): bool
     {
         if (isset($config['file'])) {
             return !is_file($config['file']);
@@ -188,7 +188,7 @@ class ScriptHandler
      *
      * @param Event $event
      */
-    private static function loadRandomCompat(Event $event)
+    private static function loadRandomCompat(Event $event): void
     {
         $composer = $event->getComposer();
 

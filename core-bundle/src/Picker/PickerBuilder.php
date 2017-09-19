@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,8 +18,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Picker builder.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class PickerBuilder implements PickerBuilderInterface
 {
@@ -60,7 +60,7 @@ class PickerBuilder implements PickerBuilderInterface
      *
      * @param PickerProviderInterface $provider
      */
-    public function addProvider(PickerProviderInterface $provider)
+    public function addProvider(PickerProviderInterface $provider): void
     {
         $this->providers[$provider->getName()] = $provider;
     }
@@ -68,7 +68,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function create(PickerConfig $config)
+    public function create(PickerConfig $config): ?Picker
     {
         $providers = $this->providers;
 
@@ -78,7 +78,7 @@ class PickerBuilder implements PickerBuilderInterface
 
         $providers = array_filter(
             $providers,
-            function (PickerProviderInterface $provider) use ($config) {
+            function (PickerProviderInterface $provider) use ($config): bool {
                 return $provider->supportsContext($config->getContext());
             }
         );
@@ -93,7 +93,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function createFromData($data)
+    public function createFromData($data): ?Picker
     {
         try {
             $config = PickerConfig::urlDecode($data);
@@ -107,7 +107,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context, array $allowed = null)
+    public function supportsContext($context, array $allowed = null): bool
     {
         $providers = $this->providers;
 
@@ -127,7 +127,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function getUrl($context, array $extras = [], $value = '')
+    public function getUrl($context, array $extras = [], $value = ''): string
     {
         $providers = (isset($extras['providers']) && is_array($extras['providers'])) ? $extras['providers'] : null;
 

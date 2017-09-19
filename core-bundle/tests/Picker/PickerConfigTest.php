@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,8 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the PickerConfig class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PickerConfigTest extends TestCase
 {
@@ -28,7 +28,7 @@ class PickerConfigTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $this->config);
     }
@@ -46,7 +46,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the getter methods.
      */
-    public function testCanReadValues()
+    public function testCanReadValues(): void
     {
         $this->assertSame('link', $this->config->getContext());
         $this->assertSame(['fieldType' => 'radio'], $this->config->getExtras());
@@ -57,7 +57,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the getExtra() and setExtra() methods.
      */
-    public function testCanReadAndWriteExtras()
+    public function testCanReadAndWriteExtras(): void
     {
         $this->assertSame('radio', $this->config->getExtra('fieldType'));
         $this->assertNull($this->config->getExtra('foo'));
@@ -70,7 +70,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the cloneForCurrent() method.
      */
-    public function testClonesTheCurrentObject()
+    public function testClonesTheCurrentObject(): void
     {
         $clone = $this->config->cloneForCurrent('new-alias');
 
@@ -84,7 +84,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the jsonSerialize() method.
      */
-    public function testSerializesItselfToAnArray()
+    public function testSerializesItselfToAnArray(): void
     {
         $this->assertSame(
             [
@@ -100,7 +100,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the urlEncode() method.
      */
-    public function testCreatesAnEncodedJsonString()
+    public function testCreatesAnEncodedJsonString(): void
     {
         $data = json_encode([
             'context' => 'link',
@@ -119,7 +119,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the urlDecode() method.
      */
-    public function testDecodesAnEncodedJsonString()
+    public function testDecodesAnEncodedJsonString(): void
     {
         $data = json_encode([
             'context' => 'link',
@@ -144,7 +144,7 @@ class PickerConfigTest extends TestCase
     /**
      * Tests the urlDecode() method with invalid JSON data.
      */
-    public function testFailsToDecodeAnEncodedJsonStringIfTheJsonIsInvalid()
+    public function testFailsToDecodeAnEncodedJsonStringIfTheJsonIsInvalid(): void
     {
         $data = '{"invalid';
 

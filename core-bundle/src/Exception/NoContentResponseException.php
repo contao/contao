@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Initializes a response exception with an empty response.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NoContentResponseException extends ResponseException
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Outputs the Contao version.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Using the contao:version command has been deprecated and will no longer work in Contao 5.0; use
  *             "composer show contao/core-bundle | grep versions | awk '{ print $4 }'" instead
  */
@@ -27,7 +27,7 @@ class VersionCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:version')
@@ -38,7 +38,7 @@ class VersionCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packages = $this->getContainer()->getParameter('kernel.packages');
 

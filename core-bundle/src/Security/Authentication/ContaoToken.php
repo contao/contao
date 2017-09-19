@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,9 +21,6 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Provides a Contao authentication token.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoToken extends AbstractToken
 {
@@ -47,7 +46,7 @@ class ContaoToken extends AbstractToken
     /**
      * {@inheritdoc}
      */
-    public function getCredentials()
+    public function getCredentials(): string
     {
         return '';
     }
@@ -59,7 +58,7 @@ class ContaoToken extends AbstractToken
      *
      * @return RoleInterface[]
      */
-    private function getRolesFromUser(User $user)
+    private function getRolesFromUser(User $user): array
     {
         $roles = [];
 

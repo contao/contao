@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,9 +19,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Adds routes for the Contao front end.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendLoader extends Loader
 {
@@ -33,7 +32,7 @@ class FrontendLoader extends Loader
      *
      * @param bool $prependLocale
      */
-    public function __construct($prependLocale)
+    public function __construct(bool $prependLocale)
     {
         $this->prependLocale = $prependLocale;
     }
@@ -41,7 +40,7 @@ class FrontendLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): RouteCollection
     {
         $routes = new RouteCollection();
 
@@ -60,7 +59,7 @@ class FrontendLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         return 'contao_frontend' === $type;
     }
@@ -71,7 +70,7 @@ class FrontendLoader extends Loader
      * @param RouteCollection $routes
      * @param array           $defaults
      */
-    private function addFrontendRoute(RouteCollection $routes, array $defaults)
+    private function addFrontendRoute(RouteCollection $routes, array $defaults): void
     {
         $route = new Route('/{alias}%contao.url_suffix%', $defaults, ['alias' => '.+']);
 
@@ -86,7 +85,7 @@ class FrontendLoader extends Loader
      * @param RouteCollection $routes
      * @param array           $defaults
      */
-    private function addIndexRoute(RouteCollection $routes, array $defaults)
+    private function addIndexRoute(RouteCollection $routes, array $defaults): void
     {
         $route = new Route('/', $defaults);
 
@@ -100,7 +99,7 @@ class FrontendLoader extends Loader
      *
      * @param Route $route
      */
-    private function addLocaleToRoute(Route $route)
+    private function addLocaleToRoute(Route $route): void
     {
         if ($this->prependLocale) {
             $route->setPath('/{_locale}'.$route->getPath());

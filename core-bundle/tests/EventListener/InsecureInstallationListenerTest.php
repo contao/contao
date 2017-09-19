@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,16 +21,13 @@ use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Tests the InsecureInstallationListener class.
- *
- * @author Dominik Tomasi <https://github.com/dtomasi>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsecureInstallationListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new InsecureInstallationListener();
 
@@ -38,7 +37,7 @@ class InsecureInstallationListenerTest extends TestCase
     /**
      * Tests throwing the exception if the document root is insecure.
      */
-    public function testThrowsAnExceptionIfTheDocumentRootIsInsecure()
+    public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void
     {
         $kernel = $this->mockKernel();
         $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
@@ -52,7 +51,7 @@ class InsecureInstallationListenerTest extends TestCase
     /**
      * Tests that there is no exception if the document root is secure.
      */
-    public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure()
+    public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
     {
         $kernel = $this->mockKernel();
 
@@ -71,7 +70,7 @@ class InsecureInstallationListenerTest extends TestCase
     /**
      * Tests that there is no exception on localhost.
      */
-    public function testDoesNotThrowAnExceptionOnLocalhost()
+    public function testDoesNotThrowAnExceptionOnLocalhost(): void
     {
         $kernel = $this->mockKernel();
 
@@ -91,7 +90,7 @@ class InsecureInstallationListenerTest extends TestCase
      *
      * @return Request
      */
-    private function getRequestObject()
+    private function getRequestObject(): Request
     {
         $request = new Request();
 

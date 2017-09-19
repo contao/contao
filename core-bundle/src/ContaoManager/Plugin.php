@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -29,19 +31,18 @@ use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouteCollection;
 use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 /**
  * Plugin for the Contao Manager.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(KnpMenuBundle::class),
@@ -71,7 +72,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
     {
         return $resolver
             ->resolve(__DIR__.'/../Resources/config/routing.yml')

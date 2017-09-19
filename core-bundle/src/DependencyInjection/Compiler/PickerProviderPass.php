@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,9 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Registers the picker providers.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class PickerProviderPass implements CompilerPassInterface
 {
@@ -27,7 +26,7 @@ class PickerProviderPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('contao.picker.builder')) {
             return;

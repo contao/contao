@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,8 +21,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Tests the Picker class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PickerTest extends TestCase
 {
@@ -32,7 +32,7 @@ class PickerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -50,7 +50,7 @@ class PickerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -60,7 +60,7 @@ class PickerTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\Picker', $this->picker);
     }
@@ -68,7 +68,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the configuration.
      */
-    public function testReturnsTheConfiguration()
+    public function testReturnsTheConfiguration(): void
     {
         $config = $this->picker->getConfig();
 
@@ -79,7 +79,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the menu.
      */
-    public function testReturnsTheMenu()
+    public function testReturnsTheMenu(): void
     {
         $menu = $this->picker->getMenu();
 
@@ -99,7 +99,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the current provider.
      */
-    public function testReturnsTheCurrentProvider()
+    public function testReturnsTheCurrentProvider(): void
     {
         $provider = $this->picker->getCurrentProvider();
 
@@ -110,7 +110,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the current provider if there is no current provider.
      */
-    public function testReturnsNullIfThereIsNoCurrentProvider()
+    public function testReturnsNullIfThereIsNoCurrentProvider(): void
     {
         $factory = new MenuFactory();
 
@@ -126,7 +126,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the current URL.
      */
-    public function testReturnsTheCurrentUrl()
+    public function testReturnsTheCurrentUrl(): void
     {
         $this->assertSame(null, $this->picker->getCurrentUrl());
     }
@@ -134,7 +134,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the current URL if there is no current menu item.
      */
-    public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem()
+    public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem(): void
     {
         $factory = new MenuFactory();
 
@@ -150,7 +150,7 @@ class PickerTest extends TestCase
     /**
      * Tests returning the current URL if there are no menu items.
      */
-    public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems()
+    public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems(): void
     {
         $picker = new Picker(new MenuFactory(), [], new PickerConfig('page', [], 5, 'pagePicker'));
 

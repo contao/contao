@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -22,15 +24,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the ContaoTableHandler class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoTableHandlerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableHandler', new ContaoTableHandler());
     }
@@ -38,7 +38,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests setting and retrieving the DBAL service name.
      */
-    public function testSupportsReadingAndWritingTheDbalServiceName()
+    public function testSupportsReadingAndWritingTheDbalServiceName(): void
     {
         $handler = new ContaoTableHandler();
 
@@ -56,7 +56,7 @@ class ContaoTableHandlerTest extends TestCase
      *
      * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
      */
-    public function testHandlesContaoRecords()
+    public function testHandlesContaoRecords(): void
     {
         $record = [
             'level' => Logger::DEBUG,
@@ -94,19 +94,22 @@ class ContaoTableHandlerTest extends TestCase
 
         $container
             ->method('get')
-            ->willReturnCallback(function ($key) use ($connection) {
+            ->willReturnCallback(function (string $key) use ($connection) {
                 switch ($key) {
                     case 'contao.framework':
-                        $system = $this
-                            ->getMockBuilder(Adapter::class)
-                            ->disableOriginalConstructor()
-                            ->setMethods(['importStatic', 'addLogEntry'])
-                            ->getMock()
-                        ;
+                        $system = $this->createMock(Adapter::class);
 
                         $system
-                            ->method('importStatic')
-                            ->willReturn($this)
+                            ->method('__call')
+                            ->willReturnCallback(
+                                function (string $key): ?self {
+                                    if ('importStatic' === $key) {
+                                        return $this;
+                                    }
+
+                                    return null;
+                                }
+                            )
                         ;
 
                         $framework = $this->createMock(ContaoFrameworkInterface::class);
@@ -140,7 +143,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Dummy method to test the addLogEntry hook.
      */
-    public function addLogEntry()
+    public function addLogEntry(): void
     {
         // ignore
     }
@@ -148,7 +151,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests that the handler does nothing if the log level does not match.
      */
-    public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch()
+    public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void
     {
         $handler = new ContaoTableHandler();
         $handler->setLevel(Logger::INFO);
@@ -159,7 +162,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests that the handle() method returns false if there is no Contao context.
      */
-    public function testDoesNotHandleARecordWithoutContaoContext()
+    public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
         $record = [
             'level' => Logger::DEBUG,
@@ -175,7 +178,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * Tests the handle() method.
      */
-    public function testDoesNotHandleTheRecordIfThereIsNoContainer()
+    public function testDoesNotHandleTheRecordIfThereIsNoContainer(): void
     {
         $record = [
             'level' => Logger::DEBUG,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use Contao\CoreBundle\Tests\TestCase;
 
 /**
  * Tests the ContaoContextTest class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContaoContextTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoContext', new ContaoContext('foo'));
     }
@@ -31,7 +31,7 @@ class ContaoContextTest extends TestCase
     /**
      * Tests the setter and getter methods.
      */
-    public function testSupportsReadingAndWritingValues()
+    public function testSupportsReadingAndWritingValues(): void
     {
         $context = new ContaoContext('foo');
 
@@ -63,7 +63,7 @@ class ContaoContextTest extends TestCase
     /**
      * Tests passing an empty function name.
      */
-    public function testFailsIfTheFunctionNameIsEmpty()
+    public function testFailsIfTheFunctionNameIsEmpty(): void
     {
         $this->expectException('InvalidArgumentException');
 

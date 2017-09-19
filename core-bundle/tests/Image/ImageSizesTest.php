@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,8 +22,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the ImageSizes class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class ImageSizesTest extends TestCase
 {
@@ -43,8 +43,10 @@ class ImageSizesTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $framework = $this->mockContaoFramework();
         $framework->initialize();
 
@@ -60,7 +62,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Image\ImageSizes', $this->imageSizes);
     }
@@ -68,7 +70,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting all options with image sizes.
      */
-    public function testReturnsAllOptionsWithImageSizes()
+    public function testReturnsAllOptionsWithImageSizes(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectExampleImageSizes();
@@ -83,7 +85,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting all options without image sizes.
      */
-    public function testReturnsAllOptionsWithoutImageSizes()
+    public function testReturnsAllOptionsWithoutImageSizes(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectImageSizes([]);
@@ -97,7 +99,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting the options for an admin user.
      */
-    public function testReturnsTheAdminUserOptions()
+    public function testReturnsTheAdminUserOptions(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
@@ -115,7 +117,7 @@ class ImageSizesTest extends TestCase
     /**
      * Tests getting all options for a regular user.
      */
-    public function testReturnsTheRegularUserOptions()
+    public function testReturnsTheRegularUserOptions(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
@@ -152,7 +154,7 @@ class ImageSizesTest extends TestCase
      *
      * @param string $event
      */
-    private function expectEvent($event)
+    private function expectEvent($event): void
     {
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
@@ -166,7 +168,7 @@ class ImageSizesTest extends TestCase
      *
      * @param array $imageSizes
      */
-    private function expectImageSizes(array $imageSizes)
+    private function expectImageSizes(array $imageSizes): void
     {
         $this->connection
             ->expects($this->atLeastOnce())
@@ -177,7 +179,7 @@ class ImageSizesTest extends TestCase
     /**
      * Adds expected example image sizes to the database connection mock object.
      */
-    private function expectExampleImageSizes()
+    private function expectExampleImageSizes(): void
     {
         $this->expectImageSizes(
             [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -30,8 +32,6 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
  * Converts exceptions to HTTP exceptions.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ExceptionConverterListener
 {
@@ -59,7 +59,7 @@ class ExceptionConverterListener
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
         $class = $this->getTargetClass($exception);
@@ -80,7 +80,7 @@ class ExceptionConverterListener
      *
      * @return string|null
      */
-    private function getTargetClass(\Exception $exception)
+    private function getTargetClass(\Exception $exception): ?string
     {
         foreach ($this->mapper as $source => $target) {
             if ($exception instanceof $source) {
@@ -99,7 +99,7 @@ class ExceptionConverterListener
      *
      * @return HttpException|null
      */
-    private function convertToHttpException(\Exception $exception, $target)
+    private function convertToHttpException(\Exception $exception, $target): ?HttpException
     {
         switch ($target) {
             case 'AccessDeniedHttpException':

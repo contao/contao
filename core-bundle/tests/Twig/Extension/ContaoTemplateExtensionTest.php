@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,15 +22,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the ContaoTemplateExtension class.
- *
- * @author Jim Schmid <https://github.com/sheeep>
  */
 class ContaoTemplateExtensionTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension', $this->getExtension());
     }
@@ -36,7 +36,7 @@ class ContaoTemplateExtensionTest extends TestCase
     /**
      * Tests the renderContaoBackendTemplate() method.
      */
-    public function testRendersTheContaoBackendTemplate()
+    public function testRendersTheContaoBackendTemplate(): void
     {
         $backendRoute = $this
             ->getMockBuilder(BackendCustom::class)
@@ -79,14 +79,17 @@ class ContaoTemplateExtensionTest extends TestCase
     /**
      * Tests the getFunctions() method.
      */
-    public function testAddsTheRenderContaoBackEndTemplateFunction()
+    public function testAddsTheRenderContaoBackEndTemplateFunction(): void
     {
         $extension = $this->getExtension();
         $functions = $extension->getFunctions();
 
-        $renderBaseTemplateFunction = array_filter($functions, function (\Twig_SimpleFunction $function) {
-            return 'render_contao_backend_template' === $function->getName();
-        });
+        $renderBaseTemplateFunction = array_filter(
+            $functions,
+            function (\Twig_SimpleFunction $function): bool {
+                return 'render_contao_backend_template' === $function->getName();
+            }
+        );
 
         $this->assertCount(1, $renderBaseTemplateFunction);
     }
@@ -94,7 +97,7 @@ class ContaoTemplateExtensionTest extends TestCase
     /**
      * Tests the scope restriction.
      */
-    public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope()
+    public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope(): void
     {
         $this->assertEmpty($this->getExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
@@ -107,7 +110,7 @@ class ContaoTemplateExtensionTest extends TestCase
      *
      * @return ContaoTemplateExtension
      */
-    private function getExtension(ContaoFrameworkInterface $framework = null, $scope = 'backend')
+    private function getExtension(ContaoFrameworkInterface $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

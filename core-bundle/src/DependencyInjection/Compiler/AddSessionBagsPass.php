@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,15 +18,13 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Registers the Contao session bags.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class AddSessionBagsPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('session')) {
             return;

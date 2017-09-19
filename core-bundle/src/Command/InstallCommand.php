@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,8 +21,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Installs the required Contao directories.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InstallCommand extends AbstractLockedCommand
 {
@@ -75,7 +75,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:install')
@@ -89,7 +89,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
@@ -113,7 +113,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * Adds the empty directories.
      */
-    private function addEmptyDirs()
+    private function addEmptyDirs(): void
     {
         foreach ($this->emptyDirs as $path) {
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
@@ -127,7 +127,7 @@ class InstallCommand extends AbstractLockedCommand
      *
      * @param string $path
      */
-    private function addEmptyDir($path)
+    private function addEmptyDir(string $path): void
     {
         if ($this->fs->exists($path)) {
             return;
@@ -141,7 +141,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * Adds the ignored directories.
      */
-    private function addIgnoredDirs()
+    private function addIgnoredDirs(): void
     {
         foreach ($this->ignoredDirs as $path) {
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
@@ -155,7 +155,7 @@ class InstallCommand extends AbstractLockedCommand
      *
      * @param string $path
      */
-    private function addIgnoredDir($path)
+    private function addIgnoredDir(string $path): void
     {
         $this->addEmptyDir($path);
 
@@ -172,7 +172,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * Adds the initialize.php file.
      */
-    private function addInitializePhp()
+    private function addInitializePhp(): void
     {
         $this->fs->dumpFile(
             $this->rootDir.'/system/initialize.php',
@@ -211,7 +211,7 @@ EOF
     /**
      * Symlinks the tcpdf.php config file to system/config.
      */
-    private function symlinkTcpdfConfig()
+    private function symlinkTcpdfConfig(): void
     {
         SymlinkUtil::symlink(
             'vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php',

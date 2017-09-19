@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,8 +20,6 @@ use Symfony\Component\Routing\RequestContext;
 
 /**
  * Generates Contao URLs.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class UrlGenerator implements UrlGeneratorInterface
 {
@@ -45,7 +45,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param ContaoFrameworkInterface $framework
      * @param bool                     $prependLocale
      */
-    public function __construct(UrlGeneratorInterface $router, ContaoFrameworkInterface $framework, $prependLocale)
+    public function __construct(UrlGeneratorInterface $router, ContaoFrameworkInterface $framework, bool $prependLocale)
     {
         $this->router = $router;
         $this->framework = $framework;
@@ -55,7 +55,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function setContext(RequestContext $context)
+    public function setContext(RequestContext $context): void
     {
         $this->router->setContext($context);
     }
@@ -63,7 +63,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->router->getContext();
     }
@@ -75,9 +75,9 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param array  $parameters
      * @param int    $referenceType
      *
-     * @return string
+     * @return string|null
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
     {
         $this->framework->initialize();
 
@@ -119,7 +119,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param array $parameters
      */
-    private function prepareLocale(array &$parameters)
+    private function prepareLocale(array &$parameters): void
     {
         if (!$this->prependLocale && array_key_exists('_locale', $parameters)) {
             unset($parameters['_locale']);
@@ -134,7 +134,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @throws MissingMandatoryParametersException
      */
-    private function prepareAlias($alias, array &$parameters)
+    private function prepareAlias(string $alias, array &$parameters): void
     {
         if ('index' === $alias) {
             return;
@@ -148,7 +148,7 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $parameters['alias'] = preg_replace_callback(
             '/\{([^\}]+)\}/',
-            function ($matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config) {
+            function (array $matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config): string {
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {
@@ -179,7 +179,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param array          $parameters
      * @param int            $referenceType
      */
-    private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType)
+    private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType): void
     {
         if (isset($parameters['_ssl'])) {
             $context->setScheme(true === $parameters['_ssl'] ? 'https' : 'http');
@@ -199,7 +199,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param array          $parameters
      * @param string         $referenceType
      */
-    private function addHostToContext(RequestContext $context, array $parameters, &$referenceType)
+    private function addHostToContext(RequestContext $context, array $parameters, &$referenceType): void
     {
         list($host, $port) = $this->getHostAndPort($parameters['_domain']);
 
@@ -228,7 +228,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @return array
      */
-    private function getHostAndPort($domain)
+    private function getHostAndPort($domain): array
     {
         if (false !== strpos($domain, ':')) {
             return explode(':', $domain, 2);
@@ -244,7 +244,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @return array
      */
-    private function getAutoItems(array $parameters)
+    private function getAutoItems(array $parameters): array
     {
         if (isset($parameters['auto_item'])) {
             return [$parameters['auto_item']];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,13 @@ use Doctrine\DBAL\Types\Type;
 
 /**
  * Type that maps a PHP string to a binary database field.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class BinaryStringType extends Type
 {
     /**
      * @var string
      */
-    const NAME = 'binary_string';
+    public const NAME = 'binary_string';
 
     /**
      * {@inheritdoc}
@@ -42,7 +42,7 @@ class BinaryStringType extends Type
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }
@@ -50,7 +50,7 @@ class BinaryStringType extends Type
     /**
      * {@inheritdoc}
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

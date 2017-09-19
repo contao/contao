@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,8 +16,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Internal server error HTTP exception.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InternalServerErrorHttpException extends HttpException
 {
@@ -26,7 +26,7 @@ class InternalServerErrorHttpException extends HttpException
      * @param \Exception|null $previous
      * @param int             $code
      */
-    public function __construct($message = null, \Exception $previous = null, $code = 0)
+    public function __construct(string $message = null, \Exception $previous = null, $code = 0)
     {
         parent::__construct(500, $message, $previous, [], $code);
     }

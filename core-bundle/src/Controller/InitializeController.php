@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,8 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Custom controller to support legacy entry point scripts.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
- *
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
  */
 class InitializeController extends Controller
@@ -33,7 +33,7 @@ class InitializeController extends Controller
      *
      * @Route("/_contao/initialize", name="contao_initialize")
      */
-    public function indexAction()
+    public function indexAction(): InitializeControllerResponse
     {
         @trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 

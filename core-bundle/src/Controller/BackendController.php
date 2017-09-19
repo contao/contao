@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -32,9 +34,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * Handles the Contao back end routes.
  *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @Route(defaults={"_scope" = "backend", "_token_check" = true})
  */
 class BackendController extends Controller
@@ -46,7 +45,7 @@ class BackendController extends Controller
      *
      * @Route("/contao", name="contao_backend")
      */
-    public function mainAction()
+    public function mainAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -62,7 +61,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/login", name="contao_backend_login")
      */
-    public function loginAction()
+    public function loginAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -78,7 +77,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/password", name="contao_backend_password")
      */
-    public function passwordAction()
+    public function passwordAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -94,7 +93,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/preview", name="contao_backend_preview")
      */
-    public function previewAction()
+    public function previewAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -110,7 +109,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/confirm", name="contao_backend_confirm")
      */
-    public function confirmAction()
+    public function confirmAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -126,7 +125,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/file", name="contao_backend_file")
      */
-    public function fileAction()
+    public function fileAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -142,7 +141,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/help", name="contao_backend_help")
      */
-    public function helpAction()
+    public function helpAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -158,7 +157,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/page", name="contao_backend_page")
      */
-    public function pageAction()
+    public function pageAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -174,7 +173,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/popup", name="contao_backend_popup")
      */
-    public function popupAction()
+    public function popupAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -190,7 +189,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/switch", name="contao_backend_switch")
      */
-    public function switchAction()
+    public function switchAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -206,7 +205,7 @@ class BackendController extends Controller
      *
      * @Route("/contao/alerts", name="contao_backend_alerts")
      */
-    public function alertsAction()
+    public function alertsAction(): Response
     {
         $this->container->get('contao.framework')->initialize();
 
@@ -227,7 +226,7 @@ class BackendController extends Controller
      *
      * @Route("/_contao/picker", name="contao_backend_picker")
      */
-    public function pickerAction(Request $request)
+    public function pickerAction(Request $request): RedirectResponse
     {
         $extras = [];
 

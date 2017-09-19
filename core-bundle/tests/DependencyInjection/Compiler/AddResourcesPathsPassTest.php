@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,15 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the AddResourcesPathsPass class.
- *
- * @author Leo Feyer <http://github.com/leofeyer>
  */
 class AddResourcesPathsPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $pass = new AddResourcesPathsPass();
 
@@ -37,7 +37,7 @@ class AddResourcesPathsPassTest extends TestCase
     /**
      * Tests adding the resources paths.
      */
-    public function testAddsTheResourcesPaths()
+    public function testAddsTheResourcesPaths(): void
     {
         $pass = new AddResourcesPathsPass();
 

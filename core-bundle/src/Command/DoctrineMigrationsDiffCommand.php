@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,17 +22,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This Command replaces Doctrine\Bundle\MigrationsBundle\Command\MigrationsDiffDoctrineCommand
  * if ORM is not installed. The regular doctrine:migrations:diff command only works with ORM.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class DoctrineMigrationsDiffCommand extends DiffCommand
 {
-    const COMMAND_ID = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
+    public const COMMAND_ID = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
 
     /**
      * {@inheritdoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): void
     {
         /** @var Application $application */
         $application = $this->getApplication();
@@ -48,7 +48,7 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

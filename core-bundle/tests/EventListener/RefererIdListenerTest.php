@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,16 +22,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the RefererIdListener class.
- *
- * @author Yanick Witschi <https:/github.com/toflar>
- * @author Leo Feyer <https:/github.com/leofeyer>
  */
 class RefererIdListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
 
@@ -39,14 +38,16 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests adding the token to the request.
      */
-    public function testAddsTheTokenToTheRequest()
+    public function testAddsTheTokenToTheRequest(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
@@ -58,14 +59,16 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests that the token is not added to a front end request.
      */
-    public function testDoesNotAddTheTokenInFrontEndScope()
+    public function testDoesNotAddTheTokenInFrontEndScope(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
@@ -76,14 +79,16 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests that the token is not added to a subrequest.
      */
-    public function testDoesNotAddTheTokenToASubrequest()
+    public function testDoesNotAddTheTokenToASubrequest(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::SUB_REQUEST
+        );
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
@@ -94,14 +99,16 @@ class RefererIdListenerTest extends TestCase
     /**
      * Tests that the same token is added to subsequent requests.
      */
-    public function testAddsTheSameTokenToSubsequestRequests()
+    public function testAddsTheSameTokenToSubsequestRequests(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);

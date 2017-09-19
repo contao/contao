@@ -70,7 +70,7 @@ class PictureFactory implements PictureFactoryInterface
      * @param bool                      $bypassCache
      * @param array                     $imagineOptions
      */
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions)
+    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
@@ -82,7 +82,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function setDefaultDensities($densities)
+    public function setDefaultDensities($densities): self
     {
         $this->defaultDensities = (string) $densities;
 
@@ -92,7 +92,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create($path, $size = null)
+    public function create($path, $size = null): PictureInterface
     {
         $attributes = [];
 
@@ -131,7 +131,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @return array<PictureConfiguration,array>
      */
-    private function createConfig($size)
+    private function createConfig($size): array
     {
         if (!is_array($size)) {
             $size = [0, 0, $size];
@@ -201,7 +201,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @return PictureConfigurationItem
      */
-    private function createConfigItem($imageSize)
+    private function createConfigItem($imageSize): PictureConfigurationItem
     {
         $configItem = new PictureConfigurationItem();
         $resizeConfig = new ResizeConfiguration();
@@ -236,7 +236,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @return PictureInterface
      */
-    private function addImageAttributes(PictureInterface $picture, array $attributes)
+    private function addImageAttributes(PictureInterface $picture, array $attributes): PictureInterface
     {
         if (empty($attributes)) {
             return $picture;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,15 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the ResponseException class.
- *
- * @author Christian Schiffler <https://github.com/discordier>
  */
 class ResponseExceptionTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $exception = new ResponseException(new Response('Hello world'));
 
@@ -34,7 +34,7 @@ class ResponseExceptionTest extends TestCase
     /**
      * Tests the getResponse() method.
      */
-    public function testSetsTheResponseStatusCodeAndContent()
+    public function testSetsTheResponseStatusCodeAndContent(): void
     {
         $exception = new ResponseException(new Response('Hello world'));
 

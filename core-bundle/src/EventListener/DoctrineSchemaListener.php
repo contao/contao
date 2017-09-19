@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,9 +18,6 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class DoctrineSchemaListener
 {
     /**
@@ -41,7 +40,7 @@ class DoctrineSchemaListener
      *
      * @param GenerateSchemaEventArgs $event
      */
-    public function postGenerateSchema(GenerateSchemaEventArgs $event)
+    public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
         $this->provider->appendToSchema($event->getSchema());
     }
@@ -51,7 +50,7 @@ class DoctrineSchemaListener
      *
      * @param SchemaIndexDefinitionEventArgs $event
      */
-    public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event)
+    public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event): void
     {
         $connection = $event->getConnection();
         $data = $event->getTableIndex();
