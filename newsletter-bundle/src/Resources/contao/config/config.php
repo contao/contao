@@ -19,7 +19,7 @@ array_insert($GLOBALS['BE_MOD']['content'], 4, array
 		'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
 		'send'       => array('Newsletter', 'send'),
 		'import'     => array('Newsletter', 'importRecipients'),
-		'stylesheet' => 'bundles/contaonewsletter/style.css'
+		'stylesheet' => 'bundles/contaonewsletter/newsletter.min.css'
 	)
 ));
 
