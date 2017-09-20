@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     csso = require('gulp-csso'),
     ignore = require('gulp-ignore'),
     rename = require('gulp-rename'),
+    svgo = require('gulp-svgo'),
     uglify = require('gulp-uglify'),
     pump = require('pump');
 
@@ -44,4 +45,14 @@ gulp.task('minify-theme-css', function (cb) {
     );
 });
 
-gulp.task('default', ['minify-public', 'minify-theme-js', 'minify-theme-css']);
+gulp.task('minify-theme-icons', function (cb) {
+    pump([
+            gulp.src('src/Resources/contao/themes/flexible/icons/*.svg'),
+            svgo(),
+            gulp.dest('src/Resources/contao/themes/flexible/icons')
+        ],
+        cb
+    );
+});
+
+gulp.task('default', ['minify-public', 'minify-theme-js', 'minify-theme-css', 'minify-theme-icons']);
