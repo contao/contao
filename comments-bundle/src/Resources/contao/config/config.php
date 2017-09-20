@@ -29,6 +29,6 @@ array_insert($GLOBALS['BE_MOD']['content'], 5, array
 	'comments' => array
 	(
 		'tables'     => array('tl_comments'),
-		'stylesheet' => 'bundles/contaocomments/style.css'
+		'stylesheet' => 'bundles/contaocomments/comments.min.css'
 	)
 ));
