@@ -266,6 +266,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'combineScripts' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['combineScripts'],
+			'default'                 => '1',
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
