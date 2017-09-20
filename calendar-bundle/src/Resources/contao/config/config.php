@@ -49,7 +49,7 @@ $GLOBALS['TL_CRON']['daily']['generateCalendarFeeds'] = array('Calendar', 'gener
  */
 if (TL_MODE == 'BE')
 {
-	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/style.css|static';
+	$GLOBALS['TL_CSS'][] = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')) . '/bundles/contaocalendar/calendar.min.css|static';
 }
 
 
