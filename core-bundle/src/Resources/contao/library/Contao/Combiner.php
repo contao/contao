@@ -302,8 +302,15 @@ class Combiner extends \System
 			$strUrl = TL_ASSETS_URL;
 		}
 
+		$arrPrefix = array();
 		$strTarget = substr($this->strMode, 1);
-		$strKey = substr(md5($this->strKey), 0, 12);
+
+		foreach ($this->arrFiles as $arrFile)
+		{
+			$arrPrefix[] = basename($arrFile['name']);
+		}
+
+		$strKey = \StringUtil::substr(implode('+', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
 
 		// Load the existing file
 		if (file_exists(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))

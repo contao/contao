@@ -115,7 +115,7 @@ class CombinerTest extends TestCase
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/[a-z0-9]+\.css$/', $combinedFile);
+        $this->assertRegExp('/^assets\/css\/file1\.css\+file2\.css\+file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertSame(
             "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n",
@@ -152,7 +152,7 @@ class CombinerTest extends TestCase
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/[a-z0-9]+\.css$/', $combinedFile);
+        $this->assertRegExp('/^assets\/css\/file1\.scss\+file2\.scss-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertSame(
             "body{color:red}\nbody{color:green}\n",
@@ -188,7 +188,7 @@ class CombinerTest extends TestCase
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/js\/[a-z0-9]+\.js$/', $combinedFile);
+        $this->assertRegExp('/^assets\/js\/file1\.js\+file2\.js-[a-z0-9]+\.js$/', $combinedFile);
 
         $this->assertSame(
             "file1();\nfile2();\n",

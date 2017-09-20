@@ -732,7 +732,7 @@ abstract class Controller extends \System
 		{
 			foreach (array_unique($GLOBALS['TL_JQUERY']) as $script)
 			{
-				$strScripts .= "\n" . trim($script) . "\n";
+				$strScripts .= $script;
 			}
 		}
 
@@ -744,7 +744,7 @@ abstract class Controller extends \System
 		{
 			foreach (array_unique($GLOBALS['TL_MOOTOOLS']) as $script)
 			{
-				$strScripts .= "\n" . trim($script) . "\n";
+				$strScripts .= $script;
 			}
 		}
 
@@ -756,7 +756,7 @@ abstract class Controller extends \System
 		{
 			foreach (array_unique($GLOBALS['TL_BODY']) as $script)
 			{
-				$strScripts .= trim($script) . "\n";
+				$strScripts .= $script;
 			}
 		}
 
@@ -797,7 +797,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateStyleTag(static::addStaticUrlTo($stylesheet), $options->media) . "\n";
+					$strScripts .= \Template::generateStyleTag(static::addStaticUrlTo($stylesheet), $options->media);
 				}
 			}
 		}
@@ -815,7 +815,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateStyleTag(static::addStaticUrlTo($stylesheet), $options->media) . "\n";
+					$strScripts .= \Template::generateStyleTag(static::addStaticUrlTo($stylesheet), $options->media);
 				}
 			}
 		}
@@ -825,7 +825,7 @@ abstract class Controller extends \System
 		{
 			if ($blnCombineScripts)
 			{
-				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . "\n";
+				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all');
 			}
 			else
 			{
@@ -833,7 +833,7 @@ abstract class Controller extends \System
 				{
 					list($url, $media) = explode('|', $strUrl);
 
-					$strScripts .= \Template::generateStyleTag($url, $media) . "\n";
+					$strScripts .= \Template::generateStyleTag($url, $media);
 				}
 			}
 		}
@@ -862,7 +862,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateScriptTag(static::addStaticUrlTo($javascript), $options->async) . "\n";
+					$strScripts .= \Template::generateScriptTag(static::addStaticUrlTo($javascript), $options->async);
 				}
 			}
 
@@ -871,7 +871,7 @@ abstract class Controller extends \System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . "\n" . $strScripts;
+					$strScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . $strScripts;
 				}
 				else
 				{
@@ -879,7 +879,7 @@ abstract class Controller extends \System
 
 					foreach ($arrReversed as $strUrl)
 					{
-						$strScripts = \Template::generateScriptTag($strUrl) . "\n" . $strScripts;
+						$strScripts = \Template::generateScriptTag($strUrl) . $strScripts;
 					}
 				}
 			}
@@ -888,7 +888,7 @@ abstract class Controller extends \System
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . "\n" . $strScripts;
+					$strScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strScripts;
 				}
 				else
 				{
@@ -896,7 +896,7 @@ abstract class Controller extends \System
 
 					foreach ($arrReversed as $strUrl)
 					{
-						$strScripts = \Template::generateScriptTag($strUrl, true) . "\n" . $strScripts;
+						$strScripts = \Template::generateScriptTag($strUrl, true) . $strScripts;
 					}
 				}
 			}
@@ -907,7 +907,7 @@ abstract class Controller extends \System
 		{
 			foreach (array_unique($GLOBALS['TL_HEAD']) as $head)
 			{
-				$strScripts .= trim($head) . "\n";
+				$strScripts .= $head;
 			}
 		}
 

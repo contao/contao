@@ -9,9 +9,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/diff.css">
+  <link rel="stylesheet" href="<?php
+    $objCombiner = new Combiner();
+    $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/diff.css');
+    echo $objCombiner->getCombinedFile();
+  ?>">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
