@@ -261,21 +261,11 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($noUserReturn)
         ;
 
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['prepare', 'execute'])
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
             ->expects($this->never())
-            ->method('prepare')
-        ;
-
-        $connection
-            ->expects($this->never())
-            ->method('execute')
+            ->method('update')
         ;
 
         $listener = $this->getListener($session, $connection, $tokenStorage);
@@ -342,21 +332,11 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['prepare', 'execute'])
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $connection
             ->expects($this->never())
-            ->method('prepare')
-        ;
-
-        $connection
-            ->expects($this->never())
-            ->method('execute')
+            ->method('update')
         ;
 
         $listener = $this->getListener($session, $connection);

@@ -138,7 +138,7 @@ class UserPasswordCommand extends ContainerAwareCommand
         $framework = $this->getContainer()->get('contao.framework');
         $framework->initialize();
 
-        /** @var Config $confirm */
+        /** @var Config $config */
         $config = $framework->getAdapter(Config::class);
         $passwordLength = $config->get('minPasswordLength') ?: 8;
 

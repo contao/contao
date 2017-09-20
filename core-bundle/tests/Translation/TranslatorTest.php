@@ -39,7 +39,7 @@ class TranslatorTest extends TestCase
     /**
      * Tests forwarding method calls to the decorated translator.
      */
-    public function testForwardsTheMethodCalls(): void
+    public function testForwardsTheMethodCallsToTheDecoratedTranslator(): void
     {
         $originalTranslator = $this->createMock(TranslatorInterface::class);
 
