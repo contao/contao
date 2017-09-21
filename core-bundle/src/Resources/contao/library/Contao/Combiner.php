@@ -131,7 +131,6 @@ class Combiner extends \System
 			// Handle public bundle resources in web/
 			if (file_exists(TL_ROOT . '/' . $this->strWebDir . '/' . $strFile))
 			{
-				@trigger_error('Paths relative to the webdir are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 				$strFile = $this->strWebDir . '/' . $strFile;
 			}
 			else
@@ -443,7 +442,15 @@ class Combiner extends \System
 	 */
 	protected function fixPaths($content, $arrFile)
 	{
-		$strDirname = dirname($arrFile['name']);
+		$strName = $arrFile['name'];
+
+		// Strip the web/ prefix
+		if (strpos($strName, $this->strWebDir .'/') === 0)
+		{
+			$strName = substr($strName, strlen($this->strWebDir) + 1);
+		}
+
+		$strDirname = dirname($strName);
 		$strGlue = ($strDirname != '.') ? $strDirname . '/' : '';
 
 		$strBuffer = '';

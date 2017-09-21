@@ -62,6 +62,8 @@ class BackendTemplate extends \Template
 			$this->ua .= ' lw';
 		}
 
+		$strWebDir = \System::getContainer()->getParameter('contao.web_dir');
+
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && is_array($GLOBALS['TL_CSS']))
 		{
@@ -76,7 +78,14 @@ class BackendTemplate extends \Template
 				{
 					if ($options->mtime === null)
 					{
-						$options->mtime = filemtime(TL_ROOT . '/' . $stylesheet);
+						if (file_exists(TL_ROOT . '/' . $stylesheet))
+						{
+							$options->mtime = filemtime(TL_ROOT . '/' . $stylesheet);
+						}
+						elseif (file_exists(TL_ROOT . '/' . $strWebDir . '/' . $stylesheet))
+						{
+							$options->mtime = filemtime(TL_ROOT . '/' . $strWebDir . '/' . $stylesheet);
+						}
 					}
 
 					$objCombiner->add($stylesheet, $options->mtime, $options->media);
@@ -110,7 +119,14 @@ class BackendTemplate extends \Template
 				{
 					if ($options->mtime === null)
 					{
-						$options->mtime = filemtime(TL_ROOT . '/' . $javascript);
+						if (file_exists(TL_ROOT . '/' . $javascript))
+						{
+							$options->mtime = filemtime(TL_ROOT . '/' . $javascript);
+						}
+						elseif (file_exists(TL_ROOT . '/' . $strWebDir . '/' . $javascript))
+						{
+							$options->mtime = filemtime(TL_ROOT . '/' . $strWebDir . '/' . $javascript);
+						}
 					}
 
 					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
