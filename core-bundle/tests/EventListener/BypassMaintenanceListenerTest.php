@@ -18,14 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-/**
- * Tests the BypassMaintenanceListener class.
- */
 class BypassMaintenanceListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new BypassMaintenanceListener($this->mockSession(), false);
@@ -33,9 +27,6 @@ class BypassMaintenanceListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\BypassMaintenanceListener', $listener);
     }
 
-    /**
-     * Tests adding the request attribute.
-     */
     public function testAddsTheRequestAttribute(): void
     {
         $request = new Request();
@@ -53,9 +44,6 @@ class BypassMaintenanceListenerTest extends TestCase
         $this->assertTrue($event->getRequest()->attributes->get('_bypass_maintenance'));
     }
 
-    /**
-     * Tests that the request attribute is not set if there is no back end user.
-     */
     public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser(): void
     {
         $event = new GetResponseEvent(

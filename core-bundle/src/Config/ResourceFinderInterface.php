@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Config;
 
 use Symfony\Component\Finder\Finder;
 
-/**
- * Interface for resource finders.
- */
 interface ResourceFinderInterface
 {
     /**

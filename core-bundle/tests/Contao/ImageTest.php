@@ -19,8 +19,6 @@ use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Tests the Image class.
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -89,9 +87,6 @@ class ImageTest extends TestCase
         System::setContainer($container);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $fileMock = $this->createMock(File::class);
@@ -122,9 +117,6 @@ class ImageTest extends TestCase
         $this->assertInstanceOf('Contao\Image', new Image($fileMock));
     }
 
-    /**
-     * Tests the object instantiation with a non-existent file.
-     */
     public function testFailsIfTheFileDoesNotExist(): void
     {
         $fileMock = $this->createMock(File::class);
@@ -139,9 +131,6 @@ class ImageTest extends TestCase
         new Image($fileMock);
     }
 
-    /**
-     * Tests the object instantiation with an invalid extension.
-     */
     public function testFailsIfTheFileExtensionIsInvalid(): void
     {
         $fileMock = $this->createMock(File::class);
@@ -172,8 +161,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests resizing without an important part.
-     *
      * @param array $arguments
      * @param array $expectedResult
      *
@@ -240,8 +227,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testComputeResizeWithoutImportantPart() method.
-     *
      * @return array
      */
     public function getComputeResizeDataWithoutImportantPart(): array
@@ -625,8 +610,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests resizing with an important part.
-     *
      * @param array $arguments
      * @param array $expectedResult
      *
@@ -676,8 +659,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testComputeResizeWithImportantPart() method.
-     *
      * @return array
      */
     public function getComputeResizeDataWithImportantPart(): array
@@ -818,9 +799,6 @@ class ImageTest extends TestCase
         ];
     }
 
-    /**
-     * Tests the setters and getters.
-     */
     public function testSupportsReadingAndWritingValues(): void
     {
         $fileMock = $this->createMock(File::class);
@@ -951,8 +929,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the getCacheName() method.
-     *
      * @param array  $arguments
      * @param string $expectedCacheName
      *
@@ -1010,8 +986,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testGetCacheName() method.
-     *
      * @return array
      */
     public function getCacheName(): array
@@ -1059,8 +1033,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the setZoomLevel() with an out of bounds value.
-     *
      * @param int $value
      *
      * @dataProvider getZoomLevel
@@ -1097,8 +1069,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Returns the zoom level for the testFailsIfTheZoomValueIsOutOfBounds() method.
-     *
      * @return array
      */
     public function getZoomLevel(): array
@@ -1110,8 +1080,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the legacy get() method.
-     *
      * @param array $arguments
      * @param array $expectedResult
      *
@@ -1125,8 +1093,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testGetLegacy() method.
-     *
      * @return array
      */
     public function getGetLegacy(): array
@@ -1145,9 +1111,6 @@ class ImageTest extends TestCase
         ];
     }
 
-    /**
-     * Tests the deprecated methods of the Image class.
-     */
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {
         $this->assertNull(Image::get('', 100, 100));
@@ -1156,8 +1119,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the legacy resize() method.
-     *
      * @param array $arguments
      * @param array $expectedResult
      *
@@ -1171,8 +1132,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testGetLegacy() method.
-     *
      * @return array
      */
     public function getResizeLegacy(): array
@@ -1191,9 +1150,6 @@ class ImageTest extends TestCase
         ];
     }
 
-    /**
-     * Tests resizing an image which already matches the given dimensions.
-     */
     public function testDoesNotResizeMatchingImages(): void
     {
         $file = new File('dummy.jpg');
@@ -1208,9 +1164,6 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->height, 200);
     }
 
-    /**
-     * Tests resizing an image which has to be cropped.
-     */
     public function testCropsImages(): void
     {
         $file = new File('dummy.jpg');
@@ -1225,9 +1178,6 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->height, 100);
     }
 
-    /**
-     * Tests resizing an image which has to be cropped and has a target defined.
-     */
     public function testCropsImagesWithTargetPath(): void
     {
         $file = new File('dummy.jpg');
@@ -1243,9 +1193,6 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->path, 'dummy_foobar.jpg');
     }
 
-    /**
-     * Tests resizing an image which has to be cropped and has an existing target defined.
-     */
     public function testCropsImagesWithExistingTargetPath(): void
     {
         $file = new File('dummy.jpg');
@@ -1264,9 +1211,6 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->height, 100);
     }
 
-    /**
-     * Tests resizing an SVG image.
-     */
     public function testResizesSvgImages(): void
     {
         file_put_contents(
@@ -1303,9 +1247,6 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
-    /**
-     * Tests resizing an SVG image with percentage based dimensions.
-     */
     public function testResizesSvgImagesWithPercentageDimensions(): void
     {
         file_put_contents(
@@ -1342,9 +1283,6 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
-    /**
-     * Tests resizing an SVG image without dimensions.
-     */
     public function testResizesSvgImagesWithoutDimensions(): void
     {
         file_put_contents(
@@ -1379,9 +1317,6 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
-    /**
-     * Tests resizing an SVG image without a view box.
-     */
     public function testResizesSvgImagesWithoutViewBox(): void
     {
         file_put_contents(
@@ -1417,9 +1352,6 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
-    /**
-     * Tests resizing an SVG image without a view box and dimensions.
-     */
     public function testResizesSvgImagesWithoutViewBoxAndDimensions(): void
     {
         file_put_contents(
@@ -1443,9 +1375,6 @@ class ImageTest extends TestCase
         $this->assertSame($file->path, $resultFile->path);
     }
 
-    /**
-     * Tests resizing an SVGZ image.
-     */
     public function testResizesSvgzImages(): void
     {
         file_put_contents(
@@ -1483,9 +1412,6 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
-    /**
-     * Tests the executeResize hook.
-     */
     public function testExecutesTheResizeHook(): void
     {
         $GLOBALS['TL_HOOKS'] = [
@@ -1530,8 +1456,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Returns a custom image path.
-     *
      * @param object $imageObj The image object
      *
      * @return string The image path
@@ -1555,9 +1479,6 @@ class ImageTest extends TestCase
         return $path;
     }
 
-    /**
-     * Tests the getImage hook.
-     */
     public function testExecutesTheGetImageHook(): void
     {
         $file = new File('dummy.jpg');
@@ -1604,8 +1525,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Returns a custom image path.
-     *
      * @param string $originalPath
      * @param int    $targetWidth
      * @param int    $targetHeight
@@ -1638,8 +1557,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Tests the getPixelValue() method.
-     *
      * @param string $value
      * @param int    $expected
      *
@@ -1651,8 +1568,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Provides the data for the testGetPixelValue() method.
-     *
      * @return array
      */
     public function getGetPixelValueData(): array

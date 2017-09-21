@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Access denied exception.
- */
 class AccessDeniedException extends \RuntimeException
 {
 }

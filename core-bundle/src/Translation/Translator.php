@@ -16,9 +16,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Translator.
- */
 class Translator implements TranslatorInterface
 {
     /**
@@ -77,7 +74,6 @@ class Translator implements TranslatorInterface
      */
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
-        // Forward to the default translator
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
@@ -86,7 +82,6 @@ class Translator implements TranslatorInterface
      */
     public function setLocale($locale): ?string
     {
-        // Forward to the default translator
         return $this->translator->setLocale($locale);
     }
 
@@ -95,7 +90,6 @@ class Translator implements TranslatorInterface
      */
     public function getLocale(): string
     {
-        // Forward to the default translator
         return $this->translator->getLocale();
     }
 

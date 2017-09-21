@@ -16,14 +16,8 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the Adapter class.
- */
 class AdapterTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $adapter = new Adapter('Dummy');
@@ -31,9 +25,6 @@ class AdapterTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
     }
 
-    /**
-     * Tests the __call method.
-     */
     public function testImplementsTheMagicCallMethod(): void
     {
         /** @var LegacyClass $adapter */
@@ -42,15 +33,13 @@ class AdapterTest extends TestCase
         $this->assertSame(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
     }
 
-    /**
-     * Tests the __call method of a non-existent function.
-     */
     public function testFailsIfAMethodDoesNotExist(): void
     {
         $adapter = new Adapter(LegacyClass::class);
 
         $this->expectException('TypeError');
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $adapter->missingMethod();
     }
 }

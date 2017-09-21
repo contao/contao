@@ -16,14 +16,8 @@ use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Tests the HtaccessAnalyzer class.
- */
 class HtaccessAnalyzerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $file = new SplFileInfo(
@@ -37,9 +31,6 @@ class HtaccessAnalyzerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Analyzer\HtaccessAnalyzer', $htaccess);
     }
 
-    /**
-     * Tests reading the access configuration.
-     */
     public function testReadsTheAccessConfigurationFromTheHtaccesFile(): void
     {
         $file = new SplFileInfo(
@@ -73,9 +64,6 @@ class HtaccessAnalyzerTest extends TestCase
         $this->assertFalse($htaccess->grantsAccess());
     }
 
-    /**
-     * Tests adding an invalid file.
-     */
     public function testThrowsAnExceptionIfTheFileIsNotAnHtaccessFile(): void
     {
         $this->expectException('InvalidArgumentException');

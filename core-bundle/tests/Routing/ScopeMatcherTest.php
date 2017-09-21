@@ -20,9 +20,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the ScopeMatcher class.
- */
 class ScopeMatcherTest extends TestCase
 {
     /**
@@ -40,17 +37,12 @@ class ScopeMatcherTest extends TestCase
         $this->matcher = $this->mockScopeMatcher();
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Routing\ScopeMatcher', $this->matcher);
     }
 
     /**
-     * Tests the request methods.
-     *
      * @param string|null $scope
      * @param int         $requestType
      * @param bool        $isMaster
@@ -74,8 +66,6 @@ class ScopeMatcherTest extends TestCase
     }
 
     /**
-     * Provides the data for the request tests.
-     *
      * @return array
      */
     public function masterRequestProvider(): array

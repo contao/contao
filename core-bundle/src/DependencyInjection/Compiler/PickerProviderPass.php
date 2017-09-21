@@ -16,9 +16,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Registers the picker providers.
- */
 class PickerProviderPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;

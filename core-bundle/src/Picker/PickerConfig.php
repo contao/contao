@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-/**
- * Picker configuration.
- */
 class PickerConfig implements \JsonSerializable
 {
     /**
@@ -38,8 +35,6 @@ class PickerConfig implements \JsonSerializable
     private $current;
 
     /**
-     * Constructor.
-     *
      * @param string     $context
      * @param array      $extras
      * @param string|int $value

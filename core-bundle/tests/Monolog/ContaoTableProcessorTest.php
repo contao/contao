@@ -23,25 +23,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Tests the ContaoTableProcessor class.
- */
 class ContaoTableProcessorTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $this->createContaoTableProcessor());
+        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $this->mockContaoTableProcessor());
     }
 
-    /**
-     * Tests the __invoke() method.
-     */
     public function testCanBeInvoked(): void
     {
-        $processor = $this->createContaoTableProcessor();
+        $processor = $this->mockContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
         $this->assertSame(['foo' => 'bar'], $processor(['foo' => 'bar']));
@@ -49,8 +40,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Tests the action for different error levels.
-     *
      * @param int    $logLevel
      * @param string $expectedAction
      *
@@ -58,7 +47,7 @@ class ContaoTableProcessorTest extends TestCase
      */
     public function testReturnsDifferentActionsForDifferentErrorLevels(int $logLevel, string $expectedAction): void
     {
-        $processor = $this->createContaoTableProcessor();
+        $processor = $this->mockContaoTableProcessor();
 
         $record = $processor(
             [
@@ -74,15 +63,13 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Tests that an existing action is not changed.
-     *
      * @param int $logLevel
      *
      * @dataProvider actionLevelProvider
      */
     public function testDoesNotChangeAnExistingAction(int $logLevel): void
     {
-        $processor = $this->createContaoTableProcessor();
+        $processor = $this->mockContaoTableProcessor();
 
         $record = $processor(
             [
@@ -98,8 +85,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Provides the test action levels.
-     *
      * @return array
      */
     public function actionLevelProvider(): array
@@ -116,12 +101,9 @@ class ContaoTableProcessorTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that an IP is added if there is no request.
-     */
     public function testAddsAnIpAddressIfThereIsNoRequest(): void
     {
-        $processor = $this->createContaoTableProcessor();
+        $processor = $this->mockContaoTableProcessor();
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
@@ -130,8 +112,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Tests that IP addresses are anonymized.
-     *
      * @param string $input
      * @param string $expected
      *
@@ -144,14 +124,14 @@ class ContaoTableProcessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $processor = $this->createContaoTableProcessor($requestStack, null, false);
+        $processor = $this->mockContaoTableProcessor($requestStack, null, false);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
 
         $this->assertSame($input, $context->getIp());
 
-        $processor = $this->createContaoTableProcessor($requestStack, null, true);
+        $processor = $this->mockContaoTableProcessor($requestStack, null, true);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
@@ -160,8 +140,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Provides the anonymized IPs.
-     *
      * @return array
      */
     public function anonymizedIpProvider(): array
@@ -180,9 +158,6 @@ class ContaoTableProcessorTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that the browser is added.
-     */
     public function testAddsTheUserAgent(): void
     {
         $request = new Request([], [], [], [], [], ['HTTP_USER_AGENT' => 'Contao test']);
@@ -190,7 +165,7 @@ class ContaoTableProcessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $processor = $this->createContaoTableProcessor($requestStack);
+        $processor = $this->mockContaoTableProcessor($requestStack);
 
         /** @var ContaoContext $context */
         $context = $processor(
@@ -212,9 +187,6 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame('N/A', $context->getBrowser());
     }
 
-    /**
-     * Tests that the username is added.
-     */
     public function testAddsTheUsername(): void
     {
         $token = $this->createMock(ContaoToken::class);
@@ -227,7 +199,7 @@ class ContaoTableProcessorTest extends TestCase
         $tokenStorage = new TokenStorage();
         $tokenStorage->setToken($token);
 
-        $processor = $this->createContaoTableProcessor(null, $tokenStorage);
+        $processor = $this->mockContaoTableProcessor(null, $tokenStorage);
 
         /** @var ContaoContext $context */
         $context = $processor(
@@ -250,8 +222,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Tests that the source is added.
-     *
      * @param string|null $scope
      * @param string|null $contextSource
      * @param string      $expectedSource
@@ -269,7 +239,7 @@ class ContaoTableProcessorTest extends TestCase
             $requestStack->push($request);
         }
 
-        $processor = $this->createContaoTableProcessor($requestStack);
+        $processor = $this->mockContaoTableProcessor($requestStack);
 
         $result = $processor(
             ['context' => ['contao' => new ContaoContext(__METHOD__, null, null, null, null, $contextSource)]]
@@ -282,8 +252,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Provides the sources.
-     *
      * @return array
      */
     public function sourceProvider(): array
@@ -304,7 +272,7 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * Creates the ContaoTableProcessor object.
+     * Mocks a Contao table processor.
      *
      * @param RequestStack|null          $requestStack
      * @param TokenStorageInterface|null $tokenStorage
@@ -312,7 +280,7 @@ class ContaoTableProcessorTest extends TestCase
      *
      * @return ContaoTableProcessor
      */
-    private function createContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null, bool $anonymizeIp = true): ContaoTableProcessor
+    private function mockContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null, bool $anonymizeIp = true): ContaoTableProcessor
     {
         if (null === $requestStack) {
             $requestStack = $this->createMock(RequestStack::class);

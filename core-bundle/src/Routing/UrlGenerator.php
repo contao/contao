@@ -18,9 +18,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
-/**
- * Generates Contao URLs.
- */
 class UrlGenerator implements UrlGeneratorInterface
 {
     /**
@@ -39,8 +36,6 @@ class UrlGenerator implements UrlGeneratorInterface
     private $prependLocale;
 
     /**
-     * Constructor.
-     *
      * @param UrlGeneratorInterface    $router
      * @param ContaoFrameworkInterface $framework
      * @param bool                     $prependLocale

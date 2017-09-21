@@ -16,9 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Adds the maintenance attribute to the request.
- */
 class BypassMaintenanceListener
 {
     /**
@@ -37,8 +34,6 @@ class BypassMaintenanceListener
     private $requestAttribute;
 
     /**
-     * Constructor.
-     *
      * @param SessionInterface $session
      * @param bool             $disableIpCheck
      * @param string           $requestAttribute

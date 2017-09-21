@@ -20,14 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
-/**
- * Tests the PageLayoutListener class.
- */
 class PageLayoutListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new PageLayoutListener($this->mockScopeMatcher(), $this->mockContaoFramework());
@@ -36,9 +30,6 @@ class PageLayoutListenerTest extends TestCase
     }
 
     /**
-     * Tests all combinations of user agent result, TL_VIEW cookie value and checks if the
-     * header value is set correctly.
-     *
      * @param bool        $agentIsMobile
      * @param string|null $tlViewCookie
      * @param string      $expectedHeaderValue
@@ -86,8 +77,6 @@ class PageLayoutListenerTest extends TestCase
     }
 
     /**
-     * Provides the data for the testOnReplayWithNoFrontendScope test.
-     *
      * @return array
      */
     public function onReplayProvider()
@@ -102,9 +91,6 @@ class PageLayoutListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that no header is added outside the Contao front end scope.
-     */
     public function testDoesNotAddThePageLayoutHeaderIfNotInFrontEndScope(): void
     {
         $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());

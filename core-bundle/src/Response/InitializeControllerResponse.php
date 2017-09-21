@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Response;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Custom response class to support legacy entry point scripts.
+ * Custom response class to support legacy entry points.
  *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
  */

@@ -14,14 +14,9 @@ namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Initializes a response exception with an empty response.
- */
 class NoContentResponseException extends ResponseException
 {
     /**
-     * Constructor.
-     *
      * @param \Exception|null $previous
      */
     public function __construct(\Exception $previous = null)

@@ -19,9 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Defines the image sizes service.
- */
 class ImageSizes
 {
     /**
@@ -45,8 +42,6 @@ class ImageSizes
     private $options;
 
     /**
-     * Constructor.
-     *
      * @param Connection               $connection
      * @param EventDispatcherInterface $eventDispatcher
      * @param ContaoFrameworkInterface $framework

@@ -16,9 +16,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Persists the locale from the accept header or the request in the session.
- */
 class LocaleListener
 {
     /**
@@ -32,8 +29,6 @@ class LocaleListener
     private $availableLocales;
 
     /**
-     * Constructor.
-     *
      * @param ScopeMatcher $scopeMatcher
      * @param array        $availableLocales
      */

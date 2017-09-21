@@ -15,14 +15,8 @@ namespace Contao\CoreBundle\Tests\Event;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the PreviewUrlCreateEvent class.
- */
 class PreviewUrlCreateEventTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
@@ -30,9 +24,6 @@ class PreviewUrlCreateEventTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Event\PreviewUrlCreateEvent', $event);
     }
 
-    /**
-     * Tests the getId() method.
-     */
     public function testSupportsReadingTheId(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
@@ -40,9 +31,6 @@ class PreviewUrlCreateEventTest extends TestCase
         $this->assertSame(12, $event->getId());
     }
 
-    /**
-     * Tests the getKey() method.
-     */
     public function testSupportsReadingTheKey(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
@@ -50,9 +38,6 @@ class PreviewUrlCreateEventTest extends TestCase
         $this->assertSame('news', $event->getKey());
     }
 
-    /**
-     * Tests the query getter and setter.
-     */
     public function testSupportsReadingAndWritingTheQueryString(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);

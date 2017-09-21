@@ -16,14 +16,8 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the AddPackagesPass class.
- */
 class AddPackagesPassTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
@@ -31,9 +25,6 @@ class AddPackagesPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $pass);
     }
 
-    /**
-     * Tests adding the packages.
-     */
     public function testAddsThePackages(): void
     {
         $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
@@ -54,9 +45,6 @@ class AddPackagesPassTest extends TestCase
         $this->assertSame('dev-develop', $packages['contao/test-bundle2']);
     }
 
-    /**
-     * Tests adding packages without a JSON file.
-     */
     public function testAddsAnEmptyArrayIfThereIsNoJsonFile(): void
     {
         $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/invalid.json');

@@ -22,22 +22,13 @@ use Doctrine\DBAL\Statement;
 use Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the ContaoTableHandler class.
- */
 class ContaoTableHandlerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableHandler', new ContaoTableHandler());
     }
 
-    /**
-     * Tests setting and retrieving the DBAL service name.
-     */
     public function testSupportsReadingAndWritingTheDbalServiceName(): void
     {
         $handler = new ContaoTableHandler();
@@ -50,8 +41,6 @@ class ContaoTableHandlerTest extends TestCase
     }
 
     /**
-     * Tests the handle() method.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
@@ -140,17 +129,11 @@ class ContaoTableHandlerTest extends TestCase
         $this->assertFalse($handler->handle($record));
     }
 
-    /**
-     * Dummy method to test the addLogEntry hook.
-     */
     public function addLogEntry(): void
     {
-        // ignore
+        // Dummy method to test the addLogEntry hook
     }
 
-    /**
-     * Tests that the handler does nothing if the log level does not match.
-     */
     public function testDoesNotHandleARecordIfTheLogLevelDoesNotMatch(): void
     {
         $handler = new ContaoTableHandler();
@@ -159,9 +142,6 @@ class ContaoTableHandlerTest extends TestCase
         $this->assertFalse($handler->handle(['level' => Logger::DEBUG]));
     }
 
-    /**
-     * Tests that the handle() method returns false if there is no Contao context.
-     */
     public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
         $record = [
@@ -175,9 +155,6 @@ class ContaoTableHandlerTest extends TestCase
         $this->assertFalse($handler->handle($record));
     }
 
-    /**
-     * Tests the handle() method.
-     */
     public function testDoesNotHandleTheRecordIfThereIsNoContainer(): void
     {
         $record = [

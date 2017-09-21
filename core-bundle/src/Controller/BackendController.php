@@ -32,15 +32,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Handles the Contao back end routes.
- *
  * @Route(defaults={"_scope" = "backend", "_token_check" = true})
  */
 class BackendController extends Controller
 {
     /**
-     * Runs the main back end controller.
-     *
      * @return Response
      *
      * @Route("/contao", name="contao_backend")
@@ -55,8 +51,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the back end login form.
-     *
      * @return Response
      *
      * @Route("/contao/login", name="contao_backend_login")
@@ -71,8 +65,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the "set new password" form.
-     *
      * @return Response
      *
      * @Route("/contao/password", name="contao_backend_password")
@@ -87,8 +79,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the front end preview.
-     *
      * @return Response
      *
      * @Route("/contao/preview", name="contao_backend_preview")
@@ -103,8 +93,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the "invalid request token" screen.
-     *
      * @return Response
      *
      * @Route("/contao/confirm", name="contao_backend_confirm")
@@ -119,8 +107,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the file picker.
-     *
      * @return Response
      *
      * @Route("/contao/file", name="contao_backend_file")
@@ -135,8 +121,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the help content.
-     *
      * @return Response
      *
      * @Route("/contao/help", name="contao_backend_help")
@@ -151,8 +135,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the page picker.
-     *
      * @return Response
      *
      * @Route("/contao/page", name="contao_backend_page")
@@ -167,8 +149,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the pop-up content.
-     *
      * @return Response
      *
      * @Route("/contao/popup", name="contao_backend_popup")
@@ -183,8 +163,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the front end preview switcher.
-     *
      * @return Response
      *
      * @Route("/contao/switch", name="contao_backend_switch")
@@ -199,8 +177,6 @@ class BackendController extends Controller
     }
 
     /**
-     * Renders the alerts content.
-     *
      * @return Response
      *
      * @Route("/contao/alerts", name="contao_backend_alerts")
@@ -215,8 +191,9 @@ class BackendController extends Controller
     }
 
     /**
-     * Redirects the user to the Contao back end and includes the picker query parameter. It will determine
-     * the current provider URL based on the value (usually read dynamically via JavaScript).
+     * Redirects the user to the Contao back end and adds the picker query parameter.
+     * It will determine the current provider URL based on the value, which is usually
+     * read dynamically via JavaScript.
      *
      * @param Request $request
      *

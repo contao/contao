@@ -16,14 +16,8 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Finder\Finder;
 
-/**
- * Tests the ResourceFinder class.
- */
 class ResourceFinderTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $finder = new ResourceFinder();
@@ -31,9 +25,6 @@ class ResourceFinderTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Config\ResourceFinder', $finder);
     }
 
-    /**
-     * Tests that the find() and findIn() methods return a finder object.
-     */
     public function testReturnsAFinderObject(): void
     {
         $finder = new ResourceFinder([]);
@@ -48,9 +39,6 @@ class ResourceFinderTest extends TestCase
         $this->assertInstanceOf(Finder::class, $finder->findIn('config'));
     }
 
-    /**
-     * Tests that an invalid subpath triggers an exception.
-     */
     public function testFailsIfTheSubpathIsInvalid(): void
     {
         $finder = new ResourceFinder([

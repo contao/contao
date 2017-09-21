@@ -17,9 +17,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Environment;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
-/**
- * Adds the Contao-Page-Layout header based on the terminal42/header-replay-bundle.
- */
 class PageLayoutListener
 {
     /**
@@ -33,8 +30,6 @@ class PageLayoutListener
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param ScopeMatcher             $scopeMatcher
      * @param ContaoFrameworkInterface $framework
      */

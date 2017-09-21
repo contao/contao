@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Util;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Adds helper methods for symlinks.
- */
 class SymlinkUtil
 {
     /**

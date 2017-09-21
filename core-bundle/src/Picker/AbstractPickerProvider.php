@@ -17,9 +17,6 @@ use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Abstract class for picker providers.
- */
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
     /**
@@ -38,8 +35,6 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     private $tokenStorage;
 
     /**
-     * Constructor.
-     *
      * @param FactoryInterface $menuFactory
      * @param RouterInterface  $router
      */

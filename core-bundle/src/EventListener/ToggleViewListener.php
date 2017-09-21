@@ -19,9 +19,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Sets the TL_VIEW cookie based on the "toggle_view" query parameter.
- */
 class ToggleViewListener
 {
     /**
@@ -35,8 +32,6 @@ class ToggleViewListener
     private $scopeMatcher;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      * @param ScopeMatcher             $scopeMatcher
      */

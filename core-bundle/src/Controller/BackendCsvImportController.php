@@ -26,9 +26,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Handles importing CSV data in the Contao back end.
- */
 class BackendCsvImportController
 {
     public const SEPARATOR_COMMA = 'comma';
@@ -57,8 +54,6 @@ class BackendCsvImportController
     private $contaoRoot;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      * @param Connection               $connection
      * @param RequestStack             $requestStack

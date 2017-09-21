@@ -24,9 +24,6 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * Provides a Contao front end or back end user object.
- */
 class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterface
 {
     use ContainerAwareTrait;
@@ -42,8 +39,6 @@ class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterfa
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      * @param ScopeMatcher             $scopeMatcher
      */

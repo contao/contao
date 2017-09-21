@@ -17,9 +17,6 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * Adds routes for the Contao front end.
- */
 class FrontendLoader extends Loader
 {
     /**
@@ -28,8 +25,6 @@ class FrontendLoader extends Loader
     private $prependLocale;
 
     /**
-     * Constructor.
-     *
      * @param bool $prependLocale
      */
     public function __construct(bool $prependLocale)

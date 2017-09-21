@@ -19,9 +19,6 @@ use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Tests the Picker class.
- */
 class PickerTest extends TestCase
 {
     /**
@@ -57,17 +54,11 @@ class PickerTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\Picker', $this->picker);
     }
 
-    /**
-     * Tests returning the configuration.
-     */
     public function testReturnsTheConfiguration(): void
     {
         $config = $this->picker->getConfig();
@@ -76,9 +67,6 @@ class PickerTest extends TestCase
         $this->assertSame('page', $config->getContext());
     }
 
-    /**
-     * Tests returning the menu.
-     */
     public function testReturnsTheMenu(): void
     {
         $menu = $this->picker->getMenu();
@@ -96,9 +84,6 @@ class PickerTest extends TestCase
         $this->assertSame($menu, $this->picker->getMenu());
     }
 
-    /**
-     * Tests returning the current provider.
-     */
     public function testReturnsTheCurrentProvider(): void
     {
         $provider = $this->picker->getCurrentProvider();
@@ -107,9 +92,6 @@ class PickerTest extends TestCase
         $this->assertSame('pagePicker', $provider->getName());
     }
 
-    /**
-     * Tests returning the current provider if there is no current provider.
-     */
     public function testReturnsNullIfThereIsNoCurrentProvider(): void
     {
         $factory = new MenuFactory();
@@ -123,17 +105,11 @@ class PickerTest extends TestCase
         $this->assertNull($picker->getCurrentProvider());
     }
 
-    /**
-     * Tests returning the current URL.
-     */
     public function testReturnsTheCurrentUrl(): void
     {
         $this->assertSame(null, $this->picker->getCurrentUrl());
     }
 
-    /**
-     * Tests returning the current URL if there is no current menu item.
-     */
     public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem(): void
     {
         $factory = new MenuFactory();
@@ -147,9 +123,6 @@ class PickerTest extends TestCase
         $this->assertSame(null, $picker->getCurrentUrl());
     }
 
-    /**
-     * Tests returning the current URL if there are no menu items.
-     */
     public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems(): void
     {
         $picker = new Picker(new MenuFactory(), [], new PickerConfig('page', [], 5, 'pagePicker'));

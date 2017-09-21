@@ -23,14 +23,8 @@ use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Tests the ContaoDataCollector class.
- */
 class ContaoDataCollectorTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $collector = new ContaoDataCollector([]);
@@ -38,9 +32,6 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DataCollector\ContaoDataCollector', $collector);
     }
 
-    /**
-     * Tests collecting data in the back end.
-     */
     public function testCollectsDataInBackEnd(): void
     {
         $GLOBALS['TL_DEBUG'] = [
@@ -77,9 +68,6 @@ class ContaoDataCollectorTest extends TestCase
         unset($GLOBALS['TL_DEBUG']);
     }
 
-    /**
-     * Tests collecting data in the front end.
-     */
     public function testCollectsDataInFrontEnd(): void
     {
         $layout = $this->createMock(LayoutModel::class);
@@ -140,9 +128,6 @@ class ContaoDataCollectorTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    /**
-     * Tests that an empty array is returned if $this->data is not an array.
-     */
     public function testReturnsAnEmtpyArrayIfTheDataIsNotAnArray(): void
     {
         $collector = new ContaoDataCollector([]);
@@ -151,9 +136,6 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame([], $collector->getAdditionalData());
     }
 
-    /**
-     * Tests that an empty array is returned if the key is unknown.
-     */
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
         $collector = new ContaoDataCollector([]);

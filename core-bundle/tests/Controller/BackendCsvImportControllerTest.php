@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the BackendControllerTest class.
- */
 class BackendCsvImportControllerTest extends TestCase
 {
     /**
@@ -57,17 +54,11 @@ class BackendCsvImportControllerTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $this->getController());
+        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $this->mockController());
     }
 
-    /**
-     * Tests the list wizard import.
-     */
     public function testRendersTheListWizardMarkup(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -100,12 +91,9 @@ EOF;
         $request = new Request();
         $request->query->set('key', 'lw');
 
-        $this->assertSame($expect, $this->getController($request)->importListWizard($dc)->getContent());
+        $this->assertSame($expect, $this->mockController($request)->importListWizard($dc)->getContent());
     }
 
-    /**
-     * Tests the list wizard import with POST data.
-     */
     public function testImportsTheListWizardData(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -158,9 +146,6 @@ EOF;
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the table wizard import.
-     */
     public function testRendersTheTableWizardMarkup(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -193,12 +178,9 @@ EOF;
         $request = new Request();
         $request->query->set('key', 'tw');
 
-        $this->assertSame($expect, $this->getController($request)->importTableWizard($dc)->getContent());
+        $this->assertSame($expect, $this->mockController($request)->importTableWizard($dc)->getContent());
     }
 
-    /**
-     * Tests the table wizard import with POST data.
-     */
     public function testImportsTheTableWizardData(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -251,9 +233,6 @@ EOF;
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the option wizard import.
-     */
     public function testRendersTheOptionWizardMarkup(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -286,12 +265,9 @@ EOF;
         $request = new Request();
         $request->query->set('key', 'ow');
 
-        $this->assertSame($expect, $this->getController($request)->importOptionWizard($dc)->getContent());
+        $this->assertSame($expect, $this->mockController($request)->importOptionWizard($dc)->getContent());
     }
 
-    /**
-     * Tests the option wizard import with POST data.
-     */
     public function testImportsTheOptionWizardData(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -348,9 +324,6 @@ EOF;
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the list wizard import with incomplete POST data.
-     */
     public function testRedirectsIfThePostDataIsIncomplete(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -377,15 +350,12 @@ EOF;
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $response = $this->getController($request)->importListWizard($dc);
+        $response = $this->mockController($request)->importListWizard($dc);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(303, $response->getStatusCode());
     }
 
-    /**
-     * Tests the wizard import without a request object.
-     */
     public function testFailsIfThereIsNoRequestObject(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -423,13 +393,13 @@ EOF;
     }
 
     /**
-     * Returns the controller.
+     * Mocks a controller.
      *
      * @param Request|null $request
      *
      * @return BackendCsvImportController
      */
-    private function getController(Request $request = null): BackendCsvImportController
+    private function mockController(Request $request = null): BackendCsvImportController
     {
         if (null === $request) {
             $request = new Request();

@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Initializes the Contao framework.
- *
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
  */
 class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
@@ -103,8 +101,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     ];
 
     /**
-     * Constructor.
-     *
      * @param RequestStack     $requestStack
      * @param RouterInterface  $router
      * @param SessionInterface $session

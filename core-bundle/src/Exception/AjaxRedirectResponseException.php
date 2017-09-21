@@ -14,14 +14,9 @@ namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Initializes a response exception with an Ajax compatible redirect response.
- */
 class AjaxRedirectResponseException extends ResponseException
 {
     /**
-     * Constructor.
-     *
      * @param string          $location
      * @param int             $status
      * @param \Exception|null $previous

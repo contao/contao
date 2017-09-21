@@ -15,14 +15,8 @@ namespace Contao\CoreBundle\Tests\Event;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the PreviewUrlConvertEvent class.
- */
 class PreviewUrlConvertEventTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $event = new PreviewUrlConvertEvent();
@@ -30,9 +24,6 @@ class PreviewUrlConvertEventTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Event\PreviewUrlConvertEvent', $event);
     }
 
-    /**
-     * Tests the URL getter and setter.
-     */
     public function testSupportsReadingAndWritingTheUrl(): void
     {
         $event = new PreviewUrlConvertEvent();

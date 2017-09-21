@@ -30,8 +30,6 @@ class XliffFileLoader extends Loader
     private $addToGlobals;
 
     /**
-     * Constructor.
-     *
      * @param string $rootDir
      * @param bool   $addToGlobals
      */

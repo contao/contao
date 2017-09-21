@@ -16,14 +16,8 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the ImageSizesEvent class.
- */
 class ImageSizesEventTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $event = new ImageSizesEvent([1]);
@@ -31,9 +25,6 @@ class ImageSizesEventTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Event\ImageSizesEvent', $event);
     }
 
-    /**
-     * Tests the image sizes setter and getter.
-     */
     public function testSupportsReadingAndWritingImageSizes(): void
     {
         $event = new ImageSizesEvent([1]);
@@ -45,9 +36,6 @@ class ImageSizesEventTest extends TestCase
         $this->assertSame([1, 2], $event->getImageSizes());
     }
 
-    /**
-     * Tests the getUser() method.
-     */
     public function testSupportsReadingTheUserObject(): void
     {
         $user = $this->createMock(BackendUser::class);

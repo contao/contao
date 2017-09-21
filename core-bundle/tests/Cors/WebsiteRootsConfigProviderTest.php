@@ -21,14 +21,8 @@ use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Tests the WebsiteRootsConfigProvider class.
- */
 class WebsiteRootsConfigProviderTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $configProvider = new WebsiteRootsConfigProvider($this->createMock(Connection::class));
@@ -36,9 +30,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Cors\WebsiteRootsConfigProvider', $configProvider);
     }
 
-    /**
-     * Tests that a configuration is provided if the host matches.
-     */
     public function testProvidesTheConfigurationIfTheHostMatches(): void
     {
         $request = Request::create('https://foobar.com');
@@ -57,7 +48,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
             ->willReturn(1)
         ;
 
-        $connection = $this->getConnection($statement);
+        $connection = $this->mockConnection($statement);
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
@@ -71,9 +62,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         );
     }
 
-    /**
-     * Tests that no configuration is provided if the host does not match.
-     */
     public function testDoesNotProvideTheConfigurationIfTheHostDoesNotMatch(): void
     {
         $request = Request::create('https://foobar.com');
@@ -92,16 +80,13 @@ class WebsiteRootsConfigProviderTest extends TestCase
             ->willReturn(0)
         ;
 
-        $connection = $this->getConnection($statement);
+        $connection = $this->mockConnection($statement);
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if there is no origin header.
-     */
     public function testDoesNotProvideTheConfigurationIfThereIsNoOriginHeader(): void
     {
         $request = Request::create('http://foobar.com');
@@ -120,9 +105,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if the origin equals the host.
-     */
     public function testDoesNotProvideTheConfigurationIfTheOriginEqualsTheHost(): void
     {
         $request = Request::create('https://foobar.com');
@@ -141,9 +123,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if the database is not connected.
-     */
     public function testDoesNotProvideTheConfigurationIfTheDatabaseIsNotConnected(): void
     {
         $request = Request::create('https://foobar.com');
@@ -167,9 +146,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if the table does not exist.
-     */
     public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist(): void
     {
         $request = Request::create('https://foobar.com');
@@ -207,13 +183,13 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * Mocks a database connection object.
+     * Mocks a database connection.
      *
      * @param Statement $statement
      *
      * @return Connection|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function getConnection(Statement $statement): Connection
+    private function mockConnection(Statement $statement): Connection
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
 

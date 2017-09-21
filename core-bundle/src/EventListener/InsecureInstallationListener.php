@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Ensures that the document root is secure.
- */
 class InsecureInstallationListener
 {
     /**

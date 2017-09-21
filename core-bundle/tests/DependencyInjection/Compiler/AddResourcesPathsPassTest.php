@@ -19,14 +19,8 @@ use Contao\TestBundle\ContaoTestBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the AddResourcesPathsPass class.
- */
 class AddResourcesPathsPassTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $pass = new AddResourcesPathsPass();
@@ -34,9 +28,6 @@ class AddResourcesPathsPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass', $pass);
     }
 
-    /**
-     * Tests adding the resources paths.
-     */
     public function testAddsTheResourcesPaths(): void
     {
         $pass = new AddResourcesPathsPass();

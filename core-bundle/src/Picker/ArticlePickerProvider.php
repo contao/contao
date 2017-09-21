@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-/**
- * Provides the article picker.
- */
 class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
     /**

@@ -17,9 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-/**
- * Tests the BinaryStringType class.
- */
 class BinaryStringTypeTest extends TestCase
 {
     /**
@@ -47,17 +44,11 @@ class BinaryStringTypeTest extends TestCase
         $this->type = Type::getType(BinaryStringType::NAME);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType', $this->type);
     }
 
-    /**
-     * Tests that getSqlDeclaration() returns a binary definition for fixed length fields.
-     */
     public function testReturnsABinaryDefinitionForAFixedLengthField(): void
     {
         $fieldDefinition = ['fixed' => true];
@@ -82,9 +73,6 @@ class BinaryStringTypeTest extends TestCase
         $this->type->getSQLDeclaration($fieldDefinition, $platform);
     }
 
-    /**
-     * Tests that getSqlDeclaration() returns a blob definition for variable length fields.
-     */
     public function testReturnsABlobDefinitionForAVariableLengthField(): void
     {
         $fieldDefinition = ['fixed' => false];
@@ -109,17 +97,11 @@ class BinaryStringTypeTest extends TestCase
         $this->type->getSQLDeclaration($fieldDefinition, $platform);
     }
 
-    /**
-     * Tests the name.
-     */
     public function testReturnsTheCorrectName(): void
     {
         $this->assertSame(BinaryStringType::NAME, $this->type->getName());
     }
 
-    /**
-     * Tests the custom type requires an SQL hint.
-     */
     public function testRequiresAnSqlCommentHintForTheCustomType(): void
     {
         $this->assertTrue(

@@ -23,14 +23,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
-/**
- * Tests the DoctrineSchemaListener class.
- */
 class DoctrineSchemaListenerTest extends DoctrineTestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new DoctrineSchemaListener($this->createMock(DcaSchemaProvider::class));
@@ -38,9 +32,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\DoctrineSchemaListener', $listener);
     }
 
-    /**
-     * Tests appending to an existing scheme.
-     */
     public function testAppendsToAnExistingSchema(): void
     {
         $framework = $this->mockContaoFrameworkWithInstaller(
@@ -70,9 +61,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         $this->assertTrue($schema->getTable('tl_files')->hasColumn('path'));
     }
 
-    /**
-     * Tests that the index is changed if there is a subpart.
-     */
     public function testChangesTheIndexIfThereIsASubpart(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -143,9 +131,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         $this->assertSame(['path(333)'], $index->getColumns());
     }
 
-    /**
-     * Tests that the index is not changed if there is no subpart.
-     */
     public function testDoesNotChangeTheIndexIfThereIsNoSubpart(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -202,9 +187,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         $listener->onSchemaIndexDefinition($event);
     }
 
-    /**
-     * Tests that the index of the primary index column is not changed .
-     */
     public function testDoesNotChangeTheIndexOfThePrimaryKeyColumn(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -240,9 +222,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         $listener->onSchemaIndexDefinition($event);
     }
 
-    /**
-     * Tests that the index is not changed on patforms other than MySQL.
-     */
     public function testDoesNotChangeTheIndexOnDatabasePlatformsOtherThanMysql(): void
     {
         $connection = $this->createMock(Connection::class);

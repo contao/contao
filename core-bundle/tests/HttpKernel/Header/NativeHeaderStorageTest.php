@@ -17,9 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class NativeHeaderStorageTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $storage = new NativeHeaderStorage();

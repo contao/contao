@@ -18,15 +18,11 @@ use Contao\Validator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the Validator class.
- *
  * @group contao3
  */
 class ValidatorTest extends TestCase
 {
     /**
-     * Tests validating e-mail addresses.
-     *
      * @param string   $email
      * @param int|bool $expected
      *
@@ -42,8 +38,6 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * Provides the data for the testEmail() method.
-     *
      * @return array
      */
     public function emailProvider(): array
@@ -179,9 +173,6 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * Tests extracting e-mail addresses from text.
-     */
     public function testExtractsEmailAddressesFromText(): void
     {
         $text = <<<EOF

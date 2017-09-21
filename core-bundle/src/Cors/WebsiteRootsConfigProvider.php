@@ -17,9 +17,6 @@ use Doctrine\DBAL\Exception\DriverException;
 use Nelmio\CorsBundle\Options\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Provides the configuration for the nelmio/cors-bundle.
- */
 class WebsiteRootsConfigProvider implements ProviderInterface
 {
     /**
@@ -28,8 +25,6 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     private $connection;
 
     /**
-     * Constructor.
-     *
      * @param Connection $connection
      */
     public function __construct(Connection $connection)

@@ -29,14 +29,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-/**
- * Tests the ExceptionConverterListener class.
- */
 class ExceptionConverterListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new ExceptionConverterListener();
@@ -44,9 +38,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\ExceptionConverterListener', $listener);
     }
 
-    /**
-     * Tests converting an AccessDeniedException exception.
-     */
     public function testConvertsAccessDeniedExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -65,9 +56,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\AccessDeniedException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an ForwardPageNotFoundException exception.
-     */
     public function testConvertsForwardPageNotFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -86,9 +74,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\ForwardPageNotFoundException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an IncompleteInstallationException exception.
-     */
     public function testConvertsIncompleteInstallationExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -111,9 +96,6 @@ class ExceptionConverterListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests converting an InsecureInstallationException exception.
-     */
     public function testConvertsInsecureInstallationExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -132,9 +114,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\InsecureInstallationException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an InvalidRequestTokenException exception.
-     */
     public function testConvertsInvalidRequestTokenExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -153,9 +132,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\InvalidRequestTokenException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an NoActivePageFoundException exception.
-     */
     public function testConvertsNoActivePageFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -174,9 +150,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\NoActivePageFoundException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an NoLayoutSpecifiedException exception.
-     */
     public function testConvertsNoLayoutSpecifiedExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -195,9 +168,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\NoLayoutSpecifiedException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an NoRootPageFoundException exception.
-     */
     public function testConvertsNoRootPageFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -216,9 +186,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\NoRootPageFoundException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an PageNotFoundException exception.
-     */
     public function testConvertsPageNotFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -237,9 +204,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\PageNotFoundException', $exception->getPrevious());
     }
 
-    /**
-     * Tests converting an ServiceUnavailableException exception.
-     */
     public function testConvertsServiceUnavailableExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -262,9 +226,6 @@ class ExceptionConverterListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests converting an unknown exception.
-     */
     public function testConvertsUnknownExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -282,9 +243,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('RuntimeException', $exception);
     }
 
-    /**
-     * Tests converting the derived PageNotFoundException exception.
-     */
     public function testConvertsDerivedPageNotFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(

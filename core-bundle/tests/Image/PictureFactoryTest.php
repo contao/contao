@@ -32,25 +32,16 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 
-/**
- * Tests the PictureFactory class.
- */
 class PictureFactoryTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
-        $pictureFactory = $this->getPictureFactory();
+        $pictureFactory = $this->mockPictureFactory();
 
         $this->assertInstanceOf('Contao\CoreBundle\Image\PictureFactory', $pictureFactory);
         $this->assertInstanceOf('Contao\CoreBundle\Image\PictureFactoryInterface', $pictureFactory);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAPictureObjectFromAnImagePath(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -190,16 +181,13 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
+        $pictureFactory = $this->mockPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
         $this->assertSame('my-size', $picture->getImg()['class']);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void
     {
         $pictureConfig = (new PictureConfiguration())
@@ -252,15 +240,12 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $pictureFactory = $this->getPictureFactory($pictureGenerator);
+        $pictureFactory = $this->mockPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
         $this->assertSame($pictureMock, $picture);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -336,15 +321,12 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
+        $pictureFactory = $this->mockPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
 
         $this->assertSame($pictureMock, $picture);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAPictureObjectWithoutAModel(): void
     {
         $defaultDensities = '';
@@ -408,7 +390,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
+        $pictureFactory = $this->mockPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
         $this->assertSame($pictureMock, $picture);
@@ -421,7 +403,7 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * Creates an PictureFactory instance helper.
+     * Mocks a picture factory.
      *
      * @param PictureGenerator|null         $pictureGenerator
      * @param ImageFactory|null             $imageFactory
@@ -431,7 +413,7 @@ class PictureFactoryTest extends TestCase
      *
      * @return PictureFactory
      */
-    private function getPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null): PictureFactory
+    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);

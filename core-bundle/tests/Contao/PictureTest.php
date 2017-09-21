@@ -19,8 +19,6 @@ use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Tests the Picture class.
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -87,9 +85,6 @@ class PictureTest extends TestCase
         System::setContainer($container);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $fileMock = $this->createMock(File::class);
@@ -120,9 +115,6 @@ class PictureTest extends TestCase
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
-    /**
-     * Tests returning the template data.
-     */
     public function testReturnsTheTemplateData(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -143,9 +135,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Tests returning the template data for an image.
-     */
     public function testHandlesImages(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -171,9 +160,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Tests returning the template data for an image with sources.
-     */
     public function testHandlesImagesWithSources(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -234,9 +220,6 @@ class PictureTest extends TestCase
         );
     }
 
-    /**
-     * Tests returning the template data for an image with densities.
-     */
     public function testHandlesImagesWithDensities(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -261,9 +244,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Tests returning the template data for an image with densities and sizes.
-     */
     public function testHandlesImagesWithDensitiesAndSizes(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -290,9 +270,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Tests that file names are encoded.
-     */
     public function testEncodesFileNames(): void
     {
         copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy with spaces.jpg');
@@ -315,9 +292,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Tests the old resize mode.
-     */
     public function testSupportsTheOldResizeMode(): void
     {
         $picture = new Picture(new File('dummy.jpg'));

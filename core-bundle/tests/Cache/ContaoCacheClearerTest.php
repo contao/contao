@@ -16,9 +16,6 @@ use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the ContaoCacheClearer class.
- */
 class ContaoCacheClearerTest extends TestCase
 {
     /**
@@ -32,9 +29,6 @@ class ContaoCacheClearerTest extends TestCase
         $fs->remove($this->getCacheDir().'/contao');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $clearer = new ContaoCacheClearer(new Filesystem());
@@ -42,9 +36,6 @@ class ContaoCacheClearerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheClearer', $clearer);
     }
 
-    /**
-     * Tests removing the cache folder.
-     */
     public function testRemovesTheCacheFolder(): void
     {
         $cacheDir = $this->getCacheDir();

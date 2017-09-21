@@ -20,9 +20,6 @@ use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Provides the file picker.
- */
 class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -33,8 +30,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     private $uploadPath;
 
     /**
-     * Constructor.
-     *
      * @param FactoryInterface $menuFactory
      * @param RouterInterface  $router
      * @param string           $uploadPath

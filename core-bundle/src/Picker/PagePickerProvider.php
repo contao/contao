@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-/**
- * Provides the page picker.
- */
 class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
     /**

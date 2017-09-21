@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
-/**
- * Creates a response from an exception.
- */
 class ResponseExceptionListener
 {
     /**

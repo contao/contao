@@ -16,9 +16,6 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Adds the bundle resources paths to the container.
- */
 class AddResourcesPathsPass implements CompilerPassInterface
 {
     /**

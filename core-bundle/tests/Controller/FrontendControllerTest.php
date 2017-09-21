@@ -16,14 +16,8 @@ use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the FrontendController class.
- */
 class FrontendControllerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $controller = new FrontendController();
@@ -31,9 +25,6 @@ class FrontendControllerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Controller\FrontendController', $controller);
     }
 
-    /**
-     * Tests the controller actions.
-     */
     public function testReturnsAResponseInTheActionMethods(): void
     {
         $container = $this->mockKernel()->getContainer();

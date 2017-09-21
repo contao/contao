@@ -24,9 +24,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-/**
- * Tests the PickerBuilder class.
- */
 class PickerBuilderTest extends TestCase
 {
     /**
@@ -51,17 +48,11 @@ class PickerBuilderTest extends TestCase
         $this->builder = new PickerBuilder(new MenuFactory(), $router, new RequestStack());
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerBuilder', $this->builder);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAPickerObject(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
@@ -83,17 +74,11 @@ class PickerBuilderTest extends TestCase
         $this->assertSame(['providers' => ['pagePicker']], $config->getExtras());
     }
 
-    /**
-     * Tests the create() method without providers.
-     */
     public function testDoesNotCreateAPickerObjectIfThereAreNoProviders(): void
     {
         $this->assertNull($this->builder->create(new PickerConfig('page')));
     }
 
-    /**
-     * Tests the createFromData() method.
-     */
     public function testCreatesAPickerObjectFromData(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
@@ -107,9 +92,6 @@ class PickerBuilderTest extends TestCase
         $this->assertSame('link', $picker->getConfig()->getContext());
     }
 
-    /**
-     * Tests the createFromData() method with an invalid argument.
-     */
     public function testDoesNotCreateAPickerObjectFromDataIfTheArgumentIsInvalid(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
@@ -120,9 +102,6 @@ class PickerBuilderTest extends TestCase
         $this->assertNull($this->builder->createFromData('invalid'));
     }
 
-    /**
-     * Tests the supportsContext() method.
-     */
     public function testChecksIfAContextIsSupported(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
@@ -135,9 +114,6 @@ class PickerBuilderTest extends TestCase
         $this->assertFalse($this->builder->supportsContext('foo'));
     }
 
-    /**
-     * Tests the getUrl() method.
-     */
     public function testReturnsThePickerUrl(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
@@ -148,16 +124,13 @@ class PickerBuilderTest extends TestCase
         $this->assertSame('/_contao/picker?context=page', $this->builder->getUrl('page', [], '{{link_url::5}}'));
     }
 
-    /**
-     * Tests the getUrl() method without a supported context.
-     */
     public function testReturnsAnEmptyPickerUrlIfTheContextIsNotSupported(): void
     {
         $this->assertSame('', $this->builder->getUrl('foo'));
     }
 
     /**
-     * Returns a token storage mock.
+     * Mocks a token storage.
      *
      * @return TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
      */

@@ -16,9 +16,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Frontend;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
-/**
- * Adds a page to the search index after the response has been sent.
- */
 class AddToSearchIndexListener
 {
     /**
@@ -32,8 +29,6 @@ class AddToSearchIndexListener
     private $fragmentPath;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      * @param string                   $fragmentPath
      */

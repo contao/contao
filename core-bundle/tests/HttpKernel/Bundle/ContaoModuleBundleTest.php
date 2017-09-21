@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\Tests\HttpKernel\Bundle;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the ContaoModuleBundle class.
- */
 class ContaoModuleBundleTest extends TestCase
 {
     /**
@@ -26,7 +23,7 @@ class ContaoModuleBundleTest extends TestCase
     protected $bundle;
 
     /**
-     * Creates a new Contao module bundle.
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
@@ -35,17 +32,11 @@ class ContaoModuleBundleTest extends TestCase
         $this->bundle = new ContaoModuleBundle('foobar', $this->getRootDir().'/app');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle', $this->bundle);
     }
 
-    /**
-     * Tests returning the module path.
-     */
     public function testReturnsTheModulePath(): void
     {
         $this->assertSame(
@@ -54,9 +45,6 @@ class ContaoModuleBundleTest extends TestCase
         );
     }
 
-    /**
-     * Tests that an exception is thrown if the module folder does not exist.
-     */
     public function testFailsIfTheModuleFolderDoesNotExist(): void
     {
         $this->expectException('LogicException');

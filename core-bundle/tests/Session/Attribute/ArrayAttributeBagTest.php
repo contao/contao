@@ -16,14 +16,8 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
-/**
- * Tests the ArrayAttributeBag class.
- */
 class ArrayAttributeBagTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $adapter = new ArrayAttributeBag(new AttributeBag('foobar_storageKey'));
@@ -32,9 +26,6 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertInstanceOf('ArrayAccess', $adapter);
     }
 
-    /**
-     * Tests the offsetSet() method.
-     */
     public function testCanWriteTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
@@ -44,9 +35,6 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame('bar', $bag->get('foo'));
     }
 
-    /**
-     * Tests the offsetExists() method.
-     */
     public function testChecksIfTheOffsetExists(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
@@ -56,9 +44,6 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertTrue(isset($bag['foo']));
     }
 
-    /**
-     * Tests the offsetGet() method.
-     */
     public function testCanReadTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
@@ -68,9 +53,6 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame('bar', $bag['foo']);
     }
 
-    /**
-     * Tests the offsetUnset() method.
-     */
     public function testCanUnsetTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');

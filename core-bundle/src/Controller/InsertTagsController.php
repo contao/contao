@@ -18,11 +18,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles insert tag requests.
+ * Do not use this controller directly!
  *
- * Do not just call this Controller directly! It is supposed to be used within ESI requests that are protected by
- * the fragment uri signer of Symfony. If you call it directly, make sure you check for all permissions needed because
- * insert tags can contain arbitrary data!
+ * It is supposed to be used within ESI requests that are protected by the
+ * Symfony fragment URI signer. If you use it directly, make sure to add a
+ * permission check, because insert tags can contain arbitrary data!
  */
 class InsertTagsController extends Controller
 {
@@ -32,8 +32,6 @@ class InsertTagsController extends Controller
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param $framework
      */
     public function __construct($framework)

@@ -34,9 +34,6 @@ class ConfigurationTest extends TestCase
         $this->configuration = new Configuration(false, $this->getRootDir(), $this->getRootDir().'/app', 'en');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Configuration', $this->configuration);
@@ -46,9 +43,6 @@ class ConfigurationTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $treeBuilder);
     }
 
-    /**
-     * Tests resolving the paths.
-     */
     public function testResolvesThePaths(): void
     {
         $params = [
@@ -71,8 +65,6 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * Tests an invalid upload path.
-     *
      * @param string $uploadPath
      *
      * @dataProvider invalidUploadPathProvider
@@ -92,8 +84,6 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * Provides the data for the testInvalidUploadPath() method.
-     *
      * @return array
      */
     public function invalidUploadPathProvider(): array

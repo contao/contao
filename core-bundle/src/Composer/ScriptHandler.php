@@ -16,9 +16,6 @@ use Composer\Script\Event;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-/**
- * Sets up the Contao environment in a Symfony app.
- */
 class ScriptHandler
 {
     public const RANDOM_SECRET_NAME = 'CONTAO_RANDOM_SECRET';

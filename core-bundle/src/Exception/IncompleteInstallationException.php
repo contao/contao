@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Incomplete installation exception.
- */
 class IncompleteInstallationException extends \RuntimeException
 {
 }

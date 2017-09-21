@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the AddToSearchIndexListener class.
- */
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
@@ -46,9 +43,6 @@ class AddToSearchIndexListenerTest extends TestCase
         ;
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new AddToSearchIndexListener($this->framework);
@@ -57,8 +51,6 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does use the response if the Contao framework is booted.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -81,9 +73,6 @@ class AddToSearchIndexListenerTest extends TestCase
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * Tests that the listener does nothing if the Contao framework is not booted.
-     */
     public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized(): void
     {
         $this->framework
@@ -102,9 +91,6 @@ class AddToSearchIndexListenerTest extends TestCase
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * Tests that the listener does nothing if the request is a fragment.
-     */
     public function testDoesNotIndexTheResponseUponFragmentRequests(): void
     {
         $this->framework
@@ -124,7 +110,7 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Returns a PostResponseEvent mock object.
+     * Mocks a post response event.
      *
      * @param string|null $requestUri
      *

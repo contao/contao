@@ -18,9 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Monolog processor for Contao.
- */
 class ContaoTableProcessor
 {
     /**
@@ -44,8 +41,6 @@ class ContaoTableProcessor
     private $anonymizeIp;
 
     /**
-     * Constructor.
-     *
      * @param RequestStack          $requestStack
      * @param TokenStorageInterface $tokenStorage
      * @param ScopeMatcher          $scopeMatcher

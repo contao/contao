@@ -26,9 +26,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the CommandSchedulerListener class.
- */
 class CommandSchedulerListenerTest extends TestCase
 {
     /**
@@ -51,9 +48,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
@@ -62,8 +56,6 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does use the response if the Contao framework is booted.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -95,9 +87,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener->onKernelTerminate($this->mockPostResponseEvent('contao_frontend'));
     }
 
-    /**
-     * Tests that the listener does nothing if the Contao framework is not booted.
-     */
     public function testDoesNotRunTheCommandSchedulerIfTheContaoFrameworkIsNotInitialized(): void
     {
         $this->framework
@@ -115,8 +104,6 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing in the install tool.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -148,8 +135,6 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing upon a fragment URL.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -181,8 +166,6 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing if the installation is incomplete.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -229,8 +212,6 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing if the command scheduler has been disabled.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -275,8 +256,6 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests that the listener does nothing if the database connection fails.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -316,7 +295,7 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Mocks a database connection object.
+     * Mocks a database connection.
      *
      * @return Connection|\PHPUnit_Framework_MockObject_MockObject
      */

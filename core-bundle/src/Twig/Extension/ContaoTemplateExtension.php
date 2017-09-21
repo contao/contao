@@ -17,9 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Contao template extension.
- */
 class ContaoTemplateExtension extends \Twig_Extension
 {
     /**
@@ -38,8 +35,6 @@ class ContaoTemplateExtension extends \Twig_Extension
     private $scopeMatcher;
 
     /**
-     * Constructor.
-     *
      * @param RequestStack             $requestStack
      * @param ContaoFrameworkInterface $framework
      * @param ScopeMatcher             $scopeMatcher

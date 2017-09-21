@@ -19,9 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\LockHandler;
 
-/**
- * Tests the InstallCommand class.
- */
 class InstallCommandTest extends TestCase
 {
     /**
@@ -67,9 +64,6 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $command = new InstallCommand('contao:install');
@@ -78,9 +72,6 @@ class InstallCommandTest extends TestCase
         $this->assertSame('contao:install', $command->getName());
     }
 
-    /**
-     * Tests creating the the Contao folders.
-     */
     public function testCreatesTheContaoFolders(): void
     {
         $container = new ContainerBuilder();
@@ -107,9 +98,6 @@ class InstallCommandTest extends TestCase
         $this->assertContains(' * system/tmp', $output);
     }
 
-    /**
-     * Tests adding a custom files and images directory.
-     */
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
         $container = new ContainerBuilder();
@@ -130,9 +118,6 @@ class InstallCommandTest extends TestCase
         $this->assertContains(' * assets/images_test', $display);
     }
 
-    /**
-     * Tests that the command is locked while running.
-     */
     public function testIsLockedWhileRunning(): void
     {
         $lock = new LockHandler('contao:install');

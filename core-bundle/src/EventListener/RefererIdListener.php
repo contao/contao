@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-/**
- * Adds the referer ID to the current request.
- */
 class RefererIdListener
 {
     /**
@@ -38,8 +35,6 @@ class RefererIdListener
     private $token;
 
     /**
-     * Constructor.
-     *
      * @param CsrfTokenManagerInterface $tokenManager
      * @param ScopeMatcher              $scopeMatcher
      */

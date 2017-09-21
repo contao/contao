@@ -20,14 +20,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
-/**
- * Tests the UserSessionListener class.
- */
 class UserSessionListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new UserSessionListener($this->mockScopeMatcher(), false);
@@ -36,8 +30,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests adding the T42-Force-No-Cache header.
-     *
      * @param string $cookie
      * @param string $hash
      *
@@ -68,8 +60,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Provides the data for the testAddsTheForceNoCacheHeader() method.
-     *
      * @return array
      */
     public function getForceNoCacheHeaderData(): array
@@ -80,9 +70,6 @@ class UserSessionListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that no header is added outside the Contao scope.
-     */
     public function testDoesNotAddTheForceNoCacheHeaderIfNotInContaoScope(): void
     {
         $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());
@@ -96,9 +83,6 @@ class UserSessionListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that no header is added when the request has no session.
-     */
     public function testDoesNotAddTheForceNoCacheIfThereIsNoSession(): void
     {
         $request = new Request();
@@ -115,9 +99,6 @@ class UserSessionListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that no header is added when the request has no user authentication cookie.
-     */
     public function testDoesNotAddTheForceNoCacheIfThereIsNoCookie(): void
     {
         $request = new Request();
@@ -137,9 +118,6 @@ class UserSessionListenerTest extends TestCase
         $this->assertNotNull($request->getSession());
     }
 
-    /**
-     * Tests that no header is added if the authentication cookie has an invalid value.
-     */
     public function testDoesNotAddTheForceNoCacheIfTheCookieIsInvalid(): void
     {
         $request = new Request();

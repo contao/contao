@@ -30,15 +30,10 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
- * Tests the ContaoFramework class.
- *
  * @preserveGlobalState disabled
  */
 class ContaoFrameworkTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $framework = $this->mockContaoFramework(
@@ -51,8 +46,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with a front end request.
-     *
      * @runInSeparateProcess
      */
     public function testInitializesTheFrameworkWithAFrontEndRequest(): void
@@ -87,8 +80,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with a back end request.
-     *
      * @runInSeparateProcess
      */
     public function testInitializesTheFrameworkWithABackEndRequest(): void
@@ -123,8 +114,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework without a request.
-     *
      * @runInSeparateProcess
      */
     public function testInitializesTheFrameworkWithoutARequest(): void
@@ -152,8 +141,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with request but without route.
-     *
      * @runInSeparateProcess
      */
     public function testInitializesTheFrameworkWithoutARoute(): void
@@ -193,8 +180,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework without a scope.
-     *
      * @runInSeparateProcess
      */
     public function testInitializesTheFrameworkWithoutAScope(): void
@@ -226,8 +211,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests that the framework is not initialized twice.
-     *
      * @runInSeparateProcess
      */
     public function testDoesNotInitializeTheFrameworkTwice(): void
@@ -264,8 +247,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests that the error level will get updated when configured.
-     *
      * @runInSeparateProcess
      */
     public function testOverridesTheErrorLevel(): void
@@ -297,8 +278,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with a valid request token.
-     *
      * @runInSeparateProcess
      */
     public function testValidatesTheRequestToken(): void
@@ -324,8 +303,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with an invalid request token.
-     *
      * @runInSeparateProcess
      */
     public function testFailsIfTheRequestTokenIsInvalid(): void
@@ -359,8 +336,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests if the request token check is skipped upon an Ajax request.
-     *
      * @runInSeparateProcess
      */
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
@@ -394,8 +369,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests if the request token check is skipped if the attribute is false.
-     *
      * @runInSeparateProcess
      */
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
@@ -441,8 +414,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with an incomplete installation.
-     *
      * @runInSeparateProcess
      */
     public function testFailsIfTheInstallationIsIncomplete(): void
@@ -491,8 +462,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with an incomplete installation on the install route.
-     *
      * @param string $route
      *
      * @runInSeparateProcess
@@ -544,8 +513,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Provides the data for the testAllowsTheInstallationToBeIncompleteInTheInstallTool() method.
-     *
      * @return array
      */
     public function getInstallRoutes(): array
@@ -557,8 +524,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with a valid request token.
-     *
      * @runInSeparateProcess
      */
     public function testFailsIfTheContainerIsNotSet(): void
@@ -574,9 +539,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
     }
 
-    /**
-     * Tests the createInstance method.
-     */
     public function testCreatesAnObjectInstance(): void
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
@@ -589,9 +551,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame([1, 2], $instance->constructorArgs);
     }
 
-    /**
-     * Tests the createInstance method for a singleton class.
-     */
     public function testCreateASingeltonObjectInstance(): void
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
@@ -604,9 +563,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame([1, 2], $instance->constructorArgs);
     }
 
-    /**
-     * Tests the getAdapter method.
-     */
     public function testCreatesAdaptersForLegacyClasses(): void
     {
         $class = LegacyClass::class;

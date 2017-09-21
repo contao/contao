@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Framework;
 
-/**
- * Provides methods to inject the framework service.
- */
 trait FrameworkAwareTrait
 {
     /**

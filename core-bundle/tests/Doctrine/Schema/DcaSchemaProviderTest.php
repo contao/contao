@@ -18,14 +18,8 @@ use Contao\CoreBundle\Tests\DoctrineTestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-/**
- * Tests the DcaSchemaProvider class.
- */
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $provider = new DcaSchemaProvider(
@@ -36,17 +30,12 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $provider);
     }
 
-    /**
-     * Tests that the schema is empty.
-     */
     public function testHasAnEmptySchema(): void
     {
         $this->assertCount(0, $this->getProvider()->createSchema()->getTableNames());
     }
 
     /**
-     * Tests creating a schema.
-     *
      * @param array $dca
      * @param array $sql
      *
@@ -140,8 +129,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * Provides the data for the schema test.
-     *
      * @return array
      */
     public function createSchemaProvider(): array
@@ -213,9 +200,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
     }
 
-    /**
-     * Test the table options.
-     */
     public function testReadsTheTableOptions(): void
     {
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
@@ -246,9 +230,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame('Latin1', $schema->getTable('tl_member')->getOption('charset'));
     }
 
-    /**
-     * Tests the table create definitions.
-     */
     public function testCreatesTheTableDefinitions(): void
     {
         $provider = $this->getProvider(
@@ -295,9 +276,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
-    /**
-     * Tests adding an index with a key length.
-     */
     public function testHandlesIndexesWithKeyLength(): void
     {
         $provider = $this->getProvider(
@@ -329,9 +307,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['path(333)'], $table->getIndex('path')->getColumns());
     }
 
-    /**
-     * Tests adding a fulltext index.
-     */
     public function testHandlesFulltextIndexes(): void
     {
         $provider = $this->getProvider(
@@ -365,9 +340,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
-    /**
-     * Tests parsing an invalid primary key.
-     */
     public function testFailsIfThePrimaryKeyIsInvalid(): void
     {
         $provider = $this->getProvider(
@@ -388,9 +360,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $provider->createSchema();
     }
 
-    /**
-     * Tests parsing an invalid key.
-     */
     public function testFailsIfAKeyIsInvalid(): void
     {
         $provider = $this->getProvider(
@@ -412,8 +381,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * Returns a DCA schema provider.
-     *
      * @param array $dca
      * @param array $file
      *

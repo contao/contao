@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * No root page found exception.
- */
 class NoRootPageFoundException extends \RuntimeException
 {
 }

@@ -17,8 +17,6 @@ use Contao\Widget;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the Widget class.
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -27,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 class WidgetTest extends TestCase
 {
     /**
-     * Includes the helper functions if they have not yet been included.
+     * {@inheritdoc}
      */
     public static function setUpBeforeClass(): void
     {
@@ -39,8 +37,6 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * Tests reading the POST data.
-     *
      * @param string $key
      * @param string $input
      * @param mixed  $value
@@ -71,8 +67,6 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * Provides the data for the testGetPost() method.
-     *
      * @return array
      */
     public function postProvider(): array
@@ -95,9 +89,6 @@ class WidgetTest extends TestCase
         ];
     }
 
-    /**
-     * Tests validating the POST data.
-     */
     public function testValidatesThePostData(): void
     {
         /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */

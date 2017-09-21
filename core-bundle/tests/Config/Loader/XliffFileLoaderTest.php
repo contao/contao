@@ -15,14 +15,8 @@ namespace Contao\CoreBundle\Tests\Config\Loader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the XliffFileLoader class.
- */
 class XliffFileLoaderTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
@@ -31,9 +25,6 @@ class XliffFileLoaderTest extends TestCase
         );
     }
 
-    /**
-     * Tests that only XLF files are supported.
-     */
     public function testSupportsXlfFiles(): void
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app');
@@ -51,9 +42,6 @@ class XliffFileLoaderTest extends TestCase
         );
     }
 
-    /**
-     * Tests loading a file into a string.
-     */
     public function testLoadsXlfFilesIntoAString(): void
     {
         $loader = new XliffFileLoader($this->getRootDir(), false);
@@ -106,8 +94,6 @@ TXT;
     }
 
     /**
-     * Tests loading a file into the global variables.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -134,9 +120,6 @@ TXT;
         $this->assertSame('This is the third target', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 
-    /**
-     * Tests that too many nesting levels trigger an exception.
-     */
     public function testFailsIfThereAreTooManyNestingLevels(): void
     {
         $loader = new XliffFileLoader($this->getRootDir().'/app', false);

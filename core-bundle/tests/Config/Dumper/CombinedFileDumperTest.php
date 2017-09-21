@@ -17,14 +17,8 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the CombinedFileDumper class.
- */
 class CombinedFileDumperTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
@@ -37,9 +31,6 @@ class CombinedFileDumperTest extends TestCase
         );
     }
 
-    /**
-     * Tests dumping the data into a file.
-     */
     public function testDumpsTheDataIntoAFile(): void
     {
         $dumper = new CombinedFileDumper(
@@ -51,9 +42,6 @@ class CombinedFileDumperTest extends TestCase
         $dumper->dump(['test.php'], 'test.php');
     }
 
-    /**
-     * Tests that a custom header can be set.
-     */
     public function testHandlesCustomHeaders(): void
     {
         $dumper = new CombinedFileDumper(
@@ -66,9 +54,6 @@ class CombinedFileDumperTest extends TestCase
         $dumper->dump(['test.php'], 'test.php');
     }
 
-    /**
-     * Tests that an invalid header triggers an exception.
-     */
     public function testFailsIfTheHeaderIsInvalid(): void
     {
         $this->expectException('InvalidArgumentException');
@@ -83,7 +68,7 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Returns a mocked filesystem object.
+     * Mocks the filesystem.
      *
      * @param mixed $expects
      *
@@ -103,7 +88,7 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Returns a mocked file loader object.
+     * Mocks a file loader.
      *
      * @return PhpFileLoader|\PHPUnit_Framework_MockObject_MockObject
      */

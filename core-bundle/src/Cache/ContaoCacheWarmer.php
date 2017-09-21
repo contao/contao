@@ -27,9 +27,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-/**
- * Generates the Contao cache during cache warmup.
- */
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
     /**
@@ -63,8 +60,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param Filesystem               $filesystem
      * @param ResourceFinderInterface  $finder
      * @param FileLocator              $locator

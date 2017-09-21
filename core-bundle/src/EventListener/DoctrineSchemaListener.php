@@ -26,8 +26,6 @@ class DoctrineSchemaListener
     private $provider;
 
     /**
-     * Constructor.
-     *
      * @param DcaSchemaProvider $provider
      */
     public function __construct(DcaSchemaProvider $provider)

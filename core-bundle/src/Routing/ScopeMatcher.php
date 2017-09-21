@@ -16,9 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
-/**
- * Checks the request for a Contao scope.
- */
 class ScopeMatcher
 {
     /**
@@ -32,8 +29,6 @@ class ScopeMatcher
     private $frontendMatcher;
 
     /**
-     * Constructor.
-     *
      * @param RequestMatcherInterface $backendMatcher
      * @param RequestMatcherInterface $frontendMatcher
      */

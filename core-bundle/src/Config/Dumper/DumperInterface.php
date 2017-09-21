@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Config\Dumper;
 
-/**
- * Interface for cache dumpers.
- */
 interface DumperInterface
 {
     /**

@@ -17,9 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class MemoryHeaderStorageTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $storage = new MemoryHeaderStorage();
@@ -28,9 +25,6 @@ class MemoryHeaderStorageTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface', $storage);
     }
 
-    /**
-     * Tests that all headers are returned.
-     */
     public function testReturnsAllHeaders(): void
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);
@@ -42,9 +36,6 @@ class MemoryHeaderStorageTest extends TestCase
         $this->assertSame(['Foo: Bar', 'Bar: Baz'], $storage->all());
     }
 
-    /**
-     * Tests that existing headers are cleared.
-     */
     public function testClearsExistingHeaders(): void
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);

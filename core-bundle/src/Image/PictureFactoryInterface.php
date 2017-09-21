@@ -16,9 +16,6 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureInterface;
 
-/**
- * Picture factory interface.
- */
 interface PictureFactoryInterface
 {
     /**

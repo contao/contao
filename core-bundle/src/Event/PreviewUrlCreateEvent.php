@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Allows to create a preview URL.
- */
 class PreviewUrlCreateEvent extends Event
 {
     /**
@@ -35,8 +32,6 @@ class PreviewUrlCreateEvent extends Event
     private $query;
 
     /**
-     * Constructor.
-     *
      * @param string $key
      * @param int    $id
      */

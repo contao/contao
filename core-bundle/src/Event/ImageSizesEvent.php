@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\Event;
 use Contao\BackendUser;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Allows to filter image sizes.
- */
 class ImageSizesEvent extends Event
 {
     /**
@@ -31,8 +28,6 @@ class ImageSizesEvent extends Event
     private $user;
 
     /**
-     * Constructor.
-     *
      * @param array            $imageSizes
      * @param BackendUser|null $user
      */

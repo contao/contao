@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-/**
- * Picker builder interface.
- */
 interface PickerBuilderInterface
 {
     /**

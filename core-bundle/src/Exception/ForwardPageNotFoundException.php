@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Forward page not found exception.
- */
 class ForwardPageNotFoundException extends \RuntimeException
 {
 }

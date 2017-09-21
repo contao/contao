@@ -16,14 +16,8 @@ use Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
-/**
- * Tests the DcaSchemaProvider class.
- */
 class MigrationsSchemaProviderTest extends DcaSchemaProviderTest
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $provider = new MigrationsSchemaProvider(

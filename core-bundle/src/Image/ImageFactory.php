@@ -28,9 +28,6 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Creates Image objects.
- */
 class ImageFactory implements ImageFactoryInterface
 {
     /**
@@ -74,8 +71,6 @@ class ImageFactory implements ImageFactoryInterface
     private $validExtensions;
 
     /**
-     * Constructor.
-     *
      * @param ResizerInterface         $resizer
      * @param ImagineInterface         $imagine
      * @param ImagineInterface         $imagineSvg

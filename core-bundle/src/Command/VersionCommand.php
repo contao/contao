@@ -17,10 +17,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Outputs the Contao version.
- *
- * @deprecated Using the contao:version command has been deprecated and will no longer work in Contao 5.0; use
- *             "composer show contao/core-bundle | grep versions | awk '{ print $4 }'" instead
+ * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0; use
+ *             "composer show | grep contao/core-bundle | awk '{ print $2 }'" instead
  */
 class VersionCommand extends ContainerAwareCommand
 {

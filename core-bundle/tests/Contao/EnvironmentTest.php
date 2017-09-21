@@ -17,8 +17,6 @@ use Contao\Environment;
 use Contao\System;
 
 /**
- * Tests the Environment class.
- *
  * @group contao3
  */
 class EnvironmentTest extends TestCase
@@ -37,9 +35,6 @@ class EnvironmentTest extends TestCase
         require __DIR__.'/../../src/Resources/contao/config/agents.php';
     }
 
-    /**
-     * Tests the mod_php environment.
-     */
     public function testHandlesModPhp(): void
     {
         $this->setSapi('apache');
@@ -66,9 +61,6 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * Tests the cgi_fcgi environment.
-     */
     public function testHandlesCgiFcgi(): void
     {
         $this->setSapi('cgi_fcgi');
@@ -99,9 +91,6 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * Tests the fpm_fcgi environment.
-     */
     public function testHandlesFpmFcgi(): void
     {
         $this->setSapi('fpm_fcgi');
@@ -131,8 +120,6 @@ class EnvironmentTest extends TestCase
     }
 
     /**
-     * Returns the normalized root directory.
-     *
      * @return string
      */
     public function getRootDir(): string
@@ -140,9 +127,6 @@ class EnvironmentTest extends TestCase
         return strtr(parent::getRootDir(), '\\', '/');
     }
 
-    /**
-     * Runs the actual tests.
-     */
     protected function runTests(): void
     {
         $container = $this->mockContainerWithContaoScopes();
@@ -189,8 +173,6 @@ class EnvironmentTest extends TestCase
     }
 
     /**
-     * Overrides the SAPI value.
-     *
      * @param string $sapi
      */
     private function setSapi(string $sapi): void

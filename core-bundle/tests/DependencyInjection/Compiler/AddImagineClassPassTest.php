@@ -17,14 +17,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
-/**
- * Tests the AddImagineClassPass class.
- */
 class AddImagineClassPassTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $pass = new AddImagineClassPass();
@@ -32,9 +26,6 @@ class AddImagineClassPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass', $pass);
     }
 
-    /**
-     * Tests adding the Imagine class.
-     */
     public function testAddsTheImagineClass(): void
     {
         $container = new ContainerBuilder();

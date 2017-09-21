@@ -23,8 +23,6 @@ class MemoryHeaderStorage implements HeaderStorageInterface
     private $headers = [];
 
     /**
-     * Constructor.
-     *
      * @param array $headers
      */
     public function __construct(array $headers = [])

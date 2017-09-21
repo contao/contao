@@ -26,7 +26,7 @@ use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
 
 /**
- * Resizes Image objects via Contao\Image\Resizer and executes legacy hooks.
+ * Resizes image objects and executes the legacy hooks.
  */
 class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 {

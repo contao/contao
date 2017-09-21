@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Framework;
 
-/**
- * Contao framework interface.
- */
 interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInterface
 {
     /**

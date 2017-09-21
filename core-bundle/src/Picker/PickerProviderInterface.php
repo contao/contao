@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\ItemInterface;
 
-/**
- * Picker provider interface.
- */
 interface PickerProviderInterface
 {
     /**

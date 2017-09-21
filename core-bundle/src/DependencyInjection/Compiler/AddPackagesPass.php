@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Adds the composer packages and versions to the container.
+ * Adds the composer packages and version numbers to the container.
  */
 class AddPackagesPass implements CompilerPassInterface
 {
@@ -26,8 +26,6 @@ class AddPackagesPass implements CompilerPassInterface
     private $jsonFile;
 
     /**
-     * Constructor.
-     *
      * @param string $jsonFile
      */
     public function __construct(string $jsonFile)

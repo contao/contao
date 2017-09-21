@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Monolog;
 
-/**
- * Contao-specific logger context.
- */
 class ContaoContext
 {
     public const ERROR = 'ERROR';
@@ -59,8 +56,6 @@ class ContaoContext
     private $source;
 
     /**
-     * Constructor.
-     *
      * @param string      $func
      * @param string|null $action
      * @param string|null $username

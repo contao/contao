@@ -15,14 +15,8 @@ namespace Contao\CoreBundle\Tests\Exception;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the RedirectResponseException class.
- */
 class RedirectResponseExceptionTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $exception = new RedirectResponseException('http://example.org');
@@ -30,9 +24,6 @@ class RedirectResponseExceptionTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\RedirectResponseException', $exception);
     }
 
-    /**
-     * Tests the getResponse() method.
-     */
     public function testSetsTheResponseStatusCodeAndLocation(): void
     {
         $exception = new RedirectResponseException('http://example.org');

@@ -17,14 +17,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\LockHandler;
 
-/**
- * Tests the FilesyncCommand class.
- */
 class FilesyncCommandTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $command = new FilesyncCommand('contao:filesync');
@@ -33,9 +27,6 @@ class FilesyncCommandTest extends TestCase
         $this->assertSame('contao:filesync', $command->getName());
     }
 
-    /**
-     * Tests that the confirmation message is printed.
-     */
     public function testOutputsTheConfirmationMessage(): void
     {
         $command = new FilesyncCommand('contao:filesync');
@@ -48,9 +39,6 @@ class FilesyncCommandTest extends TestCase
         $this->assertContains('Synchronization complete (see sync.log).', $tester->getDisplay());
     }
 
-    /**
-     * Tests that the command is locked while running.
-     */
     public function testIsLockedWhileRunning(): void
     {
         $lock = new LockHandler('contao:filesync');

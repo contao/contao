@@ -25,9 +25,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Stores and restores the user session.
- */
 class UserSessionListener
 {
     /**
@@ -55,8 +52,6 @@ class UserSessionListener
     private $scopeMatcher;
 
     /**
-     * Constructor.
-     *
      * @param SessionInterface                     $session
      * @param Connection                           $connection
      * @param TokenStorageInterface                $tokenStorage

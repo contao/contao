@@ -34,9 +34,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Terminal42\HeaderReplay\HeaderReplayBundle;
 
-/**
- * Plugin for the Contao Manager.
- */
 class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**

@@ -19,14 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the InitializeController class.
- */
 class InitializeControllerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $controller = new InitializeController();
@@ -35,8 +29,6 @@ class InitializeControllerTest extends TestCase
     }
 
     /**
-     * Tests the indexAction() method.
-     *
      * @group legacy
      *
      * @expectedDeprecation Custom entry points are deprecated and will no longer work in Contao 5.0.

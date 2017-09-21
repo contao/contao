@@ -16,9 +16,6 @@ use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfigurationInterface;
 
-/**
- * Image factory interface.
- */
 interface ImageFactoryInterface
 {
     /**

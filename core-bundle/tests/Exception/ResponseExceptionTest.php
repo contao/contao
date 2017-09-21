@@ -16,14 +16,8 @@ use Contao\CoreBundle\Exception\ResponseException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Tests the ResponseException class.
- */
 class ResponseExceptionTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $exception = new ResponseException(new Response('Hello world'));
@@ -31,9 +25,6 @@ class ResponseExceptionTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\ResponseException', $exception);
     }
 
-    /**
-     * Tests the getResponse() method.
-     */
     public function testSetsTheResponseStatusCodeAndContent(): void
     {
         $exception = new ResponseException(new Response('Hello world'));

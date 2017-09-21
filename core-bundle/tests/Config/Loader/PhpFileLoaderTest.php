@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\Tests\Config\Loader;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the PhpFileLoader class.
- */
 class PhpFileLoaderTest extends TestCase
 {
     /**
@@ -26,7 +23,7 @@ class PhpFileLoaderTest extends TestCase
     private $loader;
 
     /**
-     * Creates the PhpFileLoader object.
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
@@ -35,17 +32,11 @@ class PhpFileLoaderTest extends TestCase
         $this->loader = new PhpFileLoader();
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
     }
 
-    /**
-     * Tests that only PHP files are supported.
-     */
     public function testSupportsPhpFiles(): void
     {
         $this->assertTrue(
@@ -61,9 +52,6 @@ class PhpFileLoaderTest extends TestCase
         );
     }
 
-    /**
-     * Tests loading a PHP file.
-     */
     public function testLoadsPhpFiles(): void
     {
         $expects = <<<'EOF'
@@ -103,9 +91,6 @@ EOF;
         );
     }
 
-    /**
-     * Tests that custom namespaces are added.
-     */
     public function testAddsCustomNamespaces(): void
     {
         $expects = <<<'EOF'
@@ -142,8 +127,6 @@ EOF;
     }
 
     /**
-     * Tests that a declare(strict_types=1) statement is stripped.
-     *
      * @param string $file
      *
      * @dataProvider loadWithDeclareStatementsStrictType
@@ -177,8 +160,6 @@ EOF;
     }
 
     /**
-     * Tests that a declare(strict_types=1) statement in a comment is ignored.
-     *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
     public function testIgnoresDeclareStatementsInComments(): void
@@ -216,8 +197,6 @@ EOF;
     }
 
     /**
-     * Provides the data for the declare(strict_types=1) tests.
-     *
      * @return array
      */
     public function loadWithDeclareStatementsStrictType(): array
@@ -229,8 +208,6 @@ EOF;
     }
 
     /**
-     * Tests that other definitions than strict_types are preserved.
-     *
      * @param string $file
      *
      * @dataProvider loadWithDeclareStatementsMultipleDefined
@@ -266,8 +243,6 @@ EOF;
     }
 
     /**
-     * Provides the data for the declare(strict_types=1,ticks=1) tests.
-     *
      * @return array
      */
     public function loadWithDeclareStatementsMultipleDefined(): array

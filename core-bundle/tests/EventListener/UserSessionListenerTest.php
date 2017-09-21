@@ -32,22 +32,14 @@ use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\User;
 
-/**
- * Tests the UserSessionListener class.
- */
 class UserSessionListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->getListener());
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->mockListener());
     }
 
     /**
-     * Tests replacing the session upon kernel.request.
-     *
      * @param string $scope
      * @param string $userClass
      * @param string $sessionBagName
@@ -98,7 +90,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener($session, null, $tokenStorage);
+        $listener = $this->mockListener($session, null, $tokenStorage);
         $listener->onKernelRequest($responseEvent);
 
         /** @var AttributeBagInterface $bag */
@@ -108,8 +100,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Provides the data for the testSessionReplacedOnKernelRequest() method.
-     *
      * @return array
      */
     public function scopeBagProvider(): array
@@ -121,8 +111,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session is stored upon kernel.response.
-     *
      * @param string $scope
      * @param string $userClass
      * @param string $userTable
@@ -173,13 +161,11 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener($this->mockSession(), $connection, $tokenStorage);
+        $listener = $this->mockListener($this->mockSession(), $connection, $tokenStorage);
         $listener->onKernelResponse($responseEvent);
     }
 
     /**
-     * Provides the data for the testSessionStoredOnKernelResponse() method.
-     *
      * @return array
      */
     public function scopeTableProvider(): array
@@ -191,8 +177,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session bag is not requested when there is no user.
-     *
      * @param AnonymousToken $noUserReturn
      *
      * @dataProvider noUserProvider
@@ -223,13 +207,11 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($noUserReturn)
         ;
 
-        $listener = $this->getListener($session, null, $tokenStorage);
+        $listener = $this->mockListener($session, null, $tokenStorage);
         $listener->onKernelRequest($responseEvent);
     }
 
     /**
-     * Tests that neither the session bag nor doctrine is requested when there is no user.
-     *
      * @param AnonymousToken $noUserReturn
      *
      * @dataProvider noUserProvider
@@ -268,13 +250,11 @@ class UserSessionListenerTest extends TestCase
             ->method('update')
         ;
 
-        $listener = $this->getListener($session, $connection, $tokenStorage);
+        $listener = $this->mockListener($session, $connection, $tokenStorage);
         $listener->onKernelResponse($responseEvent);
     }
 
     /**
-     * Provides the data for the user-less tests.
-     *
      * @return array
      */
     public function noUserProvider(): array
@@ -285,9 +265,6 @@ class UserSessionListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that the session bag is not requested upon a sub request.
-     */
     public function testDoesNotReplaceTheSessionUponSubrequests(): void
     {
         $request = new Request();
@@ -306,13 +283,10 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
-        $listener = $this->getListener($session);
+        $listener = $this->mockListener($session);
         $listener->onKernelRequest($responseEvent);
     }
 
-    /**
-     * Tests that neither the session bag nor doctrine is requested upon a subrequest.
-     */
     public function testDoesNotStoreTheSessionUponSubrequests(): void
     {
         $request = new Request();
@@ -339,13 +313,10 @@ class UserSessionListenerTest extends TestCase
             ->method('update')
         ;
 
-        $listener = $this->getListener($session, $connection);
+        $listener = $this->mockListener($session, $connection);
         $listener->onKernelResponse($responseEvent);
     }
 
-    /**
-     * Tests that the session bag is not requested if there is no Contao user upon kernel.request.
-     */
     public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void
     {
         $request = new Request();
@@ -371,7 +342,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener(
+        $listener = $this->mockListener(
             $this->mockSession(),
             $this->createMock(Connection::class),
             $tokenStorage
@@ -382,9 +353,6 @@ class UserSessionListenerTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * Tests that neither the session bag nor doctrine is requested if there is no Contao user upon kernel.response.
-     */
     public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
     {
         $request = new Request();
@@ -411,7 +379,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener(
+        $listener = $this->mockListener(
             $this->mockSession(),
             $this->createMock(Connection::class),
             $tokenStorage
@@ -423,7 +391,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Returns the session listener object.
+     * Mocks a session listener.
      *
      * @param SessionInterface      $session
      * @param Connection            $connection
@@ -431,7 +399,7 @@ class UserSessionListenerTest extends TestCase
      *
      * @return UserSessionListener
      */
-    private function getListener(SessionInterface $session = null, Connection $connection = null, TokenStorageInterface $tokenStorage = null): UserSessionListener
+    private function mockListener(SessionInterface $session = null, Connection $connection = null, TokenStorageInterface $tokenStorage = null): UserSessionListener
     {
         if (null === $session) {
             $session = $this->mockSession();

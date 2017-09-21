@@ -18,9 +18,6 @@ use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-/**
- * Adds HTTP headers sent by Contao to the Symfony response.
- */
 class MergeHttpHeadersListener
 {
     /**
@@ -50,8 +47,6 @@ class MergeHttpHeadersListener
     ];
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface    $framework
      * @param HeaderStorageInterface|null $headerStorage
      */

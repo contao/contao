@@ -30,9 +30,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
-/**
- * Converts exceptions to HTTP exceptions.
- */
 class ExceptionConverterListener
 {
     /**

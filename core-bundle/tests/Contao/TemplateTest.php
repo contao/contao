@@ -18,8 +18,6 @@ use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Tests the Template class.
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -52,9 +50,6 @@ class TemplateTest extends TestCase
         $fs->remove($this->getRootDir().'/templates');
     }
 
-    /**
-     * Tests replacing variables.
-     */
     public function testReplacesTheVariables(): void
     {
         file_put_contents(
@@ -70,9 +65,6 @@ class TemplateTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    /**
-     * Tests throwing an exceptions inside a template.
-     */
     public function testHandlesExceptions(): void
     {
         file_put_contents(
@@ -96,9 +88,6 @@ class TemplateTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    /**
-     * Tests throwing an exceptions inside a template block.
-     */
     public function testHandlesExceptionsInsideBlocks(): void
     {
         file_put_contents($this->getRootDir().'/templates/test_template.html5', <<<'EOF'
@@ -130,9 +119,6 @@ EOF
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    /**
-     * Tests throwing an exceptions inside a parent template.
-     */
     public function testHandlesExceptionsInParentTemplate(): void
     {
         file_put_contents($this->getRootDir().'/templates/test_parent.html5', <<<'EOF'
@@ -188,9 +174,6 @@ EOF
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    /**
-     * Tests parsing nested blocks.
-     */
     public function testParsesNestedBlocks(): void
     {
         file_put_contents($this->getRootDir().'/templates/test_parent.html5', '');

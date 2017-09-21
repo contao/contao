@@ -34,9 +34,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Tests the PrettyErrorScreenListener class.
- */
 class PrettyErrorScreenListenerTest extends TestCase
 {
     /**
@@ -70,17 +67,11 @@ class PrettyErrorScreenListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $this->listener);
     }
 
-    /**
-     * Tests rendering a back end exception.
-     */
     public function testRendersBackEndExceptions(): void
     {
         $this->listener = new PrettyErrorScreenListener(
@@ -109,8 +100,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * Tests rendering the Contao page handler.
-     *
      * @param int        $type
      * @param \Exception $exception
      *
@@ -140,8 +129,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * Provides the data for the testContaoPageHandler() method.
-     *
      * @return array
      */
     public function getErrorTypes()
@@ -152,9 +139,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests rendering a service unavailable HTTP exception.
-     */
     public function testRendersServiceUnavailableHttpExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -174,9 +158,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(503, $response->getStatusCode());
     }
 
-    /**
-     * Tests rendering an unknown HTTP exception.
-     */
     public function testRendersUnknownHttpExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -196,9 +177,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(409, $response->getStatusCode());
     }
 
-    /**
-     * Tests rendering the error screen.
-     */
     public function testRendersTheErrorScreen(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -246,9 +224,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $response->getStatusCode());
     }
 
-    /**
-     * Tests that the listener is bypassed if the request format is not "html".
-     */
     public function testDoesNothingIfTheFormatIsNotHtml(): void
     {
         $request = new Request();
@@ -266,9 +241,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertFalse($event->hasResponse());
     }
 
-    /**
-     * Tests rendering a non existing page handler.
-     */
     public function testDoesNothingIfThePageHandlerDoesNotExist(): void
     {
         $event = new GetResponseForExceptionEvent(
@@ -284,7 +256,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * Mocks a token storage object.
+     * Mocks a token storage.
      *
      * @param string $userClass
      *

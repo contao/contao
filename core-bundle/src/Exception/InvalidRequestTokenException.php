@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Invalid request token exception.
- */
 class InvalidRequestTokenException extends \RuntimeException
 {
 }

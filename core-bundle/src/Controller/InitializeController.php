@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Custom controller to support legacy entry point scripts.
+ * Custom controller to support legacy entry points.
  *
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
  */

@@ -19,9 +19,6 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Stores the referer in the session.
- */
 class StoreRefererListener
 {
     /**
@@ -44,8 +41,6 @@ class StoreRefererListener
     private $scopeMatcher;
 
     /**
-     * Constructor.
-     *
      * @param SessionInterface                     $session
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver

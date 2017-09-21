@@ -20,8 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Tests the Combiner class.
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -85,17 +83,11 @@ class CombinerTest extends TestCase
         System::setContainer($this->container);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\Combiner', new Combiner());
     }
 
-    /**
-     * Tests the CSS combiner.
-     */
     public function testCombinesCssFiles(): void
     {
         file_put_contents(static::$rootDir.'/file1.css', 'file1 { background: url("foo.bar") }');
@@ -132,9 +124,6 @@ class CombinerTest extends TestCase
         );
     }
 
-    /**
-     * Tests the SCSS combiner.
-     */
     public function testCombinesScssFiles(): void
     {
         file_put_contents(static::$rootDir.'/file1.scss', '$color: red; @import "file1_sub";');
@@ -169,9 +158,6 @@ class CombinerTest extends TestCase
         );
     }
 
-    /**
-     * Tests the JS Combiner.
-     */
     public function testCombinesJsFiles(): void
     {
         file_put_contents(static::$rootDir.'/file1.js', 'file1();');

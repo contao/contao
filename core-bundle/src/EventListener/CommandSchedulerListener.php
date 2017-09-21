@@ -20,9 +20,6 @@ use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
-/**
- * Triggers the Contao command scheduler after the response has been sent.
- */
 class CommandSchedulerListener
 {
     /**
@@ -41,8 +38,6 @@ class CommandSchedulerListener
     private $fragmentPath;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      * @param Connection               $connection
      * @param string                   $fragmentPath

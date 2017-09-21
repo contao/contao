@@ -24,14 +24,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * Tests the ContaoAuthenticator class.
- */
 class ContaoAuthenticatorTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -39,9 +33,6 @@ class ContaoAuthenticatorTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Security\ContaoAuthenticator', $authenticator);
     }
 
-    /**
-     * Tests creating an authentication token.
-     */
     public function testCreatesTheToken(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -52,9 +43,6 @@ class ContaoAuthenticatorTest extends TestCase
         $this->assertSame('anon.', $token->getUsername());
     }
 
-    /**
-     * Tests authenticating a token.
-     */
     public function testAuthenticatesTheToken(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -77,9 +65,6 @@ class ContaoAuthenticatorTest extends TestCase
         $this->assertSame($token, $authenticator->authenticateToken($token, $provider, 'console'));
     }
 
-    /**
-     * Tests authenticating an invalid token.
-     */
     public function testFailsToAuthenticateAnInvalidToken(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -92,9 +77,6 @@ class ContaoAuthenticatorTest extends TestCase
         );
     }
 
-    /**
-     * Tests authenticating a token without the container being set.
-     */
     public function testFailsToAuthenticateATokenIfThereIsNoContainerContainer(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -106,9 +88,6 @@ class ContaoAuthenticatorTest extends TestCase
         );
     }
 
-    /**
-     * Tests the token support.
-     */
     public function testChecksIfATokenIsSupported(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -119,6 +98,28 @@ class ContaoAuthenticatorTest extends TestCase
         $this->assertFalse(
             $authenticator->supportsToken(new PreAuthenticatedToken('foo', 'bar', 'console'), 'console')
         );
+    }
+
+    /**
+     * Mocks a user object.
+     *
+     * @return User|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockUser(): User
+    {
+        $user = $this
+            ->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['authenticate'])
+            ->getMock()
+        ;
+
+        $user
+            ->method('authenticate')
+            ->willReturn(true)
+        ;
+
+        return $user;
     }
 
     /**
@@ -146,27 +147,5 @@ class ContaoAuthenticatorTest extends TestCase
         ;
 
         return $provider;
-    }
-
-    /**
-     * Mocks a user object.
-     *
-     * @return User|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockUser(): User
-    {
-        $user = $this
-            ->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['authenticate'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('authenticate')
-            ->willReturn(true)
-        ;
-
-        return $user;
     }
 }

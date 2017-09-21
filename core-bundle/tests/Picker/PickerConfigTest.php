@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\Tests\Picker;
 use Contao\CoreBundle\Picker\PickerConfig;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the PickerConfig class.
- */
 class PickerConfigTest extends TestCase
 {
     /**
@@ -35,17 +32,11 @@ class PickerConfigTest extends TestCase
         $this->config = new PickerConfig('link', ['fieldType' => 'radio'], 'foo', 'alias');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $this->config);
     }
 
-    /**
-     * Tests the getter methods.
-     */
     public function testCanReadValues(): void
     {
         $this->assertSame('link', $this->config->getContext());
@@ -54,9 +45,6 @@ class PickerConfigTest extends TestCase
         $this->assertSame('alias', $this->config->getCurrent());
     }
 
-    /**
-     * Tests the getExtra() and setExtra() methods.
-     */
     public function testCanReadAndWriteExtras(): void
     {
         $this->assertSame('radio', $this->config->getExtra('fieldType'));
@@ -67,9 +55,6 @@ class PickerConfigTest extends TestCase
         $this->assertSame('bar', $this->config->getExtra('foo'));
     }
 
-    /**
-     * Tests the cloneForCurrent() method.
-     */
     public function testClonesTheCurrentObject(): void
     {
         $clone = $this->config->cloneForCurrent('new-alias');
@@ -81,9 +66,6 @@ class PickerConfigTest extends TestCase
         $this->assertSame('new-alias', $clone->getCurrent());
     }
 
-    /**
-     * Tests the jsonSerialize() method.
-     */
     public function testSerializesItselfToAnArray(): void
     {
         $this->assertSame(
@@ -97,9 +79,6 @@ class PickerConfigTest extends TestCase
         );
     }
 
-    /**
-     * Tests the urlEncode() method.
-     */
     public function testCreatesAnEncodedJsonString(): void
     {
         $data = json_encode([
@@ -116,9 +95,6 @@ class PickerConfigTest extends TestCase
         $this->assertSame(strtr(base64_encode($data), '+/=', '-_,'), $this->config->urlEncode());
     }
 
-    /**
-     * Tests the urlDecode() method.
-     */
     public function testDecodesAnEncodedJsonString(): void
     {
         $data = json_encode([
@@ -141,9 +117,6 @@ class PickerConfigTest extends TestCase
         $this->assertSame('foo', $config->getValue());
     }
 
-    /**
-     * Tests the urlDecode() method with invalid JSON data.
-     */
     public function testFailsToDecodeAnEncodedJsonStringIfTheJsonIsInvalid(): void
     {
         $data = '{"invalid';

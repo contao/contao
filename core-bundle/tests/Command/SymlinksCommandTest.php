@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\LockHandler;
 
-/**
- * Tests the SymlinksCommand class.
- */
 class SymlinksCommandTest extends TestCase
 {
     /**
@@ -41,9 +38,6 @@ class SymlinksCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/web/system');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $command = new SymlinksCommand('contao:symlinks');
@@ -52,9 +46,6 @@ class SymlinksCommandTest extends TestCase
         $this->assertSame('contao:symlinks', $command->getName());
     }
 
-    /**
-     * Tests symlinking the Contao folders.
-     */
     public function testSymlinksTheContaoFolders(): void
     {
         $container = new ContainerBuilder();
@@ -92,9 +83,6 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains('var/logs', $display);
     }
 
-    /**
-     * Tests that the command is locked while running.
-     */
     public function testIsLockedWhileRunning(): void
     {
         $lock = new LockHandler('contao:symlinks');
@@ -111,9 +99,6 @@ class SymlinksCommandTest extends TestCase
         $lock->release();
     }
 
-    /**
-     * Tests that absolute paths are converted to relative paths.
-     */
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
         $command = new SymlinksCommand('contao:symlinks');

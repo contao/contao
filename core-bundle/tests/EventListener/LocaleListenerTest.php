@@ -20,14 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-/**
- * Tests the LocaleListener class.
- */
 class LocaleListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
@@ -36,8 +30,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * Tests reading the locale from the request.
-     *
      * @param string|null $locale
      * @param string      $expected
      *
@@ -58,8 +50,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * Tests reading the locale from the session.
-     *
      * @param string|null $locale
      * @param string      $expected
      *
@@ -84,8 +74,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * Provides the test data for the locale tests.
-     *
      * @return array
      */
     public function localeTestData(): array
@@ -101,8 +89,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * Tests the onKernelRequest() method with an accept language header.
-     *
      * @param string|null $locale
      * @param string      $expected
      * @param array       $available
@@ -124,8 +110,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * Provides the test data for the accept language header tests.
-     *
      * @return array
      */
     public function acceptLanguageTestData(): array
@@ -141,9 +125,6 @@ class LocaleListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that the listener does nothing if there is no request scope.
-     */
     public function testDoesNothingIfThereIsNoRequestScope(): void
     {
         $attributes = $this->createMock(ParameterBag::class);
@@ -160,9 +141,6 @@ class LocaleListenerTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    /**
-     * Tests the onKernelRequest() method with an invalid locale.
-     */
     public function testFailsIfTheLocaleIsInvalid(): void
     {
         $request = Request::create('/');

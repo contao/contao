@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * No active page found exception.
- */
 class NoActivePageFoundException extends \RuntimeException
 {
 }

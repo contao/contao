@@ -22,14 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-/**
- * Tests the DoctrineMigrationsPass class.
- */
 class DoctrineMigrationsPassTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $pass = new DoctrineMigrationsPass();
@@ -37,12 +31,9 @@ class DoctrineMigrationsPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass', $pass);
     }
 
-    /**
-     * Tests adding the definition if the migrations bundle is installed.
-     */
     public function testAddsTheDefinitionIfTheMigrationsBundleIsInstalled(): void
     {
-        $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
+        $container = $this->getContainerBuilder([DoctrineMigrationsBundle::class]);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
@@ -50,12 +41,9 @@ class DoctrineMigrationsPassTest extends TestCase
         $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
     }
 
-    /**
-     * Tests adding the definition if the migrations bundle is not installed.
-     */
     public function testDoesNotAddTheDefinitionIfTheMigrationsBundleIsNotInstalled(): void
     {
-        $container = $this->createContainerBuilder();
+        $container = $this->getContainerBuilder();
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
@@ -63,12 +51,9 @@ class DoctrineMigrationsPassTest extends TestCase
         $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
     }
 
-    /**
-     * Tests adding the command to the "console.command" tags.
-     */
     public function testAddsTheCommandIdToTheConsoleCommandIds(): void
     {
-        $container = $this->createContainerBuilder([DoctrineMigrationsBundle::class]);
+        $container = $this->getContainerBuilder([DoctrineMigrationsBundle::class]);
 
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
@@ -88,13 +73,13 @@ class DoctrineMigrationsPassTest extends TestCase
     }
 
     /**
-     * Creates a ContainerBuilder and loads the commands.yml file.
+     * Returns a container builder that loads the commands.yml file.
      *
      * @param array $bundles
      *
      * @return ContainerBuilder
      */
-    private function createContainerBuilder(array $bundles = []): ContainerBuilder
+    private function getContainerBuilder(array $bundles = []): ContainerBuilder
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.bundles', $bundles);

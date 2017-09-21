@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
-/**
- * Defines constants for the Contao events.
- */
 final class ContaoCoreEvents
 {
     /**

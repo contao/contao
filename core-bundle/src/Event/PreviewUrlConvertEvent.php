@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Allows to convert a preview URL.
- */
 class PreviewUrlConvertEvent extends Event
 {
     /**

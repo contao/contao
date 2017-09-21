@@ -17,14 +17,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the VersionCommand class.
- */
 class VersionCommandTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $command = new VersionCommand('contao:version');
@@ -33,9 +27,6 @@ class VersionCommandTest extends TestCase
         $this->assertSame('contao:version', $command->getName());
     }
 
-    /**
-     * Tests printing the version number.
-     */
     public function testOutputsTheVersionNumber(): void
     {
         $container = new ContainerBuilder();
@@ -51,9 +42,6 @@ class VersionCommandTest extends TestCase
         $this->assertContains('4.0.2', $tester->getDisplay());
     }
 
-    /**
-     * Tests that an empty string is printed if the version is not set.
-     */
     public function testOutputsAnEmptyStringIfTheVersionIsNotSet(): void
     {
         $container = new ContainerBuilder();

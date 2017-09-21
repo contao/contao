@@ -16,9 +16,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-/**
- * Registers the Contao session bags.
- */
 class AddSessionBagsPass implements CompilerPassInterface
 {
     /**

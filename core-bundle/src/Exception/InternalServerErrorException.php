@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Internal server error exception.
- */
 class InternalServerErrorException extends \RuntimeException
 {
 }

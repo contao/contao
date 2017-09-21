@@ -17,14 +17,8 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the InsertTagsController class.
- */
 class InsertTagsControllerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $controller = new InsertTagsController($this->mockContaoFramework());
@@ -32,9 +26,6 @@ class InsertTagsControllerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Controller\InsertTagsController', $controller);
     }
 
-    /**
-     * Tests rendering non-cacheable insert tags.
-     */
     public function testRendersNonCacheableInsertTag(): void
     {
         $adapter = $this->createMock(Adapter::class);
@@ -61,7 +52,7 @@ class InsertTagsControllerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param Adapter $adapter
      *

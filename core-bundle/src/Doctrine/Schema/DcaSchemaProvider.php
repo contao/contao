@@ -19,9 +19,6 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class DcaSchemaProvider
 {
     /**
@@ -35,8 +32,6 @@ class DcaSchemaProvider
     private $doctrine;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      * @param Registry|null            $doctrine
      */

@@ -20,9 +20,6 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Tests the ImageSizes class.
- */
 class ImageSizesTest extends TestCase
 {
     /**
@@ -59,17 +56,11 @@ class ImageSizesTest extends TestCase
         $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $framework);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Image\ImageSizes', $this->imageSizes);
     }
 
-    /**
-     * Tests getting all options with image sizes.
-     */
     public function testReturnsAllOptionsWithImageSizes(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
@@ -82,9 +73,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('42', $options['image_sizes']);
     }
 
-    /**
-     * Tests getting all options without image sizes.
-     */
     public function testReturnsAllOptionsWithoutImageSizes(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
@@ -96,9 +84,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('image_sizes', $options);
     }
 
-    /**
-     * Tests getting the options for an admin user.
-     */
     public function testReturnsTheAdminUserOptions(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
@@ -114,9 +99,6 @@ class ImageSizesTest extends TestCase
         $this->assertArraySubset($GLOBALS['TL_CROP'], $options);
     }
 
-    /**
-     * Tests getting all options for a regular user.
-     */
     public function testReturnsTheRegularUserOptions(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
@@ -173,7 +155,8 @@ class ImageSizesTest extends TestCase
         $this->connection
             ->expects($this->atLeastOnce())
             ->method('fetchAll')
-            ->willReturn($imageSizes);
+            ->willReturn($imageSizes)
+        ;
     }
 
     /**

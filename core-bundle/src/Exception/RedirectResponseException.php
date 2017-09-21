@@ -14,14 +14,9 @@ namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-/**
- * Initializes a response exception with a redirect response.
- */
 class RedirectResponseException extends ResponseException
 {
     /**
-     * Constructor.
-     *
      * @param string          $location
      * @param int             $status
      * @param \Exception|null $previous

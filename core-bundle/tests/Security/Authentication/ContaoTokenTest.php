@@ -20,14 +20,9 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
-/**
- * Tests the ContaoToken class.
- */
 class ContaoTokenTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -39,8 +34,6 @@ class ContaoTokenTest extends TestCase
     }
 
     /**
-     * Tests a front end user.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -59,8 +52,6 @@ class ContaoTokenTest extends TestCase
     }
 
     /**
-     * Tests a back end user.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -80,8 +71,6 @@ class ContaoTokenTest extends TestCase
     }
 
     /**
-     * Tests an unauthenticated user.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */

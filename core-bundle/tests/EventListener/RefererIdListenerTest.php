@@ -20,14 +20,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the RefererIdListener class.
- */
 class RefererIdListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
@@ -35,9 +29,6 @@ class RefererIdListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\RefererIdListener', $listener);
     }
 
-    /**
-     * Tests adding the token to the request.
-     */
     public function testAddsTheTokenToTheRequest(): void
     {
         $request = new Request();
@@ -56,9 +47,6 @@ class RefererIdListenerTest extends TestCase
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
     }
 
-    /**
-     * Tests that the token is not added to a front end request.
-     */
     public function testDoesNotAddTheTokenInFrontEndScope(): void
     {
         $request = new Request();
@@ -76,9 +64,6 @@ class RefererIdListenerTest extends TestCase
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
     }
 
-    /**
-     * Tests that the token is not added to a subrequest.
-     */
     public function testDoesNotAddTheTokenToASubrequest(): void
     {
         $request = new Request();
@@ -96,9 +81,6 @@ class RefererIdListenerTest extends TestCase
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
     }
 
-    /**
-     * Tests that the same token is added to subsequent requests.
-     */
     public function testAddsTheSameTokenToSubsequestRequests(): void
     {
         $request = new Request();

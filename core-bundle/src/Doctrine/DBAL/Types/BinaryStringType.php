@@ -16,7 +16,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
 /**
- * Type that maps a PHP string to a binary database field.
+ * Maps a PHP string to a binary database field.
  */
 class BinaryStringType extends Type
 {

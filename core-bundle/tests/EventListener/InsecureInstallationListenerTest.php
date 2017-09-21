@@ -19,14 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Kernel;
 
-/**
- * Tests the InsecureInstallationListener class.
- */
 class InsecureInstallationListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $listener = new InsecureInstallationListener();
@@ -34,13 +28,10 @@ class InsecureInstallationListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\InsecureInstallationListener', $listener);
     }
 
-    /**
-     * Tests throwing the exception if the document root is insecure.
-     */
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void
     {
         $kernel = $this->mockKernel();
-        $event = new GetResponseEvent($kernel, $this->getRequestObject(), Kernel::MASTER_REQUEST);
+        $event = new GetResponseEvent($kernel, $this->getRequest(), Kernel::MASTER_REQUEST);
 
         $this->expectException(InsecureInstallationException::class);
 
@@ -48,14 +39,11 @@ class InsecureInstallationListenerTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    /**
-     * Tests that there is no exception if the document root is secure.
-     */
     public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
     {
         $kernel = $this->mockKernel();
 
-        $request = $this->getRequestObject();
+        $request = $this->getRequest();
         $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
         $request->server->set('SCRIPT_FILENAME', $this->getRootDir().'/app_dev.php');
 
@@ -67,14 +55,11 @@ class InsecureInstallationListenerTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * Tests that there is no exception on localhost.
-     */
     public function testDoesNotThrowAnExceptionOnLocalhost(): void
     {
         $kernel = $this->mockKernel();
 
-        $request = $this->getRequestObject();
+        $request = $this->getRequest();
         $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
         $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
@@ -86,11 +71,11 @@ class InsecureInstallationListenerTest extends TestCase
     }
 
     /**
-     * Returns a request object.
+     * Returns a request.
      *
      * @return Request
      */
-    private function getRequestObject(): Request
+    private function getRequest(): Request
     {
         $request = new Request();
 

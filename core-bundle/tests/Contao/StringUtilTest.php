@@ -17,8 +17,6 @@ use Contao\StringUtil;
 use Contao\System;
 
 /**
- * Tests the StringUtil class.
- *
  * @group contao3
  */
 class StringUtilTest extends TestCase
@@ -49,9 +47,6 @@ class StringUtilTest extends TestCase
         System::setContainer($this->mockContainerWithContaoScopes());
     }
 
-    /**
-     * Tests generating aliases.
-     */
     public function testGeneratesAliases(): void
     {
         $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
@@ -68,8 +63,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests parsing simple tokens.
-     *
      * @param string $string
      * @param array  $tokens
      * @param string $expected
@@ -82,8 +75,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
      * @return array
      */
     public function parseSimpleTokensProvider(): array
@@ -293,8 +284,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method works correctly with newlines.
-     *
      * @param string $string
      * @param array  $tokens
      * @param string $expected
@@ -307,8 +296,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Provides the data for the testParseSimpleTokensCorrectNewlines() method.
-     *
      * @return array
      */
     public function parseSimpleTokensCorrectNewlines(): array
@@ -348,8 +335,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code.
-     *
      * @param string $string
      * @param bool
      *
@@ -361,8 +346,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
      * @return array
      */
     public function parseSimpleTokensDoesntExecutePhp(): array
@@ -396,8 +379,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code inside tokens.
-     *
      * @param array $tokens
      * @param bool
      *
@@ -409,8 +390,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
      * @return array
      */
     public function parseSimpleTokensDoesntExecutePhpInToken(): array
@@ -443,10 +422,6 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
-     * contain PHP code that is generated only after replacing the tokens.
-     */
     public function testDoesNotExecutePhpCodeInCombinedTokens(): void
     {
         $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
@@ -457,8 +432,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method fails for invalid comparisons.
-     *
      * @param $string
      *
      * @dataProvider parseSimpleTokensInvalidComparison
@@ -471,8 +444,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
      * @return array
      */
     public function parseSimpleTokensInvalidComparison(): array
@@ -491,9 +462,6 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * Tests the stripRootDir() method.
-     */
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'/'));
@@ -506,9 +474,6 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getRootDir().'\foo\bar'));
     }
 
-    /**
-     * Tests that a path outside the root directory triggers an exception.
-     */
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
     {
         $this->expectException('InvalidArgumentException');
@@ -516,9 +481,6 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir('/foo');
     }
 
-    /**
-     * Tests that a parent path triggers an exception.
-     */
     public function testFailsIfThePathIsTheParentFolder(): void
     {
         $this->expectException('InvalidArgumentException');
@@ -526,9 +488,6 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir(dirname($this->getRootDir()).'/');
     }
 
-    /**
-     * Tests that a longer path triggers an exception.
-     */
     public function testFailsIfThePathDoesNotMatch(): void
     {
         $this->expectException('InvalidArgumentException');
@@ -536,9 +495,6 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir($this->getRootDir().'foo/');
     }
 
-    /**
-     * Tests that omitting the trailing slash triggers an exception.
-     */
     public function testFailsIfThePathHasNoTrailingSlash(): void
     {
         $this->expectException('InvalidArgumentException');

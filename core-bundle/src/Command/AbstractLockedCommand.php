@@ -17,9 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\LockHandler;
 
-/**
- * Runs a command and locks it while its running.
- */
 abstract class AbstractLockedCommand extends ContainerAwareCommand
 {
     /**

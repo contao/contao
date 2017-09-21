@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-/**
- * Collects debug information for the web profiler.
- */
 class ContaoDataCollector extends DataCollector implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -34,8 +31,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     private $packages;
 
     /**
-     * Constructor.
-     *
      * @param array $packages
      */
     public function __construct(array $packages)

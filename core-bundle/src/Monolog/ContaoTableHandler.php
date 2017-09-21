@@ -20,9 +20,6 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Sends logs to the Contao tl_log table.
- */
 class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

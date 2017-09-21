@@ -40,9 +40,6 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the ImageFactory class.
- */
 class ImageFactoryTest extends TestCase
 {
     /**
@@ -57,20 +54,14 @@ class ImageFactoryTest extends TestCase
         }
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
-        $imageFactory = $this->getImageFactory();
+        $imageFactory = $this->mockImageFactory();
 
         $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactory', $imageFactory);
         $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactoryInterface', $imageFactory);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAnImageObjectFromAnImagePath(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -123,7 +114,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($filesAdapter)
         ;
 
-        $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
+        $imageFactory = $this->mockImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
         $this->assertSameImage($imageMock, $image);
@@ -141,21 +132,15 @@ class ImageFactoryTest extends TestCase
         $this->assertSameImage($imageMock, $image);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testFailsToCreateAnImageObjectIfTheFileExtensionIsInvalid(): void
     {
-        $imageFactory = $this->getImageFactory();
+        $imageFactory = $this->mockImageFactory();
 
         $this->expectException('InvalidArgumentException');
 
         $imageFactory->create($this->getRootDir().'/images/dummy.foo');
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAnImageObjectFromAnImagePathWithAnImageSize(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -264,15 +249,12 @@ class ImageFactoryTest extends TestCase
             )
         ;
 
-        $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
+        $imageFactory = $this->mockImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, 1, $this->getRootDir().'/target/path.jpg');
 
         $this->assertSame($imageMock, $image);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAnImageObjectFromAnImagePathIfTheImageSizeIsMissing(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -304,15 +286,12 @@ class ImageFactoryTest extends TestCase
             )
         ;
 
-        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
+        $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path, 1);
 
         $this->assertSame($path, $image->getPath());
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAnImageObjectFromAnImageObjectWithAResizeConfiguration(): void
     {
         $resizeConfig = (new ResizeConfiguration())
@@ -363,27 +342,22 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $imageFactory = $this->getImageFactory($resizer);
+        $imageFactory = $this->mockImageFactory($resizer);
         $image = $imageFactory->create($imageMock, $resizeConfig, $this->getRootDir().'/target/path.jpg');
 
         $this->assertSameImage($imageMock, $image);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAnImageObjectFromAnImageObjectWithAnEmptyResizeConfiguration(): void
     {
         $imageMock = $this->createMock(ImageInterface::class);
-        $imageFactory = $this->getImageFactory();
+        $imageFactory = $this->mockImageFactory();
         $image = $imageFactory->create($imageMock, (new ResizeConfiguration()));
 
         $this->assertSameImage($imageMock, $image);
     }
 
     /**
-     * Tests the create() method.
-     *
      * @param string $mode
      * @param array  $expected
      *
@@ -483,15 +457,13 @@ class ImageFactoryTest extends TestCase
             ->willReturn($filesAdapter)
         ;
 
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
+        $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
         $image = $imageFactory->create($path, [50, 50, $mode]);
 
         $this->assertSame($imageMock, $image);
     }
 
     /**
-     * Tests the getImportantPartFromLegacyMode() method.
-     *
      * @param string $mode
      * @param string $expected
      *
@@ -513,7 +485,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($dimensionsMock)
         ;
 
-        $imageFactory = $this->getImageFactory();
+        $imageFactory = $this->mockImageFactory();
 
         $this->assertSameImportantPart(
             new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
@@ -522,8 +494,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Provides the data for the testCreateWithLegacyMode() method.
-     *
      * @return array
      */
     public function getCreateWithLegacyMode(): array
@@ -542,13 +512,10 @@ class ImageFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * Tests the getImportantPartFromLegacyMode() method throws an exception for invalid resize modes.
-     */
     public function testFailsToReturnTheImportantPartIfTheModeIsInvalid(): void
     {
         $imageMock = $this->createMock(ImageInterface::class);
-        $imageFactory = $this->getImageFactory();
+        $imageFactory = $this->mockImageFactory();
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('not a legacy resize mode');
@@ -556,9 +523,6 @@ class ImageFactoryTest extends TestCase
         $imageFactory->getImportantPartFromLegacyMode($imageMock, 'invalid');
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreatesAnImageObjectFromAnImagePathWithoutAResizer(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -569,15 +533,12 @@ class ImageFactoryTest extends TestCase
             ->willReturn($this->createMock(Adapter::class))
         ;
 
-        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
+        $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
 
         $this->assertSame($path, $image->getPath());
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testIgnoresTheImportantPartIfItIsOutOfBounds(): void
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -611,7 +572,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($filesAdapter)
         ;
 
-        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
+        $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
 
         $this->assertSameImportantPart(
@@ -621,8 +582,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Tests the executeResize hook.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -653,7 +612,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($filesAdapter)
         ;
 
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+        $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
@@ -688,11 +647,9 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Returns a custom image path.
+     * @param ContaoImage $imageObj
      *
-     * @param ContaoImage $imageObj The image object
-     *
-     * @return string The image path
+     * @return string
      */
     public static function executeResizeHookCallback(ContaoImage $imageObj): string
     {
@@ -718,8 +675,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Tests the getImage hook.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -752,7 +707,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($filesAdapter)
         ;
 
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+        $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
@@ -792,18 +747,16 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Returns a custom image path.
+     * @param string      $originalPath
+     * @param int         $targetWidth
+     * @param int         $targetHeight
+     * @param string      $resizeMode
+     * @param string      $cacheName
+     * @param File        $fileObj
+     * @param string      $targetPath
+     * @param ContaoImage $imageObj
      *
-     * @param string      $originalPath The original path
-     * @param int         $targetWidth  The target width
-     * @param int         $targetHeight The target height
-     * @param string      $resizeMode   The resize mode
-     * @param string      $cacheName    The cache name
-     * @param File        $fileObj      The file object
-     * @param string      $targetPath   The target path
-     * @param ContaoImage $imageObj     The image object
-     *
-     * @return string The image path
+     * @return string
      */
     public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, File $fileObj, string $targetPath, ContaoImage $imageObj): string
     {
@@ -830,8 +783,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Tests empty getImage and executeResize hooks.
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -880,7 +831,7 @@ class ImageFactoryTest extends TestCase
 
         $resizer->setFramework($framework);
 
-        $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+        $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[get_class($this), 'emptyHookCallback']],
@@ -899,16 +850,13 @@ class ImageFactoryTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * Returns null.
-     */
     public static function emptyHookCallback()
     {
         return null;
     }
 
     /**
-     * Create an ImageFactory instance helper.
+     * Mocks an image factory.
      *
      * @param ResizerInterface|null         $resizer
      * @param ImagineInterface|null         $imagine
@@ -921,7 +869,7 @@ class ImageFactoryTest extends TestCase
      *
      * @return ImageFactory
      */
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null, string $validExtensions = null): ImageFactory
+    private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null, string $validExtensions = null): ImageFactory
     {
         if (null === $resizer) {
             $resizer = $this->createMock(ResizerInterface::class);
@@ -971,8 +919,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Asserts that two image objects are the same.
-     *
      * @param ImageInterface $imageA
      * @param ImageInterface $imageB
      */
@@ -986,8 +932,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Asserts that two important path objects are the same.
-     *
      * @param ImportantPartInterface $partA
      * @param ImportantPartInterface $partB
      */

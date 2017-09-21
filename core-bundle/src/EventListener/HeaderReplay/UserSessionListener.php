@@ -17,9 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
-/**
- * Disables the reverse proxy based on the terminal42/header-replay-bundle.
- */
 class UserSessionListener
 {
     /**
@@ -33,8 +30,6 @@ class UserSessionListener
     private $disableIpCheck;
 
     /**
-     * Constructor.
-     *
      * @param ScopeMatcher $scopeMatcher
      * @param bool         $disableIpCheck
      */

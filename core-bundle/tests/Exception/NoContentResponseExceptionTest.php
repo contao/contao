@@ -15,14 +15,8 @@ namespace Contao\CoreBundle\Tests\Exception;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the NoContentResponseException class.
- */
 class NoContentResponseExceptionTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $exception = new NoContentResponseException();
@@ -30,9 +24,6 @@ class NoContentResponseExceptionTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\NoContentResponseException', $exception);
     }
 
-    /**
-     * Tests the getResponse() method.
-     */
     public function testSetsTheResponseStatusCode(): void
     {
         $exception = new NoContentResponseException();

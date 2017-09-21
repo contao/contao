@@ -18,14 +18,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\LockHandler;
 
-/**
- * Tests the AutomatorCommand class.
- */
 class AutomatorCommandTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $command = new AutomatorCommand('contao:automator');
@@ -34,9 +28,6 @@ class AutomatorCommandTest extends TestCase
         $this->assertSame('contao:automator', $command->getName());
     }
 
-    /**
-     * Tests generating the task list.
-     */
     public function testGeneratesTheTaskList(): void
     {
         $command = new AutomatorCommand('contao:automator');
@@ -54,9 +45,6 @@ class AutomatorCommandTest extends TestCase
         $this->assertContains('[10]', $output);
     }
 
-    /**
-     * Tests that the object can be converted to a string.
-     */
     public function testCanBeConvertedToString(): void
     {
         $command = new AutomatorCommand('contao:automator');
@@ -65,9 +53,6 @@ class AutomatorCommandTest extends TestCase
         $this->assertContains('The name of the task:', $command->__toString());
     }
 
-    /**
-     * Tests that the command is locked while running.
-     */
     public function testIsLockedWhileRunning(): void
     {
         $lock = new LockHandler('contao:automator');
@@ -88,9 +73,6 @@ class AutomatorCommandTest extends TestCase
         $lock->release();
     }
 
-    /**
-     * Tests that the task name can be passed as argument.
-     */
     public function testTakesTheTaskNameAsArgument(): void
     {
         $command = new AutomatorCommand('contao:automator');
@@ -107,9 +89,6 @@ class AutomatorCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    /**
-     * Tests selecting an invalid number.
-     */
     public function testHandlesAnInvalidSelection(): void
     {
         $command = new AutomatorCommand('contao:automator');
@@ -125,9 +104,6 @@ class AutomatorCommandTest extends TestCase
         $this->assertContains('Value "4800" is invalid (see help contao:automator)', $tester->getDisplay());
     }
 
-    /**
-     * Tests passing an invalid task name.
-     */
     public function testHandlesAnInvalidTaskName(): void
     {
         $command = new AutomatorCommand('contao:automator');
@@ -146,7 +122,7 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Returns the application object.
+     * Returns the application.
      *
      * @return Application
      */

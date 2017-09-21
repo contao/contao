@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Framework;
 
-/**
- * Interface for framework aware services.
- */
 interface FrameworkAwareInterface
 {
     /**

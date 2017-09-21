@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Runs Automator tasks on the command line.
+ * Runs Contao automator tasks on the command line.
  */
 class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareInterface
 {

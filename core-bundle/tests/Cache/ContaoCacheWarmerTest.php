@@ -21,9 +21,6 @@ use Doctrine\DBAL\Driver\Statement;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the ContaoCacheWarmer class.
- */
 class ContaoCacheWarmerTest extends TestCase
 {
     /**
@@ -59,17 +56,11 @@ class ContaoCacheWarmerTest extends TestCase
         $fs->remove($this->getCacheDir().'/contao');
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheWarmer', $this->warmer);
     }
 
-    /**
-     * Tests creating the cache folder.
-     */
     public function testCreatesTheCacheFolder(): void
     {
         $class1 = new \stdClass();
@@ -143,17 +134,11 @@ class ContaoCacheWarmerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the warmer is optional.
-     */
     public function testIsAnOptionalWarmer(): void
     {
         $this->assertTrue($this->warmer->isOptional());
     }
 
-    /**
-     * Tests that no cache is generated if there are no Contao resources.
-     */
     public function testDoesNotCreateTheCacheFolderIfThereAreNoContaoResources(): void
     {
         $class1 = new \stdClass();
@@ -191,9 +176,6 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileNotExists($this->getCacheDir().'/contao');
     }
 
-    /**
-     * Tests that no cache is generated if the installation is incomplete.
-     */
     public function testDoesNotCreateTheCacheFolderIfTheInstallationIsIncomplete(): void
     {
         $connection = $this->createMock(Connection::class);

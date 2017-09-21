@@ -25,9 +25,6 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 
-/**
- * Authenticates a Contao token.
- */
 class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthenticatorInterface
 {
     use ContainerAwareTrait;
@@ -38,8 +35,6 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
     protected $scopeMatcher;
 
     /**
-     * Constructor.
-     *
      * @param ScopeMatcher $scopeMatcher
      */
     public function __construct(ScopeMatcher $scopeMatcher)

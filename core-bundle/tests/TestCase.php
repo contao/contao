@@ -44,14 +44,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-/**
- * Abstract TestCase class.
- */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Returns the path to the fixtures directory.
-     *
      * @return string
      */
     public function getRootDir(): string
@@ -60,8 +55,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Returns the path to the fixtures cache directory.
-     *
      * @return string
      */
     public function getCacheDir(): string
@@ -70,7 +63,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param RequestStack|null    $requestStack
      * @param RouterInterface|null $router
@@ -244,7 +237,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Mocks a container with scopes.
+     * Mocks a container with an optional Contao scope.
      *
      * @param string|null $scope
      *
@@ -405,7 +398,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Adds image services to the container.
+     * Adds the image services to the container.
      *
      * @param Container   $container
      * @param string|null $rootDir

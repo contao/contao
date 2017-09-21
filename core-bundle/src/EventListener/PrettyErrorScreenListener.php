@@ -35,9 +35,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Renders pretty error screens for exceptions.
- */
 class PrettyErrorScreenListener
 {
     /**
@@ -79,8 +76,6 @@ class PrettyErrorScreenListener
     ];
 
     /**
-     * Constructor.
-     *
      * @param bool                     $prettyErrorScreens
      * @param \Twig_Environment        $twig
      * @param ContaoFrameworkInterface $framework

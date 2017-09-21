@@ -18,13 +18,10 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-/**
- * Abstract DoctrineTestCase class.
- */
 abstract class DoctrineTestCase extends TestCase
 {
     /**
-     * Returns a Doctrine registry with database connection.
+     * Mocks a Doctrine registry with database connection.
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -58,7 +55,7 @@ abstract class DoctrineTestCase extends TestCase
     }
 
     /**
-     * Returns a Doctrine registry with database installer.
+     * Mocks the Contao framework with the database installer.
      *
      * @param array $dca
      * @param array $file

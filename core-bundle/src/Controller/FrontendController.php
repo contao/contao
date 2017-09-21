@@ -21,15 +21,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles the Contao frontend routes.
- *
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
  */
 class FrontendController extends Controller
 {
     /**
-     * Runs the main front end controller.
-     *
      * @return Response
      */
     public function indexAction(): Response
@@ -42,8 +38,6 @@ class FrontendController extends Controller
     }
 
     /**
-     * Runs the command scheduler.
-     *
      * @return Response
      *
      * @Route("/_contao/cron", name="contao_frontend_cron")
@@ -58,8 +52,6 @@ class FrontendController extends Controller
     }
 
     /**
-     * Renders the content syndication dialog.
-     *
      * @return RedirectResponse
      *
      * @Route("/_contao/share", name="contao_frontend_share")

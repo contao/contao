@@ -23,9 +23,6 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Configures the Contao core bundle.
- */
 class ContaoCoreBundle extends Bundle
 {
     public const SCOPE_BACKEND = 'backend';

@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Insecure installation exception.
- */
 class InsecureInstallationException extends \RuntimeException
 {
 }

@@ -24,11 +24,6 @@ use Contao\Image\ResizeOptions;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 
-/**
- * Creates Picture objects.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 class PictureFactory implements PictureFactoryInterface
 {
     /**
@@ -62,8 +57,6 @@ class PictureFactory implements PictureFactoryInterface
     private $defaultDensities = '';
 
     /**
-     * Constructor.
-     *
      * @param PictureGeneratorInterface $pictureGenerator
      * @param ImageFactoryInterface     $imageFactory
      * @param ContaoFrameworkInterface  $framework

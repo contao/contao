@@ -18,14 +18,8 @@ use Contao\CoreBundle\Translation\Translator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Tests the TokenGenerator class.
- */
 class TranslatorTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $originalTranslator = $this->createMock(TranslatorInterface::class);
@@ -36,9 +30,6 @@ class TranslatorTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Translation\TranslatorInterface', $translator);
     }
 
-    /**
-     * Tests forwarding method calls to the decorated translator.
-     */
     public function testForwardsTheMethodCallsToTheDecoratedTranslator(): void
     {
         $originalTranslator = $this->createMock(TranslatorInterface::class);
@@ -86,9 +77,6 @@ class TranslatorTest extends TestCase
         $this->assertSame('en', $translator->getLocale());
     }
 
-    /**
-     * Tests reading from $GLOBALS['TL_LANG'].
-     */
     public function testReadsFromTheGlobalLanguageArray(): void
     {
         $systemAdapter = $this->createMock(Adapter::class);
@@ -142,9 +130,6 @@ class TranslatorTest extends TestCase
         );
     }
 
-    /**
-     * Tests loading message domains with the "contao_" prefix.
-     */
     public function testLoadsMessageDomainsWithTheContaoPrefix(): void
     {
         $systemAdapter = $this->createMock(Adapter::class);

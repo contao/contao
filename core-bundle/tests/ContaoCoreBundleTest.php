@@ -20,16 +20,8 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the ContaoCoreBundle class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class ContaoCoreBundleTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $bundle = new ContaoCoreBundle();
@@ -37,9 +29,6 @@ class ContaoCoreBundleTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\ContaoCoreBundle', $bundle);
     }
 
-    /**
-     * Tests the getContainerExtension() method.
-     */
     public function testReturnsTheContainerExtension(): void
     {
         $bundle = new ContaoCoreBundle();
@@ -50,9 +39,6 @@ class ContaoCoreBundleTest extends TestCase
         );
     }
 
-    /**
-     * Tests the build() method.
-     */
     public function testAddsTheCompilerPaths(): void
     {
         $container = new ContainerBuilder();

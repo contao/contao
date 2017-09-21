@@ -14,14 +14,9 @@ namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-/**
- * Internal server error HTTP exception.
- */
 class InternalServerErrorHttpException extends HttpException
 {
     /**
-     * Constructor.
-     *
      * @param string|null     $message
      * @param \Exception|null $previous
      * @param int             $code

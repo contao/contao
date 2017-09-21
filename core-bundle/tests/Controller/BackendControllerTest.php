@@ -21,14 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-/**
- * Tests the BackendControllerTest class.
- */
 class BackendControllerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $controller = new BackendController();
@@ -36,9 +30,6 @@ class BackendControllerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendController', $controller);
     }
 
-    /**
-     * Tests the controller actions.
-     */
     public function testReturnsAResponseInTheActionMethods(): void
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
@@ -63,9 +54,6 @@ class BackendControllerTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->alertsAction());
     }
 
-    /**
-     * Tests the pickerAction() method.
-     */
     public function testReturnsAResponseInThePickerActionMethod(): void
     {
         $picker = $this->createMock(PickerInterface::class);
@@ -104,9 +92,6 @@ class BackendControllerTest extends TestCase
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the pickerAction() method with invalid picker extras.
-     */
     public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid(): void
     {
         $controller = new BackendController();
@@ -120,9 +105,6 @@ class BackendControllerTest extends TestCase
         $controller->pickerAction($request);
     }
 
-    /**
-     * Tests the pickerAction() method with an unsupported context.
-     */
     public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported(): void
     {
         $builder = $this->createMock(PickerBuilderInterface::class);

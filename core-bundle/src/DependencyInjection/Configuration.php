@@ -19,9 +19,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Webmozart\PathUtil\Path;
 
-/**
- * Adds the Contao configuration structure.
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -45,8 +42,6 @@ class Configuration implements ConfigurationInterface
     private $defaultLocale;
 
     /**
-     * Constructor.
-     *
      * @param bool   $debug
      * @param string $projectDir
      * @param string $rootDir

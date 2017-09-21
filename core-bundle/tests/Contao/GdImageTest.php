@@ -19,8 +19,6 @@ use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Tests the GdImage class.
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -71,9 +69,6 @@ class GdImageTest extends TestCase
         System::setContainer($this->mockContainerWithContaoScopes());
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $resource = imagecreate(1, 1);
@@ -83,9 +78,6 @@ class GdImageTest extends TestCase
         $this->assertSame($resource, $image->getResource());
     }
 
-    /**
-     * Tests creating an image from dimensions.
-     */
     public function testCreatesImagesFromDimensions(): void
     {
         $image = GdImage::fromDimensions(100, 100);
@@ -109,8 +101,6 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests creating an image from a file.
-     *
      * @param string $type
      *
      * @dataProvider getImageTypes
@@ -132,8 +122,6 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests that the image can be saved to a file.
-     *
      * @param string $type
      *
      * @dataProvider getImageTypes
@@ -153,8 +141,6 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Provides the image types for the tests.
-     *
      * @return array
      */
     public function getImageTypes(): array
@@ -166,9 +152,6 @@ class GdImageTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that an invalid file type triggers an exception.
-     */
     public function testFailsIfTheFileTypeIsInvalid(): void
     {
         $this->expectException('InvalidArgumentException');
@@ -176,9 +159,6 @@ class GdImageTest extends TestCase
         GdImage::fromFile(new File('test.xyz'));
     }
 
-    /**
-     * Tests that the image can be copied.
-     */
     public function testCopiesImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -234,9 +214,6 @@ class GdImageTest extends TestCase
         );
     }
 
-    /**
-     * Tests that an image can be converted to a palette image.
-     */
     public function testConvertsImagesToPaletteImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -267,9 +244,6 @@ class GdImageTest extends TestCase
         );
     }
 
-    /**
-     * Tests that a true color image can be converted to a palette image.
-     */
     public function testConvertsTrueColorImagesToPaletteImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -298,9 +272,6 @@ class GdImageTest extends TestCase
         );
     }
 
-    /**
-     * Tests the colors can be counted.
-     */
     public function testCountsTheImageColors(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -318,9 +289,6 @@ class GdImageTest extends TestCase
         $this->assertSame(2, $image->countColors(1));
     }
 
-    /**
-     * Tests the isSemitransparent() method.
-     */
     public function testRecognizesSemitransparentImages(): void
     {
         $image = imagecreatetruecolor(100, 100);

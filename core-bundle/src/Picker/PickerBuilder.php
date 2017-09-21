@@ -16,9 +16,6 @@ use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Picker builder.
- */
 class PickerBuilder implements PickerBuilderInterface
 {
     /**
@@ -42,8 +39,6 @@ class PickerBuilder implements PickerBuilderInterface
     private $providers = [];
 
     /**
-     * Constructor.
-     *
      * @param FactoryInterface $menuFactory
      * @param RouterInterface  $router
      * @param RequestStack     $requestStack

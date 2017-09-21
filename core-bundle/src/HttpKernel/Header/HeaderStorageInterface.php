@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel\Header;
 
-/**
- * Interface for HTTP header storage.
- */
 interface HeaderStorageInterface
 {
     /**

@@ -16,9 +16,6 @@ use Contao\CoreBundle\Exception\PaletteNotFoundException;
 use Contao\CoreBundle\Exception\PalettePositionException;
 use Contao\StringUtil;
 
-/**
- * Adds fields and legends to DCA palettes.
- */
 class PaletteManipulator
 {
     public const POSITION_BEFORE = 'before';

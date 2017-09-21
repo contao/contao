@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Stores a response object.
- */
 class ResponseException extends \RuntimeException
 {
     /**
@@ -25,8 +22,6 @@ class ResponseException extends \RuntimeException
     private $response;
 
     /**
-     * Constructor.
-     *
      * @param Response        $response
      * @param \Exception|null $previous
      */

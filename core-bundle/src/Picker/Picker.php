@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\Picker;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 
-/**
- * DCA picker.
- */
 class Picker implements PickerInterface
 {
     /**
@@ -41,8 +38,6 @@ class Picker implements PickerInterface
     private $menu;
 
     /**
-     * Constructor.
-     *
      * @param FactoryInterface          $menuFactory
      * @param PickerProviderInterface[] $providers
      * @param PickerConfig              $config
