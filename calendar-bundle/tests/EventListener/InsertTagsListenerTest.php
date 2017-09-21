@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,27 +20,16 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Events;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the InsertTagsListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InsertTagsListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\CalendarBundle\EventListener\InsertTagsListener', $listener);
     }
 
-    /**
-     * Tests that the listener returns a replacement string for a calendar feed.
-     */
-    public function testReplacesTheCalendarFeedTag()
+    public function testReplacesTheCalendarFeedTag(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -48,10 +39,7 @@ class InsertTagsListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the listener returns a replacement string for an event.
-     */
-    public function testReplacesTheEventTags()
+    public function testReplacesTheEventTags(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -81,20 +69,14 @@ class InsertTagsListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the listener returns false if the tag is unknown.
-     */
-    public function testReturnsFalseIfTheTagIsUnknown()
+    public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
         $this->assertFalse($listener->onReplaceInsertTags('link_url::2'));
     }
 
-    /**
-     * Tests that the listener returns an empty string if there is no model.
-     */
-    public function testReturnsAnEmptyStringIfThereIsNoModel()
+    public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
 
@@ -103,42 +85,38 @@ class InsertTagsListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param string $source
      * @param bool   $noModels
      *
-     * @return ContaoFrameworkInterface
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFramework($source = 'default', $noModels = false)
+    private function mockContaoFramework(string $source = 'default', bool $noModels = false): ContaoFrameworkInterface
     {
         $feedModel = $this->createMock(CalendarFeedModel::class);
 
         $feedModel
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'feedBase':
-                        return 'http://localhost/';
+            ->willReturnCallback(
+                function (string $key): ?string {
+                    switch ($key) {
+                        case 'feedBase':
+                            return 'http://localhost/';
 
-                    case 'alias':
-                        return 'events';
+                        case 'alias':
+                            return 'events';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        $calendarFeedModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
+        $calendarFeedModelAdapter = $this->createMock(Adapter::class);
 
         $calendarFeedModelAdapter
-            ->method('findByPk')
+            ->method('__call')
             ->willReturn($noModels ? null : $feedModel)
         ;
 
@@ -146,41 +124,32 @@ class InsertTagsListenerTest extends TestCase
 
         $eventModel
             ->method('__get')
-            ->willReturnCallback(function ($key) use ($source) {
-                switch ($key) {
-                    case 'title':
-                        return 'The "foobar" event';
+            ->willReturnCallback(
+                function (string $key) use ($source): ?string {
+                    switch ($key) {
+                        case 'title':
+                            return 'The "foobar" event';
 
-                    case 'teaser':
-                        return '<p>The annual foobar event.</p>';
+                        case 'teaser':
+                            return '<p>The annual foobar event.</p>';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        $eventsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIdOrAlias'])
-            ->getMock()
-        ;
+        $eventsModelAdapter = $this->createMock(Adapter::class);
 
         $eventsModelAdapter
-            ->method('findByIdOrAlias')
+            ->method('__call')
             ->willReturn($noModels ? null : $eventModel)
         ;
 
-        $eventsAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['generateEventUrl'])
-            ->getMock()
-        ;
+        $eventsAdapter = $this->createMock(Adapter::class);
 
         $eventsAdapter
-            ->method('generateEventUrl')
+            ->method('__call')
             ->willReturn('events/the-foobar-event.html')
         ;
 
@@ -193,21 +162,22 @@ class InsertTagsListenerTest extends TestCase
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($calendarFeedModelAdapter, $eventsModelAdapter, $eventsAdapter) {
-                switch ($key) {
-                    case CalendarFeedModel::class:
-                        return $calendarFeedModelAdapter;
+            ->willReturnCallback(
+                function (string $key) use ($calendarFeedModelAdapter, $eventsModelAdapter, $eventsAdapter): ?Adapter {
+                    switch ($key) {
+                        case CalendarFeedModel::class:
+                            return $calendarFeedModelAdapter;
 
-                    case CalendarEventsModel::class:
-                        return $eventsModelAdapter;
+                        case CalendarEventsModel::class:
+                            return $eventsModelAdapter;
 
-                    case Events::class:
-                        return $eventsAdapter;
+                        case Events::class:
+                            return $eventsAdapter;
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,42 +22,31 @@ use Contao\PageModel;
 use Contao\Template;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the GeneratePageListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class GeneratePageListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new GeneratePageListener($this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\CalendarBundle\EventListener\GeneratePageListener', $listener);
     }
 
-    /**
-     * Tests that the listener returns a replacement string for a calendar feed.
-     */
-    public function testAddsTheCalendarFeedLink()
+    public function testAddsTheCalendarFeedLink(): void
     {
         $pageModel = $this->createMock(PageModel::class);
         $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'calendarfeeds':
+            ->willReturnCallback(
+                function (string $key): ?string {
+                    if ('calendarfeeds' === $key) {
                         return 'a:1:{i:0;i:3;}';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         $GLOBALS['TL_HEAD'] = [];
@@ -71,25 +62,22 @@ class GeneratePageListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the listener returns if there are no feeds.
-     */
-    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoFeeds()
+    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoFeeds(): void
     {
         $pageModel = $this->createMock(PageModel::class);
         $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'calendarfeeds':
+            ->willReturnCallback(
+                function (string $key): ?string {
+                    if ('calendarfeeds' === $key) {
                         return '';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         $GLOBALS['TL_HEAD'] = [];
@@ -100,25 +88,22 @@ class GeneratePageListenerTest extends TestCase
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
 
-    /**
-     * Tests that the listener returns if there are no models.
-     */
-    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoModels()
+    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoModels(): void
     {
         $pageModel = $this->createMock(PageModel::class);
         $layoutModel = $this->createMock(LayoutModel::class);
 
         $layoutModel
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'calendarfeeds':
+            ->willReturnCallback(
+                function (string $key): ?string {
+                    if ('calendarfeeds' === $key) {
                         return 'a:1:{i:0;i:3;}';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         $GLOBALS['TL_HEAD'] = [];
@@ -130,13 +115,13 @@ class GeneratePageListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param bool $noModels
      *
-     * @return ContaoFrameworkInterface
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFramework($noModels = false)
+    private function mockContaoFramework(bool $noModels = false): ContaoFrameworkInterface
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -149,52 +134,49 @@ class GeneratePageListenerTest extends TestCase
 
         $feedModel
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'feedBase':
-                        return 'http://localhost/';
+            ->willReturnCallback(
+                function (string $key): ?string {
+                    switch ($key) {
+                        case 'feedBase':
+                            return 'http://localhost/';
 
-                    case 'alias':
-                        return 'events';
+                        case 'alias':
+                            return 'events';
 
-                    case 'format':
-                        return 'rss';
+                        case 'format':
+                            return 'rss';
 
-                    case 'title':
-                        return 'Upcoming events';
+                        case 'title':
+                            return 'Upcoming events';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        $calendarFeedModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIds'])
-            ->getMock()
-        ;
+        $calendarFeedModelAdapter = $this->createMock(Adapter::class);
 
         $calendarFeedModelAdapter
-            ->method('findByIds')
+            ->method('__call')
             ->willReturn($noModels ? null : new Collection([$feedModel], 'tl_calendar_feeds'))
         ;
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($calendarFeedModelAdapter) {
-                switch ($key) {
-                    case CalendarFeedModel::class:
-                        return $calendarFeedModelAdapter;
+            ->willReturnCallback(
+                function (string $key) use ($calendarFeedModelAdapter): ?Adapter {
+                    switch ($key) {
+                        case CalendarFeedModel::class:
+                            return $calendarFeedModelAdapter;
 
-                    case Template::class:
-                        return new Adapter(Template::class);
+                        case Template::class:
+                            return new Adapter(Template::class);
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;

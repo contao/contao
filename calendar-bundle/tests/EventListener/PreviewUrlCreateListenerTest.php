@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,27 +21,16 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the PreviewUrlCreateListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlCreateListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\CalendarBundle\EventListener\PreviewUrlCreateListener', $listener);
     }
 
-    /**
-     * Tests the onPreviewUrlCreate() method.
-     */
-    public function testCreatesThePreviewUrl()
+    public function testCreatesThePreviewUrl(): void
     {
         $request = Request::createFromGlobals();
 
@@ -54,10 +45,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertSame('calendar=1', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the framework is not initialized.
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized()
+    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
@@ -67,10 +55,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the key is not "calendar".
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheCalendarParameterIsNotSet()
+    public function testDoesNotCreateThePreviewUrlIfTheCalendarParameterIsNotSet(): void
     {
         $event = new PreviewUrlCreateEvent('news', 1);
 
@@ -80,10 +65,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed on the calendar list page.
-     */
-    public function testDoesNotCreateThePreviewUrlOnTheCalendarListPage()
+    public function testDoesNotCreateThePreviewUrlOnTheCalendarListPage(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('table', 'tl_calendar_events');
@@ -99,10 +81,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the ID is overwritten if the event settings are edited.
-     */
-    public function testOverwritesTheIdIfTheEventSettingsAreEdited()
+    public function testOverwritesTheIdIfTheEventSettingsAreEdited(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('act', 'edit');
@@ -120,17 +99,14 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertSame('calendar=2', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no event.
-     */
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoEvent()
+    public function testDoesNotCreateThePreviewUrlIfThereIsNoEvent(): void
     {
         $request = Request::createFromGlobals();
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new PreviewUrlCreateEvent('calendar', null);
+        $event = new PreviewUrlCreateEvent('calendar', 0);
 
         $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlCreate($event);
@@ -139,13 +115,13 @@ class PreviewUrlCreateListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param bool $isInitialized
      *
-     * @return ContaoFrameworkInterface
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFramework($isInitialized = true)
+    private function mockContaoFramework(bool $isInitialized = true): ContaoFrameworkInterface
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -154,37 +130,41 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn($isInitialized)
         ;
 
-        $eventsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
+        $eventsModelAdapter = $this->createMock(Adapter::class);
 
         $eventsModelAdapter
-            ->method('findByPk')
-            ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $method, array $params): ?CalendarEventsModel {
+                    $this->assertInternalType('string', $method);
 
-                    default:
-                        return (object) ['id' => $id];
+                    if (!empty($params[0])) {
+                        $adapter = $this->createMock(CalendarEventsModel::class);
+
+                        $adapter
+                            ->method('__get')
+                            ->willReturn($params[0])
+                        ;
+
+                        return $adapter;
+                    }
+
+                    return null;
                 }
-            })
+            )
         ;
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($eventsModelAdapter) {
-                switch ($key) {
-                    case CalendarEventsModel::class:
+            ->willReturnCallback(
+                function (string $key) use ($eventsModelAdapter): ?Adapter {
+                    if (CalendarEventsModel::class === $key) {
                         return $eventsModelAdapter;
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;

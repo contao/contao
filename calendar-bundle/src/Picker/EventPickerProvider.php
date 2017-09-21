@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,11 +20,6 @@ use Contao\CoreBundle\Picker\AbstractPickerProvider;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 
-/**
- * Provides the event picker.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class EventPickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -30,7 +27,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'eventPicker';
     }
@@ -38,7 +35,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context)
+    public function supportsContext($context): bool
     {
         return 'link' === $context && $this->getUser()->hasAccess('calendar', 'modules');
     }
@@ -46,7 +43,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config)
+    public function supportsValue(PickerConfig $config): bool
     {
         return false !== strpos($config->getValue(), '{{event_url::');
     }
@@ -54,7 +51,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable()
+    public function getDcaTable(): string
     {
         return 'tl_calendar_events';
     }
@@ -62,7 +59,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config)
+    public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
 
@@ -76,7 +73,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, $value): string
     {
         return '{{event_url::'.$value.'}}';
     }
@@ -84,7 +81,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null)
+    protected function getRouteParameters(PickerConfig $config = null): array
     {
         $params = ['do' => 'calendar'];
 
@@ -105,11 +102,11 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     /**
      * Returns the calendar ID.
      *
-     * @param int $id
+     * @param int|string $id
      *
      * @return int|null
      */
-    private function getCalendarId($id)
+    private function getCalendarId($id): ?int
     {
         /** @var CalendarEventsModel $eventAdapter */
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
@@ -122,6 +119,6 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
             return null;
         }
 
-        return $calendar->id;
+        return (int) $calendar->id;
     }
 }

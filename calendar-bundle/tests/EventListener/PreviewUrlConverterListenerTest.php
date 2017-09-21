@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,27 +22,16 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the PreviewUrlConverterListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlConverterListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new PreviewUrlConvertListener(new RequestStack(), $this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\CalendarBundle\EventListener\PreviewUrlConvertListener', $listener);
     }
 
-    /**
-     * Tests the onPreviewUrlConvert() method.
-     */
-    public function testConvertsThePreviewUrl()
+    public function testConvertsThePreviewUrl(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('calendar', 1);
@@ -58,10 +49,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertSame('http://localhost/events/winter-holidays.html', $event->getUrl());
     }
 
-    /**
-     * Tests that the listener is bypassed if the framework is not initialized.
-     */
-    public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized()
+    public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
         $event = new PreviewUrlConvertEvent();
 
@@ -71,10 +59,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no "calendar" parameter.
-     */
-    public function testDoesNotConvertThePreviewUrlIfTheCalendarParameterIsNotSet()
+    public function testDoesNotConvertThePreviewUrlIfTheCalendarParameterIsNotSet(): void
     {
         $request = Request::createFromGlobals();
         $request->server->set('SERVER_NAME', 'localhost');
@@ -91,10 +76,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no event.
-     */
-    public function testDoesNotConvertThePreviewUrlIfThereIsNoEvent()
+    public function testDoesNotConvertThePreviewUrlIfThereIsNoEvent(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('calendar', null);
@@ -113,13 +95,13 @@ class PreviewUrlConverterListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param bool $isInitialized
      *
-     * @return ContaoFrameworkInterface
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFramework($isInitialized = true)
+    private function mockContaoFramework(bool $isInitialized = true): ContaoFrameworkInterface
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -128,52 +110,45 @@ class PreviewUrlConverterListenerTest extends TestCase
             ->willReturn($isInitialized)
         ;
 
-        $eventsAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['generateEventUrl'])
-            ->getMock()
-        ;
+        $eventsAdapter = $this->createMock(Adapter::class);
 
         $eventsAdapter
-            ->method('generateEventUrl')
+            ->method('__call')
             ->willReturn('events/winter-holidays.html')
         ;
 
-        $eventsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
+        $eventsModelAdapter = $this->createMock(Adapter::class);
 
         $eventsModelAdapter
-            ->method('findByPk')
-            ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $method, array $params): ?CalendarEventsModel {
+                    $this->assertInternalType('string', $method);
 
-                    default:
-                        return [];
+                    if (!empty($params[0])) {
+                        return $this->createMock(CalendarEventsModel::class);
+                    }
+
+                    return null;
                 }
-            })
+            )
         ;
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($eventsAdapter, $eventsModelAdapter) {
-                switch ($key) {
-                    case Events::class:
-                        return $eventsAdapter;
+            ->willReturnCallback(
+                function (string $key) use ($eventsAdapter, $eventsModelAdapter): ?Adapter {
+                    switch ($key) {
+                        case Events::class:
+                            return $eventsAdapter;
 
-                    case CalendarEventsModel::class:
-                        return $eventsModelAdapter;
+                        case CalendarEventsModel::class:
+                            return $eventsModelAdapter;
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;
