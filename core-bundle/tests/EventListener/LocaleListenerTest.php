@@ -33,7 +33,7 @@ class LocaleListenerTest extends TestCase
      * @param string|null $locale
      * @param string      $expected
      *
-     * @dataProvider localeTestData
+     * @dataProvider getLocaleRequestData
      */
     public function testReadsTheLocaleFromTheRequest(?string $locale, string $expected): void
     {
@@ -50,12 +50,26 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @param string|null $locale
-     * @param string      $expected
-     *
-     * @dataProvider localeTestData
+     * @return array
      */
-    public function testReadsTheLocaleFromTheSession(?string $locale, string $expected): void
+    public function getLocaleRequestData(): array
+    {
+        return [
+            [null, 'en'], // see #264
+            ['en', 'en'],
+            ['de', 'de'],
+            ['de-CH', 'de_CH'],
+            ['de_CH', 'de_CH'],
+            ['zh-tw', 'zh_TW'],
+        ];
+    }
+
+    /**
+     * @param string $expected
+     *
+     * @dataProvider getLocaleSessionData
+     */
+    public function testReadsTheLocaleFromTheSession(string $expected): void
     {
         // The session values are already formatted, so we're passing in $expected here
         $session = $this->mockSession();
@@ -71,6 +85,20 @@ class LocaleListenerTest extends TestCase
         $listener->onKernelRequest($event);
 
         $this->assertSame($expected, $request->attributes->get('_locale'));
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocaleSessionData(): array
+    {
+        return [
+            ['en'],
+            ['de'],
+            ['de_CH'],
+            ['de_CH'],
+            ['zh_TW'],
+        ];
     }
 
     /**

@@ -99,11 +99,9 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn($layout)
         ;
 
-        global $objPage;
+        $GLOBALS['objPage'] = $this->createMock(PageModel::class);
 
-        $objPage = $this->createMock(PageModel::class);
-
-        $objPage
+        $GLOBALS['objPage']
             ->method('__get')
             ->willReturn(2)
         ;

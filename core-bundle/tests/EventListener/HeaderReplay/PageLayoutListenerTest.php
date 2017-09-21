@@ -46,13 +46,11 @@ class PageLayoutListenerTest extends TestCase
                 function (string $key, array $params) use ($agentIsMobile) {
                     $this->assertSame('get', $key);
 
-                    switch ($params[0]) {
-                        case 'agent':
-                            return (object) ['mobile' => $agentIsMobile];
-
-                        default:
-                            return null;
+                    if ('agent' === $params[0]) {
+                        return (object) ['mobile' => $agentIsMobile];
                     }
+
+                    return null;
                 }
             )
         ;

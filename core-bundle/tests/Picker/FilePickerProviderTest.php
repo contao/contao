@@ -69,10 +69,9 @@ class FilePickerProviderTest extends TestCase
 
                         case 'uuid':
                             return StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea');
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -89,7 +88,7 @@ class FilePickerProviderTest extends TestCase
                     }
 
                     // Return the files model upon the first call
-                    if ('findByPath' === $key && ++$count === 1) {
+                    if ('findByPath' === $key && 1 === ++$count) {
                         return $filesModel;
                     }
 

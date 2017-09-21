@@ -51,5 +51,5 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
      *
      * @return int
      */
-    abstract protected function executeLocked(InputInterface $input, OutputInterface $output): int;
+    abstract protected function executeLocked(InputInterface $input, OutputInterface $output);
 }

@@ -104,10 +104,9 @@ class PictureTest extends TestCase
 
                         case 'path':
                             return 'dummy.jpg';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             ))
         ;

@@ -106,10 +106,9 @@ class ImageTest extends TestCase
 
                         case 'path':
                             return 'dummy.jpg';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -144,13 +143,11 @@ class ImageTest extends TestCase
             ->method('__get')
             ->will($this->returnCallback(
                 function (string $key): ?string {
-                    switch ($key) {
-                        case 'extension':
-                            return 'foobar';
-
-                        default:
-                            return null;
+                    if ('extension' === $key) {
+                        return 'foobar';
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -191,10 +188,9 @@ class ImageTest extends TestCase
 
                         case 'viewHeight':
                             return $arguments[3];
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -640,10 +636,9 @@ class ImageTest extends TestCase
 
                         case 'viewHeight':
                             return $arguments[3];
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -826,10 +821,9 @@ class ImageTest extends TestCase
                         case 'height':
                         case 'viewHeight':
                             return 100;
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -967,10 +961,9 @@ class ImageTest extends TestCase
                         case 'height':
                         case 'viewHeight':
                             return 200;
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -1050,13 +1043,11 @@ class ImageTest extends TestCase
             ->method('__get')
             ->will($this->returnCallback(
                 function (string $key): ?string {
-                    switch ($key) {
-                        case 'extension':
-                            return 'jpg';
-
-                        default:
-                            return null;
+                    if ('extension' === $key) {
+                        return 'jpg';
                     }
+
+                    return null;
                 }
             ))
         ;

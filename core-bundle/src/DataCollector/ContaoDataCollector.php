@@ -232,12 +232,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
      */
     private function getLayout(): ?LayoutModel
     {
-        /** @var PageModel $objPage */
-        global $objPage;
-
-        if (null === $objPage) {
+        if (!isset($GLOBALS['objPage'])) {
             return null;
         }
+
+        /* @var PageModel $objPage */
+        $objPage = $GLOBALS['objPage'];
 
         /** @var LayoutModel $layout */
         $layout = $this->framework->getAdapter(LayoutModel::class);

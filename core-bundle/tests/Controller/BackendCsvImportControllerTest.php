@@ -73,10 +73,9 @@ class BackendCsvImportControllerTest extends TestCase
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -108,10 +107,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -160,10 +158,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -195,10 +192,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -247,10 +243,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -282,10 +277,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -338,10 +332,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;
@@ -370,10 +363,9 @@ EOF;
 
                         case 'table':
                             return 'tl_content';
-
-                        default:
-                            return null;
                     }
+
+                    return null;
                 }
             )
         ;

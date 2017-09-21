@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -145,7 +147,7 @@ class DcaSchemaProvider
         list($dbType, $def) = explode(' ', $sql, 2);
 
         $type = strtok(strtolower($dbType), '(), ');
-        $length = strtok('(), ');
+        $length = (int) strtok('(), ');
         $fixed = false;
         $scale = null;
         $precision = null;
@@ -154,7 +156,10 @@ class DcaSchemaProvider
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
         $type = $this->doctrine->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping($type);
-        $length = (0 === (int) $length) ? null : (int) $length;
+
+        if ($length === 0) {
+            $length = null;
+        }
 
         if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
             $default = trim($match[1], "'");
