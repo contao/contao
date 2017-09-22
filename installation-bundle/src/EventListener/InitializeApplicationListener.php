@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -22,11 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Listens to the contao_installation.initialize event.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InitializeApplicationListener implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -36,7 +33,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
      *
      * @param InitializeApplicationEvent $event
      */
-    public function onInitialize(InitializeApplicationEvent $event)
+    public function onInitialize(InitializeApplicationEvent $event): void
     {
         $input = new ArgvInput([
             'assets:install',
@@ -65,7 +62,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
      *
      * @return string|null
      */
-    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null)
+    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null): ?string
     {
         if (null === $input) {
             $input = new ArgvInput([]);

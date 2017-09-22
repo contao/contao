@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\InstallationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Allows to set response and output.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InitializeApplicationEvent extends Event
 {
     /**
@@ -29,7 +26,7 @@ class InitializeApplicationEvent extends Event
      *
      * @return string
      */
-    public function getOutput()
+    public function getOutput(): string
     {
         return $this->output;
     }
@@ -39,7 +36,7 @@ class InitializeApplicationEvent extends Event
      *
      * @param string $output
      */
-    public function setOutput($output)
+    public function setOutput(string $output): void
     {
         $this->output = $output;
 
@@ -51,7 +48,7 @@ class InitializeApplicationEvent extends Event
      *
      * @return bool
      */
-    public function hasOutput()
+    public function hasOutput(): bool
     {
         return null !== $this->output;
     }

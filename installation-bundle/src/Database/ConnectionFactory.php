@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,11 +16,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
 
-/**
- * Creates a database connection object.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ConnectionFactory
 {
     /**
@@ -28,7 +25,7 @@ class ConnectionFactory
      *
      * @return Connection|null
      */
-    public static function create(array $parameters)
+    public static function create(array $parameters): ?Connection
     {
         $params = [];
 

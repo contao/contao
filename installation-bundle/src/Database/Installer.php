@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,12 +16,6 @@ use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 
-/**
- * Handles the database installation.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class Installer
 {
     /**
@@ -38,8 +34,6 @@ class Installer
     private $schemaProvider;
 
     /**
-     * Constructor.
-     *
      * @param Connection        $connection
      * @param DcaSchemaProvider $schemaProvider
      */
@@ -54,7 +48,7 @@ class Installer
      *
      * @return array
      */
-    public function getCommands()
+    public function getCommands(): array
     {
         if (null === $this->commands) {
             $this->compileCommands();
@@ -70,7 +64,7 @@ class Installer
      *
      * @throws \InvalidArgumentException
      */
-    public function execCommand($hash)
+    public function execCommand(string $hash): void
     {
         if (null === $this->commands) {
             $this->compileCommands();
@@ -90,7 +84,7 @@ class Installer
     /**
      * Compiles the command required to update the database.
      */
-    private function compileCommands()
+    private function compileCommands(): void
     {
         $return = [
             'CREATE' => [],
@@ -178,7 +172,7 @@ class Installer
      *
      * @return Schema
      */
-    private function dropNonContaoTables(Schema $schema)
+    private function dropNonContaoTables(Schema $schema): Schema
     {
         $needle = $schema->getName().'.tl_';
 

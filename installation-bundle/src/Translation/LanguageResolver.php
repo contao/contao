@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\InstallationBundle\Translation;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Maps the accepted languages to the available locales.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class LanguageResolver
 {
     /**
@@ -30,12 +27,10 @@ class LanguageResolver
     private $translationsDir;
 
     /**
-     * Constructor.
-     *
      * @param RequestStack $requestStack
      * @param string       $translationsDir
      */
-    public function __construct(RequestStack $requestStack, $translationsDir)
+    public function __construct(RequestStack $requestStack, string $translationsDir)
     {
         $this->requestStack = $requestStack;
         $this->translationsDir = $translationsDir;
@@ -46,7 +41,7 @@ class LanguageResolver
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         foreach ($this->getAcceptedLocales() as $locale) {
             if (file_exists($this->translationsDir.'/messages.'.$locale.'.xlf')) {
@@ -62,7 +57,7 @@ class LanguageResolver
      *
      * @return array
      */
-    private function getAcceptedLocales()
+    private function getAcceptedLocales(): array
     {
         $accepted = [];
         $locales = [];

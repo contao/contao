@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,17 +15,9 @@ namespace Contao\InstallationBundle\Tests;
 use Contao\InstallationBundle\ContaoInstallationBundle;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the ContaoInstallationBundle class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoInstallationBundleTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $bundle = new ContaoInstallationBundle();
 

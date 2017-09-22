@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,11 +12,6 @@
 
 namespace Contao\InstallationBundle\Event;
 
-/**
- * Defines constants for the Contao installation events.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 final class ContaoInstallationEvents
 {
     /**
@@ -24,5 +21,5 @@ final class ContaoInstallationEvents
      *
      * @see InitializeApplicationEvent
      */
-    const INITIALIZE_APPLICATION = 'contao_installation.initialize_application';
+    public const INITIALIZE_APPLICATION = 'contao_installation.initialize_application';
 }

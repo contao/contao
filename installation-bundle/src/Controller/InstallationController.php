@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -29,10 +31,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles the installation process.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
  */
 class InstallationController implements ContainerAwareInterface
@@ -48,13 +46,11 @@ class InstallationController implements ContainerAwareInterface
     ];
 
     /**
-     * Handles the installation process.
-     *
      * @return Response
      *
      * @Route("/install", name="contao_install")
      */
-    public function installAction()
+    public function installAction(): Response
     {
         if (null !== ($response = $this->initializeApplication())) {
             return $response;
@@ -114,11 +110,9 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Initializes the application.
-     *
      * @return Response|null
      */
-    private function initializeApplication()
+    private function initializeApplication(): ?Response
     {
         $event = new InitializeApplicationEvent();
 
@@ -138,7 +132,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return Response|RedirectResponse
      */
-    private function acceptLicense()
+    private function acceptLicense(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -156,7 +150,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return Response|RedirectResponse
      */
-    private function setPassword()
+    private function setPassword(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -195,7 +189,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return Response|RedirectResponse
      */
-    private function login()
+    private function login(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -227,7 +221,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Purges the Symfony cache.
      */
-    private function purgeSymfonyCache()
+    private function purgeSymfonyCache(): void
     {
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
@@ -267,7 +261,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @see https://github.com/symfony/symfony/pull/23792
      */
-    private function warmUpSymfonyCache()
+    private function warmUpSymfonyCache(): void
     {
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
@@ -297,7 +291,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return Response|RedirectResponse
      */
-    private function setUpDatabaseConnection()
+    private function setUpDatabaseConnection(): Response
     {
         $parameters = [];
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -355,7 +349,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Runs the database updates.
      */
-    private function runDatabaseUpdates()
+    private function runDatabaseUpdates(): void
     {
         if ($this->container->get('contao.install_tool')->isFreshInstallation()) {
             return;
@@ -387,7 +381,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return RedirectResponse|null
      */
-    private function adjustDatabaseTables()
+    private function adjustDatabaseTables(): ?RedirectResponse
     {
         $this->container->get('contao.install_tool')->handleRunOnce();
 
@@ -417,7 +411,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return RedirectResponse|null
      */
-    private function importExampleWebsite()
+    private function importExampleWebsite(): ?RedirectResponse
     {
         $installTool = $this->container->get('contao.install_tool');
         $templates = $installTool->getTemplates();
@@ -463,7 +457,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return RedirectResponse|null
      */
-    private function createAdminUser()
+    private function createAdminUser(): ?RedirectResponse
     {
         $installTool = $this->container->get('contao.install_tool');
 
@@ -567,7 +561,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return Response
      */
-    private function render($name, $context = [])
+    private function render(string $name, array $context = []): Response
     {
         return new Response(
             $this->container->get('twig')->render(
@@ -578,13 +572,13 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Translate a key.
+     * Translates a key.
      *
      * @param string $key
      *
      * @return string
      */
-    private function trans($key)
+    private function trans(string $key): string
     {
         return $this->container->get('translator')->trans($key);
     }
@@ -594,7 +588,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return RedirectResponse
      */
-    private function getRedirectResponse()
+    private function getRedirectResponse(): RedirectResponse
     {
         return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
     }
@@ -606,7 +600,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return array
      */
-    private function addDefaultsToContext(array $context)
+    private function addDefaultsToContext(array $context): array
     {
         $context = array_merge($this->context, $context);
 
@@ -634,7 +628,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return string
      */
-    private function getRequestToken()
+    private function getRequestToken(): string
     {
         $tokenName = $this->getContainerParameter('contao.csrf_token_name');
 
@@ -652,7 +646,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return mixed
      */
-    private function getContainerParameter($name)
+    private function getContainerParameter(string $name)
     {
         if ($this->container->hasParameter($name)) {
             return $this->container->getParameter($name);
@@ -666,7 +660,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return string
      */
-    private function getUserAgentString()
+    private function getUserAgentString(): string
     {
         if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
             return '';

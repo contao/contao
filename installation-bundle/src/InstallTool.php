@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,11 +20,6 @@ use Doctrine\DBAL\DBALException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Provides installation related methods.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InstallTool
 {
     /**
@@ -41,13 +38,11 @@ class InstallTool
     private $logDir;
 
     /**
-     * Constructor.
-     *
      * @param Connection $connection
      * @param string     $rootDir
      * @param string     $logDir
      */
-    public function __construct(Connection $connection, $rootDir, $logDir)
+    public function __construct(Connection $connection, string $rootDir, string $logDir)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
@@ -59,7 +54,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function isLocked()
+    public function isLocked(): bool
     {
         $cache = \System::getContainer()->get('contao.cache');
 
@@ -75,7 +70,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function canWriteFiles()
+    public function canWriteFiles(): bool
     {
         return is_writable(__FILE__);
     }
@@ -85,7 +80,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function shouldAcceptLicense()
+    public function shouldAcceptLicense(): bool
     {
         return !Config::get('licenseAccepted');
     }
@@ -93,7 +88,7 @@ class InstallTool
     /**
      * Increases the login count.
      */
-    public function increaseLoginCount()
+    public function increaseLoginCount(): void
     {
         $cache = \System::getContainer()->get('contao.cache');
 
@@ -109,7 +104,7 @@ class InstallTool
     /**
      * Resets the login count.
      */
-    public function resetLoginCount()
+    public function resetLoginCount(): void
     {
         \File::putContent('system/tmp/login-count.txt', 0);
     }
@@ -119,7 +114,7 @@ class InstallTool
      *
      * @param Connection $connection
      */
-    public function setConnection(Connection $connection)
+    public function setConnection(Connection $connection): void
     {
         $this->connection = $connection;
     }
@@ -131,7 +126,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function canConnectToDatabase($name)
+    public function canConnectToDatabase(string $name): bool
     {
         if (null === $this->connection) {
             return false;
@@ -161,7 +156,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function hasTable($name)
+    public function hasTable(string $name): bool
     {
         return $this->connection->getSchemaManager()->tablesExist([$name]);
     }
@@ -171,7 +166,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function isFreshInstallation()
+    public function isFreshInstallation(): bool
     {
         if (!$this->hasTable('tl_module')) {
             return true;
@@ -187,7 +182,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function hasOldDatabase()
+    public function hasOldDatabase(): bool
     {
         if (!$this->hasTable('tl_layout')) {
             return false;
@@ -206,7 +201,7 @@ class InstallTool
     /**
      * Handles executing the runonce files.
      */
-    public function handleRunOnce()
+    public function handleRunOnce(): void
     {
         // Wait for the tables to be created (see #5061)
         if (!$this->hasTable('tl_log')) {
@@ -221,7 +216,7 @@ class InstallTool
      *
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         $finder = Finder::create()
             ->files()
@@ -245,7 +240,7 @@ class InstallTool
      * @param string $template
      * @param bool   $preserveData
      */
-    public function importTemplate($template, $preserveData = false)
+    public function importTemplate(string $template, bool $preserveData = false): void
     {
         if (!$preserveData) {
             $tables = $this->connection->getSchemaManager()->listTableNames();
@@ -269,7 +264,7 @@ class InstallTool
      *
      * @return bool
      */
-    public function hasAdminUser()
+    public function hasAdminUser(): bool
     {
         try {
             $statement = $this->connection->query('SELECT COUNT(*) AS count FROM tl_user WHERE admin=1');
@@ -293,7 +288,7 @@ class InstallTool
      * @param string $password
      * @param string $language
      */
-    public function persistAdminUser($username, $name, $email, $password, $language)
+    public function persistAdminUser($username, string $name, string $email, string $password, string $language): void
     {
         $statement = $this->connection->prepare("
             INSERT INTO tl_user(
@@ -354,7 +349,7 @@ class InstallTool
      *
      * @return mixed|null
      */
-    public function getConfig($key)
+    public function getConfig(string $key)
     {
         return Config::get($key);
     }
@@ -365,7 +360,7 @@ class InstallTool
      * @param string $key
      * @param mixed  $value
      */
-    public function setConfig($key, $value)
+    public function setConfig(string $key, $value): void
     {
         Config::set($key, $value);
     }
@@ -376,7 +371,7 @@ class InstallTool
      * @param string $key
      * @param mixed  $value
      */
-    public function persistConfig($key, $value)
+    public function persistConfig(string $key, $value): void
     {
         $config = Config::getInstance();
         $config->persist($key, $value);
@@ -388,7 +383,7 @@ class InstallTool
      *
      * @param \Exception $e
      */
-    public function logException(\Exception $e)
+    public function logException(\Exception $e): void
     {
         error_log(
             sprintf(

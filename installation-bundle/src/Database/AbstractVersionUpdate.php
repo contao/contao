@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,11 +16,6 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Parent class for version update classes.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 abstract class AbstractVersionUpdate implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -29,8 +26,6 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     protected $connection;
 
     /**
-     * Constructor.
-     *
      * @param Connection $connection
      */
     public function __construct(Connection $connection)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\InstallationBundle;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
-/**
- * Handles the user authentication.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InstallToolUser
 {
     /**
@@ -30,8 +27,6 @@ class InstallToolUser
     private $timeout = 300;
 
     /**
-     * Constructor.
-     *
      * @param Session $session
      */
     public function __construct(Session $session)
@@ -44,7 +39,7 @@ class InstallToolUser
      *
      * @return bool
      */
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         if (!$this->session->has('_auth_until') || $this->session->get('_auth_until') < time()) {
             return false;
@@ -61,7 +56,7 @@ class InstallToolUser
      *
      * @param bool $authenticated
      */
-    public function setAuthenticated($authenticated)
+    public function setAuthenticated(bool $authenticated): void
     {
         if (true === $authenticated) {
             $this->session->set('_auth_until', time() + $this->timeout);

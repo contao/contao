@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,17 +12,12 @@
 
 namespace Contao\InstallationBundle\Database;
 
-/**
- * Runs the version 4.1.0 update.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class Version410Update extends AbstractVersionUpdate
 {
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -36,7 +33,7 @@ class Version410Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run()
+    public function run(): void
     {
         $crop = $GLOBALS['TL_CROP'];
 
