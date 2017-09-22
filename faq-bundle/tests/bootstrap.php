@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -31,7 +33,7 @@ if (
 }
 
 // Handle classes in the global namespace
-$legacyLoader = function ($class) {
+$legacyLoader = function ($class): void {
     if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) {
         return;
     }

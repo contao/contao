@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,27 +21,16 @@ use Contao\FaqModel;
 use Contao\PageModel;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the InsertTagsListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InsertTagsListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\FaqBundle\EventListener\InsertTagsListener', $listener);
     }
 
-    /**
-     * Tests that the listener returns a replacement string.
-     */
-    public function testReplacesTheFaqTags()
+    public function testReplacesTheFaqTags(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -64,30 +55,21 @@ class InsertTagsListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the listener returns false if the tag is unknown.
-     */
-    public function testReturnsFalseIfTheTagIsUnknown()
+    public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
         $this->assertFalse($listener->onReplaceInsertTags('link_url::2'));
     }
 
-    /**
-     * Tests that the listener returns an empty string if there is no model.
-     */
-    public function testReturnsAnEmptyStringIfThereIsNoModel()
+    public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(true));
 
         $this->assertSame('', $listener->onReplaceInsertTags('faq_url::2'));
     }
 
-    /**
-     * Tests that the listener returns an empty string if there is no category model.
-     */
-    public function testReturnsAnEmptyStringIfThereIsNoCategoryModel()
+    public function testReturnsAnEmptyStringIfThereIsNoCategoryModel(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework(false, true));
 
@@ -95,14 +77,14 @@ class InsertTagsListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param bool $noFaqModel
      * @param bool $noFaqCategory
      *
-     * @return ContaoFrameworkInterface
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFramework($noFaqModel = false, $noFaqCategory = false)
+    private function mockContaoFramework(bool $noFaqModel = false, bool $noFaqCategory = false): ContaoFrameworkInterface
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -134,49 +116,46 @@ class InsertTagsListenerTest extends TestCase
 
         $faq
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 2;
+            ->willReturnCallback(
+                function (string $key) {
+                    switch ($key) {
+                        case 'id':
+                            return 2;
 
-                    case 'alias':
-                        return 'what-does-foobar-mean';
+                        case 'alias':
+                            return 'what-does-foobar-mean';
 
-                    case 'question':
-                        return 'What does "foobar" mean?';
+                        case 'question':
+                            return 'What does "foobar" mean?';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        $faqModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIdOrAlias'])
-            ->getMock()
-        ;
+        $faqModelAdapter = $this->createMock(Adapter::class);
 
         $faqModelAdapter
-            ->method('findByIdOrAlias')
+            ->method('__call')
             ->willReturn($noFaqModel ? null : $faq)
         ;
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($faqModelAdapter) {
-                switch ($key) {
-                    case FaqModel::class:
-                        return $faqModelAdapter;
+            ->willReturnCallback(
+                function (string $key) use ($faqModelAdapter): ?Adapter {
+                    switch ($key) {
+                        case FaqModel::class:
+                            return $faqModelAdapter;
 
-                    case Config::class:
-                        return $this->mockConfigAdapter();
+                        case Config::class:
+                            return $this->mockConfigAdapter();
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;
@@ -187,44 +166,27 @@ class InsertTagsListenerTest extends TestCase
      *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockConfigAdapter()
+    private function mockConfigAdapter(): Adapter
     {
-        $configAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isComplete', 'preload', 'getInstance', 'get'])
-            ->getMock()
-        ;
+        $configAdapter = $this->createMock(Adapter::class);
 
         $configAdapter
-            ->method('isComplete')
-            ->willReturn(true)
-        ;
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $key, array $params) {
+                    if ('get' === $key) {
+                        switch ($params[0]) {
+                            case 'characterSet':
+                                return 'UTF-8';
 
-        $configAdapter
-            ->method('preload')
-            ->willReturn(null)
-        ;
+                            case 'useAutoItem':
+                                return true;
+                        }
+                    }
 
-        $configAdapter
-            ->method('getInstance')
-            ->willReturn(null)
-        ;
-
-        $configAdapter
-            ->method('get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'characterSet':
-                        return 'UTF-8';
-
-                    case 'useAutoItem':
-                        return true;
-
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $configAdapter;

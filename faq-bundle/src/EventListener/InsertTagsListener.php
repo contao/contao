@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,12 +19,6 @@ use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 
-/**
- * Handles FAQ insert tags.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InsertTagsListener
 {
     /**
@@ -41,8 +37,6 @@ class InsertTagsListener
     ];
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework)
@@ -57,7 +51,7 @@ class InsertTagsListener
      *
      * @return string|false
      */
-    public function onReplaceInsertTags($tag)
+    public function onReplaceInsertTags(string $tag)
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -111,7 +105,7 @@ class InsertTagsListener
      *
      * @return string|false
      */
-    private function generateReplacement(FaqModel $faq, $key, $url)
+    private function generateReplacement(FaqModel $faq, string $key, string $url)
     {
         switch ($key) {
             case 'faq':
