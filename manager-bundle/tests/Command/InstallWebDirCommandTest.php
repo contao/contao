@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,12 +21,6 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * Tests the InstallWebDirCommand class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class InstallWebDirCommandTest extends TestCase
 {
     /**
@@ -55,7 +51,7 @@ class InstallWebDirCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -75,32 +71,25 @@ class InstallWebDirCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown(): void
     {
+        parent::tearDown();
+
         $this->filesystem->remove($this->tmpdir);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ManagerBundle\Command\InstallWebDirCommand', $this->command);
     }
 
-    /**
-     * Tests the command name.
-     */
-    public function testNameAndArguments()
+    public function testNameAndArguments(): void
     {
         $this->assertSame('contao:install-web-dir', $this->command->getName());
         $this->assertTrue($this->command->getDefinition()->hasArgument('path'));
     }
 
-    /**
-     * Tests the command.
-     */
-    public function testCommandRegular()
+    public function testCommandRegular(): void
     {
         foreach ($this->webFiles as $file) {
             $this->assertFileNotExists($this->tmpdir.'/web/'.$file->getFilename());
@@ -119,10 +108,7 @@ class InstallWebDirCommandTest extends TestCase
         }
     }
 
-    /**
-     * Tests that the command does not override optional optional files.
-     */
-    public function testCommandDoesNotOverrideOptionals()
+    public function testCommandDoesNotOverrideOptionals(): void
     {
         foreach ($this->webFiles as $file) {
             $this->filesystem->dumpFile($this->tmpdir.'/web/'.$file->getRelativePathname(), 'foobar-content');
@@ -140,10 +126,7 @@ class InstallWebDirCommandTest extends TestCase
         }
     }
 
-    /**
-     * Tests that the install.php is removed from web directory.
-     */
-    public function testCommandRemovesInstallPhp()
+    public function testCommandRemovesInstallPhp(): void
     {
         $this->filesystem->dumpFile($this->tmpdir.'/web/install.php', 'foobar-content');
 
@@ -153,10 +136,7 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertFileNotExists($this->tmpdir.'/web/install.php');
     }
 
-    /**
-     * Tests that the install.php is removed from web directory.
-     */
-    public function testInstallsAppDevByDefault()
+    public function testInstallsAppDevByDefault(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir]);
@@ -164,10 +144,7 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertFileExists($this->tmpdir.'/web/app_dev.php');
     }
 
-    /**
-     * Tests that the install.php is removed from web directory.
-     */
-    public function testNotInstallsAppDevOnProd()
+    public function testNotInstallsAppDevOnProd(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir, '--no-dev' => true]);
@@ -175,10 +152,7 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertFileNotExists($this->tmpdir.'/web/app_dev.php');
     }
 
-    /**
-     * Tests setting the access key as argument.
-     */
-    public function testAccesskeyFromArgument()
+    public function testAccesskeyFromArgument(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => 'bar']);
@@ -191,10 +165,7 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Tests setting the access key interactively.
-     */
-    public function testAccesskeyFromInput()
+    public function testAccesskeyFromInput(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo', 'bar']);
@@ -211,10 +182,7 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Tests setting the access key interactively with a given username.
-     */
-    public function testAccesskeyWithUserFromInput()
+    public function testAccesskeyWithUserFromInput(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['bar']);
@@ -229,10 +197,7 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Tests setting the access key interactively without a username.
-     */
-    public function testAccesskeyWithoutUserFromInput()
+    public function testAccesskeyWithoutUserFromInput(): void
     {
         QuestionHelper::disableStty();
 
@@ -244,10 +209,7 @@ class InstallWebDirCommandTest extends TestCase
         $commandTester->execute(['path' => $this->tmpdir, '--password' => 'bar']);
     }
 
-    /**
-     * Tests that the access key is appended to the .env file.
-     */
-    public function testAccesskeyAppendToDotEnv()
+    public function testAccesskeyAppendToDotEnv(): void
     {
         $this->filesystem->dumpFile($this->tmpdir.'/.env', 'FOO=bar');
 
@@ -265,7 +227,7 @@ class InstallWebDirCommandTest extends TestCase
     }
 
     /**
-     * Returns the application object.
+     * Returns the application.
      *
      * @return Application
      */

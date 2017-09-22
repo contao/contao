@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,28 +23,17 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the ContaoKernel class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoKernelTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
-        $kernel = $this->getKernel(__DIR__);
+        $kernel = $this->mockKernel(__DIR__);
 
         $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoKernel', $kernel);
         $this->assertInstanceOf('Symfony\Component\HttpKernel\Kernel', $kernel);
     }
 
-    /**
-     * Tests the registerBundles() method.
-     */
-    public function testRegisterBundles()
+    public function testRegisterBundles(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
 
@@ -56,7 +47,7 @@ class ContaoKernelTest extends TestCase
             )
         ;
 
-        $kernel = $this->getKernel(sys_get_temp_dir());
+        $kernel = $this->mockKernel(sys_get_temp_dir());
         $kernel->setBundleLoader($bundleLoader);
 
         $bundles = $kernel->registerBundles();
@@ -66,11 +57,9 @@ class ContaoKernelTest extends TestCase
     }
 
     /**
-     * Tests the registerBundles() method autoloads AppBundle.
-     *
      * @runInSeparateProcess
      */
-    public function testRegistersAppBundle()
+    public function testRegistersAppBundle(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
 
@@ -84,7 +73,7 @@ class ContaoKernelTest extends TestCase
             )
         ;
 
-        $kernel = $this->getKernel(sys_get_temp_dir());
+        $kernel = $this->mockKernel(sys_get_temp_dir());
         $kernel->setBundleLoader($bundleLoader);
 
         include __DIR__.'/../Fixtures/HttpKernel/AppBundle.php';
@@ -95,35 +84,27 @@ class ContaoKernelTest extends TestCase
         $this->assertArrayHasKey(AppBundle::class, $bundles);
     }
 
-    /**
-     * Tests the getCacheDir() method.
-     */
-    public function testGetCacheDir()
+    public function testGetCacheDir(): void
     {
-        $kernel = $this->getKernel(sys_get_temp_dir());
+        $kernel = $this->mockKernel(sys_get_temp_dir());
 
         $this->assertSame($kernel->getProjectDir().'/var/cache/test', $kernel->getCacheDir());
     }
 
-    /**
-     * Tests the getLogDir() method.
-     */
-    public function testGetLogDir()
+    public function testGetLogDir(): void
     {
-        $kernel = $this->getKernel(sys_get_temp_dir());
+        $kernel = $this->mockKernel(sys_get_temp_dir());
 
         $this->assertSame($kernel->getProjectDir().'/var/logs', $kernel->getLogDir());
     }
 
     /**
-     * Tests the registerContainerConfiguration() method.
-     *
      * @param string $projectDir
      * @param string $expectedResult
      *
      * @dataProvider containerConfigurationProvider
      */
-    public function testRegisterContainerConfiguration($projectDir, $expectedResult)
+    public function testRegisterContainerConfiguration($projectDir, $expectedResult): void
     {
         $files = [];
         $loader = $this->createMock(LoaderInterface::class);
@@ -132,7 +113,7 @@ class ContaoKernelTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files) {
+                function ($resource) use (&$files): void {
                     if (is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (is_callable($resource)) {
@@ -144,15 +125,13 @@ class ContaoKernelTest extends TestCase
             )
         ;
 
-        $kernel = $this->getKernel($projectDir);
+        $kernel = $this->mockKernel($projectDir);
         $kernel->registerContainerConfiguration($loader);
 
         $this->assertSame($expectedResult, $files);
     }
 
     /**
-     * Provides data for the testRegisterContainerConfiguration method.
-     *
      * @return array
      */
     public function containerConfigurationProvider()
@@ -181,10 +160,7 @@ class ContaoKernelTest extends TestCase
         ];
     }
 
-    /**
-     * Tests the registerContainerConfiguration() method loads plugin configuration.
-     */
-    public function testRegisterContainerConfigurationLoadsPlugins()
+    public function testRegisterContainerConfigurationLoadsPlugins(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $pluginLoader = $this->createMock(PluginLoader::class);
@@ -195,20 +171,20 @@ class ContaoKernelTest extends TestCase
             ->willReturn([$this->mockConfigPlugin($loader), $this->mockConfigPlugin($loader)])
         ;
 
-        $kernel = $this->getKernel(sys_get_temp_dir());
+        $kernel = $this->mockKernel(sys_get_temp_dir());
 
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
     }
 
     /**
-     * Creates a kernel with PluginLoader for given project dir.
+     * Mocks a kernel with the plugin loader.
      *
      * @param string $projectDir
      *
-     * @return ContaoKernel
+     * @return ContaoKernel|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function getKernel($projectDir)
+    private function mockKernel($projectDir): ContaoKernel
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
 
@@ -225,13 +201,13 @@ class ContaoKernelTest extends TestCase
     }
 
     /**
-     * Returns the config plugin.
+     * Mocks a configuartion plugin.
      *
      * @param LoaderInterface $loader
      *
-     * @return ConfigPluginInterface
+     * @return ConfigPluginInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockConfigPlugin(LoaderInterface $loader)
+    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
     {
         $plugin = $this->createMock(ConfigPluginInterface::class);
 

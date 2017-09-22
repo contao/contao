@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,11 +23,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * Tests the Plugin class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class PluginTest extends TestCase
 {
     /**
@@ -36,24 +33,20 @@ class PluginTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $this->plugin = new Plugin();
     }
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Plugin', $this->plugin);
         $this->assertTrue(method_exists($this->plugin, 'autoloadModules'));
     }
 
-    /**
-     * Tests the getBundles() method.
-     */
-    public function testGetBundles()
+    public function testGetBundles(): void
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $this->plugin);
 
@@ -71,7 +64,7 @@ class PluginTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('parse')
             ->willReturnCallback(
-                function ($resource) {
+                function ($resource): array {
                     return [$resource];
                 }
             )
@@ -87,10 +80,7 @@ class PluginTest extends TestCase
         $fs->remove($tmpdir);
     }
 
-    /**
-     * Tests the registerContainerConfiguration() method in the production environment.
-     */
-    public function testRegisterContainerConfigurationInProd()
+    public function testRegisterContainerConfigurationInProd(): void
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $this->plugin);
 
@@ -101,7 +91,7 @@ class PluginTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files) {
+                function ($resource) use (&$files): void {
                     if (is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (is_callable($resource)) {
@@ -126,10 +116,7 @@ class PluginTest extends TestCase
         $this->assertNotContains('web_profiler.yml', $files);
     }
 
-    /**
-     * Tests the registerContainerConfiguration() method.
-     */
-    public function testRegisterContainerConfigurationInDev()
+    public function testRegisterContainerConfigurationInDev(): void
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $this->plugin);
 
@@ -140,7 +127,7 @@ class PluginTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files) {
+                function ($resource) use (&$files): void {
                     if (is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (is_callable($resource)) {
@@ -165,10 +152,7 @@ class PluginTest extends TestCase
         $this->assertContains('web_profiler.yml', $files);
     }
 
-    /**
-     * Tests the getRouteCollection() method in the production environment.
-     */
-    public function testGetRouteCollectionInProd()
+    public function testGetRouteCollectionInProd(): void
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $this->plugin);
 
@@ -184,10 +168,7 @@ class PluginTest extends TestCase
         $this->assertNull($this->plugin->getRouteCollection($resolver, $kernel));
     }
 
-    /**
-     * Tests the getRouteCollection() method in the development environment.
-     */
-    public function testGetRouteCollectionInDev()
+    public function testGetRouteCollectionInDev(): void
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $this->plugin);
 
@@ -197,7 +178,7 @@ class PluginTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function ($file) {
+                function (string $file): RouteCollection {
                     $collection = new RouteCollection();
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 

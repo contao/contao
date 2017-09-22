@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,33 +16,19 @@ use Contao\ManagerBundle\Composer\ScriptHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the ScriptHandler class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ScriptHandlerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ManagerBundle\Composer\ScriptHandler', new ScriptHandler());
     }
 
-    /**
-     * Tests that the initializeApplication() method exists.
-     */
-    public function testInitializeApplicationMethodExists()
+    public function testInitializeApplicationMethodExists(): void
     {
         $this->assertTrue(method_exists(ScriptHandler::class, 'initializeApplication'));
     }
 
-    /**
-     * Tests adding the app directory.
-     */
-    public function testAddAppDirectory()
+    public function testAddAppDirectory(): void
     {
         ScriptHandler::addAppDirectory();
 

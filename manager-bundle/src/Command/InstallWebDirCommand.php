@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,11 +23,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * Installs the web entry points for Contao Managed Edition.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class InstallWebDirCommand extends AbstractLockedCommand
 {
     /**
@@ -48,7 +45,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     ];
 
     /**
-     * Files that should not be copied on no-dev option.
+     * Files that should not be copied if the "no-dev" option is set.
      *
      * @var array
      */
@@ -59,7 +56,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:install-web-dir')
@@ -96,7 +93,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $user = $input->getOption('user');
         $password = $input->getOption('password');
@@ -134,7 +131,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
@@ -155,7 +152,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      * @param string $webDir
      * @param bool   $dev
      */
-    private function addFiles($webDir, $dev = true)
+    private function addFiles(string $webDir, bool $dev = true): void
     {
         /** @var Finder $finder */
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
@@ -181,7 +178,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      *
      * @param string $webDir
      */
-    private function removeInstallPhp($webDir)
+    private function removeInstallPhp(string $webDir): void
     {
         if (!file_exists($webDir.'/install.php')) {
             return;
@@ -197,7 +194,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      * @param InputInterface $input
      * @param string         $projectDir
      */
-    private function storeAppDevAccesskey(InputInterface $input, $projectDir)
+    private function storeAppDevAccesskey(InputInterface $input, string $projectDir): void
     {
         $user = $input->getOption('user');
         $password = $input->getOption('password');
@@ -229,7 +226,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      * @param string $key
      * @param string $value
      */
-    private function addToDotEnv($projectDir, $key, $value)
+    private function addToDotEnv(string $projectDir, string $key, string $value): void
     {
         $fs = new Filesystem();
 

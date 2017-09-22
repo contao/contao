@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,17 +17,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the ContaoCache class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoCacheTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
 

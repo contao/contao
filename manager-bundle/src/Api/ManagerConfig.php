@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * Copyright (c) 2005-2017 Leo Feyer
+ *
+ * @license LGPL-3.0+
+ */
+
 namespace Contao\ManagerBundle\Api;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,12 +33,10 @@ class ManagerConfig
     private $config;
 
     /**
-     * Constructor.
-     *
      * @param string          $projectDir
      * @param Filesystem|null $filesystem
      */
-    public function __construct($projectDir, Filesystem $filesystem = null)
+    public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
         $projectDir = realpath($projectDir) ?: $projectDir;
 
@@ -36,7 +44,10 @@ class ManagerConfig
         $this->filesystem = $filesystem ?: new Filesystem();
     }
 
-    public function all()
+    /**
+     * @return array
+     */
+    public function all(): array
     {
         if (null === $this->config) {
             $this->read();
@@ -48,7 +59,7 @@ class ManagerConfig
     /**
      * @return array
      */
-    public function read()
+    public function read(): array
     {
         if (!is_file($this->configFile)) {
             $this->config = [];
@@ -62,13 +73,10 @@ class ManagerConfig
     /**
      * @param array $config
      */
-    public function write(array $config)
+    public function write(array $config): void
     {
         $this->config = $config;
 
-        $this->filesystem->dumpFile(
-            $this->configFile,
-            Yaml::dump($config)
-        );
+        $this->filesystem->dumpFile($this->configFile, Yaml::dump($config));
     }
 }

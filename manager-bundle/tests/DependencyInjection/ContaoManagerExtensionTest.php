@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,11 +16,6 @@ use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the ContaoManagerExtension class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoManagerExtensionTest extends TestCase
 {
     /**
@@ -29,26 +26,20 @@ class ContaoManagerExtensionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->extension = new ContaoManagerExtension();
     }
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension', $this->extension);
         $this->assertInstanceOf('Symfony\Component\HttpKernel\DependencyInjection\Extension', $this->extension);
     }
 
-    /**
-     * Tests the load() method.
-     */
-    public function testLoad()
+    public function testLoad(): void
     {
         $container = new ContainerBuilder();
 

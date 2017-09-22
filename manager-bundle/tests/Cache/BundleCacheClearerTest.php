@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,27 +16,16 @@ use Contao\ManagerBundle\Cache\BundleCacheClearer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the BundleCacheClearer class.
- *
- * @author Kamil Kuzminski <https://github.com/qzminski>
- */
 class BundleCacheClearerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $clearer = new BundleCacheClearer();
 
         $this->assertInstanceOf('Contao\ManagerBundle\Cache\BundleCacheClearer', $clearer);
     }
 
-    /**
-     * Tests the clear() method.
-     */
-    public function testClear()
+    public function testClear(): void
     {
         $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
 

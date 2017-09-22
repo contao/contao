@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -24,9 +26,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoKernel extends Kernel
 {
     /**
@@ -52,7 +51,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerBundles()
+    public function registerBundles(): array
     {
         $bundles = [];
 
@@ -64,7 +63,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getProjectDir()
+    public function getProjectDir(): string
     {
         if (null === self::$projectDir) {
             throw new \LogicException('setProjectDir() must be called to initialize the ContaoKernel.');
@@ -76,7 +75,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getRootDir()
+    public function getRootDir(): string
     {
         if (null === $this->rootDir) {
             $this->rootDir = $this->getProjectDir().'/app';
@@ -88,7 +87,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getProjectDir().'/var/cache/'.$this->getEnvironment();
     }
@@ -96,7 +95,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return $this->getProjectDir().'/var/logs';
     }
@@ -106,7 +105,7 @@ class ContaoKernel extends Kernel
      *
      * @return PluginLoader
      */
-    public function getPluginLoader()
+    public function getPluginLoader(): PluginLoader
     {
         if (null === $this->pluginLoader) {
             $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
@@ -127,7 +126,7 @@ class ContaoKernel extends Kernel
      *
      * @param PluginLoader $pluginLoader
      */
-    public function setPluginLoader(PluginLoader $pluginLoader)
+    public function setPluginLoader(PluginLoader $pluginLoader): void
     {
         $this->pluginLoader = $pluginLoader;
     }
@@ -137,7 +136,7 @@ class ContaoKernel extends Kernel
      *
      * @return BundleLoader
      */
-    public function getBundleLoader()
+    public function getBundleLoader(): BundleLoader
     {
         if (null === $this->bundleLoader) {
             $parser = new DelegatingParser();
@@ -155,7 +154,7 @@ class ContaoKernel extends Kernel
      *
      * @param BundleLoader $bundleLoader
      */
-    public function setBundleLoader(BundleLoader $bundleLoader)
+    public function setBundleLoader(BundleLoader $bundleLoader): void
     {
         $this->bundleLoader = $bundleLoader;
     }
@@ -165,7 +164,7 @@ class ContaoKernel extends Kernel
      *
      * @return ManagerConfig
      */
-    public function getManagerConfig()
+    public function getManagerConfig(): ManagerConfig
     {
         if (null === $this->managerConfig) {
             $this->managerConfig = new ManagerConfig($this->getProjectDir());
@@ -179,7 +178,7 @@ class ContaoKernel extends Kernel
      *
      * @param ManagerConfig $managerConfig
      */
-    public function setManagerConfig(ManagerConfig $managerConfig)
+    public function setManagerConfig(ManagerConfig $managerConfig): void
     {
         $this->managerConfig = $managerConfig;
     }
@@ -187,7 +186,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         if (file_exists($this->getRootDir().'/config/parameters.yml')) {
             $loader->load($this->getRootDir().'/config/parameters.yml');
@@ -204,7 +203,7 @@ class ContaoKernel extends Kernel
             $loader->load($this->getRootDir().'/config/parameters.yml');
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($loader) {
+        $loader->load(function (ContainerBuilder $container) use ($loader): void {
             $environment = $container->getParameter('kernel.environment');
 
             if (file_exists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
@@ -220,7 +219,7 @@ class ContaoKernel extends Kernel
      *
      * @param string $projectDir
      */
-    public static function setProjectDir($projectDir)
+    public static function setProjectDir(string $projectDir): void
     {
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
@@ -228,7 +227,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    protected function getContainerBuilder()
+    protected function getContainerBuilder(): PluginContainerBuilder
     {
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
         $container->getParameterBag()->add($this->getKernelParameters());
@@ -245,7 +244,7 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    protected function initializeContainer()
+    protected function initializeContainer(): void
     {
         parent::initializeContainer();
 
@@ -258,7 +257,7 @@ class ContaoKernel extends Kernel
      *
      * @param array $bundles
      */
-    private function addBundlesFromPlugins(&$bundles)
+    private function addBundlesFromPlugins(array &$bundles): void
     {
         $configs = $this->getBundleLoader()->getBundleConfigs(
             'dev' === $this->getEnvironment(),

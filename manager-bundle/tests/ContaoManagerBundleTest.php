@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,17 +15,9 @@ namespace Contao\ManagerBundle\Tests;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the ContaoManagerBundle class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoManagerBundleTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ManagerBundle\ContaoManagerBundle', new ContaoManagerBundle());
     }

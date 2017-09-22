@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -27,11 +29,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * Plugin for the Contao Manager.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface
 {
     /**
@@ -77,7 +74,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
+    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/framework.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/security.yml');
@@ -89,17 +86,19 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/lexik_maintenance.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/nelmio_security.yml');
 
-        $loader->load(function (ContainerBuilder $container) use ($loader) {
-            if ('dev' === $container->getParameter('kernel.environment')) {
-                $loader->load('@ContaoManagerBundle/Resources/contao-manager/web_profiler.yml');
+        $loader->load(
+            function (ContainerBuilder $container) use ($loader): void {
+                if ('dev' === $container->getParameter('kernel.environment')) {
+                    $loader->load('@ContaoManagerBundle/Resources/contao-manager/web_profiler.yml');
+                }
             }
-        });
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
     {
         if ('dev' !== $kernel->getEnvironment()) {
             return null;
@@ -122,7 +121,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $collection = array_reduce(
             $collections,
-            function (RouteCollection $carry, RouteCollection $item) {
+            function (RouteCollection $carry, RouteCollection $item): RouteCollection {
                 $carry->addCollection($item);
 
                 return $carry;
@@ -144,7 +143,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * {@inheritdoc}
      */
-    public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container)
+    public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         if ('doctrine' !== $extensionName) {
             return $extensionConfigs;
@@ -184,11 +183,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Sets path to enable autoloading of legacy Contao modules.
+     * Sets the path to enable autoloading of legacy Contao modules.
      *
      * @param string $modulePath
      */
-    public static function autoloadModules($modulePath)
+    public static function autoloadModules(string $modulePath): void
     {
         static::$autoloadModules = $modulePath;
     }

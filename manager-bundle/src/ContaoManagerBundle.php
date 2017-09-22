@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\ManagerBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Configures the Contao manager bundle.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoManagerBundle extends Bundle
 {
 }

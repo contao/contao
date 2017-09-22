@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class GetConfigCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -36,7 +35,7 @@ class GetConfigCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $application = $this->getApplication();
 
@@ -44,10 +43,6 @@ class GetConfigCommand extends Command
             throw new \RuntimeException('');
         }
 
-        $output->writeln(
-            json_encode(
-                $application->getManagerConfig()->all()
-            )
-        );
+        $output->writeln(json_encode($application->getManagerConfig()->all()));
     }
 }

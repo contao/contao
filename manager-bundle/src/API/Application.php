@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,14 +20,9 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Console application for the Contao API.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class Application extends BaseApplication
 {
-    const VERSION = '1.0.0';
+    public const VERSION = '1.0.0';
 
     /**
      * @var string
@@ -38,13 +35,11 @@ class Application extends BaseApplication
     private $managerConfig;
 
     /**
-     * Constructor.
-     *
      * @param string $projectDir
      */
-    public function __construct($projectDir)
+    public function __construct(string $projectDir)
     {
-        $this->projectDir = realpath($projectDir) ?: $projectDir;;
+        $this->projectDir = realpath($projectDir) ?: $projectDir;
 
         parent::__construct('contao-api', self::VERSION);
     }
@@ -54,7 +49,7 @@ class Application extends BaseApplication
      *
      * @return ManagerConfig
      */
-    public function getManagerConfig()
+    public function getManagerConfig(): ManagerConfig
     {
         if (null === $this->managerConfig) {
             $this->managerConfig = new ManagerConfig($this->projectDir);
@@ -68,7 +63,7 @@ class Application extends BaseApplication
      *
      * @param ManagerConfig $managerConfig
      */
-    public function setManagerConfig(ManagerConfig $managerConfig)
+    public function setManagerConfig(ManagerConfig $managerConfig): void
     {
         $this->managerConfig = $managerConfig;
     }
@@ -76,7 +71,7 @@ class Application extends BaseApplication
     /**
      * {@inheritdoc}
      */
-    protected function configureIO(InputInterface $input, OutputInterface $output)
+    protected function configureIO(InputInterface $input, OutputInterface $output): void
     {
         $output->setDecorated(false);
         $input->setInteractive(false);
@@ -85,7 +80,7 @@ class Application extends BaseApplication
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition(
             [
@@ -97,7 +92,7 @@ class Application extends BaseApplication
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultCommands()
+    protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();
 

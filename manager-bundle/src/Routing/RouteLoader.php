@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -34,8 +36,6 @@ class RouteLoader
     private $kernel;
 
     /**
-     * Constructor.
-     *
      * @param LoaderInterface $loader
      * @param PluginLoader    $pluginLoader
      * @param KernelInterface $kernel
@@ -52,12 +52,12 @@ class RouteLoader
      *
      * @return RouteCollection
      */
-    public function loadFromPlugins()
+    public function loadFromPlugins(): RouteCollection
     {
         /** @var RouteCollection $collection */
         $collection = array_reduce(
             $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
-            function (RouteCollection $collection, RoutingPluginInterface $plugin) {
+            function (RouteCollection $collection, RoutingPluginInterface $plugin): RouteCollection {
                 $routes = $plugin->getRouteCollection($this->loader->getResolver(), $this->kernel);
 
                 if ($routes instanceof RouteCollection) {

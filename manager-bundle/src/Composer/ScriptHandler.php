@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,11 +17,6 @@ use Composer\Util\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-/**
- * Sets up the Contao Managed Edition.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ScriptHandler
 {
     /**
@@ -27,7 +24,7 @@ class ScriptHandler
      *
      * @param Event $event
      */
-    public static function initializeApplication(Event $event)
+    public static function initializeApplication(Event $event): void
     {
         static::purgeCacheFolder();
 
@@ -45,7 +42,7 @@ class ScriptHandler
     /**
      * Purges the cache folder.
      */
-    public static function purgeCacheFolder()
+    public static function purgeCacheFolder(): void
     {
         $filesystem = new Filesystem();
         $filesystem->removeDirectory(getcwd().'/var/cache/prod');
@@ -54,7 +51,7 @@ class ScriptHandler
     /**
      * Adds the app directory if it does not exist.
      */
-    public static function addAppDirectory()
+    public static function addAppDirectory(): void
     {
         $filesystem = new Filesystem();
         $filesystem->ensureDirectoryExists(getcwd().'/app');
@@ -67,7 +64,7 @@ class ScriptHandler
      *
      * @throws \RuntimeException
      */
-    public static function addWebEntryPoints(Event $event)
+    public static function addWebEntryPoints(Event $event): void
     {
         static::executeCommand('contao:install-web-dir', $event);
     }
@@ -80,7 +77,7 @@ class ScriptHandler
      *
      * @throws \RuntimeException
      */
-    private static function executeCommand($cmd, Event $event)
+    private static function executeCommand(string $cmd, Event $event): void
     {
         $phpFinder = new PhpExecutableFinder();
 
@@ -100,7 +97,7 @@ class ScriptHandler
         );
 
         $process->run(
-            function ($type, $buffer) use ($event) {
+            function (string $type, string $buffer) use ($event): void {
                 $event->getIO()->write($buffer, false);
             }
         );
@@ -119,7 +116,7 @@ class ScriptHandler
      *
      * @return string
      */
-    private static function getVerbosityFlag(Event $event)
+    private static function getVerbosityFlag(Event $event): string
     {
         $io = $event->getIO();
 

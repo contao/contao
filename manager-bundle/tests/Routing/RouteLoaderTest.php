@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,17 +22,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * Tests the RouteLoader class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class RouteLoaderTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $routeLoader = new RouteLoader(
             $this->createMock(LoaderInterface::class),
@@ -41,10 +35,7 @@ class RouteLoaderTest extends TestCase
         $this->assertInstanceOf('Contao\ManagerBundle\Routing\RouteLoader', $routeLoader);
     }
 
-    /**
-     * Tests the loadFromPlugins() method.
-     */
-    public function testLoadFromPlugins()
+    public function testLoadFromPlugins(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
         $loader = $this->createMock(LoaderInterface::class);
@@ -82,10 +73,7 @@ class RouteLoaderTest extends TestCase
         $this->assertInstanceOf(Route::class, $collection->get('foo2'));
     }
 
-    /**
-     * Tests that the catch all route is last.
-     */
-    public function testCatchAllIsLast()
+    public function testCatchAllIsLast(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
         $loader = $this->createMock(LoaderInterface::class);

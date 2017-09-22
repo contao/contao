@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,13 +16,10 @@ use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class ContaoCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
@@ -29,11 +28,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
      * Constructor.
      *
      * @param HttpKernelInterface $kernel
-     * @param null                $cacheDir
-     *
-     * @todo Maybe provide a contao manager plugin?
+     * @param string|null         $cacheDir
      */
-    public function __construct(HttpKernelInterface $kernel, $cacheDir = null)
+    public function __construct(HttpKernelInterface $kernel, string $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
@@ -43,7 +40,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * {@inheritdoc}
      */
-    public function fetch(Request $request, $catch = false)
+    public function fetch(Request $request, $catch = false): Response
     {
         return parent::fetch($request, $catch);
     }
@@ -51,7 +48,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * {@inheritdoc}
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return ['allow_reload' => true];
     }
