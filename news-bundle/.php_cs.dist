@@ -20,6 +20,7 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        '@PHP71Migration' => true,
         'psr0' => false,
         'strict_comparison' => true,
         'strict_param' => true,
@@ -28,6 +29,8 @@ return PhpCsFixer\Config::create()
         'header_comment' => ['header' => $header],
         'ordered_imports' => true,
         'ordered_class_elements' => true,
+        'void_return' => true,
+        'declare_strict_types' => true,
         'php_unit_strict' => true,
         'phpdoc_order' => true,
         'no_useless_return' => true,
@@ -35,6 +38,7 @@ return PhpCsFixer\Config::create()
         'no_unreachable_default_argument_value' => true,
         'combine_consecutive_unsets' => true,
         'general_phpdoc_annotation_remove' => [
+            'author',
             'expectedException',
             'expectedExceptionMessage',
         ],

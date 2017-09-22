@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,27 +22,16 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the PreviewUrlConverterListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlConverterListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new PreviewUrlConvertListener(new RequestStack(), $this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\NewsBundle\EventListener\PreviewUrlConvertListener', $listener);
     }
 
-    /**
-     * Tests the onPreviewUrlConvert() method.
-     */
-    public function testConvertsThePreviewUrl()
+    public function testConvertsThePreviewUrl(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('news', 1);
@@ -58,10 +49,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertSame('http://localhost/news/james-wilson-returns.html', $event->getUrl());
     }
 
-    /**
-     * Tests that the listener is bypassed if the framework is not initialized.
-     */
-    public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized()
+    public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
         $event = new PreviewUrlConvertEvent();
 
@@ -71,10 +59,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no "news" parameter.
-     */
-    public function testDoesNotConvertThePreviewUrlIfTheNewsParameterIsNotSet()
+    public function testDoesNotConvertThePreviewUrlIfTheNewsParameterIsNotSet(): void
     {
         $request = Request::createFromGlobals();
         $request->server->set('SERVER_NAME', 'localhost');
@@ -91,10 +76,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $this->assertNull($event->getUrl());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no news item.
-     */
-    public function testDoesNotConvertThePreviewUrlIfThereIsNoNewsItem()
+    public function testDoesNotConvertThePreviewUrlIfThereIsNoNewsItem(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('news', null);
@@ -113,13 +95,13 @@ class PreviewUrlConverterListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param bool $isInitialized
      *
      * @return ContaoFrameworkInterface
      */
-    private function mockContaoFramework($isInitialized = true)
+    private function mockContaoFramework(bool $isInitialized = true): ContaoFrameworkInterface
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -128,52 +110,45 @@ class PreviewUrlConverterListenerTest extends TestCase
             ->willReturn($isInitialized)
         ;
 
-        $newsAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['generateNewsUrl'])
-            ->getMock()
-        ;
+        $newsAdapter = $this->createMock(Adapter::class);
 
         $newsAdapter
-            ->method('generateNewsUrl')
+            ->method('__call')
             ->willReturn('news/james-wilson-returns.html')
         ;
 
-        $newsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
+        $newsModelAdapter = $this->createMock(Adapter::class);
 
         $newsModelAdapter
-            ->method('findByPk')
-            ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $method, array $params): ?NewsModel {
+                    $this->assertInternalType('string', $method);
 
-                    default:
-                        return [];
+                    if (!empty($params[0])) {
+                        return $this->createMock(NewsModel::class);
+                    }
+
+                    return null;
                 }
-            })
+            )
         ;
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsAdapter, $newsModelAdapter) {
-                switch ($key) {
-                    case News::class:
-                        return $newsAdapter;
+            ->willReturnCallback(
+                function (string $key) use ($newsAdapter, $newsModelAdapter): ?Adapter {
+                    switch ($key) {
+                        case News::class:
+                            return $newsAdapter;
 
-                    case NewsModel::class:
-                        return $newsModelAdapter;
+                        case NewsModel::class:
+                            return $newsModelAdapter;
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;

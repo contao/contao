@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,11 +18,6 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\NewsBundle\ContaoNewsBundle;
 
-/**
- * Plugin for the Contao Manager.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class Plugin implements BundlePluginInterface
 {
     /**

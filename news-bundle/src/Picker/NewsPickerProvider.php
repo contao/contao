@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,11 +20,6 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 
-/**
- * Provides the news picker.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -30,7 +27,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'newsPicker';
     }
@@ -38,7 +35,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context)
+    public function supportsContext($context): bool
     {
         return 'link' === $context && $this->getUser()->hasAccess('news', 'modules');
     }
@@ -46,7 +43,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config)
+    public function supportsValue(PickerConfig $config): bool
     {
         return false !== strpos($config->getValue(), '{{news_url::');
     }
@@ -54,7 +51,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable()
+    public function getDcaTable(): string
     {
         return 'tl_news';
     }
@@ -62,7 +59,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config)
+    public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
 
@@ -76,7 +73,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, $value): string
     {
         return '{{news_url::'.$value.'}}';
     }
@@ -84,7 +81,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null)
+    protected function getRouteParameters(PickerConfig $config = null): array
     {
         $params = ['do' => 'news'];
 
@@ -105,11 +102,11 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * Returns the news archive ID.
      *
-     * @param int $id
+     * @param int|string $id
      *
      * @return int|null
      */
-    private function getNewsArchiveId($id)
+    private function getNewsArchiveId($id): ?int
     {
         /** @var NewsModel $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
@@ -122,6 +119,6 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return null;
         }
 
-        return $newsArchive->id;
+        return (int) $newsArchive->id;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,11 +18,6 @@ use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Adds a query to the front end preview URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlCreateListener
 {
     /**
@@ -34,8 +31,6 @@ class PreviewUrlCreateListener
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param RequestStack             $requestStack The request stack
      * @param ContaoFrameworkInterface $framework    The Contao framework service
      */
@@ -50,7 +45,7 @@ class PreviewUrlCreateListener
      *
      * @param PreviewUrlCreateEvent $event The event object
      */
-    public function onPreviewUrlCreate(PreviewUrlCreateEvent $event)
+    public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void
     {
         if (!$this->framework->isInitialized() || 'news' !== $event->getKey()) {
             return;
@@ -95,7 +90,7 @@ class PreviewUrlCreateListener
      *
      * @return NewsModel|null The news model or null
      */
-    private function getNewsModel($id)
+    private function getNewsModel(int $id): ?NewsModel
     {
         /** @var NewsModel $adapter */
         $adapter = $this->framework->getAdapter(NewsModel::class);

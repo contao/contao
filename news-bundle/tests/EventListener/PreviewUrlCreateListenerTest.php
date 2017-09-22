@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,31 +16,21 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
+use Contao\NewsModel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the PreviewUrlCreateListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlCreateListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\NewsBundle\EventListener\PreviewUrlCreateListener', $listener);
     }
 
-    /**
-     * Tests the onPreviewUrlCreate() method.
-     */
-    public function testCreatesThePreviewUrl()
+    public function testCreatesThePreviewUrl(): void
     {
         $request = Request::createFromGlobals();
 
@@ -53,10 +45,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertSame('news=1', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the framework is not initialized.
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized()
+    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
         $event = new PreviewUrlCreateEvent('news', 1);
 
@@ -66,10 +55,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the key is not "news".
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheNewsParameterIsNotSet()
+    public function testDoesNotCreateThePreviewUrlIfTheNewsParameterIsNotSet(): void
     {
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
@@ -79,10 +65,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed on the news archive list page.
-     */
-    public function testDoesNotCreateThePreviewUrlOnTheArchiveListPage()
+    public function testDoesNotCreateThePreviewUrlOnTheArchiveListPage(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('table', 'tl_news');
@@ -98,10 +81,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the ID is overwritten if the news settings are edited.
-     */
-    public function testOverwritesTheIdIfTheArchiveSettingsAreEdited()
+    public function testOverwritesTheIdIfTheArchiveSettingsAreEdited(): void
     {
         $request = Request::createFromGlobals();
         $request->query->set('act', 'edit');
@@ -119,17 +99,14 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertSame('news=2', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no news item.
-     */
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoNewsItem()
+    public function testDoesNotCreateThePreviewUrlIfThereIsNoNewsItem(): void
     {
         $request = Request::createFromGlobals();
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new PreviewUrlCreateEvent('news', null);
+        $event = new PreviewUrlCreateEvent('news', 0);
 
         $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
         $listener->onPreviewUrlCreate($event);
@@ -138,13 +115,13 @@ class PreviewUrlCreateListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param bool $isInitialized
      *
-     * @return ContaoFrameworkInterface
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFramework($isInitialized = true)
+    private function mockContaoFramework(bool $isInitialized = true): ContaoFrameworkInterface
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
@@ -153,37 +130,41 @@ class PreviewUrlCreateListenerTest extends TestCase
             ->willReturn($isInitialized)
         ;
 
-        $newsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
+        $newsModelAdapter = $this->createMock(Adapter::class);
 
         $newsModelAdapter
-            ->method('findByPk')
-            ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
+            ->method('__call')
+            ->willReturnCallback(
+                function (string $method, array $params): ?NewsModel {
+                    $this->assertInternalType('string', $method);
 
-                    default:
-                        return (object) ['id' => $id];
+                    if (!empty($params[0])) {
+                        $adapter = $this->createMock(NewsModel::class);
+
+                        $adapter
+                            ->method('__get')
+                            ->willReturn($params[0])
+                        ;
+
+                        return $adapter;
+                    }
+
+                    return null;
                 }
-            })
+            )
         ;
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsModelAdapter) {
-                switch ($key) {
-                    case 'Contao\NewsModel':
+            ->willReturnCallback(
+                function (string $key) use ($newsModelAdapter): ?Adapter {
+                    if (NewsModel::class === $key) {
                         return $newsModelAdapter;
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;

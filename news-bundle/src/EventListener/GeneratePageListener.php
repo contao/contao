@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,12 +21,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 
-/**
- * Adds the news feeds to the page header.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class GeneratePageListener
 {
     /**
@@ -33,8 +29,6 @@ class GeneratePageListener
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework)
@@ -48,7 +42,7 @@ class GeneratePageListener
      * @param PageModel          $objPage
      * @param LayoutModel|object $objLayout
      */
-    public function onGeneratePage(PageModel $objPage, LayoutModel $objLayout)
+    public function onGeneratePage(PageModel $objPage, LayoutModel $objLayout): void
     {
         $newsfeeds = StringUtil::deserialize($objLayout->newsfeeds);
 
@@ -73,7 +67,7 @@ class GeneratePageListener
      *
      * @param Collection|NewsFeedModel[] $feeds
      */
-    private function addFeedMarkupToPageHeader(Collection $feeds)
+    private function addFeedMarkupToPageHeader(Collection $feeds): void
     {
         /** @var Template $template */
         $template = $this->framework->getAdapter(Template::class);

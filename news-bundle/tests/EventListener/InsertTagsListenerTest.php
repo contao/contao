@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,27 +20,16 @@ use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the InsertTagsListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InsertTagsListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\NewsBundle\EventListener\InsertTagsListener', $listener);
     }
 
-    /**
-     * Tests that the listener returns a replacement string for a news feed.
-     */
-    public function testReplacesTheNewsFeedTag()
+    public function testReplacesTheNewsFeedTag(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -48,10 +39,7 @@ class InsertTagsListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the listener returns a replacement string for a news item.
-     */
-    public function testReplacesTheNewsTags()
+    public function testReplacesTheNewsTags(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
@@ -81,20 +69,14 @@ class InsertTagsListenerTest extends TestCase
         );
     }
 
-    /**
-     * Tests that the listener returns false if the tag is unknown.
-     */
-    public function testReturnsFalseIfTheTagIsUnknown()
+    public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
         $this->assertFalse($listener->onReplaceInsertTags('link_url::2'));
     }
 
-    /**
-     * Tests that the listener returns an empty string if there is no model.
-     */
-    public function testReturnsAnEmptyStringIfThereIsNoModel()
+    public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
 
@@ -103,42 +85,38 @@ class InsertTagsListenerTest extends TestCase
     }
 
     /**
-     * Returns a ContaoFramework instance.
+     * Mocks the Contao framework.
      *
      * @param string $source
      * @param bool   $noModels
      *
      * @return ContaoFrameworkInterface
      */
-    private function mockContaoFramework($source = 'default', $noModels = false)
+    private function mockContaoFramework(string $source = 'default', bool $noModels = false): ContaoFrameworkInterface
     {
         $feedModel = $this->createMock(NewsFeedModel::class);
 
         $feedModel
             ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'feedBase':
-                        return 'http://localhost/';
+            ->willReturnCallback(
+                function (string $key): ?string {
+                    switch ($key) {
+                        case 'feedBase':
+                            return 'http://localhost/';
 
-                    case 'alias':
-                        return 'news';
+                        case 'alias':
+                            return 'news';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        $newsFeedModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
+        $newsFeedModelAdapter = $this->createMock(Adapter::class);
 
         $newsFeedModelAdapter
-            ->method('findByPk')
+            ->method('__call')
             ->willReturn($noModels ? null : $feedModel)
         ;
 
@@ -146,41 +124,32 @@ class InsertTagsListenerTest extends TestCase
 
         $newsModel
             ->method('__get')
-            ->willReturnCallback(function ($key) use ($source) {
-                switch ($key) {
-                    case 'headline':
-                        return '"Foo" is not "bar"';
+            ->willReturnCallback(
+                function (string $key) use ($source): ?string {
+                    switch ($key) {
+                        case 'headline':
+                            return '"Foo" is not "bar"';
 
-                    case 'teaser':
-                        return '<p>Foo does not equal bar.</p>';
+                        case 'teaser':
+                            return '<p>Foo does not equal bar.</p>';
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
-        $newsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIdOrAlias'])
-            ->getMock()
-        ;
+        $newsModelAdapter = $this->createMock(Adapter::class);
 
         $newsModelAdapter
-            ->method('findByIdOrAlias')
+            ->method('__call')
             ->willReturn($noModels ? null : $newsModel)
         ;
 
-        $newsAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['generateNewsUrl'])
-            ->getMock()
-        ;
+        $newsAdapter = $this->createMock(Adapter::class);
 
         $newsAdapter
-            ->method('generateNewsUrl')
+            ->method('__call')
             ->willReturn('news/foo-is-not-bar.html')
         ;
 
@@ -193,21 +162,22 @@ class InsertTagsListenerTest extends TestCase
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsFeedModelAdapter, $newsModelAdapter, $newsAdapter) {
-                switch ($key) {
-                    case NewsFeedModel::class:
-                        return $newsFeedModelAdapter;
+            ->willReturnCallback(
+                function (string $key) use ($newsFeedModelAdapter, $newsModelAdapter, $newsAdapter): ?Adapter {
+                    switch ($key) {
+                        case NewsFeedModel::class:
+                            return $newsFeedModelAdapter;
 
-                    case NewsModel::class:
-                        return $newsModelAdapter;
+                        case NewsModel::class:
+                            return $newsModelAdapter;
 
-                    case News::class:
-                        return $newsAdapter;
+                        case News::class:
+                            return $newsAdapter;
+                    }
 
-                    default:
-                        return null;
+                    return null;
                 }
-            })
+            )
         ;
 
         return $framework;

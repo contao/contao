@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\NewsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Configures the Contao news bundle.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoNewsBundle extends Bundle
 {
 }

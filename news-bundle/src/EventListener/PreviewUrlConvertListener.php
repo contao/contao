@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,11 +19,6 @@ use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Converts the front end preview URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlConvertListener
 {
     /**
@@ -35,8 +32,6 @@ class PreviewUrlConvertListener
     private $framework;
 
     /**
-     * Constructor.
-     *
      * @param RequestStack             $requestStack The request stack
      * @param ContaoFrameworkInterface $framework    The Contao framework service
      */
@@ -51,7 +46,7 @@ class PreviewUrlConvertListener
      *
      * @param PreviewUrlConvertEvent $event The event object
      */
-    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event)
+    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;
@@ -76,7 +71,7 @@ class PreviewUrlConvertListener
      *
      * @return NewsModel|null The news model or null
      */
-    private function getNewsModel(Request $request)
+    private function getNewsModel(Request $request): ?NewsModel
     {
         if (!$request->query->has('news')) {
             return null;

@@ -49,7 +49,7 @@ $GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('News', 'generateFeeds
  */
 if (TL_MODE == 'BE')
 {
-	$GLOBALS['TL_CSS'][] = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')) . '/bundles/contaonews/news.min.css|static';
+	$GLOBALS['TL_CSS'][] = 'bundles/contaonews/news.min.css|static';
 }
 
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,17 +15,9 @@ namespace Contao\NewsBundle\Tests;
 use Contao\NewsBundle\ContaoNewsBundle;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the ContaoNewsBundle class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoNewsBundleTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $bundle = new ContaoNewsBundle();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -22,11 +24,6 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-/**
- * Tests the ContaoNewsExtension class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoNewsExtensionTest extends TestCase
 {
     /**
@@ -37,7 +34,7 @@ class ContaoNewsExtensionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -47,20 +44,14 @@ class ContaoNewsExtensionTest extends TestCase
         $extension->load([], $this->container);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $extension = new ContaoNewsExtension();
 
         $this->assertInstanceOf('Contao\NewsBundle\DependencyInjection\ContaoNewsExtension', $extension);
     }
 
-    /**
-     * Tests the contao_news.listener.generate_page service.
-     */
-    public function testRegistersTheGeneratePageListener()
+    public function testRegistersTheGeneratePageListener(): void
     {
         $this->assertTrue($this->container->has('contao_news.listener.generate_page'));
 
@@ -70,10 +61,7 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
-    /**
-     * Tests the contao_news.listener.insert_tags service.
-     */
-    public function testRegistersTheInsertTagsListener()
+    public function testRegistersTheInsertTagsListener(): void
     {
         $this->assertTrue($this->container->has('contao_news.listener.insert_tags'));
 
@@ -83,10 +71,7 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
-    /**
-     * Tests the contao_news.listener.preview_url_create service.
-     */
-    public function testRegistersThePreviewUrlCreateListener()
+    public function testRegistersThePreviewUrlCreateListener(): void
     {
         $this->assertTrue($this->container->has('contao_news.listener.preview_url_create'));
 
@@ -103,10 +88,7 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame('onPreviewUrlCreate', $tags['kernel.event_listener'][0]['method']);
     }
 
-    /**
-     * Tests the contao_news.listener.preview_url_convert service.
-     */
-    public function testRegistersThePreviewUrlConvertListener()
+    public function testRegistersThePreviewUrlConvertListener(): void
     {
         $this->assertTrue($this->container->has('contao_news.listener.preview_url_convert'));
 
@@ -123,10 +105,7 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame('onPreviewUrlConvert', $tags['kernel.event_listener'][0]['method']);
     }
 
-    /**
-     * Tests the contao_news.listener.news_picker_provider service.
-     */
-    public function testRegistersTheNewsPickerProvider()
+    public function testRegistersTheNewsPickerProvider(): void
     {
         $this->assertTrue($this->container->has('contao_news.picker.news_provider'));
 

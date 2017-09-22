@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,11 +18,6 @@ use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\StringUtil;
 
-/**
- * Handles insert tags for news.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class InsertTagsListener
 {
     /**
@@ -40,8 +37,6 @@ class InsertTagsListener
     ];
 
     /**
-     * Constructor.
-     *
      * @param ContaoFrameworkInterface $framework
      */
     public function __construct(ContaoFrameworkInterface $framework)
@@ -56,7 +51,7 @@ class InsertTagsListener
      *
      * @return string|false
      */
-    public function onReplaceInsertTags($tag)
+    public function onReplaceInsertTags(string $tag)
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -75,11 +70,11 @@ class InsertTagsListener
     /**
      * Replaces the news feed insert tag.
      *
-     * @param int $feedId
+     * @param string $feedId
      *
      * @return string
      */
-    private function replaceFeedInsertTag($feedId)
+    private function replaceFeedInsertTag(string $feedId): string
     {
         $this->framework->initialize();
 
@@ -101,7 +96,7 @@ class InsertTagsListener
      *
      * @return string
      */
-    private function replaceNewsInsertTags($insertTag, $idOrAlias)
+    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias): string
     {
         $this->framework->initialize();
 
@@ -123,7 +118,7 @@ class InsertTagsListener
      *
      * @return string
      */
-    private function generateReplacement(NewsModel $news, $insertTag)
+    private function generateReplacement(NewsModel $news, string $insertTag): string
     {
         /** @var News $adapter */
         $adapter = $this->framework->getAdapter(News::class);
