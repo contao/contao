@@ -46,7 +46,7 @@ class GeneratePageListener
     {
         $calendarfeeds = StringUtil::deserialize($objLayout->calendarfeeds);
 
-        if (empty($calendarfeeds) || !is_array($calendarfeeds)) {
+        if (empty($calendarfeeds) || !\is_array($calendarfeeds)) {
             return;
         }
 
