@@ -60,7 +60,7 @@ class InsertTagsListener
             return $this->replaceFeedInsertTag($elements[1]);
         }
 
-        if (in_array($key, $this->supportedTags, true)) {
+        if (\in_array($key, $this->supportedTags, true)) {
             return $this->replaceNewsInsertTags($key, $elements[1]);
         }
 
