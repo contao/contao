@@ -17,7 +17,7 @@ $include = function ($file) {
 };
 
 // PhpStorm fix (see https://www.drupal.org/node/2597814)
-if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+if (!\defined('PHPUNIT_COMPOSER_INSTALL')) {
     define('PHPUNIT_COMPOSER_INSTALL', __DIR__.'/../vendor/autoload.php');
 }
 
