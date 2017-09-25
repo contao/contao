@@ -42,7 +42,7 @@ class Version430Update extends AbstractVersionUpdate
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $sections = StringUtil::trimsplit(',', $layout->sections);
 
-            if (!empty($sections) && is_array($sections)) {
+            if (!empty($sections) && \is_array($sections)) {
                 $set = [];
 
                 foreach ($sections as $section) {

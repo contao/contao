@@ -43,7 +43,7 @@ class Version440Update extends AbstractVersionUpdate
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $scripts = StringUtil::deserialize($layout->scripts);
 
-            if (!empty($scripts) && is_array($scripts)) {
+            if (!empty($scripts) && \is_array($scripts)) {
                 $scripts[] = 'js_autofocus';
 
                 $stmt = $this->connection->prepare('UPDATE tl_layout SET scripts=:scripts WHERE id=:id');

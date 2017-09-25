@@ -397,7 +397,7 @@ class InstallationController implements ContainerAwareInterface
 
         $sql = $request->request->get('sql');
 
-        if (!empty($sql) && is_array($sql)) {
+        if (!empty($sql) && \is_array($sql)) {
             foreach ($sql as $hash) {
                 $installer->execCommand($hash);
             }
@@ -430,7 +430,7 @@ class InstallationController implements ContainerAwareInterface
 
         $template = $request->request->get('template');
 
-        if ('' === $template || !in_array($template, $templates, true)) {
+        if ('' === $template || !\in_array($template, $templates, true)) {
             $this->context['import_error'] = $this->trans('import_empty_source');
 
             return null;

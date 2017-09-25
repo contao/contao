@@ -195,7 +195,7 @@ class InstallTool
 
         $column = $this->connection->fetchAssoc($sql." AND COLUMN_NAME = 'sections'");
 
-        return !in_array($column['Type'], ['varchar(1022)', 'blob'], true);
+        return !\in_array($column['Type'], ['varchar(1022)', 'blob'], true);
     }
 
     /**

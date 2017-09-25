@@ -51,7 +51,7 @@ class Version400Update extends AbstractVersionUpdate
             if ($layout->addJQuery) {
                 $jquery = StringUtil::deserialize($layout->jquery);
 
-                if (!empty($jquery) && is_array($jquery)) {
+                if (!empty($jquery) && \is_array($jquery)) {
                     if (false !== ($key = array_search('j_slider', $jquery, true))) {
                         $scripts[] = 'js_slider';
                         unset($jquery[$key]);
@@ -66,7 +66,7 @@ class Version400Update extends AbstractVersionUpdate
             if ($layout->addMooTools) {
                 $mootools = StringUtil::deserialize($layout->mootools);
 
-                if (!empty($mootools) && is_array($mootools)) {
+                if (!empty($mootools) && \is_array($mootools)) {
                     if (false !== ($key = array_search('moo_slider', $mootools, true))) {
                         $scripts[] = 'js_slider';
                         unset($mootools[$key]);
@@ -90,7 +90,7 @@ class Version400Update extends AbstractVersionUpdate
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $mootools = StringUtil::deserialize($layout->mootools);
 
-            if (!empty($mootools) && is_array($mootools)) {
+            if (!empty($mootools) && \is_array($mootools)) {
                 if (false !== ($key = array_search('moo_slimbox', $mootools, true))) {
                     $mootools[] = 'moo_mediabox';
                     unset($mootools[$key]);
@@ -107,7 +107,7 @@ class Version400Update extends AbstractVersionUpdate
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $framework = StringUtil::deserialize($layout->framework);
 
-            if (!empty($framework) && is_array($framework)) {
+            if (!empty($framework) && \is_array($framework)) {
                 if (false !== ($key = array_search('tinymce.css', $framework, true))) {
                     unset($framework[$key]);
 
