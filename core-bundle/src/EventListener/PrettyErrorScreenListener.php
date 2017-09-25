@@ -363,7 +363,7 @@ class PrettyErrorScreenListener
         if ($exception instanceof HttpException) {
             return (int) $exception->getStatusCode();
         }
-        
+
         return 500;
     }
 }

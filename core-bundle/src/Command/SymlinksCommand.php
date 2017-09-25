@@ -257,7 +257,7 @@ class SymlinksCommand extends AbstractLockedCommand
                 $parent = dirname($path);
 
                 while (false !== strpos($parent, '/')) {
-                    if (in_array($parent, $parents, true)) {
+                    if (\in_array($parent, $parents, true)) {
                         $this->rows[] = [
                             sprintf(
                                 '<fg=yellow;options=bold>%s</>',

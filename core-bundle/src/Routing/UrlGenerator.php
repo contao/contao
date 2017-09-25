@@ -76,7 +76,7 @@ class UrlGenerator implements UrlGeneratorInterface
     {
         $this->framework->initialize();
 
-        if (!is_array($parameters)) {
+        if (!\is_array($parameters)) {
             $parameters = [];
         }
 
@@ -155,7 +155,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 $value = $parameters[$param];
                 unset($parameters[$param]);
 
-                if (!$config->get('useAutoItem') || $hasAutoItem || !in_array($param, $autoItems, true)) {
+                if (!$config->get('useAutoItem') || $hasAutoItem || !\in_array($param, $autoItems, true)) {
                     return $param.'/'.$value;
                 }
 
@@ -245,7 +245,7 @@ class UrlGenerator implements UrlGeneratorInterface
             return [$parameters['auto_item']];
         }
 
-        if (isset($GLOBALS['TL_AUTO_ITEM']) && is_array($GLOBALS['TL_AUTO_ITEM'])) {
+        if (isset($GLOBALS['TL_AUTO_ITEM']) && \is_array($GLOBALS['TL_AUTO_ITEM'])) {
             return $GLOBALS['TL_AUTO_ITEM'];
         }
 

@@ -85,7 +85,7 @@ class MergeHttpHeadersListener
     {
         $uniqueKey = $this->getUniqueKey($name);
 
-        if (!in_array($uniqueKey, $this->multiHeaders, true)) {
+        if (!\in_array($uniqueKey, $this->multiHeaders, true)) {
             $this->multiHeaders[] = $uniqueKey;
         }
     }
@@ -141,7 +141,7 @@ class MergeHttpHeadersListener
 
             $uniqueKey = $this->getUniqueKey($name);
 
-            if (in_array($uniqueKey, $this->multiHeaders, true)) {
+            if (\in_array($uniqueKey, $this->multiHeaders, true)) {
                 $response->headers->set($uniqueKey, trim($content), false);
             } elseif (isset($allowOverrides[$uniqueKey]) || !$response->headers->has($uniqueKey)) {
                 $allowOverrides[$uniqueKey] = true;

@@ -213,7 +213,7 @@ class ScriptHandlerTest extends TestCase
     private function assertRandomSecretIsValid(): void
     {
         $this->assertNotFalse(getenv(ScriptHandler::RANDOM_SECRET_NAME));
-        $this->assertGreaterThanOrEqual(64, strlen(getenv(ScriptHandler::RANDOM_SECRET_NAME)));
+        $this->assertGreaterThanOrEqual(64, \strlen(getenv(ScriptHandler::RANDOM_SECRET_NAME)));
     }
 
     /**

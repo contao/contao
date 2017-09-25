@@ -28,6 +28,6 @@ class TokenGeneratorTest extends TestCase
     {
         $generator = new TokenGenerator(1000);
 
-        $this->assertSame(8, strlen($generator->generateToken()));
+        $this->assertSame(8, \strlen($generator->generateToken()));
     }
 }

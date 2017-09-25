@@ -67,7 +67,7 @@ class PickerBuilder implements PickerBuilderInterface
     {
         $providers = $this->providers;
 
-        if (is_array($allowed = $config->getExtra('providers'))) {
+        if (\is_array($allowed = $config->getExtra('providers'))) {
             $providers = array_intersect_key($providers, array_flip($allowed));
         }
 
@@ -124,7 +124,7 @@ class PickerBuilder implements PickerBuilderInterface
      */
     public function getUrl($context, array $extras = [], $value = ''): string
     {
-        $providers = (isset($extras['providers']) && is_array($extras['providers'])) ? $extras['providers'] : null;
+        $providers = (isset($extras['providers']) && \is_array($extras['providers'])) ? $extras['providers'] : null;
 
         if (!$this->supportsContext($context, $providers)) {
             return '';

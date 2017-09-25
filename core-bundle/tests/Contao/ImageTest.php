@@ -1406,7 +1406,7 @@ class ImageTest extends TestCase
     public function testExecutesTheResizeHook(): void
     {
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
         ];
 
         $file = new File('dummy.jpg');
@@ -1461,7 +1461,7 @@ class ImageTest extends TestCase
             .'_'.$imageObj->getTargetHeight()
             .'_'.$imageObj->getResizeMode()
             .'_'.$imageObj->getTargetPath()
-            .'_'.str_replace('\\', '-', get_class($imageObj))
+            .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg'
         ;
 
@@ -1480,7 +1480,7 @@ class ImageTest extends TestCase
         $imageObj->executeResize();
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[get_class($this), 'getImageHookCallback']],
+            'getImage' => [[\get_class($this), 'getImageHookCallback']],
         ];
 
         $imageObj = new Image($file);
@@ -1536,9 +1536,9 @@ class ImageTest extends TestCase
             .'_'.$targetWidth
             .'_'.$targetHeight
             .'_'.$resizeMode
-            .'_'.str_replace('\\', '-', get_class($fileObj))
+            .'_'.str_replace('\\', '-', \get_class($fileObj))
             .'_'.$targetPath
-            .'_'.str_replace('\\', '-', get_class($imageObj))
+            .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg'
         ;
 

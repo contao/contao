@@ -50,7 +50,7 @@ class DcaSchemaProvider
      */
     public function createSchema(): Schema
     {
-        if (0 !== count($this->doctrine->getManagerNames())) {
+        if (0 !== \count($this->doctrine->getManagerNames())) {
             return $this->createSchemaFromOrm();
         }
 
@@ -79,7 +79,7 @@ class DcaSchemaProvider
 
             if (isset($definitions['TABLE_FIELDS'])) {
                 foreach ($definitions['TABLE_FIELDS'] as $fieldName => $sql) {
-                    $this->parseColumnSql($table, $fieldName, strtolower(substr($sql, strlen($fieldName) + 3)));
+                    $this->parseColumnSql($table, $fieldName, strtolower(substr($sql, \strlen($fieldName) + 3)));
                 }
             }
 
@@ -157,7 +157,7 @@ class DcaSchemaProvider
 
         $type = $this->doctrine->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping($type);
 
-        if ($length === 0) {
+        if (0 === $length) {
             $length = null;
         }
 
@@ -319,7 +319,7 @@ class DcaSchemaProvider
         if (!empty($sqlLegacy)) {
             foreach ($sqlLegacy as $table => $categories) {
                 foreach ($categories as $category => $fields) {
-                    if (is_array($fields)) {
+                    if (\is_array($fields)) {
                         foreach ($fields as $name => $sql) {
                             $sqlTarget[$table][$category][$name] = $sql;
                         }

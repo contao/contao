@@ -163,7 +163,7 @@ class ImageSizes
     private function filterImageSizes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $key => $size) {
-            if (in_array($key, $allowedSizes, true)) {
+            if (\in_array($key, $allowedSizes, true)) {
                 $filteredSizes[$group][$key] = $size;
             }
         }
@@ -180,7 +180,7 @@ class ImageSizes
     private function filterResizeModes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $size) {
-            if (in_array($size, $allowedSizes, true)) {
+            if (\in_array($size, $allowedSizes, true)) {
                 $filteredSizes[$group][] = $size;
             }
         }

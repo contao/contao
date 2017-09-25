@@ -186,7 +186,7 @@ class XliffFileLoader extends Loader
      */
     private function getStringRepresentation(array $chunks, $value): string
     {
-        switch (count($chunks)) {
+        switch (\count($chunks)) {
             case 2:
                 return sprintf(
                     "\$GLOBALS['TL_LANG']['%s'][%s] = %s;\n",

@@ -615,7 +615,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
         ];
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
@@ -661,7 +661,7 @@ class ImageFactoryTest extends TestCase
             .'_'.$imageObj->getTargetHeight()
             .'_'.$imageObj->getResizeMode()
             .'_'.$imageObj->getTargetPath()
-            .'_'.str_replace('\\', '-', get_class($imageObj))
+            .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg'
         ;
 
@@ -710,14 +710,14 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
         ];
 
         // Build cache before adding the hook
         $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[get_class($this), 'getImageHookCallback']],
+            'getImage' => [[\get_class($this), 'getImageHookCallback']],
         ];
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
@@ -767,9 +767,9 @@ class ImageFactoryTest extends TestCase
             .'_'.$targetWidth
             .'_'.$targetHeight
             .'_'.$resizeMode
-            .'_'.str_replace('\\', '-', get_class($fileObj))
+            .'_'.str_replace('\\', '-', \get_class($fileObj))
             .'_'.$targetPath
-            .'_'.str_replace('\\', '-', get_class($imageObj))
+            .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg'
         ;
 
@@ -834,11 +834,11 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'emptyHookCallback']],
+            'executeResize' => [[\get_class($this), 'emptyHookCallback']],
         ];
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[get_class($this), 'emptyHookCallback']],
+            'getImage' => [[\get_class($this), 'emptyHookCallback']],
         ];
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);

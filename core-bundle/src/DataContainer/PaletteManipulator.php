@@ -164,7 +164,7 @@ class PaletteManipulator
         }
 
         // Make sure there is at least one legend
-        if (0 === count($config)) {
+        if (0 === \count($config)) {
             $config = [['fields' => [], 'hide' => false]];
         }
 
@@ -191,7 +191,7 @@ class PaletteManipulator
             self::POSITION_APPEND,
         ];
 
-        if (!in_array($position, $positions, true)) {
+        if (!\in_array($position, $positions, true)) {
             throw new PalettePositionException('Invalid legend position');
         }
     }
@@ -219,7 +219,7 @@ class PaletteManipulator
 
             if (preg_match('#\{(.+?)(:hide)?\}#', $fields[0], $matches)) {
                 $legend = $matches[1];
-                $hide = count($matches) > 2 && ':hide' === $matches[2];
+                $hide = \count($matches) > 2 && ':hide' === $matches[2];
                 array_shift($fields);
             } else {
                 $legend = $legendCount++;
@@ -246,7 +246,7 @@ class PaletteManipulator
         $palette = '';
 
         foreach ($config as $legend => $group) {
-            if (count($group['fields']) < 1) {
+            if (\count($group['fields']) < 1) {
                 continue;
             }
 
@@ -254,7 +254,7 @@ class PaletteManipulator
                 $palette .= ';';
             }
 
-            if (!is_int($legend)) {
+            if (!\is_int($legend)) {
                 $palette .= sprintf('{%s%s},', $legend, ($group['hide'] ? ':hide' : ''));
             }
 
@@ -425,7 +425,7 @@ class PaletteManipulator
         }
 
         // If everything fails, add to the last legend
-        $offset = self::POSITION_PREPEND === $action['fallbackPosition'] ? 0 : count($config[$fallback]['fields']);
+        $offset = self::POSITION_PREPEND === $action['fallbackPosition'] ? 0 : \count($config[$fallback]['fields']);
         array_splice($config[$fallback]['fields'], $offset, 0, $action['fields']);
     }
 
@@ -442,7 +442,7 @@ class PaletteManipulator
     private function findLegendForField(array &$config, string $field)
     {
         foreach ($config as $legend => $group) {
-            if (in_array($field, $group['fields'], true)) {
+            if (\in_array($field, $group['fields'], true)) {
                 return $legend;
             }
         }
@@ -464,7 +464,7 @@ class PaletteManipulator
     {
         foreach ($action[$key] as $parent) {
             if (array_key_exists($parent, $config)) {
-                $offset = self::POSITION_PREPEND === $action[$position] ? 0 : count($config[$parent]['fields']);
+                $offset = self::POSITION_PREPEND === $action[$position] ? 0 : \count($config[$parent]['fields']);
                 array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
 
                 return true;

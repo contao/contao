@@ -102,13 +102,13 @@ class ImageFactory implements ImageFactoryInterface
         } else {
             $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-            if (in_array($fileExtension, ['svg', 'svgz'], true)) {
+            if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
                 $imagine = $this->imagineSvg;
             } else {
                 $imagine = $this->imagine;
             }
 
-            if (!in_array($fileExtension, $this->validExtensions, true)) {
+            if (!\in_array($fileExtension, $this->validExtensions, true)) {
                 throw new \InvalidArgumentException(
                     sprintf('Image type "%s" was not allowed to be processed', $fileExtension)
                 );
@@ -124,7 +124,7 @@ class ImageFactory implements ImageFactoryInterface
             list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
         }
 
-        if (!is_object($path) || !($path instanceof ImageInterface)) {
+        if (!\is_object($path) || !($path instanceof ImageInterface)) {
             if (null === $importantPart) {
                 $importantPart = $this->createImportantPart($image);
             }
@@ -194,7 +194,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createConfig($size, ImageInterface $image): array
     {
-        if (!is_array($size)) {
+        if (!\is_array($size)) {
             $size = [0, 0, $size];
         }
 

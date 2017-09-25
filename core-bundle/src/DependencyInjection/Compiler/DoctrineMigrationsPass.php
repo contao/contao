@@ -61,6 +61,6 @@ class DoctrineMigrationsPass implements CompilerPassInterface
      */
     private function hasMigrationsBundle(ContainerBuilder $container): bool
     {
-        return in_array(DoctrineMigrationsBundle::class, $container->getParameter('kernel.bundles'), true);
+        return \in_array(DoctrineMigrationsBundle::class, $container->getParameter('kernel.bundles'), true);
     }
 }

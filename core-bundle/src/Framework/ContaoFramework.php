@@ -156,8 +156,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     public function createInstance($class, $args = [])
     {
-        if (in_array('getInstance', get_class_methods($class), true)) {
-            return call_user_func_array([$class, 'getInstance'], $args);
+        if (\in_array('getInstance', get_class_methods($class), true)) {
+            return \call_user_func_array([$class, 'getInstance'], $args);
         }
 
         $reflection = new \ReflectionClass($class);
@@ -184,7 +184,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function setConstants(): void
     {
-        if (!defined('TL_MODE')) {
+        if (!\defined('TL_MODE')) {
             define('TL_MODE', $this->getMode());
         }
 
@@ -192,7 +192,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         define('TL_ROOT', $this->rootDir);
         define('TL_REFERER_ID', $this->getRefererId());
 
-        if (!defined('TL_SCRIPT')) {
+        if (!\defined('TL_SCRIPT')) {
             define('TL_SCRIPT', $this->getRoute());
         }
 
@@ -261,7 +261,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        return substr($route, strlen($this->request->getBasePath()) + 1);
+        return substr($route, \strlen($this->request->getBasePath()) + 1);
     }
 
     /**
@@ -378,7 +378,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private function validateInstallation(): void
     {
         if (null === $this->request
-            || in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
+            || \in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
         ) {
             return;
         }
@@ -411,7 +411,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function triggerInitializeSystemHook(): void
     {
-        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
+        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
                 System::importStatic($callback[0])->{$callback[1]}();
             }
@@ -434,7 +434,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $requestToken = $this->getAdapter(RequestToken::class);
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
-        if (!defined('REQUEST_TOKEN')) {
+        if (!\defined('REQUEST_TOKEN')) {
             define('REQUEST_TOKEN', 'cli' === PHP_SAPI ? null : $requestToken->get());
         }
 

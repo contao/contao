@@ -92,7 +92,7 @@ class UserSessionListener
 
         $session = $user->session;
 
-        if (is_array($session)) {
+        if (\is_array($session)) {
             $this->getSessionBag($event->getRequest())->replace($session);
         }
     }
