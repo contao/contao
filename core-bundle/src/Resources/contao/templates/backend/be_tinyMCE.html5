@@ -29,7 +29,7 @@ setTimeout(function() {
       Backend.openModalBrowser(field_name, url, type, win);
     },
     file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
-    plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace tabfocus table visualblocks',
+    plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks',
     browser_spellcheck: true,
     tabfocus_elements: ':prev,:next',
     importcss_append: true,
