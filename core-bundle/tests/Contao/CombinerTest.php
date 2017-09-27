@@ -53,6 +53,7 @@ class CombinerTest extends TestCase
         $fs->mkdir(self::$rootDir.'/system');
         $fs->mkdir(self::$rootDir.'/system/tmp');
         $fs->mkdir(self::$rootDir.'/web');
+        $fs->mkdir(self::$rootDir.'/web/"test"');
     }
 
     /**
@@ -99,11 +100,14 @@ class CombinerTest extends TestCase
         $combiner->add('file1.css');
         $combiner->addMultiple(['file2.css', 'file3.css']);
 
-        $this->assertSame([
-            'file1.css',
-            'file2.css|screen',
-            'file3.css|screen',
-        ], $combiner->getFileUrls());
+        $this->assertSame(
+            [
+                'file1.css',
+                'file2.css|screen',
+                'file3.css|screen',
+            ],
+            $combiner->getFileUrls()
+        );
 
         $combinedFile = $combiner->getCombinedFile();
 
@@ -122,6 +126,70 @@ class CombinerTest extends TestCase
             'file1.css"><link rel="stylesheet" href="file2.css" media="screen"><link rel="stylesheet" href="file3.css" media="screen',
             $markup
         );
+    }
+
+    public function testFixesTheFilePaths(): void
+    {
+        file_put_contents(static::$rootDir.'/web/file1.css', 'file1 { background: url(foo.bar) }');
+        file_put_contents(static::$rootDir.'/web/file2.css', 'file2 { background: url("foo.bar") }');
+        file_put_contents(static::$rootDir.'/web/file3.css', "file3 { background: url('foo.bar') }");
+
+        $combiner = new Combiner();
+        $combiner->addMultiple(['file1.css', 'file2.css', 'file3.css'], null, 'all');
+
+        $combinedFile = $combiner->getCombinedFile();
+
+        $expected = <<<'EOF'
+file1 { background: url(../../foo.bar) }
+file2 { background: url("../../foo.bar") }
+file3 { background: url('../../foo.bar') }
+
+EOF;
+
+        $this->assertSame($expected, file_get_contents(static::$rootDir.'/'.$combinedFile));
+    }
+
+    public function testHandlesSpecialCharactersWhileFixingTheFilePaths(): void
+    {
+        file_put_contents(static::$rootDir.'/web/"test"/file1.css', 'file1 { background: url(foo.bar) }');
+
+        $combiner = new Combiner();
+        $combiner->add('"test"/file1.css');
+
+        $combinedFile = $combiner->getCombinedFile();
+
+        $expected = <<<'EOF'
+file1 { background: url("../../\"test\"/foo.bar") }
+
+EOF;
+
+        $this->assertSame($expected, file_get_contents(static::$rootDir.'/'.$combinedFile));
+    }
+
+    public function testIgnoresDataUrlsWhileFixingTheFilePaths(): void
+    {
+        file_put_contents(
+            static::$rootDir.'/web/file1.css',
+            'file1 { background: url(\'data:image/svg+xml;utf8,<svg id="foo"></svg>\') }'
+        );
+
+        file_put_contents(
+            static::$rootDir.'/web/file2.css',
+            'file2 { background: url("data:image/svg+xml;utf8,<svg id=\'foo\'></svg>") }'
+        );
+
+        $combiner = new Combiner();
+        $combiner->addMultiple(['file1.css', 'file2.css'], null, 'all');
+
+        $combinedFile = $combiner->getCombinedFile();
+
+        $expected = <<<'EOF'
+file1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
+file2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
+
+EOF;
+
+        $this->assertSame($expected, file_get_contents(static::$rootDir.'/'.$combinedFile));
     }
 
     public function testCombinesScssFiles(): void
