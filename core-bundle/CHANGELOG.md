@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Correctly select the important part in the modal dialog (see #1093).
+
 ### 4.4.5 (2017-09-18)
 
  * Fall back to the URL if there is no link title (see #1081).
