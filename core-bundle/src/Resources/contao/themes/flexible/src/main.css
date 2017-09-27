@@ -149,7 +149,7 @@ body.popup {
 	background:url("icons/alert.svg") center center no-repeat;
 	overflow:hidden;
 	white-space:nowrap;
-	text-indent:100%;
+	text-indent:28px; /* 16px width + 12px padding */
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
@@ -370,7 +370,7 @@ h2.sub_headline {
 	border:0;
 	margin:0;
 	padding:0;
-	text-indent:100%;
+	text-indent:16px; /* 16px width */
 	white-space:nowrap;
 	overflow:hidden;
 	position:relative;
@@ -1832,7 +1832,7 @@ fieldset.collapsed > legend {
 	#header h1 a {
 		width:22px;
 		padding:12px;
-		text-indent:100%;
+		text-indent:34px; /* 22px width + 12px padding */
 		overflow:hidden;
 	}
 	#tmenu {
