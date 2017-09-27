@@ -53,7 +53,6 @@ class CombinerTest extends TestCase
         $fs->mkdir(self::$rootDir.'/system');
         $fs->mkdir(self::$rootDir.'/system/tmp');
         $fs->mkdir(self::$rootDir.'/web');
-        $fs->mkdir(self::$rootDir.'/web/"test"');
     }
 
     /**
@@ -120,76 +119,97 @@ class CombinerTest extends TestCase
 
         Config::set('debugMode', true);
 
-        $markup = $combiner->getCombinedFile();
-
         $this->assertSame(
             'file1.css"><link rel="stylesheet" href="file2.css" media="screen"><link rel="stylesheet" href="file3.css" media="screen',
-            $markup
+            $combiner->getCombinedFile()
         );
     }
 
     public function testFixesTheFilePaths(): void
     {
-        file_put_contents(static::$rootDir.'/web/file1.css', 'file1 { background: url(foo.bar) }');
-        file_put_contents(static::$rootDir.'/web/file2.css', 'file2 { background: url("foo.bar") }');
-        file_put_contents(static::$rootDir.'/web/file3.css', "file3 { background: url('foo.bar') }");
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
 
-        $combiner = new Combiner();
-        $combiner->addMultiple(['file1.css', 'file2.css', 'file3.css'], null, 'all');
-
-        $combinedFile = $combiner->getCombinedFile();
-
-        $expected = <<<'EOF'
-file1 { background: url(../../foo.bar) }
-file2 { background: url("../../foo.bar") }
-file3 { background: url('../../foo.bar') }
-
+        $css = <<<'EOF'
+test1 { background: url(foo.bar) }
+test2 { background: url("foo.bar") }
+test3 { background: url('foo.bar') }
 EOF;
 
-        $this->assertSame($expected, file_get_contents(static::$rootDir.'/'.$combinedFile));
+        $expected = <<<'EOF'
+test1 { background: url(../../foo.bar) }
+test2 { background: url("../../foo.bar") }
+test3 { background: url('../../foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+        );
     }
 
     public function testHandlesSpecialCharactersWhileFixingTheFilePaths(): void
     {
-        file_put_contents(static::$rootDir.'/web/"test"/file1.css', 'file1 { background: url(foo.bar) }');
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
 
-        $combiner = new Combiner();
-        $combiner->add('"test"/file1.css');
-
-        $combinedFile = $combiner->getCombinedFile();
-
-        $expected = <<<'EOF'
-file1 { background: url("../../\"test\"/foo.bar") }
-
+        $css = <<<'EOF'
+test1 { background: url(foo.bar) }
+test2 { background: url("foo.bar") }
+test3 { background: url('foo.bar') }
 EOF;
 
-        $this->assertSame($expected, file_get_contents(static::$rootDir.'/'.$combinedFile));
+        $expected = <<<'EOF'
+test1 { background: url("../../\"test\"/foo.bar") }
+test2 { background: url("../../\"test\"/foo.bar") }
+test3 { background: url('../../"test"/foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/"test"/file.css']])
+        );
+
+        $expected = <<<'EOF'
+test1 { background: url("../../'test'/foo.bar") }
+test2 { background: url("../../'test'/foo.bar") }
+test3 { background: url('../../\'test\'/foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/'test'/file.css"]])
+        );
+
+        $expected = <<<'EOF'
+test1 { background: url("../../(test)/foo.bar") }
+test2 { background: url("../../(test)/foo.bar") }
+test3 { background: url('../../(test)/foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/(test)/file.css"]])
+        );
     }
 
     public function testIgnoresDataUrlsWhileFixingTheFilePaths(): void
     {
-        file_put_contents(
-            static::$rootDir.'/web/file1.css',
-            'file1 { background: url(\'data:image/svg+xml;utf8,<svg id="foo"></svg>\') }'
-        );
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
 
-        file_put_contents(
-            static::$rootDir.'/web/file2.css',
-            'file2 { background: url("data:image/svg+xml;utf8,<svg id=\'foo\'></svg>") }'
-        );
-
-        $combiner = new Combiner();
-        $combiner->addMultiple(['file1.css', 'file2.css'], null, 'all');
-
-        $combinedFile = $combiner->getCombinedFile();
-
-        $expected = <<<'EOF'
-file1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
-file2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
-
+        $css = <<<'EOF'
+test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
+test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
 EOF;
 
-        $this->assertSame($expected, file_get_contents(static::$rootDir.'/'.$combinedFile));
+        $this->assertSame(
+            $css,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+        );
     }
 
     public function testCombinesScssFiles(): void
@@ -202,14 +222,16 @@ EOF;
         $combiner->add('file1.scss');
         $combiner->add('file2.scss');
 
-        $this->assertSame([
-            'assets/css/file1.scss.css',
-            'assets/css/file2.scss.css',
-        ], $combiner->getFileUrls());
+        $this->assertSame(
+            [
+                'assets/css/file1.scss.css',
+                'assets/css/file2.scss.css',
+            ],
+            $combiner->getFileUrls()
+        );
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/file1\.scss\+file2\.scss-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertSame(
             "body{color:red}\nbody{color:green}\n",
@@ -218,11 +240,9 @@ EOF;
 
         Config::set('debugMode', true);
 
-        $markup = $combiner->getCombinedFile();
-
         $this->assertSame(
             'assets/css/file1.scss.css"><link rel="stylesheet" href="assets/css/file2.scss.css',
-            $markup
+            $combiner->getCombinedFile()
         );
     }
 
@@ -235,27 +255,21 @@ EOF;
         $combiner->add('file1.js');
         $combiner->add('file2.js');
 
-        $this->assertSame([
-            'file1.js',
-            'file2.js',
-        ], $combiner->getFileUrls());
+        $this->assertSame(
+            [
+                'file1.js',
+                'file2.js',
+            ],
+            $combiner->getFileUrls()
+        );
 
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertRegExp('/^assets\/js\/file1\.js\+file2\.js-[a-z0-9]+\.js$/', $combinedFile);
-
-        $this->assertSame(
-            "file1();\nfile2();\n",
-            file_get_contents(static::$rootDir.'/'.$combinedFile)
-        );
+        $this->assertSame("file1();\nfile2();\n", file_get_contents(static::$rootDir.'/'.$combinedFile));
 
         Config::set('debugMode', true);
 
-        $markup = $combiner->getCombinedFile();
-
-        $this->assertSame(
-            'file1.js"></script><script src="file2.js',
-            $markup
-        );
+        $this->assertSame('file1.js"></script><script src="file2.js', $combiner->getCombinedFile());
     }
 }

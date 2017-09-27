@@ -496,10 +496,18 @@ class Combiner extends \System
 				{
 					$strQuote = $matches[1][0];
 				}
-				elseif (preg_match('/[(),\s"\']/', $strData))
+
+				if (preg_match('/[(),\s"\']/', $strData))
 				{
-					$strQuote = '"';
-					$strData = str_replace('"', '\"', $strData);
+					if ($matches[1][0] == "'")
+					{
+						$strData = str_replace("'", "\\'", $strData);
+					}
+					else
+					{
+						$strQuote = '"';
+						$strData = str_replace('"', '\"', $strData);
+					}
 				}
 
 				return 'url(' . $strQuote . $strData . $strQuote . ')';
