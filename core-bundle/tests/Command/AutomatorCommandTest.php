@@ -12,9 +12,11 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\AutomatorCommand;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the AutomatorCommand class.
@@ -40,7 +42,7 @@ class AutomatorCommandTest extends TestCase
     public function testGeneratesTheTaskList()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getApplication());
+        $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
@@ -70,11 +72,11 @@ class AutomatorCommandTest extends TestCase
      */
     public function testIsLockedWhileRunning()
     {
-        $lock = new LockHandler('contao:automator');
+        $lock = new LockHandler('contao:automator', sys_get_temp_dir().'/'.md5('foobar'));
         $lock->lock();
 
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getApplication());
+        $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
@@ -94,7 +96,7 @@ class AutomatorCommandTest extends TestCase
     public function testTakesTheTaskNameAsArgument()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getApplication());
+        $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
@@ -113,7 +115,7 @@ class AutomatorCommandTest extends TestCase
     public function testHandlesAnInvalidSelection()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getApplication());
+        $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
@@ -131,7 +133,7 @@ class AutomatorCommandTest extends TestCase
     public function testHandlesAnInvalidTaskName()
     {
         $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->getApplication());
+        $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
@@ -146,13 +148,23 @@ class AutomatorCommandTest extends TestCase
     }
 
     /**
-     * Returns the application object.
+     * Mocks the application.
      *
      * @return Application
      */
-    private function getApplication()
+    private function mockApplication()
     {
-        $application = new Application();
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', 'foobar');
+
+        $kernel = $this->createMock(KernelInterface::class);
+
+        $kernel
+            ->method('getContainer')
+            ->willReturn($container)
+        ;
+
+        $application = new Application($kernel);
         $application->setCatchExceptions(true);
 
         return $application;

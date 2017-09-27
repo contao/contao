@@ -95,10 +95,15 @@ class SymlinksCommandTest extends TestCase
      */
     public function testIsLockedWhileRunning()
     {
-        $lock = new LockHandler('contao:symlinks');
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', 'foobar');
+
+        $lock = new LockHandler('contao:symlinks', sys_get_temp_dir().'/'.md5('foobar'));
         $lock->lock();
 
         $command = new SymlinksCommand('contao:symlinks');
+        $command->setContainer($container);
+
         $tester = new CommandTester($command);
 
         $code = $tester->execute([]);

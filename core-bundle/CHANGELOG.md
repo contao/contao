@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Bind the lock file path to the installation root directory (see #1107).
  * Correctly select the important part in the modal dialog (see #1093).
 
 ### 4.4.5 (2017-09-18)
