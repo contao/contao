@@ -351,7 +351,7 @@ class Automator extends \System
 			foreach ($arrPages as $strUrl)
 			{
 				$strUrl = rawurlencode($strUrl);
-				$strUrl = str_replace(array('%2F', '%3F', '%3D', '%26', '%3A//'), array('/', '?', '=', '&', '://'), $strUrl);
+				$strUrl = str_replace(array('%2F', '%3F', '%3D', '%26', '%3A//', '%25'), array('/', '?', '=', '&', '://', '%'), $strUrl);
 				$strUrl = ampersand($strUrl, true);
 
 				$objFile->append('  <url><loc>' . $strUrl . '</loc></url>');
