@@ -116,7 +116,7 @@ class ContaoKernelTest extends TestCase
                 function ($resource) use (&$files): void {
                     if (\is_string($resource)) {
                         $files[] = basename($resource);
-                    } elseif (is_callable($resource)) {
+                    } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'dev');
                         \call_user_func($resource, $container);
