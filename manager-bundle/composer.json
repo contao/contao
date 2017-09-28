@@ -19,7 +19,7 @@
         "friendsofsymfony/http-cache": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
-        "terminal42/header-replay-bundle": "^1.0",
+        "terminal42/header-replay-bundle": "^1.3",
         "contao/manager-plugin": "^2.1",
         "contao/core-bundle": "4.4.*",
         "contao/installation-bundle": "4.4.*"
