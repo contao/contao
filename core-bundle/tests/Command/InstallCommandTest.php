@@ -31,8 +31,8 @@ class InstallCommandTest extends TestCase
         $tcpdfPath = $this->getRootDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php';
 
         if (!file_exists($tcpdfPath)) {
-            if (!file_exists(dirname($tcpdfPath))) {
-                mkdir(dirname($tcpdfPath), 0777, true);
+            if (!file_exists(\dirname($tcpdfPath))) {
+                mkdir(\dirname($tcpdfPath), 0777, true);
             }
 
             file_put_contents($tcpdfPath, '');

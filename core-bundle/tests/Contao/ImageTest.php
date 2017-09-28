@@ -38,7 +38,7 @@ class ImageTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        self::$rootDir = dirname(dirname(__DIR__)).'/tmp';
+        self::$rootDir = \dirname(\dirname(__DIR__)).'/tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -78,8 +78,8 @@ class ImageTest extends TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
-        define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', self::$rootDir);
+        \define('TL_ERROR', 'ERROR');
+        \define('TL_ROOT', self::$rootDir);
 
         $container = $this->mockContainerWithContaoScopes();
         $this->addImageServicesToContainer($container, self::$rootDir);

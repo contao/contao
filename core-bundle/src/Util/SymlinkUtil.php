@@ -43,7 +43,7 @@ class SymlinkUtil
         if ('\\' === DIRECTORY_SEPARATOR) {
             $fs->symlink($target, $link);
         } else {
-            $fs->symlink(rtrim($fs->makePathRelative($target, dirname($link)), '/'), $link);
+            $fs->symlink(rtrim($fs->makePathRelative($target, \dirname($link)), '/'), $link);
         }
     }
 

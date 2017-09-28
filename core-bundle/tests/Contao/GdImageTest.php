@@ -65,7 +65,7 @@ class GdImageTest extends TestCase
     {
         parent::setUp();
 
-        define('TL_ROOT', self::$rootDir);
+        \define('TL_ROOT', self::$rootDir);
         System::setContainer($this->mockContainerWithContaoScopes());
     }
 

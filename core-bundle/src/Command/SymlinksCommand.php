@@ -254,7 +254,7 @@ class SymlinksCommand extends AbstractLockedCommand
             $path = rtrim(strtr($prepend.'/'.$file->getRelativePath(), '\\', '/'), '/');
 
             if (!empty($parents)) {
-                $parent = dirname($path);
+                $parent = \dirname($path);
 
                 while (false !== strpos($parent, '/')) {
                     if (\in_array($parent, $parents, true)) {
@@ -271,7 +271,7 @@ class SymlinksCommand extends AbstractLockedCommand
                         break;
                     }
 
-                    $parent = dirname($parent);
+                    $parent = \dirname($parent);
                 }
             }
 

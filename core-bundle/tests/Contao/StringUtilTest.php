@@ -29,7 +29,7 @@ class StringUtilTest extends TestCase
         parent::setUpBeforeClass();
 
         if (!\defined('TL_ERROR')) {
-            define('TL_ERROR', 'ERROR');
+            \define('TL_ERROR', 'ERROR');
         }
     }
 
@@ -41,7 +41,7 @@ class StringUtilTest extends TestCase
         parent::setUp();
 
         if (!\defined('TL_ROOT')) {
-            define('TL_ROOT', $this->getRootDir());
+            \define('TL_ROOT', $this->getRootDir());
         }
 
         System::setContainer($this->mockContainerWithContaoScopes());
@@ -485,7 +485,7 @@ class StringUtilTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
 
-        StringUtil::stripRootDir(dirname($this->getRootDir()).'/');
+        StringUtil::stripRootDir(\dirname($this->getRootDir()).'/');
     }
 
     public function testFailsIfThePathDoesNotMatch(): void

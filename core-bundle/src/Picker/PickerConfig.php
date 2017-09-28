@@ -145,7 +145,7 @@ class PickerConfig implements \JsonSerializable
     {
         $data = json_encode($this);
 
-        if (function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
             $data = $encoded;
         }
 
@@ -165,7 +165,7 @@ class PickerConfig implements \JsonSerializable
     {
         $data = base64_decode(strtr($data, '-_,', '+/='), true);
 
-        if (function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($data))) {
+        if (\function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($data))) {
             $data = $uncompressed;
         }
 

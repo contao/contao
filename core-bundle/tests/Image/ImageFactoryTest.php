@@ -121,8 +121,8 @@ class ImageFactoryTest extends TestCase
 
         $path = $this->getRootDir().'/assets/images/dummy.svg';
 
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
+        if (!file_exists(\dirname($path))) {
+            mkdir(\dirname($path), 0777, true);
         }
 
         file_put_contents($path, '');
@@ -587,7 +587,7 @@ class ImageFactoryTest extends TestCase
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
-        define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getRootDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         $path = $this->getRootDir().'/images/dummy.jpg';
@@ -665,8 +665,8 @@ class ImageFactoryTest extends TestCase
             .'.jpg'
         ;
 
-        if (!file_exists(dirname(TL_ROOT.'/'.$path))) {
-            mkdir(dirname(TL_ROOT.'/'.$path), 0777, true);
+        if (!file_exists(\dirname(TL_ROOT.'/'.$path))) {
+            mkdir(\dirname(TL_ROOT.'/'.$path), 0777, true);
         }
 
         file_put_contents(TL_ROOT.'/'.$path, '');
@@ -680,7 +680,7 @@ class ImageFactoryTest extends TestCase
      */
     public function testExecutesTheGetImageHook(): void
     {
-        define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getRootDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainerWithContaoScopes());
@@ -773,8 +773,8 @@ class ImageFactoryTest extends TestCase
             .'.jpg'
         ;
 
-        if (!file_exists(dirname(TL_ROOT.'/'.$path))) {
-            mkdir(dirname(TL_ROOT.'/'.$path), 0777, true);
+        if (!file_exists(\dirname(TL_ROOT.'/'.$path))) {
+            mkdir(\dirname(TL_ROOT.'/'.$path), 0777, true);
         }
 
         file_put_contents(TL_ROOT.'/'.$path, '');
@@ -788,7 +788,7 @@ class ImageFactoryTest extends TestCase
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
-        define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getRootDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainerWithContaoScopes());

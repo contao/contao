@@ -185,25 +185,25 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private function setConstants(): void
     {
         if (!\defined('TL_MODE')) {
-            define('TL_MODE', $this->getMode());
+            \define('TL_MODE', $this->getMode());
         }
 
-        define('TL_START', microtime(true));
-        define('TL_ROOT', $this->rootDir);
-        define('TL_REFERER_ID', $this->getRefererId());
+        \define('TL_START', microtime(true));
+        \define('TL_ROOT', $this->rootDir);
+        \define('TL_REFERER_ID', $this->getRefererId());
 
         if (!\defined('TL_SCRIPT')) {
-            define('TL_SCRIPT', $this->getRoute());
+            \define('TL_SCRIPT', $this->getRoute());
         }
 
         // Define the login status constants in the back end (see #4099, #5279)
         if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
-            define('BE_USER_LOGGED_IN', false);
-            define('FE_USER_LOGGED_IN', false);
+            \define('BE_USER_LOGGED_IN', false);
+            \define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        define('TL_PATH', $this->getPath());
+        \define('TL_PATH', $this->getPath());
     }
 
     /**
@@ -435,7 +435,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!\defined('REQUEST_TOKEN')) {
-            define('REQUEST_TOKEN', 'cli' === PHP_SAPI ? null : $requestToken->get());
+            \define('REQUEST_TOKEN', 'cli' === PHP_SAPI ? null : $requestToken->get());
         }
 
         if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {
@@ -453,7 +453,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function iniSet(string $key, string $value): void
     {
-        if (function_exists('ini_set')) {
+        if (\function_exists('ini_set')) {
             ini_set($key, $value);
         }
     }

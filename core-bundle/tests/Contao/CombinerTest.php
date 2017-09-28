@@ -73,9 +73,9 @@ class CombinerTest extends TestCase
     {
         parent::setUp();
 
-        define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', self::$rootDir);
-        define('TL_ASSETS_URL', '');
+        \define('TL_ERROR', 'ERROR');
+        \define('TL_ROOT', self::$rootDir);
+        \define('TL_ASSETS_URL', '');
 
         $this->container = $this->mockContainerWithContaoScopes();
         $this->container->setParameter('contao.web_dir', self::$rootDir.'/web');
@@ -191,7 +191,7 @@ EOF;
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/(test)/file.css"]])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/(test)/file.css']])
         );
     }
 
@@ -231,7 +231,6 @@ EOF;
         );
 
         $combinedFile = $combiner->getCombinedFile();
-
 
         $this->assertSame(
             "body{color:red}\nbody{color:green}\n",

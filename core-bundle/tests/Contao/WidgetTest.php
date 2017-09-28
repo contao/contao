@@ -31,7 +31,7 @@ class WidgetTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        if (!function_exists('utf8_decode_entities')) {
+        if (!\function_exists('utf8_decode_entities')) {
             include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
         }
     }

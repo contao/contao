@@ -388,7 +388,7 @@ class PaletteManipulator
      */
     private function applyFallback(array &$config, array $action, bool $skipLegends = false): void
     {
-        if (is_callable($action['fallback'])) {
+        if (\is_callable($action['fallback'])) {
             $action['fallback']($config, $action, $skipLegends);
         } else {
             $this->applyFallbackPalette($config, $action);

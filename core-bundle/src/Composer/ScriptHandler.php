@@ -53,7 +53,7 @@ class ScriptHandler
             return;
         }
 
-        if (!function_exists('random_bytes')) {
+        if (!\function_exists('random_bytes')) {
             self::loadRandomCompat($event);
         }
 

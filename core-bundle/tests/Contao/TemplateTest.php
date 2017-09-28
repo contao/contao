@@ -35,8 +35,8 @@ class TemplateTest extends TestCase
         $fs = new Filesystem();
         $fs->mkdir($this->getRootDir().'/templates');
 
-        define('TL_ROOT', $this->getRootDir());
-        define('TL_MODE', 'BE');
+        \define('TL_ROOT', $this->getRootDir());
+        \define('TL_MODE', 'BE');
     }
 
     /**
