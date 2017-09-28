@@ -21,6 +21,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * Tests the Combiner class.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
+ * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @group contao3
  *
@@ -103,11 +104,14 @@ class CombinerTest extends TestCase
         $combiner->add('file1.css');
         $combiner->addMultiple(['file2.css', 'file3.css']);
 
-        $this->assertSame([
-            'file1.css',
-            'file2.css|screen',
-            'file3.css|screen',
-        ], $combiner->getFileUrls());
+        $this->assertSame(
+            [
+                'file1.css',
+                'file2.css|screen',
+                'file3.css|screen',
+            ],
+            $combiner->getFileUrls()
+        );
 
         $combinedFile = $combiner->getCombinedFile();
 
@@ -129,7 +133,103 @@ class CombinerTest extends TestCase
     }
 
     /**
-     * Tests the SCSS combiner.
+     * Tests fixing the paths in the CSS combiner.
+     */
+    public function testFixesTheFilePaths()
+    {
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
+
+        $css = <<<'EOF'
+test1 { background: url(foo.bar) }
+test2 { background: url("foo.bar") }
+test3 { background: url('foo.bar') }
+EOF;
+
+        $expected = <<<'EOF'
+test1 { background: url(../../foo.bar) }
+test2 { background: url("../../foo.bar") }
+test3 { background: url('../../foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+        );
+    }
+
+    /**
+     * Tests if the CSS combiner handles special characters while fixing paths.
+     */
+    public function testHandlesSpecialCharactersWhileFixingTheFilePaths()
+    {
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
+
+        $css = <<<'EOF'
+test1 { background: url(foo.bar) }
+test2 { background: url("foo.bar") }
+test3 { background: url('foo.bar') }
+EOF;
+
+        $expected = <<<'EOF'
+test1 { background: url("../../\"test\"/foo.bar") }
+test2 { background: url("../../\"test\"/foo.bar") }
+test3 { background: url('../../"test"/foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/"test"/file.css']])
+        );
+
+        $expected = <<<'EOF'
+test1 { background: url("../../'test'/foo.bar") }
+test2 { background: url("../../'test'/foo.bar") }
+test3 { background: url('../../\'test\'/foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/'test'/file.css"]])
+        );
+
+        $expected = <<<'EOF'
+test1 { background: url("../../(test)/foo.bar") }
+test2 { background: url("../../(test)/foo.bar") }
+test3 { background: url('../../(test)/foo.bar') }
+EOF;
+
+        $this->assertSame(
+            $expected,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/(test)/file.css"]])
+        );
+    }
+
+    /**
+     * Checks that the CSS combiner ignores data URLs while fixing paths.
+     */
+    public function testIgnoresDataUrlsWhileFixingTheFilePaths()
+    {
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
+
+        $css = <<<'EOF'
+test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
+test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
+EOF;
+
+        $this->assertSame(
+            $css,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+        );
+    }
+
+    /**
+     * Tests the SCSS Combiner.
      */
     public function testCombinesScssFiles()
     {
@@ -141,10 +241,13 @@ class CombinerTest extends TestCase
         $combiner->add('file1.scss');
         $combiner->add('file2.scss');
 
-        $this->assertSame([
-            'assets/css/file1.scss.css',
-            'assets/css/file2.scss.css',
-        ], $combiner->getFileUrls());
+        $this->assertSame(
+            [
+                'assets/css/file1.scss.css',
+                'assets/css/file2.scss.css',
+            ],
+            $combiner->getFileUrls()
+        );
 
         $combinedFile = $combiner->getCombinedFile();
 
@@ -177,10 +280,13 @@ class CombinerTest extends TestCase
         $combiner->add('file1.js');
         $combiner->add('file2.js');
 
-        $this->assertSame([
-            'file1.js',
-            'file2.js',
-        ], $combiner->getFileUrls());
+        $this->assertSame(
+            [
+                'file1.js',
+                'file2.js',
+            ],
+            $combiner->getFileUrls()
+        );
 
         $combinedFile = $combiner->getCombinedFile();
 

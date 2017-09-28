@@ -131,6 +131,7 @@
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
+        <target>Uživatelský profil</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>

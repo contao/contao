@@ -1,5 +1,13 @@
 # Contao core bundle change log
 
+### 4.4.6 (2017-09-28)
+
+ * Bind the lock file path to the installation root directory (see #1107).
+ * Correctly select the important part in the modal dialog (see #1093).
+ * Correctly handle unencoded data images in the Combiner (see contao/core#8788).
+ * Do not add a suffix when copying if the "doNotCopy" flag is set (see contao/core#8610).
+ * Use the module type as group header if sorted by type (see contao/core#8402).
+
 ### 4.4.5 (2017-09-18)
 
  * Fall back to the URL if there is no link title (see #1081).

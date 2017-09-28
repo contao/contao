@@ -230,8 +230,7 @@
         <target>Scripts combineren</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
-        <target>Combineer .css en .js bestanden (niet aanzetten voor HTTP/2).</target>
+        <source>Combine the .css and .js files (recommended).</source>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>

@@ -131,7 +131,6 @@ class Combiner extends \System
 			// Handle public bundle resources in web/
 			if (file_exists(TL_ROOT . '/' . $this->strWebDir . '/' . $strFile))
 			{
-				@trigger_error('Paths relative to the webdir are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 				$strFile = $this->strWebDir . '/' . $strFile;
 			}
 			else
@@ -436,27 +435,34 @@ class Combiner extends \System
 	 */
 	protected function fixPaths($content, $arrFile)
 	{
-		$strDirname = dirname($arrFile['name']);
+		$strName = $arrFile['name'];
+
+		// Strip the web/ prefix
+		if (strpos($strName, $this->strWebDir .'/') === 0)
+		{
+			$strName = substr($strName, strlen($this->strWebDir) + 1);
+		}
+
+		$strDirname = dirname($strName);
 		$strGlue = ($strDirname != '.') ? $strDirname . '/' : '';
 
-		$strBuffer = '';
-		$chunks = preg_split('/url\(["\']??(.+)["\']??\)/U', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-		// Check the URLs
-		for ($i=0, $c=count($chunks); $i<$c; $i=$i+2)
-		{
-			$strBuffer .= $chunks[$i];
-
-			if (!isset($chunks[$i+1]))
+		return preg_replace_callback(
+			'/url\(("[^"\n]+"|\'[^\'\n]+\'|[^"\'\s()]+)\)/',
+			function ($matches) use ($strDirname, $strGlue)
 			{
-				break;
-			}
+				$strData = $matches[1];
 
-			$strData = $chunks[$i+1];
+				if ($strData[0] == '"' || $strData[0] == "'")
+				{
+					$strData = substr($strData, 1, -1);
+				}
 
-			// Skip absolute links and embedded images (see #5082)
-			if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0)
-			{
+				// Skip absolute links and embedded images (see #5082)
+				if (strncmp($strData, 'data:', 5) === 0 || strncmp($strData, 'http://', 7) === 0 || strncmp($strData, 'https://', 8) === 0 || strncmp($strData, '/', 1) === 0 || strncmp($strData, 'assets/css3pie/', 15) === 0)
+				{
+					return $matches[0];
+				}
+
 				// Make the paths relative to the root (see #4161)
 				if (strncmp($strData, '../', 3) !== 0)
 				{
@@ -476,12 +482,31 @@ class Combiner extends \System
 					$glue = ($dir != '.') ? $dir . '/' : '';
 					$strData = '../../' . $glue . $strData;
 				}
-			}
 
-			$strBuffer .= 'url("' . $strData . '")';
-		}
+				$strQuote = '';
 
-		return $strBuffer;
+				if ($matches[1][0] == "'" || $matches[1][0] == '"')
+				{
+					$strQuote = $matches[1][0];
+				}
+
+				if (preg_match('/[(),\s"\']/', $strData))
+				{
+					if ($matches[1][0] == "'")
+					{
+						$strData = str_replace("'", "\\'", $strData);
+					}
+					else
+					{
+						$strQuote = '"';
+						$strData = str_replace('"', '\"', $strData);
+					}
+				}
+
+				return 'url(' . $strQuote . $strData . $strQuote . ')';
+			},
+			$content
+		);
 	}
 
 

@@ -192,8 +192,10 @@ var Theme = {
 	 * Set up the profile toggle
 	 */
 	setupProfileToggle: function() {
-		var tmenu = $('tmenu'),
-			ul = tmenu.getElement('.level_2'),
+		var tmenu = $('tmenu');
+		if (!tmenu) return;
+
+		var ul = tmenu.getElement('.level_2'),
 			h2 = tmenu.getElement('h2');
 		if (!ul || !h2) return;
 

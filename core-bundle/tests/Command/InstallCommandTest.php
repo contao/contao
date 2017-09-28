@@ -131,10 +131,15 @@ class InstallCommandTest extends TestCase
      */
     public function testIsLockedWhileRunning()
     {
-        $lock = new LockHandler('contao:install');
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', 'foobar');
+
+        $lock = new LockHandler('contao:install', sys_get_temp_dir().'/'.md5('foobar'));
         $lock->lock();
 
         $command = new InstallCommand('contao:install');
+        $command->setContainer($container);
+
         $tester = new CommandTester($command);
 
         $code = $tester->execute([]);
