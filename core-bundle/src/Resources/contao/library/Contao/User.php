@@ -261,6 +261,11 @@ abstract class User extends \System
 	 */
 	public function authenticate()
 	{
+		if (!isset($_COOKIE[$this->strCookie]))
+		{
+			return false;
+		}
+
 		// Check the cookie hash
 		if ($this->strHash != $this->getSessionHash($this->strCookie))
 		{

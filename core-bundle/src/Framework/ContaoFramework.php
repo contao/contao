@@ -426,7 +426,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Handles the request token.
      *
-     * @throws AjaxRedirectResponseException|InvalidRequestTokenException
+     * @throws InvalidRequestTokenException
      */
     private function handleRequestToken(): void
     {

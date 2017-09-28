@@ -2,4 +2,4 @@
 
 ### DEV
 
- * Store the request token as cookie instead of in the session (see #1065).
+ * Use a double submit cookie instead of storing the CSRF token in the PHP session (see #1065).

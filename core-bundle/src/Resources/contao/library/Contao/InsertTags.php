@@ -121,10 +121,16 @@ class InsertTags extends \Controller
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
-					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction',
-						['insertTag' => '{{' . $strTag . '}}'],
-						['pageId' => $objPage->id, 'request' => \Environment::get('request')]
-					), 'esi');
+
+					$strBuffer .= $fragmentHandler->render(
+						new ControllerReference(
+							'contao.controller.insert_tags:renderAction',
+							['insertTag' => '{{' . $strTag . '}}'],
+							['pageId' => $objPage->id, 'request' => \Environment::get('request')]
+						),
+						'esi'
+					);
+
 					continue;
 				}
 			}
@@ -527,7 +533,6 @@ class InsertTags extends \Controller
 				// Last update
 				case 'last_update':
 					$strQuery = "SELECT MAX(tstamp) AS tc";
-
 					$bundles = \System::getContainer()->getParameter('kernel.bundles');
 
 					if (isset($bundles['ContaoNewsBundle']))
