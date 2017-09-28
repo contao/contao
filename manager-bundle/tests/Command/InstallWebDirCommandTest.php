@@ -12,12 +12,14 @@ namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Tests the InstallWebDirCommand class.
@@ -60,7 +62,7 @@ class InstallWebDirCommandTest extends TestCase
         parent::setUp();
 
         $this->command = new InstallWebDirCommand();
-        $this->command->setApplication($this->getApplication());
+        $this->command->setApplication($this->mockApplication());
 
         $this->filesystem = new Filesystem();
         $this->tmpdir = sys_get_temp_dir().'/'.uniqid('InstallWebDirCommand_', false);
@@ -265,13 +267,23 @@ class InstallWebDirCommandTest extends TestCase
     }
 
     /**
-     * Returns the application object.
+     * Mocks the application.
      *
      * @return Application
      */
-    private function getApplication()
+    private function mockApplication()
     {
-        $application = new Application();
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', 'foobar');
+
+        $kernel = $this->createMock(KernelInterface::class);
+
+        $kernel
+            ->method('getContainer')
+            ->willReturn($container)
+        ;
+
+        $application = new Application($kernel);
         $application->setCatchExceptions(true);
 
         return $application;
