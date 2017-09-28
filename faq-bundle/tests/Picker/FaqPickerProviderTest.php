@@ -85,7 +85,7 @@ class FaqPickerProviderTest extends TestCase
             'value' => '',
         ]);
 
-        if (function_exists('gzencode') && false !== ($encoded = @gzencode($picker))) {
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($picker))) {
             $picker = $encoded;
         }
 
