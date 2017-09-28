@@ -243,11 +243,11 @@ class InstallationController implements ContainerAwareInterface
         $filesystem->rename($cacheDir, $oldCacheDir);
         $filesystem->remove($oldCacheDir);
 
-        if (function_exists('opcache_reset')) {
+        if (\function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -277,11 +277,11 @@ class InstallationController implements ContainerAwareInterface
 
         $warmer->warmUp($cacheDir);
 
-        if (function_exists('opcache_reset')) {
+        if (\function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
