@@ -56,7 +56,7 @@ class RequestToken
 	{
 		$container = \System::getContainer();
 
-		return $container->get('security.csrf.token_manager')->getToken($container->getParameter('contao.csrf_token_name'))->getValue();
+		return $container->get('contao.csrf.token_manager')->getToken($container->getParameter('contao.csrf_token_name'))->getValue();
 	}
 
 
@@ -91,6 +91,6 @@ class RequestToken
 
 		$container = \System::getContainer();
 
-		return $container->get('security.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken));
+		return $container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken));
 	}
 }

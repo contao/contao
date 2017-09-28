@@ -199,15 +199,15 @@ services:
             - { name: contao.picker_provider }
 
     contao.referer_id.manager:
-         class: Symfony\Component\Security\Csrf\CsrfTokenManager
-         public: false
-         arguments:
+        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+        public: false
+        arguments:
             - "@contao.referer_id.token_generator"
             - "@security.csrf.token_storage"
 
     contao.referer_id.token_generator:
-         class: Contao\CoreBundle\Referer\TokenGenerator
-         public: false
+        class: Contao\CoreBundle\Referer\TokenGenerator
+        public: false
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
@@ -280,6 +280,16 @@ services:
             - "_contao_fe_attributes"
         calls:
             - ["setName", ["contao_frontend"]]
+
+    contao.csrf.token_manager:
+        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+        arguments:
+            - "@security.csrf.token_generator"
+            - "@contao.csrf.token_storage"
+
+    contao.csrf.token_storage:
+        class: Contao\CoreBundle\Csrf\MemoryTokenStorage
+        public: false
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
