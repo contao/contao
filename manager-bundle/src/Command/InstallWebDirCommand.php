@@ -110,10 +110,15 @@ class InstallWebDirCommand extends AbstractLockedCommand
             return;
         }
 
+        // A password is given on the command line but no user
+        if (false === $user && $password) {
+            throw new \InvalidArgumentException('Must have username and password');
+        }
+
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
-        if (false === $input->getOption('user')) {
+        if (false === $user) {
             $input->setOption(
                 'user',
                 $helper->ask($input, $output, new Question('Please enter a username:'))

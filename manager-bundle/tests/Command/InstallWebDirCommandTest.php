@@ -198,7 +198,7 @@ class InstallWebDirCommandTest extends TestCase
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo', 'bar']);
-        $commandTester->execute(['path' => $this->tmpdir, '--password' => true]);
+        $commandTester->execute(['path' => $this->tmpdir, '--password' => null]);
 
         $this->assertContains('Please enter a username:', $commandTester->getDisplay());
         $this->assertContains('Please enter a password:', $commandTester->getDisplay());
@@ -218,7 +218,7 @@ class InstallWebDirCommandTest extends TestCase
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['bar']);
-        $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => true]);
+        $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo']);
 
         $this->assertNotContains('Please enter a username:', $commandTester->getDisplay());
         $this->assertContains('Please enter a password:', $commandTester->getDisplay());
