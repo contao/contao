@@ -1,6 +1,9 @@
 # Contao calendar bundle change log
 
+### 4.4.6 (2017-09-28)
+
  * Fix the setEmptyEndTime() save_callback (see #10).
+ * Correctly show multi-day events if the shortened view is disabled (see contao/core#8782).
 
 ### 4.4.2 (2017-07-25)
 
