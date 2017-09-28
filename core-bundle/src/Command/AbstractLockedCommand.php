@@ -24,7 +24,10 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
      */
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $lock = new LockHandler($this->getName());
+        $lock = new LockHandler(
+            $this->getName(),
+            sys_get_temp_dir().'/'.md5($this->getContainer()->getParameter('kernel.project_dir'))
+        );
 
         if (!$lock->lock()) {
             $output->writeln('The command is already running in another process.');

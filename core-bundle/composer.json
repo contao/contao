@@ -14,7 +14,7 @@
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-pcre": "*",
-        "symfony/console": "^3.3",
+        "symfony/console": "^3.3.7",
         "symfony/filesystem": "^3.3",
         "symfony/finder": "^3.3",
         "symfony/framework-bundle": "^3.3",
