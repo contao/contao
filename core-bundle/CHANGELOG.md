@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.6 (2017-09-28)
 
  * Bind the lock file path to the installation root directory (see #1107).
  * Correctly select the important part in the modal dialog (see #1093).

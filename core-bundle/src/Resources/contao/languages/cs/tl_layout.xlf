@@ -230,8 +230,8 @@
         <target>Sloučit skripty</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
-        <target>Sloučit soubory .css a .js (nepovolujte pro HTTP/2)</target>
+        <source>Combine the .css and .js files (recommended).</source>
+        <target>Sloučit soubory .css a .js (doporučeno).</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
