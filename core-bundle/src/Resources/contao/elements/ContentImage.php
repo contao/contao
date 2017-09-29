@@ -63,6 +63,8 @@ class ContentImage extends \ContentElement
 	 */
 	protected function compile()
 	{
+		$this->arrData['floating'] = '';
+
 		$this->addImageToTemplate($this->Template, $this->arrData, null, null, $this->objFilesModel);
 	}
 }
