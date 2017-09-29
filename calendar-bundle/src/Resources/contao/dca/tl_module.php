@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_calendar', 'getFormats'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-	'eval'                    => array('tl_class'=>'w50'),
+	'eval'                    => array('tl_class'=>'w50', 'addWizardClass'=>false),
 	'wizard' => array
 	(
 		array('tl_module_calendar', 'hideStartDay')
