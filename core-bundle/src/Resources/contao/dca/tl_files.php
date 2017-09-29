@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false),
 			'wizard' => array
 			(
 				array('tl_files', 'addFileLocation')

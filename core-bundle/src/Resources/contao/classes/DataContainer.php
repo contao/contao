@@ -534,7 +534,7 @@ abstract class DataContainer extends \Backend
 		{
 			$objWidget->wizard = $wizard;
 
-			if (!in_array('wizard', $arrClasses))
+			if ($arrData['eval']['addWizardClass'] !== false && !in_array('wizard', $arrClasses))
 			{
 				$arrClasses[] = 'wizard';
 			}
