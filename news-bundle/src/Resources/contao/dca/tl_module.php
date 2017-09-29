@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 	'inputType'               => 'select',
 	'options'                 => array('news_day', 'news_month', 'news_year'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-	'eval'                    => array('tl_class'=>'w50'),
+	'eval'                    => array('tl_class'=>'w50', 'addWizardClass'=>false),
 	'wizard' => array
 	(
 		array('tl_module_news', 'hideStartDay')
