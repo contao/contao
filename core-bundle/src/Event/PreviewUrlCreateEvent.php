@@ -32,10 +32,10 @@ class PreviewUrlCreateEvent extends Event
     private $query;
 
     /**
-     * @param string $key
-     * @param int    $id
+     * @param string     $key
+     * @param string|int $id
      */
-    public function __construct(string $key, int $id)
+    public function __construct(string $key, $id)
     {
         $this->key = $key;
         $this->id = $id;
@@ -44,9 +44,9 @@ class PreviewUrlCreateEvent extends Event
     /**
      * Returns the ID.
      *
-     * @return int
+     * @return string|int
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }

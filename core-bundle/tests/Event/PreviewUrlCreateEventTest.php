@@ -33,7 +33,7 @@ class PreviewUrlCreateEventTest extends TestCase
 
     public function testSupportsReadingTheKey(): void
     {
-        $event = new PreviewUrlCreateEvent('news', 12);
+        $event = new PreviewUrlCreateEvent('news', 'files/public/image.jpg');
 
         $this->assertSame('news', $event->getKey());
     }
