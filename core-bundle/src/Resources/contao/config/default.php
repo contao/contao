@@ -67,8 +67,8 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 	. 'ttf,ttc,otf,eot,woff,woff2,'
 	. 'css,scss,less,js,html,htm,txt,zip,rar,7z,cto';
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
-$GLOBALS['TL_CONFIG']['imageWidth']     = 800;
-$GLOBALS['TL_CONFIG']['imageHeight']    = 600;
+$GLOBALS['TL_CONFIG']['imageWidth']     = 0;
+$GLOBALS['TL_CONFIG']['imageHeight']    = 0;
 $GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
 $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 
