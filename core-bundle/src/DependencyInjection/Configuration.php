@@ -123,7 +123,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('bypass_cache')
-                            ->defaultValue($this->debug)
+                            ->defaultValue(false)
                         ->end()
                         ->scalarNode('target_path')
                             ->defaultNull()
