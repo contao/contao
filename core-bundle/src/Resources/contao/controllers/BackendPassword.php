@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,10 @@ class BackendPassword extends \Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		$this->User->authenticate();
+		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		{
+			throw new AccessDeniedException('Access denied');
+		}
 
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('modules');

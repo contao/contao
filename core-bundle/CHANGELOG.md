@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Prevent the User::authenticate() method from running twice (see #1067).
+
 ### 4.4.6 (2017-09-28)
 
  * Bind the lock file path to the installation root directory (see #1107).

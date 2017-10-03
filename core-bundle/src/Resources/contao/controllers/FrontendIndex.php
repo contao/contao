@@ -63,7 +63,6 @@ class FrontendIndex extends \Frontend
 		// Throw a 404 error if the request is not a Contao request (see #2864)
 		elseif ($pageId === false)
 		{
-			$this->User->authenticate();
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
@@ -182,7 +181,6 @@ class FrontendIndex extends \Frontend
 
 			if (preg_match($regex, \Environment::get('relativeRequest')))
 			{
-				$this->User->authenticate();
 				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 		}
@@ -230,15 +228,13 @@ class FrontendIndex extends \Frontend
 			// Load an error 404 page object
 			if ($objPage->domain != \Environment::get('host'))
 			{
-				$this->User->authenticate();
 				$this->log('Page ID "' . $objPage->id . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-
 				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
 		}
 
 		// Authenticate the user
-		if (!$this->User->authenticate() && $objPage->protected)
+		if ($objPage->protected && !\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_MEMBER'))
 		{
 			throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
 		}

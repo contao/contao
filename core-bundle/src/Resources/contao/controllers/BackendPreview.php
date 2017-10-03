@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -38,7 +39,11 @@ class BackendPreview extends \Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		$this->User->authenticate();
+		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		{
+			throw new AccessDeniedException('Access denied');
+		}
+
 		\System::loadLanguageFile('default');
 	}
 
