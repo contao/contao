@@ -1,0 +1,19 @@
+services:
+    # Test fragments
+    AppBundle\TestTrivialModule:
+        tags:
+            - { name: contao.fragment.frontend_module, type: navigation_trivial, category: navigationMenu }
+
+    AppBundle\TestEsiModule:
+        tags:
+            - { name: contao.fragment.frontend_module, type: navigation_esi, category: navigationMenu, renderStrategy: esi }
+
+    AppBundle\SuperPageType:
+        tags:
+            - { name: contao.fragment.page_type, type: super_page }
+
+    other_controller:
+        class: AppBundle\Controller\Other
+        tags:
+            - { name: contao.fragment.content_element, method: foobarAction, type: other, category: text, renderStrategy: esi }
+            - { name: contao.fragment.content_element, method: secondAction, type: other, category: maintenance }

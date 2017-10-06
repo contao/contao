@@ -396,6 +396,10 @@ $GLOBALS['TL_HOOKS'] = array
 		array('Messages', 'versionCheck'),
 		array('Messages', 'maintenanceCheck'),
 		array('Messages', 'languageFallback')
+	),
+	'initializeSystem' => array
+	(
+		array('contao.listener.map_fragments_to_globals', 'onInitializeSystem')
 	)
 );
 

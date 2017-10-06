@@ -238,7 +238,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				array('tl_page', 'checkRootType')
 			),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'pageTitle' => array
 		(
