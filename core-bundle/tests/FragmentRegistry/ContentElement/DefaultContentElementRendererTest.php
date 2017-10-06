@@ -48,9 +48,9 @@ class DefaultContentElementRendererTest extends TestCase
             ]
         );
 
-        $fragmentHandler = $this->createMock(FragmentHandler::class);
+        $handler = $this->createMock(FragmentHandler::class);
 
-        $fragmentHandler
+        $handler
             ->expects($this->once())
             ->method('render')
             ->with($this->equalTo($expectedControllerReference))
@@ -72,7 +72,7 @@ class DefaultContentElementRendererTest extends TestCase
             ]
         );
 
-        $renderer = $this->mockRenderer($registry, $fragmentHandler);
+        $renderer = $this->mockRenderer($registry, $handler);
         $renderer->render($model, 'main', 'scope');
     }
 

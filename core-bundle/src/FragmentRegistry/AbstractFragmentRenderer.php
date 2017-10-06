@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\FragmentRegistry;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -65,7 +66,7 @@ abstract class AbstractFragmentRenderer
             $attributes['pageModel'] = $GLOBALS['objPage']->id;
         }
 
-        if ($fragment instanceof SimpleRenderingInformationProviderInterface) {
+        if ($request instanceof Request && $fragment instanceof SimpleRenderingInformationProviderInterface) {
             $attributes = $fragment->getControllerRequestAttributes($request, $attributes);
             $query = $fragment->getControllerQueryParameters($request, $query);
         }

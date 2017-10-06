@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;

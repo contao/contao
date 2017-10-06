@@ -103,4 +103,27 @@ class DelegatingFrontendModuleRendererTest extends TestCase
 
         $this->assertSame('foobar', $renderer->render(new ModuleModel()));
     }
+
+    public function testReturnsNullIfNoneOfTheRenderersSupportsTheModel(): void
+    {
+        $renderer1 = $this->createMock(FrontendModuleRendererInterface::class);
+
+        $renderer1
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+
+        $renderer2 = $this->createMock(FrontendModuleRendererInterface::class);
+
+        $renderer2
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+
+        $renderer = new DelegatingFrontendModuleRenderer([$renderer1, $renderer2]);
+
+        $this->assertNull($renderer->render(new ModuleModel()));
+    }
 }

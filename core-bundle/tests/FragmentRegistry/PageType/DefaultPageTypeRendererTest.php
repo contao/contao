@@ -16,8 +16,10 @@ use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
 use Contao\CoreBundle\FragmentRegistry\FragmentRegistry;
 use Contao\CoreBundle\FragmentRegistry\FragmentRegistryInterface;
 use Contao\CoreBundle\FragmentRegistry\PageType\DefaultPageTypeRenderer;
+use Contao\CoreBundle\FragmentRegistry\SimpleRenderingInformationProviderInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -63,9 +65,9 @@ class DefaultPageTypeRendererTest extends TestCase
             ]
         );
 
-        $fragmentHandler = $this->createMock(FragmentHandler::class);
+        $handler = $this->createMock(FragmentHandler::class);
 
-        $fragmentHandler
+        $handler
             ->expects($this->once())
             ->method('render')
             ->with($this->equalTo($expectedControllerReference))
@@ -74,7 +76,122 @@ class DefaultPageTypeRendererTest extends TestCase
         $model = new PageModel();
         $model->setRow(['id' => 42, 'type' => 'identifier']);
 
-        $renderer = $this->mockRenderer($registry, $fragmentHandler);
+        $renderer = $this->mockRenderer($registry, $handler);
+        $renderer->render($model);
+    }
+
+    public function testRendersPageModelsWithRenderingInformation(): void
+    {
+        $page = new PageModel();
+        $page->setRow(['id' => 42]);
+
+        $GLOBALS['objPage'] = $page;
+
+        $expectedControllerReference = new ControllerReference(
+            'test',
+            [
+                'pageModel' => 42,
+                'foo' => 'bar',
+            ],
+            [
+                'bar' => 'foo',
+            ]
+        );
+
+        $fragment = $this->createMock(SimpleRenderingInformationProviderInterface::class);
+
+        $fragment
+            ->expects($this->once())
+            ->method('getControllerRequestAttributes')
+            ->willReturn(['pageModel' => 42, 'foo' => 'bar'])
+        ;
+
+        $fragment
+            ->expects($this->once())
+            ->method('getControllerQueryParameters')
+            ->willReturn(['bar' => 'foo'])
+        ;
+
+        $registry = new FragmentRegistry();
+
+        $registry->addFragment(
+            FragmentRegistryPass::TAG_FRAGMENT_PAGE_TYPE.'.identifier',
+            $fragment,
+            [
+                'tag' => FragmentRegistryPass::TAG_FRAGMENT_PAGE_TYPE,
+                'type' => 'test',
+                'controller' => 'test',
+            ]
+        );
+
+        $handler = $this->createMock(FragmentHandler::class);
+
+        $handler
+            ->expects($this->once())
+            ->method('render')
+            ->with($this->equalTo($expectedControllerReference))
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
+        $model = new PageModel();
+        $model->setRow(['id' => 42, 'type' => 'identifier']);
+
+        $renderer = $this->mockRenderer($registry, $handler, $requestStack);
+        $renderer->render($model);
+    }
+
+    public function testIgnoresTheRenderingInformationIfThereIsNoRequest(): void
+    {
+        $page = new PageModel();
+        $page->setRow(['id' => 42]);
+
+        $GLOBALS['objPage'] = $page;
+
+        $expectedControllerReference = new ControllerReference(
+            'test',
+            [
+                'pageModel' => 42,
+            ]
+        );
+
+        $fragment = $this->createMock(SimpleRenderingInformationProviderInterface::class);
+
+        $fragment
+            ->expects($this->never())
+            ->method('getControllerRequestAttributes')
+        ;
+
+        $fragment
+            ->expects($this->never())
+            ->method('getControllerQueryParameters')
+        ;
+
+        $registry = new FragmentRegistry();
+
+        $registry->addFragment(
+            FragmentRegistryPass::TAG_FRAGMENT_PAGE_TYPE.'.identifier',
+            $fragment,
+            [
+                'tag' => FragmentRegistryPass::TAG_FRAGMENT_PAGE_TYPE,
+                'type' => 'test',
+                'controller' => 'test',
+            ]
+        );
+
+        $handler = $this->createMock(FragmentHandler::class);
+
+        $handler
+            ->expects($this->once())
+            ->method('render')
+            ->with($this->equalTo($expectedControllerReference))
+        ;
+
+        $model = new PageModel();
+        $model->setRow(['id' => 42, 'type' => 'identifier']);
+
+        $renderer = $this->mockRenderer($registry, $handler);
         $renderer->render($model);
     }
 
@@ -83,10 +200,11 @@ class DefaultPageTypeRendererTest extends TestCase
      *
      * @param FragmentRegistryInterface|null $registry
      * @param FragmentHandler|null           $handler
+     * @param RequestStack|null              $requestStack
      *
      * @return DefaultPageTypeRenderer
      */
-    private function mockRenderer(FragmentRegistryInterface $registry = null, FragmentHandler $handler = null): DefaultPageTypeRenderer
+    private function mockRenderer(FragmentRegistryInterface $registry = null, FragmentHandler $handler = null, RequestStack $requestStack = null): DefaultPageTypeRenderer
     {
         if (null === $registry) {
             $registry = new FragmentRegistry();
@@ -96,6 +214,10 @@ class DefaultPageTypeRendererTest extends TestCase
             $handler = $this->createMock(FragmentHandler::class);
         }
 
-        return new DefaultPageTypeRenderer($registry, $handler, new RequestStack());
+        if (null === $requestStack) {
+            $requestStack = new RequestStack();
+        }
+
+        return new DefaultPageTypeRenderer($registry, $handler, $requestStack);
     }
 }

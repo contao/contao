@@ -103,4 +103,27 @@ class DelegatingContentElementRendererTest extends TestCase
 
         $this->assertSame('foobar', $renderer->render(new ContentModel()));
     }
+
+    public function testReturnsNullIfNoneOfTheRenderersSupportsTheModel(): void
+    {
+        $renderer1 = $this->createMock(ContentElementRendererInterface::class);
+
+        $renderer1
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+
+        $renderer2 = $this->createMock(ContentElementRendererInterface::class);
+
+        $renderer2
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+
+        $renderer = new DelegatingContentElementRenderer([$renderer1, $renderer2]);
+
+        $this->assertNull($renderer->render(new ContentModel()));
+    }
 }

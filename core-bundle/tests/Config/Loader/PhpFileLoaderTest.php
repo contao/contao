@@ -104,7 +104,23 @@ EOF;
         $this->assertSame(
             $expects,
             $this->loader->load(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace.php',
+                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace1.php',
+                'namespaced'
+            )
+        );
+
+        $expects = <<<'EOF'
+
+namespace {
+    $GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = 'DC_Table';
+}
+
+EOF;
+
+        $this->assertSame(
+            $expects,
+            $this->loader->load(
+                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace2.php',
                 'namespaced'
             )
         );

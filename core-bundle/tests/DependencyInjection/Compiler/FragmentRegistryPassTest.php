@@ -38,66 +38,74 @@ class FragmentRegistryPassTest extends TestCase
             ])
         );
 
-        // This contains the real config
-        $loader->load('services.yml');
-
-        // This contains fixture data
-        $loader->load('example.yml');
+        $loader->load('services.yml'); // real configuration
+        $loader->load('example.yml'); // fixture data
 
         $pass = new FragmentRegistryPass();
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition('contao.fragment.registry'));
 
-        $this->assertSame('Contao\CoreBundle\FragmentRegistry\FragmentRegistry',
+        $this->assertSame(
+            'Contao\CoreBundle\FragmentRegistry\FragmentRegistry',
             $container->getDefinition('contao.fragment.registry')->getClass()
         );
 
         $this->assertTrue($container->hasDefinition('contao.fragment.renderer.frontend_module.default'));
 
-        $this->assertSame('Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
+        $this->assertSame(
+            'Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
             $container->getDefinition('contao.fragment.renderer.frontend_module.default')->getClass()
         );
 
-        $this->assertContains('contao.fragment.renderer.frontend_module',
+        $this->assertContains(
+            'contao.fragment.renderer.frontend_module',
             array_keys($container->getDefinition('contao.fragment.renderer.frontend_module.default')->getTags())
         );
 
         $this->assertTrue($container->hasDefinition('contao.fragment.renderer.frontend_module.default'));
 
-        $this->assertSame('Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
+        $this->assertSame(
+            'Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
             $container->getDefinition('contao.fragment.renderer.frontend_module.default')->getClass()
         );
 
-        $this->assertContains('contao.fragment.renderer.frontend_module',
+        $this->assertContains(
+            'contao.fragment.renderer.frontend_module',
             array_keys($container->getDefinition('contao.fragment.renderer.frontend_module.default')->getTags())
         );
 
-        $this->assertContains('contao.fragment.renderer.content_element',
+        $this->assertContains(
+            'contao.fragment.renderer.content_element',
             array_keys($container->getDefinition('contao.fragment.renderer.content_element.default')->getTags())
         );
 
         $this->assertTrue($container->hasDefinition('contao.fragment.renderer.content_element.default'));
 
-        $this->assertSame('Contao\CoreBundle\FragmentRegistry\ContentElement\DefaultContentElementRenderer',
+        $this->assertSame(
+            'Contao\CoreBundle\FragmentRegistry\ContentElement\DefaultContentElementRenderer',
             $container->getDefinition('contao.fragment.renderer.content_element.default')->getClass()
         );
 
-        $this->assertContains('contao.fragment.renderer.content_element',
+        $this->assertContains(
+            'contao.fragment.renderer.content_element',
             array_keys($container->getDefinition('contao.fragment.renderer.content_element.default')->getTags())
         );
 
-        $this->assertContains('contao.fragment.renderer.page_type',
+        $this->assertContains(
+            'contao.fragment.renderer.page_type',
             array_keys($container->getDefinition('contao.fragment.renderer.page_type.default')->getTags())
         );
 
         $this->assertTrue($container->hasDefinition('contao.fragment.renderer.page_type.default'));
 
-        $this->assertSame('Contao\CoreBundle\FragmentRegistry\PageType\DefaultPageTypeRenderer',
+        $this->assertSame(
+            'Contao\CoreBundle\FragmentRegistry\PageType\DefaultPageTypeRenderer',
             $container->getDefinition('contao.fragment.renderer.page_type.default')->getClass()
         );
 
-        $this->assertContains('contao.fragment.renderer.page_type',
+        $this->assertContains(
+            'contao.fragment.renderer.page_type',
             array_keys($container->getDefinition('contao.fragment.renderer.page_type.default')->getTags())
         );
 
@@ -168,5 +176,77 @@ class FragmentRegistryPassTest extends TestCase
             ],
             $methodCalls[4][1][2]
         );
+    }
+
+    public function testFailsIfATaggedServiceHasNoTypeAttribute(): void
+    {
+        $container = new ContainerBuilder();
+
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator([
+                __DIR__.'/../../../src/Resources/config',
+                __DIR__.'/../../Fixtures/FragmentRegistry',
+            ])
+        );
+
+        $loader->load('services.yml');
+        $loader->load('invalid.yml');
+
+        $pass = new FragmentRegistryPass();
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('must have a "type" attribute set');
+
+        $pass->process($container);
+    }
+
+    public function testDoesNotLookForDefinitionsIfThereIsNoFragmentRegistry()
+    {
+        /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
+        $container = $this
+            ->getMockBuilder(ContainerBuilder::class)
+            ->setMethods(['findDefinition'])
+            ->getMock()
+        ;
+
+        $container
+            ->expects($this->never())
+            ->method('findDefinition')
+        ;
+
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator([__DIR__.'/../../Fixtures/FragmentRegistry'])
+        );
+
+        $loader->load('example.yml');
+
+        $pass = new FragmentRegistryPass();
+        $pass->process($container);
+
+        $this->assertFalse($container->hasDefinition('contao.fragment.registry'));
+    }
+
+    public function testDoesNotLookForDefinitionsIfThereAreNoFragmentRenderers()
+    {
+        /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
+        $container = $this
+            ->getMockBuilder(ContainerBuilder::class)
+            ->setMethods(['findDefinition'])
+            ->getMock()
+        ;
+
+        $container
+            ->expects($this->never())
+            ->method('findDefinition')
+        ;
+
+        $reflection = new \ReflectionClass(FragmentRegistryPass::class);
+        $method = $reflection->getMethod('registerFragmentRenderers');
+        $method->setAccessible(true);
+        $registry = $reflection->newInstanceWithoutConstructor();
+
+        $method->invokeArgs($registry, [$container, 'foo', 'bar']);
     }
 }

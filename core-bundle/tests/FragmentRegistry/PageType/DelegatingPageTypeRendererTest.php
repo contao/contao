@@ -103,4 +103,27 @@ class DelegatingPageTypeRendererTest extends TestCase
 
         $this->assertSame('foobar', $renderer->render(new PageModel()));
     }
+
+    public function testReturnsNullIfNoneOfTheRenderersSupportsTheModel(): void
+    {
+        $renderer1 = $this->createMock(PageTypeRendererInterface::class);
+
+        $renderer1
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+
+        $renderer2 = $this->createMock(PageTypeRendererInterface::class);
+
+        $renderer2
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+
+        $renderer = new DelegatingPageTypeRenderer([$renderer1, $renderer2]);
+
+        $this->assertNull($renderer->render(new PageModel()));
+    }
 }

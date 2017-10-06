@@ -567,14 +567,9 @@ class ContaoFrameworkTest extends TestCase
     {
         $class = LegacyClass::class;
 
-        $adapter = $this
-            ->mockContaoFramework(
-                null,
-                null,
-                [$class => new Adapter($class)]
-            )
-            ->getAdapter($class)
-        ;
+        $reflection = new \ReflectionClass(ContaoFramework::class);
+        $framework = $reflection->newInstanceWithoutConstructor();
+        $adapter = $framework->getAdapter($class);
 
         $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
 

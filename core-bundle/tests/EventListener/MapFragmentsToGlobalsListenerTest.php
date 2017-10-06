@@ -44,9 +44,6 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
     {
         $registry = new FragmentRegistry();
 
-        $listener = new MapFragmentsToGlobalsListener($registry);
-        $listener->setFramework($this->mockContaoFramework());
-
         $registry->addFragment(
             'page-type',
             new \stdClass(),
@@ -79,10 +76,58 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
             ]
         );
 
+        $listener = new MapFragmentsToGlobalsListener($registry);
+        $listener->setFramework($this->mockContaoFramework());
         $listener->onInitializeSystem();
 
         $this->assertSame(PageProxy::class, $GLOBALS['TL_PTY']['test']);
         $this->assertSame(ModuleProxy::class, $GLOBALS['FE_MOD']['navigationMod']['test']);
         $this->assertSame(ContentProxy::class, $GLOBALS['TL_CTE']['text']['test']);
+    }
+
+    public function testFailsToMapFrontendModulesWithoutACategory(): void
+    {
+        $registry = new FragmentRegistry();
+
+        $registry->addFragment(
+            'frontend-module',
+            new \stdClass(),
+            [
+                'tag' => FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE,
+                'type' => 'test',
+                'controller' => 'test',
+            ]
+        );
+
+        $listener = new MapFragmentsToGlobalsListener($registry);
+        $listener->setFramework($this->mockContaoFramework());
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('but forgot to specify the "category" attribute');
+
+        $listener->onInitializeSystem();
+    }
+
+    public function testFailsToMapContentElementsWithoutACategory(): void
+    {
+        $registry = new FragmentRegistry();
+
+        $registry->addFragment(
+            'content-element',
+            new \stdClass(),
+            [
+                'tag' => FragmentRegistryPass::TAG_FRAGMENT_CONTENT_ELEMENT,
+                'type' => 'test',
+                'controller' => 'test',
+            ]
+        );
+
+        $listener = new MapFragmentsToGlobalsListener($registry);
+        $listener->setFramework($this->mockContaoFramework());
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('but forgot to specify the "category" attribute');
+
+        $listener->onInitializeSystem();
     }
 }

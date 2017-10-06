@@ -68,7 +68,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
      *
      * @throws \RuntimeException
      */
-    private function mapFrontEndModules(): void
+    private function mapFrontendModules(): void
     {
         $filter = $this->getTagFilter(FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE);
 
@@ -121,11 +121,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
         return function ($identifier) use ($tag) {
             $options = $this->fragmentRegistry->getOptions($identifier);
 
-            if ($options['tag'] !== $tag) {
-                return false;
-            }
-
-            return true;
+            return $options['tag'] === $tag;
         };
     }
 }
