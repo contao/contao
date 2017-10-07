@@ -1,4 +1,13 @@
 services:
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - ["setFramework", ["@contao.framework"]]
+
+        Symfony\Component\DependencyInjection\ContainerAwareInterface:
+            calls:
+                - ["setContainer", ["@service_container"]]
+
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
@@ -73,6 +82,8 @@ services:
 
     contao.listener.map_fragments_to_globals:
         class: Contao\CoreBundle\EventListener\MapFragmentsToGlobalsListener
+        arguments:
+            - "@contao.fragment.registry"
 
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
