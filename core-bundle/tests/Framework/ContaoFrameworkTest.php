@@ -27,7 +27,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * @preserveGlobalState disabled
@@ -221,7 +220,6 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
         $container->get('request_stack')->push($request);
         $container->setParameter('contao.csrf_token_name', 'dummy_token');
-        $container->set('security.csrf.token_manager', new CsrfTokenManager());
 
         // Ensure to use the fixtures class
         Config::preload();
