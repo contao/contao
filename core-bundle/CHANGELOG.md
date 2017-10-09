@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Copy the existing referers if a new referer ID is initialized (see #1117).
  * Stop using the TinyMCE gzip compressor (deprecated since 2014).
  * Prevent the User::authenticate() method from running twice (see #1067).
 
