@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Stop using the TinyMCE gzip compressor (deprecated since 2014).
  * Prevent the User::authenticate() method from running twice (see #1067).
 
 ### 4.4.6 (2017-09-28)
