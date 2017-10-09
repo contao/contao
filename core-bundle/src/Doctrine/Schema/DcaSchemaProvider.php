@@ -82,7 +82,7 @@ class DcaSchemaProvider
 
             if (isset($definitions['TABLE_FIELDS'])) {
                 foreach ($definitions['TABLE_FIELDS'] as $fieldName => $sql) {
-                    $this->parseColumnSql($table, $fieldName, strtolower(substr($sql, strlen($fieldName) + 3)));
+                    $this->parseColumnSql($table, $fieldName, substr($sql, strlen($fieldName) + 3));
                 }
             }
 
@@ -161,19 +161,19 @@ class DcaSchemaProvider
         $type = $this->doctrine->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping($type);
         $length = (0 === (int) $length) ? null : (int) $length;
 
-        if (preg_match('/default (\'[^\']*\'|\d+)/', $def, $match)) {
+        if (preg_match('/default (\'[^\']*\'|\d+)/i', $def, $match)) {
             $default = trim($match[1], "'");
         }
 
         $options = [
             'length' => $length,
-            'unsigned' => false !== strpos($def, 'unsigned'),
+            'unsigned' => false !== stripos($def, 'unsigned'),
             'fixed' => $fixed,
             'default' => $default,
-            'notnull' => false !== strpos($def, 'not null'),
+            'notnull' => false !== stripos($def, 'not null'),
             'scale' => null,
             'precision' => null,
-            'autoincrement' => false !== strpos($def, 'auto_increment'),
+            'autoincrement' => false !== stripos($def, 'auto_increment'),
             'comment' => null,
         ];
 
@@ -188,12 +188,12 @@ class DcaSchemaProvider
     /**
      * Sets the length, scale, precision and fixed values by field type.
      *
-     * @param string $type
-     * @param string $dbType
-     * @param int    $length
-     * @param int    $scale
-     * @param int    $precision
-     * @param bool   $fixed
+     * @param string   $type
+     * @param string   $dbType
+     * @param int|null $length
+     * @param int      $scale
+     * @param int      $precision
+     * @param bool     $fixed
      */
     private function setLengthAndPrecisionByType($type, $dbType, &$length, &$scale, &$precision, &$fixed)
     {
