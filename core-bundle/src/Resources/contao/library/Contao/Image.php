@@ -703,7 +703,6 @@ class Image
 			// Handle public bundle resources
 			if (file_exists(TL_ROOT . '/' . $webDir . '/' . $src))
 			{
-				@trigger_error('Paths relative to the webdir are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 				$src = $webDir . '/' . $src;
 			}
 			else
