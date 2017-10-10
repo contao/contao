@@ -76,18 +76,6 @@ class BackendTemplate extends \Template
 
 				if ($options->static)
 				{
-					if ($options->mtime === null)
-					{
-						if (file_exists(TL_ROOT . '/' . $stylesheet))
-						{
-							$options->mtime = filemtime(TL_ROOT . '/' . $stylesheet);
-						}
-						elseif (file_exists(TL_ROOT . '/' . $strWebDir . '/' . $stylesheet))
-						{
-							$options->mtime = filemtime(TL_ROOT . '/' . $strWebDir . '/' . $stylesheet);
-						}
-					}
-
 					$objCombiner->add($stylesheet, $options->mtime, $options->media);
 				}
 				else
@@ -117,18 +105,6 @@ class BackendTemplate extends \Template
 
 				if ($options->static)
 				{
-					if ($options->mtime === null)
-					{
-						if (file_exists(TL_ROOT . '/' . $javascript))
-						{
-							$options->mtime = filemtime(TL_ROOT . '/' . $javascript);
-						}
-						elseif (file_exists(TL_ROOT . '/' . $strWebDir . '/' . $javascript))
-						{
-							$options->mtime = filemtime(TL_ROOT . '/' . $strWebDir . '/' . $javascript);
-						}
-					}
-
 					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
 				}
 				else
