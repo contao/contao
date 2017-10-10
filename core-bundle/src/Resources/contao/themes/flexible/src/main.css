@@ -279,7 +279,7 @@ body.popup {
 }
 
 /* Buttons */
-#tl_buttons,#tl_buttons_a {
+#tl_buttons {
 	margin:0;
 	padding:12px 15px;
 	text-align:right;
