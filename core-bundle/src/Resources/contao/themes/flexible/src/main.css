@@ -1617,6 +1617,13 @@ label.error,legend.error {
 .tl_formbody_edit > .tl_error {
 	margin-top:9px;
 }
+.broken-image {
+	display:inline-block;
+	padding:12px 12px 12px 30px;
+	background:#faebeb url("icons/error.svg") no-repeat 9px center;
+	color:#c33;
+	text-indent:0;
+}
 
 /* Fieldsets */
 fieldset.tl_tbox,fieldset.tl_box {
