@@ -127,7 +127,8 @@ class MetaWizard extends \Widget
 		{
 			if (count($languages) > 0)
 			{
-				$this->varValue = array(key($languages)=>array()); // see #4188
+				$key = isset($languages[$GLOBALS['TL_LANGUAGE']]) ? $GLOBALS['TL_LANGUAGE'] : key($languages);
+				$this->varValue = array($key=>array()); // see #4188
 			}
 			else
 			{
