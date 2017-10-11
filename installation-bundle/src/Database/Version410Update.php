@@ -50,18 +50,40 @@ class Version410Update extends AbstractVersionUpdate
             $options = array_merge($options, array_values($values));
         }
 
-        $rows = $this->connection->fetchAll('SELECT id FROM tl_image_size');
+        $rows = $this->connection->fetchAll('
+            SELECT
+                id
+            FROM
+                tl_image_size
+        ');
 
         foreach ($rows as $imageSize) {
             $options[] = $imageSize['id'];
         }
 
         // Add the database fields
-        $this->connection->query('ALTER TABLE `tl_user` ADD `imageSizes` blob NULL');
-        $this->connection->query('ALTER TABLE `tl_user_group` ADD `imageSizes` blob NULL');
+        $this->connection->query('
+            ALTER TABLE
+                tl_user
+            ADD
+                imageSizes blob NULL
+        ');
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_user_group
+            ADD
+                imageSizes blob NULL
+        ');
 
         // Grant access to all existing image sizes at group level
-        $stmt = $this->connection->prepare('UPDATE tl_user_group SET imageSizes=:options');
+        $stmt = $this->connection->prepare('
+            UPDATE
+                tl_user_group
+            SET
+                imageSizes = :options
+        ');
+
         $stmt->execute([':options' => serialize($options)]);
     }
 }
