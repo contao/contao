@@ -1,7 +1,7 @@
 {% extends "@ContaoInstallation/layout.html.twig" %}
 
 {% block main %}
-  <fieldset class="tl_tbox{% if sql_form is empty %} collapsed{% endif %}">
+  <fieldset class="tl_tbox{% if sql_form is empty and sql_message is empty %} collapsed{% endif %}">
     <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'update_tables'|trans }}</legend>
     <div>
       <h3>{{ 'update_tables'|trans }}</h3>
@@ -9,6 +9,9 @@
         <p class="tl_confirm">{{ 'update_tables_confirm'|trans }}</p>
       {% endif %}
       <p>{{ 'update_tables_explain'|trans|raw }}</p>
+      {% if sql_message is not empty %}
+        <div id="sql_message">{{ sql_message|raw }}</div>
+      {% endif %}
       {% if sql_form is not empty %}
         <form method="post">
           <div class="tl_formbody">
