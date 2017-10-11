@@ -398,7 +398,7 @@ class Search
 		$arrValues = array();
 
 		// Remember found words so we can highlight them later
-		$strQuery = "SELECT tl_search_index.pid AS sid, GROUP_CONCAT(word) AS matches";
+		$strQuery = "SELECT * FROM (SELECT tl_search_index.pid AS sid, GROUP_CONCAT(word) AS matches";
 
 		// Get the number of wildcard matches
 		if (!$blnOrSearch && $intWildcards)
@@ -412,9 +412,6 @@ class Search
 
 		// Get the relevance
 		$strQuery .= ", SUM(relevance) AS relevance";
-
-		// Get meta information from tl_search
-		$strQuery .= ", tl_search.*"; // see #4506
 
 		// Prepare keywords array
 		$arrAllKeywords = array();
@@ -454,7 +451,7 @@ class Search
 			$arrValues = array_merge($arrValues, $arrWildcards);
 		}
 
-		$strQuery .= " FROM tl_search_index LEFT JOIN tl_search ON(tl_search_index.pid=tl_search.id) WHERE (" . implode(' OR ', $arrAllKeywords) . ")";
+		$strQuery .= " FROM tl_search_index WHERE (" . implode(' OR ', $arrAllKeywords) . ")";
 
 		// Get phrases
 		if ($intPhrases)
@@ -485,21 +482,21 @@ class Search
 
 		$strQuery .= " GROUP BY tl_search_index.pid";
 
+		// Sort by relevance
+		$strQuery .= " ORDER BY relevance DESC) matches LEFT JOIN tl_search ON(matches.sid=tl_search.id)";
+
 		// Make sure to find all words
 		if (!$blnOrSearch)
 		{
 			// Number of keywords without wildcards
-			$strQuery .= " HAVING count >= " . $intKeywords;
+			$strQuery .= " WHERE matches.count >= " . $intKeywords;
 
 			// Dynamically add the number of wildcard matches
 			if ($intWildcards)
 			{
-				$strQuery .= " + IF(wildcards>" . $intWildcards . ", wildcards, " . $intWildcards . ")";
+				$strQuery .= " + IF(matches.wildcards>" . $intWildcards . ", matches.wildcards, " . $intWildcards . ")";
 			}
 		}
-
-		// Sort by relevance
-		$strQuery .= " ORDER BY relevance DESC";
 
 		// Return result
 		$objResultStmt = \Database::getInstance()->prepare($strQuery);

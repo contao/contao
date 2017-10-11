@@ -327,12 +327,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
 
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ") GROUP BY path")
+					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ")")
 											  ->execute($for, $for);
 				}
 				else
 				{
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE " . $strPattern . " GROUP BY path")
+					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE " . $strPattern)
 											  ->execute($for);
 				}
 
