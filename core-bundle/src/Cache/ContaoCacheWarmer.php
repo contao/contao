@@ -270,14 +270,25 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function getLanguagesInUse()
     {
         // Get all languages in use (see #6013)
-        $query = "
-            SELECT language FROM tl_member
-            UNION SELECT language FROM tl_user
-            UNION SELECT REPLACE(language, '-', '_') FROM tl_page
-            WHERE type='root'
-        ";
+        $statement = $this->connection->prepare("
+            SELECT
+                language
+            FROM
+                tl_member
+            UNION
+                SELECT
+                    language
+                FROM
+                    tl_user
+            UNION
+                SELECT
+                    REPLACE(language, '-', '_')
+                FROM
+                    tl_page
+                WHERE
+                    type = 'root'
+        ");
 
-        $statement = $this->connection->prepare($query);
         $statement->execute();
 
         $languages = [];
