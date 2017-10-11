@@ -44,6 +44,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'http://origin.com');
+
         $statement = $this->createMock(Statement::class);
 
         $statement
@@ -53,8 +54,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement
             ->expects($this->once())
-            ->method('rowCount')
-            ->willReturn(1)
+            ->method('fetchColumn')
+            ->willReturn('1')
         ;
 
         $connection = $this->getConnection($statement);
@@ -78,6 +79,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
+
         $statement = $this->createMock(Statement::class);
 
         $statement
@@ -87,8 +89,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement
             ->expects($this->once())
-            ->method('rowCount')
-            ->willReturn(0)
+            ->method('fetchColumn')
+            ->willReturn('0')
         ;
 
         $connection = $this->getConnection($statement);
