@@ -177,7 +177,12 @@ class InstallTool
             return true;
         }
 
-        $statement = $this->connection->query('SELECT COUNT(*) AS count FROM tl_page');
+        $statement = $this->connection->query('
+            SELECT
+                COUNT(*) AS count
+            FROM
+                tl_page
+        ');
 
         return $statement->fetch(\PDO::FETCH_OBJ)->count < 1;
     }
@@ -272,7 +277,14 @@ class InstallTool
     public function hasAdminUser()
     {
         try {
-            $statement = $this->connection->query('SELECT COUNT(*) AS count FROM tl_user WHERE admin=1');
+            $statement = $this->connection->query("
+                SELECT
+                    COUNT(*) AS count
+                FROM
+                    tl_user
+                WHERE
+                    admin = '1'
+            ");
 
             if ($statement->fetch(\PDO::FETCH_OBJ)->count > 0) {
                 return true;
@@ -296,35 +308,25 @@ class InstallTool
     public function persistAdminUser($username, $name, $email, $password, $language)
     {
         $statement = $this->connection->prepare("
-            INSERT INTO tl_user(
-                tstamp,
-                name,
-                email,
-                username,
-                password,
-                language,
-                backendTheme,
-                admin,
-                showHelp,
-                useRTE,
-                useCE,
-                thumbnails,
-                dateAdded
-            ) VALUES (
-                :time,
-                :name,
-                :email,
-                :username,
-                :password,
-                :language,
-                'flexible',
-                1,
-                1,
-                1,
-                1,
-                1,
-                :time
-            )
+            INSERT INTO
+                tl_user
+                    (
+                        tstamp,
+                        name,
+                        email,
+                        username,
+                        password,
+                        language,
+                        backendTheme,
+                        admin,
+                        showHelp,
+                        useRTE,
+                        useCE,
+                        thumbnails,
+                        dateAdded
+                    )
+                 VALUES
+                    (:time, :name, :email, :username, :password, :language, 'flexible', 1, 1, 1, 1, 1, :time)
         ");
 
         $replace = [
