@@ -34,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index',
+				'pid,email' => 'unique',
 				'email' => 'index'
 			)
 		)
