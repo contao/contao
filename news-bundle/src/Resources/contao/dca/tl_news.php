@@ -647,7 +647,7 @@ class tl_news extends Backend
 
 
 	/**
-	 * Add the type of input field
+	 * List a news article
 	 *
 	 * @param array $arrRow
 	 *
