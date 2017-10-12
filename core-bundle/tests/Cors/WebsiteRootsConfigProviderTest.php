@@ -44,8 +44,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement
             ->expects($this->once())
-            ->method('rowCount')
-            ->willReturn(1)
+            ->method('fetchColumn')
+            ->willReturn('1')
         ;
 
         $connection = $this->mockConnection($statement);
@@ -76,8 +76,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement
             ->expects($this->once())
-            ->method('rowCount')
-            ->willReturn(0)
+            ->method('fetchColumn')
+            ->willReturn('0')
         ;
 
         $connection = $this->mockConnection($statement);

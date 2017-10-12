@@ -572,8 +572,11 @@ abstract class User extends \System
 	 */
 	public function save()
 	{
+		$arrFields = $this->Database->getFieldNames($this->strTable);
+		$arrSet = array_intersect_key($this->arrData, array_flip($arrFields));
+
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($this->arrData)
+					   ->set($arrSet)
 					   ->execute($this->id);
 	}
 

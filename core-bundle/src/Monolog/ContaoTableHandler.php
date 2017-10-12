@@ -131,8 +131,11 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         }
 
         $this->statement = $this->container->get($this->dbalServiceName)->prepare('
-            INSERT INTO tl_log (tstamp, source, action, username, text, func, ip, browser)
-            VALUES (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
+            INSERT INTO
+                tl_log
+                    (tstamp, source, action, username, text, func, ip, browser)
+                VALUES
+                    (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
         ');
     }
 

@@ -139,7 +139,7 @@ class FileSelector extends \Widget
 					$for = trim(str_replace('type:folder', '', $for));
 				}
 
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM tl_files WHERE $strPattern $strType GROUP BY path")
+				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM tl_files WHERE $strPattern $strType")
 										  ->execute($for);
 
 				if ($objRoot->numRows < 1)

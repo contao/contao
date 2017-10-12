@@ -142,7 +142,7 @@ class StoreRefererListener
         }
 
         if (!isset($referers[$refererId]) || !\is_array($referers[$refererId])) {
-            $referers[$refererId] = ['last' => ''];
+            $referers[$refererId] = end($referers) ?: ['last' => ''];
         }
 
         // Make sure we never have more than 25 different referer URLs
