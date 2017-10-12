@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.7 (2017-10-12)
 
  * Show broken images in the file manager (see #1116).
  * Copy the existing referers if a new referer ID is initialized (see #1117).

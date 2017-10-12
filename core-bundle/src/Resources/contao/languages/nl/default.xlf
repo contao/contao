@@ -1385,9 +1385,11 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.profile">
         <source>Profile</source>
+        <target>Profiel</target>
       </trans-unit>
       <trans-unit id="MSC.profileTitle">
         <source>User profile</source>
+        <target>Gebruiker profiel</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
@@ -1815,9 +1817,11 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
+        <target>Meldingen</target>
       </trans-unit>
       <trans-unit id="MSC.noSystemMessages">
         <source>Currently there are no alerts.</source>
+        <target>Momenteel geen meldingen.</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
