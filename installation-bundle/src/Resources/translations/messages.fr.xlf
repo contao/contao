@@ -361,6 +361,14 @@
         <target>Une tâche de post-installation n'a pas pu être terminée !</target>
         
       </trans-unit>
+      <trans-unit id="73">
+        <source>duplicate_subscriptions</source>
+        
+      </trans-unit>
+      <trans-unit id="74">
+        <source>duplicates_purged</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

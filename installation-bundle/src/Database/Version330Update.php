@@ -40,7 +40,14 @@ class Version330Update extends AbstractVersionUpdate
      */
     public function run()
     {
-        $statement = $this->connection->query("SELECT id, framework FROM tl_layout WHERE framework!=''");
+        $statement = $this->connection->query("
+            SELECT
+                id, framework
+            FROM
+                tl_layout
+            WHERE
+                framework != ''
+        ");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $framework = '';
@@ -54,11 +61,24 @@ class Version330Update extends AbstractVersionUpdate
                 $framework = serialize(array_values(array_unique($tmp)));
             }
 
-            $stmt = $this->connection->prepare('UPDATE tl_layout SET framework=:framework WHERE id=:id');
+            $stmt = $this->connection->prepare('
+                UPDATE
+                    tl_layout
+                SET
+                    framework = :framework
+                WHERE
+                    id = :id
+            ');
+
             $stmt->execute([':framework' => $framework, ':id' => $layout->id]);
         }
 
         // Add the "viewport" field (triggers the version 3.3 update)
-        $this->connection->query("ALTER TABLE `tl_layout` ADD `viewport` varchar(255) NOT NULL default ''");
+        $this->connection->query("
+            ALTER TABLE
+                tl_layout
+            ADD
+                viewport varchar(255) NOT NULL default ''
+        ");
     }
 }
