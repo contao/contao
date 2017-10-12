@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -31,7 +33,7 @@ class Version447Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run()
+    public function run(): void
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -103,8 +105,7 @@ class Version447Update extends AbstractVersionUpdate
             $this->addMessage(sprintf('<li>%s</li>', $duplicate->email));
         }
 
-        if ($this->hasMessage())
-        {
+        if ($this->hasMessage()) {
             $translator = $this->container->get('translator');
 
             $this->prependMessage(sprintf('<p>%s</p><ul>', $translator->trans('duplicate_subscriptions')));

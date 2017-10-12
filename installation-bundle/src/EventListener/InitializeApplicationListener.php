@@ -45,7 +45,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
      *
      * @param InitializeApplicationEvent $event
      */
-    private function installAssets(InitializeApplicationEvent $event)
+    private function installAssets(InitializeApplicationEvent $event): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 
@@ -67,7 +67,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
      *
      * @param InitializeApplicationEvent $event
      */
-    private function installContao(InitializeApplicationEvent $event)
+    private function installContao(InitializeApplicationEvent $event): void
     {
         $projectDir = $this->container->getParameter('kernel.project_dir');
 
@@ -87,7 +87,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
      *
      * @param InitializeApplicationEvent $event
      */
-    private function createSymlinks(InitializeApplicationEvent $event)
+    private function createSymlinks(InitializeApplicationEvent $event): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 

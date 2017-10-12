@@ -107,7 +107,7 @@ class Version440Update extends AbstractVersionUpdate
      *
      * @param string $table
      */
-    private function enableOverwriteMeta($table)
+    private function enableOverwriteMeta(string $table): void
     {
         $this->connection->query("
             ALTER TABLE
