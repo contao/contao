@@ -148,7 +148,7 @@ class Newsletter extends \Backend
 			$intPages = \Input::get('mpc') ? \Input::get('mpc') : 10;
 
 			// Get recipients
-			$objRecipients = $this->Database->prepare("SELECT *, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 GROUP BY r.email ORDER BY r.email")
+			$objRecipients = $this->Database->prepare("SELECT *, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
 											->limit($intPages, $intStart)
 											->execute($objNewsletter->pid);
 
