@@ -29,29 +29,77 @@ class InitializeApplicationListener implements ContainerAwareInterface
     use ContainerAwareTrait;
 
     /**
-     * Installs the assets, directories and symlinks.
+     * Listens to the contao_installation.initialize event.
      *
      * @param InitializeApplicationEvent $event
      */
     public function onInitialize(InitializeApplicationEvent $event): void
     {
-        $input = new ArgvInput([
-            'assets:install',
-            '--relative',
-            $this->container->getParameter('kernel.root_dir').'/../web',
-        ]);
+        $this->installAssets($event);
+        $this->installContao($event);
+        $this->createSymlinks($event);
+    }
 
-        if (null !== ($output = $this->runCommand(new AssetsInstallCommand(), $input))) {
-            $event->setOutput($output);
+    /**
+     * Installs the assets.
+     *
+     * @param InitializeApplicationEvent $event
+     */
+    private function installAssets(InitializeApplicationEvent $event)
+    {
+        $webDir = $this->container->getParameter('contao.web_dir');
+
+        if (file_exists($webDir.'/bundles/contaocore/core.js')) {
+            return;
         }
 
-        if (null !== ($output = $this->runCommand(new InstallCommand()))) {
-            $event->setOutput($output);
+        $input = new ArgvInput(['assets:install', '--relative', $webDir]);
+
+        if (null === ($output = $this->runCommand(new AssetsInstallCommand(), $input))) {
+            return;
         }
 
-        if (null !== ($output = $this->runCommand(new SymlinksCommand()))) {
-            $event->setOutput($output);
+        $event->setOutput($output);
+    }
+
+    /**
+     * Installs the Contao folders.
+     *
+     * @param InitializeApplicationEvent $event
+     */
+    private function installContao(InitializeApplicationEvent $event)
+    {
+        $projectDir = $this->container->getParameter('kernel.project_dir');
+
+        if (is_dir($projectDir.'/system/config')) {
+            return;
         }
+
+        if (null === ($output = $this->runCommand(new InstallCommand()))) {
+            return;
+        }
+
+        $event->setOutput($output);
+    }
+
+    /**
+     * Creates the symlinks.
+     *
+     * @param InitializeApplicationEvent $event
+     */
+    private function createSymlinks(InitializeApplicationEvent $event)
+    {
+        $webDir = $this->container->getParameter('contao.web_dir');
+
+        if (is_link($webDir.'/system/themes')) {
+            return;
+        }
+
+        if (null === ($output = $this->runCommand(new SymlinksCommand()))) {
+            return;
+        }
+
+        $event->setOutput($output);
     }
 
     /**

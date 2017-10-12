@@ -362,6 +362,8 @@ class InstallationController implements ContainerAwareInterface
             ->in(__DIR__.'/../Database')
         ;
 
+        $messages = [];
+
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
@@ -372,8 +374,14 @@ class InstallationController implements ContainerAwareInterface
             if ($update instanceof AbstractVersionUpdate && $update->shouldBeRun()) {
                 $update->setContainer($this->container);
                 $update->run();
+
+                if ($message = $update->getMessage()) {
+                    $messages[] = $message;
+                }
             }
         }
+
+        $this->context['sql_message'] = implode($messages);
     }
 
     /**

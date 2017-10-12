@@ -113,6 +113,7 @@
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
+        <target>Назив базе података не сме да садржи тачке у имену!</target>
         
       </trans-unit>
       <trans-unit id="24">
@@ -358,6 +359,14 @@
       <trans-unit id="72">
         <source>console_explanation</source>
         <target>Задаци након исталације не могу да се заврше!</target>
+        
+      </trans-unit>
+      <trans-unit id="73">
+        <source>duplicate_subscriptions</source>
+        
+      </trans-unit>
+      <trans-unit id="74">
+        <source>duplicates_purged</source>
         
       </trans-unit>
     </body>

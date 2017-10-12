@@ -37,12 +37,22 @@ class Version400Update extends AbstractVersionUpdate
      */
     public function run(): void
     {
-        $this->connection->query('ALTER TABLE `tl_layout` ADD `scripts` text NULL');
+        $this->connection->query('
+            ALTER TABLE
+                tl_layout
+            ADD
+                scripts text NULL
+        ');
 
         // Adjust the framework agnostic scripts
-        $statement = $this->connection->query(
-            "SELECT id, addJQuery, jquery, addMooTools, mootools FROM tl_layout WHERE framework!=''"
-        );
+        $statement = $this->connection->query("
+            SELECT
+                id, addJQuery, jquery, addMooTools, mootools
+            FROM
+                tl_layout
+            WHERE
+                framework != ''
+        ");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $scripts = [];
@@ -56,7 +66,15 @@ class Version400Update extends AbstractVersionUpdate
                         $scripts[] = 'js_slider';
                         unset($jquery[$key]);
 
-                        $stmt = $this->connection->prepare('UPDATE tl_layout SET jquery=:jquery WHERE id=:id');
+                        $stmt = $this->connection->prepare('
+                            UPDATE
+                                tl_layout
+                            SET
+                                jquery = :jquery
+                            WHERE
+                                id = :id
+                        ');
+
                         $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $layout->id]);
                     }
                 }
@@ -71,7 +89,15 @@ class Version400Update extends AbstractVersionUpdate
                         $scripts[] = 'js_slider';
                         unset($mootools[$key]);
 
-                        $stmt = $this->connection->prepare('UPDATE tl_layout SET mootools=:mootools WHERE id=:id');
+                        $stmt = $this->connection->prepare('
+                            UPDATE
+                                tl_layout
+                            SET
+                                mootools = :mootools
+                            WHERE
+                                id = :id
+                        ');
+
                         $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout->id]);
                     }
                 }
@@ -79,13 +105,28 @@ class Version400Update extends AbstractVersionUpdate
 
             // Enable the js_slider template
             if (!empty($scripts)) {
-                $stmt = $this->connection->prepare('UPDATE tl_layout SET scripts=:scripts WHERE id=:id');
+                $stmt = $this->connection->prepare('
+                    UPDATE
+                        tl_layout
+                    SET
+                        scripts = :scripts
+                    WHERE
+                        id = :id
+                ');
+
                 $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $layout->id]);
             }
         }
 
         // Replace moo_slimbox with moo_mediabox
-        $statement = $this->connection->query("SELECT id, mootools FROM tl_layout WHERE framework!=''");
+        $statement = $this->connection->query("
+            SELECT
+                id, mootools
+            FROM
+                tl_layout
+            WHERE
+                framework != ''
+        ");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $mootools = StringUtil::deserialize($layout->mootools);
@@ -95,14 +136,29 @@ class Version400Update extends AbstractVersionUpdate
                     $mootools[] = 'moo_mediabox';
                     unset($mootools[$key]);
 
-                    $stmt = $this->connection->prepare('UPDATE tl_layout SET mootools=:mootools WHERE id=:id');
+                    $stmt = $this->connection->prepare('
+                        UPDATE
+                            tl_layout
+                        SET
+                            mootools = :mootools
+                        WHERE
+                            id = :id
+                    ');
+
                     $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout->id]);
                 }
             }
         }
 
         // Adjust the list of framework style sheets
-        $statement = $this->connection->query("SELECT id, framework FROM tl_layout WHERE framework!=''");
+        $statement = $this->connection->query("
+            SELECT
+                id, framework
+            FROM
+                tl_layout
+            WHERE
+                framework != ''
+        ");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
             $framework = StringUtil::deserialize($layout->framework);
@@ -111,15 +167,46 @@ class Version400Update extends AbstractVersionUpdate
                 if (false !== ($key = array_search('tinymce.css', $framework, true))) {
                     unset($framework[$key]);
 
-                    $stmt = $this->connection->prepare('UPDATE tl_layout SET framework=:framework WHERE id=:id');
+                    $stmt = $this->connection->prepare('
+                        UPDATE
+                            tl_layout
+                        SET
+                            framework = :framework
+                        WHERE
+                            id = :id
+                    ');
+
                     $stmt->execute([':framework' => serialize(array_values($framework)), ':id' => $layout->id]);
                 }
             }
         }
 
         // Adjust the module types
-        $this->connection->query("UPDATE tl_module SET type='articlelist' WHERE type='articleList'");
-        $this->connection->query("UPDATE tl_module SET type='rssReader' WHERE type='rss_reader'");
-        $this->connection->query("UPDATE tl_form_field SET type='explanation' WHERE type='headline'");
+        $this->connection->query("
+            UPDATE
+                tl_module
+            SET
+                type = 'articlelist'
+            WHERE
+                type = 'articleList'
+        ");
+
+        $this->connection->query("
+            UPDATE
+                tl_module
+            SET
+                type = 'rssReader'
+            WHERE
+                type = 'rss_reader'
+        ");
+
+        $this->connection->query("
+            UPDATE
+                tl_form_field
+            SET
+                type = 'explanation'
+            WHERE
+                type = 'headline'
+        ");
     }
 }

@@ -40,8 +40,29 @@ class Version350Update extends AbstractVersionUpdate
      */
     public function run(): void
     {
-        $this->connection->query('ALTER TABLE `tl_member` CHANGE `username` `username` varchar(64) COLLATE utf8_bin NULL');
-        $this->connection->query("UPDATE `tl_member` SET username=NULL WHERE username=''");
-        $this->connection->query('ALTER TABLE `tl_member` DROP INDEX `username`, ADD UNIQUE KEY `username` (`username`)');
+        $this->connection->query('
+            ALTER TABLE
+                tl_member
+            CHANGE
+                username username varchar(64) COLLATE utf8_bin NULL
+        ');
+
+        $this->connection->query("
+            UPDATE
+                tl_member
+            SET
+                username = NULL
+            WHERE
+                username = ''
+        ");
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_member
+            DROP INDEX
+                username,
+            ADD UNIQUE KEY
+                username (username)
+        ');
     }
 }
