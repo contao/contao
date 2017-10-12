@@ -1,5 +1,9 @@
 # Contao calendar bundle change log
 
+### 4.4.7 (2017-10-12)
+
+ * Filter multi-day events outside the scope in the event list (see contao/core#8792).
+
 ### 4.4.6 (2017-09-28)
 
  * Fix the setEmptyEndTime() save_callback (see #10).
