@@ -201,7 +201,7 @@ class FragmentRegistryPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testDoesNotLookForDefinitionsIfThereIsNoFragmentRegistry()
+    public function testDoesNotLookForDefinitionsIfThereIsNoFragmentRegistry(): void
     {
         /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this
@@ -228,7 +228,7 @@ class FragmentRegistryPassTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.fragment.registry'));
     }
 
-    public function testDoesNotLookForDefinitionsIfThereAreNoFragmentRenderers()
+    public function testDoesNotLookForDefinitionsIfThereAreNoFragmentRenderers(): void
     {
         /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
         $container = $this
