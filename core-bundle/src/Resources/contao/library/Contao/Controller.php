@@ -788,11 +788,6 @@ abstract class Controller extends \System
 
 				if ($options->static)
 				{
-					if ($options->mtime === null)
-					{
-						$options->mtime = filemtime(TL_ROOT . '/' . $stylesheet);
-					}
-
 					$objCombiner->add($stylesheet, $options->mtime, $options->media);
 				}
 				else
@@ -853,11 +848,6 @@ abstract class Controller extends \System
 
 				if ($options->static)
 				{
-					if ($options->mtime === null)
-					{
-						$options->mtime = filemtime(TL_ROOT . '/' . $javascript);
-					}
-
 					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
 				}
 				else

@@ -1,5 +1,12 @@
 # Contao core bundle change log
 
+### 4.4.7 (2017-10-12)
+
+ * Show broken images in the file manager (see #1116).
+ * Copy the existing referers if a new referer ID is initialized (see #1117).
+ * Stop using the TinyMCE gzip compressor (deprecated since 2014).
+ * Prevent the User::authenticate() method from running twice (see #1067).
+
 ### 4.4.6 (2017-09-28)
 
  * Bind the lock file path to the installation root directory (see #1107).

@@ -90,7 +90,7 @@ body.popup {
 #tmenu ul.level_2 {
 	min-width:150px;
 	position:absolute;
-	right:3px;
+	right:6px;
 	margin-top:5px;
 	padding:6px 0 9px;
 	background:#fff;
@@ -136,7 +136,15 @@ body.popup {
 	border-width:7px;
 	border-bottom-color:#fff;
 }
-#tmenu a:hover,#tmenu h2:hover,#tmenu .burger button:hover {
+#tmenu ul.level_2:after {
+	content:"";
+	display:block;
+	width:100%;
+	height:5px;
+	position: absolute;
+	top:-5px;
+}
+#tmenu a:hover,#tmenu li:hover h2,#tmenu .burger button:hover {
 	background-color:#e87600;
 }
 #tmenu .icon-alert {
@@ -279,7 +287,7 @@ body.popup {
 }
 
 /* Buttons */
-#tl_buttons,#tl_buttons_a {
+#tl_buttons {
 	margin:0;
 	padding:12px 15px;
 	text-align:right;
@@ -1608,6 +1616,13 @@ label.error,legend.error {
 }
 .tl_formbody_edit > .tl_error {
 	margin-top:9px;
+}
+.broken-image {
+	display:inline-block;
+	padding:12px 12px 12px 30px;
+	background:#faebeb url("icons/error.svg") no-repeat 9px center;
+	color:#c33;
+	text-indent:0;
 }
 
 /* Fieldsets */

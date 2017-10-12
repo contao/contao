@@ -200,7 +200,7 @@ var Theme = {
 		if (!ul || !h2) return;
 
 		h2.addEvent('click', function(e) {
-			ul.fade();
+			ul.fade('in');
 			e.stopPropagation();
 		});
 

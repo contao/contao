@@ -46,12 +46,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	protected $ctable;
 
 	/**
-	 * ID of the button container
-	 * @var string
-	 */
-	protected $bid;
-
-	/**
 	 * Limit (database query)
 	 * @var string
 	 */
@@ -293,7 +287,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		$return = '';
 		$this->limit = '';
-		$this->bid = 'tl_buttons';
 
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
@@ -4588,7 +4581,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function listView()
 	{
-		$return = '';
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->ptable : $this->strTable;
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
@@ -4686,18 +4678,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$objRow = $objRowStmt->execute($this->values);
-		$this->bid = ($return != '') ? $this->bid : 'tl_buttons';
 
 		// Display buttos
-		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] || !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']))
-		{
-			$return .= \Message::generate() . '
-<div id="'.$this->bid.'">'.((\Input::get('act') == 'select' || $this->ptable) ? '
+		$return = \Message::generate() . '
+<div id="tl_buttons">'.((\Input::get('act') == 'select' || $this->ptable) ? '
 <a href="'.$this->getReferer(true, $this->ptable).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '')) . ((\Input::get('act') != 'select' && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
 <a href="'.(($this->ptable != '') ? $this->addToUrl('act=create' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')).'" class="header_new" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . $this->generateGlobalButtons() . '
 </div>';
-		}
 
 		// Return "no records found" message
 		if ($objRow->numRows < 1)
@@ -5161,7 +5149,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
-		$this->bid = 'tl_buttons_a';
 		$session = $objSessionBag->all();
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'];
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
@@ -5379,7 +5366,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 		$fields = '';
-		$this->bid = 'tl_buttons_a';
 		$sortingFields = array();
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;

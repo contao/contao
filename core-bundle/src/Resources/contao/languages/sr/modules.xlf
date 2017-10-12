@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="MOD.form.0">
         <source>Form generator</source>
-        <target>Генератор формулара</target>
+        <target>Формулари</target>
       </trans-unit>
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="MOD.design">
         <source>Layout</source>
-        <target>Распоред - Layout</target>
+        <target>Распореди</target>
       </trans-unit>
       <trans-unit id="MOD.themes.0">
         <source>Themes</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
-        <target>Шаблони - Templates</target>
+        <target>Шаблони</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Edit templates in the back end</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.0">
         <source>File manager</source>
-        <target>Менаџер фајлова - File manager</target>
+        <target>Управљање фајловима</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders or upload new files to the server</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
-        <target>Системске биљешке - System log</target>
+        <target>Системски логови</target>
       </trans-unit>
       <trans-unit id="MOD.log.1">
         <source>Browse the system log and analyze the activity on the website</source>
