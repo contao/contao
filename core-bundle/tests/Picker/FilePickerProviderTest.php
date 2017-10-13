@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FilePickerProviderTest extends TestCase
 {
@@ -104,20 +105,15 @@ class FilePickerProviderTest extends TestCase
             ->willReturn($adapter)
         ;
 
-        $this->provider = new FilePickerProvider($menuFactory, $router, __DIR__);
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->willReturn('File picker')
+        ;
+
+        $this->provider = new FilePickerProvider($menuFactory, $router, $translator, __DIR__);
         $this->provider->setFramework($framwork);
-
-        $GLOBALS['TL_LANG']['MSC']['filePicker'] = 'File picker';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
     }
 
     public function testCanBeInstantiated(): void

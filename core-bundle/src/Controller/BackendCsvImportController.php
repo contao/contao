@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BackendCsvImportController
 {
@@ -49,22 +50,29 @@ class BackendCsvImportController
     private $requestStack;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var string
      */
-    private $contaoRoot;
+    private $projectDir;
 
     /**
      * @param ContaoFrameworkInterface $framework
      * @param Connection               $connection
      * @param RequestStack             $requestStack
-     * @param string                   $contaoRoot
+     * @param TranslatorInterface      $translator
+     * @param string                   $projectDir
      */
-    public function __construct(ContaoFrameworkInterface $framework, Connection $connection, RequestStack $requestStack, string $contaoRoot)
+    public function __construct(ContaoFrameworkInterface $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
+        $this->framework    = $framework;
+        $this->connection   = $connection;
         $this->requestStack = $requestStack;
-        $this->contaoRoot = $contaoRoot;
+        $this->translator   = $translator;
+        $this->projectDir   = $projectDir;
     }
 
     /**
@@ -82,8 +90,8 @@ class BackendCsvImportController
             },
             $dc->table,
             'listitems',
-            $dc->id,
-            $GLOBALS['TL_LANG']['MSC']['lw_import'][0],
+            (int) $dc->id,
+            $this->translator->trans('MSC.lw_import.0', [], 'contao_default'),
             true
         );
     }
@@ -105,8 +113,8 @@ class BackendCsvImportController
             },
             $dc->table,
             'tableitems',
-            $dc->id,
-            $GLOBALS['TL_LANG']['MSC']['tw_import'][0]
+            (int) $dc->id,
+            $this->translator->trans('MSC.tw_import.0', [], 'contao_default')
         );
     }
 
@@ -132,8 +140,8 @@ class BackendCsvImportController
             },
             $dc->table,
             'options',
-            $dc->id,
-            $GLOBALS['TL_LANG']['MSC']['ow_import'][0]
+            (int) $dc->id,
+            $this->translator->trans('MSC.ow_import.0', [], 'contao_default')
         );
     }
 
@@ -215,11 +223,13 @@ class BackendCsvImportController
         $template->fileMaxSize = $config->get('maxFileSize');
         $template->uploader = $uploader->generateMarkup();
         $template->separators = $this->getSeparators($allowLinebreak);
-        $template->submitLabel = $GLOBALS['TL_LANG']['MSC']['apply'][0];
-        $template->backBT = $GLOBALS['TL_LANG']['MSC']['backBT'];
-        $template->backBTTitle = $GLOBALS['TL_LANG']['MSC']['backBTTitle'];
-        $template->separatorLabel = $GLOBALS['TL_LANG']['MSC']['separator'];
-        $template->sourceLabel = $GLOBALS['TL_LANG']['MSC']['source'];
+        $template->submitLabel = $this->translator->trans('MSC.apply', [], 'contao_default');
+        $template->backBT = $this->translator->trans('MSC.backBT', [], 'contao_default');
+        $template->backBTTitle = $this->translator->trans('MSC.backBTTitle', [], 'contao_default');
+        $template->separatorLabel = $this->translator->trans('MSC.separator.0', [], 'contao_default');
+        $template->separatorHelp = $this->translator->trans('MSC.separator.1', [], 'contao_default');
+        $template->sourceLabel = $this->translator->trans('MSC.source.0', [], 'contao_default');
+        $template->sourceLabelHelp = $this->translator->trans('MSC.source.1', [], 'contao_default');
 
         return $template;
     }
@@ -287,17 +297,17 @@ class BackendCsvImportController
             self::SEPARATOR_COMMA => [
                 'delimiter' => ',',
                 'value' => self::SEPARATOR_COMMA,
-                'label' => $GLOBALS['TL_LANG']['MSC']['comma'],
+                'label' => $this->translator->trans('MSC.comma', [], 'contao_default'),
             ],
             self::SEPARATOR_SEMICOLON => [
                 'delimiter' => ';',
                 'value' => self::SEPARATOR_SEMICOLON,
-                'label' => $GLOBALS['TL_LANG']['MSC']['semicolon'],
+                'label' => $this->translator->trans('MSC.semicolon', [], 'contao_default'),
             ],
             self::SEPARATOR_TABULATOR => [
                 'delimiter' => "\t",
                 'value' => self::SEPARATOR_TABULATOR,
-                'label' => $GLOBALS['TL_LANG']['MSC']['tabulator'],
+                'label' => $this->translator->trans('MSC.tabulator', [], 'contao_default'),
             ],
         ];
 
@@ -305,7 +315,7 @@ class BackendCsvImportController
             $separators[self::SEPARATOR_LINEBREAK] = [
                 'delimiter' => "\n",
                 'value' => self::SEPARATOR_LINEBREAK,
-                'label' => $GLOBALS['TL_LANG']['MSC']['linebreak'],
+                'label' => $this->translator->trans('MSC.linebreak', [], 'contao_default'),
             ];
         }
 
@@ -326,7 +336,7 @@ class BackendCsvImportController
         $separators = $this->getSeparators(true);
 
         if (!isset($separators[$separator])) {
-            throw new \RuntimeException($GLOBALS['TL_LANG']['MSC']['separator'][1]);
+            throw new \RuntimeException($this->translator->trans('MSC.separator.1', [], 'contao_default'));
         }
 
         return $separators[$separator]['delimiter'];
@@ -346,17 +356,19 @@ class BackendCsvImportController
         $files = $uploader->uploadTo('system/tmp');
 
         if (\count($files) < 1) {
-            throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['all_fields']);
+            throw new \RuntimeException($this->translator->trans('ERR.all_fields', [], 'contao_default'));
         }
 
         foreach ($files as &$file) {
             $extension = pathinfo($file, PATHINFO_EXTENSION);
 
             if ('csv' !== $extension) {
-                throw new \RuntimeException(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $extension));
+                throw new \RuntimeException(
+                    sprintf($this->translator->trans('ERR.filetype', [], 'contao_default'), $extension)
+                );
             }
 
-            $file = $this->contaoRoot.'/'.$file;
+            $file = $this->projectDir.'/'.$file;
         }
 
         return $files;

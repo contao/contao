@@ -1,7 +1,8 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.unavailable }}
+    {{ 'XPT.unavailable'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.maintenance }}</p>
+    <p>{{ 'XPT.maintenance'|trans }}</p>
 {% endblock %}

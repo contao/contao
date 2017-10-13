@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
@@ -30,18 +31,25 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     private $router;
 
     /**
+     * @var TranslatorInterface|null
+     */
+    private $translator;
+
+    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
 
     /**
-     * @param FactoryInterface $menuFactory
-     * @param RouterInterface  $router
+     * @param FactoryInterface         $menuFactory
+     * @param RouterInterface          $router
+     * @param TranslatorInterface|null $translator
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {
         $this->menuFactory = $menuFactory;
         $this->router = $router;
+        $this->translator = $translator;
     }
 
     /**
@@ -59,10 +67,17 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     {
         $name = $this->getName();
 
+        if (null === $this->translator) {
+            @trigger_error('Using a picker provider without injecting the translator service has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            $label = $GLOBALS['TL_LANG']['MSC'][$name];
+        } else {
+            $label = $this->translator->trans('MSC.'.$name, [], 'contao_default');
+        }
+
         return $this->menuFactory->createItem(
             $name,
             [
-                'label' => $GLOBALS['TL_LANG']['MSC'][$name] ?: $name,
+                'label' => $label ?: $name,
                 'linkAttributes' => ['class' => $name],
                 'current' => $this->isCurrent($config),
                 'uri' => $this->generateUrl($config, true),

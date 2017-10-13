@@ -44,16 +44,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        $GLOBALS['TL_LANG']['XPT'] = [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

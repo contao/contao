@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PickerBuilderTest extends TestCase
 {
@@ -61,7 +62,12 @@ class PickerBuilderTest extends TestCase
         $this->builder->addProvider($provider);
 
         $this->builder->addProvider(
-            new FilePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class), __DIR__)
+            new FilePickerProvider(
+                new MenuFactory(),
+                $this->createMock(RouterInterface::class),
+                $this->createMock(TranslatorInterface::class),
+                __DIR__
+            )
         );
 
         $picker = $this->builder->create(new PickerConfig('page', ['providers' => ['pagePicker']]));

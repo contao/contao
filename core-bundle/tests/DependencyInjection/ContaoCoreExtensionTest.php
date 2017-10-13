@@ -467,7 +467,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('database_connection', (string) $definition->getArgument(1));
         $this->assertSame('request_stack', (string) $definition->getArgument(2));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
+        $this->assertSame('contao.translation.translator', (string) $definition->getArgument(3));
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(4));
     }
 
     public function tesRegistersThetInsertTagsController(): void
@@ -744,6 +745,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('contao.translation.translator', (string) $definition->getArgument(2));
 
         $calls = $definition->getMethodCalls();
 
@@ -766,7 +768,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(2));
+        $this->assertSame('contao.translation.translator', (string) $definition->getArgument(2));
+        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(3));
 
         $calls = $definition->getMethodCalls();
 
@@ -789,6 +792,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('contao.translation.translator', (string) $definition->getArgument(2));
 
         $calls = $definition->getMethodCalls();
 

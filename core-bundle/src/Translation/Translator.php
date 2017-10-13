@@ -103,10 +103,6 @@ class Translator implements TranslatorInterface
      */
     private function getFromGlobals(string $id, string $domain): ?string
     {
-        if ('default' !== $domain) {
-            $id = $domain.'.'.$id;
-        }
-
         // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
         preg_match_all('/(?:\\\\[.\\\\]|[^.])++/s', $id, $matches);
         $parts = preg_replace('/\\\\([.\\\\])/s', '$1', $matches[0]);

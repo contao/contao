@@ -13,22 +13,22 @@
 
     <fieldset class="tl_tbox nolegend">
       <div class="widget w50">
-        <h3><label for="separator"><?= $this->separatorLabel[0] ?></label></h3>
+        <h3><label for="separator"><?= $this->separatorLabel ?></label></h3>
         <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
           <?php foreach ($this->separators as $separator): ?>
             <option value="<?= $separator['value'] ?>"><?= $separator['label'] ?></option>
           <?php endforeach; ?>
         </select>
-        <?php if (isset($this->separatorLabel[1])): ?>
-          <p class="tl_help tl_tip"><?= $this->separatorLabel[1] ?></p>
+        <?php if (isset($this->separatorHelp)): ?>
+          <p class="tl_help tl_tip"><?= $this->separatorHelp ?></p>
         <?php endif; ?>
       </div>
 
       <div class="widget clr">
-        <h3><?= $this->sourceLabel[0] ?></h3>
+        <h3><?= $this->sourceLabel ?></h3>
         <?= $this->uploader ?>
-        <?php if (isset($this->sourceLabel[1])): ?>
-          <p class="tl_help tl_tip"><?= $this->sourceLabel[1] ?></p>
+        <?php if (isset($this->sourceHelp)): ?>
+          <p class="tl_help tl_tip"><?= $this->sourceHelp ?></p>
         <?php endif; ?>
       </div>
     </fieldset>

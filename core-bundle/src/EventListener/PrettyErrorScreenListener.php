@@ -255,14 +255,10 @@ class PrettyErrorScreenListener
         $view = '@ContaoCore/Error/'.$template.'.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
-        if (null === $parameters) {
+        try {
+            $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
+        } catch (\Twig_Error $e) {
             $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
-        } else {
-            try {
-                $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
-            } catch (\Twig_Error $e) {
-                $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
-            }
         }
     }
 
@@ -277,10 +273,6 @@ class PrettyErrorScreenListener
      */
     private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event): ?array
     {
-        if (null === ($labels = $this->loadLanguageStrings())) {
-            return null;
-        }
-
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
@@ -289,30 +281,11 @@ class PrettyErrorScreenListener
         return [
             'statusCode' => $statusCode,
             'statusName' => Response::$statusTexts[$statusCode],
-            'error' => $labels,
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getException()->getMessage(),
         ];
-    }
-
-    /**
-     * Loads the language strings.
-     *
-     * @return array|null
-     */
-    private function loadLanguageStrings(): ?array
-    {
-        $this->framework->initialize();
-
-        System::loadLanguageFile('exception');
-
-        if (!isset($GLOBALS['TL_LANG']['XPT'])) {
-            return null;
-        }
-
-        return $GLOBALS['TL_LANG']['XPT'];
     }
 
     /**

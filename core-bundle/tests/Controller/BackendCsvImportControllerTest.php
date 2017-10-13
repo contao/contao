@@ -20,40 +20,10 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BackendCsvImportControllerTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        $GLOBALS['TL_LANG']['MSC']['source'] = 'Source';
-        $GLOBALS['TL_LANG']['MSC']['separator'] = 'Separator';
-        $GLOBALS['TL_LANG']['MSC']['comma'] = 'Comma';
-        $GLOBALS['TL_LANG']['MSC']['semicolon'] = 'Semicolon';
-        $GLOBALS['TL_LANG']['MSC']['tabulator'] = 'Tabulator';
-        $GLOBALS['TL_LANG']['MSC']['linebreak'] = 'Line break';
-        $GLOBALS['TL_LANG']['MSC']['apply'] = 'Apply';
-        $GLOBALS['TL_LANG']['MSC']['backBT'] = 'Back';
-        $GLOBALS['TL_LANG']['MSC']['backBTTitle'] = 'Go back';
-        $GLOBALS['TL_LANG']['MSC']['lw_import'] = ['Import'];
-        $GLOBALS['TL_LANG']['MSC']['tw_import'] = ['Import'];
-        $GLOBALS['TL_LANG']['MSC']['ow_import'] = ['Import'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        unset($GLOBALS['TL_LANG']);
-    }
-
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $this->mockController());
@@ -135,6 +105,7 @@ EOF;
             $this->mockContaoFramework(),
             $connection,
             $requestStack,
+            $this->createMock(TranslatorInterface::class),
             $this->getRootDir()
         );
 
@@ -220,6 +191,7 @@ EOF;
             $this->mockContaoFramework(),
             $connection,
             $requestStack,
+            $this->createMock(TranslatorInterface::class),
             $this->getRootDir()
         );
 
@@ -309,6 +281,7 @@ EOF;
             $this->mockContaoFramework(),
             $connection,
             $requestStack,
+            $this->createMock(TranslatorInterface::class),
             $this->getRootDir()
         );
 
@@ -376,6 +349,7 @@ EOF;
             $this->mockContaoFramework(),
             $connection,
             new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
             $this->getRootDir()
         );
 
@@ -400,10 +374,18 @@ EOF;
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
         $controller = new BackendCsvImportController(
             $this->mockContaoFramework(),
             $this->createMock(Connection::class),
             $requestStack,
+            $translator,
             $this->getRootDir()
         );
 

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PickerTest extends TestCase
 {
@@ -35,23 +36,18 @@ class PickerTest extends TestCase
 
         $factory = new MenuFactory();
 
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->willReturn('Page picker')
+        ;
+
         $this->picker = new Picker(
             $factory,
-            [new PagePickerProvider($factory, $this->createMock(RouterInterface::class))],
+            [new PagePickerProvider($factory, $this->createMock(RouterInterface::class), $translator)],
             new PickerConfig('page', [], 5, 'pagePicker')
         );
-
-        $GLOBALS['TL_LANG']['MSC']['pagePicker'] = 'Page picker';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
     }
 
     public function testCanBeInstantiated(): void
@@ -116,7 +112,13 @@ class PickerTest extends TestCase
 
         $picker = new Picker(
             $factory,
-            [new PagePickerProvider($factory, $this->createMock(RouterInterface::class))],
+            [
+                new PagePickerProvider(
+                    $factory,
+                    $this->createMock(RouterInterface::class),
+                    $this->createMock(TranslatorInterface::class)
+                )
+            ],
             new PickerConfig('page')
         );
 

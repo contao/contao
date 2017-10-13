@@ -1,10 +1,11 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.noForward }}
+    {{ 'XPT.noForward'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.noForwardPage }}</p>
+    <p>{{ 'XPT.noForwardPage'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.noForwardFix|format(adminEmail)|raw }}</p>
+    <p>{{ 'XPT.noForwardFix'|trans|format(adminEmail)|raw }}</p>
 {% endblock %}

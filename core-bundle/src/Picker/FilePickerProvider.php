@@ -19,6 +19,7 @@ use Contao\StringUtil;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -30,13 +31,14 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     private $uploadPath;
 
     /**
-     * @param FactoryInterface $menuFactory
-     * @param RouterInterface  $router
-     * @param string           $uploadPath
+     * @param FactoryInterface    $menuFactory
+     * @param RouterInterface     $router
+     * @param TranslatorInterface $translator
+     * @param string              $uploadPath
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, string $uploadPath)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, string $uploadPath)
     {
-        parent::__construct($menuFactory, $router);
+        parent::__construct($menuFactory, $router, $translator);
 
         $this->uploadPath = $uploadPath;
     }

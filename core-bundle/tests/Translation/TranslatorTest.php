@@ -129,38 +129,4 @@ class TranslatorTest extends TestCase
             $GLOBALS['TL_LANG']['MSC']['foo\\']['bar\\baz.']
         );
     }
-
-    public function testLoadsMessageDomainsWithTheContaoPrefix(): void
-    {
-        $systemAdapter = $this->createMock(Adapter::class);
-
-        $systemAdapter
-            ->expects($this->atLeastOnce())
-            ->method('__call')
-            ->with('loadLanguageFile', ['tl_foobar'])
-        ;
-
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('initialize')
-        ;
-
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('getAdapter')
-            ->willReturn($systemAdapter)
-        ;
-
-        $translator = new Translator($this->createMock(TranslatorInterface::class), $framework);
-
-        $this->assertSame('foo', $translator->trans('foo', [], 'contao_tl_foobar'));
-
-        $GLOBALS['TL_LANG']['tl_foobar']['foo'] = 'bar';
-
-        $this->assertSame('bar', $translator->trans('foo', [], 'contao_tl_foobar'));
-
-        unset($GLOBALS['TL_LANG']['tl_foobar']['foo']);
-    }
 }

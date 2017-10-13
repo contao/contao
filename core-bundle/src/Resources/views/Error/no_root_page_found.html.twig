@@ -1,10 +1,11 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.noRoot }}
+    {{ 'XPT.noRoot'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.noRootPage }}</p>
+    <p>{{ 'XPT.noRootPage'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.noRootFix|format(base, adminEmail)|raw }}</p>
+    <p>{{ 'XPT.noRootFix'|trans|format(base, adminEmail)|raw }}</p>
 {% endblock %}

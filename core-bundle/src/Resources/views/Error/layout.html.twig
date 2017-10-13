@@ -1,4 +1,4 @@
-{% spaceless %}
+{% trans_default_domain 'contao_exception' %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,17 +100,17 @@
                             {% block main %}
                                 {% set _block = block('matter') %}
                                 {% if _block|trim is not empty %}
-                                    <h2>{{ error.matter|default("What's the matter?") }}</h2>
+                                    <h2>{{ 'XPT.matter'|trans }}</h2>
                                     {{ _block|raw }}
                                 {% endif %}
                                 {% set _block = block('howToFix') %}
                                 {% if _block|trim is not empty %}
-                                    <h2>{{ error.howToFix|default('How can I fix the issue?') }}</h2>
+                                    <h2>{{ 'XPT.howToFix'|trans }}</h2>
                                     {{ _block|raw }}
                                 {% endif %}
                                 {% set _block = block('explain') %}
                                 {% if _block|trim is not empty %}
-                                    <h3>{{ error.more|default('Tell me more, please') }}</h3>
+                                    <h3>{{ 'XPT.more'|trans }}</h3>
                                     {{ _block|raw }}
                                 {% endif %}
                             {% endblock %}
@@ -122,9 +122,8 @@
     </div>
     <div id="footer">
         <div class="wrap">
-            {% block hint %}{{ error.hint|default('To customize this notice, create a custom Twig template overriding @ContaoCore/Error/error.html.twig.')|format(template)|raw }}{% endblock %}
+            {% block hint %}{{ 'XPT.hint'|trans|format(template)|raw }}{% endblock %}
         </div>
     </div>
 </body>
 </html>
-{% endspaceless %}
