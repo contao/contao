@@ -56,7 +56,7 @@ class Translator implements TranslatorInterface
         $this->framework->initialize();
         $this->loadLanguageFile($domain);
 
-        $translated = $this->getFromGlobals($id, $domain);
+        $translated = $this->getFromGlobals($id);
 
         if (null === $translated) {
             return $id;
@@ -96,12 +96,11 @@ class Translator implements TranslatorInterface
     /**
      * Returns the labels from the $GLOBALS['TL_LANG'] array.
      *
-     * @param string $id     Message id, e.g. "MSC.view"
-     * @param string $domain Message domain, e.g. "messages" or "tl_content"
+     * @param string $id Message id, e.g. "MSC.view"
      *
      * @return string|null
      */
-    private function getFromGlobals(string $id, string $domain): ?string
+    private function getFromGlobals(string $id): ?string
     {
         // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
         preg_match_all('/(?:\\\\[.\\\\]|[^.])++/s', $id, $matches);

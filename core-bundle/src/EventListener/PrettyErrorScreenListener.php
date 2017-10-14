@@ -25,7 +25,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageError404;
 use Contao\StringUtil;
-use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -269,7 +268,7 @@ class PrettyErrorScreenListener
      * @param int                          $statusCode
      * @param GetResponseForExceptionEvent $event
      *
-     * @return array|null
+     * @return array
      */
     private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event): ?array
     {
