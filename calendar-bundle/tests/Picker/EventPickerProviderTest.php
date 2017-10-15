@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class EventPickerProviderTest extends TestCase
 {
@@ -53,19 +54,14 @@ class EventPickerProviderTest extends TestCase
             )
         ;
 
-        $this->provider = new EventPickerProvider($menuFactory, $router);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $GLOBALS['TL_LANG']['MSC']['eventPicker'] = 'Event picker';
-    }
+        $translator
+            ->method('trans')
+            ->willReturn('Event picker')
+        ;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
+        $this->provider = new EventPickerProvider($menuFactory, $router, $translator);
     }
 
     public function testCanBeInstantiated(): void

@@ -10,6 +10,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
+            - "@contao.translation.translator"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:
