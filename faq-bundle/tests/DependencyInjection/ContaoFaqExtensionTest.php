@@ -67,6 +67,8 @@ class ContaoFaqExtensionTest extends TestCase
         $this->assertSame(FaqPickerProvider::class, $definition->getClass());
         $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('contao.translation.translator', (string) $definition->getArgument(2));
 
         $conditionals = $definition->getInstanceofConditionals();
 

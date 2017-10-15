@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Tests the FaqPickerProvider class.
@@ -56,19 +57,14 @@ class FaqPickerProviderTest extends TestCase
             )
         ;
 
-        $this->provider = new FaqPickerProvider($menuFactory, $router);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $GLOBALS['TL_LANG']['MSC']['faqPicker'] = 'Faq picker';
-    }
+        $translator
+            ->method('trans')
+            ->willReturn('Faq picker')
+        ;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
+        $this->provider = new FaqPickerProvider($menuFactory, $router, $translator);
     }
 
     public function testCanBeInstantiated(): void
