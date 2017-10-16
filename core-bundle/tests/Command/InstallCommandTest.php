@@ -17,7 +17,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 
 class InstallCommandTest extends TestCase
 {
@@ -123,8 +124,10 @@ class InstallCommandTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', 'foobar');
 
-        $lock = new LockHandler('contao:install', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
+        $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5('foobar')));
+
+        $lock = $factory->createLock('contao:install');
+        $lock->acquire();
 
         $command = new InstallCommand('contao:install');
         $command->setContainer($container);

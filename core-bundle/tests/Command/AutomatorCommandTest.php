@@ -17,8 +17,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 
 class AutomatorCommandTest extends TestCase
 {
@@ -57,8 +58,10 @@ class AutomatorCommandTest extends TestCase
 
     public function testIsLockedWhileRunning(): void
     {
-        $lock = new LockHandler('contao:automator', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
+        $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5('foobar')));
+
+        $lock = $factory->createLock('contao:automator');
+        $lock->acquire();
 
         $command = new AutomatorCommand('contao:automator');
         $command->setApplication($this->mockApplication());

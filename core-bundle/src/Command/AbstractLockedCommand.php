@@ -15,7 +15,8 @@ namespace Contao\CoreBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 
 abstract class AbstractLockedCommand extends ContainerAwareCommand
 {
@@ -24,12 +25,14 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
      */
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $lock = new LockHandler(
-            $this->getName(),
+        $store = new FlockStore(
             sys_get_temp_dir().'/'.md5($this->getContainer()->getParameter('kernel.project_dir'))
         );
 
-        if (!$lock->lock()) {
+        $factory = new Factory($store);
+        $lock = $factory->createLock($this->getName());
+
+        if (!$lock->acquire()) {
             $output->writeln('The command is already running in another process.');
 
             return 1;

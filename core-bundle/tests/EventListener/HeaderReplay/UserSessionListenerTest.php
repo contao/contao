@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
@@ -37,7 +38,7 @@ class UserSessionListenerTest extends TestCase
      */
     public function testAddsTheForceNoCacheHeader(string $cookie, string $hash): void
     {
-        $session = new Session();
+        $session = new Session(new MockArraySessionStorage());
         $session->setId('foobar-id');
 
         $request = new Request();
@@ -103,7 +104,7 @@ class UserSessionListenerTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
-        $request->setSession(new Session());
+        $request->setSession(new Session(new MockArraySessionStorage()));
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
@@ -123,7 +124,7 @@ class UserSessionListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
         $request->cookies->set('BE_USER_AUTH', 'foobar');
-        $request->setSession(new Session());
+        $request->setSession(new Session(new MockArraySessionStorage()));
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
