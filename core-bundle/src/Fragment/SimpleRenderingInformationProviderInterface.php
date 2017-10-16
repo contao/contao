@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry;
+namespace Contao\CoreBundle\Fragment;
 
 use Symfony\Component\HttpFoundation\Request;
 

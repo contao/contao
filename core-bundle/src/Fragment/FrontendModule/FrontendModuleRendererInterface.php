@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\FrontendModule;
+namespace Contao\CoreBundle\Fragment\FrontendModule;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ModuleModel;

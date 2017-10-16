@@ -38,7 +38,9 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertTrue(
+            $container->hasDefinition('console.command.contao_corebundle_command_doctrinemigrationsdiffcommand')
+        );
     }
 
     public function testDoesNotAddTheDefinitionIfTheMigrationsBundleIsNotInstalled(): void
@@ -48,7 +50,9 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass = new DoctrineMigrationsPass();
         $pass->process($container);
 
-        $this->assertFalse($container->hasDefinition(DoctrineMigrationsPass::DIFF_COMMAND_ID));
+        $this->assertFalse(
+            $container->hasDefinition('console.command.contao_corebundle_command_doctrinemigrationsdiffcommand')
+        );
     }
 
     public function testAddsTheCommandIdToTheConsoleCommandIds(): void
@@ -67,7 +71,7 @@ class DoctrineMigrationsPassTest extends TestCase
         $this->assertTrue($container->hasParameter('console.command.ids'));
 
         $this->assertContains(
-            DoctrineMigrationsPass::DIFF_COMMAND_ID,
+            'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand',
             $container->getParameter('console.command.ids')
         );
     }

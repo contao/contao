@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests\FragmentRegistry\FrontendModule;
+namespace Contao\CoreBundle\Tests\Fragment\FrontendModule;
 
-use Contao\CoreBundle\FragmentRegistry\FrontendModule\DelegatingFrontendModuleRenderer;
-use Contao\CoreBundle\FragmentRegistry\FrontendModule\FrontendModuleRendererInterface;
+use Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer;
+use Contao\CoreBundle\Fragment\FrontendModule\FrontendModuleRendererInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
 
@@ -21,9 +21,9 @@ class DelegatingFrontendModuleRendererTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $renderer = new DelegatingFrontendModuleRenderer([]);
+        $renderer = new DelegatingFrontendModuleRenderer();
 
-        $this->assertInstanceOf('Contao\CoreBundle\FragmentRegistry\FrontendModule\DelegatingFrontendModuleRenderer', $renderer);
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer', $renderer);
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void
@@ -43,7 +43,9 @@ class DelegatingFrontendModuleRendererTest extends TestCase
             ->method('supports')
         ;
 
-        $renderer = new DelegatingFrontendModuleRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingFrontendModuleRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertTrue($renderer->supports(new ModuleModel()));
     }
@@ -66,7 +68,9 @@ class DelegatingFrontendModuleRendererTest extends TestCase
             ->willReturn(false)
         ;
 
-        $renderer = new DelegatingFrontendModuleRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingFrontendModuleRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertFalse($renderer->supports(new ModuleModel()));
     }
@@ -99,7 +103,9 @@ class DelegatingFrontendModuleRendererTest extends TestCase
             ->method('render')
         ;
 
-        $renderer = new DelegatingFrontendModuleRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingFrontendModuleRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertSame('foobar', $renderer->render(new ModuleModel()));
     }
@@ -122,7 +128,9 @@ class DelegatingFrontendModuleRendererTest extends TestCase
             ->willReturn(false)
         ;
 
-        $renderer = new DelegatingFrontendModuleRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingFrontendModuleRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertNull($renderer->render(new ModuleModel()));
     }

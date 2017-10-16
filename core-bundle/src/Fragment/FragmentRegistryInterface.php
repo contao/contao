@@ -10,10 +10,18 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry;
+namespace Contao\CoreBundle\Fragment;
 
 interface FragmentRegistryInterface
 {
+    public const CONTENT_ELEMENT_FRAGMENT = 'contao.fragment.content_element';
+    public const FRONTEND_MODULE_FRAGMENT = 'contao.fragment.frontend_module';
+    public const PAGE_TYPE_FRAGMENT = 'contao.fragment.page_type';
+
+    public const CONTENT_ELEMENT_RENDERER = 'contao.fragment.content_element_renderer';
+    public const FRONTEND_MODULE_RENDERER = 'contao.fragment.frontend_module_renderer';
+    public const PAGE_TYPE_RENDERER = 'contao.fragment.page_type_renderer';
+
     /**
      * Adds a fragment.
      *

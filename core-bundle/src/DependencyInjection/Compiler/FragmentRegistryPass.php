@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,20 +23,6 @@ class FragmentRegistryPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
-    public const FRAGMENT_REGISTRY = 'contao.fragment.registry';
-
-    public const TAG_FRAGMENT_FRONTEND_MODULE = 'contao.fragment.frontend_module';
-    public const TAG_FRAGMENT_PAGE_TYPE = 'contao.fragment.page_type';
-    public const TAG_FRAGMENT_CONTENT_ELEMENT = 'contao.fragment.content_element';
-
-    public const RENDERER_FRONTEND_MODULE = 'contao.fragment.renderer.frontend_module.delegating';
-    public const RENDERER_PAGE_TYPE = 'contao.fragment.renderer.page_type.delegating';
-    public const RENDERER_CONTENT_ELEMENT = 'contao.fragment.renderer.content_element.delegating';
-
-    public const TAG_RENDERER_FRONTEND_MODULE = 'contao.fragment.renderer.frontend_module';
-    public const TAG_RENDERER_PAGE_TYPE = 'contao.fragment.renderer.page_type';
-    public const TAG_RENDERER_CONTENT_ELEMENT = 'contao.fragment.renderer.content_element';
-
     /**
      * @var Definition
      */
@@ -44,19 +31,19 @@ class FragmentRegistryPass implements CompilerPassInterface
     /**
      * @var array
      */
-    private $tags = [
-        self::TAG_FRAGMENT_FRONTEND_MODULE,
-        self::TAG_FRAGMENT_PAGE_TYPE,
-        self::TAG_FRAGMENT_CONTENT_ELEMENT,
+    private $fragments = [
+        FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT,
+        FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
+        FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
     ];
 
     /**
      * @var array
      */
     private $renderers = [
-        self::RENDERER_FRONTEND_MODULE => self::TAG_RENDERER_FRONTEND_MODULE,
-        self::RENDERER_PAGE_TYPE => self::TAG_RENDERER_PAGE_TYPE,
-        self::RENDERER_CONTENT_ELEMENT => self::TAG_FRAGMENT_CONTENT_ELEMENT,
+        FragmentRegistryInterface::CONTENT_ELEMENT_RENDERER,
+        FragmentRegistryInterface::FRONTEND_MODULE_RENDERER,
+        FragmentRegistryInterface::PAGE_TYPE_RENDERER,
     ];
 
     /**
@@ -66,18 +53,18 @@ class FragmentRegistryPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(self::FRAGMENT_REGISTRY)) {
+        if (!$container->has('contao.fragment.registry')) {
             return;
         }
 
-        $this->fragmentRegistry = $container->findDefinition(self::FRAGMENT_REGISTRY);
+        $this->fragmentRegistry = $container->findDefinition('contao.fragment.registry');
 
-        foreach ($this->tags as $tag) {
-            $this->registerFragments($container, $tag);
+        foreach ($this->fragments as $tag) {
+            $this->registerFragment($container, $tag);
         }
 
-        foreach ($this->renderers as $renderer => $tag) {
-            $this->registerFragmentRenderers($container, $renderer, $tag);
+        foreach ($this->renderers as $tag) {
+            $this->registerFragmentRenderer($container, $tag);
         }
     }
 
@@ -87,7 +74,7 @@ class FragmentRegistryPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      * @param string           $tag
      */
-    private function registerFragments(ContainerBuilder $container, string $tag): void
+    private function registerFragment(ContainerBuilder $container, string $tag): void
     {
         $fragments = $this->findAndSortTaggedServices($tag, $container);
 
@@ -98,10 +85,7 @@ class FragmentRegistryPass implements CompilerPassInterface
                 $fragmentOptions['tag'] = $tag;
 
                 if (!isset($fragmentOptions['type'])) {
-                    throw new RuntimeException(sprintf(
-                        'A service tagged as "%s" must have a "type" attribute set.',
-                        $tag
-                    ));
+                    throw new RuntimeException(sprintf('A service tagged as "%s" must have a "type" attribute.', $tag));
                 }
 
                 $fragmentOptions['controller'] = (string) $reference;
@@ -131,16 +115,15 @@ class FragmentRegistryPass implements CompilerPassInterface
      * Registers the fragment renderers.
      *
      * @param ContainerBuilder $container
-     * @param string           $renderer
      * @param string           $tag
      */
-    private function registerFragmentRenderers(ContainerBuilder $container, string $renderer, string $tag): void
+    private function registerFragmentRenderer(ContainerBuilder $container, string $tag): void
     {
-        if (!$container->has($renderer)) {
-            return;
-        }
+        $renderers = $this->findAndSortTaggedServices($tag, $container);
 
-        $renderer = $container->findDefinition($renderer);
-        $renderer->setArgument(0, $this->findAndSortTaggedServices($tag, $container));
+        foreach ($renderers as $priority => $reference) {
+            $renderer = $container->findDefinition($tag);
+            $renderer->addMethodCall('addRenderer', [$reference]);
+        }
     }
 }

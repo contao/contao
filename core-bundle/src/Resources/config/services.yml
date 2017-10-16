@@ -56,7 +56,7 @@ services:
         arguments:
             - "@contao.framework"
 
-    contao.cors_website_roots_config_provider:
+    contao.cors.website_roots_config_provider:
         class: Contao\CoreBundle\Cors\WebsiteRootsConfigProvider
         arguments:
             - "@database_connection"
@@ -78,52 +78,52 @@ services:
             - "@doctrine"
 
     contao.fragment.registry:
-        class: Contao\CoreBundle\FragmentRegistry\FragmentRegistry
+        class: Contao\CoreBundle\Fragment\FragmentRegistry
 
-    contao.fragment.renderer.content_element:
-        alias: contao.fragment.renderer.content_element.delegating
+    contao.fragment.content_element_renderer:
+        alias: contao.fragment.content_element.delegating_renderer
 
-    contao.fragment.renderer.content_element.default:
-        class: Contao\CoreBundle\FragmentRegistry\ContentElement\DefaultContentElementRenderer
+    contao.fragment.content_element.default_renderer:
+        class: Contao\CoreBundle\Fragment\ContentElement\DefaultContentElementRenderer
         arguments:
             - "@contao.fragment.registry"
             - "@fragment.handler"
             - "@request_stack"
         tags:
-            { name: 'contao.fragment.renderer.content_element' }
+            { name: 'contao.fragment.content_element_renderer' }
 
-    contao.fragment.renderer.content_element.delegating:
-        class: Contao\CoreBundle\FragmentRegistry\ContentElement\DelegatingContentElementRenderer
+    contao.fragment.content_element.delegating_renderer:
+        class: Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer
 
-    contao.fragment.renderer.frontend_module:
-        alias: contao.fragment.renderer.frontend_module.delegating
+    contao.fragment.frontend_module_renderer:
+        alias: contao.fragment.frontend_module.delegating_renderer
 
-    contao.fragment.renderer.frontend_module.default:
-        class: Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer
+    contao.fragment.frontend_module.default_renderer:
+        class: Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer
         arguments:
             - "@contao.fragment.registry"
             - "@fragment.handler"
             - "@request_stack"
         tags:
-            { name: 'contao.fragment.renderer.frontend_module' }
+            { name: 'contao.fragment.frontend_module_renderer' }
 
-    contao.fragment.renderer.frontend_module.delegating:
-        class: Contao\CoreBundle\FragmentRegistry\FrontendModule\DelegatingFrontendModuleRenderer
+    contao.fragment.frontend_module.delegating_renderer:
+        class: Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer
 
-    contao.fragment.renderer.page_type:
-        alias: contao.fragment.renderer.page_type.delegating
+    contao.fragment.page_type_renderer:
+        alias: contao.fragment.page_type.delegating_renderer
 
-    contao.fragment.renderer.page_type.default:
-        class: Contao\CoreBundle\FragmentRegistry\PageType\DefaultPageTypeRenderer
+    contao.fragment.page_type.default_renderer:
+        class: Contao\CoreBundle\Fragment\PageType\DefaultPageTypeRenderer
         arguments:
             - "@contao.fragment.registry"
             - "@fragment.handler"
             - "@request_stack"
         tags:
-            { name: 'contao.fragment.renderer.page_type' }
+            { name: 'contao.fragment.page_type_renderer' }
 
-    contao.fragment.renderer.page_type.delegating:
-        class: Contao\CoreBundle\FragmentRegistry\PageType\DelegatingPageTypeRenderer
+    contao.fragment.page_type.delegating_renderer:
+        class: Contao\CoreBundle\Fragment\PageType\DelegatingPageTypeRenderer
 
     contao.image.imagine:
         class: Imagine\Gd\Imagine

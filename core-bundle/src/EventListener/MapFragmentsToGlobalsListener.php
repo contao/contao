@@ -13,8 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\ContentProxy;
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\FragmentRegistryInterface;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\ModuleProxy;
@@ -54,7 +53,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
      */
     private function mapPageTypes(): void
     {
-        $filter = $this->getTagFilter(FragmentRegistryPass::TAG_FRAGMENT_PAGE_TYPE);
+        $filter = $this->getTagFilter(FragmentRegistryInterface::PAGE_TYPE_FRAGMENT);
 
         foreach ($this->fragmentRegistry->getFragments($filter) as $identifier => $fragment) {
             $options = $this->fragmentRegistry->getOptions($identifier);
@@ -70,7 +69,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
      */
     private function mapFrontendModules(): void
     {
-        $filter = $this->getTagFilter(FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE);
+        $filter = $this->getTagFilter(FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT);
 
         foreach ($this->fragmentRegistry->getFragments($filter) as $identifier => $fragment) {
             $options = $this->fragmentRegistry->getOptions($identifier);
@@ -78,7 +77,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
             if (!isset($options['category'])) {
                 throw new \RuntimeException(sprintf(
                     'You tagged a fragment as "%s" but forgot to specify the "category" attribute.',
-                    FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE
+                    FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT
                 ));
             }
 
@@ -93,7 +92,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
      */
     private function mapContentElements(): void
     {
-        $filter = $this->getTagFilter(FragmentRegistryPass::TAG_FRAGMENT_CONTENT_ELEMENT);
+        $filter = $this->getTagFilter(FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT);
 
         foreach ($this->fragmentRegistry->getFragments($filter) as $identifier => $fragment) {
             $options = $this->fragmentRegistry->getOptions($identifier);
@@ -101,7 +100,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
             if (!isset($options['category'])) {
                 throw new \RuntimeException(sprintf(
                     'You tagged a fragment as "%s" but forgot to specify the "category" attribute.',
-                    FragmentRegistryPass::TAG_FRAGMENT_CONTENT_ELEMENT
+                    FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT
                 ));
             }
 

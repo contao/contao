@@ -26,7 +26,7 @@ class FragmentRegistryPassTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass', $pass);
     }
 
-    public function testRegistersTheFragmentsAndFragmentRenderers(): void
+    public function testAddsTheMethodCallsToTheDefinition(): void
     {
         $container = new ContainerBuilder();
 
@@ -44,75 +44,37 @@ class FragmentRegistryPassTest extends TestCase
         $pass = new FragmentRegistryPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('contao.fragment.registry'));
-
-        $this->assertSame(
-            'Contao\CoreBundle\FragmentRegistry\FragmentRegistry',
-            $container->getDefinition('contao.fragment.registry')->getClass()
-        );
-
-        $this->assertTrue($container->hasDefinition('contao.fragment.renderer.frontend_module.default'));
-
-        $this->assertSame(
-            'Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
-            $container->getDefinition('contao.fragment.renderer.frontend_module.default')->getClass()
-        );
-
-        $this->assertContains(
-            'contao.fragment.renderer.frontend_module',
-            array_keys($container->getDefinition('contao.fragment.renderer.frontend_module.default')->getTags())
-        );
-
-        $this->assertTrue($container->hasDefinition('contao.fragment.renderer.frontend_module.default'));
-
-        $this->assertSame(
-            'Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
-            $container->getDefinition('contao.fragment.renderer.frontend_module.default')->getClass()
-        );
-
-        $this->assertContains(
-            'contao.fragment.renderer.frontend_module',
-            array_keys($container->getDefinition('contao.fragment.renderer.frontend_module.default')->getTags())
-        );
-
-        $this->assertContains(
-            'contao.fragment.renderer.content_element',
-            array_keys($container->getDefinition('contao.fragment.renderer.content_element.default')->getTags())
-        );
-
-        $this->assertTrue($container->hasDefinition('contao.fragment.renderer.content_element.default'));
-
-        $this->assertSame(
-            'Contao\CoreBundle\FragmentRegistry\ContentElement\DefaultContentElementRenderer',
-            $container->getDefinition('contao.fragment.renderer.content_element.default')->getClass()
-        );
-
-        $this->assertContains(
-            'contao.fragment.renderer.content_element',
-            array_keys($container->getDefinition('contao.fragment.renderer.content_element.default')->getTags())
-        );
-
-        $this->assertContains(
-            'contao.fragment.renderer.page_type',
-            array_keys($container->getDefinition('contao.fragment.renderer.page_type.default')->getTags())
-        );
-
-        $this->assertTrue($container->hasDefinition('contao.fragment.renderer.page_type.default'));
-
-        $this->assertSame(
-            'Contao\CoreBundle\FragmentRegistry\PageType\DefaultPageTypeRenderer',
-            $container->getDefinition('contao.fragment.renderer.page_type.default')->getClass()
-        );
-
-        $this->assertContains(
-            'contao.fragment.renderer.page_type',
-            array_keys($container->getDefinition('contao.fragment.renderer.page_type.default')->getTags())
-        );
-
         $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
 
         $this->assertSame('addFragment', $methodCalls[0][0]);
-        $this->assertSame('contao.fragment.frontend_module.navigation_trivial', $methodCalls[0][1][0]);
+        $this->assertSame('contao.fragment.content_element.other', $methodCalls[0][1][0]);
+
+        $this->assertSame(
+            [
+                'type' => 'other',
+                'category' => 'text',
+                'renderStrategy' => 'esi',
+                'tag' => 'contao.fragment.content_element',
+                'controller' => 'other_controller:foobarAction', // validates method option
+            ],
+            $methodCalls[0][1][2]
+        );
+
+        $this->assertSame('addFragment', $methodCalls[1][0]);
+        $this->assertSame('contao.fragment.content_element.other', $methodCalls[1][1][0]);
+
+        $this->assertSame(
+            [
+                'type' => 'other',
+                'category' => 'maintenance',
+                'tag' => 'contao.fragment.content_element',
+                'controller' => 'other_controller:secondAction', // validates method option
+            ],
+            $methodCalls[1][1][2]
+        );
+
+        $this->assertSame('addFragment', $methodCalls[2][0]);
+        $this->assertSame('contao.fragment.frontend_module.navigation_trivial', $methodCalls[2][1][0]);
 
         $this->assertSame(
             [
@@ -121,11 +83,11 @@ class FragmentRegistryPassTest extends TestCase
                 'tag' => 'contao.fragment.frontend_module',
                 'controller' => 'AppBundle\TestTrivialModule',
             ],
-            $methodCalls[0][1][2]
+            $methodCalls[2][1][2]
         );
 
-        $this->assertSame('addFragment', $methodCalls[1][0]);
-        $this->assertSame('contao.fragment.frontend_module.navigation_esi', $methodCalls[1][1][0]);
+        $this->assertSame('addFragment', $methodCalls[3][0]);
+        $this->assertSame('contao.fragment.frontend_module.navigation_esi', $methodCalls[3][1][0]);
 
         $this->assertSame(
             [
@@ -135,44 +97,17 @@ class FragmentRegistryPassTest extends TestCase
                 'tag' => 'contao.fragment.frontend_module',
                 'controller' => 'AppBundle\TestEsiModule',
             ],
-            $methodCalls[1][1][2]
+            $methodCalls[3][1][2]
         );
 
-        $this->assertSame('addFragment', $methodCalls[2][0]);
-        $this->assertSame('contao.fragment.page_type.super_page', $methodCalls[2][1][0]);
+        $this->assertSame('addFragment', $methodCalls[4][0]);
+        $this->assertSame('contao.fragment.page_type.super_page', $methodCalls[4][1][0]);
 
         $this->assertSame(
             [
                 'type' => 'super_page',
                 'tag' => 'contao.fragment.page_type',
                 'controller' => 'AppBundle\SuperPageType',
-            ],
-            $methodCalls[2][1][2]
-        );
-
-        $this->assertSame('addFragment', $methodCalls[3][0]);
-        $this->assertSame('contao.fragment.content_element.other', $methodCalls[3][1][0]);
-
-        $this->assertSame(
-            [
-                'type' => 'other',
-                'category' => 'text',
-                'renderStrategy' => 'esi',
-                'tag' => 'contao.fragment.content_element',
-                'controller' => 'other_controller:foobarAction', // Validates method option
-            ],
-            $methodCalls[3][1][2]
-        );
-
-        $this->assertSame('addFragment', $methodCalls[4][0]);
-        $this->assertSame('contao.fragment.content_element.other', $methodCalls[4][1][0]);
-
-        $this->assertSame(
-            [
-                'type' => 'other',
-                'category' => 'maintenance',
-                'tag' => 'contao.fragment.content_element',
-                'controller' => 'other_controller:secondAction', // Validates method option
             ],
             $methodCalls[4][1][2]
         );
@@ -196,7 +131,7 @@ class FragmentRegistryPassTest extends TestCase
         $pass = new FragmentRegistryPass();
 
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('must have a "type" attribute set');
+        $this->expectExceptionMessage('must have a "type" attribute');
 
         $pass->process($container);
     }
@@ -243,7 +178,7 @@ class FragmentRegistryPassTest extends TestCase
         ;
 
         $reflection = new \ReflectionClass(FragmentRegistryPass::class);
-        $method = $reflection->getMethod('registerFragmentRenderers');
+        $method = $reflection->getMethod('registerFragmentRenderer');
         $method->setAccessible(true);
         $registry = $reflection->newInstanceWithoutConstructor();
 

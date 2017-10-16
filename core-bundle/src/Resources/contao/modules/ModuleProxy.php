@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\FrontendModule\FrontendModuleRendererInterface;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
+use Contao\CoreBundle\Fragment\FrontendModule\FrontendModuleRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,7 +30,7 @@ class ModuleProxy extends Module
         $response = new Response();
 
         /** @var FrontendModuleRendererInterface $frontendModuleRenderer */
-        $frontendModuleRenderer = $container->get(FragmentRegistryPass::RENDERER_FRONTEND_MODULE);
+        $frontendModuleRenderer = $container->get(FragmentRegistryInterface::FRONTEND_MODULE_RENDERER);
 
         $result = $frontendModuleRenderer->render($this->objModel, $this->strColumn);
 

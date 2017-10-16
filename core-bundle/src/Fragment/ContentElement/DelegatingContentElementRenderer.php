@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\ContentElement;
+namespace Contao\CoreBundle\Fragment\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -21,16 +21,6 @@ class DelegatingContentElementRenderer implements ContentElementRendererInterfac
      * @var ContentElementRendererInterface[]
      */
     private $renderers = [];
-
-    /**
-     * @param ContentElementRendererInterface[] $renderers
-     */
-    public function __construct(array $renderers)
-    {
-        foreach ($renderers as $renderer) {
-            $this->addRenderer($renderer);
-        }
-    }
 
     /**
      * Adds a renderer.

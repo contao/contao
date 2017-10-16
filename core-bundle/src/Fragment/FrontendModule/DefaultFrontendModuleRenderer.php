@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\FrontendModule;
+namespace Contao\CoreBundle\Fragment\FrontendModule;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\AbstractFragmentRenderer;
+use Contao\CoreBundle\Fragment\AbstractFragmentRenderer;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\ModuleModel;
 
 class DefaultFrontendModuleRenderer extends AbstractFragmentRenderer implements FrontendModuleRendererInterface
@@ -40,7 +40,7 @@ class DefaultFrontendModuleRenderer extends AbstractFragmentRenderer implements 
             'scope' => $scope,
         ];
 
-        $fragmentIdentifier = FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE.'.'.$moduleModel->type;
+        $fragmentIdentifier = FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT.'.'.$moduleModel->type;
 
         return $this->renderFragment($fragmentIdentifier, $attributes, $query);
     }

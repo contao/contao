@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\PageType\PageTypeRendererInterface;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
+use Contao\CoreBundle\Fragment\PageType\PageTypeRendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -31,7 +31,7 @@ class PageProxy
         $response = new Response();
 
         /** @var PageTypeRendererInterface $pageTypeRenderer */
-        $pageTypeRenderer = $container->get(FragmentRegistryPass::RENDERER_PAGE_TYPE);
+        $pageTypeRenderer = $container->get(FragmentRegistryInterface::PAGE_TYPE_RENDERER);
 
         $result = $pageTypeRenderer->render($objPage);
 

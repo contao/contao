@@ -22,8 +22,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class DoctrineMigrationsPass implements CompilerPassInterface
 {
-    public const DIFF_COMMAND_ID = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
-
     /**
      * {@inheritdoc}
      */
@@ -46,7 +44,7 @@ class DoctrineMigrationsPass implements CompilerPassInterface
         // Required if Symfony's compiler pass has already handled the "console.command" tags
         if ($container->hasParameter('console.command.ids')) {
             $ids = $container->getParameter('console.command.ids');
-            $ids[] = static::DIFF_COMMAND_ID;
+            $ids[] = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
 
             $container->setParameter('console.command.ids', $ids);
         }

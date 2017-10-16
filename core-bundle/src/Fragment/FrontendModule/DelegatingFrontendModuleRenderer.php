@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\FrontendModule;
+namespace Contao\CoreBundle\Fragment\FrontendModule;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ModuleModel;
@@ -21,16 +21,6 @@ class DelegatingFrontendModuleRenderer implements FrontendModuleRendererInterfac
      * @var FrontendModuleRendererInterface[]
      */
     private $renderers = [];
-
-    /**
-     * @param FrontendModuleRendererInterface[] $renderers
-     */
-    public function __construct(array $renderers)
-    {
-        foreach ($renderers as $renderer) {
-            $this->addRenderer($renderer);
-        }
-    }
 
     /**
      * Adds a renderer.

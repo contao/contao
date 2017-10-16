@@ -1,5 +1,4 @@
 services:
-    # Test fragments
     AppBundle\TestTrivialModule:
         tags:
             - { name: contao.fragment.frontend_module, type: navigation_trivial, category: navigationMenu }

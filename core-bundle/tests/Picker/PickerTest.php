@@ -117,7 +117,7 @@ class PickerTest extends TestCase
                     $factory,
                     $this->createMock(RouterInterface::class),
                     $this->createMock(TranslatorInterface::class)
-                )
+                ),
             ],
             new PickerConfig('page')
         );

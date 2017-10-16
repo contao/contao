@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests\FragmentRegistry\PageType;
+namespace Contao\CoreBundle\Tests\Fragment\PageType;
 
-use Contao\CoreBundle\FragmentRegistry\PageType\DelegatingPageTypeRenderer;
-use Contao\CoreBundle\FragmentRegistry\PageType\PageTypeRendererInterface;
+use Contao\CoreBundle\Fragment\PageType\DelegatingPageTypeRenderer;
+use Contao\CoreBundle\Fragment\PageType\PageTypeRendererInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 
@@ -21,9 +21,9 @@ class DelegatingPageTypeRendererTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $renderer = new DelegatingPageTypeRenderer([]);
+        $renderer = new DelegatingPageTypeRenderer();
 
-        $this->assertInstanceOf('Contao\CoreBundle\FragmentRegistry\PageType\DelegatingPageTypeRenderer', $renderer);
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\PageType\DelegatingPageTypeRenderer', $renderer);
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void
@@ -43,7 +43,9 @@ class DelegatingPageTypeRendererTest extends TestCase
             ->method('supports')
         ;
 
-        $renderer = new DelegatingPageTypeRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingPageTypeRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertTrue($renderer->supports(new PageModel()));
     }
@@ -66,7 +68,9 @@ class DelegatingPageTypeRendererTest extends TestCase
             ->willReturn(false)
         ;
 
-        $renderer = new DelegatingPageTypeRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingPageTypeRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertFalse($renderer->supports(new PageModel()));
     }
@@ -99,7 +103,9 @@ class DelegatingPageTypeRendererTest extends TestCase
             ->method('render')
         ;
 
-        $renderer = new DelegatingPageTypeRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingPageTypeRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertSame('foobar', $renderer->render(new PageModel()));
     }
@@ -122,7 +128,9 @@ class DelegatingPageTypeRendererTest extends TestCase
             ->willReturn(false)
         ;
 
-        $renderer = new DelegatingPageTypeRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingPageTypeRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertNull($renderer->render(new PageModel()));
     }

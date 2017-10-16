@@ -10,12 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests\FragmentRegistry\FrontendModule;
+namespace Contao\CoreBundle\Tests\Fragment\FrontendModule;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\FragmentRegistry;
-use Contao\CoreBundle\FragmentRegistry\FragmentRegistryInterface;
-use Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer;
+use Contao\CoreBundle\Fragment\FragmentRegistry;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
+use Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,7 +26,7 @@ class DefaultFrontendModuleRendererTest extends TestCase
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
-            'Contao\CoreBundle\FragmentRegistry\FrontendModule\DefaultFrontendModuleRenderer',
+            'Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer',
             $this->mockRenderer()
         );
     }
@@ -51,10 +50,10 @@ class DefaultFrontendModuleRendererTest extends TestCase
         $registry = new FragmentRegistry();
 
         $registry->addFragment(
-            FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE.'.identifier',
+            FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT.'.identifier',
             new \stdClass(),
             [
-                'tag' => FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE,
+                'tag' => FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
                 'type' => 'test',
                 'controller' => 'test',
                 'category' => 'navigationMod',

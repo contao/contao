@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\PageType;
+namespace Contao\CoreBundle\Fragment\PageType;
 
 use Contao\PageModel;
 
@@ -20,16 +20,6 @@ class DelegatingPageTypeRenderer implements PageTypeRendererInterface
      * @var PageTypeRendererInterface[]
      */
     private $renderers = [];
-
-    /**
-     * @param PageTypeRendererInterface[] $renderers
-     */
-    public function __construct(array $renderers)
-    {
-        foreach ($renderers as $renderer) {
-            $this->addRenderer($renderer);
-        }
-    }
 
     /**
      * Adds a renderer.

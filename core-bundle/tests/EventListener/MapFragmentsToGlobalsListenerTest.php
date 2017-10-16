@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\ContentProxy;
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
 use Contao\CoreBundle\EventListener\MapFragmentsToGlobalsListener;
-use Contao\CoreBundle\FragmentRegistry\FragmentRegistry;
+use Contao\CoreBundle\Fragment\FragmentRegistry;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleProxy;
 use Contao\PageProxy;
@@ -48,7 +48,7 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
             'page-type',
             new \stdClass(),
             [
-                'tag' => FragmentRegistryPass::TAG_FRAGMENT_PAGE_TYPE,
+                'tag' => FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
                 'type' => 'test',
                 'controller' => 'test',
             ]
@@ -58,7 +58,7 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
             'frontend-module',
             new \stdClass(),
             [
-                'tag' => FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE,
+                'tag' => FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
                 'type' => 'test',
                 'controller' => 'test',
                 'category' => 'navigationMod',
@@ -69,7 +69,7 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
             'content-element',
             new \stdClass(),
             [
-                'tag' => FragmentRegistryPass::TAG_FRAGMENT_CONTENT_ELEMENT,
+                'tag' => FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT,
                 'type' => 'test',
                 'controller' => 'test',
                 'category' => 'text',
@@ -93,7 +93,7 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
             'frontend-module',
             new \stdClass(),
             [
-                'tag' => FragmentRegistryPass::TAG_FRAGMENT_FRONTEND_MODULE,
+                'tag' => FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
                 'type' => 'test',
                 'controller' => 'test',
             ]
@@ -116,7 +116,7 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
             'content-element',
             new \stdClass(),
             [
-                'tag' => FragmentRegistryPass::TAG_FRAGMENT_CONTENT_ELEMENT,
+                'tag' => FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT,
                 'type' => 'test',
                 'controller' => 'test',
             ]

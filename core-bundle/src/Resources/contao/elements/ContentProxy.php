@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\ContentElement\ContentElementRendererInterface;
+use Contao\CoreBundle\Fragment\ContentElement\ContentElementRendererInterface;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,7 +30,7 @@ class ContentProxy extends ContentElement
         $response = new Response();
 
         /** @var ContentElementRendererInterface $contentElementRenderer */
-        $contentElementRenderer = $container->get(FragmentRegistryPass::RENDERER_CONTENT_ELEMENT);
+        $contentElementRenderer = $container->get(FragmentRegistryInterface::CONTENT_ELEMENT_RENDERER);
 
         $result = $contentElementRenderer->render($this->objModel, $this->strColumn);
 

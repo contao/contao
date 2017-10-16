@@ -68,11 +68,11 @@ class BackendCsvImportController
      */
     public function __construct(ContaoFrameworkInterface $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
-        $this->framework    = $framework;
-        $this->connection   = $connection;
+        $this->framework = $framework;
+        $this->connection = $connection;
         $this->requestStack = $requestStack;
-        $this->translator   = $translator;
-        $this->projectDir   = $projectDir;
+        $this->translator = $translator;
+        $this->projectDir = $projectDir;
     }
 
     /**

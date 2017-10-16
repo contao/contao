@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\ContentElement;
+namespace Contao\CoreBundle\Fragment\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\ContaoCoreBundle;

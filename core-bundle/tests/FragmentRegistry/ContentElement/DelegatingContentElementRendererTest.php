@@ -10,20 +10,20 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests\FragmentRegistry\ContentElement;
+namespace Contao\CoreBundle\Tests\Fragment\ContentElement;
 
 use Contao\ContentModel;
-use Contao\CoreBundle\FragmentRegistry\ContentElement\ContentElementRendererInterface;
-use Contao\CoreBundle\FragmentRegistry\ContentElement\DelegatingContentElementRenderer;
+use Contao\CoreBundle\Fragment\ContentElement\ContentElementRendererInterface;
+use Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 
 class DelegatingContentElementRendererTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $renderer = new DelegatingContentElementRenderer([]);
+        $renderer = new DelegatingContentElementRenderer();
 
-        $this->assertInstanceOf('Contao\CoreBundle\FragmentRegistry\ContentElement\DelegatingContentElementRenderer', $renderer);
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer', $renderer);
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void
@@ -43,7 +43,9 @@ class DelegatingContentElementRendererTest extends TestCase
             ->method('supports')
         ;
 
-        $renderer = new DelegatingContentElementRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingContentElementRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertTrue($renderer->supports(new ContentModel()));
     }
@@ -66,7 +68,9 @@ class DelegatingContentElementRendererTest extends TestCase
             ->willReturn(false)
         ;
 
-        $renderer = new DelegatingContentElementRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingContentElementRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertFalse($renderer->supports(new ContentModel()));
     }
@@ -99,7 +103,9 @@ class DelegatingContentElementRendererTest extends TestCase
             ->method('render')
         ;
 
-        $renderer = new DelegatingContentElementRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingContentElementRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertSame('foobar', $renderer->render(new ContentModel()));
     }
@@ -122,7 +128,9 @@ class DelegatingContentElementRendererTest extends TestCase
             ->willReturn(false)
         ;
 
-        $renderer = new DelegatingContentElementRenderer([$renderer1, $renderer2]);
+        $renderer = new DelegatingContentElementRenderer();
+        $renderer->addRenderer($renderer1);
+        $renderer->addRenderer($renderer2);
 
         $this->assertNull($renderer->render(new ContentModel()));
     }

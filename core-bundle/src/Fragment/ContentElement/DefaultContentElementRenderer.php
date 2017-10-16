@@ -10,12 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\FragmentRegistry\ContentElement;
+namespace Contao\CoreBundle\Fragment\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
-use Contao\CoreBundle\FragmentRegistry\AbstractFragmentRenderer;
+use Contao\CoreBundle\Fragment\AbstractFragmentRenderer;
+use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 
 class DefaultContentElementRenderer extends AbstractFragmentRenderer implements ContentElementRendererInterface
 {
@@ -40,7 +40,7 @@ class DefaultContentElementRenderer extends AbstractFragmentRenderer implements 
             'scope' => $scope,
         ];
 
-        $fragmentIdentifier = FragmentRegistryPass::TAG_FRAGMENT_CONTENT_ELEMENT.'.'.$contentModel->type;
+        $fragmentIdentifier = FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT.'.'.$contentModel->type;
 
         return $this->renderFragment($fragmentIdentifier, $attributes, $query);
     }

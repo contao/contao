@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests\FragmentRegistry;
+namespace Contao\CoreBundle\Tests\Fragment;
 
-use Contao\CoreBundle\FragmentRegistry\FragmentRegistry;
+use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 
 class FragmentRegistryTest extends TestCase
@@ -21,7 +21,7 @@ class FragmentRegistryTest extends TestCase
     {
         $registry = new FragmentRegistry();
 
-        $this->assertInstanceOf('Contao\CoreBundle\FragmentRegistry\FragmentRegistry', $registry);
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FragmentRegistry', $registry);
     }
 
     public function testChecksTheBasicOptions(): void
