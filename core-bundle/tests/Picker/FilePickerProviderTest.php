@@ -265,13 +265,24 @@ class FilePickerProviderTest extends TestCase
             'files' => true,
         ];
 
+        $uuid = '82243f46-a4c3-11e3-8e29-000c29e44aea';
+
         $this->assertSame(
             [
                 'fieldType' => 'checkbox',
                 'files' => true,
                 'value' => ['/foobar'],
             ],
-            $this->provider->getDcaAttributes(new PickerConfig('file', $extra, '82243f46-a4c3-11e3-8e29-000c29e44aea'))
+            $this->provider->getDcaAttributes(new PickerConfig('file', $extra, $uuid))
+        );
+
+        $this->assertSame(
+            [
+                'files' => true,
+                'fieldType' => 'radio',
+                'value' => ['/foobar'],
+            ],
+            $this->provider->getDcaAttributes(new PickerConfig('file', ['files' => true], $uuid))
         );
 
         $this->assertSame(
@@ -280,9 +291,7 @@ class FilePickerProviderTest extends TestCase
                 'filesOnly' => true,
                 'value' => '/foobar',
             ],
-            $this->provider->getDcaAttributes(
-                new PickerConfig('link', $extra, '{{file::82243f46-a4c3-11e3-8e29-000c29e44aea}}')
-            )
+            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{file::'.$uuid.'}}'))
         );
 
         $this->assertSame(
@@ -310,6 +319,15 @@ class FilePickerProviderTest extends TestCase
                 'value' => 'foo/b%C3%A4r%20baz.jpg',
             ],
             $this->provider->getDcaAttributes(new PickerConfig('link', [], 'foo/bär baz.jpg'))
+        );
+
+        $this->assertSame(
+            [
+                'fieldType' => 'radio',
+                'filesOnly' => true,
+                'value' => __DIR__.'/foobar.jpg',
+            ],
+            $this->provider->getDcaAttributes(new PickerConfig('link', [], __DIR__.'/foobar.jpg'))
         );
     }
 

@@ -54,6 +54,7 @@ class SymlinksCommandTest extends TestCase
         $container->setParameter('kernel.project_dir', $this->getRootDir());
         $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
         $container->setParameter('contao.upload_path', 'app');
+        $container->set('filesystem', new Filesystem());
 
         $container->set(
             'contao.resource_finder',

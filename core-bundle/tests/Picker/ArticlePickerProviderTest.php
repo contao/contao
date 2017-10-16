@@ -32,6 +32,26 @@ class ArticlePickerProviderTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        $GLOBALS['TL_LANG']['MSC']['articlePicker'] = 'Article picker';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        unset($GLOBALS['TL_LANG']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,14 +74,7 @@ class ArticlePickerProviderTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
-
-        $translator
-            ->method('trans')
-            ->willReturn('Article picker')
-        ;
-
-        $this->provider = new ArticlePickerProvider($menuFactory, $router, $translator);
+        $this->provider = new ArticlePickerProvider($menuFactory, $router);
     }
 
     public function testCanBeInstantiated(): void
@@ -69,6 +82,11 @@ class ArticlePickerProviderTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Picker\ArticlePickerProvider', $this->provider);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using a picker provider without injecting the translator service has been deprecated %s.
+     */
     public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([

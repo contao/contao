@@ -129,6 +129,43 @@ class PrettyErrorScreenListenerTest extends TestCase
         ];
     }
 
+    public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void
+    {
+        $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorResponseException';
+
+        $event = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new AccessDeniedHttpException('', new AccessDeniedException())
+        );
+
+        $this->listener->onKernelException($event);
+
+        $this->assertTrue($event->hasResponse());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
+
+        unset($GLOBALS['TL_PTY']);
+    }
+
+    public function testHandlesExceptionsWhenRenderingAPageHandler(): void
+    {
+        $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorException';
+
+        $event = new GetResponseForExceptionEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new AccessDeniedHttpException('', new AccessDeniedException())
+        );
+
+        $this->listener->onKernelException($event);
+
+        $this->assertFalse($event->hasResponse());
+
+        unset($GLOBALS['TL_PTY']);
+    }
+
     public function testRendersServiceUnavailableHttpExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(

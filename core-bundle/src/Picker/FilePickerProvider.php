@@ -64,13 +64,13 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsValue(PickerConfig $config): bool
     {
+        $value = $config->getValue();
+
         if ('file' === $config->getContext()) {
-            return Validator::isUuid($config->getValue());
+            return Validator::isUuid($value);
         }
 
-        return false !== strpos($config->getValue(), '{{file::')
-            || 0 === strpos($config->getValue(), $this->uploadPath)
-        ;
+        return false !== strpos($value, '{{file::') || 0 === strpos($value, $this->uploadPath);
     }
 
     /**
@@ -86,47 +86,11 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function getDcaAttributes(PickerConfig $config): array
     {
-        $value = $config->getValue();
-
         if ('file' === $config->getContext()) {
-            $attributes = array_intersect_key(
-                $config->getExtras(),
-                array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
-            );
-
-            if (!isset($attributes['fieldType'])) {
-                $attributes['fieldType'] = 'radio';
-            }
-
-            if ($value) {
-                $attributes['value'] = [];
-
-                foreach (explode(',', $value) as $v) {
-                    $attributes['value'][] = $this->urlEncode($this->convertValueToPath($v));
-                }
-            }
-
-            return $attributes;
+            return $this->getFileDcaAttributes($config);
         }
 
-        $attributes = [
-            'fieldType' => 'radio',
-            'filesOnly' => true,
-        ];
-
-        if ($value) {
-            if (false !== strpos($value, '{{file::')) {
-                $value = str_replace(['{{file::', '}}'], '', $value);
-            }
-
-            if (0 === strpos($value, $this->uploadPath.'/')) {
-                $attributes['value'] = $this->urlEncode($value);
-            } else {
-                $attributes['value'] = $this->urlEncode($this->convertValueToPath($value));
-            }
-        }
-
-        return $attributes;
+        return $this->getLinkDcaAttributes($config);
     }
 
     /**
@@ -140,7 +104,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
 
         /** @var FilesModel $filesAdapter */
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
-        $filesModel = $filesAdapter->findByPath(rawurldecode($value));
+        $filesModel   = $filesAdapter->findByPath(rawurldecode($value));
 
         if ($filesModel instanceof FilesModel) {
             return '{{file::'.StringUtil::binToUuid($filesModel->uuid).'}}';
@@ -189,4 +153,66 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     {
         return str_replace('%2F', '/', rawurlencode($strPath));
     }
+
+    /**
+     * Returns the DCA attributes in file context.
+     *
+     * @param PickerConfig $config
+     *
+     * @return array
+     */
+    private function getFileDcaAttributes(PickerConfig $config): array
+    {
+        $attributes = array_intersect_key(
+            $config->getExtras(),
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+        );
+
+        if (!isset($attributes['fieldType'])) {
+            $attributes['fieldType'] = 'radio';
+        }
+
+        $value = $config->getValue();
+
+        if ($value) {
+            $attributes['value'] = [];
+
+            foreach (explode(',', $value) as $v) {
+                $attributes['value'][] = $this->urlEncode($this->convertValueToPath($v));
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Returns the DCA attributes in link context.
+     *
+     * @param PickerConfig $config
+     *
+     * @return array
+     */
+    private function getLinkDcaAttributes(PickerConfig $config): array
+    {
+        $attributes = [
+            'fieldType' => 'radio',
+            'filesOnly' => true,
+        ];
+
+        $value = $config->getValue();
+
+        if ($value) {
+            if (false !== strpos($value, '{{file::')) {
+                $value = str_replace(['{{file::', '}}'], '', $value);
+            }
+
+            if (0 === strpos($value, $this->uploadPath.'/')) {
+                $attributes['value'] = $this->urlEncode($value);
+            } else {
+                $attributes['value'] = $this->urlEncode($this->convertValueToPath($value));
+            }
+        }
+
+        return $attributes;
+   }
 }

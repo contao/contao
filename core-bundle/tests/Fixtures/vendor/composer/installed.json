@@ -8,6 +8,15 @@
         "version": "dev-develop"
     },
     {
-        "name": "contao/test-bundle3"
+        "name": "contao/test-bundle3",
+        "version": "dev-develop",
+        "extra": {
+            "branch-alias": {
+                "dev-develop": "1.1.x-dev"
+            }
+        }
+    },
+    {
+        "name": "contao/test-bundle4"
     }
 ]

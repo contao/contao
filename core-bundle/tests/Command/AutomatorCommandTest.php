@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
@@ -135,6 +136,7 @@ class AutomatorCommandTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', 'foobar');
+        $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(KernelInterface::class);
 

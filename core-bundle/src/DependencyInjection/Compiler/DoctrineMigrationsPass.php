@@ -44,7 +44,7 @@ class DoctrineMigrationsPass implements CompilerPassInterface
         // Required if Symfony's compiler pass has already handled the "console.command" tags
         if ($container->hasParameter('console.command.ids')) {
             $ids = $container->getParameter('console.command.ids');
-            $ids[] = 'console.command.contao_corebundle_command_doctrinemigrationsdiffcommand';
+            $ids[] = DoctrineMigrationsDiffCommand::COMMAND_ID;
 
             $container->setParameter('console.command.ids', $ids);
         }
