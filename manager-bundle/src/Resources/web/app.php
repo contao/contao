@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
+use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
-ManagerBundlePlugin::autoloadModules(__DIR__.'/../system/modules');
-
+Plugin::autoloadModules(__DIR__.'/../system/modules');
 ContaoKernel::setProjectDir(dirname(__DIR__));
+
 $kernel = new ContaoKernel('prod', false);
 
 // Enable the Symfony reverse proxy

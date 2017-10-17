@@ -29,10 +29,10 @@ class SetConfigCommand extends Command
 
         $this
             ->setName('config:set')
-            ->setDescription('Sets the Contao Manager configuration from JSON data.')
+            ->setDescription('Sets the Contao Manager configuration from a JSON string.')
             ->setDefinition(
                 [
-                    new InputArgument('json', InputArgument::REQUIRED, 'Config in JSON format.'),
+                    new InputArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string'),
                 ]
             )
         ;
@@ -46,7 +46,7 @@ class SetConfigCommand extends Command
         $application = $this->getApplication();
 
         if (!$application instanceof Application) {
-            throw new \RuntimeException('');
+            throw new \RuntimeException('The application has not been set');
         }
 
         $data = @json_decode($input->getArgument('json'), true);

@@ -21,14 +21,14 @@ class InstallCommandListener
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
-     * @param string $rootDir
+     * @param string $projectDir
      */
-    public function __construct(string $rootDir)
+    public function __construct(string $projectDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -43,7 +43,7 @@ class InstallCommandListener
         }
 
         (new Filesystem())
-            ->copy(__DIR__.'/../Resources/system/initialize.php', $this->rootDir.'/system/initialize.php', true)
+            ->copy(__DIR__.'/../Resources/system/initialize.php', $this->projectDir.'/system/initialize.php', true)
         ;
     }
 }

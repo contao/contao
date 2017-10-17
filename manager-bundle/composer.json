@@ -20,13 +20,14 @@
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
         "terminal42/header-replay-bundle": "^1.3",
-        "contao/manager-plugin": "^2.1",
+        "contao/manager-plugin": "^2.2",
         "contao/core-bundle": "4.4.*",
         "contao/installation-bundle": "4.4.*"
     },
     "require-dev": {
         "composer/composer": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.6",
+        "ocramius/proxy-manager": "^2.0",
         "phpunit/phpunit": "^6.1",
         "php-http/message-factory": "^1.0.2",
         "satooshi/php-coveralls": "^1.0",
@@ -66,5 +67,7 @@
             "dev-develop": "4.5.x-dev"
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

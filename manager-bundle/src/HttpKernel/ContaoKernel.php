@@ -21,6 +21,7 @@ use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
+use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -49,6 +50,16 @@ class ContaoKernel extends Kernel
     private $managerConfig;
 
     /**
+     * Sets the project directory (the Contao kernel does not know it's location).
+     *
+     * @param string $projectDir
+     */
+    public static function setProjectDir(string $projectDir): void
+    {
+        self::$projectDir = realpath($projectDir) ?: $projectDir;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function registerBundles(): array
@@ -66,7 +77,7 @@ class ContaoKernel extends Kernel
     public function getProjectDir(): string
     {
         if (null === self::$projectDir) {
-            throw new \LogicException('setProjectDir() must be called to initialize the ContaoKernel.');
+            throw new \LogicException('ContaoKernel::setProjectDir() must be called to initialize the Contao kernel');
         }
 
         return self::$projectDir;
@@ -101,7 +112,7 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Gets the class to load Contao Manager plugins.
+     * Gets the plugin loader.
      *
      * @return PluginLoader
      */
@@ -111,6 +122,7 @@ class ContaoKernel extends Kernel
             $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
 
             $config = $this->getManagerConfig()->all();
+
             if (isset($config['contao_manager']['disabled_packages'])
                 && \is_array($config['contao_manager']['disabled_packages'])
             ) {
@@ -122,7 +134,7 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Sets the class to load Contao Manager plugins.
+     * Sets the plugin loader.
      *
      * @param PluginLoader $pluginLoader
      */
@@ -188,40 +200,35 @@ class ContaoKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if (file_exists($this->getRootDir().'/config/parameters.yml')) {
-            $loader->load($this->getRootDir().'/config/parameters.yml');
+        $rootDir = $this->getRootDir();
+
+        if (file_exists($rootDir.'/config/parameters.yml')) {
+            $loader->load($rootDir.'/config/parameters.yml');
         }
 
-        /** @var ConfigPluginInterface[] $plugins */
+        $config = $this->getManagerConfig()->all();
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
+        /** @var ConfigPluginInterface[] $plugins */
         foreach ($plugins as $plugin) {
-            $plugin->registerContainerConfiguration($loader, $this->getManagerConfig()->all());
+            $plugin->registerContainerConfiguration($loader, $config);
         }
 
-        if (file_exists($this->getRootDir().'/config/parameters.yml')) {
-            $loader->load($this->getRootDir().'/config/parameters.yml');
+        if (file_exists($rootDir.'/config/parameters.yml')) {
+            $loader->load($rootDir.'/config/parameters.yml');
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($loader): void {
-            $environment = $container->getParameter('kernel.environment');
+        $loader->load(
+            function (ContainerBuilder $container) use ($rootDir, $loader): void {
+                $environment = $container->getParameter('kernel.environment');
 
-            if (file_exists($this->getRootDir().'/config/config_'.$environment.'.yml')) {
-                $loader->load($this->getRootDir().'/config/config_'.$environment.'.yml');
-            } elseif (file_exists($this->getRootDir().'/config/config.yml')) {
-                $loader->load($this->getRootDir().'/config/config.yml');
+                if (file_exists($rootDir.'/config/config_'.$environment.'.yml')) {
+                    $loader->load($rootDir.'/config/config_'.$environment.'.yml');
+                } elseif (file_exists($rootDir.'/config/config.yml')) {
+                    $loader->load($rootDir.'/config/config.yml');
+                }
             }
-        });
-    }
-
-    /**
-     * Initializes getProjectDir() because the ContaoKernel does not know it's location.
-     *
-     * @param string $projectDir
-     */
-    public static function setProjectDir(string $projectDir): void
-    {
-        self::$projectDir = realpath($projectDir) ?: $projectDir;
+        );
     }
 
     /**
@@ -232,9 +239,7 @@ class ContaoKernel extends Kernel
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
         $container->getParameterBag()->add($this->getKernelParameters());
 
-        if (class_exists('ProxyManager\Configuration')
-            && class_exists('Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator')
-        ) {
+        if (class_exists(Configuration::class) && class_exists(RuntimeInstantiator::class)) {
             $container->setProxyInstantiator(new RuntimeInstantiator());
         }
 
@@ -248,7 +253,7 @@ class ContaoKernel extends Kernel
     {
         parent::initializeContainer();
 
-        // Set plugin loader again so it's available at runtime (synthetic service)
+        // Set the plugin loader again so it is available at runtime (synthetic service)
         $this->getContainer()->set('contao_manager.plugin_loader', $this->getPluginLoader());
     }
 

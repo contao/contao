@@ -233,7 +233,7 @@ class InstallWebDirCommandTest extends TestCase
      *
      * @return Application
      */
-    private function mockApplication()
+    private function mockApplication(): Application
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', 'foobar');

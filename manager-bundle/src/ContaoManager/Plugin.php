@@ -37,6 +37,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private static $autoloadModules = null;
 
     /**
+     * Sets the path to enable autoloading of legacy Contao modules.
+     *
+     * @param string $modulePath
+     */
+    public static function autoloadModules(string $modulePath): void
+    {
+        static::$autoloadModules = $modulePath;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getPackageDependencies()
@@ -130,12 +140,18 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
 
         // Redirect the deprecated install.php file
-        $collection->add('contao_install_redirect', new Route('/install.php', [
-            '_scope' => 'backend',
-            '_controller' => 'FrameworkBundle:Redirect:redirect',
-            'route' => 'contao_install',
-            'permanent' => true,
-        ]));
+        $collection->add(
+            'contao_install_redirect',
+            new Route(
+                '/install.php',
+                [
+                    '_scope' => 'backend',
+                    '_controller' => 'FrameworkBundle:Redirect:redirect',
+                    'route' => 'contao_install',
+                    'permanent' => true,
+                ]
+            )
+        );
 
         return $collection;
     }
@@ -180,15 +196,5 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
-    }
-
-    /**
-     * Sets the path to enable autoloading of legacy Contao modules.
-     *
-     * @param string $modulePath
-     */
-    public static function autoloadModules(string $modulePath): void
-    {
-        static::$autoloadModules = $modulePath;
     }
 }

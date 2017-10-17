@@ -28,7 +28,7 @@ class GetConfigCommand extends Command
 
         $this
             ->setName('config:get')
-            ->setDescription('Gets the Contao Manager configuration as JSON data.')
+            ->setDescription('Gets the Contao Manager configuration as JSON string.')
         ;
     }
 
@@ -40,7 +40,7 @@ class GetConfigCommand extends Command
         $application = $this->getApplication();
 
         if (!$application instanceof Application) {
-            throw new \RuntimeException('');
+            throw new \RuntimeException('The application has not been set');
         }
 
         $output->writeln(json_encode($application->getManagerConfig()->all()));

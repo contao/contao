@@ -27,14 +27,10 @@ class ScriptHandler
     public static function initializeApplication(Event $event): void
     {
         static::purgeCacheFolder();
-
         static::addAppDirectory();
-        static::addWebEntryPoints($event);
-
-        static::executeCommand('cache:clear --no-warmup', $event);
-        static::executeCommand('cache:warmup', $event);
+        static::executeCommand('contao:install-web-dir', $event);
+        static::executeCommand('cache:clear', $event);
         static::executeCommand('assets:install --symlink --relative', $event);
-
         static::executeCommand('contao:install', $event);
         static::executeCommand('contao:symlinks', $event);
     }
@@ -55,18 +51,6 @@ class ScriptHandler
     {
         $filesystem = new Filesystem();
         $filesystem->ensureDirectoryExists(getcwd().'/app');
-    }
-
-    /**
-     * Adds the web entry points.
-     *
-     * @param Event $event The event object
-     *
-     * @throws \RuntimeException
-     */
-    public static function addWebEntryPoints(Event $event): void
-    {
-        static::executeCommand('contao:install-web-dir', $event);
     }
 
     /**

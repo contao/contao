@@ -48,7 +48,7 @@ class RouteLoader
     }
 
     /**
-     * Returns route collection build from all plugins.
+     * Returns a route collection build from all plugin routes.
      *
      * @return RouteCollection
      */

@@ -23,7 +23,7 @@ class ManagerConfig
     private $configFile;
 
     /**
-     * @var null|Filesystem
+     * @var Filesystem|null
      */
     private $filesystem;
 

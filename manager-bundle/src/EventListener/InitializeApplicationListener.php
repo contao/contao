@@ -19,14 +19,14 @@ class InitializeApplicationListener
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
-     * @param string $rootDir
+     * @param string $projectDir
      */
-    public function __construct(string $rootDir)
+    public function __construct(string $projectDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -35,7 +35,7 @@ class InitializeApplicationListener
     public function onInitializeApplication(): void
     {
         $source = __DIR__.'/../Resources/system/initialize.php';
-        $target = $this->rootDir.'/system/initialize.php';
+        $target = $this->projectDir.'/system/initialize.php';
 
         if (md5_file($source) === md5_file($target)) {
             return;

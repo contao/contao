@@ -40,11 +40,7 @@ class ContaoKernelTest extends TestCase
         $bundleLoader
             ->expects($this->once())
             ->method('getBundleConfigs')
-            ->willReturn(
-                [
-                    new BundleConfig(ContaoManagerBundle::class),
-                ]
-            )
+            ->willReturn([new BundleConfig(ContaoManagerBundle::class)])
         ;
 
         $kernel = $this->mockKernel(sys_get_temp_dir());
@@ -66,11 +62,7 @@ class ContaoKernelTest extends TestCase
         $bundleLoader
             ->expects($this->once())
             ->method('getBundleConfigs')
-            ->willReturn(
-                [
-                    new BundleConfig(ContaoManagerBundle::class),
-                ]
-            )
+            ->willReturn([new BundleConfig(ContaoManagerBundle::class)])
         ;
 
         $kernel = $this->mockKernel(sys_get_temp_dir());
@@ -134,7 +126,7 @@ class ContaoKernelTest extends TestCase
     /**
      * @return array
      */
-    public function containerConfigurationProvider()
+    public function containerConfigurationProvider(): array
     {
         return [
             [

@@ -25,8 +25,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     use EventDispatchingHttpCache;
 
     /**
-     * Constructor.
-     *
      * @param HttpKernelInterface $kernel
      * @param string|null         $cacheDir
      */

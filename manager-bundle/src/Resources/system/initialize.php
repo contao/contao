@@ -1,6 +1,6 @@
 <?php
 
-use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
+use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,12 +12,13 @@ if (!defined('TL_SCRIPT')) {
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
-ManagerBundlePlugin::autoloadModules(__DIR__.'/modules');
+Plugin::autoloadModules(__DIR__.'/modules');
 
 $request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
 $request->attributes->set('_scope', ('BE' === TL_MODE ? 'backend' : 'frontend'));
 
 ContaoKernel::setProjectDir(dirname(__DIR__));
+
 $kernel = new ContaoKernel('prod', false);
 $response = $kernel->handle($request);
 
