@@ -36,9 +36,6 @@
             "src/Resources/contao/templates/"
         ]
     },
-    "config": {
-        "preferred-install": "dist"
-    },
     "support": {
         "docs": "https://docs.contao.org",
         "forum": "https://community.contao.org",
