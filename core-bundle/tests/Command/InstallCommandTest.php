@@ -56,7 +56,6 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/files_test');
         $fs->remove($this->getRootDir().'/system/cache');
         $fs->remove($this->getRootDir().'/system/config');
-        $fs->remove($this->getRootDir().'/system/initialize.php');
         $fs->remove($this->getRootDir().'/system/modules/.gitignore');
         $fs->remove($this->getRootDir().'/system/tmp');
         $fs->remove($this->getRootDir().'/templates');
