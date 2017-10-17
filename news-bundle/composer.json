@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": "^7.1",
-        "symfony/framework-bundle": "^3.3",
-        "contao/core-bundle": "^4.5@dev"
+        "symfony/framework-bundle": "^3.4",
+        "contao/core-bundle": "^4.5"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
@@ -47,9 +47,6 @@
             "Contao\\NewsBundle\\Tests\\": "tests/"
         }
     },
-    "config": {
-        "preferred-install": "dist"
-    },
     "support": {
         "docs": "https://docs.contao.org",
         "forum": "https://community.contao.org",
@@ -61,5 +58,7 @@
             "dev-develop": "4.5.x-dev"
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
