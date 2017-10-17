@@ -123,9 +123,6 @@
             "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
-    "config": {
-        "preferred-install": "dist"
-    },
     "support": {
         "docs": "https://docs.contao.org",
         "forum": "https://community.contao.org",

@@ -22,6 +22,8 @@ use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use Nelmio\CorsBundle\NelmioCorsBundle;
+use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use PHPUnit\Framework\TestCase;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -53,16 +55,16 @@ class PluginTest extends TestCase
         $this->assertCount(4, $bundles);
 
         $this->assertSame(KnpMenuBundle::class, $bundles[0]->getName());
+        $this->assertSame([], $bundles[0]->getReplace());
+        $this->assertSame([], $bundles[0]->getLoadAfter());
+
+        $this->assertSame(KnpTimeBundle::class, $bundles[1]->getName());
         $this->assertSame([], $bundles[1]->getReplace());
         $this->assertSame([], $bundles[1]->getLoadAfter());
 
-        $this->assertSame(KnpTimeBundle::class, $bundles[1]->getName());
+        $this->assertSame(HeaderReplayBundle::class, $bundles[2]->getName());
         $this->assertSame([], $bundles[2]->getReplace());
         $this->assertSame([], $bundles[2]->getLoadAfter());
-
-        $this->assertSame(HeaderReplayBundle::class, $bundles[2]->getName());
-        $this->assertSame([], $bundles[0]->getReplace());
-        $this->assertSame([], $bundles[0]->getLoadAfter());
 
         $this->assertSame(ContaoCoreBundle::class, $bundles[3]->getName());
         $this->assertSame(['core'], $bundles[3]->getReplace());
@@ -79,7 +81,10 @@ class PluginTest extends TestCase
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
                 LexikMaintenanceBundle::class,
+                NelmioCorsBundle::class,
+                NelmioSecurityBundle::class,
                 SensioFrameworkExtraBundle::class,
+                HeaderReplayBundle::class,
                 ContaoManagerBundle::class,
             ],
             $bundles[3]->getLoadAfter()

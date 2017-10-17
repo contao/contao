@@ -23,6 +23,8 @@ use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use Nelmio\CorsBundle\NelmioCorsBundle;
+use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -59,7 +61,10 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         KnpMenuBundle::class,
                         KnpTimeBundle::class,
                         LexikMaintenanceBundle::class,
+                        NelmioCorsBundle::class,
+                        NelmioSecurityBundle::class,
                         SensioFrameworkExtraBundle::class,
+                        HeaderReplayBundle::class,
                         ContaoManagerBundle::class,
                     ]
                 ),
