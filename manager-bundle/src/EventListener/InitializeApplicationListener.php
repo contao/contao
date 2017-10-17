@@ -34,13 +34,16 @@ class InitializeApplicationListener
      */
     public function onInitializeApplication(): void
     {
-        $source = __DIR__.'/../Resources/skeleton/system/initialize.php';
-        $target = $this->projectDir.'/system/initialize.php';
-
-        if (md5_file($source) === md5_file($target)) {
+        if (file_exists($this->projectDir.'/system/initialize.php')) {
             return;
         }
 
-        (new Filesystem())->copy($source, $target, true);
+        (new Filesystem())
+            ->copy(
+                __DIR__.'/../Resources/skeleton/system/initialize.php',
+                $this->projectDir.'/system/initialize.php',
+                true
+            )
+        ;
     }
 }
