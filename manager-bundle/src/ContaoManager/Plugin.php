@@ -44,7 +44,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface
 {
@@ -76,7 +75,23 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     public function getBundles(ParserInterface $parser)
     {
-        $configs = $this->getSymfonyBundleConfigs();
+        $configs = [
+            BundleConfig::create(FrameworkBundle::class),
+            BundleConfig::create(SecurityBundle::class),
+            BundleConfig::create(TwigBundle::class),
+            BundleConfig::create(MonologBundle::class),
+            BundleConfig::create(SwiftmailerBundle::class),
+            BundleConfig::create(DoctrineBundle::class),
+            BundleConfig::create(DoctrineCacheBundle::class),
+            BundleConfig::create(LexikMaintenanceBundle::class),
+            BundleConfig::create(NelmioCorsBundle::class),
+            BundleConfig::create(NelmioSecurityBundle::class),
+            BundleConfig::create(SensioFrameworkExtraBundle::class),
+            BundleConfig::create(ContaoManagerBundle::class),
+            BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
+            BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
+            BundleConfig::create(SensioDistributionBundle::class)->setLoadInProduction(false)
+        ];
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
@@ -204,32 +219,5 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
-    }
-
-    /**
-     * Returns the Symfony bundle configurations.
-     *
-     * @return array
-     */
-    private function getSymfonyBundleConfigs()
-    {
-        return [
-            BundleConfig::create(FrameworkBundle::class),
-            BundleConfig::create(SecurityBundle::class),
-            BundleConfig::create(TwigBundle::class),
-            BundleConfig::create(MonologBundle::class),
-            BundleConfig::create(SwiftmailerBundle::class),
-            BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(DoctrineCacheBundle::class),
-            BundleConfig::create(LexikMaintenanceBundle::class),
-            BundleConfig::create(NelmioCorsBundle::class),
-            BundleConfig::create(NelmioSecurityBundle::class),
-            BundleConfig::create(SensioFrameworkExtraBundle::class),
-            BundleConfig::create(HeaderReplayBundle::class),
-            BundleConfig::create(ContaoManagerBundle::class),
-            BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
-            BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
-            BundleConfig::create(SensioDistributionBundle::class)->setLoadInProduction(false)
-        ];
     }
 }
