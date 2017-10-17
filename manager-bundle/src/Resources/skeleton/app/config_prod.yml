@@ -1,3 +1,6 @@
+imports:
+    - { resource: config.yml }
+
 # Monolog configuration
 monolog:
     handlers:

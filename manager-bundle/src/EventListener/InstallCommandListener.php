@@ -43,7 +43,11 @@ class InstallCommandListener
         }
 
         (new Filesystem())
-            ->copy(__DIR__.'/../Resources/system/initialize.php', $this->projectDir.'/system/initialize.php', true)
+            ->copy(
+                __DIR__.'/../Resources/skeleton/system/initialize.php',
+                $this->projectDir.'/system/initialize.php',
+                true
+            )
         ;
     }
 }

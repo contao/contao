@@ -22,6 +22,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class InstallWebDirCommand extends AbstractLockedCommand
 {
@@ -147,7 +148,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     }
 
     /**
-     * Adds files from Resources/web to the application's web directory.
+     * Adds files from Resources/skeleton/web to the application's web directory.
      *
      * @param string $webDir
      * @param bool   $dev
@@ -155,12 +156,10 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private function addFiles(string $webDir, bool $dev = true): void
     {
         /** @var Finder $finder */
-        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
+        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
-            if (\in_array($file->getRelativePathname(), $this->optionalFiles, true)
-                && $this->fs->exists($webDir.'/'.$file->getRelativePathname())
-            ) {
+            if ($this->isExistingOptionalFile($file, $webDir)) {
                 continue;
             }
 
@@ -250,5 +249,26 @@ class InstallWebDirCommand extends AbstractLockedCommand
         }
 
         $fs->dumpFile($path, $content.$key.'='.escapeshellarg($value)."\n");
+    }
+
+    /**
+     * Checks if an optional file exists.
+     *
+     * @param SplFileInfo $file
+     * @param string      $webDir
+     *
+     * @return bool
+     */
+    private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
+    {
+        if (!\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
+            return false;
+        }
+
+        if (!$this->fs->exists($webDir.'/'.$file->getRelativePathname())) {
+            return false;
+        }
+
+        return true;
     }
 }

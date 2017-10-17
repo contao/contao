@@ -72,7 +72,7 @@ class PluginTest extends TestCase
 
         $configs = $this->plugin->getBundles($parser);
 
-        $this->assertCount(3, $configs);
+        $this->assertCount(18, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -105,15 +105,7 @@ class PluginTest extends TestCase
 
         $this->plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('framework.yml', $files);
-        $this->assertContains('security.yml', $files);
-        $this->assertContains('contao.yml', $files);
-        $this->assertContains('twig.yml', $files);
-        $this->assertContains('doctrine.yml', $files);
-        $this->assertContains('swiftmailer.yml', $files);
-        $this->assertContains('monolog.yml', $files);
-        $this->assertContains('lexik_maintenance.yml', $files);
-        $this->assertNotContains('web_profiler.yml', $files);
+        $this->assertContains('config_prod.yml', $files);
     }
 
     public function testRegisterContainerConfigurationInDev(): void
@@ -141,15 +133,7 @@ class PluginTest extends TestCase
 
         $this->plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('framework.yml', $files);
-        $this->assertContains('security.yml', $files);
-        $this->assertContains('contao.yml', $files);
-        $this->assertContains('twig.yml', $files);
-        $this->assertContains('doctrine.yml', $files);
-        $this->assertContains('swiftmailer.yml', $files);
-        $this->assertContains('monolog.yml', $files);
-        $this->assertContains('lexik_maintenance.yml', $files);
-        $this->assertContains('web_profiler.yml', $files);
+        $this->assertContains('config_dev.yml', $files);
     }
 
     public function testGetRouteCollectionInProd(): void

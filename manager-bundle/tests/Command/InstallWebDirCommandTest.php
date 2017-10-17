@@ -62,7 +62,12 @@ class InstallWebDirCommandTest extends TestCase
 
         $this->filesystem = new Filesystem();
         $this->tmpdir = sys_get_temp_dir().'/'.uniqid('InstallWebDirCommand_', false);
-        $this->webFiles = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../../src/Resources/web');
+
+        $this->webFiles = Finder::create()
+            ->files()
+            ->ignoreDotFiles(false)
+            ->in(__DIR__.'/../../src/Resources/skeleton/web')
+        ;
 
         $ref = new \ReflectionClass(InstallWebDirCommand::class);
         $prop = $ref->getProperty('optionalFiles');

@@ -34,7 +34,7 @@ class InitializeApplicationListener
      */
     public function onInitializeApplication(): void
     {
-        $source = __DIR__.'/../Resources/system/initialize.php';
+        $source = __DIR__.'/../Resources/skeleton/system/initialize.php';
         $target = $this->projectDir.'/system/initialize.php';
 
         if (md5_file($source) === md5_file($target)) {
