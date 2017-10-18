@@ -72,7 +72,7 @@ class PluginTest extends TestCase
 
         $configs = $this->plugin->getBundles($parser);
 
-        $this->assertCount(18, $configs);
+        $this->assertCount(17, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);

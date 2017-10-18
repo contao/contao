@@ -242,6 +242,7 @@ class InstallWebDirCommandTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', 'foobar');
+        $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(KernelInterface::class);
 
