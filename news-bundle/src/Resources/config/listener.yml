@@ -3,11 +3,13 @@ services:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:
             - "@contao.framework"
+        public: true
 
     contao_news.listener.insert_tags:
         class: Contao\NewsBundle\EventListener\InsertTagsListener
         arguments:
             - "@contao.framework"
+        public: true
 
     contao_news.listener.preview_url_create:
         class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener

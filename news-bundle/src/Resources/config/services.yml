@@ -6,7 +6,6 @@ services:
 
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
-        public: false
         arguments:
             - "@knp_menu.factory"
             - "@router"
