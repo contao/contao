@@ -13,7 +13,6 @@ services:
 
     contao.install_tool_twig_extension:
         class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
-        public: false
         tags:
             - { name: twig.extension }
 
