@@ -316,7 +316,7 @@ class FilePickerProviderTest extends TestCase
             [
                 'fieldType' => 'radio',
                 'filesOnly' => true,
-                'value' => 'foo/b%C3%A4r%20baz.jpg',
+                'value' => str_replace('%2F', '/', rawurlencode('foo/bär baz.jpg')),
             ],
             $this->provider->getDcaAttributes(new PickerConfig('link', [], 'foo/bär baz.jpg'))
         );
@@ -325,7 +325,7 @@ class FilePickerProviderTest extends TestCase
             [
                 'fieldType' => 'radio',
                 'filesOnly' => true,
-                'value' => __DIR__.'/foobar.jpg',
+                'value' => str_replace('%2F', '/', rawurlencode(__DIR__.'/foobar.jpg')),
             ],
             $this->provider->getDcaAttributes(new PickerConfig('link', [], __DIR__.'/foobar.jpg'))
         );
