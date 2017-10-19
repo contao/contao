@@ -12,16 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\DependencyInjection;
 
+use Contao\ManagerBundle\Cache\BundleCacheClearer;
 use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
+use Contao\ManagerBundle\EventListener\InitializeApplicationListener;
+use Contao\ManagerBundle\EventListener\InstallCommandListener;
+use Contao\ManagerBundle\Routing\RouteLoader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoManagerExtensionTest extends TestCase
 {
     /**
-     * @var ContaoManagerExtension
+     * @var ContainerBuilder
      */
-    private $extension;
+    private $container;
 
     /**
      * {@inheritdoc}
@@ -30,22 +34,84 @@ class ContaoManagerExtensionTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension = new ContaoManagerExtension();
+        $this->container = new ContainerBuilder();
+
+        $extension = new ContaoManagerExtension();
+        $extension->load([], $this->container);
     }
 
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension', $this->extension);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\DependencyInjection\Extension', $this->extension);
+        $extension = new ContaoManagerExtension();
+
+        $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension', $extension);
     }
 
-    public function testLoad(): void
+    public function testRegistersTheInitializeApplicationListener(): void
     {
-        $container = new ContainerBuilder();
+        $this->assertTrue($this->container->has('contao_manager.listener.initialize_application'));
 
-        $this->extension->load([], $container);
+        $definition = $this->container->getDefinition('contao_manager.listener.initialize_application');
 
-        $this->assertTrue($container->has('contao_manager.plugin_loader'));
-        $this->assertTrue($container->has('contao_manager.routing_loader'));
+        $this->assertSame(InitializeApplicationListener::class, $definition->getClass());
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('contao_installation.initialize_application', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onInitializeApplication', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(-128, $tags['kernel.event_listener'][0]['priority']);
+    }
+
+    public function testRegistersTheInstallCommandListener(): void
+    {
+        $this->assertTrue($this->container->has('contao_manager.listener.install_command'));
+
+        $definition = $this->container->getDefinition('contao_manager.listener.install_command');
+
+        $this->assertSame(InstallCommandListener::class, $definition->getClass());
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('console.terminate', $tags['kernel.event_listener'][0]['event']);
+    }
+
+    public function testRegistersTheBundleCacheClearer(): void
+    {
+        $this->assertTrue($this->container->has('contao_manager.cache.clear_bundle'));
+
+        $definition = $this->container->getDefinition('contao_manager.cache.clear_bundle');
+
+        $this->assertSame(BundleCacheClearer::class, $definition->getClass());
+        $this->assertSame('filesystem', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.cache_clearer', $tags);
+    }
+
+    public function testRegistersThePluginLoader(): void
+    {
+        $this->assertTrue($this->container->has('contao_manager.plugin_loader'));
+
+        $definition = $this->container->getDefinition('contao_manager.plugin_loader');
+
+        $this->assertTrue($definition->isSynthetic());
+    }
+
+    public function testRegistersTheRoutingLoader(): void
+    {
+        $this->assertTrue($this->container->has('contao_manager.routing_loader'));
+
+        $definition = $this->container->getDefinition('contao_manager.routing_loader');
+
+        $this->assertSame(RouteLoader::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('routing.loader', (string) $definition->getArgument(0));
+        $this->assertSame('contao_manager.plugin_loader', (string) $definition->getArgument(1));
+        $this->assertSame('kernel', (string) $definition->getArgument(2));
     }
 }
