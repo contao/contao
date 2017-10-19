@@ -3,11 +3,13 @@ services:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
             - "@contao.framework"
+        public: true
 
     contao_calendar.listener.insert_tags:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
         arguments:
             - "@contao.framework"
+        public: true
 
     contao_calendar.listener.preview_url_create:
         class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
