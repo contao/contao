@@ -24,7 +24,6 @@ use Contao\ManagerPlugin\PluginLoader;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel
@@ -48,16 +47,6 @@ class ContaoKernel extends Kernel
      * @var ManagerConfig
      */
     private $managerConfig;
-
-    /**
-     * Sets the project directory (the Contao kernel does not know it's location).
-     *
-     * @param string $projectDir
-     */
-    public static function setProjectDir(string $projectDir): void
-    {
-        self::$projectDir = realpath($projectDir) ?: $projectDir;
-    }
 
     /**
      * {@inheritdoc}
@@ -214,21 +203,26 @@ class ContaoKernel extends Kernel
             $plugin->registerContainerConfiguration($loader, $config);
         }
 
+        // Reload the parameters.yml file
         if (file_exists($rootDir.'/config/parameters.yml')) {
             $loader->load($rootDir.'/config/parameters.yml');
         }
 
-        $loader->load(
-            function (ContainerBuilder $container) use ($rootDir, $loader): void {
-                $environment = $container->getParameter('kernel.environment');
+        if (file_exists($rootDir.'/config/config_'.$this->getEnvironment().'.yml')) {
+            $loader->load($rootDir.'/config/config_'.$this->getEnvironment().'.yml');
+        } elseif (file_exists($rootDir.'/config/config.yml')) {
+            $loader->load($rootDir.'/config/config.yml');
+        }
+    }
 
-                if (file_exists($rootDir.'/config/config_'.$environment.'.yml')) {
-                    $loader->load($rootDir.'/config/config_'.$environment.'.yml');
-                } elseif (file_exists($rootDir.'/config/config.yml')) {
-                    $loader->load($rootDir.'/config/config.yml');
-                }
-            }
-        );
+    /**
+     * Sets the project directory (the Contao kernel does not know it's location).
+     *
+     * @param string $projectDir
+     */
+    public static function setProjectDir(string $projectDir): void
+    {
+        self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
     /**

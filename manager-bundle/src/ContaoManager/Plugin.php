@@ -90,7 +90,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(ContaoManagerBundle::class),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
-            BundleConfig::create(SensioDistributionBundle::class)->setLoadInProduction(false)
+            BundleConfig::create(SensioDistributionBundle::class)->setLoadInProduction(false),
         ];
 
         // Autoload the legacy modules
