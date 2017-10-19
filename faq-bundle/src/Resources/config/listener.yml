@@ -3,3 +3,4 @@ services:
         class: Contao\FaqBundle\EventListener\InsertTagsListener
         arguments:
             - "@contao.framework"
+        public: true
