@@ -8,15 +8,31 @@
 
 /* Body */
 html,body {
-	background:#666;
+	background:#f2f2f2;
 }
 
 /* Container */
 #container {
 	padding:3px 6px;
 	overflow:hidden;
-	background:#eaeaec;
 	text-align:right;
+}
+
+#container:after {
+	content:"";
+	display:block;
+	position:absolute;
+	top:40px;
+	left:0;
+	height:1px;
+	width:100%;
+	background:#d3d3d3;
+}
+
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	#container:after {
+		background:linear-gradient(transparent 0%, transparent 50%, #d3d3d3 50%, #d3d3d3 100%);
+	}
 }
 
 /* Headline */
