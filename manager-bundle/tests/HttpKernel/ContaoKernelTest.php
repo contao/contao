@@ -80,7 +80,7 @@ class ContaoKernelTest extends TestCase
     {
         $kernel = $this->mockKernel(sys_get_temp_dir());
 
-        $this->assertSame($kernel->getProjectDir().'/var/cache/test', $kernel->getCacheDir());
+        $this->assertSame($kernel->getProjectDir().'/var/cache/prod', $kernel->getCacheDir());
     }
 
     public function testGetLogDir(): void
@@ -92,32 +92,30 @@ class ContaoKernelTest extends TestCase
 
     /**
      * @param string $projectDir
-     * @param string $expectedResult
+     * @param string $env
+     * @param array  $expectedResult
      *
      * @dataProvider containerConfigurationProvider
      */
-    public function testRegisterContainerConfiguration($projectDir, $expectedResult): void
+    public function testRegisterContainerConfiguration(string $projectDir, string $env, array $expectedResult): void
     {
         $files = [];
         $loader = $this->createMock(LoaderInterface::class);
 
         $loader
-            ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
                 function ($resource) use (&$files): void {
                     if (\is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (\is_callable($resource)) {
-                        $container = new ContainerBuilder();
-                        $container->setParameter('kernel.environment', 'dev');
-                        \call_user_func($resource, $container);
+                        \call_user_func($resource, new ContainerBuilder());
                     }
                 }
             )
         ;
 
-        $kernel = $this->mockKernel($projectDir);
+        $kernel = $this->mockKernel($projectDir, $env);
         $kernel->registerContainerConfiguration($loader);
 
         $this->assertSame($expectedResult, $files);
@@ -131,22 +129,27 @@ class ContaoKernelTest extends TestCase
         return [
             [
                 __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
+                'prod',
                 ['parameters.yml', 'parameters.yml'],
             ],
             [
                 __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
+                'dev',
                 ['config_dev.yml'],
             ],
             [
                 __DIR__.'/../Fixtures/HttpKernel/WithConfigYml',
+                'prod',
                 ['config.yml'],
             ],
             [
                 __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
-                ['config_dev.yml'],
+                'prod',
+                ['config_prod.yml'],
             ],
             [
                 sys_get_temp_dir(),
+                'prod',
                 [],
             ],
         ];
@@ -173,10 +176,11 @@ class ContaoKernelTest extends TestCase
      * Mocks a kernel with the plugin loader.
      *
      * @param string $projectDir
+     * @param string $env
      *
      * @return ContaoKernel|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockKernel($projectDir): ContaoKernel
+    private function mockKernel($projectDir, $env = 'prod'): ContaoKernel
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
 
@@ -186,7 +190,7 @@ class ContaoKernelTest extends TestCase
         ;
 
         ContaoKernel::setProjectDir($projectDir);
-        $kernel = new ContaoKernel('test', true);
+        $kernel = new ContaoKernel($env, true);
         $kernel->setPluginLoader($pluginLoader);
 
         return $kernel;
