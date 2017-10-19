@@ -154,6 +154,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function reset(): void
+    {
+        $this->data = [];
+    }
+
+    /**
      * Returns the debug data as array.
      *
      * @param string $key

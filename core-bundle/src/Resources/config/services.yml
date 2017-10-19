@@ -22,6 +22,7 @@ services:
             - "%kernel.cache_dir%/contao/cache"
             - ""
             - 0022
+        public: true
 
     contao.cache.clear_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
@@ -55,6 +56,7 @@ services:
         class: Contao\CoreBundle\Controller\InsertTagsController
         arguments:
             - "@contao.framework"
+        public: true
 
     contao.cors.website_roots_config_provider:
         class: Contao\CoreBundle\Cors\WebsiteRootsConfigProvider
@@ -65,7 +67,6 @@ services:
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
-        public: false
         arguments:
             - "%kernel.packages%"
         tags:
@@ -127,17 +128,17 @@ services:
 
     contao.image.imagine:
         class: Imagine\Gd\Imagine
+        public: true
 
     contao.image.imagine_svg:
         class: Contao\ImagineSvg\Imagine
+        public: true
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
-        public: false
 
     contao.image.resizer:
         class: Contao\CoreBundle\Image\LegacyResizer
-        public: false
         arguments:
             - "%contao.image.target_dir%"
             - "@contao.image.resize_calculator"
@@ -154,6 +155,7 @@ services:
             - "%contao.image.bypass_cache%"
             - "%contao.image.imagine_options%"
             - "%contao.image.valid_extensions%"
+        public: true
 
     contao.image.image_sizes:
         class: Contao\CoreBundle\Image\ImageSizes
@@ -175,6 +177,7 @@ services:
             - "@contao.framework"
             - "%contao.image.bypass_cache%"
             - "%contao.image.imagine_options%"
+        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
@@ -185,10 +188,10 @@ services:
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
             - "%contao.error_level%"
+        public: true
 
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
-        public: false
 
     contao.menu.renderer:
         class: Knp\Menu\Renderer\ListRenderer
@@ -197,7 +200,6 @@ services:
 
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
-        public: false
         arguments:
             - debug
             - false
@@ -206,7 +208,6 @@ services:
 
     contao.monolog.processor:
         class: Contao\CoreBundle\Monolog\ContaoTableProcessor
-        public: false
         arguments:
             - "@request_stack"
             - "@security.token_storage"
@@ -223,7 +224,6 @@ services:
 
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider
-        public: false
         arguments:
             - "@knp_menu.factory"
             - "@router"
@@ -235,7 +235,6 @@ services:
 
     contao.picker.file_provider:
         class: Contao\CoreBundle\Picker\FilePickerProvider
-        public: false
         arguments:
             - "@knp_menu.factory"
             - "@router"
@@ -248,7 +247,6 @@ services:
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider
-        public: false
         arguments:
             - "@knp_menu.factory"
             - "@router"
@@ -260,28 +258,27 @@ services:
 
     contao.referer_id.manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
-        public: false
         arguments:
             - "@contao.referer_id.token_generator"
             - "@security.csrf.token_storage"
 
     contao.referer_id.token_generator:
         class: Contao\CoreBundle\Referer\TokenGenerator
-        public: false
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         arguments:
             - "%contao.resources_paths%"
+        public: true
 
     contao.resource_locator:
         class: Symfony\Component\Config\FileLocator
         arguments:
             - "%contao.resources_paths%"
+        public: true
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
-        public: false
         arguments:
             - "%contao.prepend_locale%"
         tags:
@@ -293,6 +290,7 @@ services:
             - "@router"
             - "@contao.framework"
             - "%contao.prepend_locale%"
+        public: true
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher
@@ -302,32 +300,27 @@ services:
 
     contao.routing.backend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
-        public: false
         calls:
             - ["matchAttribute", ["_scope", "backend"]]
 
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
-        public: false
         calls:
             - ["matchAttribute", ["_scope", "frontend"]]
 
     contao.security.authenticator:
         class: Contao\CoreBundle\Security\ContaoAuthenticator
-        public: false
         arguments:
             - "@contao.routing.scope_matcher"
 
     contao.security.user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
-        public: false
         arguments:
             - "@contao.framework"
             - "@contao.routing.scope_matcher"
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
-        public: false
         arguments:
             - "_contao_be_attributes"
         calls:
@@ -335,7 +328,6 @@ services:
 
     contao.session.contao_frontend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
-        public: false
         arguments:
             - "_contao_fe_attributes"
         calls:
@@ -346,10 +338,10 @@ services:
         arguments:
             - "@security.csrf.token_generator"
             - "@contao.csrf.token_storage"
+        public: true
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
-        public: false
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
@@ -360,7 +352,6 @@ services:
 
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
-        public: false
         arguments:
             - "@request_stack"
             - "@contao.framework"
