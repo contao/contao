@@ -341,6 +341,21 @@ abstract class Template extends \Controller
 
 
 	/**
+	 * Returns a translated message
+	 *
+	 * @param string $strId
+	 * @param array  $arrParams
+	 * @param string $strDomain
+	 *
+	 * @return string
+	 */
+	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
+	{
+		return \System::getContainer()->get('contao.translation.translator')->trans($strId, $arrParams, $strDomain);
+	}
+
+
+	/**
 	 * Compile the template
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
