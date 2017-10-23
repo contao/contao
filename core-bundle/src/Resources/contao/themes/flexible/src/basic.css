@@ -482,11 +482,14 @@ a.tl_submit {
 /* Floats */
 .clr {
 	clear:both;
-	display:table; /* see #6093 */
 	width:calc(100% - 30px);
 }
 .clr:not(.widget) {
 	width:100%;
+}
+.clr:before {
+	content:"";
+	display:table;
 }
 .w50 {
 	width:calc(50% - 30px);
