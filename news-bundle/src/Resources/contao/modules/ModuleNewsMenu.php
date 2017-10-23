@@ -129,7 +129,7 @@ class ModuleNewsMenu extends \ModuleNews
 		}
 
 		// Sort the data
-		($this->news_order == 'ascending') ? ksort($arrData) : krsort($arrData);
+		($this->news_order == 'order_date_asc') ? ksort($arrData) : krsort($arrData);
 
 		$arrItems = array();
 		$count = 0;
@@ -175,10 +175,10 @@ class ModuleNewsMenu extends \ModuleNews
 		// Sort the data
 		foreach (array_keys($arrData) as $key)
 		{
-			($this->news_order == 'ascending') ? ksort($arrData[$key]) : krsort($arrData[$key]);
+			($this->news_order == 'order_date_asc') ? ksort($arrData[$key]) : krsort($arrData[$key]);
 		}
 
-		($this->news_order == 'ascending') ? ksort($arrData) : krsort($arrData);
+		($this->news_order == 'order_date_asc') ? ksort($arrData) : krsort($arrData);
 
 		$arrItems = array();
 

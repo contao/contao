@@ -20,6 +20,7 @@ use Patchwork\Utf8;
  * @property array  $news_archives
  * @property string $news_jumpToCurrent
  * @property string $news_format
+ * @property string $news_order
  * @property int    $news_readerModule
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -186,14 +187,40 @@ class ModuleNewsArchive extends \ModuleNews
 			}
 		}
 
+		// Determine sorting
+		$t = \NewsModel::getTable();
+		$arrOptions = array();
+
+		switch ($this->news_order)
+		{
+			case 'order_headline_asc':
+				$arrOptions['order'] = "$t.headline";
+				break;
+
+			case 'order_headline_desc':
+				$arrOptions['order'] = "$t.headline DESC";
+				break;
+
+			case 'order_random':
+				$arrOptions['order'] = "RAND()";
+				break;
+
+			case 'order_date_asc':
+				$arrOptions['order'] = "$t.date";
+				break;
+
+			default:
+				$arrOptions['order'] = "$t.date DESC";
+		}
+
 		// Get the news items
 		if (isset($limit))
 		{
-			$objArticles = \NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, $limit, $offset);
+			$objArticles = \NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, $limit, $offset, $arrOptions);
 		}
 		else
 		{
-			$objArticles = \NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives);
+			$objArticles = \NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, 0, 0, $arrOptions);
 		}
 
 		// Add the articles

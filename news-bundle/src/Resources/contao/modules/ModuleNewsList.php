@@ -19,6 +19,7 @@ use Patchwork\Utf8;
  *
  * @property array  $news_archives
  * @property string $news_featured
+ * @property string $news_order
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -213,6 +214,32 @@ class ModuleNewsList extends \ModuleNews
 			}
 		}
 
-		return \NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset);
+		// Determine sorting
+		$t = \NewsModel::getTable();
+		$arrOptions = array();
+
+		switch ($this->news_order)
+		{
+			case 'order_headline_asc':
+				$arrOptions['order'] = "$t.headline";
+				break;
+
+			case 'order_headline_desc':
+				$arrOptions['order'] = "$t.headline DESC";
+				break;
+
+			case 'order_random':
+				$arrOptions['order'] = "RAND()";
+				break;
+
+			case 'order_date_asc':
+				$arrOptions['order'] = "$t.date";
+				break;
+
+			default:
+				$arrOptions['order'] = "$t.date DESC";
+		}
+
+		return \NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, $arrOptions);
 	}
 }

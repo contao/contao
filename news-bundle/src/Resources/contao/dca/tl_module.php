@@ -12,9 +12,9 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']    = '{title_legend},name,headline,type;{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']    = '{title_legend},name,headline,type;{config_legend},news_archives,numberOfItems,news_featured,news_order,skipFirst,perPage;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']  = '{title_legend},name,headline,type;{config_legend},news_archives;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsarchive'] = '{title_legend},name,headline,type;{config_legend},news_archives,news_jumpToCurrent,news_readerModule,perPage,news_format;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsarchive'] = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,news_format,news_order,news_jumpToCurrent,perPage;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenu']    = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_startDay,news_order;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
 
@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 	'inputType'               => 'select',
 	'options'                 => array('all_items', 'featured', 'unfeatured'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-	'eval'                    => array('tl_class'=>'w50'),
+	'eval'                    => array('tl_class'=>'w50 clr'),
 	'sql'                     => "varchar(16) NOT NULL default ''"
 );
 
@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 	'inputType'               => 'select',
 	'options'                 => array('news_day', 'news_month', 'news_year'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-	'eval'                    => array('tl_class'=>'w50', 'addWizardClass'=>false),
+	'eval'                    => array('tl_class'=>'w50 clr', 'addWizardClass'=>false),
 	'wizard' => array
 	(
 		array('tl_module_news', 'hideStartDay')
@@ -119,13 +119,13 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_order'],
-	'default'                 => 'descending',
+	'default'                 => 'order_date_desc',
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options'                 => array('ascending', 'descending'),
-	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+	'options_callback'        => array('tl_module_news', 'getSortingOptions'),
+	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "varchar(32) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
@@ -248,5 +248,23 @@ class tl_module_news extends Backend
 	public function getNewsTemplates()
 	{
 		return $this->getTemplateGroup('news_');
+	}
+
+
+	/**
+	 * Return the sorting options
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function getSortingOptions(DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->type == 'newsmenu')
+		{
+			return array('order_date_asc', 'order_date_desc');
+		}
+
+		return array('order_date_asc', 'order_date_desc', 'order_headline_asc', 'order_headline_desc', 'order_random');
 	}
 }
