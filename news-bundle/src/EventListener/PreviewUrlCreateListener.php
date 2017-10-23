@@ -86,11 +86,11 @@ class PreviewUrlCreateListener
     /**
      * Returns the news model.
      *
-     * @param int $id The ID
+     * @param int|string $id The ID
      *
      * @return NewsModel|null The news model or null
      */
-    private function getNewsModel(int $id): ?NewsModel
+    private function getNewsModel($id): ?NewsModel
     {
         /** @var NewsModel $adapter */
         $adapter = $this->framework->getAdapter(NewsModel::class);
