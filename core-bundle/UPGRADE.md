@@ -1,6 +1,32 @@
 API changes
 ===========
 
+Version 4.* to 4.5
+------------------
+
+### Template changes
+
+The `pagination.html5` and `be_pagination.html5` templates now use a `<nav>`
+element as container and a `<strong>` element to mark the active item:
+
+
+```php
+<!-- OLD -->
+<div class="pagination block">
+  ...
+  <li><span class="active">...</span></li>
+  ...
+</div>
+
+<!-- NEW -->
+<nav class="pagination block" role="navigation" aria-label="...">
+  ...
+  <li><strong class="active">...</strong></li>
+  ...
+</nav>
+```
+
+
 Version 4.* to 4.3
 ------------------
 

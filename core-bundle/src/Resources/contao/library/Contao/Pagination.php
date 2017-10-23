@@ -257,7 +257,12 @@ class Pagination
 		$objTemplate->hasLast = $this->hasLast();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$objTemplate->items = $this->getItemsAsString($strSeparator);
+		$objTemplate->items = function () use ($strSeparator)
+		{
+			@trigger_error('Using $pagination->items has been deprecated and will no longer work in Contao 5.0. Use $pagination->pages instead.', E_USER_DEPRECATED);
+
+			return $this->getItemsAsString($strSeparator);
+		};
 
 		$objTemplate->pages = $this->getItemsAsArray();
 		$objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
@@ -291,6 +296,7 @@ class Pagination
 		);
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
+		$objTemplate->pagination = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
 
 		// Adding rel="prev" and rel="next" links is not possible
 		// anymore with unique variable names (see #3515 and #4141)
@@ -314,7 +320,7 @@ class Pagination
 		{
 			if ($arrItem['href'] === null)
 			{
-				$arrLinks[] = sprintf('<li><span class="active">%s</span></li>', $arrItem['page']);
+				$arrLinks[] = sprintf('<li><strong class="active">%s</strong></li>', $arrItem['page']);
 			}
 			else
 			{

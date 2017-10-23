@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<div class="pagination block">
+<nav class="pagination block" role="navigation" aria-label="<?= $this->pagination ?>">
 
   <p><?= $this->total ?></p>
 
@@ -15,7 +15,7 @@
 
     <?php foreach ($this->pages as $page): ?>
       <?php if ($page['href'] === null): ?>
-        <li><span class="active"><?= $page['page'] ?></span></li>
+        <li><strong class="active"><?= $page['page'] ?></strong></li>
       <?php else: ?>
         <li><a href="<?= $page['href'] ?>" class="link" title="<?= $page['title'] ?>"><?= $page['page'] ?></a></li>
       <?php endif; ?>
@@ -30,5 +30,5 @@
     <?php endif; ?>
   </ul>
 
-</div>
+</nav>
 <!-- indexer::continue -->
