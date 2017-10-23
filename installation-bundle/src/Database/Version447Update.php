@@ -17,7 +17,7 @@ class Version447Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
