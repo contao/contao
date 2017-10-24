@@ -341,6 +341,23 @@ class FilesModel extends \Model
 
 
 	/**
+	 * Find all folders in a folder
+	 *
+	 * @param string $strPath    The folder path
+	 * @param array  $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|FilesModel[]|FilesModel|null A collection of models or null if there are no matching folders
+	 */
+	public static function findMultipleFoldersByFolder($strPath, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$strPath = str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $strPath);
+
+		return static::findBy(array("$t.type='folder' AND $t.path LIKE ? AND $t.path NOT LIKE ?"), array($strPath.'/%', $strPath.'/%/%'), $arrOptions);
+	}
+
+
+	/**
 	 * Do not reload the data upon insert
 	 *
 	 * @param integer $intType The query type (Model::INSERT or Model::UPDATE)
