@@ -49,4 +49,13 @@ final class ContaoCoreEvents
      * @see PreviewUrlConvertEvent
      */
     public const PREVIEW_URL_CONVERT = 'contao.preview_url_convert';
+
+    /**
+     * The contao.backend_menu_build event is triggered when the backend menu is built.
+     *
+     * @var string
+     *
+     * @see MenuEvent
+     */
+    public const BACKEND_MENU_BUILD = 'contao.backend_menu_build';
 }

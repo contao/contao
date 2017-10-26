@@ -190,6 +190,17 @@ services:
             - "%contao.error_level%"
         public: true
 
+    contao.menu.backend_menu_renderer:
+        class: Contao\CoreBundle\Menu\BackendMenuRenderer
+        arguments:
+            - "@twig"
+
+    contao.menu.backend_menu_builder:
+        class: Contao\CoreBundle\Menu\BackendMenuBuilder
+        arguments:
+            - "@knp_menu.factory"
+            - "@event_dispatcher"
+
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
 

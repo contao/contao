@@ -65,24 +65,7 @@
   <div id="container" class="cf">
     <?php if (!$this->isPopup): ?>
       <div id="left">
-        <nav id="tl_navigation" role="navigation">
-          <a href="<?= $this->request ?>#skipNavigation" class="invisible"><?= $this->skipNavigation ?></a>
-          <ul class="tl_level_1">
-            <?php foreach ($this->modules as $strGroup=>$arrModules): ?>
-              <li class="tl_level_1_group<?= $arrModules['class'] ?>"><a href="<?= $arrModules['href'] ?>" title="<?= $arrModules['title']; ?>" class="group-<?= $strGroup ?>" onclick="return AjaxRequest.toggleNavigation(this,'<?= $strGroup ?>', '<?= $arrModules['ajaxUrl']; ?>')"><?= $arrModules['label'] ?></a></li>
-              <?php if ($arrModules['modules']): ?>
-                <li class="tl_parent" id="<?= $strGroup ?>"<?php if ($arrModules['isClosed']) echo ' style="display:none"'; ?>>
-                  <ul class="tl_level_2">
-                    <?php foreach ($arrModules['modules'] as $arrConfig): ?>
-                      <li<?php if ($arrConfig['isActive']) echo ' class="active"'; ?>><a href="<?= $arrConfig['href'] ?>" class="<?= $arrConfig['class'] ?>" title="<?= $arrConfig['title'] ?>"><?= $arrConfig['label'] ?></a></li>
-                    <?php endforeach; ?>
-                  </ul>
-                </li>
-              <?php endif; ?>
-            <?php endforeach; ?>
-          </ul>
-          <a id="skipNavigation" class="invisible">&nbsp;</a>
-        </nav>
+        <?= $this->menu; ?>
         <div class="version">
           <?= $this->version ?><br><?= $this->learnMore ?>
         </div>
