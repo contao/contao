@@ -69,10 +69,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @param RouterInterface|null $router
      * @param array                $adapters
      * @param array                $instances
+     * @param array                $hookListeners
      *
      * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = []): ContaoFramework
+    public function mockContaoFramework(RequestStack $requestStack = null, RouterInterface $router = null, array $adapters = [], array $instances = [], array $hookListeners = []): ContaoFramework
     {
         $container = $this->mockContainerWithContaoScopes();
 
@@ -106,6 +107,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 $this->mockScopeMatcher(),
                 $this->getRootDir(),
                 error_reporting(),
+                $hookListeners,
             ])
             ->setMethods(['getAdapter', 'createInstance'])
             ->getMock()

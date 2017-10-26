@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Allow to register hooks listeners as tagged services (see #1094).
  * Use a service to build the back end menu (see #1066).
  * Add the FilesModel::findMultipleFoldersByFolder() method (see contao/core#7942).
  * Add the fragment registry and the fragment renderers (see #700).

@@ -71,6 +71,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $errorLevel;
 
     /**
+     * @var array
+     */
+    private $hookListeners = [];
+
+    /**
      * @var Request
      */
     private $request;
@@ -106,8 +111,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @param ScopeMatcher     $scopeMatcher
      * @param string           $rootDir
      * @param int              $errorLevel
+     * @param array            $hookListeners
      */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel, array $hookListeners = [])
     {
         $this->requestStack = $requestStack;
         $this->router = $router;
@@ -115,6 +121,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
+        $this->hookListeners = $hookListeners;
     }
 
     /**
@@ -306,6 +313,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         // Fully load the configuration
         $config->getInstance();
 
+        $this->registerHooks();
         $this->validateInstallation();
 
         Input::initialize();
@@ -470,5 +478,24 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             || !$this->request->attributes->has('_token_check')
             || false === $this->request->attributes->get('_token_check')
         ;
+    }
+
+    /**
+     * Registers the hooks in the global hooks array.
+     */
+    private function registerHooks(): void
+    {
+        foreach ($this->hookListeners as $hookName => $priorities) {
+            if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {
+                if (isset($priorities[0])) {
+                    $priorities[0] = array_merge($GLOBALS['TL_HOOKS'][$hookName], $priorities[0]);
+                } else {
+                    $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
+                    krsort($priorities);
+                }
+            }
+
+            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...$priorities);
+        }
     }
 }
