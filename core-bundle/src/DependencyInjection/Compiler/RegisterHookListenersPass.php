@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class RegisterHooksPass implements CompilerPassInterface
+class RegisterHookListenersPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
@@ -27,8 +27,32 @@ class RegisterHooksPass implements CompilerPassInterface
             return;
         }
 
-        $serviceIds = $container->findTaggedServiceIds('contao.hook');
+        $hooks = $this->getHooks($container);
+
+        if (empty($hooks)) {
+            return;
+        }
+
+        // Sort the listeners by priority
+        foreach (array_keys($hooks) as $hook) {
+            krsort($hooks[$hook]);
+        }
+
+        $definition = $container->getDefinition('contao.framework');
+        $definition->addMethodCall('setHookListeners', [$hooks]);
+    }
+
+    /**
+     * Returns the hook listeners.
+     *
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function getHooks(ContainerBuilder $container): array
+    {
         $hooks = [];
+        $serviceIds = $container->findTaggedServiceIds('contao.hook');
 
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
@@ -41,14 +65,7 @@ class RegisterHooksPass implements CompilerPassInterface
             }
         }
 
-        if (\count($hooks) > 0) {
-            foreach (array_keys($hooks) as $hook) {
-                krsort($hooks[$hook]); // order by priority
-            }
-
-            $definition = $container->getDefinition('contao.framework');
-            $definition->setArgument(6, $hooks);
-        }
+        return $hooks;
     }
 
     /**

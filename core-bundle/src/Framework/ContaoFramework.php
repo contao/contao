@@ -71,11 +71,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $errorLevel;
 
     /**
-     * @var array
-     */
-    private $hookListeners = [];
-
-    /**
      * @var Request
      */
     private $request;
@@ -84,6 +79,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @var array
      */
     private $adapterCache = [];
+
+    /**
+     * @var array
+     */
+    private $hookListeners = [];
 
     /**
      * @var array
@@ -111,9 +111,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @param ScopeMatcher     $scopeMatcher
      * @param string           $rootDir
      * @param int              $errorLevel
-     * @param array            $hookListeners
      */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel, array $hookListeners = [])
+    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->router = $router;
@@ -121,7 +120,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
-        $this->hookListeners = $hookListeners;
     }
 
     /**
@@ -155,6 +153,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         $this->setConstants();
         $this->initializeFramework();
+    }
+
+    /**
+     * Sets the hook listeners.
+     *
+     * @param array $hookListeners
+     */
+    public function setHookListeners(array $hookListeners): void
+    {
+        $this->hookListeners = $hookListeners;
     }
 
     /**
@@ -313,7 +321,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         // Fully load the configuration
         $config->getInstance();
 
-        $this->registerHooks();
+        $this->registerHookListeners();
         $this->validateInstallation();
 
         Input::initialize();
@@ -481,9 +489,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * Registers the hooks in the global hooks array.
+     * Registers the hooks listeners in the global array.
      */
-    private function registerHooks(): void
+    private function registerHookListeners(): void
     {
         foreach ($this->hookListeners as $hookName => $priorities) {
             if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {

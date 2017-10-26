@@ -635,24 +635,14 @@ class ContaoFrameworkTest extends TestCase
             ],
         ];
 
-        $framework = $this->mockContaoFramework(
-            $container->get('request_stack'),
-            $this->mockRouter('/index.html'),
-            [],
-            [],
-            $listeners
-        );
-
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $this->mockRouter('/index.html'));
         $framework->setContainer($container);
+        $framework->setHookListeners($listeners);
 
-        if ($framework->isInitialized()) {
-            $reflection = new \ReflectionObject($framework);
-            $reflectionMethod = $reflection->getMethod('registerHooks');
-            $reflectionMethod->setAccessible(true);
-            $reflectionMethod->invoke($framework);
-        } else {
-            $framework->initialize();
-        }
+        $reflection = new \ReflectionObject($framework);
+        $reflectionMethod = $reflection->getMethod('registerHookListeners');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($framework);
 
         $this->assertArrayHasKey('TL_HOOKS', $GLOBALS);
         $this->assertArrayHasKey('getPageLayout', $GLOBALS['TL_HOOKS']);
