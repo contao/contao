@@ -104,7 +104,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
 
         /** @var FilesModel $filesAdapter */
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
-        $filesModel   = $filesAdapter->findByPath(rawurldecode($value));
+        $filesModel = $filesAdapter->findByPath(rawurldecode($value));
 
         if ($filesModel instanceof FilesModel) {
             return '{{file::'.StringUtil::binToUuid($filesModel->uuid).'}}';
@@ -214,5 +214,5 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         }
 
         return $attributes;
-   }
+    }
 }
