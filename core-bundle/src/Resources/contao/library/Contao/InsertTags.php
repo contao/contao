@@ -409,13 +409,13 @@ class InsertTags extends \Controller
 
 								if ($objNext instanceof PageModel)
 								{
-									$strUrl = $objNext->getFrontendUrl();
+									$strUrl = in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
 									break;
 								}
 								// DO NOT ADD A break; STATEMENT
 
 							default:
-								$strUrl = $objNextPage->getFrontendUrl();
+								$strUrl = in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
 								break;
 						}
 
@@ -497,7 +497,8 @@ class InsertTags extends \Controller
 					}
 
 					/** @var PageModel $objPid */
-					$strUrl = $objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
+					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
+					$strUrl = in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
