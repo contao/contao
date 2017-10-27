@@ -114,9 +114,12 @@ class Password extends \Widget
 			return '*****';
 		}
 
-		if (Utf8::strlen($varInput) < \Config::get('minPasswordLength'))
+		// Check password length either from DCA or use Config as fallback (#1086)
+		$intLength = $this->minlength ?: \Config::get('minPasswordLength');
+
+		if (Utf8::strlen($varInput) < $intLength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
+			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}
 
 		if ($varInput != $this->getPost($this->strName . '_confirm'))
