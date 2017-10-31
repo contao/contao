@@ -592,7 +592,20 @@ class tl_article extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = StringUtil::generateAlias($dc->activeRecord->title);
+			$slugOptions = [];
+
+			// Read the slug options from the associated page
+			if (($objPage = PageModel::findWithDetails($dc->activeRecord->pid)) !== null)
+			{
+				$slugOptions['locale'] = $objPage->language;
+
+				if ($objPage->validAliasCharacters)
+				{
+					$slugOptions['validChars'] = $objPage->validAliasCharacters;
+				}
+			}
+
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
 		}
 
 		// Add a prefix to reserved names (see #6066)
@@ -884,7 +897,20 @@ class tl_article extends Backend
 				}
 
 				// Set the new alias
-				$strAlias = StringUtil::generateAlias($objArticle->title);
+				$slugOptions = [];
+
+				// Read the slug options from the associated page
+				if (($objPage = PageModel::findWithDetails($objArticle->pid)) !== null)
+				{
+					$slugOptions['locale'] = $objPage->language;
+
+					if ($objPage->validAliasCharacters)
+					{
+						$slugOptions['validChars'] = $objPage->validAliasCharacters;
+					}
+				}
+
+				$strAlias = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($objArticle->title), $slugOptions);
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)
