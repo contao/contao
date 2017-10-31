@@ -670,7 +670,20 @@ class tl_calendar_events extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = StringUtil::generateAlias($dc->activeRecord->title);
+			$slugOptions = [];
+
+			// Read the slug options from the associated page
+			if (($objCalendar = CalendarModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objCalendar->jumpTo)) !== null)
+			{
+				$slugOptions['locale'] = $objPage->language;
+
+				if ($objPage->validAliasCharacters)
+				{
+					$slugOptions['validChars'] = $objPage->validAliasCharacters;
+				}
+			}
+
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")
