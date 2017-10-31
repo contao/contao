@@ -27,6 +27,10 @@ class Version450Update extends AbstractVersionUpdate
 
         $columns = $schemaManager->listTableColumns('tl_module');
 
+        if (!isset($columns['news_order'])) {
+            return false;
+        }
+
         return 32 !== $columns['news_order']->getLength();
     }
 
