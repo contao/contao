@@ -41,6 +41,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $dateFormat
  * @property string  $timeFormat
  * @property string  $datimFormat
+ * @property string  $validAliasCharacters
  * @property boolean $createSitemap
  * @property string  $sitemapName
  * @property boolean $useSSL
@@ -947,6 +948,7 @@ class PageModel extends \Model
 			$this->dateFormat = $objParentPage->dateFormat;
 			$this->timeFormat = $objParentPage->timeFormat;
 			$this->datimFormat = $objParentPage->datimFormat;
+			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
 			$this->adminEmail = $objParentPage->adminEmail;
 
 			// Store whether the root page has been published

@@ -26,6 +26,7 @@
         "symfony/yaml": "^3.4",
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/swiftmailer-bundle": "^2.3.10",
+        "ausi/slug-generator": "^1.0",
         "doctrine/dbal": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.3",

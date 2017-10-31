@@ -98,6 +98,12 @@
       <trans-unit id="tl_page.datimFormat.1">
         <source>The date and time format string will be parsed with the PHP date() function.</source>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Please choose the characters for auto-generating page aliases.</source>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
       </trans-unit>

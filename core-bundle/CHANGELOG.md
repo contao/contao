@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Use ausi/slug-generator to auto-generate aliases (see #1016).
  * Allow to register hooks listeners as tagged services (see #1094).
  * Use a service to build the back end menu (see #1066).
  * Add the FilesModel::findMultipleFoldersByFolder() method (see contao/core#7942).

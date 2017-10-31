@@ -344,6 +344,17 @@ services:
         calls:
             - ["setName", ["contao_frontend"]]
 
+    contao.slug.generator:
+        class: Ausi\SlugGenerator\SlugGenerator
+        arguments:
+            - { validChars: "\\pN\\p{Ll}" }
+
+    contao.slug.valid_characters:
+        class: Contao\CoreBundle\Slug\ValidCharacters
+        arguments:
+            - "@event_dispatcher"
+            - "@translator"
+
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
         arguments:
