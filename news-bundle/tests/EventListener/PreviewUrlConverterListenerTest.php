@@ -114,6 +114,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $newsAdapter
             ->method('__call')
+            ->with('generateNewsUrl')
             ->willReturn('news/james-wilson-returns.html')
         ;
 
@@ -121,6 +122,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $newsModelAdapter
             ->method('__call')
+            ->with('findByPk')
             ->willReturnCallback(
                 function (string $method, array $params): ?NewsModel {
                     $this->assertInternalType('string', $method);

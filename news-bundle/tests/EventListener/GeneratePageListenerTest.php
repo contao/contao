@@ -155,6 +155,7 @@ class GeneratePageListenerTest extends TestCase
 
         $newsFeedModelAdapter
             ->method('__call')
+            ->with('findByIds')
             ->willReturn($noModels ? null : new Collection([$feedModel], 'tl_news_feeds'))
         ;
 

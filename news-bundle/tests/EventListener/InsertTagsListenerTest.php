@@ -117,6 +117,7 @@ class InsertTagsListenerTest extends TestCase
 
         $newsFeedModelAdapter
             ->method('__call')
+            ->with('findByPk')
             ->willReturn($noModels ? null : $feedModel)
         ;
 
@@ -143,6 +144,7 @@ class InsertTagsListenerTest extends TestCase
 
         $newsModelAdapter
             ->method('__call')
+            ->with('findByIdOrAlias')
             ->willReturn($noModels ? null : $newsModel)
         ;
 
@@ -150,6 +152,7 @@ class InsertTagsListenerTest extends TestCase
 
         $newsAdapter
             ->method('__call')
+            ->with('generateNewsUrl')
             ->willReturn('news/foo-is-not-bar.html')
         ;
 

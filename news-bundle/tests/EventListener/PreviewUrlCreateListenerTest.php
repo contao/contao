@@ -134,6 +134,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $newsModelAdapter
             ->method('__call')
+            ->with('findByPk')
             ->willReturnCallback(
                 function (string $method, array $params): ?NewsModel {
                     $this->assertInternalType('string', $method);
