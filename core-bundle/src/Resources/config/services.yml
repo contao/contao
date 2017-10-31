@@ -49,7 +49,7 @@ services:
             - "@contao.framework"
             - "@database_connection"
             - "@request_stack"
-            - "@contao.translation.translator"
+            - "@translator"
             - "%kernel.project_dir%"
 
     contao.controller.insert_tags:
@@ -238,7 +238,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
-            - "@contao.translation.translator"
+            - "@translator"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:
@@ -249,7 +249,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
-            - "@contao.translation.translator"
+            - "@translator"
             - "%contao.upload_path%"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
@@ -261,7 +261,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
-            - "@contao.translation.translator"
+            - "@translator"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:

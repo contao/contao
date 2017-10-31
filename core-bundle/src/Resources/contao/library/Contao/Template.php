@@ -351,7 +351,7 @@ abstract class Template extends \Controller
 	 */
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
-		return \System::getContainer()->get('contao.translation.translator')->trans($strId, $arrParams, $strDomain);
+		return \System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
 	}
 
 
