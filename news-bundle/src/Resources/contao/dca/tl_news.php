@@ -625,7 +625,20 @@ class tl_news extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = StringUtil::generateAlias($dc->activeRecord->headline);
+			$slugOptions = [];
+
+			// Read the slug options from the associated page
+			if (($objNewsArchive = NewsArchiveModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objNewsArchive->jumpTo)) !== null)
+			{
+				$slugOptions['locale'] = $objPage->language;
+
+				if ($objPage->validAliasCharacters)
+				{
+					$slugOptions['validChars'] = $objPage->validAliasCharacters;
+				}
+			}
+
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->headline), $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")
