@@ -386,7 +386,20 @@ class tl_faq extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = StringUtil::generateAlias($dc->activeRecord->question);
+			$slugOptions = [];
+
+			// Read the slug options from the associated page
+			if (($objFaqCategory = FaqCategoryModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objFaqCategory->jumpTo)) !== null)
+			{
+				$slugOptions['locale'] = $objPage->language;
+
+				if ($objPage->validAliasCharacters)
+				{
+					$slugOptions['validChars'] = $objPage->validAliasCharacters;
+				}
+			}
+
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->question), $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_faq WHERE alias=? AND id!=?")
