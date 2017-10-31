@@ -15,14 +15,14 @@ namespace Contao\CalendarBundle\Tests\Picker;
 use Contao\BackendUser;
 use Contao\CalendarBundle\Picker\EventPickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class EventPickerProviderTest extends TestCase
+class EventPickerProviderTest extends ContaoTestCase
 {
     /**
      * @var EventPickerProvider
@@ -88,7 +88,8 @@ class EventPickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'eventPicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=calendar&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'))
         );
     }
 
@@ -105,33 +106,7 @@ class EventPickerProviderTest extends TestCase
 
     public function testChecksIfAContextIsSupported(): void
     {
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasAccess'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
+        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->assertTrue($this->provider->supportsContext('link'));
         $this->assertFalse($this->provider->supportsContext('file'));
@@ -208,7 +183,9 @@ class EventPickerProviderTest extends TestCase
         );
 
         $this->assertSame(
-            ['fieldType' => 'radio'],
+            [
+                'fieldType' => 'radio',
+            ],
             $this->provider->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5}}'))
         );
     }

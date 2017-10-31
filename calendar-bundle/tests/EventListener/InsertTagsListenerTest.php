@@ -15,12 +15,10 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Events;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 
-class InsertTagsListenerTest extends TestCase
+class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testCanBeInstantiated(): void
     {
@@ -31,17 +29,38 @@ class InsertTagsListenerTest extends TestCase
 
     public function testReplacesTheCalendarFeedTag(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $properties = [
+            'feedBase' => 'http://localhost/',
+            'alias' => 'events',
+        ];
 
-        $this->assertSame(
-            'http://localhost/share/events.xml',
-            $listener->onReplaceInsertTags('calendar_feed::2')
-        );
+        $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class, $properties);
+
+        $adapters = [
+            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => $feedModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+        $listener = new InsertTagsListener($framework);
+
+        $this->assertSame('http://localhost/share/events.xml', $listener->onReplaceInsertTags('calendar_feed::2'));
     }
 
     public function testReplacesTheEventTags(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $properties = [
+            'title' => 'The "foobar" event',
+            'teaser' => '<p>The annual foobar event.</p>',
+        ];
+
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $properties);
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
+            Events::class => $this->mockConfiguredAdapter(['generateEventUrl' => 'events/the-foobar-event.html']),
+        ];
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
         $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
@@ -78,108 +97,14 @@ class InsertTagsListenerTest extends TestCase
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
+            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+        ];
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
         $this->assertSame('', $listener->onReplaceInsertTags('calendar_feed::3'));
         $this->assertSame('', $listener->onReplaceInsertTags('event_url::3'));
-    }
-
-    /**
-     * Mocks the Contao framework.
-     *
-     * @param string $source
-     * @param bool   $noModels
-     *
-     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockContaoFramework(string $source = 'default', bool $noModels = false): ContaoFrameworkInterface
-    {
-        $feedModel = $this->createMock(CalendarFeedModel::class);
-
-        $feedModel
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key): ?string {
-                    switch ($key) {
-                        case 'feedBase':
-                            return 'http://localhost/';
-
-                        case 'alias':
-                            return 'events';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        $calendarFeedModelAdapter = $this->createMock(Adapter::class);
-
-        $calendarFeedModelAdapter
-            ->method('__call')
-            ->willReturn($noModels ? null : $feedModel)
-        ;
-
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $eventModel
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) use ($source): ?string {
-                    switch ($key) {
-                        case 'title':
-                            return 'The "foobar" event';
-
-                        case 'teaser':
-                            return '<p>The annual foobar event.</p>';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        $eventsModelAdapter = $this->createMock(Adapter::class);
-
-        $eventsModelAdapter
-            ->method('__call')
-            ->willReturn($noModels ? null : $eventModel)
-        ;
-
-        $eventsAdapter = $this->createMock(Adapter::class);
-
-        $eventsAdapter
-            ->method('__call')
-            ->willReturn('events/the-foobar-event.html')
-        ;
-
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(
-                function (string $key) use ($calendarFeedModelAdapter, $eventsModelAdapter, $eventsAdapter): ?Adapter {
-                    switch ($key) {
-                        case CalendarFeedModel::class:
-                            return $calendarFeedModelAdapter;
-
-                        case CalendarEventsModel::class:
-                            return $eventsModelAdapter;
-
-                        case Events::class:
-                            return $eventsAdapter;
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        return $framework;
     }
 }
