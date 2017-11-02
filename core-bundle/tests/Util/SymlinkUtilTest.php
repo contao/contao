@@ -21,27 +21,27 @@ class SymlinkUtilTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
 
-        SymlinkUtil::symlink('', 'target', $this->getRootDir());
+        SymlinkUtil::symlink('', 'target', $this->getFixturesDir());
     }
 
     public function testFailsToCreateTheSymlinkIfTheTargetFileIsEmpty(): void
     {
         $this->expectException('InvalidArgumentException');
 
-        SymlinkUtil::symlink('source', '', $this->getRootDir());
+        SymlinkUtil::symlink('source', '', $this->getFixturesDir());
     }
 
     public function testFailsToCreateTheSymlinkIfTheTargetIsInvalid(): void
     {
         $this->expectException('InvalidArgumentException');
 
-        SymlinkUtil::symlink('source', '../target', $this->getRootDir());
+        SymlinkUtil::symlink('source', '../target', $this->getFixturesDir());
     }
 
     public function testFailsToCreateTheSymlinkIfTheTargetExists(): void
     {
         $this->expectException('LogicException');
 
-        SymlinkUtil::symlink('source', 'app', $this->getRootDir());
+        SymlinkUtil::symlink('source', 'app', $this->getFixturesDir());
     }
 }

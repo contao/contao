@@ -56,7 +56,7 @@ class EnvironmentTest extends TestCase
      */
     public function getRootDir(): string
     {
-        return strtr(parent::getRootDir(), '\\', '/');
+        return strtr(parent::getFixturesDir(), '\\', '/');
     }
 
     public function testHandlesModPhp(): void

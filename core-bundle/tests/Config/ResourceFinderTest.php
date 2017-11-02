@@ -32,8 +32,8 @@ class ResourceFinderTest extends TestCase
         $this->assertInstanceOf(Finder::class, $finder->find());
 
         $finder = new ResourceFinder([
-            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
-            $this->getRootDir().'/system/modules/foobar',
+            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao',
+            $this->getFixturesDir().'/system/modules/foobar',
         ]);
 
         $this->assertInstanceOf(Finder::class, $finder->findIn('config'));
@@ -42,8 +42,8 @@ class ResourceFinderTest extends TestCase
     public function testFailsIfTheSubpathIsInvalid(): void
     {
         $finder = new ResourceFinder([
-            $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao',
-            $this->getRootDir().'/system/modules/foobar',
+            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao',
+            $this->getFixturesDir().'/system/modules/foobar',
         ]);
 
         $this->expectException('InvalidArgumentException');

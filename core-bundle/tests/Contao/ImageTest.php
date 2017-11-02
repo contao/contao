@@ -30,41 +30,22 @@ use Symfony\Component\Filesystem\Filesystem;
 class ImageTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private static $rootDir;
-
-    /**
      * {@inheritdoc}
      */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
-        self::$rootDir = sys_get_temp_dir().'/'.uniqid('ImageTest_');
-
         $fs = new Filesystem();
-        $fs->mkdir(self::$rootDir);
-        $fs->mkdir(self::$rootDir.'/assets');
-        $fs->mkdir(self::$rootDir.'/assets/images');
+        $fs->mkdir(static::getTempDir().'/assets');
+        $fs->mkdir(static::getTempDir().'/assets/images');
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(self::$rootDir.'/assets/images/'.$subdir);
+            $fs->mkdir(static::getTempDir().'/assets/images/'.$subdir);
         }
 
-        $fs->mkdir(self::$rootDir.'/system');
-        $fs->mkdir(self::$rootDir.'/system/tmp');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $fs = new Filesystem();
-        $fs->remove(self::$rootDir);
+        $fs->mkdir(static::getTempDir().'/system');
+        $fs->mkdir(static::getTempDir().'/system/tmp');
     }
 
     /**
@@ -74,7 +55,7 @@ class ImageTest extends TestCase
     {
         parent::setUp();
 
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy.jpg');
+        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -82,7 +63,7 @@ class ImageTest extends TestCase
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         \define('TL_ERROR', 'ERROR');
-        \define('TL_ROOT', self::$rootDir);
+        \define('TL_ROOT', $this->getTempDir());
 
         System::setContainer($this->mockContainerWithImageServices());
     }
@@ -1205,7 +1186,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImages(): void
     {
         file_put_contents(
-            self::$rootDir.'/dummy.svg',
+            $this->getTempDir().'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1241,7 +1222,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithPercentageDimensions(): void
     {
         file_put_contents(
-            self::$rootDir.'/dummy.svg',
+            $this->getTempDir().'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1277,7 +1258,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithoutDimensions(): void
     {
         file_put_contents(
-            self::$rootDir.'/dummy.svg',
+            $this->getTempDir().'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1311,7 +1292,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithoutViewBox(): void
     {
         file_put_contents(
-            self::$rootDir.'/dummy.svg',
+            $this->getTempDir().'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1346,7 +1327,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithoutViewBoxAndDimensions(): void
     {
         file_put_contents(
-            self::$rootDir.'/dummy.svg',
+            $this->getTempDir().'/dummy.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1369,7 +1350,7 @@ class ImageTest extends TestCase
     public function testResizesSvgzImages(): void
     {
         file_put_contents(
-            self::$rootDir.'/dummy.svgz',
+            $this->getTempDir().'/dummy.svgz',
             gzencode(
                 '<?xml version="1.0" encoding="utf-8"?>
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1433,7 +1414,7 @@ class ImageTest extends TestCase
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
 
-        file_put_contents(self::$rootDir.'/target.jpg', '');
+        file_put_contents($this->getTempDir().'/target.jpg', '');
 
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
@@ -1584,9 +1565,9 @@ class ImageTest extends TestCase
      */
     private function mockContainerWithImageServices(): ContainerBuilder
     {
-        $container = $this->mockContainer();
-        $container->setParameter('contao.image.target_dir', self::$rootDir.'/assets/images');
-        $container->setParameter('contao.web_dir', self::$rootDir.'/web');
+        $container = $this->mockContainer($this->getTempDir());
+        $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
+        $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
 
         $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
         $resizer->setFramework($this->mockContaoFramework());

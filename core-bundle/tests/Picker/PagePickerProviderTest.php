@@ -12,15 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PagePickerProviderTest extends PickerTestCase
+class PagePickerProviderTest extends ContaoTestCase
 {
     /**
      * @var PagePickerProvider
@@ -106,7 +108,7 @@ class PagePickerProviderTest extends PickerTestCase
 
     public function testChecksIfAContextIsSupported(): void
     {
-        $this->provider->setTokenStorage($this->mockTokenStorage());
+        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->assertTrue($this->provider->supportsContext('page'));
         $this->assertTrue($this->provider->supportsContext('link'));

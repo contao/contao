@@ -49,8 +49,8 @@ class ImageFactoryTest extends TestCase
     {
         parent::tearDown();
 
-        if (file_exists($this->getRootDir().'/assets/images')) {
-            (new Filesystem())->remove($this->getRootDir().'/assets/images');
+        if (file_exists($this->getFixturesDir().'/assets/images')) {
+            (new Filesystem())->remove($this->getFixturesDir().'/assets/images');
         }
     }
 
@@ -64,7 +64,7 @@ class ImageFactoryTest extends TestCase
 
     public function testCreatesAnImageObjectFromAnImagePath(): void
     {
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         $imageMock = $this->createMock(ImageInterface::class);
         $resizer = $this->createMock(ResizerInterface::class);
@@ -109,7 +109,7 @@ class ImageFactoryTest extends TestCase
 
         $this->assertSameImage($imageMock, $image);
 
-        $path = $this->getRootDir().'/assets/images/dummy.svg';
+        $path = $this->getFixturesDir().'/assets/images/dummy.svg';
 
         if (!file_exists(\dirname($path))) {
             mkdir(\dirname($path), 0777, true);
@@ -128,12 +128,12 @@ class ImageFactoryTest extends TestCase
 
         $this->expectException('InvalidArgumentException');
 
-        $imageFactory->create($this->getRootDir().'/images/dummy.foo');
+        $imageFactory->create($this->getFixturesDir().'/images/dummy.foo');
     }
 
     public function testCreatesAnImageObjectFromAnImagePathWithAnImageSize(): void
     {
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         $imageMock = $this->createMock(ImageInterface::class);
         $resizer = $this->createMock(ResizerInterface::class);
@@ -171,7 +171,7 @@ class ImageFactoryTest extends TestCase
                             'interlace' => ImagineImageInterface::INTERLACE_PLANE,
                         ], $options->getImagineOptions());
 
-                        $this->assertSame($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
+                        $this->assertSame($this->getFixturesDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
                     }
@@ -230,7 +230,7 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imageFactory = $this->mockImageFactory($resizer, null, null, null, $framework);
-        $image = $imageFactory->create($path, 1, $this->getRootDir().'/target/path.jpg');
+        $image = $imageFactory->create($path, 1, $this->getFixturesDir().'/target/path.jpg');
 
         $this->assertSame($imageMock, $image);
     }
@@ -254,7 +254,7 @@ class ImageFactoryTest extends TestCase
             )
         ;
 
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
         $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path, 1);
 
@@ -302,7 +302,7 @@ class ImageFactoryTest extends TestCase
                             'interlace' => ImagineImageInterface::INTERLACE_PLANE,
                         ], $options->getImagineOptions());
 
-                        $this->assertSame($this->getRootDir().'/target/path.jpg', $options->getTargetPath());
+                        $this->assertSame($this->getFixturesDir().'/target/path.jpg', $options->getTargetPath());
 
                         return true;
                     }
@@ -312,7 +312,7 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imageFactory = $this->mockImageFactory($resizer);
-        $image = $imageFactory->create($imageMock, $resizeConfig, $this->getRootDir().'/target/path.jpg');
+        $image = $imageFactory->create($imageMock, $resizeConfig, $this->getFixturesDir().'/target/path.jpg');
 
         $this->assertSameImage($imageMock, $image);
     }
@@ -334,7 +334,7 @@ class ImageFactoryTest extends TestCase
      */
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode($mode, array $expected): void
     {
-        $path = $this->getRootDir().'/images/none.jpg';
+        $path = $this->getFixturesDir().'/images/none.jpg';
 
         $imageMock = $this->createMock(ImageInterface::class);
         $filesystem = $this->createMock(Filesystem::class);
@@ -488,7 +488,7 @@ class ImageFactoryTest extends TestCase
             FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => null]),
         ]);
 
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
         $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
 
@@ -516,7 +516,7 @@ class ImageFactoryTest extends TestCase
             FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => $filesModel]),
         ]);
 
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
         $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
 
@@ -532,13 +532,13 @@ class ImageFactoryTest extends TestCase
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
-        \define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         $resizer = new LegacyResizer(
-            $this->getRootDir().'/assets/images',
+            $this->getFixturesDir().'/assets/images',
             new ResizeCalculator()
         );
 
@@ -557,25 +557,25 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getRootDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
+            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
+            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
         $image = $imageFactory->create(
             $path,
             [200, 200, ResizeConfiguration::MODE_CROP],
-            $this->getRootDir().'/target.jpg'
+            $this->getFixturesDir().'/target.jpg'
         );
 
         $this->assertSame(
-            $this->getRootDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
+            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -616,15 +616,15 @@ class ImageFactoryTest extends TestCase
      */
     public function testExecutesTheGetImageHook(): void
     {
-        \define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->mockContainer($this->getFixturesDir()));
 
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         $resizer = new LegacyResizer(
-            $this->getRootDir().'/assets/images',
+            $this->getFixturesDir().'/assets/images',
             new ResizeCalculator()
         );
 
@@ -650,7 +650,7 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getRootDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            $this->getFixturesDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -665,7 +665,7 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getRootDir().'/images/dummy.jpg',
+            $this->getFixturesDir().'/images/dummy.jpg',
             $image->getPath(),
             'Hook should not get called if no resize is necessary'
         );
@@ -715,15 +715,15 @@ class ImageFactoryTest extends TestCase
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
-        \define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->mockContainer($this->getFixturesDir()));
 
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         $resizer = new LegacyResizer(
-            $this->getRootDir().'/assets/images',
+            $this->getFixturesDir().'/assets/images',
             new ResizeCalculator()
         );
 
@@ -841,7 +841,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageA->getImagine(), $imageB->getImagine());
         $this->assertSame($imageA->getImportantPart(), $imageB->getImportantPart());
         $this->assertSame($imageA->getPath(), $imageB->getPath());
-        $this->assertSame($imageA->getUrl($this->getRootDir()), $imageB->getUrl($this->getRootDir()));
+        $this->assertSame($imageA->getUrl($this->getFixturesDir()), $imageB->getUrl($this->getFixturesDir()));
     }
 
     /**

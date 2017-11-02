@@ -21,7 +21,7 @@ class HtaccessAnalyzerTest extends TestCase
     public function testCanBeInstantiated(): void
     {
         $file = new SplFileInfo(
-            $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
+            $this->getFixturesDir().'/system/modules/foobar/assets/.htaccess',
             'system/modules/foobar/assets',
             'system/modules/foobar/assets/.htaccess'
         );
@@ -34,7 +34,7 @@ class HtaccessAnalyzerTest extends TestCase
     public function testReadsTheAccessConfigurationFromTheHtaccesFile(): void
     {
         $file = new SplFileInfo(
-            $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
+            $this->getFixturesDir().'/system/modules/foobar/assets/.htaccess',
             'system/modules/foobar/assets',
             'system/modules/foobar/assets/.htaccess'
         );
@@ -44,7 +44,7 @@ class HtaccessAnalyzerTest extends TestCase
         $this->assertTrue($htaccess->grantsAccess());
 
         $file = new SplFileInfo(
-            $this->getRootDir().'/system/modules/foobar/html/.htaccess',
+            $this->getFixturesDir().'/system/modules/foobar/html/.htaccess',
             'system/modules/foobar/html',
             'system/modules/foobar/html/.htaccess'
         );
@@ -54,7 +54,7 @@ class HtaccessAnalyzerTest extends TestCase
         $this->assertTrue($htaccess->grantsAccess());
 
         $file = new SplFileInfo(
-            $this->getRootDir().'/system/modules/foobar/private/.htaccess',
+            $this->getFixturesDir().'/system/modules/foobar/private/.htaccess',
             'system/modules/foobar/private',
             'system/modules/foobar/private/.htaccess'
         );

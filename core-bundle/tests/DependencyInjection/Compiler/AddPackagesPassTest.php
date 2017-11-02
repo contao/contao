@@ -20,14 +20,14 @@ class AddPackagesPassTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
+        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/installed.json');
 
         $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $pass);
     }
 
     public function testAddsThePackages(): void
     {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
+        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/installed.json');
         $container = new ContainerBuilder();
 
         $pass->process($container);
@@ -49,7 +49,7 @@ class AddPackagesPassTest extends TestCase
 
     public function testAddsAnEmptyArrayIfThereIsNoJsonFile(): void
     {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/invalid.json');
+        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/invalid.json');
         $container = new ContainerBuilder();
 
         $pass->process($container);

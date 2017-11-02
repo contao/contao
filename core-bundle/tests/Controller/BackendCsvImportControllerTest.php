@@ -40,14 +40,14 @@ class BackendCsvImportControllerTest extends TestCase
         parent::setUp();
 
         \define('TL_MODE', 'BE');
-        \define('TL_ROOT', $this->getRootDir());
+        \define('TL_ROOT', $this->getFixturesDir());
 
         $container = $this->mockContainer();
         $container->set('session', new Session(new MockArraySessionStorage()));
 
         $container->set(
             'contao.resource_finder',
-            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
         System::setContainer($container);
@@ -137,7 +137,7 @@ EOF;
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
-            $this->getRootDir()
+            $this->getFixturesDir()
         );
 
         $response = $controller->importListWizard($dc);
@@ -223,7 +223,7 @@ EOF;
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
-            $this->getRootDir()
+            $this->getFixturesDir()
         );
 
         $response = $controller->importTableWizard($dc);
@@ -313,7 +313,7 @@ EOF;
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
-            $this->getRootDir()
+            $this->getFixturesDir()
         );
 
         $response = $controller->importOptionWizard($dc);
@@ -381,7 +381,7 @@ EOF;
             $connection,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->getRootDir()
+            $this->getFixturesDir()
         );
 
         $this->expectException(InternalServerErrorException::class);
@@ -413,7 +413,7 @@ EOF;
             $this->createMock(Connection::class),
             $requestStack,
             $translator,
-            $this->getRootDir()
+            $this->getFixturesDir()
         );
 
         return $controller;

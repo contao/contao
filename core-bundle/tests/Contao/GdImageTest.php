@@ -27,47 +27,15 @@ use Symfony\Component\Filesystem\Filesystem;
 class GdImageTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private static $rootDir;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        self::$rootDir = sys_get_temp_dir().'/'.uniqid('GdImageTest_');
-
-        $fs = new Filesystem();
-        $fs->mkdir(self::$rootDir);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $fs = new Filesystem();
-
-        if ($fs->exists(self::$rootDir)) {
-            $fs->remove(self::$rootDir);
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        \define('TL_ROOT', self::$rootDir);
+        \define('TL_ROOT', $this->getTempDir());
 
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->mockContainer($this->getTempDir()));
     }
 
     public function testCanBeInstantiated(): void
@@ -112,7 +80,7 @@ class GdImageTest extends TestCase
         imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 0));
 
         $method = 'image'.$type;
-        $method($image, self::$rootDir.'/test.'.$type);
+        $method($image, $this->getTempDir().'/test.'.$type);
         imagedestroy($image);
 
         $image = GdImage::fromFile(new File('test.'.$type));
@@ -129,7 +97,7 @@ class GdImageTest extends TestCase
      */
     public function testSavesImagesToFiles(string $type): void
     {
-        $file = self::$rootDir.'/test.'.$type;
+        $file = $this->getTempDir().'/test.'.$type;
 
         $image = GdImage::fromDimensions(100, 100);
         $image->saveToFile($file);

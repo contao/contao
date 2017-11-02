@@ -13,16 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\FilesyncCommand;
-use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
 
-class FilesyncCommandTest extends TestCase
+class FilesyncCommandTest extends CommandTestCase
 {
     public function testCanBeInstantiated(): void
     {
@@ -63,29 +58,5 @@ class FilesyncCommandTest extends TestCase
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
-    }
-
-    /**
-     * Mocks the application.
-     *
-     * @return Application
-     */
-    private function mockApplication()
-    {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
-        $container->set('filesystem', new Filesystem());
-
-        $kernel = $this->createMock(KernelInterface::class);
-
-        $kernel
-            ->method('getContainer')
-            ->willReturn($container)
-        ;
-
-        $application = new Application($kernel);
-        $application->setCatchExceptions(true);
-
-        return $application;
     }
 }

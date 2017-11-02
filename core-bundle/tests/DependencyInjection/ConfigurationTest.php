@@ -31,7 +31,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false, $this->getRootDir(), $this->getRootDir().'/app', 'en');
+        $this->configuration = new Configuration(false, $this->getTempDir(), $this->getTempDir().'/app', 'en');
     }
 
     public function testCanBeInstantiated(): void
@@ -47,19 +47,19 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             'contao' => [
-                'web_dir' => $this->getRootDir().'/foo/../web',
+                'web_dir' => $this->getTempDir().'/foo/../web',
                 'image' => [
-                    'target_dir' => $this->getRootDir().'/foo/../assets/images',
+                    'target_dir' => $this->getTempDir().'/foo/../assets/images',
                 ],
             ],
         ];
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame(strtr($this->getRootDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
+        $this->assertSame(strtr($this->getTempDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
 
         $this->assertSame(
-            strtr($this->getRootDir().'/assets/images', '/', DIRECTORY_SEPARATOR),
+            strtr($this->getTempDir().'/assets/images', '/', DIRECTORY_SEPARATOR),
             $configuration['image']['target_dir']
         );
     }

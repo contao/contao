@@ -44,7 +44,7 @@ class PictureFactoryTest extends TestCase
 
     public function testCreatesAPictureObjectFromAnImagePath(): void
     {
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -240,7 +240,7 @@ class PictureFactoryTest extends TestCase
 
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getTempDir().'/images/dummy.jpg';
 
         $pictureMock = $this->createMock(PictureInterface::class);
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -322,7 +322,7 @@ class PictureFactoryTest extends TestCase
     public function testCreatesAPictureObjectWithoutAModel(): void
     {
         $defaultDensities = '';
-        $path = $this->getRootDir().'/images/dummy.jpg';
+        $path = $this->getTempDir().'/images/dummy.jpg';
 
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = $this->createMock(PictureInterface::class);

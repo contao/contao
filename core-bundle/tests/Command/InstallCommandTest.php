@@ -29,7 +29,7 @@ class InstallCommandTest extends TestCase
     {
         parent::setUp();
 
-        $tcpdfPath = $this->getRootDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php';
+        $tcpdfPath = $this->getFixturesDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php';
 
         if (!file_exists($tcpdfPath)) {
             if (!file_exists(\dirname($tcpdfPath))) {
@@ -49,19 +49,19 @@ class InstallCommandTest extends TestCase
 
         $fs = new Filesystem();
 
-        $fs->remove($this->getRootDir().'/assets/css');
-        $fs->remove($this->getRootDir().'/assets/images');
-        $fs->remove($this->getRootDir().'/assets/images_test');
-        $fs->remove($this->getRootDir().'/assets/js');
-        $fs->remove($this->getRootDir().'/files_test');
-        $fs->remove($this->getRootDir().'/system/cache');
-        $fs->remove($this->getRootDir().'/system/config');
-        $fs->remove($this->getRootDir().'/system/modules/.gitignore');
-        $fs->remove($this->getRootDir().'/system/tmp');
-        $fs->remove($this->getRootDir().'/templates');
-        $fs->remove($this->getRootDir().'/web/share');
-        $fs->remove($this->getRootDir().'/web/system');
-        $fs->remove($this->getRootDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
+        $fs->remove($this->getFixturesDir().'/assets/css');
+        $fs->remove($this->getFixturesDir().'/assets/images');
+        $fs->remove($this->getFixturesDir().'/assets/images_test');
+        $fs->remove($this->getFixturesDir().'/assets/js');
+        $fs->remove($this->getFixturesDir().'/files_test');
+        $fs->remove($this->getFixturesDir().'/system/cache');
+        $fs->remove($this->getFixturesDir().'/system/config');
+        $fs->remove($this->getFixturesDir().'/system/modules/.gitignore');
+        $fs->remove($this->getFixturesDir().'/system/tmp');
+        $fs->remove($this->getFixturesDir().'/templates');
+        $fs->remove($this->getFixturesDir().'/web/share');
+        $fs->remove($this->getFixturesDir().'/web/system');
+        $fs->remove($this->getFixturesDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
     }
 
     public function testCanBeInstantiated(): void
@@ -74,11 +74,7 @@ class InstallCommandTest extends TestCase
 
     public function testCreatesTheContaoFolders(): void
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->getRootDir());
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
-        $container->setParameter('contao.upload_path', 'files');
-        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images');
+        $container = $this->mockContainer($this->getFixturesDir());
         $container->set('filesystem', new Filesystem());
 
         $command = new InstallCommand('contao:install');
@@ -101,11 +97,9 @@ class InstallCommandTest extends TestCase
 
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->getRootDir());
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
+        $container = $this->mockContainer($this->getFixturesDir());
         $container->setParameter('contao.upload_path', 'files_test');
-        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images_test');
+        $container->setParameter('contao.image.target_dir', $this->getFixturesDir().'/assets/images_test');
 
         $command = new InstallCommand('contao:install');
         $command->setContainer($container);

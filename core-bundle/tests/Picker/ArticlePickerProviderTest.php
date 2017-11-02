@@ -12,14 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class ArticlePickerProviderTest extends PickerTestCase
+class ArticlePickerProviderTest extends ContaoTestCase
 {
     /**
      * @var ArticlePickerProvider
@@ -121,7 +123,7 @@ class ArticlePickerProviderTest extends PickerTestCase
 
     public function testChecksIfAContextIsSupported(): void
     {
-        $this->provider->setTokenStorage($this->mockTokenStorage());
+        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->assertTrue($this->provider->supportsContext('link'));
         $this->assertFalse($this->provider->supportsContext('file'));

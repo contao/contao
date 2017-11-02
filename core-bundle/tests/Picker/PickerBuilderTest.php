@@ -12,16 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PickerBuilderTest extends PickerTestCase
+class PickerBuilderTest extends ContaoTestCase
 {
     /**
      * @var PickerBuilder
@@ -53,7 +55,7 @@ class PickerBuilderTest extends PickerTestCase
     public function testCreatesAPickerObject(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
-        $provider->setTokenStorage($this->mockTokenStorage());
+        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
 
@@ -84,7 +86,7 @@ class PickerBuilderTest extends PickerTestCase
     public function testCreatesAPickerObjectFromData(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
-        $provider->setTokenStorage($this->mockTokenStorage());
+        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
 
@@ -97,7 +99,7 @@ class PickerBuilderTest extends PickerTestCase
     public function testDoesNotCreateAPickerObjectFromDataIfTheArgumentIsInvalid(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
-        $provider->setTokenStorage($this->mockTokenStorage());
+        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
 
@@ -107,7 +109,7 @@ class PickerBuilderTest extends PickerTestCase
     public function testChecksIfAContextIsSupported(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
-        $provider->setTokenStorage($this->mockTokenStorage());
+        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
 
@@ -119,7 +121,7 @@ class PickerBuilderTest extends PickerTestCase
     public function testReturnsThePickerUrl(): void
     {
         $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
-        $provider->setTokenStorage($this->mockTokenStorage());
+        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
 

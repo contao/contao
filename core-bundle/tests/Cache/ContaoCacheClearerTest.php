@@ -18,17 +18,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ContaoCacheClearerTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $fs = new Filesystem();
-        $fs->remove($this->getCacheDir().'/contao');
-    }
-
     public function testCanBeInstantiated(): void
     {
         $clearer = new ContaoCacheClearer(new Filesystem());
@@ -38,16 +27,14 @@ class ContaoCacheClearerTest extends TestCase
 
     public function testRemovesTheCacheFolder(): void
     {
-        $cacheDir = $this->getCacheDir();
-
         $fs = new Filesystem();
-        $fs->mkdir($cacheDir.'/contao/config');
+        $fs->mkdir($this->getTempDir().'/contao/config');
 
-        $this->assertFileExists($cacheDir.'/contao/config');
+        $this->assertFileExists($this->getTempDir().'/contao/config');
 
         $clearer = new ContaoCacheClearer($fs);
-        $clearer->clear($cacheDir);
+        $clearer->clear($this->getTempDir());
 
-        $this->assertFileNotExists($cacheDir.'/contao/config');
+        $this->assertFileNotExists($this->getTempDir().'/contao/config');
     }
 }

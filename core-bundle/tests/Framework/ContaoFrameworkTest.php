@@ -64,7 +64,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertFalse(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('FE', TL_MODE);
-        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
         $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('', TL_PATH);
@@ -101,7 +101,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('BE', TL_MODE);
-        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('foobar', TL_REFERER_ID);
         $this->assertSame('contao/login', TL_SCRIPT);
         $this->assertSame('', TL_PATH);
@@ -127,7 +127,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
         $this->assertNull(TL_MODE);
-        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertNull(TL_REFERER_ID);
         $this->assertSame(null, TL_SCRIPT);
         $this->assertNull(TL_PATH);
@@ -168,7 +168,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame(null, TL_MODE);
-        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
         $this->assertSame(null, TL_SCRIPT);
         $this->assertSame('', TL_PATH);
@@ -201,7 +201,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
         $this->assertNull(TL_MODE);
-        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('foobar', TL_REFERER_ID);
         $this->assertSame('contao/login', TL_SCRIPT);
         $this->assertSame('', TL_PATH);
@@ -319,7 +319,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login'),
             $this->mockSession(),
             $this->mockScopeMatcher(),
-            $this->getRootDir(),
+            $this->getTempDir(),
             error_reporting()
         );
 
@@ -362,7 +362,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login'),
             $this->mockSession(),
             $this->mockScopeMatcher(),
-            $this->getRootDir(),
+            $this->getTempDir(),
             error_reporting()
         );
 
@@ -404,7 +404,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login'),
             $this->mockSession(),
             $this->mockScopeMatcher(),
-            $this->getRootDir(),
+            $this->getTempDir(),
             error_reporting()
         );
 
@@ -453,7 +453,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login'),
             $this->mockSession(),
             $this->mockScopeMatcher(),
-            $this->getRootDir(),
+            $this->getTempDir(),
             error_reporting()
         );
 
@@ -497,7 +497,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockRouter('/contao/login'),
             $this->mockSession(),
             $this->mockScopeMatcher(),
-            $this->getRootDir(),
+            $this->getTempDir(),
             error_reporting()
         );
 
@@ -736,7 +736,7 @@ class ContaoFrameworkTest extends TestCase
             $router,
             $session,
             $this->mockScopeMatcher(),
-            $this->getRootDir(),
+            $this->getTempDir(),
             error_reporting()
         );
 

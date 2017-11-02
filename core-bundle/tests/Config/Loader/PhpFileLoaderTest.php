@@ -41,13 +41,13 @@ class PhpFileLoaderTest extends TestCase
     {
         $this->assertTrue(
             $this->loader->supports(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php'
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php'
             )
         );
 
         $this->assertFalse(
             $this->loader->supports(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
             )
         );
     }
@@ -62,7 +62,7 @@ EOF;
 
         $this->assertSame(
             $expects,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php')
+            $this->loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/config/config.php')
         );
 
         $content = <<<'EOF'
@@ -87,7 +87,7 @@ EOF;
 
         $this->assertSame(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
+            $this->loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test.php')
         );
     }
 
@@ -104,7 +104,7 @@ EOF;
         $this->assertSame(
             $expects,
             $this->loader->load(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace1.php',
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace1.php',
                 'namespaced'
             )
         );
@@ -120,7 +120,7 @@ EOF;
         $this->assertSame(
             $expects,
             $this->loader->load(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace2.php',
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_namespace2.php',
                 'namespaced'
             )
         );
@@ -136,7 +136,7 @@ EOF;
         $this->assertSame(
             $expects,
             $this->loader->load(
-                $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php',
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php',
                 'namespaced'
             )
         );
@@ -171,7 +171,9 @@ EOF;
 
         $this->assertSame(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
+            $this->loader->load(
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php'
+            )
         );
     }
 
@@ -208,7 +210,9 @@ EOF;
 
         $this->assertSame(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_declare3.php')
+            $this->loader->load(
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/tl_test_with_declare3.php'
+            )
         );
     }
 
@@ -254,7 +258,9 @@ EOF;
 
         $this->assertSame(
             $content,
-            $this->loader->load($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php')
+            $this->loader->load(
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/dca/'.$file.'.php'
+            )
         );
     }
 

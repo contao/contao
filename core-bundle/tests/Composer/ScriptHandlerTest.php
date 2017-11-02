@@ -19,7 +19,7 @@ use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Script\Event;
 use Contao\CoreBundle\Composer\ScriptHandler;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 class ScriptHandlerTest extends TestCase
 {
@@ -55,7 +55,7 @@ class ScriptHandlerTest extends TestCase
             $this->mockComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
+                        'file' => $this->getFixturesDir().'/app/config/parameters.yml',
                     ],
                 ]
             )
@@ -68,7 +68,7 @@ class ScriptHandlerTest extends TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        touch(__DIR__.'/../Fixtures/app/config/parameters.yml');
+        touch($this->getFixturesDir().'/app/config/parameters.yml');
 
         $this->handler->generateRandomSecret(
             $this->mockComposerEvent(
@@ -80,7 +80,7 @@ class ScriptHandlerTest extends TestCase
             )
         );
 
-        unlink(__DIR__.'/../Fixtures/app/config/parameters.yml');
+        unlink($this->getFixturesDir().'/app/config/parameters.yml');
 
         $this->assertRandomSecretDoesNotExist();
     }

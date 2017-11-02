@@ -32,8 +32,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
@@ -53,7 +51,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             true,
             $this->createMock('Twig_Environment'),
             $this->mockContaoFramework(),
-            $this->mockTokenStorage(),
+            $this->mockTokenStorage(FrontendUser::class),
             $this->createMock(LoggerInterface::class)
         );
     }
@@ -237,7 +235,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             true,
             $twig,
             $this->mockContaoFramework(),
-            $this->mockTokenStorage(),
+            $this->mockTokenStorage(FrontendUser::class),
             $logger
         );
 
@@ -280,31 +278,5 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
-    }
-
-    /**
-     * Mocks a token storage.
-     *
-     * @param string $userClass
-     *
-     * @return TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockTokenStorage($userClass = FrontendUser::class): TokenStorageInterface
-    {
-        $token = $this->createMock(AbstractToken::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($this->createMock($userClass))
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        return $tokenStorage;
     }
 }
