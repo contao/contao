@@ -33,6 +33,7 @@ install:
   - echo extension=php_xsl.dll >> php.ini
   - cd c:\projects\contao
   - php -r "readfile('http://getcomposer.org/installer');" | php
+  - IF %APPVEYOR_REPO_TAG%==true (SET COMPOSER_ROOT_VERSION=%APPVEYOR_REPO_TAG_NAME%) ELSE (SET COMPOSER_ROOT_VERSION=dev-%APPVEYOR_REPO_BRANCH%)
   - php composer.phar update --no-progress --no-interaction --ansi
 
 test_script:
