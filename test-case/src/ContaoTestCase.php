@@ -63,7 +63,7 @@ abstract class ContaoTestCase extends TestCase
         $key = basename(strtr(static::class, '\\', '/'));
 
         if (!isset(self::$tempDirs[$key])) {
-            self::$tempDirs[$key] = sys_get_temp_dir().'/'.uniqid($key.'_');
+            self::$tempDirs[$key] = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid($key.'_');
 
             $fs = new Filesystem();
 
