@@ -26,9 +26,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 abstract class ContaoTestCase extends TestCase
 {
     /**
-     * @var string
+     * @var array
      */
-    private static $tempDir;
+    private static $tempDirs = [];
 
     /**
      * {@inheritdoc}
@@ -37,15 +37,19 @@ abstract class ContaoTestCase extends TestCase
     {
         parent::tearDownAfterClass();
 
-        if (null === self::$tempDir) {
+        $key = basename(strtr(static::class, '\\', '/'));
+
+        if (!isset(self::$tempDirs[$key])) {
             return;
         }
 
         $fs = new Filesystem();
 
-        if ($fs->exists(self::$tempDir)) {
-            $fs->remove(self::$tempDir);
+        if ($fs->exists(self::$tempDirs[$key])) {
+            $fs->remove(self::$tempDirs[$key]);
         }
+
+        unset(self::$tempDirs[$key]);
     }
 
     /**
@@ -55,17 +59,19 @@ abstract class ContaoTestCase extends TestCase
      */
     protected static function getTempDir(): string
     {
-        if (null === self::$tempDir) {
-            self::$tempDir = sys_get_temp_dir().'/'.uniqid(static::class.'_');
+        $key = basename(strtr(static::class, '\\', '/'));
+
+        if (!isset(self::$tempDirs[$key])) {
+            self::$tempDirs[$key] = sys_get_temp_dir().'/'.uniqid($key.'_');
 
             $fs = new Filesystem();
 
-            if (!$fs->exists(self::$tempDir)) {
-                $fs->mkdir(self::$tempDir);
+            if (!$fs->exists(self::$tempDirs[$key])) {
+                $fs->mkdir(self::$tempDirs[$key]);
             }
         }
 
-        return self::$tempDir;
+        return self::$tempDirs[$key];
     }
 
     /**
