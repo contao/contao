@@ -28,7 +28,7 @@ abstract class CommandTestCase extends TestCase
     protected function mockApplication(): Application
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
+        $container->setParameter('kernel.project_dir', $this->getFixturesDir());
         $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(KernelInterface::class);

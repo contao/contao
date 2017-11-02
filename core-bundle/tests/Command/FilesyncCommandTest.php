@@ -42,7 +42,7 @@ class FilesyncCommandTest extends CommandTestCase
 
     public function testIsLockedWhileRunning(): void
     {
-        $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5('foobar')));
+        $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5($this->getFixturesDir())));
 
         $lock = $factory->createLock('contao:filesync');
         $lock->acquire();

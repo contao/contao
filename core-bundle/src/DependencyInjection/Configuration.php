@@ -17,7 +17,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
 {
@@ -69,11 +68,11 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('web_dir')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->resolvePath($this->projectDir.'/web'))
+                    ->defaultValue($this->canonicalize($this->projectDir.'/web'))
                     ->validate()
                         ->always(
                             function (string $value): string {
-                                return $this->resolvePath($value);
+                                return $this->canonicalize($value);
                             }
                         )
                     ->end()
@@ -130,11 +129,11 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('target_dir')
                             ->cannotBeEmpty()
-                            ->defaultValue($this->resolvePath($this->projectDir.'/assets/images'))
+                            ->defaultValue($this->canonicalize($this->projectDir.'/assets/images'))
                             ->validate()
                                 ->always(
                                     function (string $value): string {
-                                        return $this->resolvePath($value);
+                                        return $this->canonicalize($value);
                                     }
                                 )
                             ->end()
@@ -173,21 +172,46 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Resolves a path.
+     * Canonicalizes a path preserving the directory separators.
      *
      * @param string $value
      *
      * @return string
      */
-    private function resolvePath(string $value): string
+    private function canonicalize(string $value): string
     {
-        $path = Path::canonicalize($value);
+        $resolved = [];
+        $chunks = preg_split('#([\\/]+)#', $value, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-        if ('\\' === DIRECTORY_SEPARATOR) {
-            $path = str_replace('/', '\\', $path);
+        for ($i = 0; $i < count($chunks); $i++) {
+            if ('.' === $chunks[$i]) {
+                ++$i;
+                continue;
+            }
+
+            // Reduce multiple slashes to one
+            if ('/' === substr($chunks[$i], 0, 1)) {
+                $resolved[] = '/';
+                continue;
+            }
+
+            // Reduce multiple backslashes to one
+            if ('\\' === substr($chunks[$i], 0, 1)) {
+                $resolved[] = '\\';
+                continue;
+            }
+
+            if ('..' === $chunks[$i]) {
+                ++$i;
+                array_pop($resolved);
+                array_pop($resolved);
+                continue;
+            }
+
+            $resolved[] = $chunks[$i];
         }
 
-        return $path;
+        return implode($resolved);
     }
 
     /**

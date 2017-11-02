@@ -108,6 +108,9 @@ class SymlinksCommand extends AbstractLockedCommand
 
         // Symlinks the logs directory
         $this->symlink($this->getRelativePath($this->getContainer()->getParameter('kernel.logs_dir')), 'system/logs');
+
+        // Symlink the TCPDF config file
+        $this->symlink('vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
     }
 
     /**

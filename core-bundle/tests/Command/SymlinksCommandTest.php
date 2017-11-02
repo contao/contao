@@ -36,6 +36,7 @@ class SymlinksCommandTest extends TestCase
         $fs->remove($this->getFixturesDir().'/var/cache');
         $fs->remove($this->getFixturesDir().'/web/assets');
         $fs->remove($this->getFixturesDir().'/web/system');
+        $fs->remove($this->getFixturesDir().'/system/config/tcpdf.php');
     }
 
     public function testCanBeInstantiated(): void
@@ -78,6 +79,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains('system/themes', $display);
         $this->assertContains('system/logs', $display);
         $this->assertContains('var/logs', $display);
+        $this->assertContains('system/config/tcpdf.php ', $display);
     }
 
     public function testIsLockedWhileRunning(): void
@@ -87,10 +89,8 @@ class SymlinksCommandTest extends TestCase
         $lock = $factory->createLock('contao:symlinks');
         $lock->acquire();
 
-        $container = $this->mockContainer($this->getFixturesDir());
-
         $command = new SymlinksCommand('contao:symlinks');
-        $command->setContainer($container);
+        $command->setContainer($this->mockContainer($this->getFixturesDir()));
 
         $tester = new CommandTester($command);
 

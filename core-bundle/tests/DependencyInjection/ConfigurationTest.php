@@ -47,21 +47,17 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             'contao' => [
-                'web_dir' => $this->getTempDir().'/foo/../web',
+                'web_dir' => $this->getTempDir().'/foo/bar/../../web',
                 'image' => [
-                    'target_dir' => $this->getTempDir().'/foo/../assets/images',
+                    'target_dir' => $this->getTempDir().'/foo/../assets//./images',
                 ],
             ],
         ];
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame(strtr($this->getTempDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
-
-        $this->assertSame(
-            strtr($this->getTempDir().'/assets/images', '/', DIRECTORY_SEPARATOR),
-            $configuration['image']['target_dir']
-        );
+        $this->assertSame($this->getTempDir().'/web', $configuration['web_dir']);
+        $this->assertSame($this->getTempDir().'/assets/images', $configuration['image']['target_dir']);
     }
 
     /**

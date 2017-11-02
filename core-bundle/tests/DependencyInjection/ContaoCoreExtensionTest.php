@@ -1239,10 +1239,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
 
-        $this->assertSame(
-            str_replace('/', DIRECTORY_SEPARATOR, $this->getTempDir().'/assets/images'),
-            $container->getParameter('contao.image.target_dir')
-        );
+        $this->assertSame($this->getTempDir().'/assets/images', $container->getParameter('contao.image.target_dir'));
 
         $params = [
             'contao' => [
@@ -1253,9 +1250,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        $this->assertSame(
-            str_replace('/', DIRECTORY_SEPARATOR, $this->getTempDir()).'/my/custom/dir',
-            $container->getParameter('contao.image.target_dir')
-        );
+        $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 }
