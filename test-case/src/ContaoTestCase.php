@@ -77,22 +77,18 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a Symfony container and loads the Contao core extension configuration.
      *
-     * @param string|null $projectDir
+     * @param string $projectDir
      *
      * @return ContainerBuilder
      */
-    protected function mockContainer(string $projectDir = null): ContainerBuilder
+    protected function mockContainer(string $projectDir = ''): ContainerBuilder
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.default_locale', 'en');
-
-        // Set the project directory
-        if (null !== $projectDir) {
-            $container->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
-            $container->setParameter('kernel.project_dir', $projectDir);
-            $container->setParameter('kernel.root_dir', $projectDir.'/app');
-        }
+        $container->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
+        $container->setParameter('kernel.project_dir', $projectDir);
+        $container->setParameter('kernel.root_dir', $projectDir.'/app');
 
         // Load the default configuration
         $extension = new ContaoCoreExtension();
