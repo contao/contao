@@ -21,14 +21,13 @@ class CombinedFileDumperTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Config\Dumper\CombinedFileDumper',
-            new CombinedFileDumper(
-                $this->createMock(Filesystem::class),
-                $this->createMock(PhpFileLoader::class),
-                $this->getCacheDir()
-            )
+        $dumper = new CombinedFileDumper(
+            $this->createMock(Filesystem::class),
+            $this->createMock(PhpFileLoader::class),
+            $this->getCacheDir()
         );
+
+        $this->assertInstanceOf('Contao\CoreBundle\Config\Dumper\CombinedFileDumper', $dumper);
     }
 
     public function testDumpsTheDataIntoAFile(): void
@@ -56,13 +55,13 @@ class CombinedFileDumperTest extends TestCase
 
     public function testFailsIfTheHeaderIsInvalid(): void
     {
-        $this->expectException('InvalidArgumentException');
-
         $dumper = new CombinedFileDumper(
             $this->createMock(Filesystem::class),
             $this->createMock(PhpFileLoader::class),
             $this->getCacheDir()
         );
+
+        $this->expectException('InvalidArgumentException');
 
         $dumper->setHeader('No opening PHP tag');
     }

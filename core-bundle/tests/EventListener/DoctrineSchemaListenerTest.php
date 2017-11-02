@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
-use Contao\CoreBundle\Tests\DoctrineTestCase;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -44,17 +44,12 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
             ]
         );
 
-        $provider = new DcaSchemaProvider(
-            $framework,
-            $this->mockDoctrineRegistry()
-        );
-
         $schema = new Schema();
         $event = new GenerateSchemaEventArgs($this->createMock(EntityManagerInterface::class), $schema);
 
         $this->assertFalse($schema->hasTable('tl_files'));
 
-        $listener = new DoctrineSchemaListener($provider);
+        $listener = new DoctrineSchemaListener(new DcaSchemaProvider($framework, $this->mockDoctrineRegistry()));
         $listener->postGenerateSchema($event);
 
         $this->assertTrue($schema->hasTable('tl_files'));

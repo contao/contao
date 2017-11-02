@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -52,13 +52,7 @@ class PickerProviderPassTest extends TestCase
         $definition = new Definition();
         $definition->addTag('contao.picker_provider');
 
-        /** @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject $container */
-        $container = $this
-            ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['findDefinition'])
-            ->getMock()
-        ;
-
+        $container = new ContainerBuilder();
         $container->setDefinition('contao.picker.page_provider', $definition);
 
         $pass = new PickerProviderPass();

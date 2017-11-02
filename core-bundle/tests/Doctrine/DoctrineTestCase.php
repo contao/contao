@@ -10,9 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests;
+namespace Contao\CoreBundle\Tests\Doctrine;
 
+use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
@@ -76,6 +78,27 @@ abstract class DoctrineTestCase extends TestCase
             ->willReturn($file)
         ;
 
-        return $this->mockContaoFramework(null, null, [], [Installer::class => $installer]);
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->method('createInstance')
+            ->willReturn($installer)
+        ;
+
+        return $framework;
+    }
+
+    /**
+     * @param array $dca
+     * @param array $file
+     *
+     * @return DcaSchemaProvider
+     */
+    protected function getProvider(array $dca = [], array $file = []): DcaSchemaProvider
+    {
+        return new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller($dca, $file),
+            $this->mockDoctrineRegistry()
+        );
     }
 }

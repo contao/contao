@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command;
 
-use Contao\Config;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
@@ -23,6 +22,7 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UserPasswordCommandTest extends TestCase
@@ -44,13 +44,11 @@ class UserPasswordCommandTest extends TestCase
     {
         parent::setUp();
 
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [Encryption::class => $this->mockEncryptionAdapter()]
-        );
+        $framework = $this->mockContaoFramework([
+            Encryption::class => $this->mockEncryptionAdapter(),
+        ]);
 
-        $this->container = $this->mockContainerWithContaoScopes();
+        $this->container = new ContainerBuilder();
         $this->container->set('contao.framework', $framework);
         $this->container->set('database_connection', $this->createMock(Connection::class));
 
@@ -144,6 +142,8 @@ class UserPasswordCommandTest extends TestCase
 
     public function testRequiresAMinimumPasswordLength(): void
     {
+        unset($GLOBALS['TL_CONFIG']['minPasswordLength']);
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 8 characters long.');
 
@@ -160,26 +160,12 @@ class UserPasswordCommandTest extends TestCase
 
     public function testHandlesACustomMinimumPasswordLength(): void
     {
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [
-                Config::class => $this->mockConfigAdapter(16),
-                Encryption::class => $this->mockEncryptionAdapter(),
-            ]
-        );
-
-        $container = $this->mockContainerWithContaoScopes();
-        $container->set('contao.framework', $framework);
-
-        $command = new UserPasswordCommand();
-        $command->setContainer($container);
-        $command->setApplication(new Application());
+        $GLOBALS['TL_CONFIG']['minPasswordLength'] = 16;
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 16 characters long.');
 
-        (new CommandTester($command))
+        (new CommandTester($this->command))
             ->execute(
                 [
                     'username' => 'foobar',
@@ -268,19 +254,15 @@ class UserPasswordCommandTest extends TestCase
      *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockEncryptionAdapter(): Adapter
+    private function mockEncryptionAdapter(): Adapter
     {
-        $adapter = $this->createMock(Adapter::class);
+        $adapter = $this->mockAdapter(['hash']);
 
         $adapter
-            ->method('__call')
+            ->method('hash')
             ->willReturnCallback(
-                function (string $method, array $arguments): ?string {
-                    if ('hash' === $method) {
-                        return 'HA$HED-'.$arguments[0].'-HA$HED';
-                    }
-
-                    return null;
+                function (string $value): ?string {
+                    return 'HA$HED-'.$value.'-HA$HED';
                 }
             )
         ;

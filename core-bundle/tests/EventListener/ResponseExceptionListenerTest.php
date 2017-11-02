@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ResponseExceptionListenerTest extends TestCase
 {
@@ -32,7 +33,7 @@ class ResponseExceptionListenerTest extends TestCase
     public function testAddsAResponseToTheEvent(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new ResponseException(new Response('Foo'))
@@ -52,7 +53,7 @@ class ResponseExceptionListenerTest extends TestCase
     public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new \RuntimeException()

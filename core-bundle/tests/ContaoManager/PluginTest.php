@@ -107,9 +107,7 @@ class PluginTest extends TestCase
             ->willReturn($loader)
         ;
 
-        $kernel = $this->createMock(KernelInterface::class);
-
         $plugin = new Plugin();
-        $plugin->getRouteCollection($resolver, $kernel);
+        $plugin->getRouteCollection($resolver, $this->createMock(KernelInterface::class));
     }
 }

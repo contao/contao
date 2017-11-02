@@ -23,11 +23,12 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Tests\Fixtures\Exception\DerivedPageNotFoundException;
-use Contao\CoreBundle\Tests\TestCase;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ExceptionConverterListenerTest extends TestCase
 {
@@ -41,7 +42,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsAccessDeniedExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new AccessDeniedException()
@@ -59,7 +60,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsForwardPageNotFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new ForwardPageNotFoundException()
@@ -77,7 +78,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsIncompleteInstallationExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new IncompleteInstallationException()
@@ -99,7 +100,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsInsecureInstallationExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new InsecureInstallationException()
@@ -117,7 +118,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsInvalidRequestTokenExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new InvalidRequestTokenException()
@@ -135,7 +136,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsNoActivePageFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new NoActivePageFoundException()
@@ -153,7 +154,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsNoLayoutSpecifiedExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new NoLayoutSpecifiedException()
@@ -171,7 +172,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsNoRootPageFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new NoRootPageFoundException()
@@ -189,7 +190,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsPageNotFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new PageNotFoundException()
@@ -207,7 +208,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsServiceUnavailableExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new ServiceUnavailableException()
@@ -218,7 +219,10 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException', $exception);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException',
+            $exception
+        );
 
         $this->assertInstanceOf(
             'Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException',
@@ -229,7 +233,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsUnknownExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new \RuntimeException()
@@ -246,7 +250,7 @@ class ExceptionConverterListenerTest extends TestCase
     public function testConvertsDerivedPageNotFoundExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new DerivedPageNotFoundException()

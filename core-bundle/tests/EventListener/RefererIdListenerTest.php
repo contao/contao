@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RefererIdListenerTest extends TestCase
 {
@@ -102,5 +104,27 @@ class RefererIdListenerTest extends TestCase
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+    }
+
+    /**
+     * Mocks a token manager.
+     *
+     * @return CsrfTokenManagerInterface
+     */
+    private function mockTokenManager(): CsrfTokenManagerInterface
+    {
+        $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+
+        $tokenManager
+            ->method('getToken')
+            ->willReturn(new CsrfToken('_csrf', 'testValue'))
+        ;
+
+        $tokenManager
+            ->method('refreshToken')
+            ->willReturnOnConsecutiveCalls(new CsrfToken('_csrf', 'testValue'), new CsrfToken('_csrf', 'foo'))
+        ;
+
+        return $tokenManager;
     }
 }

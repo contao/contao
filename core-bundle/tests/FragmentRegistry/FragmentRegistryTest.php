@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Fragment;
 
 use Contao\CoreBundle\Fragment\FragmentRegistry;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FragmentRegistryTest extends TestCase
 {
@@ -28,7 +28,7 @@ class FragmentRegistryTest extends TestCase
     {
         $registry = new FragmentRegistry();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
 
         $registry->addFragment('foobar', new \stdClass(), ['nonsense' => 'test']);
     }

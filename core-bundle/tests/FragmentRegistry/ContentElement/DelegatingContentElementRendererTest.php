@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Fragment\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Fragment\ContentElement\ContentElementRendererInterface;
 use Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class DelegatingContentElementRendererTest extends TestCase
 {
@@ -23,7 +23,10 @@ class DelegatingContentElementRendererTest extends TestCase
     {
         $renderer = new DelegatingContentElementRenderer();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer', $renderer);
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer',
+            $renderer
+        );
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void

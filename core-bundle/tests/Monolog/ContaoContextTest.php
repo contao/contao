@@ -19,7 +19,9 @@ class ContaoContextTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoContext', new ContaoContext('foo'));
+        $context = new ContaoContext('foo');
+
+        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoContext', $context);
     }
 
     public function testSupportsReadingAndWritingValues(): void

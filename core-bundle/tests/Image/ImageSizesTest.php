@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -44,16 +43,21 @@ class ImageSizesTest extends TestCase
     {
         parent::setUp();
 
-        $framework = $this->mockContaoFramework();
-        $framework->initialize();
-
-        System::setContainer($this->mockContainerWithContaoScopes());
-
-        require_once __DIR__.'/../../src/Resources/contao/config/config.php';
+        $GLOBALS['TL_CROP'] = [
+            'relative' => [
+                'proportional', 'box',
+            ],
+            'exact' => [
+                'crop',
+                'left_top',    'center_top',    'right_top',
+                'left_center', 'center_center', 'right_center',
+                'left_bottom', 'center_bottom', 'right_bottom',
+            ],
+        ];
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $framework);
+        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework());
     }
 
     public function testCanBeInstantiated(): void
@@ -164,15 +168,13 @@ class ImageSizesTest extends TestCase
      */
     private function expectExampleImageSizes(): void
     {
-        $this->expectImageSizes(
+        $this->expectImageSizes([
             [
-                [
-                    'id' => '42',
-                    'name' => 'foobar',
-                    'width' => '',
-                    'height' => '',
-                ],
-            ]
-        );
+                'id' => '42',
+                'name' => 'foobar',
+                'width' => '',
+                'height' => '',
+            ],
+        ]);
     }
 }

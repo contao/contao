@@ -18,7 +18,6 @@ use Contao\FrontendUser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\Role\RoleInterface;
 
 class ContaoTokenTest extends TestCase
 {
@@ -44,7 +43,7 @@ class ContaoTokenTest extends TestCase
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame('', $token->getCredentials());
 
-        /** @var RoleInterface[] $roles */
+        /** @var Role[] $roles */
         $roles = $token->getRoles();
 
         $this->assertCount(1, $roles);
@@ -62,7 +61,7 @@ class ContaoTokenTest extends TestCase
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame('', $token->getCredentials());
 
-        /** @var RoleInterface[] $roles */
+        /** @var Role[] $roles */
         $roles = $token->getRoles();
 
         $this->assertCount(2, $roles);

@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Fragment\PageType;
 
 use Contao\CoreBundle\Fragment\PageType\DelegatingPageTypeRenderer;
 use Contao\CoreBundle\Fragment\PageType\PageTypeRendererInterface;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\TestCase;
 
 class DelegatingPageTypeRendererTest extends TestCase
 {

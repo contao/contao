@@ -24,19 +24,15 @@ class ContaoTemplateExtensionTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension', $this->mockExtension());
+        $extension = $this->mockExtension();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension', $extension);
     }
 
     public function testRendersTheContaoBackendTemplate(): void
     {
-        $backendRoute = $this
-            ->getMockBuilder(BackendCustom::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getTemplateObject', 'run'])
-            ->getMock()
-        ;
-
         $template = new \stdClass();
+        $backendRoute = $this->createMock(BackendCustom::class);
 
         $backendRoute
             ->expects($this->once())
@@ -50,17 +46,16 @@ class ContaoTemplateExtensionTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        $framework = $this->mockContaoFramework(null, null, [], [
-            BackendCustom::class => $backendRoute,
-        ]);
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->method('createInstance')
+            ->with(BackendCustom::class)
+            ->willReturn($backendRoute)
+        ;
 
         $extension = $this->mockExtension($framework);
-
-        $extension->renderContaoBackendTemplate([
-            'a' => 'a',
-            'b' => 'b',
-            'c' => 'c',
-        ]);
+        $extension->renderContaoBackendTemplate(['a' => 'a', 'b' => 'b', 'c' => 'c']);
 
         $this->assertSame('a', $template->a);
         $this->assertSame('b', $template->b);
@@ -69,8 +64,7 @@ class ContaoTemplateExtensionTest extends TestCase
 
     public function testAddsTheRenderContaoBackEndTemplateFunction(): void
     {
-        $extension = $this->mockExtension();
-        $functions = $extension->getFunctions();
+        $functions = $this->mockExtension()->getFunctions();
 
         $renderBaseTemplateFunction = array_filter(
             $functions,
@@ -104,7 +98,7 @@ class ContaoTemplateExtensionTest extends TestCase
         $requestStack->push($request);
 
         if (null === $framework) {
-            $framework = $this->mockContaoFramework(null, null, [], []);
+            $framework = $this->mockContaoFramework();
         }
 
         return new ContaoTemplateExtension($requestStack, $framework, $this->mockScopeMatcher());

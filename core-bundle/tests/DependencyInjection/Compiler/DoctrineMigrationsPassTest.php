@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\Command\DoctrineMigrationsDiffCommand;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -91,11 +91,7 @@ class DoctrineMigrationsPassTest extends TestCase
             (new Definition(DcaSchemaProvider::class))->addArgument('foo')
         );
 
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../../../src/Resources/config')
-        );
-
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../src/Resources/config'));
         $loader->load('commands.yml');
 
         return $container;

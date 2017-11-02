@@ -12,20 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\MenuFactory;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PickerBuilderTest extends TestCase
+class PickerBuilderTest extends PickerTestCase
 {
     /**
      * @var PickerBuilder
@@ -133,41 +129,5 @@ class PickerBuilderTest extends TestCase
     public function testReturnsAnEmptyPickerUrlIfTheContextIsNotSupported(): void
     {
         $this->assertSame('', $this->builder->getUrl('foo'));
-    }
-
-    /**
-     * Mocks a token storage.
-     *
-     * @return TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockTokenStorage(): TokenStorageInterface
-    {
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasAccess'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        return $tokenStorage;
     }
 }

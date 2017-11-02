@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\Config;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -22,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RouterInterface;
 
 class UrlGeneratorTest extends TestCase
 {
@@ -37,10 +36,16 @@ class UrlGeneratorTest extends TestCase
 
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Routing\UrlGenerator',
-            new UrlGenerator($this->mockRouter('foo'), $this->mockContaoFramework(), false)
-        );
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->method('generate')
+            ->willReturn('foo')
+        ;
+
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
+
+        $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $generator);
     }
 
     public function testCanWriteTheContext(): void
@@ -240,8 +245,9 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
-     * To tests this case, we omit the _ssl parameter and set the scheme to "https" in the context. If the
-     * generator still returns a HTTPS URL, we know that the context has not been modified.
+     * To tests this case, we omit the _ssl parameter and set the scheme to
+     * "https" in the context. If the generator still returns a HTTPS URL, we
+     * know that the context has not been modified.
      */
     public function testDoesNotModifyTheContextIfThereIsAHostname(): void
     {
@@ -273,7 +279,7 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
-     * Mocks an Url generator.
+     * Mocks an URL generator.
      *
      * @param UrlGeneratorInterface $router
      * @param bool                  $prependLocale
@@ -283,36 +289,11 @@ class UrlGeneratorTest extends TestCase
      */
     private function mockGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator
     {
-        $adapter = $this->createMock(Adapter::class);
+        $framework = $this->mockContaoFramework();
 
-        $adapter
-            ->method('__call')
-            ->willReturnCallback(
-                function (string $key, array $params) use ($useAutoItem) {
-                    if ('isComplete' === $key) {
-                        return true;
-                    }
+        $GLOBALS['TL_CONFIG']['useAutoItem'] = $useAutoItem;
 
-                    if ('get' === $key) {
-                        switch ($params[0]) {
-                            case 'useAutoItem':
-                                return $useAutoItem;
-
-                            case 'timeZone':
-                                return 'Europe/Berlin';
-                        }
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        return new UrlGenerator(
-            $router,
-            $this->mockContaoFramework(null, null, [Config::class => $adapter]),
-            $prependLocale
-        );
+        return new UrlGenerator($router, $framework, $prependLocale);
     }
 
     /**

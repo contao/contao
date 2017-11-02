@@ -16,7 +16,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Fragment\ContentElement\DefaultContentElementRenderer;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -25,10 +25,9 @@ class DefaultContentElementRendererTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Fragment\ContentElement\DefaultContentElementRenderer',
-            $this->mockRenderer()
-        );
+        $renderer = $this->mockRenderer();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\ContentElement\DefaultContentElementRenderer', $renderer);
     }
 
     public function testSupportsContentModels(): void

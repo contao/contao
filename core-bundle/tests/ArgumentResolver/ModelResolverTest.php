@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\ArgumentResolver;
 
 use Contao\CoreBundle\ArgumentResolver\ModelResolver;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,20 +32,8 @@ class ModelResolverTest extends TestCase
         $pageModel = new PageModel();
         $pageModel->setRow(['id' => 42]);
 
-        $adapter = $this->createMock(Adapter::class);
-
-        $adapter
-            ->expects($this->once())
-            ->method('__call')
-            ->with('findByPk', [42])
-            ->willReturn($pageModel)
-        ;
-
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [PageModel::class => $adapter]
-        );
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
@@ -68,7 +54,7 @@ class ModelResolverTest extends TestCase
 
     public function testChecksIfTheRequestAttributeExists(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->mockContaoFramework();
 
         $framework
             ->expects($this->never())
@@ -84,7 +70,7 @@ class ModelResolverTest extends TestCase
 
     public function testChecksIfTheArgumentTypeIsCorrect(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->mockContaoFramework();
 
         $framework
             ->expects($this->once())
@@ -102,7 +88,7 @@ class ModelResolverTest extends TestCase
 
     public function testSupportsNullableArguments(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->mockContaoFramework();
 
         $framework
             ->expects($this->once())
@@ -120,26 +106,14 @@ class ModelResolverTest extends TestCase
 
     public function testChecksIfTheModelExistsIfTheArgumentIsNotNullable(): void
     {
-        $adapter = $this->createMock(Adapter::class);
-
-        $adapter
-            ->expects($this->once())
-            ->method('__call')
-            ->with('findByPk', [42])
-            ->willReturn(null)
-        ;
-
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [PageModel::class => $adapter]
-        );
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => null]);
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
 
-        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
         $resolver = new ModelResolver($framework);
+        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
 
         $this->assertFalse($resolver->supports($request, $argument));
     }

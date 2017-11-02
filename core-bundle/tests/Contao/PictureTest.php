@@ -12,10 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\FilesModel;
+use Contao\Image\PictureGenerator;
+use Contao\Image\ResizeCalculator;
+use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\Picture;
 use Contao\System;
+use Imagine\Gd\Imagine as ImagineGd;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -26,6 +35,9 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class PictureTest extends TestCase
 {
+    /**
+     * @var string
+     */
     private static $rootDir;
 
     /**
@@ -35,7 +47,7 @@ class PictureTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        self::$rootDir = __DIR__.'/../../tmp';
+        self::$rootDir = sys_get_temp_dir().'/'.uniqid('PictureTest_');
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -79,10 +91,7 @@ class PictureTest extends TestCase
         \define('TL_FILES_URL', 'http://example.com/');
         \define('TL_ROOT', self::$rootDir);
 
-        $container = $this->mockContainerWithContaoScopes();
-        $this->addImageServicesToContainer($container, self::$rootDir);
-
-        System::setContainer($container);
+        System::setContainer($this->mockContainerWithImageServices());
     }
 
     public function testCanBeInstantiated(): void
@@ -91,12 +100,12 @@ class PictureTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key): ?string {
                     switch ($key) {
                         case 'extension':
@@ -108,7 +117,7 @@ class PictureTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
@@ -314,5 +323,45 @@ class PictureTest extends TestCase
         );
 
         $this->assertSame([], $pictureData['sources']);
+    }
+
+    /**
+     * Mocks a container with image services.
+     *
+     * @return ContainerBuilder
+     */
+    private function mockContainerWithImageServices(): ContainerBuilder
+    {
+        $framework = $this->mockContaoFramework([
+            Config::class => $this->mockConfiguredAdapter(['get' => 3000]),
+            FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => null]),
+        ]);
+
+        $container = $this->mockContainer();
+        $container->setParameter('contao.web_dir', self::$rootDir.'/web');
+        $container->setParameter('contao.image.target_dir', self::$rootDir.'/assets/images');
+
+        $filesystem = new Filesystem();
+
+        $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
+        $resizer->setFramework($framework);
+
+        $imageFactory = new ImageFactory(
+            $resizer,
+            new ImagineGd(),
+            new ImagineSvg(),
+            $filesystem,
+            $framework,
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options'),
+            $container->getParameter('contao.image.valid_extensions')
+        );
+
+        $pictureGenerator = new PictureGenerator($resizer);
+
+        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.picture_generator', $pictureGenerator);
+
+        return $container;
     }
 }

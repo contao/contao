@@ -23,10 +23,9 @@ class RegisterHookListenersPassTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass',
-            new RegisterHookListenersPass()
-        );
+        $pass = new RegisterHookListenersPass();
+
+        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass', $pass);
     }
 
     public function testRegistersTheHookListeners(): void

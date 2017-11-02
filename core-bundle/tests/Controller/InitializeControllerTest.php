@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\InitializeController;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -35,18 +34,13 @@ class InitializeControllerTest extends TestCase
      */
     public function testReturnsAResponseInTheIndexActionMethod(): void
     {
-        if (!\defined('TL_MODE')) {
-            \define('TL_MODE', 'BE');
-        }
-
-        if (!\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', 'index.php');
-        }
+        \define('TL_MODE', 'BE');
+        \define('TL_SCRIPT', 'index.php');
 
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
-        $container = new ContainerBuilder();
+        $container = $this->mockContainer();
         $container->set('request_stack', $requestStack);
         $container->set('contao.framework', $this->mockContaoFramework());
 

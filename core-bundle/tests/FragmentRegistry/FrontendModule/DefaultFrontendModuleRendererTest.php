@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Tests\Fragment\FrontendModule;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -25,10 +25,9 @@ class DefaultFrontendModuleRendererTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer',
-            $this->mockRenderer()
-        );
+        $renderer = $this->mockRenderer();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer', $renderer);
     }
 
     public function testSupportsModuleModels(): void

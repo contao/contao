@@ -12,21 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Monolog;
 
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Monolog\Logger;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoTableHandlerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableHandler', new ContaoTableHandler());
+        $handler = new ContaoTableHandler();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableHandler', $handler);
     }
 
     public function testSupportsReadingAndWritingTheDbalServiceName(): void
@@ -69,57 +69,11 @@ class ContaoTableHandlerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $container = $this
-            ->getMockBuilder(ContainerBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['has', 'get'])
-            ->getMock()
-        ;
+        $system = $this->mockConfiguredAdapter(['importStatic' => $this]);
 
-        $container
-            ->method('has')
-            ->willReturn(true)
-        ;
-
-        $container
-            ->method('get')
-            ->willReturnCallback(function (string $key) use ($connection) {
-                switch ($key) {
-                    case 'contao.framework':
-                        $system = $this->createMock(Adapter::class);
-
-                        $system
-                            ->method('__call')
-                            ->willReturnCallback(
-                                function (string $key): ?self {
-                                    if ('importStatic' === $key) {
-                                        return $this;
-                                    }
-
-                                    return null;
-                                }
-                            )
-                        ;
-
-                        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-                        $framework
-                            ->method('isInitialized')
-                            ->willReturn(true)
-                        ;
-
-                        $framework
-                            ->method('getAdapter')
-                            ->willReturn($system)
-                        ;
-
-                        return $framework;
-
-                    case 'doctrine.dbal.default_connection':
-                        return $connection;
-                }
-            })
-        ;
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework([System::class => $system]));
+        $container->set('doctrine.dbal.default_connection', $connection);
 
         $GLOBALS['TL_HOOKS']['addLogEntry'][] = [\get_class($this), 'addLogEntry'];
 

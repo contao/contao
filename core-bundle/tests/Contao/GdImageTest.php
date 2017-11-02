@@ -38,7 +38,7 @@ class GdImageTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        self::$rootDir = __DIR__.'/../../tmp';
+        self::$rootDir = sys_get_temp_dir().'/'.uniqid('GdImageTest_');
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -66,7 +66,8 @@ class GdImageTest extends TestCase
         parent::setUp();
 
         \define('TL_ROOT', self::$rootDir);
-        System::setContainer($this->mockContainerWithContaoScopes());
+
+        System::setContainer($this->mockContainer());
     }
 
     public function testCanBeInstantiated(): void

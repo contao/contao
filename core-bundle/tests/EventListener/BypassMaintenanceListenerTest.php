@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class BypassMaintenanceListenerTest extends TestCase
 {
@@ -30,10 +31,10 @@ class BypassMaintenanceListenerTest extends TestCase
     public function testAddsTheRequestAttribute(): void
     {
         $request = new Request();
-        $request->cookies->set('BE_USER_AUTH', 'da6c1abd61155f4ce98c6b5f1fbbf0ebeb43638e');
+        $request->cookies->set('BE_USER_AUTH', 'e15514a266be75c17ed284935ededa5a2c17ac85');
 
         $event = new GetResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
@@ -47,7 +48,7 @@ class BypassMaintenanceListenerTest extends TestCase
     public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser(): void
     {
         $event = new GetResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST
         );

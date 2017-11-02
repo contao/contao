@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Tests\TestCase;
-use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -80,7 +79,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Ignore
         }
 
@@ -111,7 +110,7 @@ EOF
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Ignore
         }
 
@@ -166,7 +165,7 @@ EOF
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Ignore
         }
 
@@ -202,7 +201,7 @@ EOF
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Ignore
         }
 

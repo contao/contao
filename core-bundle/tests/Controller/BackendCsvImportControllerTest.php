@@ -12,21 +12,52 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class BackendCsvImportControllerTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        \define('TL_MODE', 'BE');
+        \define('TL_ROOT', $this->getRootDir());
+
+        $container = $this->mockContainer();
+        $container->set('session', new Session(new MockArraySessionStorage()));
+
+        $container->set(
+            'contao.resource_finder',
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
+        );
+
+        System::setContainer($container);
+    }
+
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $this->mockController());
+        $controller = $this->mockController();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $controller);
     }
 
     public function testRendersTheListWizardMarkup(): void
@@ -367,12 +398,8 @@ EOF;
      */
     private function mockController(Request $request = null): BackendCsvImportController
     {
-        if (null === $request) {
-            $request = new Request();
-        }
-
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push($request ?: new Request());
 
         $translator = $this->createMock(TranslatorInterface::class);
 

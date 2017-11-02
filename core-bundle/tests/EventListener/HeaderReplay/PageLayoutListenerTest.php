@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\HeaderReplay;
 
 use Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,15 +37,13 @@ class PageLayoutListenerTest extends TestCase
      */
     public function testAddsThePageLayoutHeader(bool $agentIsMobile, string $tlViewCookie = null, string $expectedHeaderValue): void
     {
-        $adapter = $this->createMock(Adapter::class);
+        $adapter = $this->mockAdapter(['get']);
 
         $adapter
-            ->method('__call')
+            ->method('get')
             ->willReturnCallback(
-                function (string $key, array $params) use ($agentIsMobile) {
-                    $this->assertSame('get', $key);
-
-                    if ('agent' === $params[0]) {
+                function (string $key) use ($agentIsMobile) {
+                    if ('agent' === $key) {
                         return (object) ['mobile' => $agentIsMobile];
                     }
 
@@ -66,7 +63,7 @@ class PageLayoutListenerTest extends TestCase
 
         $listener = new PageLayoutListener(
             $this->mockScopeMatcher(),
-            $this->mockContaoFramework(null, null, [Environment::class => $adapter])
+            $this->mockContaoFramework([Environment::class => $adapter])
         );
 
         $listener->onReplay($event);

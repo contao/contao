@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
@@ -36,7 +37,9 @@ class UserSessionListenerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->mockListener());
+        $listener = $this->mockListener();
+
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $listener);
     }
 
     /**
@@ -57,18 +60,13 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', $scope);
 
         $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
 
         $session = $this->mockSession();
-
-        $user = $this
-            ->getMockBuilder($userClass)
-            ->setMethods(['__get'])
-            ->getMock()
-        ;
+        $user = $this->createPartialMock($userClass, ['__get']);
 
         $user
             ->method('__get')
@@ -123,7 +121,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', $scope);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -136,11 +134,7 @@ class UserSessionListenerTest extends TestCase
             ->method('update')
         ;
 
-        $user = $this
-            ->getMockBuilder($userClass)
-            ->setMethods(['__get', 'getTable'])
-            ->getMock()
-        ;
+        $user = $this->createPartialMock($userClass, ['getTable']);
 
         $user
             ->method('getTable')
@@ -187,7 +181,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
@@ -222,7 +216,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -271,7 +265,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::SUB_REQUEST
         );
@@ -293,7 +287,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::SUB_REQUEST,
             new Response()
@@ -323,7 +317,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
@@ -359,7 +353,7 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()

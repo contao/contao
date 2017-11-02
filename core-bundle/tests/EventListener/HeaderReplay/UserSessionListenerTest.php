@@ -16,10 +16,7 @@ use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
-use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
 class UserSessionListenerTest extends TestCase
 {
@@ -38,7 +35,7 @@ class UserSessionListenerTest extends TestCase
      */
     public function testAddsTheForceNoCacheHeader(string $cookie, string $hash): void
     {
-        $session = new Session(new MockArraySessionStorage());
+        $session = $this->mockSession();
         $session->setId('foobar-id');
 
         $request = new Request();
@@ -51,11 +48,7 @@ class UserSessionListenerTest extends TestCase
         $listener = new UserSessionListener($this->mockScopeMatcher(), false);
         $listener->onReplay($event);
 
-        $this->assertArrayHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
-
+        $this->assertArrayHasKey('t42-force-no-cache', $event->getHeaders()->all());
         $this->assertNotNull($request->getSession());
         $this->assertTrue($request->cookies->has($cookie));
     }
@@ -78,10 +71,7 @@ class UserSessionListenerTest extends TestCase
         $listener = new UserSessionListener($this->mockScopeMatcher(), false);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
     }
 
     public function testDoesNotAddTheForceNoCacheIfThereIsNoSession(): void
@@ -94,28 +84,21 @@ class UserSessionListenerTest extends TestCase
         $listener = new UserSessionListener($this->mockScopeMatcher(), false);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
     }
 
     public function testDoesNotAddTheForceNoCacheIfThereIsNoCookie(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
-        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->setSession($this->mockSession());
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
         $listener = new UserSessionListener($this->mockScopeMatcher(), false);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
-
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
         $this->assertNotNull($request->getSession());
     }
 
@@ -124,18 +107,14 @@ class UserSessionListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
         $request->cookies->set('BE_USER_AUTH', 'foobar');
-        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->setSession($this->mockSession());
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
         $listener = new UserSessionListener($this->mockScopeMatcher(), false);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
-
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
         $this->assertNotNull($request->getSession());
         $this->assertTrue($request->cookies->has('BE_USER_AUTH'));
     }

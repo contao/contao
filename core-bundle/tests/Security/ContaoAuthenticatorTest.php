@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Security\ContaoAuthenticator;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -24,7 +22,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class ContaoAuthenticatorTest extends TestCase
+class ContaoAuthenticatorTest extends SecurityTestCase
 {
     public function testCanBeInstantiated(): void
     {
@@ -46,7 +44,7 @@ class ContaoAuthenticatorTest extends TestCase
     public function testAuthenticatesTheToken(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
-        $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $authenticator->setContainer($this->mockContainerWithScope('frontend'));
 
         $provider = $this->mockUserProvider();
 
@@ -68,7 +66,7 @@ class ContaoAuthenticatorTest extends TestCase
     public function testFailsToAuthenticateAnInvalidToken(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
-        $authenticator->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $authenticator->setContainer($this->mockContainerWithScope('frontend'));
 
         $this->expectException(AuthenticationException::class);
 
@@ -107,12 +105,7 @@ class ContaoAuthenticatorTest extends TestCase
      */
     private function mockUser(): User
     {
-        $user = $this
-            ->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['authenticate'])
-            ->getMock()
-        ;
+        $user = $this->createPartialMock(User::class, ['authenticate']);
 
         $user
             ->method('authenticate')
@@ -130,7 +123,6 @@ class ContaoAuthenticatorTest extends TestCase
     private function mockUserProvider(): UserProviderInterface
     {
         $user = $this->mockUser();
-
         $provider = $this->createMock(UserProviderInterface::class);
 
         $provider

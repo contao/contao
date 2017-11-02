@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Fragment\FrontendModule;
 
 use Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer;
 use Contao\CoreBundle\Fragment\FrontendModule\FrontendModuleRendererInterface;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
+use PHPUnit\Framework\TestCase;
 
 class DelegatingFrontendModuleRendererTest extends TestCase
 {
@@ -23,7 +23,10 @@ class DelegatingFrontendModuleRendererTest extends TestCase
     {
         $renderer = new DelegatingFrontendModuleRenderer();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer', $renderer);
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer',
+            $renderer
+        );
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void

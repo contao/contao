@@ -13,8 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Tests\DoctrineTestCase;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
@@ -23,7 +22,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testCanBeInstantiated(): void
     {
         $provider = new DcaSchemaProvider(
-            $this->createMock(ContaoFrameworkInterface::class),
+            $this->mockContaoFramework(),
             $this->createMock(Registry::class)
         );
 
@@ -388,19 +387,5 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->expectException('RuntimeException');
 
         $provider->createSchema();
-    }
-
-    /**
-     * @param array $dca
-     * @param array $file
-     *
-     * @return DcaSchemaProvider
-     */
-    protected function getProvider(array $dca = [], array $file = []): DcaSchemaProvider
-    {
-        return new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry()
-        );
     }
 }

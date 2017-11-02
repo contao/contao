@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\BackendController;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;
@@ -32,11 +31,8 @@ class BackendControllerTest extends TestCase
 
     public function testReturnsAResponseInTheActionMethods(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        /** @var ContainerInterface $container */
-        $container = $this->mockKernel()->getContainer();
-        $container->set('contao.framework', $framework);
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework());
 
         $controller = new BackendController();
         $controller->setContainer($container);

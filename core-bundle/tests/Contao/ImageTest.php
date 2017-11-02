@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\Image;
+use Contao\Image\ResizeCalculator;
 use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -38,7 +41,7 @@ class ImageTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        self::$rootDir = \dirname(\dirname(__DIR__)).'/tmp';
+        self::$rootDir = sys_get_temp_dir().'/'.uniqid('ImageTest_');
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -81,10 +84,7 @@ class ImageTest extends TestCase
         \define('TL_ERROR', 'ERROR');
         \define('TL_ROOT', self::$rootDir);
 
-        $container = $this->mockContainerWithContaoScopes();
-        $this->addImageServicesToContainer($container, self::$rootDir);
-
-        System::setContainer($container);
+        System::setContainer($this->mockContainerWithImageServices());
     }
 
     public function testCanBeInstantiated(): void
@@ -93,12 +93,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key): ?string {
                     switch ($key) {
                         case 'extension':
@@ -110,7 +110,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $this->assertInstanceOf('Contao\Image', new Image($fileMock));
@@ -122,7 +122,7 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(false))
+            ->willReturn(false)
         ;
 
         $this->expectException('InvalidArgumentException');
@@ -136,12 +136,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key): ?string {
                     if ('extension' === $key) {
                         return 'foobar';
@@ -149,7 +149,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $this->expectException('InvalidArgumentException');
@@ -169,12 +169,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key) use ($arguments) {
                     switch ($key) {
                         case 'extension':
@@ -192,7 +192,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -617,12 +617,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key) use ($arguments) {
                     switch ($key) {
                         case 'extension':
@@ -640,7 +640,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -800,12 +800,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key) {
                     switch ($key) {
                         case 'extension':
@@ -825,7 +825,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -934,12 +934,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key) use ($arguments) {
                     switch ($key) {
                         case 'extension':
@@ -965,7 +965,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -1036,12 +1036,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function (string $key): ?string {
                     if ('extension' === $key) {
                         return 'jpg';
@@ -1049,7 +1049,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -1575,5 +1575,25 @@ class ImageTest extends TestCase
             'mm' => [(25.4 / 6).'mm', 16],
             'invalid' => ['abc', 0],
         ];
+    }
+
+    /**
+     * Mocks a container with image services.
+     *
+     * @return ContainerBuilder
+     */
+    private function mockContainerWithImageServices(): ContainerBuilder
+    {
+        $container = $this->mockContainer();
+        $container->setParameter('contao.image.target_dir', self::$rootDir.'/assets/images');
+        $container->setParameter('contao.web_dir', self::$rootDir.'/web');
+
+        $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
+        $resizer->setFramework($this->mockContaoFramework());
+
+        $container->set('contao.image.resizer', $resizer);
+        $container->set('filesystem', new Filesystem());
+
+        return $container;
     }
 }

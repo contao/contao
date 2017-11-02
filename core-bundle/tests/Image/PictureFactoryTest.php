@@ -129,12 +129,7 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $imageSizeAdapter = $this->createMock(Adapter::class);
-
-        $imageSizeAdapter
-            ->method('__call')
-            ->willReturn($imageSizeModel)
-        ;
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
         $imageSizeItemModel = $this->createMock(ImageSizeItemModel::class);
 
@@ -160,12 +155,9 @@ class PictureFactoryTest extends TestCase
             ->willReturn(true)
         ;
 
-        $imageSizeItemAdapter = $this->createMock(Adapter::class);
-
-        $imageSizeItemAdapter
-            ->method('__call')
-            ->willReturn(new Collection([$imageSizeItemModel], 'tl_image_size_item'))
-        ;
+        $imageSizeItemAdapter = $this->mockConfiguredAdapter([
+            'findVisibleByPid' => new Collection([$imageSizeItemModel], 'tl_image_size_item'),
+        ]);
 
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 

@@ -35,7 +35,6 @@ class PickerTest extends TestCase
         parent::setUp();
 
         $factory = new MenuFactory();
-
         $translator = $this->createMock(TranslatorInterface::class);
 
         $translator

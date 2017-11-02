@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -73,7 +74,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         );
 
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new InternalServerErrorHttpException('', new InternalServerErrorException())
@@ -100,7 +101,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
 
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $exception
@@ -134,7 +135,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorResponseException';
 
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new AccessDeniedHttpException('', new AccessDeniedException())
@@ -153,7 +154,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorException';
 
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new AccessDeniedHttpException('', new AccessDeniedException())
@@ -169,7 +170,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testRendersServiceUnavailableHttpExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new ServiceUnavailableHttpException('', new ServiceUnavailableException())
@@ -188,7 +189,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testRendersUnknownHttpExceptions(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new ConflictHttpException()
@@ -207,14 +208,13 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testRendersTheErrorScreen(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new InternalServerErrorHttpException('', new ForwardPageNotFoundException())
         );
 
         $count = 0;
-
         $twig = $this->createMock('Twig_Environment');
 
         $twig
@@ -257,7 +257,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $request->attributes->set('_format', 'json');
 
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new InternalServerErrorHttpException('', new InsecureInstallationException())
@@ -271,7 +271,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testDoesNothingIfThePageHandlerDoesNotExist(): void
     {
         $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new AccessDeniedHttpException('', new AccessDeniedException())

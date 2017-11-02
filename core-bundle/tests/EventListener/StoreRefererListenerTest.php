@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
@@ -30,7 +31,9 @@ class StoreRefererListenerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $this->mockListener());
+        $listener = $this->mockListener();
+
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $listener);
     }
 
     /**
@@ -43,7 +46,7 @@ class StoreRefererListenerTest extends TestCase
     public function testStoresTheReferer(Request $request, ?array $currentReferer, ?array $expectedReferer): void
     {
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -171,7 +174,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -215,7 +218,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::SUB_REQUEST,
             new Response()
@@ -238,7 +241,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
             new Response()

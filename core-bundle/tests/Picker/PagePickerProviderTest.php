@@ -12,17 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\FactoryInterface;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PagePickerProviderTest extends TestCase
+class PagePickerProviderTest extends PickerTestCase
 {
     /**
      * @var PagePickerProvider
@@ -88,7 +86,8 @@ class PagePickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'pagePicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=page&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'))
         );
     }
 
@@ -96,7 +95,6 @@ class PagePickerProviderTest extends TestCase
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('page', [], '', 'pagePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('page', [], '', 'filePicker')));
-
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'pagePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
     }
@@ -108,33 +106,7 @@ class PagePickerProviderTest extends TestCase
 
     public function testChecksIfAContextIsSupported(): void
     {
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasAccess'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
+        $this->provider->setTokenStorage($this->mockTokenStorage());
 
         $this->assertTrue($this->provider->supportsContext('page'));
         $this->assertTrue($this->provider->supportsContext('link'));
@@ -194,7 +166,6 @@ class PagePickerProviderTest extends TestCase
     {
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('page', [], 5)));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('page', [], '{{article_url::5}}')));
-
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '{{article_url::5}}')));
     }

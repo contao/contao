@@ -39,10 +39,7 @@ class ContaoModuleBundleTest extends TestCase
 
     public function testReturnsTheModulePath(): void
     {
-        $this->assertSame(
-            $this->getRootDir().'/system/modules/foobar',
-            $this->bundle->getPath()
-        );
+        $this->assertSame($this->getRootDir().'/system/modules/foobar', $this->bundle->getPath());
     }
 
     public function testFailsIfTheModuleFolderDoesNotExist(): void

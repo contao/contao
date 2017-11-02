@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,10 +27,9 @@ class CsrfTokenCookieListenerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\EventListener\CsrfTokenCookieListener',
-            new CsrfTokenCookieListener($this->createMock(MemoryTokenStorage::class))
-        );
+        $listener = new CsrfTokenCookieListener($this->createMock(MemoryTokenStorage::class));
+
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\CsrfTokenCookieListener', $listener);
     }
 
     public function testInitializesTheStorage(): void

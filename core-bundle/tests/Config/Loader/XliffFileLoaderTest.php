@@ -17,26 +17,36 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class XliffFileLoaderTest extends TestCase
 {
+    /**
+     * @var XliffFileLoader
+     */
+    private $loader;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loader = new XliffFileLoader($this->getRootDir());
+    }
+
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Config\Loader\XliffFileLoader',
-            new XliffFileLoader($this->getRootDir().'/app')
-        );
+        $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\XliffFileLoader', $this->loader);
     }
 
     public function testSupportsXlfFiles(): void
     {
-        $loader = new XliffFileLoader($this->getRootDir().'/app');
-
         $this->assertTrue(
-            $loader->supports(
+            $this->loader->supports(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
             )
         );
 
         $this->assertFalse(
-            $loader->supports(
+            $this->loader->supports(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php'
             )
         );
@@ -44,8 +54,6 @@ class XliffFileLoaderTest extends TestCase
 
     public function testLoadsXlfFilesIntoAString(): void
     {
-        $loader = new XliffFileLoader($this->getRootDir(), false);
-
         $source = <<<'TXT'
 
 // vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf
@@ -78,7 +86,7 @@ TXT;
 
         $this->assertSame(
             $source,
-            $loader->load(
+            $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
                 'en'
             )
@@ -86,7 +94,7 @@ TXT;
 
         $this->assertSame(
             $target,
-            $loader->load(
+            $this->loader->load(
                 $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
                 'de'
             )
@@ -122,11 +130,9 @@ TXT;
 
     public function testFailsIfThereAreTooManyNestingLevels(): void
     {
-        $loader = new XliffFileLoader($this->getRootDir().'/app', false);
-
         $this->expectException('OutOfBoundsException');
 
-        $loader->load(
+        $this->loader->load(
             $this->getRootDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/error.xlf',
             'en'
         );

@@ -15,24 +15,17 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\StringUtil;
 use Contao\System;
+use Psr\Log\NullLogger;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @group contao3
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class StringUtilTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        if (!\defined('TL_ERROR')) {
-            \define('TL_ERROR', 'ERROR');
-        }
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -40,11 +33,13 @@ class StringUtilTest extends TestCase
     {
         parent::setUp();
 
-        if (!\defined('TL_ROOT')) {
-            \define('TL_ROOT', $this->getRootDir());
-        }
+        \define('TL_ERROR', 'ERROR');
+        \define('TL_ROOT', $this->getRootDir());
 
-        System::setContainer($this->mockContainerWithContaoScopes());
+        $container = new ContainerBuilder();
+        $container->set('monolog.logger.contao', new NullLogger());
+
+        System::setContainer($container);
     }
 
     public function testGeneratesAliases(): void

@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\DBAL\Types;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
-use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use PHPUnit\Framework\TestCase;
 
 class BinaryStringTypeTest extends TestCase
 {
@@ -104,8 +104,6 @@ class BinaryStringTypeTest extends TestCase
 
     public function testRequiresAnSqlCommentHintForTheCustomType(): void
     {
-        $this->assertTrue(
-            $this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class))
-        );
+        $this->assertTrue($this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class)));
     }
 }

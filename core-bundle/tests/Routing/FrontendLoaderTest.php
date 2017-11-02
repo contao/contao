@@ -14,10 +14,9 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\FrontendLoader;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -167,19 +166,9 @@ class FrontendLoaderTest extends TestCase
             ->willReturn($collection)
         ;
 
-        $container = $this->createMock(ContainerInterface::class);
-
-        $container
-            ->method('getParameter')
-            ->with('contao.url_suffix')
-            ->willReturn($urlSuffix)
-        ;
-
-        $container
-            ->method('get')
-            ->with('routing.loader')
-            ->willReturn($loader)
-        ;
+        $container = $this->mockContainer();
+        $container->setParameter('contao.url_suffix', $urlSuffix);
+        $container->set('routing.loader', $loader);
 
         return new Router($container, '');
     }

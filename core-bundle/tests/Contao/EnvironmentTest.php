@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @group contao3
@@ -31,8 +34,29 @@ class EnvironmentTest extends TestCase
         Environment::reset();
         Environment::set('path', '/core');
 
+        $request = new Request();
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+        $request->server->set('SCRIPT_NAME', '/core/index.php');
+        $request->server->set('HTTPS', 'on');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
+
         require __DIR__.'/../../src/Resources/contao/config/default.php';
         require __DIR__.'/../../src/Resources/contao/config/agents.php';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootDir(): string
+    {
+        return strtr(parent::getRootDir(), '\\', '/');
     }
 
     public function testHandlesModPhp(): void
@@ -119,25 +143,8 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * @return string
-     */
-    public function getRootDir(): string
+    private function runTests(): void
     {
-        return strtr(parent::getRootDir(), '\\', '/');
-    }
-
-    protected function runTests(): void
-    {
-        $container = $this->mockContainerWithContaoScopes();
-        $request = $container->get('request_stack')->getCurrentRequest();
-
-        $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('SCRIPT_NAME', '/core/index.php');
-        $request->server->set('HTTPS', 'on');
-
-        System::setContainer($container);
-
         $agent = Environment::get('agent');
 
         $this->assertSame('mac', $agent->os);

@@ -12,19 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Translation;
 
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
-use PHPUnit\Framework\TestCase;
+use Contao\System;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $originalTranslator = $this->createMock(TranslatorInterface::class);
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-        $translator = new Translator($originalTranslator, $framework);
+        $translator = new Translator(
+            $this->createMock(TranslatorInterface::class),
+            $this->mockContaoFramework()
+        );
 
         $this->assertInstanceOf('Contao\CoreBundle\Translation\Translator', $translator);
         $this->assertInstanceOf('Symfony\Component\Translation\TranslatorInterface', $translator);
@@ -60,7 +60,7 @@ class TranslatorTest extends TestCase
             ->willReturn('en')
         ;
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->mockContaoFramework();
 
         $framework
             ->expects($this->never())
@@ -79,25 +79,19 @@ class TranslatorTest extends TestCase
 
     public function testReadsFromTheGlobalLanguageArray(): void
     {
-        $systemAdapter = $this->createMock(Adapter::class);
+        $adapter = $this->mockAdapter(['loadLanguageFile']);
 
-        $systemAdapter
+        $adapter
             ->expects($this->atLeastOnce())
-            ->method('__call')
-            ->with('loadLanguageFile', ['default'])
+            ->method('loadLanguageFile')
+            ->with('default')
         ;
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->mockContaoFramework([System::class => $adapter]);
 
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
-        ;
-
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('getAdapter')
-            ->willReturn($systemAdapter)
         ;
 
         $translator = new Translator($this->createMock(TranslatorInterface::class), $framework);

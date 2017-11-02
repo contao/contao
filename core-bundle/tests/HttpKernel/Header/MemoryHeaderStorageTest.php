@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\HttpKernel\Header;
 
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class MemoryHeaderStorageTest extends TestCase
 {

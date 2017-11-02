@@ -27,7 +27,9 @@ class ContaoTableProcessorTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $this->mockContaoTableProcessor());
+        $processor = $this->mockContaoTableProcessor();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $processor);
     }
 
     public function testCanBeInvoked(): void
@@ -49,12 +51,10 @@ class ContaoTableProcessorTest extends TestCase
     {
         $processor = $this->mockContaoTableProcessor();
 
-        $record = $processor(
-            [
-                'level' => $logLevel,
-                'context' => ['contao' => new ContaoContext(__METHOD__)],
-            ]
-        );
+        $record = $processor([
+            'level' => $logLevel,
+            'context' => ['contao' => new ContaoContext(__METHOD__)],
+        ]);
 
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
@@ -71,12 +71,10 @@ class ContaoTableProcessorTest extends TestCase
     {
         $processor = $this->mockContaoTableProcessor();
 
-        $record = $processor(
-            [
-                'level' => $logLevel,
-                'context' => ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)],
-            ]
-        );
+        $record = $processor([
+            'level' => $logLevel,
+            'context' => ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)],
+        ]);
 
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];

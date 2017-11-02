@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 
 class FrontendControllerTest extends TestCase
@@ -27,8 +26,8 @@ class FrontendControllerTest extends TestCase
 
     public function testReturnsAResponseInTheActionMethods(): void
     {
-        $container = $this->mockKernel()->getContainer();
-        $container->set('contao.framework', $this->createMock(ContaoFrameworkInterface::class));
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework());
 
         $controller = new FrontendController();
         $controller->setContainer($container);

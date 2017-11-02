@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\DataCollector;
 use Contao\ContentImage;
 use Contao\ContentText;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
 use Contao\PageModel;
@@ -92,13 +91,6 @@ class ContaoDataCollectorTest extends TestCase
             )
         ;
 
-        $adapter = $this->createMock(Adapter::class);
-
-        $adapter
-            ->method('__call')
-            ->willReturn($layout)
-        ;
-
         $GLOBALS['objPage'] = $this->createMock(PageModel::class);
 
         $GLOBALS['objPage']
@@ -106,8 +98,12 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn(2)
         ;
 
+        $framework = $this->mockContaoFramework([
+            LayoutModel::class => $this->mockConfiguredAdapter(['findByPk' => $layout]),
+        ]);
+
         $collector = new ContaoDataCollector([]);
-        $collector->setFramework($this->mockContaoFramework(null, null, [LayoutModel::class => $adapter]));
+        $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(

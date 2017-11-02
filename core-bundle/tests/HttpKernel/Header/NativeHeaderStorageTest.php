@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\HttpKernel\Header;
 
 use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class NativeHeaderStorageTest extends TestCase
 {

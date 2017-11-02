@@ -13,15 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\MigrationsSchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
-class MigrationsSchemaProviderTest extends DcaSchemaProviderTest
+class MigrationsSchemaProviderTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
         $provider = new MigrationsSchemaProvider(
-            $this->createMock(ContaoFrameworkInterface::class),
+            $this->mockContaoFramework(),
             $this->createMock(Registry::class)
         );
 

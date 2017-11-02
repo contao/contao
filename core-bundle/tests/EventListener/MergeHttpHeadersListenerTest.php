@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class MergeHttpHeadersListenerTest extends TestCase
 {
@@ -33,7 +34,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testMergesTheHeadersSent(): void
     {
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -59,7 +60,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testDoesNotMergeTheHeadersSentIfTheContaoFrameworkIsNotInitialized(): void
     {
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -85,7 +86,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $response->headers->set('Set-Cookie', 'content=foobar');
 
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
@@ -171,7 +172,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testInheritsHeadersFromSubrequest(): void
     {
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new Response()
@@ -209,7 +210,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
         $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
+            $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             new Response()

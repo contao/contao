@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
@@ -185,7 +184,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willThrowException(new \Exception())
         ;
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->mockContaoFramework();
 
         $framework
             ->expects($this->never())

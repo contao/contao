@@ -21,9 +21,6 @@ use Composer\Script\Event;
 use Contao\CoreBundle\Composer\ScriptHandler;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @preserveGlobalState disabled
- */
 class ScriptHandlerTest extends TestCase
 {
     /**
@@ -48,6 +45,7 @@ class ScriptHandlerTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testGeneratesARandomSecretIfTheConfigurationFileDoesNotExist(): void
     {

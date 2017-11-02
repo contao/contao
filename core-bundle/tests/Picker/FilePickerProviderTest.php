@@ -12,21 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
-use Contao\BackendUser;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Knp\Menu\FactoryInterface;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class FilePickerProviderTest extends TestCase
+class FilePickerProviderTest extends PickerTestCase
 {
     /**
      * @var FilePickerProvider
@@ -77,34 +73,19 @@ class FilePickerProviderTest extends TestCase
             )
         ;
 
-        $count = 0;
-        $adapter = $this->createMock(Adapter::class);
+        $adapter = $this->mockAdapter(['findByUuid', 'findByPath']);
 
         $adapter
-            ->method('__call')
-            ->willReturnCallback(
-                function (string $key) use ($filesModel, &$count): ?FilesModel {
-                    if ('findByUuid' === $key) {
-                        return $filesModel;
-                    }
-
-                    // Return the files model upon the first call
-                    if ('findByPath' === $key && 1 === ++$count) {
-                        return $filesModel;
-                    }
-
-                    return null;
-                }
-            )
+            ->method('findByUuid')
+            ->willReturn($filesModel)
         ;
 
-        $framwork = $this->createMock(ContaoFramework::class);
-
-        $framwork
-            ->method('getAdapter')
-            ->willReturn($adapter)
+        $adapter
+            ->method('findByPath')
+            ->willReturnOnConsecutiveCalls($filesModel, null)
         ;
 
+        $framwork = $this->mockContaoFramework([FilesModel::class => $adapter]);
         $translator = $this->createMock(TranslatorInterface::class);
 
         $translator
@@ -140,7 +121,8 @@ class FilePickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'filePicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'))
         );
     }
 
@@ -148,7 +130,6 @@ class FilePickerProviderTest extends TestCase
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('file', [], '', 'filePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('file', [], '', 'pagePicker')));
-
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'pagePicker')));
     }
@@ -160,33 +141,7 @@ class FilePickerProviderTest extends TestCase
 
     public function testChecksIfAContextIsSupported(): void
     {
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasAccess'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
+        $this->provider->setTokenStorage($this->mockTokenStorage());
 
         $this->assertTrue($this->provider->supportsContext('file'));
         $this->assertTrue($this->provider->supportsContext('link'));
@@ -248,7 +203,6 @@ class FilePickerProviderTest extends TestCase
 
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('file', [], $uuid)));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('file', [], '/home/foobar.txt')));
-
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{file::'.$uuid.'}}')));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '/home/foobar.txt')));
     }

@@ -16,8 +16,8 @@ use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Fragment\PageType\DefaultPageTypeRenderer;
 use Contao\CoreBundle\Fragment\SimpleRenderingInformationProviderInterface;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -27,10 +27,9 @@ class DefaultPageTypeRendererTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Fragment\PageType\DefaultPageTypeRenderer',
-            $this->mockRenderer()
-        );
+        $renderer = $this->mockRenderer();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\PageType\DefaultPageTypeRenderer', $renderer);
     }
 
     public function testSupportsPageModels(): void
@@ -47,9 +46,7 @@ class DefaultPageTypeRendererTest extends TestCase
 
         $expectedControllerReference = new ControllerReference(
             'test',
-            [
-                'pageModel' => 42,
-            ]
+            ['pageModel' => 42]
         );
 
         $registry = new FragmentRegistry();
@@ -88,13 +85,8 @@ class DefaultPageTypeRendererTest extends TestCase
 
         $expectedControllerReference = new ControllerReference(
             'test',
-            [
-                'pageModel' => 42,
-                'foo' => 'bar',
-            ],
-            [
-                'bar' => 'foo',
-            ]
+            ['pageModel' => 42, 'foo' => 'bar'],
+            ['bar' => 'foo']
         );
 
         $fragment = $this->createMock(SimpleRenderingInformationProviderInterface::class);
@@ -150,9 +142,7 @@ class DefaultPageTypeRendererTest extends TestCase
 
         $expectedControllerReference = new ControllerReference(
             'test',
-            [
-                'pageModel' => 42,
-            ]
+            ['pageModel' => 42]
         );
 
         $fragment = $this->createMock(SimpleRenderingInformationProviderInterface::class);

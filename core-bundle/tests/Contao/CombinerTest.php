@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
 use Contao\Config;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -44,7 +45,7 @@ class CombinerTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        self::$rootDir = __DIR__.'/../Fixtures/tmp';
+        self::$rootDir = sys_get_temp_dir().'/'.uniqid('CombinerTest_');
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -77,7 +78,7 @@ class CombinerTest extends TestCase
         \define('TL_ROOT', self::$rootDir);
         \define('TL_ASSETS_URL', '');
 
-        $this->container = $this->mockContainerWithContaoScopes();
+        $this->container = new ContainerBuilder();
         $this->container->setParameter('contao.web_dir', self::$rootDir.'/web');
 
         System::setContainer($this->container);
