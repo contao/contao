@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\User;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -163,11 +164,19 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a token storage with a back end user.
      *
-     * @return TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @param string $class
+     *
+     * @return TokenStorageInterface
+     *
+     * @throws \Exception
      */
-    protected function mockTokenStorage(): TokenStorageInterface
+    protected function mockTokenStorage(string $class): TokenStorageInterface
     {
-        $user = $this->createPartialMock(BackendUser::class, ['hasAccess']);
+        if (!is_a($class, User::class, true)) {
+            throw new \Exception(sprintf('Class "%s" is not a Contao\User class', $class));
+        }
+
+        $user = $this->createPartialMock($class, ['hasAccess']);
 
         $user
             ->method('hasAccess')
