@@ -16,7 +16,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\GdImage;
 use Contao\System;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @group contao3

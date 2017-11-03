@@ -118,7 +118,7 @@ class PickerConfig implements \JsonSerializable
      *
      * @return PickerConfig
      */
-    public function cloneForCurrent(string $current): PickerConfig
+    public function cloneForCurrent(string $current): self
     {
         return new self($this->context, $this->extras, $this->value, $current);
     }
@@ -161,7 +161,7 @@ class PickerConfig implements \JsonSerializable
      *
      * @return PickerConfig
      */
-    public static function urlDecode(string $data): PickerConfig
+    public static function urlDecode(string $data): self
     {
         $data = base64_decode(strtr($data, '-_,', '+/='), true);
 

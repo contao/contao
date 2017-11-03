@@ -17,7 +17,6 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\TestBundle\ContaoTestBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AddResourcesPathsPassTest extends TestCase
 {

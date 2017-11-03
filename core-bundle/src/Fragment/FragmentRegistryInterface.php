@@ -39,7 +39,7 @@ interface FragmentRegistryInterface
      *
      * @return FragmentRegistryInterface
      */
-    public function addFragment(string $identifier, $fragment, array $options): FragmentRegistryInterface;
+    public function addFragment(string $identifier, $fragment, array $options): self;
 
     /**
      * Returns a fragment by its identifier.
