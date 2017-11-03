@@ -103,6 +103,24 @@ $adapter = $this->mockConfiguredAdapter(['findById' => $model]);
 This code does exactly the same as the code above.
 
 
+Mocking a class with magic properties
+-------------------------------------
+
+The `mockClassWithProperties()` method mocks a class with a magic `__get()`
+method that returns the given properties.
+
+```php
+$properties = [
+    'id' => 2,
+    'title' => 'Home',
+];
+
+$mock = $this->mockClassWithProperties(Contao\PageModel::class, $properties);
+
+echo $mock->title; // will output "Home"
+```
+
+
 Mocking a token storage
 -----------------------
 

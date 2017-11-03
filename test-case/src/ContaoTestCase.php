@@ -149,7 +149,7 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockConfiguredAdapter(array $configuration)
+    protected function mockConfiguredAdapter(array $configuration): Adapter
     {
         $adapter = $this->mockAdapter(array_keys($configuration));
 
@@ -161,13 +161,37 @@ abstract class ContaoTestCase extends TestCase
     }
 
     /**
-     * Mocks a token storage with a back end user.
+     * Mocks a class with magic properties.
+     *
+     * @param string $class
+     * @param array  $properties
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockClassWithProperties(string $class, array $properties): \PHPUnit_Framework_MockObject_MockObject
+    {
+        $mock = $this->createMock($class);
+
+        $mock
+            ->method('__get')
+            ->willReturnCallback(
+                function (string $key) use ($properties) {
+                    return $properties[$key] ?? null;
+                }
+            )
+        ;
+
+        return $mock;
+    }
+
+    /**
+     * Mocks a token storage with a Contao user.
      *
      * @param string $class
      *
-     * @return TokenStorageInterface
-     *
      * @throws \Exception
+     *
+     * @return TokenStorageInterface
      */
     protected function mockTokenStorage(string $class): TokenStorageInterface
     {
@@ -204,7 +228,7 @@ abstract class ContaoTestCase extends TestCase
      *
      * @param array $adapters
      */
-    private function addConfigAdapter(array &$adapters)
+    private function addConfigAdapter(array &$adapters): void
     {
         if (isset($adapters[Config::class])) {
             return;
@@ -236,7 +260,7 @@ abstract class ContaoTestCase extends TestCase
      *
      * @throws \Exception
      */
-    private function loadDefaultConfiguration()
+    private function loadDefaultConfiguration(): void
     {
         switch (true) {
             // The core-bundle is in the vendor folder of the managed edition
@@ -247,6 +271,11 @@ abstract class ContaoTestCase extends TestCase
             // The core-bundle is the root package and the test-case folder is in vendor/contao
             case file_exists(__DIR__.'/../../../../src/Resources/contao/config/default.php'):
                 include __DIR__.'/../../../../src/Resources/contao/config/default.php';
+                break;
+
+            // Another bundle is the root package and the core-bundle folder is in vendor/contao
+            case file_exists(__DIR__.'/../../core-bundle/src/Resources/contao/config/default.php'):
+                include __DIR__.'/../../core-bundle/src/Resources/contao/config/default.php';
                 break;
 
             // The test-case is the root package and the core-bundle folder is in vendor/contao
