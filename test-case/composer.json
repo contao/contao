@@ -10,10 +10,10 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "contao/core-bundle": "^4.5"
+        "php": "^7.1"
     },
     "require-dev": {
+        "contao/core-bundle": "^4.4",
         "friendsofphp/php-cs-fixer": "^2.6",
         "php-http/guzzle6-adapter": "^1.1"
     },
@@ -21,12 +21,5 @@
         "psr-4": {
             "Contao\\TestCase\\": "src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "1.0.x-dev"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }

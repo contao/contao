@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
@@ -239,17 +238,24 @@ abstract class ContaoTestCase extends TestCase
      */
     private function loadDefaultConfiguration()
     {
-        $path = __DIR__.'/../../core-bundle/src/Resources/contao/config/default.php';
+        switch (true) {
+            // The core-bundle is in the vendor folder of the managed edition
+            case file_exists(__DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php'):
+                include __DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php';
+                break;
 
-        // The path is different in the core-bundle itself
-        if (!file_exists($path)) {
-            $path = __DIR__.'/../../../../src/Resources/contao/config/default.php';
+            // The core-bundle is the root package and the test-case folder is in vendor/contao
+            case file_exists(__DIR__.'/../../../../src/Resources/contao/config/default.php'):
+                include __DIR__.'/../../../../src/Resources/contao/config/default.php';
+                break;
+
+            // The test-case is the root package and the core-bundle folder is in vendor/contao
+            case file_exists(__DIR__.'/../vendor/contao/core-bundle/src/Resources/contao/config/default.php'):
+                include __DIR__.'/../vendor/contao/core-bundle/src/Resources/contao/config/default.php';
+                break;
+
+            default:
+                throw new \Exception('Cannot find the Contao configuration file');
         }
-
-        if (!file_exists($path)) {
-            throw new \Exception('Cannot find the Contao configuration file');
-        }
-
-        include $path;
     }
 }
