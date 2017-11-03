@@ -30,16 +30,14 @@ class RegisterHookListenersPassTest extends TestCase
 
     public function testRegistersTheHookListeners(): void
     {
-        $definition = new Definition('Test\HookListener');
+        $attributes = [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystem',
+            'priority' => 10,
+        ];
 
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystem',
-                'priority' => 10,
-            ]
-        );
+        $definition = new Definition('Test\HookListener');
+        $definition->addTag('contao.hook', $attributes);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener', $definition);
@@ -61,15 +59,13 @@ class RegisterHookListenersPassTest extends TestCase
 
     public function testSetsTheDefaultPriorityIfNoPriorityGiven(): void
     {
-        $definition = new Definition('Test\HookListener');
+        $attributes = [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystem',
+        ];
 
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-                'method' => 'onInitializeSystem',
-            ]
-        );
+        $definition = new Definition('Test\HookListener');
+        $definition->addTag('contao.hook', $attributes);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener', $definition);
@@ -213,13 +209,7 @@ class RegisterHookListenersPassTest extends TestCase
     public function testFailsIfTheHookAttributeIsMissing(): void
     {
         $definition = new Definition('Test\HookListener');
-
-        $definition->addTag(
-            'contao.hook',
-            [
-                'method' => 'onInitializeSystemAfter',
-            ]
-        );
+        $definition->addTag('contao.hook', ['method' => 'onInitializeSystemAfter']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener', $definition);
@@ -234,13 +224,7 @@ class RegisterHookListenersPassTest extends TestCase
     public function testFailsIfTheMethodAttributeIsMissing(): void
     {
         $definition = new Definition('Test\HookListener');
-
-        $definition->addTag(
-            'contao.hook',
-            [
-                'hook' => 'initializeSystem',
-            ]
-        );
+        $definition->addTag('contao.hook', ['hook' => 'initializeSystem']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener', $definition);

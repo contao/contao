@@ -49,6 +49,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->mockConnection($statement);
+
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
@@ -81,6 +82,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->mockConnection($statement);
+
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 

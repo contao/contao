@@ -19,7 +19,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -42,13 +41,11 @@ class BackendCsvImportControllerTest extends TestCase
         \define('TL_MODE', 'BE');
         \define('TL_ROOT', $this->getFixturesDir());
 
+        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
+
         $container = $this->mockContainer();
         $container->set('session', new Session(new MockArraySessionStorage()));
-
-        $container->set(
-            'contao.resource_finder',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
-        );
+        $container->set('contao.resource_finder', $finder);
 
         System::setContainer($container);
     }
@@ -62,23 +59,13 @@ class BackendCsvImportControllerTest extends TestCase
 
     public function testRendersTheListWizardMarkup(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $request = new Request();
+        $request->query->set('key', 'lw');
 
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
+        $html = $this
+            ->mockController($request)
+            ->importListWizard($this->mockDataContainer())
+            ->getContent()
         ;
 
         $expect = <<<'EOF'
@@ -88,33 +75,11 @@ class BackendCsvImportControllerTest extends TestCase
 
 EOF;
 
-        $request = new Request();
-        $request->query->set('key', 'lw');
-
-        $this->assertSame($expect, $this->mockController($request)->importListWizard($dc)->getContent());
+        $this->assertSame($expect, $html);
     }
 
     public function testImportsTheListWizardData(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
         $connection = $this->createMock(Connection::class);
 
         $connection
@@ -140,31 +105,21 @@ EOF;
             $this->getFixturesDir()
         );
 
-        $response = $controller->importListWizard($dc);
+        $response = $controller->importListWizard($this->mockDataContainer());
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testRendersTheTableWizardMarkup(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $request = new Request();
+        $request->query->set('key', 'tw');
 
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
+        $html = $this
+            ->mockController($request)
+            ->importTableWizard($this->mockDataContainer())
+            ->getContent()
         ;
 
         $expect = <<<'EOF'
@@ -174,33 +129,11 @@ EOF;
 
 EOF;
 
-        $request = new Request();
-        $request->query->set('key', 'tw');
-
-        $this->assertSame($expect, $this->mockController($request)->importTableWizard($dc)->getContent());
+        $this->assertSame($expect, $html);
     }
 
     public function testImportsTheTableWizardData(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
         $connection = $this->createMock(Connection::class);
 
         $connection
@@ -226,31 +159,21 @@ EOF;
             $this->getFixturesDir()
         );
 
-        $response = $controller->importTableWizard($dc);
+        $response = $controller->importTableWizard($this->mockDataContainer());
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testRendersTheOptionWizardMarkup(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $request = new Request();
+        $request->query->set('key', 'ow');
 
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
+        $html = $this
+            ->mockController($request)
+            ->importOptionWizard($this->mockDataContainer())
+            ->getContent()
         ;
 
         $expect = <<<'EOF'
@@ -260,33 +183,11 @@ EOF;
 
 EOF;
 
-        $request = new Request();
-        $request->query->set('key', 'ow');
-
-        $this->assertSame($expect, $this->mockController($request)->importOptionWizard($dc)->getContent());
+        $this->assertSame($expect, $html);
     }
 
     public function testImportsTheOptionWizardData(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
         $connection = $this->createMock(Connection::class);
 
         $connection
@@ -316,64 +217,29 @@ EOF;
             $this->getFixturesDir()
         );
 
-        $response = $controller->importOptionWizard($dc);
+        $response = $controller->importOptionWizard($this->mockDataContainer());
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testRedirectsIfThePostDataIsIncomplete(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
         $request = new Request();
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $response = $this->mockController($request)->importListWizard($dc);
+        $response = $this
+            ->mockController($request)
+            ->importListWizard($this->mockDataContainer())
+        ;
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(303, $response->getStatusCode());
     }
 
     public function testFailsIfThereIsNoRequestObject(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'table':
-                            return 'tl_content';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
         $connection = $this->createMock(Connection::class);
 
         $controller = new BackendCsvImportController(
@@ -386,7 +252,7 @@ EOF;
 
         $this->expectException(InternalServerErrorException::class);
 
-        $controller->importListWizard($dc);
+        $controller->importListWizard($this->mockDataContainer());
     }
 
     /**
@@ -417,5 +283,20 @@ EOF;
         );
 
         return $controller;
+    }
+
+    /**
+     * Mocks a data container.
+     *
+     * @return DataContainer|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockDataContainer(): DataContainer
+    {
+        $properties = [
+            'id' => 1,
+            'table' => 'tl_content',
+        ];
+
+        return $this->mockClassWithProperties(DataContainer::class, $properties);
     }
 }

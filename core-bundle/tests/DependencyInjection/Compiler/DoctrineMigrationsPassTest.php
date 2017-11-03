@@ -82,14 +82,13 @@ class DoctrineMigrationsPassTest extends TestCase
      */
     private function getContainerBuilder(array $bundles = []): ContainerBuilder
     {
+        $definition = new Definition(DcaSchemaProvider::class);
+        $definition->addArgument('foo');
+
         $container = new ContainerBuilder();
         $container->setParameter('kernel.bundles', $bundles);
         $container->setDefinition('service_container', (new Definition(Container::class, []))->setSynthetic(true));
-
-        $container->setDefinition(
-            'contao.doctrine.schema_provider',
-            (new Definition(DcaSchemaProvider::class))->addArgument('foo')
-        );
+        $container->setDefinition('contao.doctrine.schema_provider', $definition);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../src/Resources/config'));
         $loader->load('commands.yml');

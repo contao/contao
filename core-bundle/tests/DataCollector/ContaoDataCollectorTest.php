@@ -69,38 +69,17 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testCollectsDataInFrontEnd(): void
     {
-        $layout = $this->createMock(LayoutModel::class);
+        $properties = [
+            'name' => 'Default',
+            'id' => 2,
+            'template' => 'fe_page',
+        ];
 
-        $layout
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'name':
-                            return 'Default';
+        $layout = $this->mockClassWithProperties(LayoutModel::class, $properties);
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
 
-                        case 'id':
-                            return 2;
-
-                        case 'template':
-                            return 'fe_page';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        $GLOBALS['objPage'] = $this->createMock(PageModel::class);
-
-        $GLOBALS['objPage']
-            ->method('__get')
-            ->willReturn(2)
-        ;
-
-        $framework = $this->mockContaoFramework([
-            LayoutModel::class => $this->mockConfiguredAdapter(['findByPk' => $layout]),
-        ]);
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 2]);
 
         $collector = new ContaoDataCollector([]);
         $collector->setFramework($framework);

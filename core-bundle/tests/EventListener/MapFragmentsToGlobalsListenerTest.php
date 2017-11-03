@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\ContentProxy;
 use Contao\CoreBundle\EventListener\MapFragmentsToGlobalsListener;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
-use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleProxy;
 use Contao\PageProxy;
@@ -44,37 +43,31 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
     {
         $registry = new FragmentRegistry();
 
-        $registry->addFragment(
-            'page-type',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-            ]
-        );
+        $options = [
+            'tag' => 'contao.fragment.page_type',
+            'type' => 'test',
+            'controller' => 'test',
+        ];
 
-        $registry->addFragment(
-            'frontend-module',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-                'category' => 'navigationMod',
-            ]
-        );
+        $registry->addFragment('page-type', new \stdClass(), $options);
 
-        $registry->addFragment(
-            'content-element',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-                'category' => 'text',
-            ]
-        );
+        $options = [
+            'tag' => 'contao.fragment.frontend_module',
+            'type' => 'test',
+            'controller' => 'test',
+            'category' => 'navigationMod',
+        ];
+
+        $registry->addFragment('frontend-module', new \stdClass(), $options);
+
+        $options = [
+            'tag' => 'contao.fragment.content_element',
+            'type' => 'test',
+            'controller' => 'test',
+            'category' => 'text',
+        ];
+
+        $registry->addFragment('content-element', new \stdClass(), $options);
 
         $listener = new MapFragmentsToGlobalsListener($registry);
         $listener->setFramework($this->mockContaoFramework());
@@ -87,17 +80,14 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
 
     public function testFailsToMapFrontendModulesWithoutACategory(): void
     {
-        $registry = new FragmentRegistry();
+        $options = [
+            'tag' => 'contao.fragment.frontend_module',
+            'type' => 'test',
+            'controller' => 'test',
+        ];
 
-        $registry->addFragment(
-            'frontend-module',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-            ]
-        );
+        $registry = new FragmentRegistry();
+        $registry->addFragment('frontend-module', new \stdClass(), $options);
 
         $listener = new MapFragmentsToGlobalsListener($registry);
         $listener->setFramework($this->mockContaoFramework());
@@ -110,17 +100,14 @@ class MapFragmentsToGlobalsListenerTest extends TestCase
 
     public function testFailsToMapContentElementsWithoutACategory(): void
     {
-        $registry = new FragmentRegistry();
+        $options = [
+            'tag' => 'contao.fragment.content_element',
+            'type' => 'test',
+            'controller' => 'test',
+        ];
 
-        $registry->addFragment(
-            'content-element',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-            ]
-        );
+        $registry = new FragmentRegistry();
+        $registry->addFragment('content-element', new \stdClass(), $options);
 
         $listener = new MapFragmentsToGlobalsListener($registry);
         $listener->setFramework($this->mockContaoFramework());

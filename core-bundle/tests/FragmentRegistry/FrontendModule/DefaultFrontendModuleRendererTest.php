@@ -37,27 +37,24 @@ class DefaultFrontendModuleRendererTest extends TestCase
 
     public function testRendersModuleModels(): void
     {
-        $expectedControllerReference = new ControllerReference(
-            'test',
-            [
-                'moduleModel' => 42,
-                'inColumn' => 'main',
-                'scope' => 'scope',
-            ]
-        );
+        $attributes = [
+            'moduleModel' => 42,
+            'inColumn' => 'main',
+            'scope' => 'scope',
+        ];
+
+        $expectedControllerReference = new ControllerReference('test', $attributes);
+        $fragment = new \stdClass();
+
+        $options = [
+            'tag' => 'contao.fragment.frontend_module',
+            'type' => 'test',
+            'controller' => 'test',
+            'category' => 'navigationMod',
+        ];
 
         $registry = new FragmentRegistry();
-
-        $registry->addFragment(
-            FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT.'.identifier',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::FRONTEND_MODULE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-                'category' => 'navigationMod',
-            ]
-        );
+        $registry->addFragment('contao.fragment.frontend_module.identifier', $fragment, $options);
 
         $handler = $this->createMock(FragmentHandler::class);
 

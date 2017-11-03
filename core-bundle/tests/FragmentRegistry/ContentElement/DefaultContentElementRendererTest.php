@@ -37,14 +37,24 @@ class DefaultContentElementRendererTest extends TestCase
 
     public function testRendersContentModels(): void
     {
-        $expectedControllerReference = new ControllerReference(
-            'test',
-            [
-                'contentModel' => 42,
-                'inColumn' => 'main',
-                'scope' => 'scope',
-            ]
-        );
+        $attributes = [
+            'contentModel' => 42,
+            'inColumn' => 'main',
+            'scope' => 'scope',
+        ];
+
+        $expectedControllerReference = new ControllerReference('test', $attributes);
+        $fragment = new \stdClass();
+
+        $options = [
+            'tag' => 'contao.fragment.content_element',
+            'type' => 'test',
+            'controller' => 'test',
+            'category' => 'text',
+        ];
+
+        $registry = new FragmentRegistry();
+        $registry->addFragment('contao.fragment.content_element.identifier', $fragment, $options);
 
         $handler = $this->createMock(FragmentHandler::class);
 
@@ -56,19 +66,6 @@ class DefaultContentElementRendererTest extends TestCase
 
         $model = new ContentModel();
         $model->setRow(['id' => 42, 'type' => 'identifier']);
-
-        $registry = new FragmentRegistry();
-
-        $registry->addFragment(
-            FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT.'.identifier',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::CONTENT_ELEMENT_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-                'category' => 'text',
-            ]
-        );
 
         $renderer = $this->mockRenderer($registry, $handler);
         $renderer->render($model, 'main', 'scope');

@@ -77,28 +77,17 @@ class PictureTest extends TestCase
 
     public function testCanBeInstantiated(): void
     {
-        $fileMock = $this->createMock(File::class);
+        $properties = [
+            'extension' => 'jpg',
+            'path' => 'dummy.jpg',
+        ];
+
+        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        $fileMock = $this->mockClassWithProperties(File::class, $properties);
 
         $fileMock
             ->method('exists')
             ->willReturn(true)
-        ;
-
-        $fileMock
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key): ?string {
-                    switch ($key) {
-                        case 'extension':
-                            return 'jpg';
-
-                        case 'path':
-                            return 'dummy.jpg';
-                    }
-
-                    return null;
-                }
-            )
         ;
 
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
@@ -313,16 +302,18 @@ class PictureTest extends TestCase
      */
     private function mockContainerWithImageServices(): ContainerBuilder
     {
-        $framework = $this->mockContaoFramework([
+        $filesystem = new Filesystem();
+
+        $adapters = [
             Config::class => $this->mockConfiguredAdapter(['get' => 3000]),
             FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => null]),
-        ]);
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
 
         $container = $this->mockContainer($this->getTempDir());
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
         $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
-
-        $filesystem = new Filesystem();
 
         $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
         $resizer->setFramework($framework);

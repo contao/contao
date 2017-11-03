@@ -29,13 +29,14 @@ class AddResourcesPathsPassTest extends TestCase
 
     public function testAddsTheResourcesPaths(): void
     {
-        $container = $this->mockContainer($this->getFixturesDir());
-
-        $container->setParameter('kernel.bundles', [
+        $bundles = [
             'FrameworkBundle' => FrameworkBundle::class,
             'ContaoTestBundle' => ContaoTestBundle::class,
             'foobar' => ContaoModuleBundle::class,
-        ]);
+        ];
+
+        $container = $this->mockContainer($this->getFixturesDir());
+        $container->setParameter('kernel.bundles', $bundles);
 
         $pass = new AddResourcesPathsPass();
         $pass->process($container);

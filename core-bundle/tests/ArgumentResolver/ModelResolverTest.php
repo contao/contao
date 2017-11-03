@@ -38,14 +38,12 @@ class ModelResolverTest extends TestCase
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
 
+        $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
+
         $resolver = new ModelResolver($framework);
+        $generator = $resolver->resolve($request, $metadata);
 
-        $generator = $resolver->resolve(
-            $request,
-            new ArgumentMetadata('pageModel', PageModel::class, false, false, '')
-        );
-
-        $this->assertInstanceOf(\Generator::class, $generator);
+        $this->assertInstanceOf('Generator', $generator);
 
         foreach ($generator as $resolved) {
             $this->assertSame($pageModel, $resolved);
@@ -112,8 +110,8 @@ class ModelResolverTest extends TestCase
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
 
-        $resolver = new ModelResolver($framework);
         $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
+        $resolver = new ModelResolver($framework);
 
         $this->assertFalse($resolver->supports($request, $argument));
     }

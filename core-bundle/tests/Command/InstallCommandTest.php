@@ -105,7 +105,6 @@ class InstallCommandTest extends TestCase
         $command->setContainer($this->mockContainer($this->getTempDir()));
 
         $tester = new CommandTester($command);
-
         $code = $tester->execute([]);
 
         $this->assertSame(1, $code);

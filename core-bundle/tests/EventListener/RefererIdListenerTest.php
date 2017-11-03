@@ -36,11 +36,8 @@ class RefererIdListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $event = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
@@ -54,11 +51,8 @@ class RefererIdListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $event = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
@@ -71,11 +65,8 @@ class RefererIdListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $event = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::SUB_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
@@ -88,11 +79,8 @@ class RefererIdListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $event = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);

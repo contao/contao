@@ -44,7 +44,10 @@ class PickerBuilderTest extends ContaoTestCase
             ->willReturn('/_contao/picker?context=page')
         ;
 
-        $this->builder = new PickerBuilder(new MenuFactory(), $router, new RequestStack());
+        $factory = new MenuFactory();
+        $requestStack = new RequestStack();
+
+        $this->builder = new PickerBuilder($factory, $router, $requestStack);
     }
 
     public function testCanBeInstantiated(): void
@@ -54,21 +57,21 @@ class PickerBuilderTest extends ContaoTestCase
 
     public function testCreatesAPickerObject(): void
     {
-        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
-        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
+        $factory = new MenuFactory();
+        $router = $this->createMock(RouterInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $this->builder->addProvider($provider);
+        $pageProvider = new PagePickerProvider($factory, $router);
+        $pageProvider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
-        $this->builder->addProvider(
-            new FilePickerProvider(
-                new MenuFactory(),
-                $this->createMock(RouterInterface::class),
-                $this->createMock(TranslatorInterface::class),
-                __DIR__
-            )
-        );
+        $this->builder->addProvider($pageProvider);
 
-        $picker = $this->builder->create(new PickerConfig('page', ['providers' => ['pagePicker']]));
+        $fileProvider = new FilePickerProvider($factory, $router, $translator, __DIR__);
+
+        $this->builder->addProvider($fileProvider);
+
+        $config = new PickerConfig('page', ['providers' => ['pagePicker']]);
+        $picker = $this->builder->create($config);
 
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerInterface', $picker);
 
@@ -85,7 +88,10 @@ class PickerBuilderTest extends ContaoTestCase
 
     public function testCreatesAPickerObjectFromData(): void
     {
-        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
+        $factory = new MenuFactory();
+        $router = $this->createMock(RouterInterface::class);
+
+        $provider = new PagePickerProvider($factory, $router);
         $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
@@ -98,7 +104,10 @@ class PickerBuilderTest extends ContaoTestCase
 
     public function testDoesNotCreateAPickerObjectFromDataIfTheArgumentIsInvalid(): void
     {
-        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
+        $factory = new MenuFactory();
+        $router = $this->createMock(RouterInterface::class);
+
+        $provider = new PagePickerProvider($factory, $router);
         $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
@@ -108,7 +117,10 @@ class PickerBuilderTest extends ContaoTestCase
 
     public function testChecksIfAContextIsSupported(): void
     {
-        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
+        $factory = new MenuFactory();
+        $router = $this->createMock(RouterInterface::class);
+
+        $provider = new PagePickerProvider($factory, $router);
         $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);
@@ -120,7 +132,10 @@ class PickerBuilderTest extends ContaoTestCase
 
     public function testReturnsThePickerUrl(): void
     {
-        $provider = new PagePickerProvider(new MenuFactory(), $this->createMock(RouterInterface::class));
+        $factory = new MenuFactory();
+        $router = $this->createMock(RouterInterface::class);
+
+        $provider = new PagePickerProvider($factory, $router);
         $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->builder->addProvider($provider);

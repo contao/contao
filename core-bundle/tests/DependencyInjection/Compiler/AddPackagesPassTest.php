@@ -27,9 +27,9 @@ class AddPackagesPassTest extends TestCase
 
     public function testAddsThePackages(): void
     {
-        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/installed.json');
         $container = new ContainerBuilder();
 
+        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/installed.json');
         $pass->process($container);
 
         $this->assertTrue($container->hasParameter('kernel.packages'));
@@ -49,9 +49,9 @@ class AddPackagesPassTest extends TestCase
 
     public function testAddsAnEmptyArrayIfThereIsNoJsonFile(): void
     {
-        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/invalid.json');
         $container = new ContainerBuilder();
 
+        $pass = new AddPackagesPass($this->getFixturesDir().'/vendor/composer/invalid.json');
         $pass->process($container);
 
         $this->assertTrue($container->hasParameter('kernel.packages'));

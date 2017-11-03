@@ -49,13 +49,11 @@ class SymlinksCommandTest extends TestCase
 
     public function testSymlinksTheContaoFolders(): void
     {
+        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
+
         $container = $this->mockContainer($this->getFixturesDir());
         $container->setParameter('kernel.logs_dir', $this->getFixturesDir().'/var/logs');
-
-        $container->set(
-            'contao.resource_finder',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
-        );
+        $container->set('contao.resource_finder', $finder);
 
         $command = new SymlinksCommand('contao:symlinks');
         $command->setContainer($container);
@@ -93,7 +91,6 @@ class SymlinksCommandTest extends TestCase
         $command->setContainer($this->mockContainer($this->getFixturesDir()));
 
         $tester = new CommandTester($command);
-
         $code = $tester->execute([]);
 
         $this->assertSame(1, $code);

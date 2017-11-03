@@ -32,12 +32,7 @@ class ResponseExceptionListenerTest extends TestCase
 
     public function testAddsAResponseToTheEvent(): void
     {
-        $event = new GetResponseForExceptionEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new ResponseException(new Response('Foo'))
-        );
+        $event = $this->mockResponseEvent(new ResponseException(new Response('Foo')));
 
         $listener = new ResponseExceptionListener();
         $listener->onKernelException($event);
@@ -52,16 +47,26 @@ class ResponseExceptionListenerTest extends TestCase
 
     public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException(): void
     {
-        $event = new GetResponseForExceptionEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new \RuntimeException()
-        );
+        $event = $this->mockResponseEvent(new \RuntimeException());
 
         $listener = new ResponseExceptionListener();
         $listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Mocks a response event.
+     *
+     * @param \Exception $exception
+     *
+     * @return GetResponseForExceptionEvent
+     */
+    private function mockResponseEvent(\Exception $exception): GetResponseForExceptionEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+        $request = new Request();
+
+        return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 }

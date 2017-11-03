@@ -33,13 +33,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testMergesTheHeadersSent(): void
     {
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
+        $responseEvent = $this->mockResponseEvent();
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
@@ -59,13 +53,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testDoesNotMergeTheHeadersSentIfTheContaoFrameworkIsNotInitialized(): void
     {
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
+        $responseEvent = $this->mockResponseEvent();
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
@@ -85,13 +73,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $response = new Response();
         $response->headers->set('Set-Cookie', 'content=foobar');
 
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            $response
-        );
-
+        $responseEvent = $this->mockResponseEvent($response);
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
@@ -171,13 +153,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testInheritsHeadersFromSubrequest(): void
     {
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
+        $responseEvent = $this->mockResponseEvent();
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
@@ -209,13 +185,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
+        $responseEvent = $this->mockResponseEvent();
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
@@ -249,5 +219,23 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertCount(2, $allHeaders);
         $this->assertSame('content=foobar; path=/', $allHeaders[0]);
         $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
+    }
+
+    /**
+     * Mocks a response event.
+     *
+     * @param Response|null $response
+     *
+     * @return FilterResponseEvent
+     */
+    private function mockResponseEvent(Response $response = null): FilterResponseEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        if (null === $response) {
+            $response = new Response();
+        }
+
+        return new FilterResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
     }
 }

@@ -33,11 +33,8 @@ class BypassMaintenanceListenerTest extends TestCase
         $request = new Request();
         $request->cookies->set('BE_USER_AUTH', 'e15514a266be75c17ed284935ededa5a2c17ac85');
 
-        $event = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new BypassMaintenanceListener($this->mockSession(), false);
         $listener->onKernelRequest($event);
@@ -47,11 +44,9 @@ class BypassMaintenanceListenerTest extends TestCase
 
     public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser(): void
     {
-        $event = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $request = new Request();
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new BypassMaintenanceListener($this->mockSession(), false);
         $listener->onKernelRequest($event);

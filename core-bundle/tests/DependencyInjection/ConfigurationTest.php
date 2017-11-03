@@ -43,27 +43,50 @@ class ConfigurationTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $treeBuilder);
     }
 
-    public function testResolvesThePaths(): void
+    /**
+     * @param string $unix
+     * @param string $windows
+     *
+     * @dataProvider getPaths
+     */
+    public function testResolvesThePaths(string $unix, string $windows): void
     {
         $params = [
             'contao' => [
-                'web_dir' => $this->getTempDir().'/foo/bar/../../web',
+                'web_dir' => $unix,
                 'image' => [
-                    'target_dir' => $this->getTempDir().'/foo/../assets//./images',
+                    'target_dir' => $windows,
                 ],
             ],
         ];
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame($this->getTempDir().'/web', $configuration['web_dir']);
-        $this->assertSame($this->getTempDir().'/assets/images', $configuration['image']['target_dir']);
+        $this->assertSame('/tmp/contao', $configuration['web_dir']);
+        $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaths(): array
+    {
+        return [
+            ['/tmp/contao', 'C:\Temp\contao'],
+            ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'],
+            ['/tmp/foo/bar/../../contao', 'C:\Temp\foo\bar\..\..\contao'],
+            ['/tmp/./contao', 'C:\Temp\.\contao'],
+            ['/tmp//contao', 'C:\Temp\\\\contao'],
+            ['/tmp/contao/', 'C:\Temp\contao\\'],
+            ['/tmp/contao/.', 'C:\Temp\contao\.'],
+            ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'],
+        ];
     }
 
     /**
      * @param string $uploadPath
      *
-     * @dataProvider invalidUploadPathProvider
+     * @dataProvider getInvalidUploadPaths
      */
     public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
     {
@@ -82,7 +105,7 @@ class ConfigurationTest extends TestCase
     /**
      * @return array
      */
-    public function invalidUploadPathProvider(): array
+    public function getInvalidUploadPaths(): array
     {
         return [
             [''],

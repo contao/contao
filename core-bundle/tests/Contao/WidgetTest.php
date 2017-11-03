@@ -51,9 +51,9 @@ class WidgetTest extends TestCase
         error_reporting($errorReporting & ~E_NOTICE);
 
         $widget = $this->createMock(Widget::class);
+
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
-
         $method->setAccessible(true);
 
         $_POST[$input] = $value;

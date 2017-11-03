@@ -419,11 +419,16 @@ class StringUtilTest extends TestCase
 
     public function testDoesNotExecutePhpCodeInCombinedTokens(): void
     {
-        $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
+        $data = [
             'open' => '<',
             'open2' => '?php echo "I am evil";',
             'close' => '?>',
-        ]));
+        ];
+
+        $this->assertSame(
+            'This is <?php echo "I am evil";?> evil',
+            StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', $data)
+        );
     }
 
     /**

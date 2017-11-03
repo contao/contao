@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
@@ -34,14 +35,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         parent::setUp();
 
-        $this->warmer = new ContaoCacheWarmer(
-            new Filesystem(),
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            new FileLocator($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao',
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework()
-        );
+        $this->warmer = $this->mockCacheWarmer();
     }
 
     /**
@@ -83,15 +77,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $warmer = new ContaoCacheWarmer(
-            new Filesystem(),
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            new FileLocator($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao',
-            $connection,
-            $this->mockContaoFramework()
-        );
-
+        $warmer = $this->mockCacheWarmer($connection);
         $warmer->warmUp($this->getFixturesDir().'/var/cache');
 
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao');
@@ -161,15 +147,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $warmer = new ContaoCacheWarmer(
-            new Filesystem(),
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/empty-bundle/Resources/contao'),
-            new FileLocator($this->getFixturesDir().'/vendor/contao/empty-bundle/Resources/contao'),
-            $this->getFixturesDir().'/vendor/contao/empty-bundle/Resources/contao',
-            $connection,
-            $this->mockContaoFramework()
-        );
-
+        $warmer = $this->mockCacheWarmer($connection, null, 'empty-bundle');
         $warmer->warmUp($this->getFixturesDir().'/var/cache/contao');
 
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
@@ -191,17 +169,37 @@ class ContaoCacheWarmerTest extends TestCase
             ->method('initialize')
         ;
 
-        $warmer = new ContaoCacheWarmer(
-            new Filesystem(),
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            new FileLocator($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao',
-            $connection,
-            $framework
-        );
-
+        $warmer = $this->mockCacheWarmer($connection, $framework);
         $warmer->warmUp($this->getFixturesDir().'/var/cache/contao');
 
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
+    }
+
+    /**
+     * Mocks a cache warmer.
+     *
+     * @param Connection|null               $connection
+     * @param ContaoFrameworkInterface|null $framework
+     * @param string                        $bundle
+     *
+     * @return ContaoCacheWarmer
+     */
+    private function mockCacheWarmer(Connection $connection = null, ContaoFrameworkInterface $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
+    {
+        if (null === $connection) {
+            $connection = $this->createMock(Connection::class);
+        }
+
+        if (null === $framework) {
+            $framework = $this->mockContaoFramework();
+        }
+
+        $fixtures = $this->getFixturesDir().'/vendor/contao/'.$bundle.'/Resources/contao';
+
+        $filesystem = new Filesystem();
+        $finder = new ResourceFinder($fixtures);
+        $locator = new FileLocator($fixtures);
+
+        return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework);
     }
 }

@@ -23,10 +23,7 @@ class DelegatingFrontendModuleRendererTest extends TestCase
     {
         $renderer = new DelegatingFrontendModuleRenderer();
 
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer',
-            $renderer
-        );
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer', $renderer);
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void

@@ -23,10 +23,7 @@ class DelegatingContentElementRendererTest extends TestCase
     {
         $renderer = new DelegatingContentElementRenderer();
 
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer',
-            $renderer
-        );
+        $this->assertInstanceOf('Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer', $renderer);
     }
 
     public function testReturnsTrueIfOneOfTheRenderersSupportsTheModel(): void

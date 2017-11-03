@@ -32,16 +32,8 @@ class AddSessionBagsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setDefinition('session', new Definition(Session::class));
-
-        $container->setDefinition(
-            'contao.session.contao_backend',
-            new Definition(ArrayAttributeBag::class)
-        );
-
-        $container->setDefinition(
-            'contao.session.contao_frontend',
-            new Definition(ArrayAttributeBag::class)
-        );
+        $container->setDefinition('contao.session.contao_backend', new Definition(ArrayAttributeBag::class));
+        $container->setDefinition('contao.session.contao_frontend', new Definition(ArrayAttributeBag::class));
 
         $pass = new AddSessionBagsPass();
         $pass->process($container);

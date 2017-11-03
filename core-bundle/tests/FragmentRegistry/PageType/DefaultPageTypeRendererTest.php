@@ -49,17 +49,16 @@ class DefaultPageTypeRendererTest extends TestCase
             ['pageModel' => 42]
         );
 
-        $registry = new FragmentRegistry();
+        $fragment = new \stdClass();
 
-        $registry->addFragment(
-            FragmentRegistryInterface::PAGE_TYPE_FRAGMENT.'.identifier',
-            new \stdClass(),
-            [
-                'tag' => FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-            ]
-        );
+        $options = [
+            'tag' => 'contao.fragment.page_type',
+            'type' => 'test',
+            'controller' => 'test',
+        ];
+
+        $registry = new FragmentRegistry();
+        $registry->addFragment('contao.fragment.page_type.identifier', $fragment, $options);
 
         $handler = $this->createMock(FragmentHandler::class);
 
@@ -103,17 +102,14 @@ class DefaultPageTypeRendererTest extends TestCase
             ->willReturn(['bar' => 'foo'])
         ;
 
-        $registry = new FragmentRegistry();
+        $options = [
+            'tag' => FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
+            'type' => 'test',
+            'controller' => 'test',
+        ];
 
-        $registry->addFragment(
-            FragmentRegistryInterface::PAGE_TYPE_FRAGMENT.'.identifier',
-            $fragment,
-            [
-                'tag' => FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-            ]
-        );
+        $registry = new FragmentRegistry();
+        $registry->addFragment('contao.fragment.page_type.identifier', $fragment, $options);
 
         $handler = $this->createMock(FragmentHandler::class);
 
@@ -157,17 +153,14 @@ class DefaultPageTypeRendererTest extends TestCase
             ->method('getControllerQueryParameters')
         ;
 
-        $registry = new FragmentRegistry();
+        $options = [
+            'tag' => 'test',
+            'type' => 'test',
+            'controller' => 'test',
+        ];
 
-        $registry->addFragment(
-            FragmentRegistryInterface::PAGE_TYPE_FRAGMENT.'.identifier',
-            $fragment,
-            [
-                'tag' => FragmentRegistryInterface::PAGE_TYPE_FRAGMENT,
-                'type' => 'test',
-                'controller' => 'test',
-            ]
-        );
+        $registry = new FragmentRegistry();
+        $registry->addFragment('contao.fragment.page_type.identifier', $fragment, $options);
 
         $handler = $this->createMock(FragmentHandler::class);
 

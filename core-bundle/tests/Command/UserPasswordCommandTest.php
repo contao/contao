@@ -44,9 +44,8 @@ class UserPasswordCommandTest extends TestCase
     {
         parent::setUp();
 
-        $framework = $this->mockContaoFramework([
-            Encryption::class => $this->mockEncryptionAdapter(),
-        ]);
+        $adapter = $this->mockEncryptionAdapter();
+        $framework = $this->mockContaoFramework([Encryption::class => $adapter]);
 
         $this->container = new ContainerBuilder();
         $this->container->set('contao.framework', $framework);
@@ -75,14 +74,12 @@ class UserPasswordCommandTest extends TestCase
 
     public function testTakesAPasswordAsArgument(): void
     {
-        $code = (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '12345678',
-                ]
-            )
-        ;
+        $input = [
+            'username' => 'foobar',
+            '--password' => '12345678',
+        ];
+
+        $code = (new CommandTester($this->command))->execute($input);
 
         $this->assertSame(0, $code);
     }
@@ -130,12 +127,7 @@ class UserPasswordCommandTest extends TestCase
 
     public function testFailsWithoutPasswordIfNotInteractive(): void
     {
-        $code = (new CommandTester($this->command))
-            ->execute(
-                ['username' => 'foobar'],
-                ['interactive' => false]
-            )
-        ;
+        $code = (new CommandTester($this->command))->execute(['username' => 'foobar'], ['interactive' => false]);
 
         $this->assertSame(1, $code);
     }
@@ -144,36 +136,30 @@ class UserPasswordCommandTest extends TestCase
     {
         unset($GLOBALS['TL_CONFIG']['minPasswordLength']);
 
+        $input = [
+            'username' => 'foobar',
+            '--password' => '123456',
+        ];
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 8 characters long.');
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '123456',
-                ],
-                ['interactive' => false]
-            )
-        ;
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
     public function testHandlesACustomMinimumPasswordLength(): void
     {
         $GLOBALS['TL_CONFIG']['minPasswordLength'] = 16;
 
+        $input = [
+            'username' => 'foobar',
+            '--password' => '123456789',
+        ];
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 16 characters long.');
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '123456789',
-                ],
-                ['interactive' => false]
-            )
-        ;
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
     public function testFailsIfTheUsernameIsUnknown(): void
@@ -186,18 +172,15 @@ class UserPasswordCommandTest extends TestCase
             ->willReturn(0)
         ;
 
+        $input = [
+            'username' => 'foobar',
+            '--password' => '12345678',
+        ];
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid username: foobar');
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '12345678',
-                ],
-                ['interactive' => false]
-            )
-        ;
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
     /**
@@ -221,15 +204,12 @@ class UserPasswordCommandTest extends TestCase
             ->willReturn(1)
         ;
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => $username,
-                    '--password' => $password,
-                ],
-                ['interactive' => false]
-            )
-        ;
+        $input = [
+            'username' => $username,
+            '--password' => $password,
+        ];
+
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
     /**

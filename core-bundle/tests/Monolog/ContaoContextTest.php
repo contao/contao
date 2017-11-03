@@ -41,16 +41,15 @@ class ContaoContextTest extends TestCase
         $context->setBrowser('Mozilla');
         $context->setSource('Foo::bar()');
 
-        $this->assertSame(
-            json_encode([
-                'func' => 'foo',
-                'action' => 'action',
-                'username' => 'username',
-                'ip' => '1.2.3.4',
-                'browser' => 'Mozilla',
-            ]),
-            (string) $context
-        );
+        $json = json_encode([
+            'func' => 'foo',
+            'action' => 'action',
+            'username' => 'username',
+            'ip' => '1.2.3.4',
+            'browser' => 'Mozilla',
+        ]);
+
+        $this->assertSame($json, (string) $context);
     }
 
     public function testFailsIfTheFunctionNameIsEmpty(): void

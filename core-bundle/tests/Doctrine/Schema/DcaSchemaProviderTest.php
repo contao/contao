@@ -12,21 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $provider = new DcaSchemaProvider(
-            $this->mockContaoFramework(),
-            $this->createMock(Registry::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $provider);
+        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $this->getProvider());
     }
 
     public function testHasAnEmptySchema(): void

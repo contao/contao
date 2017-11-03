@@ -20,29 +20,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RouterInterface;
 
 class UrlGeneratorTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        unset($GLOBALS['TL_AUTO_ITEM']);
-    }
-
     public function testCanBeInstantiated(): void
     {
-        $router = $this->createMock(RouterInterface::class);
-
-        $router
-            ->method('generate')
-            ->willReturn('foo')
-        ;
-
+        $router = $this->createMock(UrlGeneratorInterface::class);
         $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 
         $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $generator);
@@ -50,11 +33,8 @@ class UrlGeneratorTest extends TestCase
 
     public function testCanWriteTheContext(): void
     {
-        $generator = new UrlGenerator(
-            new ParentUrlGenerator(new RouteCollection(), new RequestContext()),
-            $this->mockContaoFramework(),
-            false
-        );
+        $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 
         $context = new RequestContext();
         $generator->setContext($context);
@@ -172,6 +152,8 @@ class UrlGeneratorTest extends TestCase
             ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/bar/article/test']))
             ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
         ;
+
+        unset($GLOBALS['TL_AUTO_ITEM']);
     }
 
     public function testIgnoresAutoItemsIfTheyAreDisabled(): void
@@ -197,6 +179,8 @@ class UrlGeneratorTest extends TestCase
             ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
             ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
         ;
+
+        unset($GLOBALS['TL_AUTO_ITEM']);
     }
 
     public function testFailsIfAParameterIsMissing(): void
@@ -218,11 +202,8 @@ class UrlGeneratorTest extends TestCase
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
 
-        $generator = new UrlGenerator(
-            new ParentUrlGenerator($routes, new RequestContext()),
-            $this->mockContaoFramework(),
-            false
-        );
+        $router = new ParentUrlGenerator($routes, new RequestContext());
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 
         $this->assertSame(
             'https://contao.org/',
@@ -258,11 +239,8 @@ class UrlGeneratorTest extends TestCase
         $context->setHost('contao.org');
         $context->setScheme('https');
 
-        $generator = new UrlGenerator(
-            new ParentUrlGenerator($routes, $context),
-            $this->mockContaoFramework(),
-            false
-        );
+        $router = new ParentUrlGenerator($routes, $context);
+        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
 
         $this->assertSame(
             'https://contao.org/',

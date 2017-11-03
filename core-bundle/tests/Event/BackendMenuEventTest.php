@@ -21,10 +21,9 @@ class BackendMenuEventTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $event = new MenuEvent(
-            $this->createMock(FactoryInterface::class),
-            $this->createMock(ItemInterface::class)
-        );
+        $factory = $this->createMock(FactoryInterface::class);
+        $tree = $this->createMock(ItemInterface::class);
+        $event = new MenuEvent($factory, $tree);
 
         $this->assertInstanceOf('Contao\CoreBundle\Event\MenuEvent', $event);
     }
@@ -32,15 +31,17 @@ class BackendMenuEventTest extends TestCase
     public function testReturnsTheMenuItemFactory(): void
     {
         $factory = $this->createMock(FactoryInterface::class);
-        $event = new MenuEvent($factory, $this->createMock(ItemInterface::class));
+        $tree = $this->createMock(ItemInterface::class);
+        $event = new MenuEvent($factory, $tree);
 
         $this->assertSame($factory, $event->getFactory());
     }
 
     public function testReturnsTheMenuItemTree(): void
     {
+        $factory = $this->createMock(FactoryInterface::class);
         $tree = $this->createMock(ItemInterface::class);
-        $event = new MenuEvent($this->createMock(FactoryInterface::class), $tree);
+        $event = new MenuEvent($factory, $tree);
 
         $this->assertSame($tree, $event->getTree());
     }

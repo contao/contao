@@ -17,7 +17,7 @@ use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class InsecureInstallationListenerTest extends TestCase
@@ -31,42 +31,32 @@ class InsecureInstallationListenerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, $this->getRequest(), Kernel::MASTER_REQUEST);
+        $listener = new InsecureInstallationListener();
 
         $this->expectException(InsecureInstallationException::class);
 
-        $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest($this->mockResponseEvent($this->getRequest()));
     }
 
     public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-
         $request = $this->getRequest();
         $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
         $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/app_dev.php');
 
-        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
-
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest($this->mockResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     public function testDoesNotThrowAnExceptionOnLocalhost(): void
     {
-        $kernel = $this->createMock(KernelInterface::class);
-
         $request = $this->getRequest();
         $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
-        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
-
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($event);
+        $listener->onKernelRequest($this->mockResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -86,5 +76,23 @@ class InsecureInstallationListenerTest extends TestCase
         $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
 
         return $request;
+    }
+
+    /**
+     * Mocks a response event.
+     *
+     * @param Request|null $request
+     *
+     * @return GetResponseEvent
+     */
+    private function mockResponseEvent(Request $request = null): GetResponseEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        if (null === $request) {
+            $request = new Request();
+        }
+
+        return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 }

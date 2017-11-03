@@ -56,25 +56,12 @@ class FilePickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $filesModel = $this->createMock(FilesModel::class);
+        $properties = [
+            'path' => '/foobar',
+            'uuid' => StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea'),
+        ];
 
-        $filesModel
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key): ?string {
-                    switch ($key) {
-                        case 'path':
-                            return '/foobar';
-
-                        case 'uuid':
-                            return StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea');
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
         $adapter = $this->mockAdapter(['findByUuid', 'findByPath']);
 
         $adapter

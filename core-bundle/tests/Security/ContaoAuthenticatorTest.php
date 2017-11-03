@@ -43,20 +43,18 @@ class ContaoAuthenticatorTest extends SecurityTestCase
 
     public function testAuthenticatesTheToken(): void
     {
+        $provider = $this->mockUserProvider();
+
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithScope('frontend'));
 
-        $provider = $this->mockUserProvider();
+        $token = $authenticator->authenticateToken(new ContaoToken($this->mockUser()), $provider, 'frontend');
 
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\ContaoToken',
-            $authenticator->authenticateToken(new ContaoToken($this->mockUser()), $provider, 'frontend')
-        );
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\ContaoToken', $token);
 
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\ContaoToken',
-            $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), $provider, 'frontend')
-        );
+        $token = $authenticator->authenticateToken(new AnonymousToken('frontend', 'anon.'), $provider, 'frontend');
+
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\ContaoToken', $token);
 
         $token = new AnonymousToken('console', 'anon.');
 
@@ -68,34 +66,37 @@ class ContaoAuthenticatorTest extends SecurityTestCase
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
         $authenticator->setContainer($this->mockContainerWithScope('frontend'));
 
+        $token = new PreAuthenticatedToken('foo', 'bar', 'console');
+
         $this->expectException(AuthenticationException::class);
 
-        $authenticator->authenticateToken(
-            new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console'
-        );
+        $authenticator->authenticateToken($token, $this->mockUserProvider(), 'console');
     }
 
     public function testFailsToAuthenticateATokenIfThereIsNoContainerContainer(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
+        $token = new AnonymousToken('frontend', 'anon.');
 
         $this->expectException('LogicException');
 
-        $authenticator->authenticateToken(
-            new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend'
-        );
+        $authenticator->authenticateToken($token, $this->mockUserProvider(), 'frontend');
     }
 
     public function testChecksIfATokenIsSupported(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
+        $token = new ContaoToken($this->mockUser());
 
-        $this->assertTrue($authenticator->supportsToken(new ContaoToken($this->mockUser()), 'frontend'));
-        $this->assertTrue($authenticator->supportsToken(new AnonymousToken('anon.', 'foo'), 'frontend'));
+        $this->assertTrue($authenticator->supportsToken($token, 'frontend'));
 
-        $this->assertFalse(
-            $authenticator->supportsToken(new PreAuthenticatedToken('foo', 'bar', 'console'), 'console')
-        );
+        $token = new AnonymousToken('anon.', 'foo');
+
+        $this->assertTrue($authenticator->supportsToken($token, 'frontend'));
+
+        $token = new PreAuthenticatedToken('foo', 'bar', 'console');
+
+        $this->assertFalse($authenticator->supportsToken($token, 'console'));
     }
 
     /**

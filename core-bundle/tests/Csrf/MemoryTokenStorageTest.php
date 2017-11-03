@@ -22,15 +22,8 @@ class MemoryTokenStorageTest extends TestCase
     {
         $memoryTokenStorage = new MemoryTokenStorage();
 
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Csrf\MemoryTokenStorage',
-            $memoryTokenStorage
-        );
-
-        $this->assertInstanceOf(
-            'Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface',
-            $memoryTokenStorage
-        );
+        $this->assertInstanceOf('Contao\CoreBundle\Csrf\MemoryTokenStorage', $memoryTokenStorage);
+        $this->assertInstanceOf('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface', $memoryTokenStorage);
     }
 
     public function testStoresAndRemovesTokens(): void
@@ -49,10 +42,12 @@ class MemoryTokenStorageTest extends TestCase
         $this->assertSame(['foo' => 'bar', 'baz' => 'bar'], $memoryTokenStorage->getUsedTokens());
 
         $memoryTokenStorage->removeToken('foo');
+
         $this->assertFalse($memoryTokenStorage->hasToken('foo'));
         $this->assertSame(['foo' => null, 'baz' => 'bar'], $memoryTokenStorage->getUsedTokens());
 
         $memoryTokenStorage->removeToken('baz');
+
         $this->assertFalse($memoryTokenStorage->hasToken('baz'));
         $this->assertSame(['foo' => null, 'baz' => null], $memoryTokenStorage->getUsedTokens());
     }

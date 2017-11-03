@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\InitializeController;
-use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,6 +46,6 @@ class InitializeControllerTest extends TestCase
         $controller = new InitializeController();
         $controller->setContainer($container);
 
-        $this->assertInstanceOf(InitializeControllerResponse::class, $controller->indexAction());
+        $this->assertInstanceOf('Contao\CoreBundle\Response\InitializeControllerResponse', $controller->indexAction());
     }
 }

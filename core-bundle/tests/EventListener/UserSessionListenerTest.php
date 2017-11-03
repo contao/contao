@@ -51,29 +51,12 @@ class UserSessionListenerTest extends TestCase
      */
     public function testReplacesTheSessionUponKernelRequest(string $scope, string $userClass, string $sessionBagName): void
     {
-        $sessionValuesToBeSet = [
+        $sessionValues = [
             'foo' => 'bar',
             'lonesome' => 'looser',
         ];
 
-        $request = new Request();
-        $request->attributes->set('_scope', $scope);
-
-        $responseEvent = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
-        $session = $this->mockSession();
-        $user = $this->createPartialMock($userClass, ['__get']);
-
-        $user
-            ->method('__get')
-            ->with($this->equalTo('session'))
-            ->willReturn($sessionValuesToBeSet)
-        ;
-
+        $user = $this->mockClassWithProperties($userClass, ['session' => $sessionValues]);
         $token = $this->createMock(ContaoToken::class);
 
         $token
@@ -88,13 +71,18 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
+        $session = $this->mockSession();
+
+        $request = new Request();
+        $request->attributes->set('_scope', $scope);
+
         $listener = $this->mockListener($session, null, $tokenStorage);
-        $listener->onKernelRequest($responseEvent);
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
 
         /** @var AttributeBagInterface $bag */
         $bag = $session->getBag($sessionBagName);
 
-        $this->assertSame($sessionValuesToBeSet, $bag->all());
+        $this->assertSame($sessionValues, $bag->all());
     }
 
     /**
@@ -117,16 +105,6 @@ class UserSessionListenerTest extends TestCase
      */
     public function testStoresTheSessionUponKernelResponse($scope, $userClass, $userTable): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', $scope);
-
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
         $connection = $this->createMock(Connection::class);
 
         $connection
@@ -155,8 +133,11 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
+        $request = new Request();
+        $request->attributes->set('_scope', $scope);
+
         $listener = $this->mockListener($this->mockSession(), $connection, $tokenStorage);
-        $listener->onKernelResponse($responseEvent);
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
     /**
@@ -177,15 +158,6 @@ class UserSessionListenerTest extends TestCase
      */
     public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
         $session = $this->createMock(SessionInterface::class);
 
         $session
@@ -201,8 +173,11 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($noUserReturn)
         ;
 
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $listener = $this->mockListener($session, null, $tokenStorage);
-        $listener->onKernelRequest($responseEvent);
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
     }
 
     /**
@@ -212,16 +187,6 @@ class UserSessionListenerTest extends TestCase
      */
     public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
         $session = $this->createMock(SessionInterface::class);
 
         $session
@@ -244,8 +209,11 @@ class UserSessionListenerTest extends TestCase
             ->method('update')
         ;
 
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $listener = $this->mockListener($session, $connection, $tokenStorage);
-        $listener->onKernelResponse($responseEvent);
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
     /**
@@ -261,15 +229,6 @@ class UserSessionListenerTest extends TestCase
 
     public function testDoesNotReplaceTheSessionUponSubrequests(): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::SUB_REQUEST
-        );
-
         $session = $this->createMock(SessionInterface::class);
 
         $session
@@ -277,22 +236,15 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $listener = $this->mockListener($session);
-        $listener->onKernelRequest($responseEvent);
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
     }
 
     public function testDoesNotStoreTheSessionUponSubrequests(): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::SUB_REQUEST,
-            new Response()
-        );
-
         $session = $this->createMock(SessionInterface::class);
 
         $session
@@ -307,21 +259,15 @@ class UserSessionListenerTest extends TestCase
             ->method('update')
         ;
 
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
         $listener = $this->mockListener($session, $connection);
-        $listener->onKernelResponse($responseEvent);
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
     public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new GetResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
         $token = $this->createMock(ContaoToken::class);
 
         $token
@@ -342,23 +288,16 @@ class UserSessionListenerTest extends TestCase
             $tokenStorage
         );
 
-        $listener->onKernelRequest($responseEvent);
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $responseEvent = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
         $token = $this->createMock(ContaoToken::class);
 
         $token
@@ -373,13 +312,13 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $listener = $this->mockListener(
-            $this->mockSession(),
-            $this->createMock(Connection::class),
-            $tokenStorage
-        );
+        $connection = $this->createMock(Connection::class);
+        $listener = $this->mockListener($this->mockSession(), $connection, $tokenStorage);
 
-        $listener->onKernelResponse($responseEvent);
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -410,5 +349,41 @@ class UserSessionListenerTest extends TestCase
         $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
 
         return new UserSessionListener($session, $connection, $tokenStorage, $trustResolver, $this->mockScopeMatcher());
+    }
+
+    /**
+     * Mocks a get response event.
+     *
+     * @param Request|null $request
+     *
+     * @return GetResponseEvent
+     */
+    private function mockGetResponseEvent(Request $request = null): GetResponseEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        if (null === $request) {
+            $request = new Request();
+        }
+
+        return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+    }
+
+    /**
+     * Mocks a filter response event.
+     *
+     * @param Request|null $request
+     *
+     * @return FilterResponseEvent
+     */
+    private function mockFilterResponseEvent(Request $request = null): FilterResponseEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        if (null === $request) {
+            $request = new Request();
+        }
+
+        return new FilterResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
     }
 }

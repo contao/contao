@@ -21,45 +21,35 @@ class CombinedFileDumperTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $dumper = new CombinedFileDumper(
-            $this->createMock(Filesystem::class),
-            $this->createMock(PhpFileLoader::class),
-            $this->getTempDir()
-        );
+        $filesystem = $this->createMock(Filesystem::class);
+        $loader = $this->createMock(PhpFileLoader::class);
+        $dumper = new CombinedFileDumper($filesystem, $loader, $this->getTempDir());
 
         $this->assertInstanceOf('Contao\CoreBundle\Config\Dumper\CombinedFileDumper', $dumper);
     }
 
     public function testDumpsTheDataIntoAFile(): void
     {
-        $dumper = new CombinedFileDumper(
-            $this->mockFilesystem("<?php\n\necho 'test';\n"),
-            $this->mockLoader(),
-            $this->getTempDir()
-        );
+        $filesystem = $this->mockFilesystem("<?php\n\necho 'test';\n");
 
+        $dumper = new CombinedFileDumper($filesystem, $this->mockLoader(), $this->getTempDir());
         $dumper->dump(['test.php'], 'test.php');
     }
 
     public function testHandlesCustomHeaders(): void
     {
-        $dumper = new CombinedFileDumper(
-            $this->mockFilesystem("<?php\necho 'foo';\necho 'test';\n"),
-            $this->mockLoader(),
-            $this->getTempDir()
-        );
+        $filesystem = $this->mockFilesystem("<?php\necho 'foo';\necho 'test';\n");
 
+        $dumper = new CombinedFileDumper($filesystem, $this->mockLoader(), $this->getTempDir());
         $dumper->setHeader("<?php\necho 'foo';");
         $dumper->dump(['test.php'], 'test.php');
     }
 
     public function testFailsIfTheHeaderIsInvalid(): void
     {
-        $dumper = new CombinedFileDumper(
-            $this->createMock(Filesystem::class),
-            $this->createMock(PhpFileLoader::class),
-            $this->getTempDir()
-        );
+        $filesystem = $this->createMock(Filesystem::class);
+        $loader = $this->createMock(PhpFileLoader::class);
+        $dumper = new CombinedFileDumper($filesystem, $loader, $this->getTempDir());
 
         $this->expectException('InvalidArgumentException');
 

@@ -80,12 +80,13 @@ class AutomatorCommandTest extends CommandTestCase
         $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
-        $tester = new CommandTester($command);
-
-        $code = $tester->execute([
+        $input = [
             'command' => $command->getName(),
             'task' => 'purgeTempFolder',
-        ]);
+        ];
+
+        $tester = new CommandTester($command);
+        $code = $tester->execute($input);
 
         $this->assertSame(0, $code);
     }
@@ -111,12 +112,13 @@ class AutomatorCommandTest extends CommandTestCase
         $command->setApplication($this->mockApplication());
         $command->setFramework($this->mockContaoFramework());
 
-        $tester = new CommandTester($command);
-
-        $code = $tester->execute([
+        $input = [
             'command' => $command->getName(),
             'task' => 'fooBar',
-        ]);
+        ];
+
+        $tester = new CommandTester($command);
+        $code = $tester->execute($input);
 
         $this->assertSame(1, $code);
         $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());

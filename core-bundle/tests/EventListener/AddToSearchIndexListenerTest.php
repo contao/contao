@@ -35,9 +35,9 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         parent::setUp();
 
-        $this->framework = $this->mockContaoFramework([
-            Frontend::class => $this->mockAdapter(['indexPageIfApplicable']),
-        ]);
+        $adapter = $this->mockAdapter(['indexPageIfApplicable']);
+
+        $this->framework = $this->mockContaoFramework([Frontend::class => $adapter]);
     }
 
     public function testCanBeInstantiated(): void
