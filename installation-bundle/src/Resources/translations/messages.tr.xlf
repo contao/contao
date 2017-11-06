@@ -13,12 +13,12 @@
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>Contao kurulum aracı kilitlenmiş!</target>
+        <target>Contao kurulum aracı kilitlendi!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Kurulum aracı parolayı üç kez üst üste yanlış yazdığınızdan güvenlik nedeniyle kilitlendi. Kilidi açmak için komut satırına &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; komutunu yazın.</target>
+        <target>Kurulum aracı parolayı üç kez üst üste yanlış yazdığınızdan güvenlik nedeniyle kilitlendi. Kilidi açmak için komut satırına &lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt; komutunu yazın.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -58,7 +58,7 @@
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>Parola Onayı</target>
+        <target>Onayla</target>
         
       </trans-unit>
       <trans-unit id="13">
@@ -208,32 +208,32 @@
       </trans-unit>
       <trans-unit id="42">
         <source>template_import</source>
-        <target>Bir kalıp al</target>
+        <target>Bir şablon yükle</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>template_import_explain</source>
-        <target>Buraya &lt;code&gt;templates&lt;/code&gt; klasöründen bir &lt;code&gt;.sql&lt;/code&gt; dosyası yükleyebilirsiniz. Tüm varolan veriler silinir! Yalnız kalıbı yüklemek istiyorsanız, yönetim bölümündeki kalıp yönetimi bölümünü kullanın.</target>
+        <target>Buraya &lt;code&gt;templates&lt;/code&gt; klasöründen bir &lt;code&gt;.sql&lt;/code&gt; dosyası yükleyebilirsiniz. Tüm varolan veriler silinir! Yalnız tema yüklemek istiyorsanız, yönetim bölümündeki tema yönetimi bölümünü kullanın.</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>import_exception</source>
-        <target>Alma işlemi tamamlanamadı! Veritabanınızın güncelliğini ve yüklemeye çalıştığınız kalıp dosyasının kurulu Contao sürümünüzle uyumluluğunu kontrol edin.</target>
+        <target>Yükleme işlemi tamamlanamadı! Veritabanınızın güncelliğini ve yüklemeye çalıştığınız şablon dosyasının kurulu Contao sürümünüzle uyumluluğunu kontrol edin.</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_empty_source</source>
-        <target>Lütfen bir kalıp dosyası seçin!</target>
+        <target>Lütfen bir şablon dosyası seçin!</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>import_data_will_be_deleted</source>
-        <target>Tüm varolan veriler silinecek!</target>
+        <target>Tüm varolan veriler silinecektir!</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>imported_on</source>
-        <target>Kalıp %s üzerine yüklendi.</target>
+        <target>Şablon %s yüklendi.</target>
         
       </trans-unit>
       <trans-unit id="48">
@@ -253,7 +253,7 @@
       </trans-unit>
       <trans-unit id="51">
         <source>template_save</source>
-        <target>Kalıp al</target>
+        <target>Şablon yükle</target>
         
       </trans-unit>
       <trans-unit id="52">
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="53">
         <source>admin_create_explain</source>
-        <target>Contao yönetim bölümüne oturum açabilecek bir yönetim kullanıcısı buradan oluşturulabilir.</target>
+        <target>Burada Contao arka ucuna giriş yapabilecek bir yönetici kullanıcı oluşturabilirsiniz.</target>
         
       </trans-unit>
       <trans-unit id="54">
@@ -308,12 +308,12 @@
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_password_match</source>
-        <target>Şifreler eşleşmedi!</target>
+        <target>Parola eşleşmedi!</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error_password_user</source>
-        <target>Kullanıcı ismi ve şifre aynı olmamalı!</target>
+        <target>Kullanıcı ismi ve parola aynı olmamalı!</target>
         
       </trans-unit>
       <trans-unit id="64">
@@ -328,7 +328,7 @@
       </trans-unit>
       <trans-unit id="66">
         <source>congratulations_explain</source>
-        <target>Contao kuruldu.</target>
+        <target>Contao'yu başarıyla yüklediniz.</target>
         
       </trans-unit>
       <trans-unit id="67">
@@ -338,12 +338,12 @@
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete_explain</source>
-        <target>Lütfen şimdi Contao yönetim bölümüne oturum açarak sistem ayarlarını denetleyin.</target>
+        <target>Lütfen şimdi Contao arka ucuna giriş yaparak sistem ayarlarını kontrol ediniz.</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>back_end</source>
-        <target>Contao yönetim bölümü</target>
+        <target>Contao arka ucu</target>
         
       </trans-unit>
       <trans-unit id="70">
@@ -363,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Çift bülten aboneliği bulundu:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Çift kayıtlar otomatik olarak silinir. Özgün aboneliklerin yedeği &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt; içinde saklanır.</target>
         
       </trans-unit>
     </body>

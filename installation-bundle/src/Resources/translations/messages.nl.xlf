@@ -363,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Er werden duplicaten van nieuwsbrief abonnementen gevonden:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Dubbele invoeren zijn automatisch opgeschoond. Een back-up van de oorspronkelijke inschrijvingen zijn opgeslagen in &lt;/code&gt;1tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>

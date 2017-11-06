@@ -11,9 +11,9 @@
     ],
     "require": {
         "php": "^7.1",
-        "symfony/filesystem": "^3.3",
-        "symfony/framework-bundle": "^3.3",
-        "contao/core-bundle": "^4.4",
+        "symfony/filesystem": "^3.4",
+        "symfony/framework-bundle": "^3.4",
+        "contao/core-bundle": "^4.5",
         "sensio/distribution-bundle": "^5.0",
         "sensiolabs/ansi-to-html": "^1.1"
     },
@@ -51,5 +51,7 @@
             "dev-develop": "4.5.x-dev"
         },
         "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin"
-    }
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }

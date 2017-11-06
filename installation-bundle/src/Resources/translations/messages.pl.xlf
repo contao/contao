@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>PHP nie może tworzyć plików!</target>
+        <target>PHP nie ma uprawnień do zapisu plików!</target>
         
       </trans-unit>
       <trans-unit id="6">
@@ -48,7 +48,7 @@
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Wprowadź hasło, żeby zablokować niepożądany dostęp.</target>
+        <target>Wprowadź hasło, żeby uchronić się przed niepożądanym dostępem.</target>
         
       </trans-unit>
       <trans-unit id="11">
@@ -108,16 +108,17 @@
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>Połączenie z bazą danych jest poprawne.</target>
+        <target>Połączenie z bazą danych zostało nawiązane.</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
+        <target>Nazwa bazy danych nie może zawierać kropek!</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_could_not_connect</source>
-        <target>Nie można się połączyć z bazą danych!</target>
+        <target>Brak połączenia z bazą danych!</target>
         
       </trans-unit>
       <trans-unit id="25">
@@ -137,7 +138,7 @@
       </trans-unit>
       <trans-unit id="28">
         <source>database_user</source>
-        <target>Nazwa</target>
+        <target>Nazwa użytkownika</target>
         
       </trans-unit>
       <trans-unit id="29">
@@ -157,7 +158,7 @@
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables</source>
-        <target>Aktualizuj bazę danych</target>
+        <target>Zaktualizuj bazę danych</target>
         
       </trans-unit>
       <trans-unit id="33">
@@ -167,12 +168,12 @@
       </trans-unit>
       <trans-unit id="34">
         <source>update_tables_confirm</source>
-        <target>Baza danych jest uaktualniona.</target>
+        <target>Baza danych jest aktualna.</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>update_save</source>
-        <target>Uaktualnij bazę danych</target>
+        <target>Aktualizuj bazę danych</target>
         
       </trans-unit>
       <trans-unit id="36">
@@ -227,7 +228,7 @@
       </trans-unit>
       <trans-unit id="46">
         <source>import_data_will_be_deleted</source>
-        <target>Wszystkie istniejące dane zostaną skasowane!</target>
+        <target>Wszystkie istniejące dane zostaną usunięte!</target>
         
       </trans-unit>
       <trans-unit id="47">
@@ -247,7 +248,7 @@
       </trans-unit>
       <trans-unit id="50">
         <source>import_confirm</source>
-        <target>Wszystkie istniejąca dane zostaną skasowane! Naprawdę chcesz kontynuować?</target>
+        <target>Wszystkie istniejąca dane zostaną usunięte! Naprawdę chcesz kontynuować?</target>
         
       </trans-unit>
       <trans-unit id="51">
@@ -272,17 +273,17 @@
       </trans-unit>
       <trans-unit id="55">
         <source>admin_username</source>
-        <target>Nazwa</target>
+        <target>Nazwa użytkownika (login)</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_name</source>
-        <target>Imię i nazwisko</target>
+        <target>Nazwa wyświetlana</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_email</source>
-        <target>Format e-mail</target>
+        <target>Adres e-mail</target>
         
       </trans-unit>
       <trans-unit id="58">
@@ -307,7 +308,7 @@
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_password_match</source>
-        <target>Musisz hasło potwierdzić!</target>
+        <target>Hasła się nie zgadzają!</target>
         
       </trans-unit>
       <trans-unit id="63">
@@ -322,7 +323,7 @@
       </trans-unit>
       <trans-unit id="65">
         <source>congratulations</source>
-        <target>gratulacje!</target>
+        <target>Gratulacje!</target>
         
       </trans-unit>
       <trans-unit id="66">
@@ -337,7 +338,7 @@
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete_explain</source>
-        <target>Teraz możesz zalogować się do backndu Contao i sprawdzić ustawienia systemowe.</target>
+        <target>Teraz możesz zalogować się do backendu Contao i sprawdzić ustawienia systemowe.</target>
         
       </trans-unit>
       <trans-unit id="69">
@@ -362,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Znaleziono zduplikowane subskrypcje newslettera:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Zduplikowane rekordy zostały usunięte automatycznie. Kopia zapasowa oryginalnych subskrypcji została utworzona w &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>
