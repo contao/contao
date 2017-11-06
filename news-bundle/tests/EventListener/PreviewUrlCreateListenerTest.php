@@ -38,7 +38,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $newsModel = $this->mockClassWithProperties(NewsModel::class, ['id' => 1]);
 
         $adapters = [
-            NewsMOdel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
+            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
