@@ -28,7 +28,7 @@ class InsertTagsListener
     /**
      * @var array
      */
-    private $supportedTags = [
+    private static $supportedTags = [
         'event',
         'event_open',
         'event_url',
@@ -60,7 +60,7 @@ class InsertTagsListener
             return $this->replaceFeedInsertTag($elements[1]);
         }
 
-        if (\in_array($key, $this->supportedTags, true)) {
+        if (\in_array($key, self::$supportedTags, true)) {
             return $this->replaceEventInsertTag($key, $elements[1]);
         }
 
