@@ -119,7 +119,7 @@ class RouteLoaderTest extends TestCase
      *
      * @return RoutingPluginInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockRoutePlugin($routeName, $routePath): RoutingPluginInterface
+    private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface
     {
         $collection = new RouteCollection();
         $collection->add($routeName, new Route($routePath));

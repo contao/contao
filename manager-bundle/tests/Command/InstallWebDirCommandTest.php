@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class InstallWebDirCommandTest extends TestCase
+class InstallWebDirCommandTest extends ContaoTestCase
 {
     /**
      * @var InstallWebDirCommand
@@ -34,11 +34,6 @@ class InstallWebDirCommandTest extends TestCase
      * @var Filesystem
      */
     private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $tmpdir;
 
     /**
      * @var Finder
@@ -61,7 +56,6 @@ class InstallWebDirCommandTest extends TestCase
         $this->command->setApplication($this->mockApplication());
 
         $this->filesystem = new Filesystem();
-        $this->tmpdir = sys_get_temp_dir().'/'.uniqid('InstallWebDirCommand_', false);
 
         $this->webFiles = Finder::create()
             ->files()
@@ -82,7 +76,7 @@ class InstallWebDirCommandTest extends TestCase
     {
         parent::tearDown();
 
-        $this->filesystem->remove($this->tmpdir);
+        $this->filesystem->remove($this->getTempDir().'/web');
     }
 
     public function testInstantiation(): void
@@ -99,74 +93,74 @@ class InstallWebDirCommandTest extends TestCase
     public function testCommandRegular(): void
     {
         foreach ($this->webFiles as $file) {
-            $this->assertFileNotExists($this->tmpdir.'/web/'.$file->getFilename());
+            $this->assertFileNotExists($this->getTempDir().'/web/'.$file->getFilename());
         }
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir]);
+        $commandTester->execute(['path' => $this->getTempDir()]);
 
         foreach ($this->webFiles as $file) {
-            $this->assertFileExists($this->tmpdir.'/web/'.$file->getRelativePathname());
+            $this->assertFileExists($this->getTempDir().'/web/'.$file->getRelativePathname());
 
             $expectedString = file_get_contents($file->getPathname());
             $expectedString = str_replace(['{root-dir}', '{vendor-dir}'], ['../app', '../vendor'], $expectedString);
 
-            $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getRelativePathname(), $expectedString);
+            $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getRelativePathname(), $expectedString);
         }
     }
 
     public function testCommandDoesNotOverrideOptionals(): void
     {
         foreach ($this->webFiles as $file) {
-            $this->filesystem->dumpFile($this->tmpdir.'/web/'.$file->getRelativePathname(), 'foobar-content');
+            $this->filesystem->dumpFile($this->getTempDir().'/web/'.$file->getRelativePathname(), 'foobar-content');
         }
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir]);
+        $commandTester->execute(['path' => $this->getTempDir()]);
 
         foreach ($this->webFiles as $file) {
             if (\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
-                $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
+                $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
             } else {
-                $this->assertStringNotEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
+                $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
             }
         }
     }
 
     public function testCommandRemovesInstallPhp(): void
     {
-        $this->filesystem->dumpFile($this->tmpdir.'/web/install.php', 'foobar-content');
+        $this->filesystem->dumpFile($this->getTempDir().'/web/install.php', 'foobar-content');
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir]);
+        $commandTester->execute(['path' => $this->getTempDir()]);
 
-        $this->assertFileNotExists($this->tmpdir.'/web/install.php');
+        $this->assertFileNotExists($this->getTempDir().'/web/install.php');
     }
 
     public function testInstallsAppDevByDefault(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir]);
+        $commandTester->execute(['path' => $this->getTempDir()]);
 
-        $this->assertFileExists($this->tmpdir.'/web/app_dev.php');
+        $this->assertFileExists($this->getTempDir().'/web/app_dev.php');
     }
 
     public function testNotInstallsAppDevOnProd(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir, '--no-dev' => true]);
+        $commandTester->execute(['path' => $this->getTempDir(), '--no-dev' => true]);
 
-        $this->assertFileNotExists($this->tmpdir.'/web/app_dev.php');
+        $this->assertFileNotExists($this->getTempDir().'/web/app_dev.php');
     }
 
     public function testAccesskeyFromArgument(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => 'bar']);
+        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo', '--password' => 'bar']);
 
-        $this->assertFileExists($this->tmpdir.'/.env');
+        $this->assertFileExists($this->getTempDir().'/.env');
 
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
@@ -176,14 +170,14 @@ class InstallWebDirCommandTest extends TestCase
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo', 'bar']);
-        $commandTester->execute(['path' => $this->tmpdir, '--password' => null]);
+        $commandTester->execute(['path' => $this->getTempDir(), '--password' => null]);
 
         $this->assertContains('Please enter a username:', $commandTester->getDisplay());
         $this->assertContains('Please enter a password:', $commandTester->getDisplay());
 
-        $this->assertFileExists($this->tmpdir.'/.env');
+        $this->assertFileExists($this->getTempDir().'/.env');
 
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
@@ -193,12 +187,12 @@ class InstallWebDirCommandTest extends TestCase
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['bar']);
-        $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo']);
+        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo']);
 
         $this->assertNotContains('Please enter a username:', $commandTester->getDisplay());
         $this->assertContains('Please enter a password:', $commandTester->getDisplay());
 
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
@@ -213,19 +207,19 @@ class InstallWebDirCommandTest extends TestCase
 
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo']);
-        $commandTester->execute(['path' => $this->tmpdir, '--password' => 'bar']);
+        $commandTester->execute(['path' => $this->getTempDir(), '--password' => 'bar']);
     }
 
     public function testAccesskeyAppendToDotEnv(): void
     {
-        $this->filesystem->dumpFile($this->tmpdir.'/.env', 'FOO=bar');
+        $this->filesystem->dumpFile($this->getTempDir().'/.env', 'FOO=bar');
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => 'bar']);
+        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo', '--password' => 'bar']);
 
-        $this->assertFileExists($this->tmpdir.'/.env');
+        $this->assertFileExists($this->getTempDir().'/.env');
 
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('FOO', $env);
         $this->assertSame('bar', $env['FOO']);

@@ -13,53 +13,25 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
+use Contao\TestCase\ContaoTestCase;
 use FOS\HttpCache\SymfonyCache\Events;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 
-class ContaoCacheTest extends TestCase
+class ContaoCacheTest extends ContaoTestCase
 {
-    /**
-     * @var ContaoCache
-     */
-    private $cache;
-
-    /**
-     * @var string
-     */
-    private $tmpdir;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
-
-        $fs = new Filesystem();
-        $fs->mkdir($this->tmpdir);
-
-        $this->cache = new ContaoCache($this->createMock(KernelInterface::class), $this->tmpdir);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $fs = new Filesystem();
-        $fs->remove($this->tmpdir);
-    }
-
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoCache', $this->cache);
-        $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache', $this->cache);
+        $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
+
+        $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoCache', $cache);
+        $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache', $cache);
     }
 
     public function testAddsTheEventSubscribers(): void
     {
-        $dispatcher = $this->cache->getEventDispatcher();
+        $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
+        $dispatcher = $cache->getEventDispatcher();
         $preHandleListeners = $dispatcher->getListeners(Events::PRE_HANDLE);
         $headerReplayListener = $preHandleListeners[0][0];
 

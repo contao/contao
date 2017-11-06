@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Test\Cache;
 
 use Contao\ManagerBundle\Cache\BundleCacheClearer;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class BundleCacheClearerTest extends TestCase
+class BundleCacheClearerTest extends ContaoTestCase
 {
     public function testInstantiation(): void
     {
@@ -27,19 +27,15 @@ class BundleCacheClearerTest extends TestCase
 
     public function testClear(): void
     {
-        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
-
         $fs = new Filesystem();
-        $fs->mkdir($tmpdir);
-        $fs->touch($tmpdir.'/bundles.map');
+        $fs->mkdir($this->getTempDir());
+        $fs->touch($this->getTempDir().'/bundles.map');
 
-        $this->assertFileExists($tmpdir.'/bundles.map');
+        $this->assertFileExists($this->getTempDir().'/bundles.map');
 
         $clearer = new BundleCacheClearer($fs);
-        $clearer->clear($tmpdir);
+        $clearer->clear($this->getTempDir());
 
-        $this->assertFileNotExists($tmpdir.'/bundles.map');
-
-        $fs->remove($tmpdir);
+        $this->assertFileNotExists($this->getTempDir().'/bundles.map');
     }
 }

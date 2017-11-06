@@ -14,7 +14,7 @@ namespace Contao\ManagerBundle\Tests\ContaoManager;
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,40 +23,26 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class PluginTest extends TestCase
+class PluginTest extends ContaoTestCase
 {
-    /**
-     * @var Plugin
-     */
-    private $plugin;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->plugin = new Plugin();
-    }
-
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Plugin', $this->plugin);
-        $this->assertTrue(method_exists($this->plugin, 'autoloadModules'));
+        $plugin = new Plugin();
+
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Plugin', $plugin);
+        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $plugin);
+        $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $plugin);
+        $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $plugin);
+        $this->assertTrue(method_exists($plugin, 'autoloadModules'));
     }
 
     public function testGetBundles(): void
     {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $this->plugin);
-
-        $tmpdir = sys_get_temp_dir().'/'.uniqid('PluginTest_', false);
-
         $fs = new Filesystem();
-        $fs->mkdir([$tmpdir.'/foo1', $tmpdir.'/foo2', $tmpdir.'/foo3']);
-        $fs->touch($tmpdir.'/foo3/.skip');
+        $fs->mkdir([$this->getTempDir().'/foo1', $this->getTempDir().'/foo2', $this->getTempDir().'/foo3']);
+        $fs->touch($this->getTempDir().'/foo3/.skip');
 
-        Plugin::autoloadModules($tmpdir);
+        Plugin::autoloadModules($this->getTempDir());
 
         $parser = $this->createMock(ParserInterface::class);
 
@@ -70,20 +56,17 @@ class PluginTest extends TestCase
             )
         ;
 
-        $configs = $this->plugin->getBundles($parser);
+        $plugin = new Plugin();
+        $configs = $plugin->getBundles($parser);
 
         $this->assertCount(17, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
-
-        $fs->remove($tmpdir);
     }
 
     public function testRegisterContainerConfigurationInProd(): void
     {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $this->plugin);
-
         $files = [];
         $loader = $this->createMock(LoaderInterface::class);
 
@@ -103,15 +86,14 @@ class PluginTest extends TestCase
             )
         ;
 
-        $this->plugin->registerContainerConfiguration($loader, []);
+        $plugin = new Plugin();
+        $plugin->registerContainerConfiguration($loader, []);
 
         $this->assertContains('config_prod.yml', $files);
     }
 
     public function testRegisterContainerConfigurationInDev(): void
     {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $this->plugin);
-
         $files = [];
         $loader = $this->createMock(LoaderInterface::class);
 
@@ -131,16 +113,14 @@ class PluginTest extends TestCase
             )
         ;
 
-        $this->plugin->registerContainerConfiguration($loader, []);
+        $plugin = new Plugin();
+        $plugin->registerContainerConfiguration($loader, []);
 
         $this->assertContains('config_dev.yml', $files);
     }
 
     public function testGetRouteCollectionInProd(): void
     {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $this->plugin);
-
-        $resolver = $this->createMock(LoaderResolverInterface::class);
         $kernel = $this->createMock(KernelInterface::class);
 
         $kernel
@@ -149,13 +129,14 @@ class PluginTest extends TestCase
             ->willReturn('prod')
         ;
 
-        $this->assertNull($this->plugin->getRouteCollection($resolver, $kernel));
+        $plugin = new Plugin();
+        $resolver = $this->createMock(LoaderResolverInterface::class);
+
+        $this->assertNull($plugin->getRouteCollection($resolver, $kernel));
     }
 
     public function testGetRouteCollectionInDev(): void
     {
-        $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $this->plugin);
-
         $loader = $this->createMock(LoaderInterface::class);
 
         $loader
@@ -187,8 +168,10 @@ class PluginTest extends TestCase
             ->willReturn('dev')
         ;
 
+        $plugin = new Plugin();
+
         /** @var Route[] $routes */
-        $routes = array_values($this->plugin->getRouteCollection($resolver, $kernel)->all());
+        $routes = array_values($plugin->getRouteCollection($resolver, $kernel)->all());
 
         $this->assertCount(3, $routes);
         $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
