@@ -3,23 +3,23 @@
     <body>
       <trans-unit id="tl_user.faqs.0">
         <source>Allowed FAQ categories</source>
-        <target>İzin verilen SSS kategorileri</target>
+        <target>İzin verilen FAQ kategorileri</target>
       </trans-unit>
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
-        <target>Bu bölümden bir ya da bir kaç SSS kategorisi için erişim izni verilebilir.</target>
+        <target>Burada bir yada bir kaç FAQ kategorisi için erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.0">
         <source>FAQ category permissions</source>
-        <target>SSS kategori izinleri</target>
+        <target>FAQ kategori izinleri</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.1">
         <source>Here you can define the FAQ category permissions.</source>
-        <target>SSS kategori izinleri bu bölümden ayarlanabilir.</target>
+        <target>Burada FAQ kategori izinlerini belirleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
-        <target>SSS izinleri</target>
+        <target>FAQ izinleri</target>
       </trans-unit>
     </body>
   </file>
