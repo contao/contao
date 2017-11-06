@@ -92,9 +92,9 @@ class CombinerTest extends ContaoTestCase
 
         $this->assertRegExp('/^assets\/css\/file1\.css\+file2\.css\+file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
-        $this->assertSame(
-            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n",
-            file_get_contents($this->getTempDir().'/'.$combinedFile)
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/'.$combinedFile,
+            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n"
         );
 
         Config::set('debugMode', true);
@@ -210,11 +210,9 @@ EOF;
             $combiner->getFileUrls()
         );
 
-        $combinedFile = $combiner->getCombinedFile();
-
-        $this->assertSame(
-            "body{color:red}\nbody{color:green}\n",
-            file_get_contents($this->getTempDir().'/'.$combinedFile)
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/'.$combiner->getCombinedFile(),
+            "body{color:red}\nbody{color:green}\n"
         );
 
         Config::set('debugMode', true);
@@ -245,7 +243,7 @@ EOF;
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertRegExp('/^assets\/js\/file1\.js\+file2\.js-[a-z0-9]+\.js$/', $combinedFile);
-        $this->assertSame("file1();\nfile2();\n", file_get_contents($this->getTempDir().'/'.$combinedFile));
+        $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         Config::set('debugMode', true);
 

@@ -63,6 +63,7 @@ class BinaryStringTypeTest extends TestCase
         $platform
             ->expects($this->once())
             ->method('getBinaryTypeDeclarationSQL')
+            ->willReturn('BINARY(255)')
         ;
 
         $platform
@@ -92,6 +93,7 @@ class BinaryStringTypeTest extends TestCase
         $platform
             ->expects($this->once())
             ->method('getBlobTypeDeclarationSQL')
+            ->willReturn('BLOB')
         ;
 
         $this->type->getSQLDeclaration($fieldDefinition, $platform);

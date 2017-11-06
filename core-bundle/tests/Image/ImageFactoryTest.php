@@ -284,7 +284,7 @@ class ImageFactoryTest extends TestCase
     {
         $imageMock = $this->createMock(ImageInterface::class);
         $imageFactory = $this->mockImageFactory();
-        $image = $imageFactory->create($imageMock, (new ResizeConfiguration()));
+        $image = $imageFactory->create($imageMock, new ResizeConfiguration());
 
         $this->assertSameImage($imageMock, $image);
     }
@@ -661,10 +661,6 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, null, $framework);
-
-        $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[\get_class($this), 'emptyHookCallback']],
-        ];
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[\get_class($this), 'emptyHookCallback']],

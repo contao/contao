@@ -96,11 +96,6 @@ class FragmentRegistryPass implements CompilerPassInterface
                     unset($fragmentOptions['method']);
                 }
 
-                // Mark all fragments as lazy so they are lazy loaded using the
-                // proxy manager (which is why we need to require it in the composer.json,
-                // otherwise the lazy definition will just be ignored).
-                $fragment->setLazy(true);
-
                 $fragmentIdentifier = $tag.'.'.$fragmentOptions['type'];
 
                 $this->fragmentRegistry->addMethodCall(
@@ -108,6 +103,11 @@ class FragmentRegistryPass implements CompilerPassInterface
                     [$fragmentIdentifier, $reference, $fragmentOptions]
                 );
             }
+
+            // Mark all fragments as lazy so they are lazy loaded using the
+            // proxy manager (which is why we need to require it in the composer.json,
+            // otherwise the lazy definition will just be ignored).
+            $fragment->setLazy(true);
         }
     }
 

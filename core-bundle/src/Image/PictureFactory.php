@@ -70,7 +70,7 @@ class PictureFactory implements PictureFactoryInterface
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
         $this->framework = $framework;
-        $this->bypassCache = (bool) $bypassCache;
+        $this->bypassCache = $bypassCache;
         $this->imagineOptions = $imagineOptions;
     }
 
@@ -105,7 +105,7 @@ class PictureFactory implements PictureFactoryInterface
         if ($size instanceof PictureConfigurationInterface) {
             $config = $size;
         } else {
-            list($config, $attributes) = $this->createConfig($size);
+            [$config, $attributes] = $this->createConfig($size);
         }
 
         $picture = $this->pictureGenerator->generate(
@@ -138,15 +138,15 @@ class PictureFactory implements PictureFactoryInterface
         if (!isset($size[2]) || !is_numeric($size[2])) {
             $resizeConfig = new ResizeConfiguration();
 
-            if (isset($size[0]) && $size[0]) {
+            if (!empty($size[0])) {
                 $resizeConfig->setWidth($size[0]);
             }
 
-            if (isset($size[1]) && $size[1]) {
+            if (!empty($size[1])) {
                 $resizeConfig->setHeight($size[1]);
             }
 
-            if (isset($size[2]) && $size[2]) {
+            if (!empty($size[2])) {
                 $resizeConfig->setMode($size[2]);
             }
 

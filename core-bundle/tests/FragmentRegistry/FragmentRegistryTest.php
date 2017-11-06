@@ -80,7 +80,7 @@ class FragmentRegistryTest extends TestCase
         $registry = new FragmentRegistry();
         $registry->addFragment('foobar', $fragment, $options);
 
-        $this->assertcount(1, $registry->getFragments());
+        $this->assertCount(1, $registry->getFragments());
     }
 
     public function testSupportsFilteringFragments(): void

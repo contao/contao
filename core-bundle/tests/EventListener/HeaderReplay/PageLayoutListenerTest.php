@@ -72,7 +72,7 @@ class PageLayoutListenerTest extends TestCase
     /**
      * @return array
      */
-    public function onReplayProvider()
+    public function onReplayProvider(): array
     {
         return [
             'No cookie -> desktop' => [false, null, 'desktop'],

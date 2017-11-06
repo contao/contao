@@ -65,7 +65,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * @return array
      */
-    public function refererStoredOnKernelResponseProvider()
+    public function refererStoredOnKernelResponseProvider(): array
     {
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend');

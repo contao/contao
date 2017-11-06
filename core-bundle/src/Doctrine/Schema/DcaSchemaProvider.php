@@ -144,7 +144,7 @@ class DcaSchemaProvider
      */
     private function parseColumnSql(Table $table, string $columnName, string $sql): void
     {
-        list($dbType, $def) = explode(' ', $sql, 2);
+        [$dbType, $def] = explode(' ', $sql, 2);
 
         $type = strtok(strtolower($dbType), '(), ');
         $length = (int) strtok('(), ');

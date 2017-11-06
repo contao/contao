@@ -48,7 +48,7 @@ class Configuration implements ConfigurationInterface
      */
     public function __construct(bool $debug, string $projectDir, string $rootDir, string $defaultLocale)
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
         $this->projectDir = $projectDir;
         $this->rootDir = $rootDir;
         $this->defaultLocale = $defaultLocale;
@@ -190,13 +190,13 @@ class Configuration implements ConfigurationInterface
             }
 
             // Reduce multiple slashes to one
-            if ('/' === substr($chunks[$i], 0, 1)) {
+            if ('/' === $chunks[$i][0]) {
                 $resolved[] = '/';
                 continue;
             }
 
             // Reduce multiple backslashes to one
-            if ('\\' === substr($chunks[$i], 0, 1)) {
+            if ('\\' === $chunks[$i][0]) {
                 $resolved[] = '\\';
                 continue;
             }

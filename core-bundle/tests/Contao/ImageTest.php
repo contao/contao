@@ -798,7 +798,7 @@ class ImageTest extends TestCase
             'height' => 1,
         ]);
 
-        $imageObj->setImportantPart(null);
+        $imageObj->setImportantPart();
 
         $this->assertSame($imageObj->getImportantPart(), [
             'x' => 0,

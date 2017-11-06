@@ -95,17 +95,17 @@ class UserBackendMenuListenerTest extends TestCase
 
         // Test root node
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $tree);
-        $this->assertSame(2, \count($tree->getChildren()));
+        $this->assertCount(2, $tree->getChildren());
 
         // Test category node
         $categoryNode = $tree->getChild('category1');
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $categoryNode);
-        $this->assertSame(2, \count($categoryNode->getChildren()));
+        $this->assertCount(2, $categoryNode->getChildren());
 
         // Test module node
         $moduleNode = $categoryNode->getChild('node1');
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $moduleNode);
-        $this->assertSame(0, \count($moduleNode->getChildren()));
+        $this->assertCount(0, $moduleNode->getChildren());
 
         // Test expanded/collapsed
         $this->assertTrue($tree->getChild('category1')->getDisplayChildren());
@@ -133,6 +133,6 @@ class UserBackendMenuListenerTest extends TestCase
 
         $tree = $event->getTree();
 
-        $this->assertSame(0, \count($tree->getChildren()));
+        $this->assertCount(0, $tree->getChildren());
     }
 }

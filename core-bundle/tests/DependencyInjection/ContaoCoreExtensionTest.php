@@ -925,7 +925,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(PickerBuilder::class, $definition->getClass());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('request_stack', (string) $definition->getArgument(2));
     }
 
     public function testRegistersThePagePickerProvider(): void

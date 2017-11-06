@@ -134,7 +134,7 @@ class WidgetTest extends TestCase
         $this->assertNull($widget->value);
 
         $widget
-            ->setInputCallback(null)
+            ->setInputCallback()
             ->validate() // getPost() should be called once here
         ;
     }

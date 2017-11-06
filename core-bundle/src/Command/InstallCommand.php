@@ -51,7 +51,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * @var array
      */
-    private $emptyDirs = [
+    private static $emptyDirs = [
         'system',
         'system/config',
         'templates',
@@ -61,7 +61,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * @var array
      */
-    private $ignoredDirs = [
+    private static $ignoredDirs = [
         'assets/css',
         'assets/js',
         'system/cache',
@@ -111,7 +111,7 @@ class InstallCommand extends AbstractLockedCommand
      */
     private function addEmptyDirs(): void
     {
-        foreach ($this->emptyDirs as $path) {
+        foreach (self::$emptyDirs as $path) {
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
@@ -139,7 +139,7 @@ class InstallCommand extends AbstractLockedCommand
      */
     private function addIgnoredDirs(): void
     {
-        foreach ($this->ignoredDirs as $path) {
+        foreach (self::$ignoredDirs as $path) {
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 

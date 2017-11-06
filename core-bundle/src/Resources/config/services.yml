@@ -231,7 +231,6 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
-            - "@request_stack"
 
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider

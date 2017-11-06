@@ -122,7 +122,7 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
-            if ($method->getDeclaringClass()->getName() === $class->getName() && !$method->isConstructor()) {
+            if (!$method->isConstructor() && $method->getDeclaringClass()->getName() === $class->getName()) {
                 $commands[] = $method->name;
             }
         }

@@ -129,7 +129,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertNull(TL_REFERER_ID);
-        $this->assertSame(null, TL_SCRIPT);
+        $this->assertNull(TL_SCRIPT);
         $this->assertNull(TL_PATH);
     }
 
@@ -167,10 +167,10 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
-        $this->assertSame(null, TL_MODE);
+        $this->assertNull(TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
-        $this->assertSame(null, TL_SCRIPT);
+        $this->assertNull(TL_SCRIPT);
         $this->assertSame('', TL_PATH);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
@@ -769,15 +769,8 @@ class ContaoFrameworkTest extends TestCase
 
         $config
             ->method('get')
-            ->willReturnCallback(
-                function (string $key) {
-                    if ('timeZone' === $key) {
-                        return 'Europe/Berlin';
-                    }
-
-                    throw new \Exception(sprintf('Unknown key "%s"', $key));
-                }
-            )
+            ->with('timeZone')
+            ->willReturn('Europe/Berlin')
         ;
 
         return $config;

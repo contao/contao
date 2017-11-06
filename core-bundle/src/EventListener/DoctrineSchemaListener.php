@@ -53,7 +53,7 @@ class DoctrineSchemaListener
         $connection = $event->getConnection();
         $data = $event->getTableIndex();
 
-        if (!$connection->getDatabasePlatform() instanceof MySqlPlatform || 'PRIMARY' === $data['name']) {
+        if ('PRIMARY' === $data['name'] || !$connection->getDatabasePlatform() instanceof MySqlPlatform) {
             return;
         }
 

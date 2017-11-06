@@ -100,7 +100,7 @@ class PickerTest extends TestCase
 
     public function testReturnsTheCurrentUrl(): void
     {
-        $this->assertSame(null, $this->picker->getCurrentUrl());
+        $this->assertNull($this->picker->getCurrentUrl());
     }
 
     public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem(): void
@@ -112,7 +112,7 @@ class PickerTest extends TestCase
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
 
-        $this->assertSame(null, $picker->getCurrentUrl());
+        $this->assertNull($picker->getCurrentUrl());
     }
 
     public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems(): void

@@ -64,7 +64,7 @@ class PrettyErrorScreenListener
     /**
      * @var array
      */
-    private $mapper = [
+    private static $mapper = [
         ForwardPageNotFoundException::class => 'forward_page_not_found',
         IncompleteInstallationException::class => 'incomplete_installation',
         InsecureInstallationException::class => 'insecure_installation',
@@ -229,7 +229,7 @@ class PrettyErrorScreenListener
      */
     private function getTemplateForException(\Exception $exception): ?string
     {
-        foreach ($this->mapper as $class => $template) {
+        foreach (self::$mapper as $class => $template) {
             if ($exception instanceof $class) {
                 return $template;
             }

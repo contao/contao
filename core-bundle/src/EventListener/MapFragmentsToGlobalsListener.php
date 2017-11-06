@@ -44,7 +44,7 @@ class MapFragmentsToGlobalsListener implements FrameworkAwareInterface
         $this->framework->initialize();
 
         $this->mapPageTypes();
-        $this->mapFrontEndModules();
+        $this->mapFrontendModules();
         $this->mapContentElements();
     }
 

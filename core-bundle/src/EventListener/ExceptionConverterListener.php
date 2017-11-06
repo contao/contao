@@ -35,7 +35,7 @@ class ExceptionConverterListener
     /**
      * @var array
      */
-    private $mapper = [
+    private static $mapper = [
         AccessDeniedException::class => 'AccessDeniedHttpException',
         ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
         IncompleteInstallationException::class => 'InternalServerErrorHttpException',
@@ -79,7 +79,7 @@ class ExceptionConverterListener
      */
     private function getTargetClass(\Exception $exception): ?string
     {
-        foreach ($this->mapper as $source => $target) {
+        foreach (self::$mapper as $source => $target) {
             if ($exception instanceof $source) {
                 return $target;
             }

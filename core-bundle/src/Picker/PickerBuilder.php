@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 class PickerBuilder implements PickerBuilderInterface
@@ -29,11 +28,6 @@ class PickerBuilder implements PickerBuilderInterface
     private $router;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var PickerProviderInterface[]
      */
     private $providers = [];
@@ -41,13 +35,11 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * @param FactoryInterface $menuFactory
      * @param RouterInterface  $router
-     * @param RequestStack     $requestStack
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, RequestStack $requestStack)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
     {
         $this->menuFactory = $menuFactory;
         $this->router = $router;
-        $this->requestStack = $requestStack;
     }
 
     /**
@@ -130,9 +122,6 @@ class PickerBuilder implements PickerBuilderInterface
             return '';
         }
 
-        return $this->router->generate(
-            'contao_backend_picker',
-            ['context' => $context, 'extras' => $extras, 'value' => $value]
-        );
+        return $this->router->generate('contao_backend_picker', compact('context', 'extras', 'value'));
     }
 }

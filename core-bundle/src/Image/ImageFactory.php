@@ -87,7 +87,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->imagineSvg = $imagineSvg;
         $this->filesystem = $filesystem;
         $this->framework = $framework;
-        $this->bypassCache = (bool) $bypassCache;
+        $this->bypassCache = $bypassCache;
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
     }
@@ -121,7 +121,7 @@ class ImageFactory implements ImageFactoryInterface
             $resizeConfig = $size;
             $importantPart = null;
         } else {
-            list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
+            [$resizeConfig, $importantPart] = $this->createConfig($size, $image);
         }
 
         if (!\is_object($path) || !($path instanceof ImageInterface)) {
@@ -132,7 +132,7 @@ class ImageFactory implements ImageFactoryInterface
             $image->setImportantPart($importantPart);
         }
 
-        if ($resizeConfig->isEmpty() && null === $targetPath) {
+        if (null === $targetPath && $resizeConfig->isEmpty()) {
             return $image;
         }
 
@@ -162,7 +162,7 @@ class ImageFactory implements ImageFactoryInterface
             $image->getDimensions()->getSize()->getHeight(),
         ];
 
-        list($modeX, $modeY) = explode('_', $mode);
+        [$modeX, $modeY] = explode('_', $mode);
 
         if ('left' === $modeX) {
             $importantPart[2] = 1;
@@ -217,15 +217,15 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null];
         }
 
-        if (isset($size[0]) && $size[0]) {
+        if (!empty($size[0])) {
             $config->setWidth($size[0]);
         }
-        if (isset($size[1]) && $size[1]) {
+        if (!empty($size[1])) {
             $config->setHeight($size[1]);
         }
 
         if (!isset($size[2]) || 1 !== substr_count($size[2], '_')) {
-            if (isset($size[2]) && $size[2]) {
+            if (!empty($size[2])) {
                 $config->setMode($size[2]);
             }
 

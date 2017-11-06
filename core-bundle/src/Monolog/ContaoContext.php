@@ -62,10 +62,12 @@ class ContaoContext
      * @param string|null $ip
      * @param string|null $browser
      * @param string|null $source
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(string $func, string $action = null, $username = null, $ip = null, $browser = null, $source = null)
     {
-        if ('' === (string) $func) {
+        if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
         }
 
@@ -140,7 +142,7 @@ class ContaoContext
      */
     public function setUsername(string $username): void
     {
-        $this->username = (string) $username;
+        $this->username = $username;
     }
 
     /**
@@ -180,7 +182,7 @@ class ContaoContext
      */
     public function setBrowser(string $browser): void
     {
-        $this->browser = (string) $browser;
+        $this->browser = $browser;
     }
 
     /**
@@ -200,6 +202,6 @@ class ContaoContext
      */
     public function setSource(string $source): void
     {
-        $this->source = (string) $source;
+        $this->source = $source;
     }
 }

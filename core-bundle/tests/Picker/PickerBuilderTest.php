@@ -19,7 +19,6 @@ use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -44,10 +43,7 @@ class PickerBuilderTest extends ContaoTestCase
             ->willReturn('/_contao/picker?context=page')
         ;
 
-        $factory = new MenuFactory();
-        $requestStack = new RequestStack();
-
-        $this->builder = new PickerBuilder($factory, $router, $requestStack);
+        $this->builder = new PickerBuilder(new MenuFactory(), $router);
     }
 
     public function testCanBeInstantiated(): void

@@ -22,7 +22,7 @@ class PickerConfig implements \JsonSerializable
     /**
      * @var array
      */
-    private $extras = [];
+    private $extras;
 
     /**
      * @var string

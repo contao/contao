@@ -110,7 +110,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateConfigCache(string $cacheDir): void
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
 
         foreach (['autoload.php', 'config.php'] as $file) {
             $files = $this->findConfigFiles($file);
@@ -128,7 +128,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private function generateDcaCache(string $cacheDir): void
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao', true);
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
         $processed = [];
         $files = $this->findDcaFiles();
 

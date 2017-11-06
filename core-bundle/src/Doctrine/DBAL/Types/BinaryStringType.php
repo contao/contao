@@ -28,9 +28,9 @@ class BinaryStringType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
-        if (isset($fieldDeclaration['fixed']) && $fieldDeclaration['fixed']) {
+        if (!empty($fieldDeclaration['fixed'])) {
             return $platform->getBinaryTypeDeclarationSQL($fieldDeclaration);
         }
 

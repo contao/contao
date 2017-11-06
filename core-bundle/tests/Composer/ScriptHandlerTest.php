@@ -89,7 +89,7 @@ class ScriptHandlerTest extends TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        $this->handler->generateRandomSecret($this->mockComposerEvent([]));
+        $this->handler->generateRandomSecret($this->mockComposerEvent());
 
         $this->assertRandomSecretDoesNotExist();
 

@@ -155,7 +155,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 $value = $parameters[$param];
                 unset($parameters[$param]);
 
-                if (!$config->get('useAutoItem') || $hasAutoItem || !\in_array($param, $autoItems, true)) {
+                if ($hasAutoItem || !$config->get('useAutoItem') || !\in_array($param, $autoItems, true)) {
                     return $param.'/'.$value;
                 }
 
@@ -174,7 +174,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param array          $parameters
      * @param int            $referenceType
      */
-    private function prepareDomain(RequestContext $context, array &$parameters, &$referenceType): void
+    private function prepareDomain(RequestContext $context, array &$parameters, int &$referenceType): void
     {
         if (isset($parameters['_ssl'])) {
             $context->setScheme(true === $parameters['_ssl'] ? 'https' : 'http');
@@ -192,11 +192,11 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param RequestContext $context
      * @param array          $parameters
-     * @param string         $referenceType
+     * @param int            $referenceType
      */
-    private function addHostToContext(RequestContext $context, array $parameters, &$referenceType): void
+    private function addHostToContext(RequestContext $context, array $parameters, int &$referenceType): void
     {
-        list($host, $port) = $this->getHostAndPort($parameters['_domain']);
+        [$host, $port] = $this->getHostAndPort($parameters['_domain']);
 
         if ($context->getHost() === $host) {
             return;
@@ -219,11 +219,11 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Extracts host and port from the domain.
      *
-     * @param $domain
+     * @param string $domain
      *
      * @return array
      */
-    private function getHostAndPort($domain): array
+    private function getHostAndPort(string $domain): array
     {
         if (false !== strpos($domain, ':')) {
             return explode(':', $domain, 2);

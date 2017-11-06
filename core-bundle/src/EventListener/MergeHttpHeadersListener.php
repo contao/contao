@@ -137,7 +137,7 @@ class MergeHttpHeadersListener
         $allowOverrides = [];
 
         foreach ($this->headers as $header) {
-            list($name, $content) = explode(':', $header, 2);
+            [$name, $content] = explode(':', $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
 

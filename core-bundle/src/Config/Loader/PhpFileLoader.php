@@ -29,7 +29,7 @@ class PhpFileLoader extends Loader
      */
     public function load($file, $type = null): string
     {
-        list($code, $namespace) = $this->parseFile((string) $file);
+        [$code, $namespace] = $this->parseFile((string) $file);
 
         $code = $this->stripLegacyCheck($code);
 

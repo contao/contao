@@ -41,7 +41,7 @@ class ValidCharactersTest extends TestCase
             ->with(
                 ContaoCoreEvents::SLUG_VALID_CHARACTERS,
                 $this->callback(
-                    function (SlugValidCharactersEvent $event) use (&$path): bool {
+                    function (SlugValidCharactersEvent $event): bool {
                         $this->assertInternalType('array', $event->getOptions());
                         $this->assertArrayHasKey('\pN\p{Ll}', $event->getOptions());
                         $this->assertArrayHasKey('\pN\pL', $event->getOptions());

@@ -42,8 +42,8 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
      */
     public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options): ImageInterface
     {
-        if (!empty($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize'])
-            || !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage'])
+        if ((!empty($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize']))
+            || (!empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']))
         ) {
             @trigger_error('Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. Replace the contao.image.resizer service instead.', E_USER_DEPRECATED);
 
@@ -77,9 +77,9 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             }
         }
 
-        if (isset($GLOBALS['TL_HOOKS']['executeResize'])
+        if ($this->legacyImage
+            && isset($GLOBALS['TL_HOOKS']['executeResize'])
             && \is_array($GLOBALS['TL_HOOKS']['executeResize'])
-            && $this->legacyImage
         ) {
             foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}($this->legacyImage);
@@ -98,9 +98,9 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
      */
     protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options): ImageInterface
     {
-        if (isset($GLOBALS['TL_HOOKS']['getImage'])
+        if ($this->legacyImage
+            && isset($GLOBALS['TL_HOOKS']['getImage'])
             && \is_array($GLOBALS['TL_HOOKS']['getImage'])
-            && $this->legacyImage
         ) {
             foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}(

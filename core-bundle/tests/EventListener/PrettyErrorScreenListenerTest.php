@@ -111,7 +111,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * @return array
      */
-    public function getErrorTypes()
+    public function getErrorTypes(): array
     {
         return [
             [403, new AccessDeniedHttpException('', new AccessDeniedException())],

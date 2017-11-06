@@ -205,7 +205,7 @@ class PaletteManipulator
      */
     private function explode(string $palette): array
     {
-        if ('' === (string) $palette) {
+        if ('' === $palette) {
             return [];
         }
 
@@ -225,10 +225,7 @@ class PaletteManipulator
                 $legend = $legendCount++;
             }
 
-            $legendMap[$legend] = [
-                'fields' => $fields,
-                'hide' => $hide,
-            ];
+            $legendMap[$legend] = compact('fields', 'hide');
         }
 
         return $legendMap;

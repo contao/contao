@@ -151,7 +151,7 @@ class ContaoTableProcessorTest extends TestCase
             ],
         ];
 
-        $processor = $this->mockContaoTableProcessor($requestStack, null, true);
+        $processor = $this->mockContaoTableProcessor($requestStack);
         $record = $processor($data);
 
         /** @var ContaoContext $context */
@@ -270,7 +270,7 @@ class ContaoTableProcessorTest extends TestCase
 
         $this->assertSame('k.jones', $context->getUsername());
 
-        $tokenStorage->setToken(null);
+        $tokenStorage->setToken();
 
         $data = [
             'context' => [

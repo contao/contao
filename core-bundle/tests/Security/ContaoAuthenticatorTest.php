@@ -134,7 +134,7 @@ class ContaoAuthenticatorTest extends SecurityTestCase
                         return $user;
                     }
 
-                    throw new UsernameNotFoundException();
+                    throw new UsernameNotFoundException('Can only load user "frontend" or "backend".');
                 }
             )
         ;

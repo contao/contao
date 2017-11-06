@@ -101,7 +101,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
-            'func' => (string) $context->getFunc(),
+            'func' => $context->getFunc(),
             'ip' => (string) $context->getIp(),
             'browser' => (string) $context->getBrowser(),
         ]);
@@ -153,9 +153,9 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
         $framework = $this->container->get('contao.framework');
 
-        if (!$framework->isInitialized()
-            || !isset($GLOBALS['TL_HOOKS']['addLogEntry'])
+        if (!isset($GLOBALS['TL_HOOKS']['addLogEntry'])
             || !\is_array($GLOBALS['TL_HOOKS']['addLogEntry'])
+            || !$framework->isInitialized()
         ) {
             return;
         }

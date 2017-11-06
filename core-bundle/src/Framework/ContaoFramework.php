@@ -88,7 +88,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var array
      */
-    private $basicClasses = [
+    private static $basicClasses = [
         'System',
         'Config',
         'ClassLoader',
@@ -99,7 +99,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var array
      */
-    private $installRoutes = [
+    private static $installRoutes = [
         'contao_install',
         'contao_install_redirect',
     ];
@@ -348,7 +348,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function includeBasicClasses(): void
     {
-        foreach ($this->basicClasses as $class) {
+        foreach (self::$basicClasses as $class) {
             if (!class_exists($class, false)) {
                 require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
                 class_alias('Contao\\'.$class, $class);
@@ -393,7 +393,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private function validateInstallation(): void
     {
         if (null === $this->request
-            || \in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
+            || \in_array($this->request->attributes->get('_route'), self::$installRoutes, true)
         ) {
             return;
         }

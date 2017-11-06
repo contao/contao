@@ -23,7 +23,7 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * @var array
      */
-    private $files = [
+    private static $files = [
         'commands.yml',
         'listener.yml',
         'services.yml',
@@ -63,7 +63,7 @@ class ContaoCoreExtension extends ConfigurableExtension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        foreach ($this->files as $file) {
+        foreach (self::$files as $file) {
             $loader->load($file);
         }
 
