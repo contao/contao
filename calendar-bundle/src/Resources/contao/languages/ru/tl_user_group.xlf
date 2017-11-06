@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_user_group.calendars_legend">
         <source>Events permissions</source>
+        <target>Разрешения событий</target>
       </trans-unit>
     </body>
   </file>
