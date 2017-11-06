@@ -59,7 +59,7 @@ class InstallTool
         $cache = \System::getContainer()->get('contao.cache');
 
         if ($cache->contains('login-count')) {
-            return (int) ($cache->fetch('login-count')) >= 3;
+            return (int) $cache->fetch('login-count') >= 3;
         }
 
         return false;
@@ -90,12 +90,11 @@ class InstallTool
      */
     public function increaseLoginCount(): void
     {
+        $count = 1;
         $cache = \System::getContainer()->get('contao.cache');
 
         if ($cache->contains('login-count')) {
-            $count = (int) ($cache->fetch('login-count')) + 1;
-        } else {
-            $count = 1;
+            $count = (int) $cache->fetch('login-count') + 1;
         }
 
         $cache->save('login-count', $count);
@@ -223,6 +222,7 @@ class InstallTool
      */
     public function getTemplates(): array
     {
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
@@ -231,7 +231,6 @@ class InstallTool
 
         $templates = [];
 
-        /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $templates[] = $file->getRelativePathname();
         }

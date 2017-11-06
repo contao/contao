@@ -86,7 +86,7 @@ class InstallationController implements ContainerAwareInterface
             return $this->setUpDatabaseConnection();
         }
 
-        $this->warmupSymfonyCache();
+        $this->warmUpSymfonyCache();
 
         if ($installTool->hasOldDatabase()) {
             return $this->render('old_database.html.twig');
@@ -355,6 +355,7 @@ class InstallationController implements ContainerAwareInterface
             return;
         }
 
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()
             ->files()
             ->name('Version*Update.php')
@@ -364,7 +365,6 @@ class InstallationController implements ContainerAwareInterface
 
         $messages = [];
 
-        /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
 
@@ -445,7 +445,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         try {
-            $installTool->importTemplate($template, ('1' === $request->request->get('preserve')));
+            $installTool->importTemplate($template, '1' === $request->request->get('preserve'));
         } catch (DBALException $e) {
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);

@@ -64,7 +64,7 @@ class LanguageResolver
 
         // The implementation differs from the original implementation and also works with .jp browsers
         preg_match_all(
-            '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
+            '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.\d+))?/i',
             $this->requestStack->getCurrentRequest()->headers->get('accept-language'),
             $accepted
         );
@@ -82,11 +82,9 @@ class LanguageResolver
                 }
             }
 
-            $locale = $chunks[0];
-
             // Language only, e.g. "en" or "fr"
-            if (preg_match('/^[a-z]{2}$/', $locale)) {
-                $locales[] = $locale;
+            if (preg_match('/^[a-z]{2}$/', $chunks[0])) {
+                $locales[] = $chunks[0];
             }
         }
 
