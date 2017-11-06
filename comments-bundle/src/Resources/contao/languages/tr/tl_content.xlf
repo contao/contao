@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.1">
         <source>The number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Bir sayfadaki öge sayısını belirtin. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Tek sayfadaki yorum sayısını girin. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.0">
         <source>Moderate</source>
@@ -23,15 +23,15 @@
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yorumlar web sitesinde yayınlanmadan önce onaylanmasu gerekir.</target>
+        <target>Yorumlar web sitesinde yayınlanmadan önce onaylansın.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
-        <target>BBCode kullanılabilsin</target>
+        <target>BBCode kullanılmasına izin ver</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Bu seçenek etkinleştirildiğinde, ziyaretçiler yorumlarında BBCode kullanabilir.</target>
+        <target>Ziyaretçiler yorumlarında BBCode kullanmasına izin ver.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yalnız oturum açmış kullanıcılar yorum yapabilir.</target>
+        <target>Sadece oturum açmış kullanıcıların yorum yapmasına izin ver.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable the security question</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the security question (not recommended).</source>
-        <target>Bu seçenek etkinleştirildiğinde, güvenlik sorusu kullanılmaz (önerilmez).</target>
+        <target>Güvenlik sorusunu devre dışı bırak (tavsiye etmiyoruz).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select the comments template.</source>
-        <target>Buradan kullanılacak yorum kalıbı seçilebilir.</target>
+        <target>Buradan kullanmak istediğiniz yorum kalıbını seçilebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

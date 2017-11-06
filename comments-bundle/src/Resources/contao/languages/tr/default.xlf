@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_reply">
         <source>Reply by</source>
-        <target>Yanıtlayan</target>
+        <target>Cevaplayan</target>
       </trans-unit>
       <trans-unit id="MSC.com_quote">
         <source>%s wrote:</source>
@@ -61,9 +61,19 @@
 View: %s
 Edit: %s
 </source>
+        <target>%s sayfanıza yeni bir yorum yazdı.
+---
+
+1%s
+
+---
+
+Göster: 1%s
+Düzenle: 1%s%s</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>Bu yorumun sayfada gösterilebilmesi için, önce arka uçta yayınlanması gerekiyor.</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
@@ -95,14 +105,14 @@ Cancel: %s
 </source>
         <target>Merhaba %s,
 
-lütfen bu sayfaya yapılan yorumların e-posta yoluyla bildirilmeini istediğinizi onaylayın:
+lütfen bu sayfaya yapılan yorumların e-posta yoluyla bildirilmesini istediğinizi onaylayın:
 
 %s
 
 ---
 
-Onaylıyorum: %s
-Onaylamıyorum: %s
+Onayla: %s
+Vazgeç: %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
@@ -129,12 +139,13 @@ Abonesi olduğunuz bir sayfaya yeni bir yorum yapıldı:
 
 ---
 
-Abonelikten çıkmak için, şu bağlantıya tıklayabilirsiniz:
+Abonelikten çıkmak için, bu bağlantıya tıklayabilirsiniz:
 %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
+        <target>%s yorum üzerine yeni bir cevap.</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplyMessage">
         <source>Hello %s,
@@ -148,6 +159,17 @@ a new reply to a comment has been added on a page you have subscribed to:
 To cancel your subscription, please click here:
 %s
 </source>
+        <target>Merhaba %s,
+
+Abonesi olduğunuz sayfadaki bir yoruma yeni bir cevap yazıldı:
+
+%s
+
+---
+
+Abonelikten çıkmak için, bu bağlantıya tıklayabilirsiniz:
+%s
+</target>
       </trans-unit>
     </body>
   </file>
