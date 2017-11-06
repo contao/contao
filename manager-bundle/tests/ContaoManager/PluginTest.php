@@ -80,7 +80,8 @@ class PluginTest extends ContaoTestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'prod');
-                        \call_user_func($resource, $container);
+
+                        $resource($container);
                     }
                 }
             )
@@ -107,7 +108,8 @@ class PluginTest extends ContaoTestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'dev');
-                        \call_user_func($resource, $container);
+
+                        $resource($container);
                     }
                 }
             )

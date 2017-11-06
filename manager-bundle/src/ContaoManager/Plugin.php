@@ -50,7 +50,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * @var string|null
      */
-    private static $autoloadModules = null;
+    private static $autoloadModules;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.

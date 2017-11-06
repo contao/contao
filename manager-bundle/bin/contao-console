@@ -20,9 +20,9 @@ use Symfony\Component\Debug\Debug;
 set_time_limit(0);
 
 if (file_exists(__DIR__.'/../autoload.php')) {
-    $projectDir = dirname(dirname(__DIR__));
+    $projectDir = dirname(__DIR__, 2);
 } else {
-    $projectDir = dirname(dirname(dirname(dirname(__DIR__))));
+    $projectDir = dirname(__DIR__, 4);
 }
 
 /** @var Composer\Autoload\ClassLoader $loader */

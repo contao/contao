@@ -100,12 +100,12 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $user = $input->getOption('user');
         $password = $input->getOption('password');
 
-        if (true === $input->getOption('no-dev') && (false !== $user || false !== $password)) {
+        if ((false !== $user || false !== $password) && true === $input->getOption('no-dev')) {
             throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
         }
 
         // Return if both username and password are set or both are not set
-        if ($user && $password || false === $user && false === $password) {
+        if (($user && $password) || (false === $user && false === $password)) {
             return;
         }
 
@@ -203,7 +203,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
             return;
         }
 
-        if (true === $input->getOption('no-dev') && ($user || $password)) {
+        if (($user || $password) && true === $input->getOption('no-dev')) {
             throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
         }
 
