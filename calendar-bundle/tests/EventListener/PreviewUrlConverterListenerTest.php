@@ -32,7 +32,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testConvertsThePreviewUrl(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->query->set('calendar', 1);
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
@@ -75,15 +75,15 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testDoesNotConvertThePreviewUrlIfTheCalendarParameterIsNotSet(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new PreviewUrlConvertEvent();
         $framework = $this->mockContaoFramework();
+        $event = new PreviewUrlConvertEvent();
 
         $listener = new PreviewUrlConvertListener($requestStack, $framework);
         $listener->onPreviewUrlConvert($event);
@@ -93,7 +93,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testDoesNotConvertThePreviewUrlIfThereIsNoEvent(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->query->set('calendar', null);
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
