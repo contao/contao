@@ -11,8 +11,8 @@ init:
 
 install:
   - mkdir c:\php && cd c:\php
-  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.1.4-Win32-VC14-x86.zip
-  - 7z x php-7.1.4-Win32-VC14-x86.zip -y >nul
+  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.1.10-Win32-VC14-x86.zip
+  - 7z x php-7.1.10-Win32-VC14-x86.zip -y >nul
   - del *.zip
   - copy php.ini-production php.ini
   - echo date.timezone="UTC" >> php.ini

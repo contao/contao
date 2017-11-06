@@ -16,6 +16,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
+        "contao/test-case": "^1.1",
         "doctrine/doctrine-cache-bundle": "^1.3",
         "friendsofphp/php-cs-fixer": "^2.6",
         "phpunit/phpunit": "^6.1",
@@ -59,6 +60,6 @@
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "prefer-stable": true
 }
