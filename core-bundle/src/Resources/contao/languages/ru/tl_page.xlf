@@ -129,6 +129,14 @@
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Строка формата даты и времени будет проанализирована функцией PHP date()</target>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Допустимые символы алиаса</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Вы можете выбрать определенный набор символов для автоматически генерируемых алиасов.</target>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
         <target>Создать XML-карту веб-сайта</target>
@@ -361,9 +369,9 @@
         <source>Global settings</source>
         <target>Общие настройки</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Настройки для мобильных устройств</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
+        <target>Настройки алиаса</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>

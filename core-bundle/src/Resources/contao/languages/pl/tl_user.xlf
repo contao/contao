@@ -46,8 +46,8 @@
         <target>Ogranicz szerokość</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
-        <source>Limit the maximum width of the back end.</source>
-        <target>Ogranicz maksymalną szerokość backendu.</target>
+        <source>Limit the maximum width of the back end to 1140px.</source>
+        <target>Ogranicz maksymalną szerokość backendu do 1140px.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

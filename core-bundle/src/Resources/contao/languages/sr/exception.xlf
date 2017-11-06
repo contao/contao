@@ -78,7 +78,7 @@
         <target>Апликација је подешена да прослеђује захтев другој страници, међутим, одредишна страница не постоји или није објављена.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
         <target>Овај проблем мора да буде отклоњен од стране администратора сајта. Ако сте ви посетилац, не можете ништа друго да учините осим да &lt;a href=&quot;%s&quot;&gt;обавестите вебмастера&lt;/a&gt; да постоји проблем.</target>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
@@ -90,7 +90,7 @@
         <target>Не постоји root страница која одговара захтеваном језику и/или домену.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
         <target>Ако сте јасно дефинисали језик, покушајте &lt;a href=&quot;%s&quot;&gt;да идете на почетак&lt;/a&gt; и проверите да ли ћете бити преусмерени. Иначе, &lt;a href=&quot;%s&quot;&gt;обратите се вебмастеру&lt;/a&gt; и обавестите га да постоји проблем.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
@@ -118,8 +118,8 @@
         <target>Ваш захтев је упућен на сајт који још нема нити једну објављену страницу.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>Врло вероватно, сајт је у фази израде и биће онлајн за неколико дана. Ако и даље мислите да је постоји проблем, &lt;a href=&quot;%s&quot;&gt;обавестите вебмастера&lt;/a&gt; о томе.</target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
+        <target>Врло вероватно, сајт је у фази израде и биће онлајн за неколико дана. Ако и даље мислите да постоји проблем, &lt;a href=&quot;%s&quot;&gt;обавестите вебмастера&lt;/a&gt; о томе.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

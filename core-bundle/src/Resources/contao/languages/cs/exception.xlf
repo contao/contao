@@ -78,8 +78,7 @@
         <target>Stránka odkazuje na externí stránku, která buď neexistuje nebo ještě nebyly zveřejněná. </target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>Zdá se, že správce stránky musí něco opravit. Jste-li návštěvník stránky, můžete kontaktovat &lt;a href=&quot;%s&quot;&gt;správce webu&lt;/a&gt; a sdělit mu, že není něco v pořádku. </target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -90,8 +89,7 @@
         <target>Neexistuje žádná kořenová stránka, která by určoval požadovaný jazyk a/nebo název domény.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>Pokud jste na konci domény zadali zkratku pro jazyk, zkuste se &lt;a href=&quot;%s&quot;&gt;vrátit o úroveň výš&lt;/a&gt; a počkejte, na jakou stránku budete přesměrováni. Případně &lt;a href=&quot;%s&quot;&gt;kontaktujte správce stránky&lt;/a&gt; a dejte mu vědět, že není něco v pořádku.</target>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>
@@ -118,8 +116,7 @@
         <target>Nacházíte se na stránce, která momentálně nemá žádnou zveřejněnou stránku.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>Nejspíš se stránka nachází ve vývojové fázi a bude zveřejněná za několik dní. Pokud se nadále domníváte, že je něco špatně, &lt;a href=&quot;%s&quot;&gt;kontaktujte správce webu&lt;/a&gt; a sdělte mu to. </target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

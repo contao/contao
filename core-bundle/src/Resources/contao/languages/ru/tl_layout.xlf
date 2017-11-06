@@ -230,8 +230,8 @@
         <target>Объединять скрипты</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
-        <target>Объединять .css и .js файлы (не включать для HTTP/2).</target>
+        <source>Combine the .css and .js files (recommended).</source>
+        <target>Объединять .css- и .js-файлы (рекомендуется).</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>

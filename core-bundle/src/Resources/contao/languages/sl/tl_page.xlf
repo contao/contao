@@ -129,6 +129,12 @@
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Oblika zapisa datuma in časa bo razčlenjena s pomočjo funkcije PHP date().</target>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
         <target>Naredi XML s strukturo spletnega mesta</target>
@@ -352,9 +358,8 @@
         <source>Global settings</source>
         <target>Globalne nastavitve</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Mobile nastavitve</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>

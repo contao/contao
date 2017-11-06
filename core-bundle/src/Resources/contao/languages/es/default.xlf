@@ -2295,6 +2295,21 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Debe agregar una página raíz en la estructura del sitio para introducir metadatos de archivo.</target>
       </trans-unit>
+      <trans-unit id="MSC.pagination">
+        <source>Pagination menu</source>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicodeLowercase">
+        <source>Unicode numbers and lowercase letters</source>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicode">
+        <source>Unicode numbers and letters</source>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.asciiLowercase">
+        <source>ASCII numbers and lowercase letters</source>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.ascii">
+        <source>ASCII numbers and letters</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

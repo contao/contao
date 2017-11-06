@@ -76,8 +76,7 @@
         <target>Az alkalmazás úgy lett beállítva, hogy továbbítsa a kérést egy másik oldalra, de a cél oldal nem létezik, vagy nem tették közzé.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>Ezt ki kell javítsa a rendszergazda a honlapon. Ha ön látogató, akkor nem tehet semmit, kivéve, hogy &lt;a href=&quot;%s&quot;&gt;ír a webmesternek&lt;/a&gt; és tudatja vele a problémát.</target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -88,8 +87,7 @@
         <target>Nincs a honlapnak gyökér oldala, amely megfelel a kért nyelvnek és/vagy domén névnek.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>Ha egy nyelvet beállított, próbáljon a &lt;a href=&quot;%s&quot;&gt;nyitóoldalra menni&lt;/a&gt; és nézze meg hová van átirányítva. Ha ez nem válik be, &lt;a href=&quot;%s&quot;&gt;írjon a webmesternek&lt;/a&gt;, és tudassa vele a problémát.</target>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>
@@ -116,8 +114,7 @@
         <target>Kérését olyan weboldalra vonatkozik, amely még nem tartalmaz közzétett oldalt.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>Valószínűleg a honlap még fejlesztés alatt áll, és néhány napon belül elérhető lesz. Ha még mindig úgy gondolja, hogy valami nincs rendben, akkor &lt;a href=&quot;%s&quot;&gt;lépjen kapcsolatba a webmesterrel&lt;/a&gt; és tudassa vele a problémát.</target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

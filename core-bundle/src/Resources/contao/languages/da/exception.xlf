@@ -74,8 +74,7 @@
         <target>Applikationen er blevet konfigureret til at videresende anmodninger til en anden side, men siden eksisterer ikke eller er ikke blevet offentliggjort.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>Dette er noget der bør fikses af administratoren af websitet. Hvis du er en almindelig besøgende bruger, er der intet du kan gøre udover at &lt;a href=&quot;%s&quot;&gt;kontakte webmasteren&lt;/a&gt; for at lade ham vide at der er noget galt.</target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -86,8 +85,7 @@
         <target>Der er ingen rod side for websitet der matcher der anmodet sprog eller domæne navn.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>Hvis du angivet et sprog direkte, så prøv at &lt;a href=&quot;%s&quot;&gt;gå til det øverste niveau&lt;/a&gt; og se om du bliver omdirigeret. Ellers &lt;a href=&quot;%s&quot;&gt;kontakt webmasteren&lt;/a&gt; og lad ham vide at noget muligvis er galt.</target>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>
@@ -114,8 +112,7 @@
         <target>Din efterspørgsel blev sendt til et website der endnu ikke nogen udgivne sider.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>Websitet er højst sandsynlighed stadig under udvikling og vil være tilgængeligt online indenfor et par dage. Hvis du stadig tror der er noget galt, &lt;a href=&quot;%s&quot;&gt;kontakt webmasteren&lt;/a&gt; og lad ham vide det.</target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

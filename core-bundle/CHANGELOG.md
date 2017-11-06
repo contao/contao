@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.0-beta1 (2017-11-06)
 
  * Use ausi/slug-generator to auto-generate aliases (see #1016).
  * Allow to register hooks listeners as tagged services (see #1094).

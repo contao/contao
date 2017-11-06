@@ -77,8 +77,7 @@
         <target>应用程序已配置将请求指向另外的页面，然而，目标页面不存在或者没有发布。</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>这里需要网站管理员修复。如果您是一个参观者，请联系&lt;a href=&quot;%s&quot;&gt;网站管理员&lt;/a&gt;，将问题发送给网站管理员。</target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -89,8 +88,7 @@
         <target>没有与所请求的语言 和/或 域名匹配的网站根页面。</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>如果您明确的设置一门语言，请尝试到&lt;a href=&quot;%s&quot;&gt;顶层&lt;/a&gt;看看是否被重定向。如果解决不了，请将问题发送给&lt;a href=&quot;%s&quot;&gt;网站管理员&lt;/a&gt;。</target>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>
@@ -117,8 +115,7 @@
         <target>您的请求已映射到一个网站，该网站还没有任何已发布页面。</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>有可能的是，网站依然在开发阶段，并将在几天内上线，如果您还认为有问题，请将问题发送给&lt;a href=&quot;%s&quot;&gt;网站管理员&lt;/a&gt;。</target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

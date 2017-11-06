@@ -78,8 +78,8 @@
         <target>L'applicazione è stata configurata per inoltrare la richiesta a un'altra pagina, ma la pagina di destinazione non esiste o non è stata pubblicata.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>Questo problema deve essere risolto da parte dell'amministratore del sito. Se sei un visitatore, segnala il problema al  &lt;a href=&quot;%s&quot;&gt;webmaster&lt;/a&gt; per comunicarli che vi è qualcosa che non funziona.</target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
+        <target>Questo problema deve essere risolto da parte dell'amministratore del sito. Se sei un visitatore, segnala il problema all'&lt;a href=&quot;%s&quot;&gt;amministratore del sito&lt;/a&gt;per comunicargli che c'è qualcosa che non funziona.</target>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -90,8 +90,8 @@
         <target>Non esiste una pagina root del sito che corrisponda alla lingua richiesta e/o al nome del dominio.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>Se è stata impostata in modo esplicito una lingua, provare a &lt;a href=&quot;%s&quot;&gt;passare al livello superiore&lt;/a&gt;. In caso contrario è possibile &lt;a href=&quot;%s&quot;&gt;contattare il webmaster&lt;/a&gt; e comunicargli il problema.</target>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
+        <target>Se è stata impostata in modo esplicito una lingua, provare a &lt;a href=&quot;%s&quot;&gt;passare al livello superiore&lt;/a&gt;. In caso contrario è possibile &lt;a href=&quot;%s&quot;&gt;contattare l'amministratore del sito&lt;/a&gt; e comunicargli il problema.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>
@@ -118,8 +118,8 @@
         <target>La richiesta è stata indirizzata ad un sito che non contiene ancora nessuna pagina pubblicata.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>Molto probabilmente il sito è ancora in fase di sviluppo e sarà online tra pochi giorni. Se si vuole comunicare il problema, è possibile &lt;a href=&quot;%s&quot;&gt;contattare il webmaster&lt;/a&gt; e segnalare l'anomalia.</target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
+        <target>Molto probabilmente il sito è ancora in fase di sviluppo e sarà online tra pochi giorni. Se si vuole comunicare il problema, è possibile &lt;a href=&quot;%s&quot;&gt;contattare l'amministratore del sito&lt;/a&gt; e segnalare l'anomalia.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

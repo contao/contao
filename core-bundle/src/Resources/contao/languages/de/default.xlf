@@ -2299,6 +2299,26 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Sie müssen einen Startpunkt in der Seitenstruktur anlegen, um Metadaten einzugeben.</target>
       </trans-unit>
+      <trans-unit id="MSC.pagination">
+        <source>Pagination menu</source>
+        <target>Seitenumbruch-Menü</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicodeLowercase">
+        <source>Unicode numbers and lowercase letters</source>
+        <target>Unicode-Zahlen und -Kleinbuchstaben</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicode">
+        <source>Unicode numbers and letters</source>
+        <target>Unicode-Zahlen und -Buchstaben</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.asciiLowercase">
+        <source>ASCII numbers and lowercase letters</source>
+        <target>ASCII-Zahlen und -Kleinbuchstaben</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.ascii">
+        <source>ASCII numbers and letters</source>
+        <target>ASCII-Zahlen und -Buchstaben</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

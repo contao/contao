@@ -1385,9 +1385,11 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.profile">
         <source>Profile</source>
+        <target>Profiel</target>
       </trans-unit>
       <trans-unit id="MSC.profileTitle">
         <source>User profile</source>
+        <target>Gebruiker profiel</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
@@ -1815,9 +1817,11 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
+        <target>Meldingen</target>
       </trans-unit>
       <trans-unit id="MSC.noSystemMessages">
         <source>Currently there are no alerts.</source>
+        <target>Momenteel geen meldingen.</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -2294,6 +2298,26 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>U dient een startpagina toe te voegen aan de site-structuur om meta-informatie op te kunnen slaan.</target>
+      </trans-unit>
+      <trans-unit id="MSC.pagination">
+        <source>Pagination menu</source>
+        <target>Paginering menu</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicodeLowercase">
+        <source>Unicode numbers and lowercase letters</source>
+        <target>Unicode nummers en kleine letters</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicode">
+        <source>Unicode numbers and letters</source>
+        <target>Unicode nummers en letters</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.asciiLowercase">
+        <source>ASCII numbers and lowercase letters</source>
+        <target>ASCII nummers en kleine letters</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.ascii">
+        <source>ASCII numbers and letters</source>
+        <target>ASCII nummers en letters</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

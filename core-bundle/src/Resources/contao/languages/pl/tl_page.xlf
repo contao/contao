@@ -129,6 +129,12 @@
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP function date().</target>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
         <target>Utwórz mapę strony Google XML</target>
@@ -361,9 +367,8 @@
         <source>Global settings</source>
         <target>Ustawienia globalne</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Ustawienia mobilne</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>

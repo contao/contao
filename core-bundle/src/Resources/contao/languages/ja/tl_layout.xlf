@@ -230,8 +230,8 @@
         <target>スクリプトを統合</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
-        <target>.cssと.jsのファイルの統合をを行います。(HTTP/2の場合は有効にしないでください。)</target>
+        <source>Combine the .css and .js files (recommended).</source>
+        <target>.cssや.jsファイルを結合します。(推奨設定)</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>

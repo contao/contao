@@ -230,8 +230,7 @@
         <target>合并脚本</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
-        <target>合并.css和.js文件 (HTTP/2不启用).</target>
+        <source>Combine the .css and .js files (recommended).</source>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
