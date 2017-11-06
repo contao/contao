@@ -29,7 +29,7 @@ class InsertTagsListener
     /**
      * @var array
      */
-    private $supportedTags = [
+    private static $supportedTags = [
         'faq',
         'faq_open',
         'faq_url',
@@ -56,7 +56,7 @@ class InsertTagsListener
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
 
-        if (!\in_array($key, $this->supportedTags, true)) {
+        if (!\in_array($key, self::$supportedTags, true)) {
             return false;
         }
 
