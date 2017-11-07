@@ -364,7 +364,7 @@ class Result
 	 */
 	public function count()
 	{
-		return count($this->resultSet);
+		return \count($this->resultSet);
 	}
 
 

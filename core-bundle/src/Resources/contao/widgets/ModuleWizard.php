@@ -76,7 +76,7 @@ class ModuleWizard extends \Widget
 		{
 			$arrSections = \StringUtil::deserialize($objRow->sections);
 
-			if (!empty($arrSections) && is_array($arrSections))
+			if (!empty($arrSections) && \is_array($arrSections))
 			{
 				foreach ($arrSections as $v)
 				{
@@ -97,7 +97,7 @@ class ModuleWizard extends \Widget
 		}
 
 		// Make sure there is at least an empty array
-		if (!is_array($this->varValue) || !$this->varValue[0])
+		if (!\is_array($this->varValue) || !$this->varValue[0])
 		{
 			$this->varValue = array(array('mod'=>0, 'col'=>'main'));
 		}
@@ -136,7 +136,7 @@ class ModuleWizard extends \Widget
   <tbody class="sortable">';
 
 		// Add the input fields
-		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
+		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$options = '';
 

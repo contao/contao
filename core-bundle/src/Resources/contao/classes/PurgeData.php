@@ -51,7 +51,7 @@ class PurgeData extends \Backend implements \executable
 		{
 			$purge = \Input::post('purge');
 
-			if (!empty($purge) && is_array($purge))
+			if (!empty($purge) && \is_array($purge))
 			{
 				foreach ($purge as $group=>$jobs)
 				{

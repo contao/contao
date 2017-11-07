@@ -61,7 +61,7 @@ class ModuleLoader
 
 		foreach (static::$legacy as $bundleName => $module)
 		{
-			if (in_array($bundleName, $bundles))
+			if (\in_array($bundleName, $bundles))
 			{
 				$bundles[] = $module;
 			}

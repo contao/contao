@@ -110,7 +110,7 @@ class TextField extends \Widget
 	 */
 	protected function validator($varInput)
 	{
-		if (is_array($varInput))
+		if (\is_array($varInput))
 		{
 			return parent::validator($varInput);
 		}
@@ -177,7 +177,7 @@ class TextField extends \Widget
 			return '';
 		}
 
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
 		}

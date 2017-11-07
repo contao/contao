@@ -46,7 +46,7 @@ class SqlFileParser
 			$subpatterns = array();
 
 			// Unset comments and empty lines
-			if (preg_match('/^[#-]+/', $v) || !strlen(trim($v)))
+			if (preg_match('/^[#-]+/', $v) || !\strlen(trim($v)))
 			{
 				unset($data[$k]);
 				continue;
@@ -71,7 +71,7 @@ class SqlFileParser
 				$key = $key_name[1];
 
 				// Create definitions
-				if (in_array($first, array('KEY', 'PRIMARY', 'PRIMARY KEY', 'FOREIGN', 'FOREIGN KEY', 'INDEX', 'UNIQUE', 'FULLTEXT', 'CHECK')))
+				if (\in_array($first, array('KEY', 'PRIMARY', 'PRIMARY KEY', 'FOREIGN', 'FOREIGN KEY', 'INDEX', 'UNIQUE', 'FULLTEXT', 'CHECK')))
 				{
 					if (strncmp($first, 'PRIMARY', 7) === 0)
 					{

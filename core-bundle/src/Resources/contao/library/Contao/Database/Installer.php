@@ -64,7 +64,7 @@ class Installer extends \Controller
 
 		foreach ($arrOperations as $command=>$label)
 		{
-			if (is_array($sql_command[$command]))
+			if (\is_array($sql_command[$command]))
 			{
 				// Headline
 				$return .= '
@@ -124,7 +124,7 @@ class Installer extends \Controller
 			{
 				foreach ($categories as $category=>$fields)
 				{
-					if (is_array($fields))
+					if (\is_array($fields))
 					{
 						foreach ($fields as $name=>$sql)
 						{
@@ -149,13 +149,13 @@ class Installer extends \Controller
 		// Add or change fields
 		foreach ($sql_target as $k=>$v)
 		{
-			if (in_array($k, $create))
+			if (\in_array($k, $create))
 			{
 				continue;
 			}
 
 			// Fields
-			if (is_array($v['TABLE_FIELDS']))
+			if (\is_array($v['TABLE_FIELDS']))
 			{
 				foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 				{
@@ -171,7 +171,7 @@ class Installer extends \Controller
 			}
 
 			// Create definitions
-			if (is_array($v['TABLE_CREATE_DEFINITIONS']))
+			if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
 			{
 				foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 				{
@@ -187,7 +187,7 @@ class Installer extends \Controller
 			}
 
 			// Move auto_increment fields to the end of the array
-			if (is_array($return['ALTER_ADD']))
+			if (\is_array($return['ALTER_ADD']))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv)
 				{
@@ -196,7 +196,7 @@ class Installer extends \Controller
 				}
 			}
 
-			if (is_array($return['ALTER_CHANGE']))
+			if (\is_array($return['ALTER_CHANGE']))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv)
 				{
@@ -216,10 +216,10 @@ class Installer extends \Controller
 		// Drop fields
 		foreach ($sql_current as $k=>$v)
 		{
-			if (!in_array($k, $drop))
+			if (!\in_array($k, $drop))
 			{
 				// Create definitions
-				if (is_array($v['TABLE_CREATE_DEFINITIONS']))
+				if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
 				{
 					foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 					{
@@ -231,7 +231,7 @@ class Installer extends \Controller
 				}
 
 				// Fields
-				if (is_array($v['TABLE_FIELDS']))
+				if (\is_array($v['TABLE_FIELDS']))
 				{
 					foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 					{
@@ -245,7 +245,7 @@ class Installer extends \Controller
 		}
 
 		// HOOK: allow third-party developers to modify the array (see #3281)
-		if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands']))
+		if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && \is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
 			{
@@ -273,7 +273,7 @@ class Installer extends \Controller
 
 		foreach ($files as $file)
 		{
-			if (in_array($file->getBasename(), $processed))
+			if (\in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
@@ -292,7 +292,7 @@ class Installer extends \Controller
 		ksort($return);
 
 		// HOOK: allow third-party developers to modify the array (see #6425)
-		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca']))
+		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && \is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
 			{
@@ -325,7 +325,7 @@ class Installer extends \Controller
 		ksort($return);
 
 		// HOOK: allow third-party developers to modify the array (see #3281)
-		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile']))
+		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && \is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback)
 			{
@@ -390,12 +390,12 @@ class Installer extends \Controller
 					}
 
 					// Default values
-					if (in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stristr($field['extra'], 'auto_increment') || $field['default'] === null || strtolower($field['null']) == 'null')
+					if (\in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stristr($field['extra'], 'auto_increment') || $field['default'] === null || strtolower($field['null']) == 'null')
 					{
 						unset($field['default']);
 					}
 					// Date/time constants (see #5089)
-					elseif (in_array(strtolower($field['default']), array('current_date', 'current_time', 'current_timestamp')))
+					elseif (\in_array(strtolower($field['default']), array('current_date', 'current_time', 'current_timestamp')))
 					{
 						$field['default'] = "default " . $field['default'];
 					}
@@ -455,7 +455,7 @@ class Installer extends \Controller
 		}
 
 		// HOOK: allow third-party developers to modify the array (see #3281)
-		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDB']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDB']))
+		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDB']) && \is_array($GLOBALS['TL_HOOKS']['sqlGetFromDB']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
 			{

@@ -83,7 +83,7 @@ class CheckBox extends \Widget
 	{
 		$arrOptions = array();
 
-		if (!$this->multiple && count($this->arrOptions) > 1)
+		if (!$this->multiple && \count($this->arrOptions) > 1)
 		{
 			$this->arrOptions = array($this->arrOptions[0]);
 		}

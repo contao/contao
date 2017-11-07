@@ -260,7 +260,7 @@ class tl_style_sheet extends Backend
 
 		$session = $objSession->get('style_sheet_updater');
 
-		if (!is_array($session) || empty($session))
+		if (!\is_array($session) || empty($session))
 		{
 			return;
 		}
@@ -287,7 +287,7 @@ class tl_style_sheet extends Backend
 	public function scheduleUpdate($id)
 	{
 		// The onsubmit_callback passes a DataContainer object
-		if (is_object($id))
+		if (\is_object($id))
 		{
 			$id = $id->id;
 		}
@@ -329,7 +329,7 @@ class tl_style_sheet extends Backend
 		{
 			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. $row['mediaQuery'] . $cc .'</span>' . "</div>\n";
 		}
-		elseif (!empty($media) && is_array($media))
+		elseif (!empty($media) && \is_array($media))
 		{
 			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. implode(', ', $media) . $cc .'</span>' . "</div>\n";
 		}

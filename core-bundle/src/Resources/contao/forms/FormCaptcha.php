@@ -136,7 +136,7 @@ class FormCaptcha extends \Widget
 
 		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
 
-		if (!is_array($arrCaptcha) || !strlen($arrCaptcha['key']) || !strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3) || \Input::post($arrCaptcha['key'].'_name'))
+		if (!\is_array($arrCaptcha) || !\strlen($arrCaptcha['key']) || !\strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3) || \Input::post($arrCaptcha['key'].'_name'))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);

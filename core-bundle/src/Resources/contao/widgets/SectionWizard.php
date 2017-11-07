@@ -60,7 +60,7 @@ class SectionWizard extends \Widget
 		$arrButtons = array('copy', 'delete', 'drag');
 
 		// Make sure there is at least an empty array
-		if (!is_array($this->varValue) || !$this->varValue[0])
+		if (!\is_array($this->varValue) || !$this->varValue[0])
 		{
 			$this->varValue = array(array(''));
 		}
@@ -79,7 +79,7 @@ class SectionWizard extends \Widget
   <tbody class="sortable">';
 
 		// Add the input fields
-		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
+		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
     <tr>

@@ -91,7 +91,7 @@ class ModuleFlash extends \Module
 			$this->Template->height = floor($intMaxWidth * $size[1] / $size[0]);
 		}
 
-		if (strlen($this->flashvars))
+		if (\strlen($this->flashvars))
 		{
 			$this->Template->flashvars .= '&' . \StringUtil::decodeEntities($this->flashvars);
 		}

@@ -146,7 +146,7 @@ class ImageSize extends \Widget
 					return true;
 				}
 			}
-			elseif (in_array($varInput, $arrValues))
+			elseif (\in_array($varInput, $arrValues))
 			{
 				return true;
 			}
@@ -162,7 +162,7 @@ class ImageSize extends \Widget
 	 */
 	public function generate()
 	{
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
 		}

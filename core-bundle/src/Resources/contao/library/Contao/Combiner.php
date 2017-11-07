@@ -223,9 +223,9 @@ class Combiner extends \System
 				$name = $arrFile['name'];
 
 				// Strip the web/ prefix (see #328)
-				if (strncmp($name, $this->strWebDir . '/', strlen($this->strWebDir) + 1) === 0)
+				if (strncmp($name, $this->strWebDir . '/', \strlen($this->strWebDir) + 1) === 0)
 				{
-					$name = substr($name, strlen($this->strWebDir) + 1);
+					$name = substr($name, \strlen($this->strWebDir) + 1);
 				}
 
 				// Add the media query (see #7070)
@@ -328,7 +328,7 @@ class Combiner extends \System
 			}
 
 			// HOOK: modify the file content
-			if (isset($GLOBALS['TL_HOOKS']['getCombinedFile']) && is_array($GLOBALS['TL_HOOKS']['getCombinedFile']))
+			if (isset($GLOBALS['TL_HOOKS']['getCombinedFile']) && \is_array($GLOBALS['TL_HOOKS']['getCombinedFile']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getCombinedFile'] as $callback)
 				{
@@ -353,7 +353,7 @@ class Combiner extends \System
 		$objFile->close();
 
 		// Create a gzipped version
-		if (\Config::get('gzipScripts') && function_exists('gzencode'))
+		if (\Config::get('gzipScripts') && \function_exists('gzencode'))
 		{
 			\File::putContent('assets/' . $strTarget . '/' . $strKey . $this->strMode . '.gz', gzencode(file_get_contents(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode), 9));
 		}
@@ -400,7 +400,7 @@ class Combiner extends \System
 
 			$objCompiler->setImportPaths(array
 			(
-				TL_ROOT . '/' . dirname($arrFile['name']),
+				TL_ROOT . '/' . \dirname($arrFile['name']),
 				TL_ROOT . '/vendor/contao-components/compass/css'
 			));
 
@@ -410,7 +410,7 @@ class Combiner extends \System
 		}
 		else
 		{
-			$strPath = dirname($arrFile['name']);
+			$strPath = \dirname($arrFile['name']);
 
 			$arrOptions = array
 			(
@@ -443,10 +443,10 @@ class Combiner extends \System
 		// Strip the web/ prefix
 		if (strpos($strName, $this->strWebDir .'/') === 0)
 		{
-			$strName = substr($strName, strlen($this->strWebDir) + 1);
+			$strName = substr($strName, \strlen($this->strWebDir) + 1);
 		}
 
-		$strDirname = dirname($strName);
+		$strDirname = \dirname($strName);
 		$strGlue = ($strDirname != '.') ? $strDirname . '/' : '';
 
 		return preg_replace_callback(
@@ -478,7 +478,7 @@ class Combiner extends \System
 					// Remove relative paths
 					while (strncmp($strData, '../', 3) === 0)
 					{
-						$dir = dirname($dir);
+						$dir = \dirname($dir);
 						$strData = substr($strData, 3);
 					}
 

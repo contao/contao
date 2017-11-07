@@ -61,7 +61,7 @@ class SyncExclude extends \RecursiveFilterIterator
 		$strRelpath = \StringUtil::stripRootDir($this->current()->getPathname());
 
 		// The resource is an exempt folder
-		if (in_array($strRelpath, $this->arrExempt))
+		if (\in_array($strRelpath, $this->arrExempt))
 		{
 			return false;
 		}

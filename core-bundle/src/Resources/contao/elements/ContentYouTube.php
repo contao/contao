@@ -54,7 +54,7 @@ class ContentYouTube extends \ContentElement
 	{
 		$size = \StringUtil::deserialize($this->playerSize);
 
-		if (!is_array($size) || empty($size[0]) || empty($size[1]))
+		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
 			$this->Template->size = ' width="640" height="360"';
 		}

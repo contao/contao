@@ -49,7 +49,7 @@ class ContentDownload extends \ContentElement
 		$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 		// Return if the file type is not allowed
-		if (!in_array($objFile->extension, $allowedDownload))
+		if (!\in_array($objFile->extension, $allowedDownload))
 		{
 			return '';
 		}

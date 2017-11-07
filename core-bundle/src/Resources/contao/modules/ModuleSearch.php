@@ -121,7 +121,7 @@ class ModuleSearch extends \Module
 			}
 
 			// HOOK: add custom logic (see #5223)
-			if (isset($GLOBALS['TL_HOOKS']['customizeSearch']) && is_array($GLOBALS['TL_HOOKS']['customizeSearch']))
+			if (isset($GLOBALS['TL_HOOKS']['customizeSearch']) && \is_array($GLOBALS['TL_HOOKS']['customizeSearch']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['customizeSearch'] as $callback)
 				{
@@ -131,7 +131,7 @@ class ModuleSearch extends \Module
 			}
 
 			// Return if there are no pages
-			if (!is_array($arrPages) || empty($arrPages))
+			if (!\is_array($arrPages) || empty($arrPages))
 			{
 				return;
 			}
@@ -194,7 +194,7 @@ class ModuleSearch extends \Module
 						{
 							$groups = \StringUtil::deserialize($v['groups']);
 
-							if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
+							if (!\is_array($groups) || empty($groups) || !\count(array_intersect($groups, $this->User->groups)))
 							{
 								unset($arrResult[$k]);
 							}
@@ -205,7 +205,7 @@ class ModuleSearch extends \Module
 				$arrResult = array_values($arrResult);
 			}
 
-			$count = count($arrResult);
+			$count = \count($arrResult);
 
 			$this->Template->count = $count;
 			$this->Template->page = null;

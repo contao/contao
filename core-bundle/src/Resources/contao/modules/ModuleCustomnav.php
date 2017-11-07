@@ -97,7 +97,7 @@ class ModuleCustomnav extends \Module
 		{
 			$tmp = \StringUtil::deserialize($this->orderPages);
 
-			if (!empty($tmp) && is_array($tmp))
+			if (!empty($tmp) && \is_array($tmp))
 			{
 				$arrPages = array_map(function () {}, array_flip($tmp));
 			}
@@ -120,7 +120,7 @@ class ModuleCustomnav extends \Module
 		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->navigationTpl);
 
-		$objTemplate->type = get_class($this);
+		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
 
@@ -130,7 +130,7 @@ class ModuleCustomnav extends \Module
 			$_groups = \StringUtil::deserialize($objModel->groups);
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objModel->protected || (is_array($_groups) && count(array_intersect($_groups, $groups))) || $this->showProtected)
+			if (!$objModel->protected || (\is_array($_groups) && \count(array_intersect($_groups, $groups))) || $this->showProtected)
 			{
 				// Get href
 				switch ($objModel->type)
@@ -153,7 +153,7 @@ class ModuleCustomnav extends \Module
 						break;
 				}
 
-				$trail = in_array($objModel->id, $objPage->trail);
+				$trail = \in_array($objModel->id, $objPage->trail);
 
 				// Active page
 				if ($objPage->id == $objModel->id && $href == \Environment::get('request'))
@@ -211,7 +211,7 @@ class ModuleCustomnav extends \Module
 
 		// Add classes first and last
 		$items[0]['class'] = trim($items[0]['class'] . ' first');
-		$last = count($items) - 1;
+		$last = \count($items) - 1;
 		$items[$last]['class'] = trim($items[$last]['class'] . ' last');
 
 		$objTemplate->items = $items;

@@ -75,7 +75,7 @@ class BackendSwitch extends \Backend
 			}
 		}
 
-		$blnCanSwitchUser = ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg));
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');
@@ -116,7 +116,7 @@ class BackendSwitch extends \Backend
 					$objUser = \MemberModel::findByUsername(\Input::post('user'));
 
 					// Check the allowed member groups
-					if ($objUser !== null && ($this->User->isAdmin || count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
+					if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
 					{
 						// Insert the new session
 						$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
@@ -169,7 +169,7 @@ class BackendSwitch extends \Backend
 		if (!$this->User->isAdmin)
 		{
 			// No allowed member groups
-			if (!is_array($this->User->amg) || empty($this->User->amg))
+			if (!\is_array($this->User->amg) || empty($this->User->amg))
 			{
 				header('Content-type: application/json');
 				die(json_encode(array()));

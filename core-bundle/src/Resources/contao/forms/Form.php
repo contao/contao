@@ -134,7 +134,7 @@ class Form extends \Hybrid
 		}
 
 		// HOOK: compile form fields
-		if (isset($GLOBALS['TL_HOOKS']['compileFormFields']) && is_array($GLOBALS['TL_HOOKS']['compileFormFields']))
+		if (isset($GLOBALS['TL_HOOKS']['compileFormFields']) && \is_array($GLOBALS['TL_HOOKS']['compileFormFields']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['compileFormFields'] as $callback)
 			{
@@ -144,10 +144,10 @@ class Form extends \Hybrid
 		}
 
 		// Process the fields
-		if (!empty($arrFields) && is_array($arrFields))
+		if (!empty($arrFields) && \is_array($arrFields))
 		{
 			$row = 0;
-			$max_row = count($arrFields);
+			$max_row = \count($arrFields);
 
 			foreach ($arrFields as $objField)
 			{
@@ -184,7 +184,7 @@ class Form extends \Hybrid
 				// Unset the default value depending on the field type (see #4722)
 				if (!empty($arrData['value']))
 				{
-					if (!in_array('value', \StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
+					if (!\in_array('value', \StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
 					{
 						$arrData['value'] = '';
 					}
@@ -195,7 +195,7 @@ class Form extends \Hybrid
 				$objWidget->required = $objField->mandatory ? true : false;
 
 				// HOOK: load form field callback
-				if (isset($GLOBALS['TL_HOOKS']['loadFormField']) && is_array($GLOBALS['TL_HOOKS']['loadFormField']))
+				if (isset($GLOBALS['TL_HOOKS']['loadFormField']) && \is_array($GLOBALS['TL_HOOKS']['loadFormField']))
 				{
 					foreach ($GLOBALS['TL_HOOKS']['loadFormField'] as $callback)
 					{
@@ -210,7 +210,7 @@ class Form extends \Hybrid
 					$objWidget->validate();
 
 					// HOOK: validate form field callback
-					if (isset($GLOBALS['TL_HOOKS']['validateFormField']) && is_array($GLOBALS['TL_HOOKS']['validateFormField']))
+					if (isset($GLOBALS['TL_HOOKS']['validateFormField']) && \is_array($GLOBALS['TL_HOOKS']['validateFormField']))
 					{
 						foreach ($GLOBALS['TL_HOOKS']['validateFormField'] as $callback)
 						{
@@ -313,7 +313,7 @@ class Form extends \Hybrid
 	protected function processFormData($arrSubmitted, $arrLabels, $arrFields)
 	{
 		// HOOK: prepare form data callback
-		if (isset($GLOBALS['TL_HOOKS']['prepareFormData']) && is_array($GLOBALS['TL_HOOKS']['prepareFormData']))
+		if (isset($GLOBALS['TL_HOOKS']['prepareFormData']) && \is_array($GLOBALS['TL_HOOKS']['prepareFormData']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['prepareFormData'] as $callback)
 			{
@@ -340,13 +340,13 @@ class Form extends \Hybrid
 				$v = \StringUtil::deserialize($v);
 
 				// Skip empty fields
-				if ($this->skipEmpty && !is_array($v) && !strlen($v))
+				if ($this->skipEmpty && !\is_array($v) && !\strlen($v))
 				{
 					continue;
 				}
 
 				// Add field to message
-				$message .= (isset($arrLabels[$k]) ? $arrLabels[$k] : ucfirst($k)) . ': ' . (is_array($v) ? implode(', ', $v) : $v) . "\n";
+				$message .= (isset($arrLabels[$k]) ? $arrLabels[$k] : ucfirst($k)) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 
 				// Prepare XML file
 				if ($this->format == 'xml')
@@ -354,7 +354,7 @@ class Form extends \Hybrid
 					$fields[] = array
 					(
 						'name' => $k,
-						'values' => (is_array($v) ? $v : array($v))
+						'values' => (\is_array($v) ? $v : array($v))
 					);
 				}
 
@@ -362,7 +362,7 @@ class Form extends \Hybrid
 				if ($this->format == 'csv')
 				{
 					$keys[] = $k;
-					$values[] = (is_array($v) ? implode(',', $v) : $v);
+					$values[] = (\is_array($v) ? implode(',', $v) : $v);
 				}
 			}
 
@@ -388,12 +388,12 @@ class Form extends \Hybrid
 			$email->fromName = $GLOBALS['TL_ADMIN_NAME'];
 
 			// Get the "reply to" address
-			if (strlen(\Input::post('email', true)))
+			if (\strlen(\Input::post('email', true)))
 			{
 				$replyTo = \Input::post('email', true);
 
 				// Add name
-				if (strlen(\Input::post('name')))
+				if (\strlen(\Input::post('name')))
 				{
 					$replyTo = '"' . \Input::post('name') . '" <' . $replyTo . '>';
 				}
@@ -402,13 +402,13 @@ class Form extends \Hybrid
 			}
 
 			// Fallback to default subject
-			if (!strlen($email->subject))
+			if (!\strlen($email->subject))
 			{
 				$email->subject = $this->replaceInsertTags($this->subject, false);
 			}
 
 			// Send copy to sender
-			if (strlen($arrSubmitted['cc']))
+			if (\strlen($arrSubmitted['cc']))
 			{
 				$email->sendCc(\Input::post('email', true));
 				unset($_SESSION['FORM_DATA']['cc']);
@@ -442,7 +442,7 @@ class Form extends \Hybrid
 					// Add a link to the uploaded file
 					if ($file['uploaded'])
 					{
-						$uploaded .= "\n" . \Environment::get('base') . \StringUtil::stripRootDir(dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
+						$uploaded .= "\n" . \Environment::get('base') . \StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
 					}
 
@@ -450,7 +450,7 @@ class Form extends \Hybrid
 				}
 			}
 
-			$uploaded = strlen(trim($uploaded)) ? "\n\n---\n" . $uploaded : '';
+			$uploaded = \strlen(trim($uploaded)) ? "\n\n---\n" . $uploaded : '';
 			$email->text = \StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
 			// Send the e-mail
@@ -483,7 +483,7 @@ class Form extends \Hybrid
 					$arrSet[$k] = $v;
 
 					// Convert date formats into timestamps (see #6827)
-					if ($arrSet[$k] != '' && in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					if ($arrSet[$k] != '' && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
 						$objDate = new \Date($arrSet[$k], \Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;
@@ -504,7 +504,7 @@ class Form extends \Hybrid
 			}
 
 			// HOOK: store form data callback
-			if (isset($GLOBALS['TL_HOOKS']['storeFormData']) && is_array($GLOBALS['TL_HOOKS']['storeFormData']))
+			if (isset($GLOBALS['TL_HOOKS']['storeFormData']) && \is_array($GLOBALS['TL_HOOKS']['storeFormData']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['storeFormData'] as $callback)
 				{
@@ -535,7 +535,7 @@ class Form extends \Hybrid
 		$arrFiles = $_SESSION['FILES'];
 
 		// HOOK: process form data callback
-		if (isset($GLOBALS['TL_HOOKS']['processFormData']) && is_array($GLOBALS['TL_HOOKS']['processFormData']))
+		if (isset($GLOBALS['TL_HOOKS']['processFormData']) && \is_array($GLOBALS['TL_HOOKS']['processFormData']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['processFormData'] as $callback)
 			{
@@ -596,11 +596,11 @@ class Form extends \Hybrid
 		}
 
 		$arrMessageBox = array('TL_ERROR', 'TL_CONFIRM', 'TL_INFO');
-		$_SESSION['FORM_DATA'] = is_array($_SESSION['FORM_DATA']) ? $_SESSION['FORM_DATA'] : array();
+		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA']) ? $_SESSION['FORM_DATA'] : array();
 
 		foreach ($arrMessageBox as $tl)
 		{
-			if (is_array($_SESSION[$formId][$tl]))
+			if (\is_array($_SESSION[$formId][$tl]))
 			{
 				$_SESSION[$formId][$tl] = array_unique($_SESSION[$formId][$tl]);
 

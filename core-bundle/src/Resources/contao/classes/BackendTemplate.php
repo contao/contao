@@ -34,7 +34,7 @@ class BackendTemplate extends \Template
 		$strBuffer = parent::parse();
 
 		// HOOK: add custom parse filters
-		if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseBackendTemplate']))
+		if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseBackendTemplate']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseBackendTemplate'] as $callback)
 			{
@@ -65,7 +65,7 @@ class BackendTemplate extends \Template
 		$strWebDir = \System::getContainer()->getParameter('contao.web_dir');
 
 		// Style sheets
-		if (!empty($GLOBALS['TL_CSS']) && is_array($GLOBALS['TL_CSS']))
+		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			$strStyleSheets = '';
 			$objCombiner = new \Combiner();
@@ -93,7 +93,7 @@ class BackendTemplate extends \Template
 		}
 
 		// JavaScripts
-		if (!empty($GLOBALS['TL_JAVASCRIPT']) && is_array($GLOBALS['TL_JAVASCRIPT']))
+		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
 			$objCombiner = new \Combiner();
 			$objCombinerAsync = new \Combiner();
@@ -127,7 +127,7 @@ class BackendTemplate extends \Template
 		}
 
 		// MooTools scripts (added at the page bottom)
-		if (!empty($GLOBALS['TL_MOOTOOLS']) && is_array($GLOBALS['TL_MOOTOOLS']))
+		if (!empty($GLOBALS['TL_MOOTOOLS']) && \is_array($GLOBALS['TL_MOOTOOLS']))
 		{
 			$strMootools = '';
 
@@ -143,7 +143,7 @@ class BackendTemplate extends \Template
 		$strBuffer = static::replaceOldBePaths($strBuffer);
 
 		// HOOK: add custom output filter
-		if (isset($GLOBALS['TL_HOOKS']['outputBackendTemplate']) && is_array($GLOBALS['TL_HOOKS']['outputBackendTemplate']))
+		if (isset($GLOBALS['TL_HOOKS']['outputBackendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['outputBackendTemplate']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['outputBackendTemplate'] as $callback)
 			{

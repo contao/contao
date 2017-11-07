@@ -695,11 +695,11 @@ class tl_user extends Backend
 		{
 			$arrPurge = Input::post('purge');
 
-			if (is_array($arrPurge))
+			if (\is_array($arrPurge))
 			{
 				$this->import('Automator');
 
-				if (in_array('purge_session', $arrPurge))
+				if (\in_array('purge_session', $arrPurge))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
@@ -707,13 +707,13 @@ class tl_user extends Backend
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['sessionPurged']);
 				}
 
-				if (in_array('purge_images', $arrPurge))
+				if (\in_array('purge_images', $arrPurge))
 				{
 					$this->Automator->purgeImageCache();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['htmlPurged']);
 				}
 
-				if (in_array('purge_pages', $arrPurge))
+				if (\in_array('purge_pages', $arrPurge))
 				{
 					$this->Automator->purgePageCache();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['tempPurged']);
@@ -872,7 +872,7 @@ class tl_user extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('tid')))
+		if (\strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -928,16 +928,16 @@ class tl_user extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -970,16 +970,16 @@ class tl_user extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['disable']['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -999,16 +999,16 @@ class tl_user extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user']['config']['onsubmit_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}

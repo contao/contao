@@ -277,7 +277,7 @@ abstract class Widget extends \Controller
 			case 'autocorrect':
 			case 'autocapitalize':
 			case 'spellcheck':
-				if (is_bool($varValue))
+				if (\is_bool($varValue))
 				{
 					$varValue = $varValue ? 'on' : 'off';
 				}
@@ -639,7 +639,7 @@ abstract class Widget extends \Controller
 		$strBuffer = $this->inherit();
 
 		// HOOK: add custom parse filters (see #5553)
-		if (isset($GLOBALS['TL_HOOKS']['parseWidget']) && is_array($GLOBALS['TL_HOOKS']['parseWidget']))
+		if (isset($GLOBALS['TL_HOOKS']['parseWidget']) && \is_array($GLOBALS['TL_HOOKS']['parseWidget']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseWidget'] as $callback)
 			{
@@ -710,7 +710,7 @@ abstract class Widget extends \Controller
 
 		foreach (array_keys($this->arrAttributes) as $strKey)
 		{
-			if (!in_array($strKey, $arrStrip))
+			if (!\in_array($strKey, $arrStrip))
 			{
 				$strAttributes .= $this->getAttribute($strKey);
 			}
@@ -775,7 +775,7 @@ abstract class Widget extends \Controller
 	 */
 	public function validate()
 	{
-		$varValue = (is_callable($this->inputCallback) ? call_user_func($this->inputCallback) : $this->getPost($this->strName));
+		$varValue = (\is_callable($this->inputCallback) ? \call_user_func($this->inputCallback) : $this->getPost($this->strName));
 		$varValue = $this->validator($varValue);
 
 		if ($this->hasErrors())
@@ -817,7 +817,7 @@ abstract class Widget extends \Controller
 
 		foreach ($arrParts as $part)
 		{
-			if (!is_array($varValue))
+			if (!\is_array($varValue))
 			{
 				break;
 			}
@@ -838,7 +838,7 @@ abstract class Widget extends \Controller
 	 */
 	protected function validator($varInput)
 	{
-		if (is_array($varInput))
+		if (\is_array($varInput))
 		{
 			foreach ($varInput as $k=>$v)
 			{
@@ -901,7 +901,7 @@ abstract class Widget extends \Controller
 					$textual = explode('_', $this->rgxp);
 					array_shift($textual);
 
-					if (in_array($varInput, $textual) || strncmp($varInput, '$', 1) === 0)
+					if (\in_array($varInput, $textual) || strncmp($varInput, '$', 1) === 0)
 					{
 						break;
 					}
@@ -1107,7 +1107,7 @@ abstract class Widget extends \Controller
 
 				// HOOK: pass unknown tags to callback functions
 				default:
-					if (isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) && is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
+					if (isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) && \is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
 					{
 						foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
 						{
@@ -1140,7 +1140,7 @@ abstract class Widget extends \Controller
 			$varInput = preg_replace('/\s+/', '_', trim($varInput));
 		}
 
-		if (is_bool($this->trailingSlash) && $varInput != '')
+		if (\is_bool($this->trailingSlash) && $varInput != '')
 		{
 			$varInput = preg_replace('/\/+$/', '', $varInput) . ($this->trailingSlash ? '/' : '');
 		}
@@ -1156,7 +1156,7 @@ abstract class Widget extends \Controller
 	 */
 	public function addAttributes($arrAttributes)
 	{
-		if (!is_array($arrAttributes))
+		if (!\is_array($arrAttributes))
 		{
 			return;
 		}
@@ -1219,7 +1219,7 @@ abstract class Widget extends \Controller
 			return '';
 		}
 
-		return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? ' selected' : '';
+		return (\is_array($varValues) ? \in_array($strOption, $varValues) : $strOption == $varValues) ? ' selected' : '';
 	}
 
 
@@ -1238,7 +1238,7 @@ abstract class Widget extends \Controller
 			return '';
 		}
 
-		return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? ' checked' : '';
+		return (\is_array($varValues) ? \in_array($strOption, $varValues) : $strOption == $varValues) ? ' checked' : '';
 	}
 
 
@@ -1251,7 +1251,7 @@ abstract class Widget extends \Controller
 	 */
 	protected function isValidOption($varInput)
 	{
-		if (!is_array($varInput))
+		if (!\is_array($varInput))
 		{
 			$varInput = array($varInput);
 		}
@@ -1314,7 +1314,7 @@ abstract class Widget extends \Controller
 		$arrAttributes['name'] = $strName;
 		$arrAttributes['strField'] = $strField;
 		$arrAttributes['strTable'] = $strTable;
-		$arrAttributes['label'] = (($label = is_array($arrData['label']) ? $arrData['label'][0] : $arrData['label']) != false) ? $label : $strField;
+		$arrAttributes['label'] = (($label = \is_array($arrData['label']) ? $arrData['label'][0] : $arrData['label']) != false) ? $label : $strField;
 		$arrAttributes['description'] = $arrData['label'][1];
 		$arrAttributes['type'] = $arrData['inputType'];
 		$arrAttributes['dataContainer'] = $objDca;
@@ -1332,7 +1332,7 @@ abstract class Widget extends \Controller
 			}
 		}
 
-		$arrAttributes['allowHtml'] = ($arrData['eval']['allowHtml'] || strlen($arrData['eval']['rte']) || $arrData['eval']['preserveTags']) ? true : false;
+		$arrAttributes['allowHtml'] = ($arrData['eval']['allowHtml'] || \strlen($arrData['eval']['rte']) || $arrData['eval']['preserveTags']) ? true : false;
 
 		// Decode entities if HTML is allowed
 		if ($arrAttributes['allowHtml'] || $arrData['inputType'] == 'fileTree')
@@ -1341,18 +1341,18 @@ abstract class Widget extends \Controller
 		}
 
 		// Add Ajax event
-		if ($arrData['inputType'] == 'checkbox' && is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && in_array($strField, array_keys($GLOBALS['TL_DCA'][$strTable]['subpalettes'])) && $arrData['eval']['submitOnChange'])
+		if ($arrData['inputType'] == 'checkbox' && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \in_array($strField, array_keys($GLOBALS['TL_DCA'][$strTable]['subpalettes'])) && $arrData['eval']['submitOnChange'])
 		{
 			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_".$strName."', '".$strField."')";
 		}
 
 		// Options callback
-		if (is_array($arrData['options_callback']))
+		if (\is_array($arrData['options_callback']))
 		{
 			$arrCallback = $arrData['options_callback'];
 			$arrData['options'] = static::importStatic($arrCallback[0])->{$arrCallback[1]}($objDca);
 		}
-		elseif (is_callable($arrData['options_callback']))
+		elseif (\is_callable($arrData['options_callback']))
 		{
 			$arrData['options'] = $arrData['options_callback']($objDca);
 		}
@@ -1384,7 +1384,7 @@ abstract class Widget extends \Controller
 		}
 
 		// Add options
-		if (is_array($arrData['options']))
+		if (\is_array($arrData['options']))
 		{
 			$blnIsAssociative = ($arrData['eval']['isAssociative'] || array_is_assoc($arrData['options']));
 			$blnUseReference = isset($arrData['reference']);
@@ -1397,23 +1397,23 @@ abstract class Widget extends \Controller
 
 			foreach ($arrData['options'] as $k=>$v)
 			{
-				if (!is_array($v))
+				if (!\is_array($v))
 				{
-					$arrAttributes['options'][] = array('value'=>($blnIsAssociative ? $k : $v), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+					$arrAttributes['options'][] = array('value'=>($blnIsAssociative ? $k : $v), 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
 					continue;
 				}
 
-				$key = $blnUseReference ? ((($ref = (is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
+				$key = $blnUseReference ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
 				$blnIsAssoc = array_is_assoc($v);
 
 				foreach ($v as $kk=>$vv)
 				{
-					$arrAttributes['options'][$key][] = array('value'=>($blnIsAssoc ? $kk : $vv), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+					$arrAttributes['options'][$key][] = array('value'=>($blnIsAssoc ? $kk : $vv), 'label'=>($blnUseReference ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
 				}
 			}
 		}
 
-		if (is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
+		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
 		{
 			if (isset($arrAttributes['sql']['length']) && !isset($arrAttributes['maxlength']))
 			{
@@ -1429,7 +1429,7 @@ abstract class Widget extends \Controller
 		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
 
 		// Convert timestamps
-		if ($varValue != '' && in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+		if ($varValue != '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 		{
 			$objDate = new \Date($varValue, \Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
@@ -1442,7 +1442,7 @@ abstract class Widget extends \Controller
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getAttributesFromDca']) && is_array($GLOBALS['TL_HOOKS']['getAttributesFromDca']))
+		if (isset($GLOBALS['TL_HOOKS']['getAttributesFromDca']) && \is_array($GLOBALS['TL_HOOKS']['getAttributesFromDca']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getAttributesFromDca'] as $callback)
 			{
@@ -1490,7 +1490,7 @@ abstract class Widget extends \Controller
 			return '';
 		}
 
-		if (is_array($sql))
+		if (\is_array($sql))
 		{
 			if (isset($sql['columnDefinition']))
 			{
@@ -1508,7 +1508,7 @@ abstract class Widget extends \Controller
 					return null;
 				}
 
-				if (in_array($sql['type'], array(Type::BIGINT, Type::DECIMAL, Type::INTEGER, Type::SMALLINT, Type::FLOAT)))
+				if (\in_array($sql['type'], array(Type::BIGINT, Type::DECIMAL, Type::INTEGER, Type::SMALLINT, Type::FLOAT)))
 				{
 					return 0;
 				}
@@ -1524,7 +1524,7 @@ abstract class Widget extends \Controller
 
 		$type = strtolower(preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql));
 
-		if (in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
+		if (\in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
 		{
 			return 0;
 		}

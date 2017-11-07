@@ -156,7 +156,7 @@ class FileUpload extends \Backend
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
 
 				// File type not allowed
-				if (!in_array($strExtension, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))))
+				if (!\in_array($strExtension, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))))
 				{
 					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $strExtension));
 					$this->blnHasError = true;
@@ -218,7 +218,7 @@ class FileUpload extends \Backend
 	protected function getFilesFromGlobal()
 	{
 		$arrFiles = array();
-		$intCount = count($_FILES[$this->strName]['name']);
+		$intCount = \count($_FILES[$this->strName]['name']);
 
 		for ($i=0; $i<$intCount; $i++)
 		{

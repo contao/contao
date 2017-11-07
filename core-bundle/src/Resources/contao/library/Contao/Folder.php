@@ -172,7 +172,7 @@ class Folder extends \System
 	 */
 	public function isEmpty()
 	{
-		return (count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1);
+		return (\count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1);
 	}
 
 
@@ -252,7 +252,7 @@ class Folder extends \System
 	 */
 	public function renameTo($strNewName)
 	{
-		$strParent = dirname($strNewName);
+		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
 		if (!is_dir(TL_ROOT . '/' . $strParent))
@@ -299,7 +299,7 @@ class Folder extends \System
 	 */
 	public function copyTo($strNewName)
 	{
-		$strParent = dirname($strNewName);
+		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
 		if (!is_dir(TL_ROOT . '/' . $strParent))
@@ -388,7 +388,7 @@ class Folder extends \System
 		{
 			if (strncmp($i->getFilename(), '.', 1) !== 0)
 			{
-				$arrFiles[] = substr($i->getPathname(), strlen(TL_ROOT . '/' . $this->strFolder . '/'));
+				$arrFiles[] = substr($i->getPathname(), \strlen(TL_ROOT . '/' . $this->strFolder . '/'));
 			}
 		}
 

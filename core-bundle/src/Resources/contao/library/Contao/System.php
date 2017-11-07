@@ -149,16 +149,16 @@ abstract class System
 	{
 		$strKey = $strKey ?: $strClass;
 
-		if (is_object($strKey))
+		if (\is_object($strKey))
 		{
-			$strKey = get_class($strClass);
+			$strKey = \get_class($strClass);
 		}
 
 		if ($blnForce || !isset($this->arrObjects[$strKey]))
 		{
 			$container = static::getContainer();
 
-			if (is_object($strClass))
+			if (\is_object($strClass))
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
@@ -166,9 +166,9 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
-			elseif (in_array('getInstance', get_class_methods($strClass)))
+			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				$this->arrObjects[$strKey] = call_user_func(array($strClass, 'getInstance'));
+				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -191,16 +191,16 @@ abstract class System
 	{
 		$strKey = $strKey ?: $strClass;
 
-		if (is_object($strKey))
+		if (\is_object($strKey))
 		{
-			$strKey = get_class($strClass);
+			$strKey = \get_class($strClass);
 		}
 
 		if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
 		{
 			$container = static::getContainer();
 
-			if (is_object($strClass))
+			if (\is_object($strClass))
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
 			}
@@ -208,9 +208,9 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
-			elseif (in_array('getInstance', get_class_methods($strClass)))
+			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
@@ -287,7 +287,7 @@ abstract class System
 		{
 			$session = $session[$ref];
 		}
-		elseif (TL_MODE == 'BE' && is_array($session))
+		elseif (TL_MODE == 'BE' && \is_array($session))
 		{
 			$session = end($session);
 		}
@@ -436,7 +436,7 @@ abstract class System
 		}
 
 		// HOOK: allow to load custom labels
-		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
+		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadLanguageFile'] as $callback)
 			{
@@ -482,7 +482,7 @@ abstract class System
 			{
 				/** @var SplFileInfo[] $files */
 				$files = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage);
-				static::$arrLanguages[$strLanguage] = count($files) > 0;
+				static::$arrLanguages[$strLanguage] = \count($files) > 0;
 			}
 		}
 
@@ -517,7 +517,7 @@ abstract class System
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getCountries']) && is_array($GLOBALS['TL_HOOKS']['getCountries']))
+		if (isset($GLOBALS['TL_HOOKS']['getCountries']) && \is_array($GLOBALS['TL_HOOKS']['getCountries']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback)
 			{
@@ -557,7 +557,7 @@ abstract class System
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
-			if ($blnInstalledOnly && !in_array($strKey, $arrBackendLanguages))
+			if ($blnInstalledOnly && !\in_array($strKey, $arrBackendLanguages))
 			{
 				continue;
 			}
@@ -571,7 +571,7 @@ abstract class System
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && is_array($GLOBALS['TL_HOOKS']['getLanguages']))
+		if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && \is_array($GLOBALS['TL_HOOKS']['getLanguages']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback)
 			{
@@ -665,7 +665,7 @@ abstract class System
 		$objCookie->blnHttpOnly = $blnHttpOnly;
 
 		// HOOK: allow to add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && is_array($GLOBALS['TL_HOOKS']['setCookie']))
+		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
 			{

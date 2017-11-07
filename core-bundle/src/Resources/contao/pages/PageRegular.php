@@ -77,7 +77,7 @@ class PageRegular extends \Frontend
 		$objLayout = $this->getPageLayout($objPage);
 
 		// HOOK: modify the page or layout object (see #4736)
-		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
+		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
 			{
@@ -154,7 +154,7 @@ class PageRegular extends \Frontend
 				}
 
 				// Generate the modules
-				if (in_array($arrModule['col'], $arrSections))
+				if (\in_array($arrModule['col'], $arrSections))
 				{
 					// Filter active sections (see #3273)
 					if ($arrModule['col'] == 'header' && $objLayout->rows != '2rwh' && $objLayout->rows != '3rw')
@@ -192,7 +192,7 @@ class PageRegular extends \Frontend
 		}
 
 		// HOOK: modify the page or layout object
-		if (isset($GLOBALS['TL_HOOKS']['generatePage']) && is_array($GLOBALS['TL_HOOKS']['generatePage']))
+		if (isset($GLOBALS['TL_HOOKS']['generatePage']) && \is_array($GLOBALS['TL_HOOKS']['generatePage']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generatePage'] as $callback)
 			{
@@ -290,11 +290,11 @@ class PageRegular extends \Frontend
 		$arrFramework = \StringUtil::deserialize($objLayout->framework);
 
 		// Generate the CSS framework
-		if (is_array($arrFramework) && in_array('layout.css', $arrFramework))
+		if (\is_array($arrFramework) && \in_array('layout.css', $arrFramework))
 		{
 			$strFramework = '';
 
-			if (in_array('responsive.css', $arrFramework))
+			if (\in_array('responsive.css', $arrFramework))
 			{
 				$this->Template->viewport = '<meta name="viewport" content="width=device-width,initial-scale=1.0">' . "\n";
 			}
@@ -381,7 +381,7 @@ class PageRegular extends \Frontend
 		$this->Template->mooScripts = '';
 
 		// Make sure TL_JAVASCRIPT exists (see #4890)
-		if (isset($GLOBALS['TL_JAVASCRIPT']) && is_array($GLOBALS['TL_JAVASCRIPT']))
+		if (isset($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
 			$arrAppendJs = $GLOBALS['TL_JAVASCRIPT'];
 			$GLOBALS['TL_JAVASCRIPT'] = array();
@@ -484,7 +484,7 @@ class PageRegular extends \Frontend
 			$arrPositions = array();
 			$arrSections = \StringUtil::deserialize($objLayout->sections);
 
-			if (!empty($arrSections) && is_array($arrSections))
+			if (!empty($arrSections) && \is_array($arrSections))
 			{
 				foreach ($arrSections as $v)
 				{
@@ -524,7 +524,7 @@ class PageRegular extends \Frontend
 		}
 
 		// Add the Contao CSS framework style sheets
-		if (is_array($arrFramework))
+		if (\is_array($arrFramework))
 		{
 			foreach ($arrFramework as $strFile)
 			{
@@ -536,13 +536,13 @@ class PageRegular extends \Frontend
 		}
 
 		// Make sure TL_USER_CSS is set
-		if (!is_array($GLOBALS['TL_USER_CSS']))
+		if (!\is_array($GLOBALS['TL_USER_CSS']))
 		{
 			$GLOBALS['TL_USER_CSS'] = array();
 		}
 
 		// User style sheets
-		if (is_array($arrStyleSheets) && strlen($arrStyleSheets[0]))
+		if (\is_array($arrStyleSheets) && \strlen($arrStyleSheets[0]))
 		{
 			$objStylesheets = \StyleSheetModel::findByIds($arrStyleSheets);
 
@@ -609,14 +609,14 @@ class PageRegular extends \Frontend
 		$arrExternal = \StringUtil::deserialize($objLayout->external);
 
 		// External style sheets
-		if (!empty($arrExternal) && is_array($arrExternal))
+		if (!empty($arrExternal) && \is_array($arrExternal))
 		{
 			// Consider the sorting order (see #5038)
 			if ($objLayout->orderExt != '')
 			{
 				$tmp = \StringUtil::deserialize($objLayout->orderExt);
 
-				if (!empty($tmp) && is_array($tmp))
+				if (!empty($tmp) && \is_array($tmp))
 				{
 					// Remove all values
 					$arrOrder = array_map(function () {}, array_flip($tmp));
@@ -665,7 +665,7 @@ class PageRegular extends \Frontend
 				}
 				else
 				{
-					array_splice($GLOBALS['TL_USER_CSS'], count($GLOBALS['TL_USER_CSS']), 0, $arrFiles);
+					array_splice($GLOBALS['TL_USER_CSS'], \count($GLOBALS['TL_USER_CSS']), 0, $arrFiles);
 				}
 			}
 		}

@@ -657,7 +657,7 @@ class tl_layout extends Backend
 
 		$array = StringUtil::deserialize($value);
 
-		if (empty($array) || !is_array($array))
+		if (empty($array) || !\is_array($array))
 		{
 			return $value;
 		}

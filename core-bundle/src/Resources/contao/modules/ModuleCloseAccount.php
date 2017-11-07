@@ -110,7 +110,7 @@ class ModuleCloseAccount extends \Module
 			if (!$objWidget->hasErrors())
 			{
 				// HOOK: send account ID
-				if (isset($GLOBALS['TL_HOOKS']['closeAccount']) && is_array($GLOBALS['TL_HOOKS']['closeAccount']))
+				if (isset($GLOBALS['TL_HOOKS']['closeAccount']) && \is_array($GLOBALS['TL_HOOKS']['closeAccount']))
 				{
 					foreach ($GLOBALS['TL_HOOKS']['closeAccount'] as $callback)
 					{

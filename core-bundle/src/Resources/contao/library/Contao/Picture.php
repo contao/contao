@@ -93,7 +93,7 @@ class Picture
 	 */
 	public static function create($file, $size=null)
 	{
-		if (is_string($file))
+		if (\is_string($file))
 		{
 			$file = new \File(rawurldecode($file));
 		}
@@ -102,14 +102,14 @@ class Picture
 		$picture = new static($file);
 
 		// tl_image_size ID as resize mode
-		if (is_array($size) && !empty($size[2]) && is_numeric($size[2]))
+		if (\is_array($size) && !empty($size[2]) && is_numeric($size[2]))
 		{
 			$size = (int) $size[2];
 		}
 
 		$imageSize = null;
 
-		if (!is_array($size))
+		if (!\is_array($size))
 		{
 			$imageSize = \ImageSizeModel::findByPk($size);
 
@@ -119,7 +119,7 @@ class Picture
 			}
 		}
 
-		if (is_array($size))
+		if (\is_array($size))
 		{
 			$size = $size + array(0, 0, 'crop');
 

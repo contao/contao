@@ -163,7 +163,7 @@ class FormFileUpload extends \Widget implements \uploadable
 		$uploadTypes = \StringUtil::trimsplit(',', strtolower($this->extensions));
 
 		// File type is not allowed
-		if (!in_array($objFile->extension, $uploadTypes))
+		if (!\in_array($objFile->extension, $uploadTypes))
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 			unset($_FILES[$this->strName]);
@@ -240,7 +240,7 @@ class FormFileUpload extends \Widget implements \uploadable
 							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
 							{
 								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = intval(substr($strFile, (strrpos($strFile, '_') + 1)));
+								$intValue = \intval(substr($strFile, (strrpos($strFile, '_') + 1)));
 
 								$offset = max($offset, $intValue);
 							}

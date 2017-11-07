@@ -74,12 +74,12 @@ class GdImage
 			$extension = 'jpeg';
 		}
 
-		if (in_array($extension, array('gif', 'jpeg', 'png')))
+		if (\in_array($extension, array('gif', 'jpeg', 'png')))
 		{
 			$function = 'imagecreatefrom' . $extension;
 		}
 
-		if ($function === null || !is_callable($function))
+		if ($function === null || !\is_callable($function))
 		{
 			throw new \InvalidArgumentException('Image type "' . $file->extension . '" cannot be processed by GD');
 		}
@@ -144,7 +144,7 @@ class GdImage
 	 */
 	public function setResource($gdResource)
 	{
-		if (!is_resource($gdResource) || get_resource_type($gdResource) !== 'gd')
+		if (!\is_resource($gdResource) || get_resource_type($gdResource) !== 'gd')
 		{
 			throw new \InvalidArgumentException('$gdResource is not a valid GD resource');
 		}
@@ -179,7 +179,7 @@ class GdImage
 		$folder = \StringUtil::stripRootDir($path);
 
 		// Create the parent folder
-		if (($dirname = dirname($folder)) != '.' && !is_dir(TL_ROOT . '/' . $dirname))
+		if (($dirname = \dirname($folder)) != '.' && !is_dir(TL_ROOT . '/' . $dirname))
 		{
 			new \Folder($dirname);
 		}
@@ -350,14 +350,14 @@ class GdImage
 			{
 				$colors[imagecolorat($this->gdResource, $x, $y)] = true;
 
-				if ($max !== null && count($colors) > $max)
+				if ($max !== null && \count($colors) > $max)
 				{
 					break 2;
 				}
 			}
 		}
 
-		return count($colors);
+		return \count($colors);
 	}
 
 
@@ -399,7 +399,7 @@ class GdImage
 	 */
 	public function __destruct()
 	{
-		if (is_resource($this->gdResource))
+		if (\is_resource($this->gdResource))
 		{
 			imagedestroy($this->gdResource);
 		}

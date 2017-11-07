@@ -55,7 +55,7 @@ class ContentDownloads extends \ContentElement
 		}
 
 		// Return if there are no files
-		if (!is_array($this->multiSRC) || empty($this->multiSRC))
+		if (!\is_array($this->multiSRC) || empty($this->multiSRC))
 		{
 			return '';
 		}
@@ -75,7 +75,7 @@ class ContentDownloads extends \ContentElement
 		{
 			while ($this->objFiles->next())
 			{
-				if ($file == $this->objFiles->path || dirname($file) == $this->objFiles->path)
+				if ($file == $this->objFiles->path || \dirname($file) == $this->objFiles->path)
 				{
 					\Controller::sendFileToBrowser($file);
 				}
@@ -116,7 +116,7 @@ class ContentDownloads extends \ContentElement
 			{
 				$objFile = new \File($objFiles->path);
 
-				if (!in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+				if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 				{
 					continue;
 				}
@@ -192,7 +192,7 @@ class ContentDownloads extends \ContentElement
 
 					$objFile = new \File($objSubfiles->path);
 
-					if (!in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+					if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 					{
 						continue;
 					}
@@ -280,7 +280,7 @@ class ContentDownloads extends \ContentElement
 				{
 					$tmp = \StringUtil::deserialize($this->orderSRC);
 
-					if (!empty($tmp) && is_array($tmp))
+					if (!empty($tmp) && \is_array($tmp))
 					{
 						// Remove all values
 						$arrOrder = array_map(function () {}, array_flip($tmp));

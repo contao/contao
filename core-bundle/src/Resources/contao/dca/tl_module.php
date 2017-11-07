@@ -851,7 +851,7 @@ class tl_module extends Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->forms))
+		if (!$this->User->isAdmin && !\is_array($this->User->forms))
 		{
 			return array();
 		}
@@ -888,7 +888,7 @@ class tl_module extends Backend
 			$arrCustom = StringUtil::deserialize($objLayout->sections);
 
 			// Add the custom layout sections
-			if (!empty($arrCustom) && is_array($arrCustom))
+			if (!empty($arrCustom) && \is_array($arrCustom))
 			{
 				foreach ($arrCustom as $v)
 				{
@@ -993,7 +993,7 @@ class tl_module extends Backend
 	{
 		if (!trim($varValue))
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
+			$varValue = (\is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
 		}
 
 		return $varValue;
@@ -1011,7 +1011,7 @@ class tl_module extends Backend
 	{
 		if (!trim($varValue))
 		{
-			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
+			$varValue = (\is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
 		}
 
 		return $varValue;

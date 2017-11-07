@@ -261,7 +261,7 @@ class tl_files extends Backend
 		}
 
 		// Permissions
-		if (!is_array($this->User->fop))
+		if (!\is_array($this->User->fop))
 		{
 			$this->User->fop = array();
 		}
@@ -298,7 +298,7 @@ class tl_files extends Backend
 		$session = $objSession->all();
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (\is_array($session['CURRENT']['IDS']))
 		{
 			if (Input::get('act') == 'editAll')
 			{
@@ -320,14 +320,14 @@ class tl_files extends Backend
 					{
 						$folders[] = $id;
 
-						if ($canDeleteRecursive || ($canDeleteOne && count(scan(TL_ROOT . '/' . $id)) < 1))
+						if ($canDeleteRecursive || ($canDeleteOne && \count(scan(TL_ROOT . '/' . $id)) < 1))
 						{
 							$delete_all[] = $id;
 						}
 					}
 					else
 					{
-						if (($canDeleteOne || $canDeleteRecursive) && !in_array(dirname($id), $folders))
+						if (($canDeleteOne || $canDeleteRecursive) && !\in_array(\dirname($id), $folders))
 						{
 							$delete_all[] = $id;
 						}
@@ -425,7 +425,7 @@ class tl_files extends Backend
 			return;
 		}
 
-		if (is_dir(TL_ROOT . '/' . $dc->id) || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')))))
+		if (is_dir(TL_ROOT . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')))))
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
 		}
@@ -474,7 +474,7 @@ class tl_files extends Backend
 
 			if ($dc->activeRecord->type == 'file')
 			{
-				$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
+				$intMaxlength -= (\strlen($dc->activeRecord->extension) + 1);
 			}
 
 			if ($intMaxlength && Patchwork\Utf8::strlen($varValue) > $intMaxlength)
@@ -618,7 +618,7 @@ class tl_files extends Backend
 
 		$objFile = new File($strDecoded);
 
-		if (!in_array($objFile->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		if (!\in_array($objFile->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
@@ -697,7 +697,7 @@ class tl_files extends Backend
 		{
 			if (!$blnPublic = file_exists(TL_ROOT . '/' . $strCheck . '/.public'))
 			{
-				$strCheck = dirname($strCheck);
+				$strCheck = \dirname($strCheck);
 			}
 		}
 

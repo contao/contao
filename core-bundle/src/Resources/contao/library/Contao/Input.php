@@ -401,7 +401,7 @@ class Input
 	 */
 	public static function hasUnusedGet()
 	{
-		return count(static::$arrUnusedGet) > 0;
+		return \count(static::$arrUnusedGet) > 0;
 	}
 
 
@@ -438,7 +438,7 @@ class Input
 	public static function cleanKey($varValue)
 	{
 		// Recursively clean arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			$return = array();
 
@@ -446,7 +446,7 @@ class Input
 			{
 				$k = static::cleanKey($k);
 
-				if (is_array($v))
+				if (\is_array($v))
 				{
 					$v = static::cleanKey($v);
 				}
@@ -497,7 +497,7 @@ class Input
 		}
 
 		// Recursively clean arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -548,7 +548,7 @@ class Input
 		}
 
 		// Recursively clean arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -559,7 +559,7 @@ class Input
 		}
 
 		// Return if the value is not a string
-		if (is_bool($varValue) || $varValue === null || is_numeric($varValue))
+		if (\is_bool($varValue) || $varValue === null || is_numeric($varValue))
 		{
 			return $varValue;
 		}
@@ -580,7 +580,7 @@ class Input
 		}, $varValue);
 
 		// Remove null bytes
-		$varValue = str_replace(chr(0), '', $varValue);
+		$varValue = str_replace(\chr(0), '', $varValue);
 
 		// Remove encoded null bytes
 		while (strpos($varValue, '\\0') !== false)
@@ -678,7 +678,7 @@ class Input
 		}
 
 		// Recursively clean arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -711,7 +711,7 @@ class Input
 		}
 
 		// Recursively clean arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -747,7 +747,7 @@ class Input
 		}
 
 		// Recursively clean arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{

@@ -329,7 +329,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$objDatabase = \Database::getInstance();
 
-		if (is_array($varLanguage))
+		if (\is_array($varLanguage))
 		{
 			$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='')");
 
@@ -498,7 +498,7 @@ class PageModel extends \Model
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
-		if (!is_array($arrAliases) || empty($arrAliases))
+		if (!\is_array($arrAliases) || empty($arrAliases))
 		{
 			return null;
 		}
@@ -589,7 +589,7 @@ class PageModel extends \Model
 	 */
 	public static function findPublishedRegularWithoutGuestsByIds($arrIds, array $arrOptions=array())
 	{
-		if (!is_array($arrIds) || empty($arrIds))
+		if (!\is_array($arrIds) || empty($arrIds))
 		{
 			return null;
 		}
@@ -741,7 +741,7 @@ class PageModel extends \Model
 	 */
 	public static function findFirstActiveByMemberGroups($arrIds)
 	{
-		if (!is_array($arrIds) || empty($arrIds))
+		if (!\is_array($arrIds) || empty($arrIds))
 		{
 			return null;
 		}
@@ -1037,7 +1037,7 @@ class PageModel extends \Model
 		// Make the URL relative to the base path
 		if (0 === strpos($strUrl, '/'))
 		{
-			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 		}
 
 		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
@@ -1102,7 +1102,7 @@ class PageModel extends \Model
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
+		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
 		{
 			@trigger_error('Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 

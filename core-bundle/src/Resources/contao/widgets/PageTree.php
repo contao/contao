@@ -71,7 +71,7 @@ class PageTree extends \Widget
 						   ->execute($this->activeRecord->id);
 
 			$tmp = \StringUtil::deserialize($objRow->{$this->orderField});
-			$this->{$this->orderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
+			$this->{$this->orderField} = (!empty($tmp) && \is_array($tmp)) ? array_filter($tmp) : array();
 		}
 	}
 
@@ -119,7 +119,7 @@ class PageTree extends \Widget
 		}
 		elseif (strpos($varInput, ',') === false)
 		{
-			return $this->multiple ? array(intval($varInput)) : intval($varInput);
+			return $this->multiple ? array(\intval($varInput)) : \intval($varInput);
 		}
 		else
 		{
@@ -137,21 +137,21 @@ class PageTree extends \Widget
 	 */
 	protected function checkValue($varInput)
 	{
-		if ($varInput == '' || !is_array($this->rootNodes))
+		if ($varInput == '' || !\is_array($this->rootNodes))
 		{
 			return;
 		}
 
 		if (strpos($varInput, ',') === false)
 		{
-			$arrIds = array(intval($varInput));
+			$arrIds = array(\intval($varInput));
 		}
 		else
 		{
 			$arrIds = array_map('intval', array_filter(explode(',', $varInput)));
 		}
 
-		if (count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
+		if (\count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}
@@ -167,7 +167,7 @@ class PageTree extends \Widget
 	{
 		$arrSet = array();
 		$arrValues = array();
-		$blnHasOrder = ($this->orderField != '' && is_array($this->{$this->orderField}));
+		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 
 		if (!empty($this->varValue)) // Can be an array
 		{
@@ -211,7 +211,7 @@ class PageTree extends \Widget
 
 		$return = '<input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.implode(',', $arrSet).'">' . ($blnHasOrder ? '
   <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$this->{$this->orderField}.'">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && count($arrValues) > 1) ? '
+  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
     <ul id="sort_'.$this->strId.'" class="'.($blnHasOrder ? 'sortable' : '').'">';
 
@@ -231,7 +231,7 @@ class PageTree extends \Widget
 		{
 			$extras = ['fieldType' => $this->fieldType];
 
-			if (is_array($this->rootNodes))
+			if (\is_array($this->rootNodes))
 			{
 				$extras['rootNodes'] = array_values($this->rootNodes);
 			}

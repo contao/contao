@@ -67,7 +67,7 @@ class KeyValueWizard extends \Widget
 		$options = $this->getPost($this->strName);
 
 		// Check keys only (values can be empty)
-		if (is_array($options))
+		if (\is_array($options))
 		{
 			foreach ($options as $key=>$option)
 			{
@@ -114,7 +114,7 @@ class KeyValueWizard extends \Widget
 		$arrButtons = array('copy', 'delete', 'drag');
 
 		// Make sure there is at least an empty array
-		if (!is_array($this->varValue) || !$this->varValue[0])
+		if (!\is_array($this->varValue) || !$this->varValue[0])
 		{
 			$this->varValue = array(array(''));
 		}
@@ -131,7 +131,7 @@ class KeyValueWizard extends \Widget
   <tbody class="sortable">';
 
 		// Add fields
-		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
+		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
     <tr>

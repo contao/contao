@@ -60,7 +60,7 @@ class Environment
 			return static::$arrCache[$strKey];
 		}
 
-		if (in_array($strKey, get_class_methods(__CLASS__)))
+		if (\in_array($strKey, get_class_methods(__CLASS__)))
 		{
 			static::$arrCache[$strKey] = static::$strKey();
 		}
@@ -175,9 +175,9 @@ class Environment
 
 		$strDocumentRoot .= strrev(implode('/', $arrUriSegments));
 
-		if (strlen($strDocumentRoot) < 2)
+		if (\strlen($strDocumentRoot) < 2)
 		{
-			$strDocumentRoot = substr($scriptFilename, 0, -(strlen($strDocumentRoot) + 1));
+			$strDocumentRoot = substr($scriptFilename, 0, -(\strlen($strDocumentRoot) + 1));
 		}
 
 		return str_replace('//', '/', strtr(realpath($strDocumentRoot), '\\', '/'));
@@ -261,7 +261,7 @@ class Environment
 			}
 		}
 
-		return array_slice(array_unique($arrLanguages), 0, 8);
+		return \array_slice(array_unique($arrLanguages), 0, 8);
 	}
 
 

@@ -125,7 +125,7 @@ abstract class Template extends \Controller
 	{
 		if (isset($this->arrData[$strKey]))
 		{
-			if (is_object($this->arrData[$strKey]) && is_callable($this->arrData[$strKey]))
+			if (\is_object($this->arrData[$strKey]) && \is_callable($this->arrData[$strKey]))
 			{
 				return $this->arrData[$strKey]();
 			}
@@ -149,12 +149,12 @@ abstract class Template extends \Controller
 	 */
 	public function __call($strKey, $arrParams)
 	{
-		if (!isset($this->arrData[$strKey]) || !is_callable($this->arrData[$strKey]))
+		if (!isset($this->arrData[$strKey]) || !\is_callable($this->arrData[$strKey]))
 		{
 			throw new \InvalidArgumentException("$strKey is not set or not a callable");
 		}
 
-		return call_user_func_array($this->arrData[$strKey], $arrParams);
+		return \call_user_func_array($this->arrData[$strKey], $arrParams);
 	}
 
 
@@ -273,7 +273,7 @@ abstract class Template extends \Controller
 		}
 
 		// HOOK: add custom parse filters
-		if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseTemplate']))
+		if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseTemplate']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback)
 			{
@@ -334,7 +334,7 @@ abstract class Template extends \Controller
 	public function route($strName, $arrParams=array())
 	{
 		$strUrl = \System::getContainer()->get('router')->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 
 		return ampersand($strUrl);
 	}
@@ -413,12 +413,12 @@ abstract class Template extends \Controller
 		{
 			$typeMatch = array();
 
-			if (preg_match('/\stype\s*=\s*(?:(?J)(["\'])\s*(?<type>.*?)\s*\1|(?<type>[^\s>]+))/i', $strChunk, $typeMatch) && !in_array(strtolower($typeMatch['type']), static::$validJavaScriptTypes))
+			if (preg_match('/\stype\s*=\s*(?:(?J)(["\'])\s*(?<type>.*?)\s*\1|(?<type>[^\s>]+))/i', $strChunk, $typeMatch) && !\in_array(strtolower($typeMatch['type']), static::$validJavaScriptTypes))
 			{
 				return false;
 			}
 
-			if (preg_match('/\slanguage\s*=\s*(?:(?J)(["\'])\s*(?<type>.*?)\s*\1|(?<type>[^\s>]+))/i', $strChunk, $typeMatch) && !in_array('text/' . strtolower($typeMatch['type']), static::$validJavaScriptTypes))
+			if (preg_match('/\slanguage\s*=\s*(?:(?J)(["\'])\s*(?<type>.*?)\s*\1|(?<type>[^\s>]+))/i', $strChunk, $typeMatch) && !\in_array('text/' . strtolower($typeMatch['type']), static::$validJavaScriptTypes))
 			{
 				return false;
 			}
@@ -564,14 +564,14 @@ abstract class Template extends \Controller
 	{
 		@trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		if (function_exists('fastcgi_finish_request'))
+		if (\function_exists('fastcgi_finish_request'))
 		{
 			fastcgi_finish_request();
 		}
 		elseif (PHP_SAPI !== 'cli')
 		{
 			$status = ob_get_status(true);
-			$level = count($status);
+			$level = \count($status);
 
 			while ($level-- > 0 && (!empty($status[$level]['del']) || (isset($status[$level]['flags']) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_REMOVABLE) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_FLUSHABLE))))
 			{

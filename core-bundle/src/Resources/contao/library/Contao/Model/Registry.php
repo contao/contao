@@ -84,7 +84,7 @@ class Registry implements \Countable
 	 */
 	public function count()
 	{
-		return count($this->arrIdentities);
+		return \count($this->arrIdentities);
 	}
 
 
@@ -163,12 +163,12 @@ class Registry implements \Countable
 
 		$strTable = $objModel->getTable();
 
-		if (!is_array($this->arrAliases[$strTable]))
+		if (!\is_array($this->arrAliases[$strTable]))
 		{
 			$this->arrAliases[$strTable] = array();
 		}
 
-		if (!is_array($this->arrRegistry[$strTable]))
+		if (!\is_array($this->arrRegistry[$strTable]))
 		{
 			$this->arrRegistry[$strTable] = array();
 		}

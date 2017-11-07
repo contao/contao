@@ -33,9 +33,9 @@ class ContentList extends \ContentElement
 	{
 		$arrItems = array();
 		$items = \StringUtil::deserialize($this->listitems);
-		$limit = count($items) - 1;
+		$limit = \count($items) - 1;
 
-		for ($i=0, $c=count($items); $i<$c; $i++)
+		for ($i=0, $c=\count($items); $i<$c; $i++)
 		{
 			$arrItems[] = array
 			(

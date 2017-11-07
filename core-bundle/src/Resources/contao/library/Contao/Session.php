@@ -113,7 +113,7 @@ class Session
 	public function get($strKey)
 	{
 		// Map the referer (see #281)
-		if (in_array($strKey, $this->mappedKeys))
+		if (\in_array($strKey, $this->mappedKeys))
 		{
 			return $this->session->get($strKey);
 		}
@@ -131,7 +131,7 @@ class Session
 	public function set($strKey, $varValue)
 	{
 		// Map the referer (see #281)
-		if (in_array($strKey, $this->mappedKeys))
+		if (\in_array($strKey, $this->mappedKeys))
 		{
 			$this->session->set($strKey, $varValue);
 		}
@@ -150,7 +150,7 @@ class Session
 	public function remove($strKey)
 	{
 		// Map the referer (see #281)
-		if (in_array($strKey, $this->mappedKeys))
+		if (\in_array($strKey, $this->mappedKeys))
 		{
 			$this->session->remove($strKey);
 		}
@@ -194,7 +194,7 @@ class Session
 	 */
 	public function setData($arrData)
 	{
-		if (!is_array($arrData))
+		if (!\is_array($arrData))
 		{
 			throw new \Exception('Array required to set session data');
 		}
@@ -222,12 +222,12 @@ class Session
 	 */
 	public function appendData($varData)
 	{
-		if (is_object($varData))
+		if (\is_object($varData))
 		{
 			$varData = get_object_vars($varData);
 		}
 
-		if (!is_array($varData))
+		if (!\is_array($varData))
 		{
 			throw new \Exception('Array or object required to append session data');
 		}
@@ -235,7 +235,7 @@ class Session
 		foreach ($varData as $k=>$v)
 		{
 			// Map the referer (see #281)
-			if (in_array($k, $this->mappedKeys))
+			if (\in_array($k, $this->mappedKeys))
 			{
 				$this->session->set($k, $v);
 			}

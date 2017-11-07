@@ -56,7 +56,7 @@ class Encryption
 		@trigger_error('Using Encryption::encrypt() has been deprecated and will no longer work in Contao 5.0. Use a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
 
 		// Recursively encrypt arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -107,7 +107,7 @@ class Encryption
 		@trigger_error('Using Encryption::decrypt() has been deprecated and will no longer work in Contao 5.0. Use a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
 
 		// Recursively decrypt arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -157,7 +157,7 @@ class Encryption
 	 */
 	protected static function initialize()
 	{
-		if (!in_array('mcrypt', get_loaded_extensions()))
+		if (!\in_array('mcrypt', get_loaded_extensions()))
 		{
 			throw new \Exception('The PHP mcrypt extension is not installed');
 		}
@@ -187,7 +187,7 @@ class Encryption
 			throw new \Exception("The bcrypt cost has to be between 4 and 31, $intCost given");
 		}
 
-		if (function_exists('password_hash'))
+		if (\function_exists('password_hash'))
 		{
 			return password_hash($strPassword, PASSWORD_DEFAULT, array('cost'=>$intCost));
 		}
@@ -250,18 +250,18 @@ class Encryption
 	 */
 	public static function verify($strPassword, $strHash)
 	{
-		if (function_exists('password_verify'))
+		if (\function_exists('password_verify'))
 		{
 			return password_verify($strPassword, $strHash);
 		}
 
 		$getLength = function($str) {
-			return extension_loaded('mbstring') ? mb_strlen($str, '8bit') : strlen($str);
+			return \extension_loaded('mbstring') ? mb_strlen($str, '8bit') : \strlen($str);
 		};
 
 		$newHash = crypt($strPassword, $strHash);
 
-		if (!is_string($newHash) || $getLength($newHash) != $getLength($strHash) || $getLength($newHash) <= 13)
+		if (!\is_string($newHash) || $getLength($newHash) != $getLength($strHash) || $getLength($newHash) <= 13)
 		{
 			return false;
 		}
@@ -270,7 +270,7 @@ class Encryption
 
 		for ($i=0; $i<$getLength($newHash); $i++)
 		{
-			$intStatus |= (ord($newHash[$i]) ^ ord($strHash[$i]));
+			$intStatus |= (\ord($newHash[$i]) ^ \ord($strHash[$i]));
 		}
 
 		return $intStatus === 0;

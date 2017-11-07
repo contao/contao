@@ -143,7 +143,7 @@ class BackendPopup extends \Backend
 			{
 				$arrMeta = \StringUtil::deserialize($objModel->meta);
 
-				if (is_array($arrMeta))
+				if (\is_array($arrMeta))
 				{
 					\System::loadLanguageFile('languages');
 

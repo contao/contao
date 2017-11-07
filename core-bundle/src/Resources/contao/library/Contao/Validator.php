@@ -280,7 +280,7 @@ class Validator
 	 */
 	public static function isBinaryUuid($varValue)
 	{
-		if (strlen($varValue) == 16)
+		if (\strlen($varValue) == 16)
 		{
 			return ($varValue & hex2bin('000000000000F000C000000000000000')) === hex2bin('00000000000010008000000000000000');
 		}
@@ -301,7 +301,7 @@ class Validator
 	 */
 	public static function isStringUuid($varValue)
 	{
-		if (strlen($varValue) == 36)
+		if (\strlen($varValue) == 36)
 		{
 			return preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-1[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/', $varValue);
 		}

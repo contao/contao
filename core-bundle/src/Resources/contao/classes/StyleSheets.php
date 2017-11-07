@@ -86,7 +86,7 @@ class StyleSheets extends \Backend
 			}
 
 			// Preserve root files (is this still required now that scripts are in assets/css/scripts?)
-			if (is_array(\Config::get('rootFiles')) && in_array($file, \Config::get('rootFiles')))
+			if (\is_array(\Config::get('rootFiles')) && \in_array($file, \Config::get('rootFiles')))
 			{
 				continue;
 			}
@@ -100,7 +100,7 @@ class StyleSheets extends \Backend
 			$objFile = new \File('assets/css/' . $file);
 
 			// Delete the old style sheet
-			if ($objFile->extension == 'css' && !in_array($objFile->filename, $arrStyleSheets))
+			if ($objFile->extension == 'css' && !\in_array($objFile->filename, $arrStyleSheets))
 			{
 				$objFile->delete();
 			}
@@ -148,7 +148,7 @@ class StyleSheets extends \Backend
 
 		if ($objTheme->vars != '')
 		{
-			if (is_array(($tmp = \StringUtil::deserialize($objTheme->vars))))
+			if (\is_array(($tmp = \StringUtil::deserialize($objTheme->vars))))
 			{
 				foreach ($tmp as $v)
 				{
@@ -160,7 +160,7 @@ class StyleSheets extends \Backend
 		// Merge the global style sheet variables
 		if ($row['vars'] != '')
 		{
-			if (is_array($tmp = \StringUtil::deserialize($row['vars'])))
+			if (\is_array($tmp = \StringUtil::deserialize($row['vars'])))
 			{
 				foreach ($tmp as $v)
 				{
@@ -300,7 +300,7 @@ class StyleSheets extends \Backend
 			// Top/right/bottom/left
 			$row['trbl'] = \StringUtil::deserialize($row['trbl']);
 
-			if (is_array($row['trbl']))
+			if (\is_array($row['trbl']))
 			{
 				foreach ($row['trbl'] as $k=>$v)
 				{
@@ -350,7 +350,7 @@ class StyleSheets extends \Backend
 			{
 				$row['margin'] = \StringUtil::deserialize($row['margin']);
 
-				if (is_array($row['margin']))
+				if (\is_array($row['margin']))
 				{
 					$top = $row['margin']['top'];
 					$right = $row['margin']['right'];
@@ -411,7 +411,7 @@ class StyleSheets extends \Backend
 			{
 				$row['padding'] = \StringUtil::deserialize($row['padding']);
 
-				if (is_array($row['padding']))
+				if (\is_array($row['padding']))
 				{
 					$top = $row['padding']['top'];
 					$right = $row['padding']['right'];
@@ -534,7 +534,7 @@ class StyleSheets extends \Backend
 			{
 				$row['gradientColors'] = \StringUtil::deserialize($row['gradientColors']);
 
-				if (is_array($row['gradientColors']) && count(array_filter($row['gradientColors'])) > 0)
+				if (\is_array($row['gradientColors']) && \count(array_filter($row['gradientColors'])) > 0)
 				{
 					$bgImage = '';
 
@@ -564,7 +564,7 @@ class StyleSheets extends \Backend
 					// Convert the angle for the legacy commands (see #4569)
 					if (strpos($row['gradientAngle'], 'deg') !== false)
 					{
-						$angle = (abs(intval($row['gradientAngle']) - 450) % 360) . 'deg';
+						$angle = (abs(\intval($row['gradientAngle']) - 450) % 360) . 'deg';
 					}
 					else
 					{
@@ -601,7 +601,7 @@ class StyleSheets extends \Backend
 				$shColor = \StringUtil::deserialize($row['shadowcolor'], true);
 				$row['shadowsize'] = \StringUtil::deserialize($row['shadowsize']);
 
-				if (is_array($row['shadowsize']) && $row['shadowsize']['top'] != '' && $row['shadowsize']['right'] != '')
+				if (\is_array($row['shadowsize']) && $row['shadowsize']['top'] != '' && $row['shadowsize']['right'] != '')
 				{
 					$offsetx = $row['shadowsize']['top'];
 					$offsety = $row['shadowsize']['right'];
@@ -638,7 +638,7 @@ class StyleSheets extends \Backend
 			$row['borderwidth'] = \StringUtil::deserialize($row['borderwidth']);
 
 			// Border width
-			if (is_array($row['borderwidth']))
+			if (\is_array($row['borderwidth']))
 			{
 				$top = $row['borderwidth']['top'];
 				$right = $row['borderwidth']['right'];
@@ -707,7 +707,7 @@ class StyleSheets extends \Backend
 			{
 				$row['borderradius'] = \StringUtil::deserialize($row['borderradius']);
 
-				if (is_array($row['borderradius']) && ($row['borderradius']['top'] != '' || $row['borderradius']['right'] != '' || $row['borderradius']['bottom'] != '' || $row['borderradius']['left'] != ''))
+				if (\is_array($row['borderradius']) && ($row['borderradius']['top'] != '' || $row['borderradius']['right'] != '' || $row['borderradius']['bottom'] != '' || $row['borderradius']['left'] != ''))
 				{
 					$top = $row['borderradius']['top'];
 					$right = $row['borderradius']['right'];
@@ -803,44 +803,44 @@ class StyleSheets extends \Backend
 			// Font style
 			$row['fontstyle'] = \StringUtil::deserialize($row['fontstyle']);
 
-			if (is_array($row['fontstyle']))
+			if (\is_array($row['fontstyle']))
 			{
-				if (in_array('bold', $row['fontstyle']))
+				if (\in_array('bold', $row['fontstyle']))
 				{
 					$return .= $lb . 'font-weight:bold;';
 				}
 
-				if (in_array('italic', $row['fontstyle']))
+				if (\in_array('italic', $row['fontstyle']))
 				{
 					$return .= $lb . 'font-style:italic;';
 				}
 
-				if (in_array('normal', $row['fontstyle']))
+				if (\in_array('normal', $row['fontstyle']))
 				{
 					$return .= $lb . 'font-weight:normal;';
 				}
 
-				if (in_array('underline', $row['fontstyle']))
+				if (\in_array('underline', $row['fontstyle']))
 				{
 					$return .= $lb . 'text-decoration:underline;';
 				}
 
-				if (in_array('line-through', $row['fontstyle']))
+				if (\in_array('line-through', $row['fontstyle']))
 				{
 					$return .= $lb . 'text-decoration:line-through;';
 				}
 
-				if (in_array('overline', $row['fontstyle']))
+				if (\in_array('overline', $row['fontstyle']))
 				{
 					$return .= $lb. 'text-decoration:overline;';
 				}
 
-				if (in_array('notUnderlined', $row['fontstyle']))
+				if (\in_array('notUnderlined', $row['fontstyle']))
 				{
 					$return .= $lb . 'text-decoration:none;';
 				}
 
-				if (in_array('small-caps', $row['fontstyle']))
+				if (\in_array('small-caps', $row['fontstyle']))
 				{
 					$return .= $lb . 'font-variant:small-caps;';
 				}
@@ -927,7 +927,7 @@ class StyleSheets extends \Backend
 		}
 
 		// Allow custom definitions
-		if (isset($GLOBALS['TL_HOOKS']['compileDefinition']) && is_array($GLOBALS['TL_HOOKS']['compileDefinition']))
+		if (isset($GLOBALS['TL_HOOKS']['compileDefinition']) && \is_array($GLOBALS['TL_HOOKS']['compileDefinition']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['compileDefinition'] as $callback)
 			{
@@ -983,7 +983,7 @@ class StyleSheets extends \Backend
 	 */
 	protected function compileColor($color, $blnWriteToFile=false, $vars=array())
 	{
-		if (!is_array($color))
+		if (!\is_array($color))
 		{
 			return '#' . $this->shortenHexColor($color);
 		}
@@ -1045,7 +1045,7 @@ class StyleSheets extends \Backend
 		$rgb = array();
 
 		// Try to convert using bitwise operation
-		if (strlen($color) == 6)
+		if (\strlen($color) == 6)
 		{
 			$dec = hexdec($color);
 			$rgb['red'] = 0xFF & ($dec >> 0x10);
@@ -1054,7 +1054,7 @@ class StyleSheets extends \Backend
 		}
 
 		// Shorthand notation
-		elseif (strlen($color) == 3)
+		elseif (\strlen($color) == 3)
 		{
 			$rgb['red'] = hexdec(str_repeat(substr($color, 0, 1), 2));
 			$rgb['green'] = hexdec(str_repeat(substr($color, 1, 1), 2));
@@ -1135,7 +1135,7 @@ class StyleSheets extends \Backend
 				$intSorting  = 0;
 				$strComment  = '';
 				$strCategory = '';
-				$intLength   = strlen($strFile);
+				$intLength   = \strlen($strFile);
 
 				// Tokenize
 				for ($i=0; $i<$intLength; $i++)
@@ -1370,7 +1370,7 @@ class StyleSheets extends \Backend
 
 		if ($objTheme->vars != '')
 		{
-			if (is_array(($tmp = \StringUtil::deserialize($objTheme->vars))))
+			if (\is_array(($tmp = \StringUtil::deserialize($objTheme->vars))))
 			{
 				foreach ($tmp as $v)
 				{
@@ -1382,7 +1382,7 @@ class StyleSheets extends \Backend
 		// Merge the global style sheet variables
 		if ($objStyleSheet->vars != '')
 		{
-			if (is_array(($tmp = \StringUtil::deserialize($objStyleSheet->vars))))
+			if (\is_array(($tmp = \StringUtil::deserialize($objStyleSheet->vars))))
 			{
 				foreach ($tmp as $v)
 				{
@@ -1444,8 +1444,8 @@ class StyleSheets extends \Backend
 		}
 
 		$chunks = explode('-', $strName);
-		$i = (count($chunks) > 1) ? array_pop($chunks) : 0;
-		$strName = implode('-', $chunks) . '-' . (intval($i) + 1);
+		$i = (\count($chunks) > 1) ? array_pop($chunks) : 0;
+		$strName = implode('-', $chunks) . '-' . (\intval($i) + 1);
 
 		return $this->checkStyleSheetName($strName);
 	}
@@ -1588,7 +1588,7 @@ class StyleSheets extends \Backend
 					$arrSet['alignment'] = 1;
 					$arrTRBL = preg_split('/\s+/', $arrChunks[1]);
 					$arrUnits = array();
-					switch (count($arrTRBL))
+					switch (\count($arrTRBL))
 					{
 						case 1:
 							if ($arrTRBL[0] == 'auto')
@@ -1631,7 +1631,7 @@ class StyleSheets extends \Backend
 								$varValue_2 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[1]);
 							}
 							// Move to custom section if there are different units
-							if (count(array_filter(array_unique($arrUnits))) > 1)
+							if (\count(array_filter(array_unique($arrUnits))) > 1)
 							{
 								$arrSet['alignment'] = '';
 								$arrSet['own'][] = $strDefinition;
@@ -1685,7 +1685,7 @@ class StyleSheets extends \Backend
 								$varValue_3 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[2]);
 							}
 							// Move to custom section if there are different units
-							if (count(array_filter(array_unique($arrUnits))) > 1)
+							if (\count(array_filter(array_unique($arrUnits))) > 1)
 							{
 								$arrSet['alignment'] = '';
 								$arrSet['own'][] = $strDefinition;
@@ -1748,7 +1748,7 @@ class StyleSheets extends \Backend
 								$varValue_4 = preg_replace('/[^0-9.-]+/', '', $arrTRBL[3]);
 							}
 							// Move to custom section if there are different units
-							if (count(array_filter(array_unique($arrUnits))) > 1)
+							if (\count(array_filter(array_unique($arrUnits))) > 1)
 							{
 								$arrSet['alignment'] = '';
 								$arrSet['own'][] = $strDefinition;
@@ -1956,7 +1956,7 @@ class StyleSheets extends \Backend
 							$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[0]);
 						}
 					}
-					switch (count($arrTRBL))
+					switch (\count($arrTRBL))
 					{
 						case 1:
 							$varValue = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
@@ -2017,7 +2017,7 @@ class StyleSheets extends \Backend
 							$strUnit = preg_replace('/[^acehimnprtvwx%]/', '', $arrTRBL[0]);
 						}
 					}
-					switch (count($arrTRBL))
+					switch (\count($arrTRBL))
 					{
 						case 1:
 							$varValue = preg_replace('/[^0-9.-]+/', '', $arrTRBL[0]);
@@ -2207,14 +2207,14 @@ class StyleSheets extends \Backend
 					$blnIsOwn = true;
 
 					// Allow custom definitions
-					if (isset($GLOBALS['TL_HOOKS']['createDefinition']) && is_array($GLOBALS['TL_HOOKS']['createDefinition']))
+					if (isset($GLOBALS['TL_HOOKS']['createDefinition']) && \is_array($GLOBALS['TL_HOOKS']['createDefinition']))
 					{
 						foreach ($GLOBALS['TL_HOOKS']['createDefinition'] as $callback)
 						{
 							$this->import($callback[0]);
 							$arrTemp = $this->{$callback[0]}->{$callback[1]}($strKey, $arrChunks[1], $strDefinition, $arrSet);
 
-							if ($arrTemp && is_array($arrTemp))
+							if ($arrTemp && \is_array($arrTemp))
 							{
 								$blnIsOwn = false;
 								$arrSet = array_merge($arrSet, $arrTemp);

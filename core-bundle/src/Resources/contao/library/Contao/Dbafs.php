@@ -58,7 +58,7 @@ class Dbafs
 		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
-		if ($strResource == '' || strncmp($strResource,  $strUploadPath, strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource))
+		if ($strResource == '' || strncmp($strResource,  $strUploadPath, \strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource))
 		{
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
@@ -89,7 +89,7 @@ class Dbafs
 		$objDatabase = \Database::getInstance();
 
 		// Build the paths
-		while (count($arrChunks))
+		while (\count($arrChunks))
 		{
 			$strPath .= '/' . array_shift($arrChunks);
 			$arrPaths[] = $strPath;
@@ -151,7 +151,7 @@ class Dbafs
 				continue;
 			}
 
-			$strParent = dirname($strPath);
+			$strParent = \dirname($strPath);
 
 			// The parent ID should be in $arrPids
 			// Do not use isset() here, because the PID can be null
@@ -235,7 +235,7 @@ class Dbafs
 			$objFile = static::addResource($strDestination);
 		}
 
-		$strFolder = dirname($strDestination);
+		$strFolder = \dirname($strDestination);
 
 		// Set the new parent ID
 		if ($strFolder == \Config::get('uploadPath'))
@@ -275,11 +275,11 @@ class Dbafs
 		}
 
 		// Update the MD5 hash of the parent folders
-		if (($strPath = dirname($strSource)) != \Config::get('uploadPath'))
+		if (($strPath = \dirname($strSource)) != \Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
 		}
-		if (($strPath = dirname($strDestination)) != \Config::get('uploadPath'))
+		if (($strPath = \dirname($strDestination)) != \Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
 		}
@@ -307,7 +307,7 @@ class Dbafs
 			$objFile = static::addResource($strSource);
 		}
 
-		$strFolder = dirname($strDestination);
+		$strFolder = \dirname($strDestination);
 
 		/** @var FilesModel $objNewFile */
 		$objNewFile = clone $objFile->current();
@@ -358,11 +358,11 @@ class Dbafs
 		}
 
 		// Update the MD5 hash of the parent folders
-		if (($strPath = dirname($strSource)) != \Config::get('uploadPath'))
+		if (($strPath = \dirname($strSource)) != \Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
 		}
-		if (($strPath = dirname($strDestination)) != \Config::get('uploadPath'))
+		if (($strPath = \dirname($strDestination)) != \Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
 		}
@@ -400,7 +400,7 @@ class Dbafs
 			}
 		}
 
-		static::updateFolderHashes(dirname($strResource));
+		static::updateFolderHashes(\dirname($strResource));
 
 		return null;
 	}
@@ -415,7 +415,7 @@ class Dbafs
 	{
 		$arrPaths  = array();
 
-		if (!is_array($varResource))
+		if (!\is_array($varResource))
 		{
 			$varResource = array($varResource);
 		}
@@ -432,7 +432,7 @@ class Dbafs
 			}
 
 			// Build the paths
-			while (count($arrChunks))
+			while (\count($arrChunks))
 			{
 				$strPath .= '/' . array_shift($arrChunks);
 				$arrPaths[] = $strPath;
@@ -473,7 +473,7 @@ class Dbafs
 		@ini_set('max_execution_time', 0);
 
 		// Consider the suhosin.memory_limit (see #7035)
-		if (extension_loaded('suhosin'))
+		if (\extension_loaded('suhosin'))
 		{
 			if (($limit = ini_get('suhosin.memory_limit')) !== '')
 			{
@@ -546,7 +546,7 @@ class Dbafs
 				$objLog->append("[Added] $strRelpath");
 
 				// Get the parent folder
-				$strParent = dirname($strRelpath);
+				$strParent = \dirname($strRelpath);
 
 				// Get the parent ID
 				if ($strParent == \Config::get('uploadPath'))
@@ -644,7 +644,7 @@ class Dbafs
 					}
 
 					// If another file has been mapped already, delete the entry (see #6008)
-					if (in_array($objFound->path, $arrMapped))
+					if (\in_array($objFound->path, $arrMapped))
 					{
 						$objLog->append("[Deleted] {$objFiles->path}");
 						$objFiles->delete();
@@ -728,7 +728,7 @@ class Dbafs
 	 */
 	public static function shouldBeSynchronized($strPath)
 	{
-		if (!isset(static::$arrShouldBeSynchronized[$strPath]) || !is_bool(static::$arrShouldBeSynchronized[$strPath]))
+		if (!isset(static::$arrShouldBeSynchronized[$strPath]) || !\is_bool(static::$arrShouldBeSynchronized[$strPath]))
 		{
 			static::$arrShouldBeSynchronized[$strPath] = !static::isFileSyncExclude($strPath);
 		}
@@ -753,11 +753,11 @@ class Dbafs
 
 		if (is_file(TL_ROOT . '/' . $strPath))
 		{
-			$strPath = dirname($strPath);
+			$strPath = \dirname($strPath);
 		}
 
 		// Outside the files directory
-		if (strncmp($strPath . '/', \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0)
+		if (strncmp($strPath . '/', \Config::get('uploadPath') . '/', \strlen(\Config::get('uploadPath')) + 1) !== 0)
 		{
 			return true;
 		}
@@ -769,7 +769,7 @@ class Dbafs
 
 			foreach ($arrExempt as $strExempt)
 			{
-				if (strncmp($strExempt . '/', $strPath . '/', strlen($strExempt) + 1) === 0)
+				if (strncmp($strExempt . '/', $strPath . '/', \strlen($strExempt) + 1) === 0)
 				{
 					return true;
 				}

@@ -153,7 +153,7 @@ class File extends \System
 	 */
 	public function __destruct()
 	{
-		if (is_resource($this->resFile))
+		if (\is_resource($this->resFile))
 		{
 			$this->Files->fclose($this->resFile);
 		}
@@ -336,8 +336,8 @@ class File extends \System
 
 							$this->arrImageViewSize = array
 							(
-								intval($dimensions->getSize()->getWidth()),
-								intval($dimensions->getSize()->getHeight())
+								\intval($dimensions->getSize()->getWidth()),
+								\intval($dimensions->getSize()->getHeight())
 							);
 
 							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
@@ -367,11 +367,11 @@ class File extends \System
 				break;
 
 			case 'isGdImage':
-				return in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png'));
+				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png'));
 				break;
 
 			case 'isSvgImage':
-				return in_array($this->extension, array('svg', 'svgz'));
+				return \in_array($this->extension, array('svg', 'svgz'));
 				break;
 
 			case 'channels':
@@ -391,7 +391,7 @@ class File extends \System
 				break;
 
 			case 'handle':
-				if (!is_resource($this->resFile))
+				if (!\is_resource($this->resFile))
 				{
 					$this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
 				}
@@ -419,7 +419,7 @@ class File extends \System
 		}
 
 		// Handle open_basedir restrictions
-		if (($strFolder = dirname($this->strFile)) == '.')
+		if (($strFolder = \dirname($this->strFile)) == '.')
 		{
 			$strFolder = '';
 		}
@@ -456,7 +456,7 @@ class File extends \System
 	 */
 	public function truncate()
 	{
-		if (is_resource($this->resFile))
+		if (\is_resource($this->resFile))
 		{
 			ftruncate($this->resFile, 0);
 			rewind($this->resFile);
@@ -546,7 +546,7 @@ class File extends \System
 	 */
 	public function close()
 	{
-		if (is_resource($this->resFile))
+		if (\is_resource($this->resFile))
 		{
 			$this->Files->fclose($this->resFile);
 		}
@@ -555,7 +555,7 @@ class File extends \System
 		if (!file_exists(TL_ROOT . '/' . $this->strFile))
 		{
 			// Handle open_basedir restrictions
-			if (($strFolder = dirname($this->strFile)) == '.')
+			if (($strFolder = \dirname($this->strFile)) == '.')
 			{
 				$strFolder = '';
 			}
@@ -658,7 +658,7 @@ class File extends \System
 	 */
 	public function renameTo($strNewName)
 	{
-		$strParent = dirname($strNewName);
+		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
 		if (!is_dir(TL_ROOT . '/' . $strParent))
@@ -707,7 +707,7 @@ class File extends \System
 	 */
 	public function copyTo($strNewName)
 	{
-		$strParent = dirname($strNewName);
+		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
 		if (!is_dir(TL_ROOT . '/' . $strParent))
@@ -805,7 +805,7 @@ class File extends \System
 	 */
 	protected function fputs($varData, $strMode)
 	{
-		if (!is_resource($this->resFile))
+		if (!\is_resource($this->resFile))
 		{
 			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
 

@@ -155,8 +155,8 @@ abstract class Hybrid extends \Frontend
 		$this->typePrefix = $objElement->typePrefix;
 
 		$arrHeadline = \StringUtil::deserialize($objElement->headline);
-		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -259,7 +259,7 @@ abstract class Hybrid extends \Frontend
 			$this->Template->hl = $this->hl;
 		}
 
-		if (!empty($this->objParent->classes) && is_array($this->objParent->classes))
+		if (!empty($this->objParent->classes) && \is_array($this->objParent->classes))
 		{
 			$this->Template->class .= ' ' . implode(' ', $this->objParent->classes);
 		}

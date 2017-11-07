@@ -456,7 +456,7 @@ class tl_templates extends Backend
 
 		// Templates to compare against
 		$arrComparable = array();
-		$intPrefixLength = strlen($strPrefix);
+		$intPrefixLength = \strlen($strPrefix);
 
 		foreach ($arrTemplates as $k => $v)
 		{

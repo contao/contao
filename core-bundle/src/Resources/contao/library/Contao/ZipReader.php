@@ -140,7 +140,7 @@ class ZipReader
 		$this->resFile = @fopen(TL_ROOT . '/' . $strFile, 'rb');
 
 		// Could not open file
-		if (!is_resource($this->resFile))
+		if (!\is_resource($this->resFile))
 		{
 			throw new \Exception("Could not open file $strFile");
 		}
@@ -396,7 +396,7 @@ class ZipReader
 
 			// BZIP2
 			case 12:
-				if (!extension_loaded('bz2'))
+				if (!\extension_loaded('bz2'))
 				{
 					throw new \Exception('PHP extension "bz2" required to decompress BZIP2 files');
 				}
@@ -416,7 +416,7 @@ class ZipReader
 		}
 
 		// Check uncompressed size
-		if (strlen($strBuffer) != $this->arrFiles[$this->intIndex]['uncompressed_size'])
+		if (\strlen($strBuffer) != $this->arrFiles[$this->intIndex]['uncompressed_size'])
 		{
 			throw new \Exception('Size of the uncompressed file does not match header value');
 		}
@@ -484,7 +484,7 @@ class ZipReader
 		// Eliminate nested arrays
 		foreach ($arrHeader as $k=>$v)
 		{
-			$arrHeader[$k] = is_array($v) ? $v[1] : $v;
+			$arrHeader[$k] = \is_array($v) ? $v[1] : $v;
 		}
 
 		$this->arrHeader = $arrHeader;
@@ -528,12 +528,12 @@ class ZipReader
 			// Eliminate nested arrays
 			foreach ($arrFile as $k=>$v)
 			{
-				$arrFile[$k] = is_array($v) ? $v[1] : $v;
+				$arrFile[$k] = \is_array($v) ? $v[1] : $v;
 			}
 
 			// Split file path
 			$arrFile['file_basename'] = basename($arrFile['file_name']);
-			$arrFile['file_dirname'] = (($path = dirname($arrFile['file_name'])) != '.' ? $path : '');
+			$arrFile['file_dirname'] = (($path = \dirname($arrFile['file_name'])) != '.' ? $path : '');
 
 			// Add UNIX time
 			$arrFile['last_mod_file_unix'] = $this->decToUnix((int) $arrFile['last_mod_file_time'], (int) $arrFile['last_mod_file_date']);
@@ -543,7 +543,7 @@ class ZipReader
 			$this->arrFiles[] = $arrFile;
 		}
 
-		$this->intLast = (count($this->arrFiles) - 1);
+		$this->intLast = (\count($this->arrFiles) - 1);
 
 		// Restore the mbstring encoding (see #5842)
 		$strMbCharset && mb_internal_encoding($strMbCharset);

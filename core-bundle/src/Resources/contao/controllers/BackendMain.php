@@ -252,7 +252,7 @@ class BackendMain extends \Backend
 		$this->Template->systemErrorMessagesCount = substr_count($strSystemMessages, 'class="tl_error"');
 
 		// Front end preview links
-		if (defined('CURRENT_ID') && CURRENT_ID != '')
+		if (\defined('CURRENT_ID') && CURRENT_ID != '')
 		{
 			if (\Input::get('do') == 'page')
 			{

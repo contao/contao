@@ -91,7 +91,7 @@ class Database
 			$this->resConnection = \System::getContainer()->get('database_connection');
 		}
 
-		if (!is_object($this->resConnection))
+		if (!\is_object($this->resConnection))
 		{
 			throw new \Exception(sprintf('Could not connect to database (%s)', $this->error));
 		}
@@ -153,7 +153,7 @@ class Database
 			'dbDatabase' => \Config::get('dbDatabase')
 		);
 
-		if (is_array($arrCustomConfig))
+		if (\is_array($arrCustomConfig))
 		{
 			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);
 		}
@@ -225,7 +225,7 @@ class Database
 	 */
 	public function findInSet($strKey, $varSet, $blnIsField=false)
 	{
-		if (is_array($varSet))
+		if (\is_array($varSet))
 		{
 			$varSet = implode(',', $varSet);
 		}
@@ -288,7 +288,7 @@ class Database
 			return false;
 		}
 
-		return in_array($strTable, $this->listTables($strDatabase, $blnNoCache));
+		return \in_array($strTable, $this->listTables($strDatabase, $blnNoCache));
 	}
 
 
@@ -520,7 +520,7 @@ class Database
 	 */
 	public function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
 	{
-		if (!is_array($arrParentIds))
+		if (!\is_array($arrParentIds))
 		{
 			$arrParentIds = array($arrParentIds);
 		}

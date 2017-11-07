@@ -95,7 +95,7 @@ class ModuleLogin extends \Module
 				{
 					$arrGroups = \StringUtil::deserialize($objMember->groups);
 
-					if (!empty($arrGroups) && is_array($arrGroups))
+					if (!empty($arrGroups) && \is_array($arrGroups))
 					{
 						$objGroupPage = \PageModel::findFirstActiveByMemberGroups($arrGroups);
 
@@ -133,7 +133,7 @@ class ModuleLogin extends \Module
 			$strRedirect = \Environment::get('request');
 
 			// Redirect to last page visited
-			if ($this->redirectBack && strlen($_SESSION['LAST_PAGE_VISITED']))
+			if ($this->redirectBack && \strlen($_SESSION['LAST_PAGE_VISITED']))
 			{
 				$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
 			}
