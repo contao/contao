@@ -19,9 +19,9 @@ ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
 
 if (file_exists(__DIR__.'/../autoload.php')) {
-    $projectDir = dirname(__DIR__, 2);
+    $projectDir = \dirname(__DIR__, 2);
 } else {
-    $projectDir = dirname(__DIR__, 4);
+    $projectDir = \dirname(__DIR__, 4);
 }
 
 /** @var Composer\Autoload\ClassLoader $loader */

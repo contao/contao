@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 Plugin::autoloadModules(__DIR__.'/../system/modules');
-ContaoKernel::setProjectDir(dirname(__DIR__));
+ContaoKernel::setProjectDir(\dirname(__DIR__));
 
 $kernel = new ContaoKernel('prod', false);
 

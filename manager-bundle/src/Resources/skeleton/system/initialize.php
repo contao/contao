@@ -5,7 +5,7 @@ use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\HttpFoundation\Request;
 
-if (!defined('TL_SCRIPT')) {
+if (!\defined('TL_SCRIPT')) {
     die('Your script is not compatible with Contao 4.');
 }
 
@@ -17,7 +17,7 @@ Plugin::autoloadModules(__DIR__.'/modules');
 $request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
 $request->attributes->set('_scope', ('BE' === TL_MODE ? 'backend' : 'frontend'));
 
-ContaoKernel::setProjectDir(dirname(__DIR__));
+ContaoKernel::setProjectDir(\dirname(__DIR__));
 
 $kernel = new ContaoKernel('prod', false);
 $response = $kernel->handle($request);

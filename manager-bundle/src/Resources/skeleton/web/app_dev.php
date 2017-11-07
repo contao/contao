@@ -56,7 +56,7 @@ if ($request->server->has('HTTP_CLIENT_IP')
 Debug::enable();
 Request::enableHttpMethodParameterOverride();
 Plugin::autoloadModules(__DIR__.'/../system/modules');
-ContaoKernel::setProjectDir(dirname(__DIR__));
+ContaoKernel::setProjectDir(\dirname(__DIR__));
 
 // Handle the request
 $kernel = new ContaoKernel('dev', true);
