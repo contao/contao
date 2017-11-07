@@ -73,7 +73,7 @@ class ModuleNewsletterReader extends \Module
 		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Do not index or cache the page if there are no channels
-		if (!is_array($this->nl_channels) || empty($this->nl_channels))
+		if (!\is_array($this->nl_channels) || empty($this->nl_channels))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;

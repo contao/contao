@@ -73,7 +73,7 @@ class NewsletterChannelModel extends \Model
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{
-		if (!is_array($arrIds) || empty($arrIds))
+		if (!\is_array($arrIds) || empty($arrIds))
 		{
 			return null;
 		}
