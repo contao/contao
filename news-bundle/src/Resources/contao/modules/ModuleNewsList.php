@@ -57,7 +57,7 @@ class ModuleNewsList extends \ModuleNews
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Return if there are no archives
-		if (!is_array($this->news_archives) || empty($this->news_archives))
+		if (!\is_array($this->news_archives) || empty($this->news_archives))
 		{
 			return '';
 		}
@@ -72,7 +72,7 @@ class ModuleNewsList extends \ModuleNews
 	protected function compile()
 	{
 		$limit = null;
-		$offset = intval($this->skipFirst);
+		$offset = \intval($this->skipFirst);
 
 		// Maximum number of items
 		if ($this->numberOfItems > 0)
@@ -129,7 +129,7 @@ class ModuleNewsList extends \ModuleNews
 			// Set limit and offset
 			$limit = $this->perPage;
 			$offset += (max($page, 1) - 1) * $this->perPage;
-			$skip = intval($this->skipFirst);
+			$skip = \intval($this->skipFirst);
 
 			// Overall limit
 			if ($offset + $limit > $total + $skip)
@@ -165,7 +165,7 @@ class ModuleNewsList extends \ModuleNews
 	protected function countItems($newsArchives, $blnFeatured)
 	{
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['newsListCountItems']) && is_array($GLOBALS['TL_HOOKS']['newsListCountItems']))
+		if (isset($GLOBALS['TL_HOOKS']['newsListCountItems']) && \is_array($GLOBALS['TL_HOOKS']['newsListCountItems']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListCountItems'] as $callback)
 			{
@@ -174,7 +174,7 @@ class ModuleNewsList extends \ModuleNews
 					continue;
 				}
 
-				if (is_int($intResult))
+				if (\is_int($intResult))
 				{
 					return $intResult;
 				}
@@ -198,7 +198,7 @@ class ModuleNewsList extends \ModuleNews
 	protected function fetchItems($newsArchives, $blnFeatured, $limit, $offset)
 	{
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['newsListFetchItems']) && is_array($GLOBALS['TL_HOOKS']['newsListFetchItems']))
+		if (isset($GLOBALS['TL_HOOKS']['newsListFetchItems']) && \is_array($GLOBALS['TL_HOOKS']['newsListFetchItems']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListFetchItems'] as $callback)
 			{

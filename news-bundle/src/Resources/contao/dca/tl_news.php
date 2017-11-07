@@ -513,7 +513,7 @@ class tl_news extends Backend
 		}
 
 		// Set the root IDs
-		if (!is_array($this->User->news) || empty($this->User->news))
+		if (!\is_array($this->User->news) || empty($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -522,7 +522,7 @@ class tl_news extends Backend
 			$root = $this->User->news;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = \strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
 		switch (Input::get('act'))
@@ -532,7 +532,7 @@ class tl_news extends Backend
 				break;
 
 			case 'create':
-				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
+				if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Input::get('pid') . '.');
 				}
@@ -540,7 +540,7 @@ class tl_news extends Backend
 
 			case 'cut':
 			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
+				if (!\in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . Input::get('pid') . '.');
 				}
@@ -560,7 +560,7 @@ class tl_news extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news item ID ' . $id . '.');
 				}
 
-				if (!in_array($objArchive->pid, $root))
+				if (!\in_array($objArchive->pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' of news archive ID ' . $objArchive->pid . '.');
 				}
@@ -572,7 +572,7 @@ class tl_news extends Backend
 			case 'overrideAll':
 			case 'cutAll':
 			case 'copyAll':
-				if (!in_array($id, $root))
+				if (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
@@ -594,11 +594,11 @@ class tl_news extends Backend
 				break;
 
 			default:
-				if (strlen(Input::get('act')))
+				if (\strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
-				elseif (!in_array($id, $root))
+				elseif (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
@@ -795,7 +795,7 @@ class tl_news extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (!is_array($session) || empty($session))
+		if (!\is_array($session) || empty($session))
 		{
 			return;
 		}
@@ -856,7 +856,7 @@ class tl_news extends Backend
 	 */
 	public function iconFeatured($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('fid')))
+		if (\strlen(Input::get('fid')))
 		{
 			$this->toggleFeatured(Input::get('fid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -905,16 +905,16 @@ class tl_news extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_news']['fields']['featured']['save_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_news']['fields']['featured']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['fields']['featured']['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $this);
 				}
@@ -943,7 +943,7 @@ class tl_news extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('tid')))
+		if (\strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -985,16 +985,16 @@ class tl_news extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -1024,16 +1024,16 @@ class tl_news extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_news']['fields']['published']['save_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_news']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['fields']['published']['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -1053,16 +1053,16 @@ class tl_news extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}

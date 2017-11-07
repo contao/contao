@@ -92,7 +92,7 @@ class NewsFeedModel extends \Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.archives LIKE '%\"" . intval($intId) . "\"%'"), null, $arrOptions);
+		return static::findBy(array("$t.archives LIKE '%\"" . \intval($intId) . "\"%'"), null, $arrOptions);
 	}
 
 
@@ -106,7 +106,7 @@ class NewsFeedModel extends \Model
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{
-		if (!is_array($arrIds) || empty($arrIds))
+		if (!\is_array($arrIds) || empty($arrIds))
 		{
 			return null;
 		}

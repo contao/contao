@@ -70,7 +70,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
-		if (!is_array($this->news_archives) || empty($this->news_archives))
+		if (!\is_array($this->news_archives) || empty($this->news_archives))
 		{
 			return '';
 		}
@@ -133,7 +133,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$arrItems = array();
 		$count = 0;
-		$limit = count($arrData);
+		$limit = \count($arrData);
 
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -186,12 +186,12 @@ class ModuleNewsMenu extends \ModuleNews
 		foreach ($arrData as $intYear=>$arrMonth)
 		{
 			$count = 0;
-			$limit = count($arrMonth);
+			$limit = \count($arrMonth);
 
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;
-				$intMonth = (intval($intMonth) - 1);
+				$intMonth = (\intval($intMonth) - 1);
 
 				$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
 
@@ -252,7 +252,7 @@ class ModuleNewsMenu extends \ModuleNews
 		$prevYear = ($intMonth == 1) ? ($intYear - 1) : $intYear;
 		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][($prevMonth - 1)] . ' ' . $prevYear;
 
-		$this->Template->prevHref = $this->strUrl . '?day=' . $prevYear . ((strlen($prevMonth) < 2) ? '0' : '') . $prevMonth . '01';
+		$this->Template->prevHref = $this->strUrl . '?day=' . $prevYear . ((\strlen($prevMonth) < 2) ? '0' : '') . $prevMonth . '01';
 		$this->Template->prevTitle = \StringUtil::specialchars($lblPrevious);
 		$this->Template->prevLink = $GLOBALS['TL_LANG']['MSC']['news_previous'] . ' ' . $lblPrevious;
 		$this->Template->prevLabel = $GLOBALS['TL_LANG']['MSC']['news_previous'];
@@ -265,7 +265,7 @@ class ModuleNewsMenu extends \ModuleNews
 		$nextYear = ($intMonth == 12) ? ($intYear + 1) : $intYear;
 		$lblNext = $GLOBALS['TL_LANG']['MONTHS'][($nextMonth - 1)] . ' ' . $nextYear;
 
-		$this->Template->nextHref = $this->strUrl . '?day=' . $nextYear . ((strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
+		$this->Template->nextHref = $this->strUrl . '?day=' . $nextYear . ((\strlen($nextMonth) < 2) ? '0' : '') . $nextMonth . '01';
 		$this->Template->nextTitle = \StringUtil::specialchars($lblNext);
 		$this->Template->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['news_next'];
 		$this->Template->nextLabel = $GLOBALS['TL_LANG']['MSC']['news_next'];
@@ -348,7 +348,7 @@ class ModuleNewsMenu extends \ModuleNews
 				continue;
 			}
 
-			$intKey = date('Ym', $this->Date->tstamp) . ((strlen($intDay) < 2) ? '0' . $intDay : $intDay);
+			$intKey = date('Ym', $this->Date->tstamp) . ((\strlen($intDay) < 2) ? '0' . $intDay : $intDay);
 			$strClass .= ($intKey == date('Ymd')) ? ' today' : '';
 
 			// Inactive days
