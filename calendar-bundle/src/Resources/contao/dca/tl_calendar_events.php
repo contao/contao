@@ -559,7 +559,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Set root IDs
-		if (!is_array($this->User->calendars) || empty($this->User->calendars))
+		if (!\is_array($this->User->calendars) || empty($this->User->calendars))
 		{
 			$root = array(0);
 		}
@@ -568,7 +568,7 @@ class tl_calendar_events extends Backend
 			$root = $this->User->calendars;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = \strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
 		switch (Input::get('act'))
@@ -578,7 +578,7 @@ class tl_calendar_events extends Backend
 				break;
 
 			case 'create':
-				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
+				if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create events in calendar ID ' . Input::get('pid') . '.');
 				}
@@ -586,7 +586,7 @@ class tl_calendar_events extends Backend
 
 			case 'cut':
 			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
+				if (!\in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Input::get('pid') . '.');
 				}
@@ -605,7 +605,7 @@ class tl_calendar_events extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid event ID ' . $id . '.');
 				}
 
-				if (!in_array($objCalendar->pid, $root))
+				if (!\in_array($objCalendar->pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' event ID ' . $id . ' of calendar ID ' . $objCalendar->pid . '.');
 				}
@@ -617,7 +617,7 @@ class tl_calendar_events extends Backend
 			case 'overrideAll':
 			case 'cutAll':
 			case 'copyAll':
-				if (!in_array($id, $root))
+				if (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
@@ -639,11 +639,11 @@ class tl_calendar_events extends Backend
 				break;
 
 			default:
-				if (strlen(Input::get('act')))
+				if (\strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
-				elseif (!in_array($id, $root))
+				elseif (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
@@ -861,7 +861,7 @@ class tl_calendar_events extends Backend
 		$arrSet['endTime'] = $dc->activeRecord->startDate;
 
 		// Set end date
-		if (strlen($dc->activeRecord->endDate))
+		if (\strlen($dc->activeRecord->endDate))
 		{
 			if ($dc->activeRecord->endDate > $dc->activeRecord->startDate)
 			{
@@ -883,7 +883,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Adjust end time of "all day" events
-		elseif ((strlen($dc->activeRecord->endDate) && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
+		elseif ((\strlen($dc->activeRecord->endDate) && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
 		{
 			$arrSet['endTime'] = (strtotime('+ 1 day', $arrSet['endTime']) - 1);
 		}
@@ -902,7 +902,7 @@ class tl_calendar_events extends Backend
 			{
 				$arrRange = StringUtil::deserialize($dc->activeRecord->repeatEach);
 
-				if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+				if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 				{
 					$arg = $arrRange['value'] * $dc->activeRecord->recurrences;
 					$unit = $arrRange['unit'];
@@ -927,7 +927,7 @@ class tl_calendar_events extends Backend
 
 		$session = $objSession->get('calendar_feed_updater');
 
-		if (!is_array($session) || empty($session))
+		if (!\is_array($session) || empty($session))
 		{
 			return;
 		}
@@ -988,7 +988,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('tid')))
+		if (\strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -1032,16 +1032,16 @@ class tl_calendar_events extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -1071,16 +1071,16 @@ class tl_calendar_events extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -1100,16 +1100,16 @@ class tl_calendar_events extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}

@@ -69,7 +69,7 @@ class ModuleCalendar extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
-		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
 		{
 			return '';
 		}
@@ -131,7 +131,7 @@ class ModuleCalendar extends \Events
 		$prevMonth = ($intMonth == 1) ? 12 : ($intMonth - 1);
 		$prevYear = ($intMonth == 1) ? ($intYear - 1) : $intYear;
 		$lblPrevious = $GLOBALS['TL_LANG']['MONTHS'][($prevMonth - 1)] . ' ' . $prevYear;
-		$intPrevYm = intval($prevYear . str_pad($prevMonth, 2, 0, STR_PAD_LEFT));
+		$intPrevYm = \intval($prevYear . str_pad($prevMonth, 2, 0, STR_PAD_LEFT));
 
 		// Only generate a link if there are events (see #4160)
 		if (($objMinMax->dateFrom !== null && $intPrevYm >= date('Ym', $objMinMax->dateFrom)) || $intPrevYm >= date('Ym'))
@@ -258,7 +258,7 @@ class ModuleCalendar extends \Events
 				continue;
 			}
 
-			$intKey = date('Ym', $this->Date->tstamp) . ((strlen($intDay) < 2) ? '0' . $intDay : $intDay);
+			$intKey = date('Ym', $this->Date->tstamp) . ((\strlen($intDay) < 2) ? '0' . $intDay : $intDay);
 			$strClass .= ($intKey == date('Ymd')) ? ' today' : '';
 
 			// Mark the selected day (see #1784)
@@ -291,7 +291,7 @@ class ModuleCalendar extends \Events
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
 			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), count($arrEvents));
+			$arrDays[$strWeekClass][$i]['title'] = sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
 			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
 		}
 

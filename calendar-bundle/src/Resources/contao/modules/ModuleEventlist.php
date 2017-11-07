@@ -69,7 +69,7 @@ class ModuleEventlist extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
-		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
 		{
 			return '';
 		}
@@ -119,7 +119,7 @@ class ModuleEventlist extends \Events
 			$blnClearInput = true;
 		}
 
-		$blnDynamicFormat = (!$this->cal_ignoreDynamic && in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year')));
+		$blnDynamicFormat = (!$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year')));
 
 		// Create the date object
 		try
@@ -204,7 +204,7 @@ class ModuleEventlist extends \Events
 		}
 
 		unset($arrAllEvents);
-		$total = count($arrEvents);
+		$total = \count($arrEvents);
 		$limit = $total;
 		$offset = 0;
 
@@ -288,7 +288,7 @@ class ModuleEventlist extends \Events
 			}
 
 			// Show the teaser text of redirect events (see #6315)
-			if (is_bool($event['details']))
+			if (\is_bool($event['details']))
 			{
 				$objTemplate->hasDetails = false;
 			}

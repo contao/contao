@@ -76,7 +76,7 @@ class ModuleEventReader extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
 
 		// Do not index or cache the page if there are no calendars
-		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -132,7 +132,7 @@ class ModuleEventReader extends \Events
 		{
 			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 
-			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
 				while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
 				{
@@ -175,7 +175,7 @@ class ModuleEventReader extends \Events
 		{
 			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
 
-			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
 				$strKey = 'cal_' . $arrRange['unit'];
 				$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
@@ -305,7 +305,7 @@ class ModuleEventReader extends \Events
 		}
 
 		// Adjust the comments headline level
-		$intHl = min(intval(str_replace('h', '', $this->hl)), 5);
+		$intHl = min(\intval(str_replace('h', '', $this->hl)), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
 		$this->import('Comments');
