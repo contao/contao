@@ -120,7 +120,7 @@ class ModuleListing extends \Module
 		$this->Template->searchable = false;
 		$arrSearchFields = \StringUtil::trimsplit(',', $this->list_search);
 
-		if (!empty($arrSearchFields) && is_array($arrSearchFields))
+		if (!empty($arrSearchFields) && \is_array($arrSearchFields))
 		{
 			$this->Template->searchable = true;
 
@@ -132,7 +132,7 @@ class ModuleListing extends \Module
 
 			foreach ($arrSearchFields as $field)
 			{
-				$strOptions .= '  <option value="' . $field . '"' . (($field == \Input::get('search')) ? ' selected="selected"' : '') . '>' . (strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['label'][0]) ? $label : $field) . '</option>' . "\n";
+				$strOptions .= '  <option value="' . $field . '"' . (($field == \Input::get('search')) ? ' selected="selected"' : '') . '>' . (\strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['label'][0]) ? $label : $field) . '</option>' . "\n";
 			}
 		}
 
@@ -238,7 +238,7 @@ class ModuleListing extends \Module
 
 		foreach (preg_split('/&(amp;)?/', \Environment::get('queryString')) as $fragment)
 		{
-			if ($fragment != '' && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, strlen($id)) !== 0)
+			if ($fragment != '' && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
 				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
 				$blnQuery = true;
@@ -257,7 +257,7 @@ class ModuleListing extends \Module
 		$arrFields = \StringUtil::trimsplit(',', $this->list_fields);
 
 		// THEAD
-		for ($i=0, $c=count($arrFields); $i<$c; $i++)
+		for ($i=0, $c=\count($arrFields); $i<$c; $i++)
 		{
 			// Never show passwords
 			if ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['inputType'] == 'password')
@@ -267,7 +267,7 @@ class ModuleListing extends \Module
 
 			$class = '';
 			$sort = 'asc';
-			$strField = strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'][0]) ? $label : $arrFields[$i];
+			$strField = \strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'][0]) ? $label : $arrFields[$i];
 
 			// Add a CSS class to the order_by column
 			if (\Input::get('order_by') == $arrFields[$i])
@@ -289,15 +289,15 @@ class ModuleListing extends \Module
 		$arrRows = $objData->fetchAllAssoc();
 
 		// TBODY
-		for ($i=0, $c=count($arrRows); $i<$c; $i++)
+		for ($i=0, $c=\count($arrRows); $i<$c; $i++)
 		{
 			$j = 0;
-			$class = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i + 1) == count($arrRows)) ? ' row_last' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
+			$class = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i + 1) == \count($arrRows)) ? ' row_last' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
 			foreach ($arrRows[$i] as $k=>$v)
 			{
 				// Skip the primary key
-				if ($k == $this->strPk && !in_array($this->strPk, $arrFields))
+				if ($k == $this->strPk && !\in_array($this->strPk, $arrFields))
 				{
 					continue;
 				}
@@ -319,7 +319,7 @@ class ModuleListing extends \Module
 				(
 					'raw' => $v,
 					'content' => ($value ? $value : '&nbsp;'),
-					'class' => 'col_' . $j . (($j++ == 0) ? ' col_first' : '') . ($this->list_info ? '' : (($j >= (count($arrRows[$i]) - 1)) ? ' col_last' : '')),
+					'class' => 'col_' . $j . (($j++ == 0) ? ' col_first' : '') . ($this->list_info ? '' : (($j >= (\count($arrRows[$i]) - 1)) ? ' col_last' : '')),
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
 					'url' => $strUrl . $strVarConnector . 'show=' . $arrRows[$i][$this->strPk],
@@ -367,7 +367,7 @@ class ModuleListing extends \Module
 	protected function listSingleRecord($id)
 	{
 		// Fallback template
-		if (!strlen($this->list_info_layout))
+		if (!\strlen($this->list_info_layout))
 		{
 			$this->list_info_layout = 'info_default';
 		}
@@ -394,7 +394,7 @@ class ModuleListing extends \Module
 
 		$arrFields = array();
 		$arrRow = $objRecord->row();
-		$limit = count($arrRow);
+		$limit = \count($arrRow);
 		$count = -1;
 
 		foreach ($arrRow as $k=>$v)
@@ -411,7 +411,7 @@ class ModuleListing extends \Module
 			$arrFields[$k] = array
 			(
 				'raw' => $v,
-				'label' => (strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['label'][0]) ? $label : $k),
+				'label' => (\strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['label'][0]) ? $label : $k),
 				'content' => $this->formatValue($k, $v, true),
 				'class' => $class
 			);
@@ -444,7 +444,7 @@ class ModuleListing extends \Module
 		global $objPage;
 
 		// Array
-		if (is_array($value))
+		if (\is_array($value))
 		{
 			$value = implode(', ', $value);
 		}
@@ -482,7 +482,7 @@ class ModuleListing extends \Module
 		}
 
 		// Reference
-		elseif (is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference']))
+		elseif (\is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference']))
 		{
 			$value = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['reference'][$value];
 		}
