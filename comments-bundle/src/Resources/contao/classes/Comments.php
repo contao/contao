@@ -350,7 +350,7 @@ class Comments extends \Frontend
 			}
 
 			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['addComment']) && is_array($GLOBALS['TL_HOOKS']['addComment']))
+			if (isset($GLOBALS['TL_HOOKS']['addComment']) && \is_array($GLOBALS['TL_HOOKS']['addComment']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['addComment'] as $callback)
 				{
@@ -384,7 +384,7 @@ class Comments extends \Frontend
 			}
 
 			// Do not send notifications twice
-			if (is_array($varNotifies))
+			if (\is_array($varNotifies))
 			{
 				$objEmail->sendTo(array_unique($varNotifies));
 			}
