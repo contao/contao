@@ -55,7 +55,7 @@ class ModuleFaq extends \Frontend
 				}
 
 				// Skip FAQs outside the root nodes
-				if (!empty($arrRoot) && !in_array($objFaq->jumpTo, $arrRoot))
+				if (!empty($arrRoot) && !\in_array($objFaq->jumpTo, $arrRoot))
 				{
 					continue;
 				}
