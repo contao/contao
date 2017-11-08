@@ -215,7 +215,7 @@ function deserialize($varValue, $blnForceArray=false)
 		return $blnForceArray ? array($varValue) : $varValue;
 	}
 
-	$varUnserialized = @unserialize($varValue);
+	$varUnserialized = @unserialize($varValue, array('allowed_classes' => false));
 
 	if (\is_array($varUnserialized))
 	{
