@@ -35,30 +35,11 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
-    /**
-     * @var PrettyErrorScreenListener
-     */
-    private $listener;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->listener = new PrettyErrorScreenListener(
-            true,
-            $this->createMock('Twig_Environment'),
-            $this->mockContaoFramework(),
-            $this->mockTokenStorage(FrontendUser::class),
-            $this->createMock(LoggerInterface::class)
-        );
-    }
-
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $this->listener);
+        $listener = $this->mockListener(FrontendUser::class);
+
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $listener);
     }
 
     public function testRendersBackEndExceptions(): void
@@ -66,15 +47,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $responseEvent = $this->mockResponseEvent($exception);
 
-        $this->listener = new PrettyErrorScreenListener(
-            true,
-            $this->createMock('Twig_Environment'),
-            $this->mockContaoFramework(),
-            $this->mockTokenStorage(BackendUser::class),
-            $this->createMock(LoggerInterface::class)
-        );
-
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(BackendUser::class, true);
+        $listener->onKernelException($responseEvent);
 
         $this->assertTrue($responseEvent->hasResponse());
 
@@ -96,7 +70,8 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $responseEvent = $this->mockResponseEvent($exception);
 
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(FrontendUser::class);
+        $listener->onKernelException($responseEvent);
 
         $this->assertTrue($responseEvent->hasResponse());
 
@@ -126,7 +101,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $responseEvent = $this->mockResponseEvent($exception);
 
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(FrontendUser::class);
+        $listener->onKernelException($responseEvent);
 
         $this->assertTrue($responseEvent->hasResponse());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $responseEvent->getResponse());
@@ -141,7 +117,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $responseEvent = $this->mockResponseEvent($exception);
 
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(FrontendUser::class);
+        $listener->onKernelException($responseEvent);
 
         $this->assertFalse($responseEvent->hasResponse());
 
@@ -153,7 +130,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new ServiceUnavailableHttpException('', new ServiceUnavailableException());
         $responseEvent = $this->mockResponseEvent($exception);
 
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(FrontendUser::class);
+        $listener->onKernelException($responseEvent);
 
         $this->assertTrue($responseEvent->hasResponse());
 
@@ -167,7 +145,8 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $responseEvent = $this->mockResponseEvent(new ConflictHttpException());
 
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(FrontendUser::class, true);
+        $listener->onKernelException($responseEvent);
 
         $this->assertTrue($responseEvent->hasResponse());
 
@@ -193,17 +172,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             })
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
-
-        $logger
-            ->expects($this->once())
-            ->method('critical')
-        ;
-
-        $framework = $this->mockContaoFramework();
-        $tokenStorage = $this->mockTokenStorage(FrontendUser::class);
-
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $logger);
+        $listener = $this->mockListener(FrontendUser::class, true, $twig);
         $listener->onKernelException($responseEvent);
 
         $this->assertTrue($responseEvent->hasResponse());
@@ -222,7 +191,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $responseEvent = $this->mockResponseEvent($exception, $request);
 
-        $this->listener->onKernelException($responseEvent);
+        $listener = $this->mockListener(FrontendUser::class);
+        $listener->onKernelException($responseEvent);
 
         $this->assertFalse($responseEvent->hasResponse());
     }
@@ -232,9 +202,36 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->mockResponseEvent($exception);
 
-        $this->listener->onKernelException($event);
+        $listener = $this->mockListener(FrontendUser::class);
+        $listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
+    }
+
+    /**
+     * Mocks a pretty error screen listener.
+     *
+     * @param string $userClass
+     * @param bool   $expectLogging
+     *
+     * @return PrettyErrorScreenListener
+     */
+    private function mockListener(string $userClass, bool $expectLogging = false, \Twig_Environment $twig = null): PrettyErrorScreenListener
+    {
+        if (null === $twig) {
+            $twig = $this->createMock('Twig_Environment');
+        }
+
+        $framework = $this->mockContaoFramework();
+        $tokenStorage = $this->mockTokenStorage($userClass);
+        $logger = $this->createMock(LoggerInterface::class);
+
+        $logger
+            ->expects($expectLogging ? $this->once() : $this->never())
+            ->method('critical')
+        ;
+
+        return new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $logger);
     }
 
     /**

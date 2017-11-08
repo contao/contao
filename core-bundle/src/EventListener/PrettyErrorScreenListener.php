@@ -294,11 +294,35 @@ class PrettyErrorScreenListener
      */
     private function logException(\Exception $exception): void
     {
-        if (null === $this->logger) {
+        if (null === $this->logger || !$this->isLoggable($exception)) {
             return;
         }
 
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
+    }
+
+    /**
+     * Checks if an extension is loggable.
+     *
+     * @param \Exception $exception
+     *
+     * @return bool
+     */
+    private function isLoggable(\Exception $exception): bool
+    {
+        do {
+            if ($exception instanceof ForwardPageNotFoundException) {
+                return true;
+            }
+
+            foreach (array_keys(self::$mapper) as $class) {
+                if ($exception instanceof $class) {
+                    return false;
+                }
+            }
+        } while (null !== ($exception = $exception->getPrevious()));
+
+        return true;
     }
 
     /**
