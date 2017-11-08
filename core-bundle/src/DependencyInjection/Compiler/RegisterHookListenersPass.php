@@ -56,12 +56,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
 
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
-                $this->checkRequiredAttributes($serviceId, $attributes);
-
-                $priority = (int) ($attributes['priority'] ?? 0);
-                $hook = $attributes['hook'];
-
-                $hooks[$hook][$priority][] = [$serviceId, $attributes['method']];
+                $this->addHookCallback($hooks, $serviceId, $attributes);
             }
         }
 
@@ -69,14 +64,14 @@ class RegisterHookListenersPass implements CompilerPassInterface
     }
 
     /**
-     * Checks that required attributes (hook and method) are set.
+     * Adds hook for given service and attributes.
      *
      * @param string $serviceId
      * @param array  $attributes
      *
      * @throws InvalidConfigurationException
      */
-    private function checkRequiredAttributes(string $serviceId, array $attributes): void
+    private function addHookCallback(array &$hooks, string $serviceId, array $attributes): void
     {
         if (!isset($attributes['hook'])) {
             throw new InvalidConfigurationException(
@@ -84,10 +79,24 @@ class RegisterHookListenersPass implements CompilerPassInterface
             );
         }
 
-        if (!isset($attributes['method'])) {
-            throw new InvalidConfigurationException(
-                sprintf('Missing method attribute in tagged hook service with service id "%s"', $serviceId)
-            );
+        $priority = (int) ($attributes['priority'] ?? 0);
+
+        $hooks[$attributes['hook']][$priority][] = [$serviceId, $this->getMethod($attributes)];
+    }
+
+    /**
+     * Gets the method name from config or hook name.
+     *
+     * @param array $attributes
+     *
+     * @return string
+     */
+    private function getMethod(array $attributes): string
+    {
+        if (isset($attributes['method'])) {
+            return (string) $attributes['method'];
         }
+
+        return 'on'.ucfirst($attributes['hook']);
     }
 }

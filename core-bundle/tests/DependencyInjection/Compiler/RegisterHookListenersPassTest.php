@@ -57,6 +57,33 @@ class RegisterHookListenersPassTest extends TestCase
         );
     }
 
+    public function testGeneratesMethodNameIfNoneGiven(): void
+    {
+        $attributes = [
+            'hook' => 'generatePage',
+        ];
+
+        $definition = new Definition('Test\HookListener');
+        $definition->addTag('contao.hook', $attributes);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $pass = new RegisterHookListenersPass();
+        $pass->process($container);
+
+        $this->assertSame(
+            [
+                'generatePage' => [
+                    0 => [
+                        ['test.hook_listener', 'onGeneratePage'],
+                    ],
+                ],
+            ],
+            $this->getHookListenersFromDefinition($container)[0]
+        );
+    }
+
     public function testSetsTheDefaultPriorityIfNoPriorityGiven(): void
     {
         $attributes = [
@@ -210,21 +237,6 @@ class RegisterHookListenersPassTest extends TestCase
     {
         $definition = new Definition('Test\HookListener');
         $definition->addTag('contao.hook', ['method' => 'onInitializeSystemAfter']);
-
-        $container = $this->getContainerBuilder();
-        $container->setDefinition('test.hook_listener', $definition);
-
-        $pass = new RegisterHookListenersPass();
-
-        $this->expectException(InvalidConfigurationException::class);
-
-        $pass->process($container);
-    }
-
-    public function testFailsIfTheMethodAttributeIsMissing(): void
-    {
-        $definition = new Definition('Test\HookListener');
-        $definition->addTag('contao.hook', ['hook' => 'initializeSystem']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.hook_listener', $definition);
