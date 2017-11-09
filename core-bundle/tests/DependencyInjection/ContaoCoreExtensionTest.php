@@ -646,7 +646,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.image.resize_calculator');
 
         $this->assertSame(ResizeCalculator::class, $definition->getClass());
-        $this->assertFalse($definition->isPublic());
     }
 
     /**
@@ -789,7 +788,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.menu.renderer');
 
         $this->assertSame(ListRenderer::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.menu.matcher', (string) $definition->getArgument(0));
     }
 
