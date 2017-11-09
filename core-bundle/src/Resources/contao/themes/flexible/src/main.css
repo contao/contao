@@ -830,8 +830,6 @@ table.tl_listing {
 	margin-bottom:3px;
 }
 .tl_content_left {
-	float:left;
-	width:calc(100% - 200px);
 	line-height:16px;
 }
 .tl_content_right {
@@ -927,8 +925,7 @@ table.tl_listing {
 	background:#f6f6f8;
 }
 .tl_listing .tl_left {
-	float:left;
-	width:calc(100% - 240px);
+	flex-grow:1;
 	margin-left:40px;
 	text-indent:-40px;
 	box-sizing:border-box;
@@ -940,7 +937,6 @@ table.tl_listing {
 .tl_tree_xtnd .tl_file .tl_left {
 	margin-left:22px;
 	text-indent:-22px;
-	width:calc(100% - 200px);
 }
 .tl_tree_xtnd .tl_file .tl_left * {
 	line-height:normal;
@@ -977,14 +973,15 @@ table.tl_listing {
 	vertical-align:bottom;
 }
 .tl_listing .tl_right {
-	float:right;
-	padding:0 0 1px;
+	padding:0 0 1px 9px;
+	white-space:nowrap;
 }
 .tl_listing,.tl_listing ul {
 	margin:0;
 	padding:0;
 }
 .tl_listing li {
+	display:flex;
 	margin:0;
 	padding-left:6px;
 	padding-right:6px;
@@ -2005,7 +2002,7 @@ fieldset.collapsed > legend {
 		padding-left:6px !important;
 		padding-right:7px !important;
 	}
-	.tl_show td {
+	.tl_listing .tl_left,.tl_show td {
 		word-break:break-word;
 	}
 	#tl_breadcrumb li {

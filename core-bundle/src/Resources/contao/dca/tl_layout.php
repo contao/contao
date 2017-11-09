@@ -623,7 +623,7 @@ class tl_layout extends Backend
 	 */
 	public function listLayout($row)
 	{
-		return '<div style="float:left">'. $row['name'] ."</div>\n";
+		return '<div class="tl_content_left">'. $row['name'] .'</div>';
 	}
 
 
