@@ -351,7 +351,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('twig', (string) $definition->getArgument(1));
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
         $this->assertSame('security.token_storage', (string) $definition->getArgument(3));
-        $this->assertSame('logger', (string) $definition->getArgument(4));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(4));
+        $this->assertSame('logger', (string) $definition->getArgument(5));
 
         $tags = $definition->getTags();
 
