@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Only show pretty error screens on Contao routes (see #1149).
+
 ### 4.4.7 (2017-10-12)
 
  * Show broken images in the file manager (see #1116).
