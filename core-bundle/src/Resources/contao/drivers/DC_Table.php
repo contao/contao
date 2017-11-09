@@ -354,11 +354,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
-		// Store the current IDs
-		$session = $objSession->all();
-		$session['CURRENT']['IDS'] = $this->current;
-		$objSession->replace($session);
-
 		return $return;
 	}
 
