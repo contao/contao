@@ -961,6 +961,21 @@ table.tl_listing {
 .tl_file_manager .tl_file .tl_left > a:first-child,.tl_file_manager .tl_left > img {
 	vertical-align:text-top;
 }
+.tl_file_manager .preview-image {
+	max-width:400px;
+	max-height:50px;
+	width:auto;
+	height:auto;
+	margin:0 0 2px -18px;
+}
+.tl_file_manager .preview-important {
+	max-width:320px;
+	max-height:40px;
+	width:auto;
+	height:auto;
+	margin:0 0 2px 0;
+	vertical-align:bottom;
+}
 .tl_listing .tl_right {
 	float:right;
 	padding:0 0 1px;
