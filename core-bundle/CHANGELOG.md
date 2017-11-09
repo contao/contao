@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Support class named services in System::import() and System::importStatic() (see #1176).
  * Only show pretty error screens on Contao routes (see #1149).
 
 ### 4.4.7 (2017-10-12)
