@@ -179,7 +179,7 @@ body.popup {
 	width:auto;
 	min-height:0;
 	background:#fff;
-	max-width:auto;
+	max-width:none;
 }
 
 /* Left */
@@ -213,7 +213,7 @@ body.popup {
 .popup #main {
 	float:none;
 	width:auto;
-	max-width:auto;
+	max-width:none;
 	min-height:0;
 	margin:0;
 	padding:0;
@@ -1785,9 +1785,6 @@ fieldset.collapsed > legend {
 
 /* Tablet */
 @media (max-width:991px) {
-	html,body {
-		overflow-x:hidden;
-	}
 	body {
 		background:#fff;
 	}
