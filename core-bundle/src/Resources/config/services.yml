@@ -76,7 +76,6 @@ services:
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
-        public: false
 
     contao.image.resizer:
         class: Contao\CoreBundle\Image\LegacyResizer
