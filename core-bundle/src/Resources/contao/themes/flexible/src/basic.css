@@ -171,6 +171,9 @@ p {
 .widget-captcha {
 	display:initial !important;
 }
+.widget .mce-tinymce {
+	margin:2px 0;
+}
 
 /* Forms */
 optgroup {
