@@ -619,8 +619,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests the executeResize hook.
      *
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook()
     {
@@ -716,8 +720,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests the getImage hook.
      *
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook()
     {
@@ -828,8 +836,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests empty getImage and executeResize hooks.
      *
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue()
     {

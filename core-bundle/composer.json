@@ -82,7 +82,7 @@
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "satooshi/php-coveralls": "^1.0",
-        "symfony/phpunit-bridge": "^3.2"
+        "symfony/phpunit-bridge": "^3.3.11"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"

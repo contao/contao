@@ -86,6 +86,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests the object instantiation.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testCanBeInstantiated()
     {
@@ -119,6 +123,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests returning the template data.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testReturnsTheTemplateData()
     {
@@ -142,6 +150,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests returning the template data for an image.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImages()
     {
@@ -170,6 +182,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests returning the template data for an image with sources.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImagesWithSources()
     {
@@ -233,6 +249,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests returning the template data for an image with densities.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImagesWithDensities()
     {
@@ -260,6 +280,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests returning the template data for an image with densities and sizes.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImagesWithDensitiesAndSizes()
     {
@@ -289,6 +313,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests that file names are encoded.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testEncodesFileNames()
     {
@@ -314,6 +342,10 @@ class PictureTest extends TestCase
 
     /**
      * Tests the old resize mode.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testSupportsTheOldResizeMode()
     {
