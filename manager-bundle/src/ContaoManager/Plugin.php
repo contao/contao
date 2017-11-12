@@ -124,6 +124,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 } else {
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/app/config_prod.yml');
                 }
+
+                $container->setParameter('container.autowiring.strict_mode', true);
+                $container->setParameter('container.dumper.inline_class_loader', true);
             }
         );
     }
