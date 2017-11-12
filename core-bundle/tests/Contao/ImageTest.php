@@ -68,6 +68,11 @@ class ImageTest extends TestCase
         System::setContainer($this->mockContainerWithImageServices());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testCanBeInstantiated(): void
     {
         $properties = [
@@ -86,6 +91,11 @@ class ImageTest extends TestCase
         $this->assertInstanceOf('Contao\Image', new Image($fileMock));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testFailsIfTheFileDoesNotExist(): void
     {
         $fileMock = $this->createMock(File::class);
@@ -100,6 +110,11 @@ class ImageTest extends TestCase
         new Image($fileMock);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testFailsIfTheFileExtensionIsInvalid(): void
     {
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
@@ -119,7 +134,10 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
+     * @group legacy
      * @dataProvider getComputeResizeDataWithoutImportantPart
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testResizesImagesWithoutImportantPart($arguments, $expectedResult): void
     {
@@ -552,7 +570,10 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
+     * @group legacy
      * @dataProvider getComputeResizeDataWithImportantPart
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testResizesImagesWithImportantPart($arguments, $expectedResult): void
     {
@@ -722,6 +743,11 @@ class ImageTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testSupportsReadingAndWritingValues(): void
     {
         $properties = [
@@ -839,7 +865,10 @@ class ImageTest extends TestCase
      * @param array  $arguments
      * @param string $expectedCacheName
      *
+     * @group legacy
      * @dataProvider getCacheName
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testReturnsTheCacheName($arguments, $expectedCacheName): void
     {
@@ -922,7 +951,10 @@ class ImageTest extends TestCase
     /**
      * @param int $value
      *
+     * @group legacy
      * @dataProvider getZoomLevel
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testFailsIfTheZoomValueIsOutOfBounds($value): void
     {
@@ -956,7 +988,10 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
+     * @group legacy
      * @dataProvider getGetLegacy
+     *
+     * @expectedDeprecation Using Image::get() has been deprecated %s.
      */
     public function testFactorsImagesInTheLegacyMethod($arguments, $expectedResult): void
     {
@@ -984,6 +1019,11 @@ class ImageTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using Image::get() has been deprecated %s.
+     */
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {
         $this->assertNull(Image::get('', 100, 100));
@@ -995,7 +1035,10 @@ class ImageTest extends TestCase
      * @param array $arguments
      * @param array $expectedResult
      *
+     * @group legacy
      * @dataProvider getResizeLegacy
+     *
+     * @expectedDeprecation Using Image::resize() has been deprecated %s.
      */
     public function testResizesImagesInTheLegacyMethod($arguments, $expectedResult): void
     {
@@ -1023,6 +1066,11 @@ class ImageTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testDoesNotResizeMatchingImages(): void
     {
         $file = new File('dummy.jpg');
@@ -1037,6 +1085,11 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->height, 200);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testCropsImages(): void
     {
         $file = new File('dummy.jpg');
@@ -1051,6 +1104,11 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->height, 100);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testCropsImagesWithTargetPath(): void
     {
         $file = new File('dummy.jpg');
@@ -1066,6 +1124,11 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->path, 'dummy_foobar.jpg');
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testCropsImagesWithExistingTargetPath(): void
     {
         $file = new File('dummy.jpg');
@@ -1084,6 +1147,11 @@ class ImageTest extends TestCase
         $this->assertSame($resultFile->height, 100);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testResizesSvgImages(): void
     {
         file_put_contents(
@@ -1120,6 +1188,11 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testResizesSvgImagesWithPercentageDimensions(): void
     {
         file_put_contents(
@@ -1156,6 +1229,11 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testResizesSvgImagesWithoutDimensions(): void
     {
         file_put_contents(
@@ -1190,6 +1268,11 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testResizesSvgImagesWithoutViewBox(): void
     {
         file_put_contents(
@@ -1225,6 +1308,11 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testResizesSvgImagesWithoutViewBoxAndDimensions(): void
     {
         file_put_contents(
@@ -1248,6 +1336,11 @@ class ImageTest extends TestCase
         $this->assertSame($file->path, $resultFile->path);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testResizesSvgzImages(): void
     {
         file_put_contents(
@@ -1285,6 +1378,11 @@ class ImageTest extends TestCase
         $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testExecutesTheResizeHook(): void
     {
         $GLOBALS['TL_HOOKS'] = [
@@ -1352,6 +1450,11 @@ class ImageTest extends TestCase
         return $path;
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testExecutesTheGetImageHook(): void
     {
         $file = new File('dummy.jpg');
@@ -1433,7 +1536,10 @@ class ImageTest extends TestCase
      * @param string $value
      * @param int    $expected
      *
+     * @group legacy
      * @dataProvider getGetPixelValueData
+     *
+     * @expectedDeprecation Using Image::getPixelValue() has been deprecated %s.
      */
     public function testReadsThePixelValue($value, $expected): void
     {

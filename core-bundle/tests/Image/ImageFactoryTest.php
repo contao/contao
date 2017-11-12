@@ -470,8 +470,12 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
@@ -546,8 +550,12 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
@@ -637,8 +645,12 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {

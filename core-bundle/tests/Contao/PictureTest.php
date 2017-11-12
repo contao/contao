@@ -75,6 +75,11 @@ class PictureTest extends TestCase
         System::setContainer($this->mockContainerWithImageServices());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testCanBeInstantiated(): void
     {
         $properties = [
@@ -93,6 +98,11 @@ class PictureTest extends TestCase
         $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testReturnsTheTemplateData(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -113,6 +123,11 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testHandlesImages(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -138,6 +153,11 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testHandlesImagesWithSources(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -198,6 +218,11 @@ class PictureTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testHandlesImagesWithDensities(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -222,6 +247,11 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testHandlesImagesWithDensitiesAndSizes(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
@@ -248,6 +278,11 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testEncodesFileNames(): void
     {
         copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy with spaces.jpg');
@@ -270,6 +305,11 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
+     */
     public function testSupportsTheOldResizeMode(): void
     {
         $picture = new Picture(new File('dummy.jpg'));

@@ -37,6 +37,11 @@ class GdImageTest extends TestCase
         System::setContainer($this->mockContainer($this->getTempDir()));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testCanBeInstantiated(): void
     {
         $resource = imagecreate(1, 1);
@@ -46,6 +51,11 @@ class GdImageTest extends TestCase
         $this->assertSame($resource, $image->getResource());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testCreatesImagesFromDimensions(): void
     {
         $image = GdImage::fromDimensions(100, 100);
@@ -71,7 +81,11 @@ class GdImageTest extends TestCase
     /**
      * @param string $type
      *
+     * @group legacy
+     *
      * @dataProvider getImageTypes
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testCreatesImagesFromFiles(string $type): void
     {
@@ -92,7 +106,11 @@ class GdImageTest extends TestCase
     /**
      * @param string $type
      *
+     * @group legacy
+     *
      * @dataProvider getImageTypes
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testSavesImagesToFiles(string $type): void
     {
@@ -120,6 +138,11 @@ class GdImageTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testFailsIfTheFileTypeIsInvalid(): void
     {
         $this->expectException('InvalidArgumentException');
@@ -127,6 +150,11 @@ class GdImageTest extends TestCase
         GdImage::fromFile(new File('test.xyz'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testCopiesImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -182,6 +210,11 @@ class GdImageTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testConvertsImagesToPaletteImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -212,6 +245,11 @@ class GdImageTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testConvertsTrueColorImagesToPaletteImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -240,6 +278,11 @@ class GdImageTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testCountsTheImageColors(): void
     {
         $image = imagecreatetruecolor(100, 100);
@@ -257,6 +300,11 @@ class GdImageTest extends TestCase
         $this->assertSame(2, $image->countColors(1));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
+     */
     public function testRecognizesSemitransparentImages(): void
     {
         $image = imagecreatetruecolor(100, 100);
