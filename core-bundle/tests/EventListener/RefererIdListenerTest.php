@@ -97,7 +97,7 @@ class RefererIdListenerTest extends TestCase
     /**
      * Mocks a token manager.
      *
-     * @return CsrfTokenManagerInterface
+     * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockTokenManager(): CsrfTokenManagerInterface
     {

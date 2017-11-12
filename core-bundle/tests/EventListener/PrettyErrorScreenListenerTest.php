@@ -211,8 +211,9 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Mocks a pretty error screen listener.
      *
-     * @param string $userClass
-     * @param bool   $expectLogging
+     * @param string                 $userClass
+     * @param bool                   $expectLogging
+     * @param \Twig_Environment|null $twig
      *
      * @return PrettyErrorScreenListener
      */

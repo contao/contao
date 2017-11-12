@@ -66,6 +66,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
     /**
      * Adds hook for given service and attributes.
      *
+     * @param array  $hooks
      * @param string $serviceId
      * @param array  $attributes
      *

@@ -4,7 +4,7 @@ Deprecated features
 ### Image service
 
 The `Image` and `Picture` classes have been deprecated in favor of the image
-service. Here are two examples of how to use the service:
+and picture service. Here are two examples of how to use the service:
 
 ```php
 // Old syntax

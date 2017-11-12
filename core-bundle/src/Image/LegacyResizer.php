@@ -121,15 +121,19 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         }
 
         if ($image->getImagine() instanceof GdImagine) {
-            /** @var Config $config */
-            $config = $this->framework->getAdapter(Config::class);
             $dimensions = $image->getDimensions();
 
+            /** @var Config $config */
+            $config = $this->framework->getAdapter(Config::class);
+
+            $gdMaxImgWidth = $config->get('gdMaxImgWidth');
+            $gdMaxImgHeight = $config->get('gdMaxImgHeight');
+
             // Return the path to the original image if it cannot be handled
-            if ($dimensions->getSize()->getWidth() > $config->get('gdMaxImgWidth')
-                || $dimensions->getSize()->getHeight() > $config->get('gdMaxImgHeight')
-                || $coordinates->getSize()->getWidth() > $config->get('gdMaxImgWidth')
-                || $coordinates->getSize()->getHeight() > $config->get('gdMaxImgHeight')
+            if ($dimensions->getSize()->getWidth() > $gdMaxImgWidth
+                || $dimensions->getSize()->getHeight() > $gdMaxImgHeight
+                || $coordinates->getSize()->getWidth() > $gdMaxImgWidth
+                || $coordinates->getSize()->getHeight() > $gdMaxImgHeight
             ) {
                 return $this->createImage($image, $image->getPath());
             }
