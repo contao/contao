@@ -945,7 +945,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
 		{
-			$this->set['tstamp'] = ($blnDoNotRedirect ? time() : 0);
+			$this->set['tstamp'] = time();
 
 			// Mark the new record with "copy of" (see #2938)
 			foreach (array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']) as $strKey)
