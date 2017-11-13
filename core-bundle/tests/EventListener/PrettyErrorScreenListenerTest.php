@@ -293,7 +293,7 @@ class PrettyErrorScreenListenerTest extends TestCase
                 $this->createMock(\Twig_Environment::class),
                 $this->mockContaoFramework(),
                 $this->mockTokenStorage(BackendUser::class),
-                $this->mockScopeMatcher()
+                $this->mockScopeMatcher(),
             ])
             ->setMethods(['handleException'])
             ->getMock()

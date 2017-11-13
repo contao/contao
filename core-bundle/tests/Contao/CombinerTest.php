@@ -204,7 +204,7 @@ EOF;
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/(test)/file.css"]])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/(test)/file.css']])
         );
     }
 
