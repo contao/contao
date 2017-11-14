@@ -187,7 +187,8 @@ class ModuleListing extends \Module
 		$strQuery .= $strWhere;
 
 		// Cast date fields to int (see #5609)
-		$isInt = function ($field) {
+		$isInt = function ($field)
+		{
 			return $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'date' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'time' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'datim';
 		};
 
