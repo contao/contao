@@ -702,11 +702,11 @@ class ImageFactoryTest extends TestCase
      * @param ContaoFrameworkInterface|null $framework
      * @param bool                          $bypassCache
      * @param array                         $imagineOptions
-     * @param string                        $validExtensions
+     * @param array|null                    $validExtensions
      *
      * @return ImageFactory
      */
-    private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null, string $validExtensions = null): ImageFactory
+    private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
     {
         if (null === $resizer) {
             $resizer = $this->createMock(ResizerInterface::class);

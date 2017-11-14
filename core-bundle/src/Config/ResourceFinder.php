@@ -27,7 +27,7 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * @param string|array $paths
      */
-    public function __construct($paths = [])
+    public function __construct($paths)
     {
         $this->paths = (array) $paths;
     }

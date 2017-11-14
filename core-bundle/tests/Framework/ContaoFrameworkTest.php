@@ -589,7 +589,6 @@ class ContaoFrameworkTest extends TestCase
         $requestStack->push($request);
 
         $container = $this->mockContainer();
-        $container->set('request_stack', $requestStack);
         $container->set('test.listener', new \stdClass());
         $container->set('test.listener2', new \stdClass());
 
@@ -637,7 +636,7 @@ class ContaoFrameworkTest extends TestCase
             ],
         ];
 
-        $framework = $this->mockFramework($container->get('request_stack'), $this->mockRouter('/index.html'));
+        $framework = $this->mockFramework($requestStack, $this->mockRouter('/index.html'));
         $framework->setContainer($container);
         $framework->setHookListeners($listeners);
 

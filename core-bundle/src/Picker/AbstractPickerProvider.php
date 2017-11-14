@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Picker;
 
 use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -63,7 +64,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function createMenuItem(PickerConfig $config)
+    public function createMenuItem(PickerConfig $config): ItemInterface
     {
         $name = $this->getName();
 

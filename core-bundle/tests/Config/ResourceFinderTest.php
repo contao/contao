@@ -19,7 +19,7 @@ class ResourceFinderTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $finder = new ResourceFinder();
+        $finder = new ResourceFinder([]);
 
         $this->assertInstanceOf('Contao\CoreBundle\Config\ResourceFinder', $finder);
     }

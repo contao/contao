@@ -19,6 +19,8 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
+use Knp\Menu\MenuItem;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,7 +44,17 @@ class FilePickerProviderTest extends ContaoTestCase
 
         $menuFactory
             ->method('createItem')
-            ->willReturnArgument(1)
+            ->willReturnCallback(
+                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                    $item = new MenuItem($name, $menuFactory);
+                    $item->setLabel($data['label']);
+                    $item->setLinkAttributes($data['linkAttributes']);
+                    $item->setCurrent($data['current']);
+                    $item->setUri($data['uri']);
+
+                    return $item;
+                }
+            )
         ;
 
         $router = $this->createMock(RouterInterface::class);
@@ -104,15 +116,13 @@ class FilePickerProviderTest extends ContaoTestCase
             $picker = $encoded;
         }
 
-        $this->assertSame(
-            [
-                'label' => 'File picker',
-                'linkAttributes' => ['class' => 'filePicker'],
-                'current' => true,
-                'uri' => 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ],
-            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'))
-        );
+        $item = $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'));
+        $uri = 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,');
+
+        $this->assertSame('File picker', $item->getLabel());
+        $this->assertSame(['class' => 'filePicker'], $item->getLinkAttributes());
+        $this->assertTrue($item->isCurrent());
+        $this->assertSame($uri, $item->getUri());
     }
 
     public function testChecksIfAMenuItemIsCurrent(): void
