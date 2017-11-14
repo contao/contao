@@ -32,11 +32,6 @@ class PickerBuilder implements PickerBuilderInterface
     private $router;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var PickerProviderInterface[]
      */
     private $providers = [];
@@ -46,13 +41,11 @@ class PickerBuilder implements PickerBuilderInterface
      *
      * @param FactoryInterface $menuFactory
      * @param RouterInterface  $router
-     * @param RequestStack     $requestStack
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, RequestStack $requestStack)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
     {
         $this->menuFactory = $menuFactory;
         $this->router = $router;
-        $this->requestStack = $requestStack;
     }
 
     /**

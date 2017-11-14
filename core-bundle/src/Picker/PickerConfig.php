@@ -25,7 +25,7 @@ class PickerConfig implements \JsonSerializable
     /**
      * @var array
      */
-    private $extras = [];
+    private $extras;
 
     /**
      * @var string
@@ -168,18 +168,18 @@ class PickerConfig implements \JsonSerializable
      */
     public static function urlDecode($data)
     {
-        $data = base64_decode(strtr($data, '-_,', '+/='), true);
+        $decoded = base64_decode(strtr($data, '-_,', '+/='), true);
 
-        if (function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($data))) {
-            $data = $uncompressed;
+        if (function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($decoded))) {
+            $decoded = $uncompressed;
         }
 
-        $data = @json_decode($data, true);
+        $json = @json_decode($decoded, true);
 
-        if (null === $data) {
+        if (null === $json) {
             throw new \InvalidArgumentException('Invalid JSON data');
         }
 
-        return new self($data['context'], $data['extras'], $data['value'], $data['current']);
+        return new self($json['context'], $json['extras'], $json['value'], $json['current']);
     }
 }

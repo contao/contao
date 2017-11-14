@@ -372,7 +372,7 @@ class ImageFactoryTest extends TestCase
     {
         $imageMock = $this->createMock(ImageInterface::class);
         $imageFactory = $this->getImageFactory();
-        $image = $imageFactory->create($imageMock, (new ResizeConfiguration()));
+        $image = $imageFactory->create($imageMock, new ResizeConfiguration());
 
         $this->assertSameImage($imageMock, $image);
     }
@@ -891,10 +891,6 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'emptyHookCallback']],
-        ];
-
-        $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[get_class($this), 'emptyHookCallback']],
         ];
 
@@ -925,7 +921,7 @@ class ImageFactoryTest extends TestCase
      * @param ContaoFrameworkInterface|null $framework
      * @param bool                          $bypassCache
      * @param array                         $imagineOptions
-     * @param string                        $validExtensions
+     * @param array|null                    $validExtensions
      *
      * @return ImageFactory
      */
