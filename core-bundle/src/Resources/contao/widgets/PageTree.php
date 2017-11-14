@@ -229,7 +229,11 @@ class PageTree extends \Widget
 		}
 		else
 		{
-			$extras = ['fieldType' => $this->fieldType];
+			$extras = array
+			(
+				'fieldType' => $this->fieldType,
+				'source' => $this->strTable.'.'.$this->currentRecord,
+			);
 
 			if (is_array($this->rootNodes))
 			{

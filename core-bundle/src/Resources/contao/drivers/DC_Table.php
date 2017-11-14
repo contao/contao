@@ -93,6 +93,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected $arrModule = array();
 
+	/**
+	 * Preserve this record when revising tables
+	 * @var int
+	 */
+	protected $intPreserveRecord;
+
 
 	/**
 	 * Initialize the object
@@ -946,7 +952,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
 		{
-			$this->set['tstamp'] = time();
+			$this->set['tstamp'] = ($blnDoNotRedirect ? time() : 0);
 
 			// Mark the new record with "copy of" (see #2938)
 			foreach (array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']) as $strKey)
@@ -3317,15 +3323,35 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Delete all new but incomplete records (tstamp=0)
 		if (!empty($new_records[$this->strTable]) && is_array($new_records[$this->strTable]))
 		{
-			$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('intval', $new_records[$this->strTable])) . ") AND tstamp=0");
+			$intPreserved = null;
 
-			if ($objStmt->affectedRows > 0)
+			// Unset the preserved record (see #1129)
+			if ($this->intPreserveRecord && ($index = array_search($this->intPreserveRecord, $new_records[$this->strTable])) !== false)
 			{
-				$reload = true;
+				$intPreserved = $new_records[$this->strTable][$index];
+				unset($new_records[$this->strTable][$index]);
+			}
+
+			// Remove the entries from the database
+			if (!empty($new_records[$this->strTable]))
+			{
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('intval', $new_records[$this->strTable])) . ") AND tstamp=0");
+
+				if ($objStmt->affectedRows > 0)
+				{
+					$reload = true;
+				}
 			}
 
 			// Remove the entries from the session
-			unset($new_records[$this->strTable]);
+			if ($intPreserved !== null)
+			{
+				$new_records[$this->strTable] = array($intPreserved);
+			}
+			else
+			{
+				unset($new_records[$this->strTable]);
+			}
 
 			$objSessionBag->set('new_records', $new_records);
 		}
@@ -6010,6 +6036,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 
 			$this->root = $arrRoot;
+		}
+
+		if (isset($attributes['preserveRecord']))
+		{
+			list($table, $id) = explode('.', $attributes['preserveRecord']);
+
+			if ($table == $this->strTable)
+			{
+				$this->intPreserveRecord = $id;
+			}
 		}
 
 		return $attributes;
