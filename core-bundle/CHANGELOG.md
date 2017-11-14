@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Prevent SQL injections in the back end search panel (see CVE-2017-16558).
  * Support class named services in System::import() and System::importStatic() (see #1176).
  * Only show pretty error screens on Contao routes (see #1149).
 

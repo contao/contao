@@ -5068,8 +5068,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$strField = \Input::post('tl_field', true);
 			$strKeyword = ltrim(\Input::postRaw('tl_value'), '*');
 
+			if ($strField && !in_array($strField, $searchFields, true))
+			{
+				$strField = '';
+				$strKeyword = '';
+			}
+
 			// Make sure the regular expression is valid
-			if ($strKeyword != '')
+			if ($strField && $strKeyword)
 			{
 				try
 				{
@@ -5187,7 +5193,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$strSort = \Input::post('tl_sort');
 
 			// Validate the user input (thanks to aulmn) (see #4971)
-			if (in_array($strSort, $sortingFields))
+			if (in_array($strSort, $sortingFields, true))
 			{
 				$session['sorting'][$this->strTable] = in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strSort]['flag'], array(2, 4, 6, 8, 10, 12)) ? "$strSort DESC" : $strSort;
 				$objSessionBag->replace($session);
