@@ -146,7 +146,7 @@ class InsertTagsListenerTest extends TestCase
 
         $eventModel
             ->method('__get')
-            ->willReturnCallback(function ($key) use ($source) {
+            ->willReturnCallback(function ($key) {
                 switch ($key) {
                     case 'title':
                         return 'The "foobar" event';
