@@ -146,7 +146,7 @@ class InsertTagsListenerTest extends TestCase
 
         $newsModel
             ->method('__get')
-            ->willReturnCallback(function ($key) use ($source) {
+            ->willReturnCallback(function ($key) {
                 switch ($key) {
                     case 'headline':
                         return '"Foo" is not "bar"';
