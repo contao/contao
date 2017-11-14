@@ -27,7 +27,7 @@ class ContaoCacheTest extends TestCase
      */
     public function testInstantiation()
     {
-        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', false);
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_');
 
         $fs = new Filesystem();
         $fs->mkdir($tmpdir);
