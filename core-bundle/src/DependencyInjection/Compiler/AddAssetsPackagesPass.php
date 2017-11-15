@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AddAssetsPackagesPass implements CompilerPassInterface
 {
@@ -51,22 +50,17 @@ class AddAssetsPackagesPass implements CompilerPassInterface
             $version = new Reference('assets.empty_version_strategy');
         }
 
-        /** @var Bundle[] $bundles */
-        $bundles = $container->get('kernel')->getBundles();
+        $bundles = $container->getParameter('kernel.bundles');
+        $meta = $container->getParameter('kernel.bundles_metadata');
 
-        foreach ($bundles as $bundle) {
-            if (!is_dir($originDir = $bundle->getPath().'/Resources/public')) {
+        foreach ($bundles as $name => $class) {
+            if (!is_dir($originDir = $meta[$name]['path'].'/Resources/public')) {
                 continue;
             }
 
-            if ($extension = $bundle->getContainerExtension()) {
-                $packageName = $extension->getAlias();
-            } else {
-                $packageName = $this->getBundlePackageName($bundle);
-            }
-
+            $packageName = $this->getBundlePackageName($name);
             $serviceId = 'assets._package_'.$packageName;
-            $basePath = 'bundles/'.preg_replace('/bundle$/', '', strtolower($bundle->getName()));
+            $basePath = 'bundles/'.preg_replace('/bundle$/', '', strtolower($name));
 
             $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
             $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
@@ -149,14 +143,12 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     /**
      * Returns a bundle package name emulating what a bundle extension would look like.
      *
-     * @param Bundle $bundle
+     * @param string $className
      *
      * @return string
      */
-    private function getBundlePackageName(Bundle $bundle): string
+    private function getBundlePackageName(string $className): string
     {
-        $className = $bundle->getName();
-
         if ('Bundle' === substr($className, -6)) {
             $className = substr($className, 0, -6);
         }

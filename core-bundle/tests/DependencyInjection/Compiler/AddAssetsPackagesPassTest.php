@@ -19,13 +19,22 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\HttpKernel\Kernel;
 
 class AddAssetsPackagesPassTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        $fs = new Filesystem();
+        $fs->mkdir(static::getTempDir().'/FooBarBundle/Resources/public');
+        $fs->mkdir(static::getTempDir().'/FooBarPackage/Resources/public');
+    }
+
     public function testCanBeInstantiated(): void
     {
         $pass = new AddAssetsPackagesPass();
@@ -55,24 +64,8 @@ class AddAssetsPackagesPassTest extends TestCase
 
     public function testIgnoresBundlesWithoutPublicFolder(): void
     {
-        $bundle = $this->mockBundle('FooBarBundle', false);
-
-        $bundle
-            ->expects($this->never())
-            ->method('getContainerExtension')
-        ;
-
-        $kernel = $this->createMock(Kernel::class);
-
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->willReturn([$bundle])
-        ;
-
-        $container = $this->mockContainer();
-        $container->setDefinition('assets.packages', new Definition(Packages::class));
-        $container->set('kernel', $kernel);
+        $bundlePath = static::getTempDir().'/BarFooBundle';
+        $container = $this->mockContainerWithAssets('BarFooBundle', 'Bar\Foo\BarFooBundle', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
@@ -80,74 +73,10 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertEmpty($container->getDefinition('assets.packages')->getMethodCalls());
     }
 
-    public function testUsesTheBundleExtensionAliasAsPackageName(): void
+    public function testUsesTheBundleNameAsPackageName(): void
     {
-        $extension = $this->createMock(ExtensionInterface::class);
-
-        $extension
-            ->expects($this->once())
-            ->method('getAlias')
-            ->willReturn('foo_bar')
-        ;
-
-        $bundle = $this->mockBundle('BarBundle');
-
-        $bundle
-            ->expects($this->once())
-            ->method('getContainerExtension')
-            ->willReturn($extension)
-        ;
-
-        $kernel = $this->createMock(Kernel::class);
-
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->willReturn([$bundle])
-        ;
-
-        $container = $this->mockContainer();
-        $container->setDefinition('assets.packages', new Definition(Packages::class));
-        $container->set('kernel', $kernel);
-
-        $pass = new AddAssetsPackagesPass();
-        $pass->process($container);
-
-        $calls = $container->getDefinition('assets.packages')->getMethodCalls();
-
-        $this->assertCount(1, $calls);
-        $this->assertSame('addPackage', $calls[0][0]);
-        $this->assertSame('foo_bar', $calls[0][1][0]);
-        $this->assertTrue($container->hasDefinition('assets._package_foo_bar'));
-
-        $service = $container->getDefinition('assets._package_foo_bar');
-        $this->assertSame('bundles/bar', $service->getArgument(0));
-        $this->assertSame('assets.empty_version_strategy', (string) $service->getArgument(1));
-        $this->assertSame('contao.assets.plugins_context', (string) $service->getArgument(2));
-    }
-
-    public function testFallsBackToTheBundleNameAsPackageName(): void
-    {
-        $bundle = $this->mockBundle('FooBarBundle');
-
-        $bundle
-            ->expects($this->once())
-            ->method('getContainerExtension')
-            ->willReturn(null)
-        ;
-
-        $kernel = $this->createMock(Kernel::class);
-
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->willReturn([$bundle])
-        ;
-
-        $container = $this->mockContainer();
-        $container->setDefinition('assets.packages', new Definition(Packages::class));
-        $container->setDefinition('assets.empty_version_strategy', new Definition(EmptyVersionStrategy::class));
-        $container->set('kernel', $kernel);
+        $bundlePath = static::getTempDir().'/FooBarBundle';
+        $container = $this->mockContainerWithAssets('FooBarBundle', 'Foo\Bar\FooBarBundle', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
@@ -167,46 +96,25 @@ class AddAssetsPackagesPassTest extends TestCase
 
     public function testUsesTheDefaultVersionStrategyForBundles(): void
     {
-        $bundle = $this->mockBundle('BarBundle');
-        $kernel = $this->createMock(Kernel::class);
+        $bundlePath = static::getTempDir().'/FooBarBundle';
 
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->willReturn([$bundle])
-        ;
-
-        $container = $this->mockContainer();
-        $container->setDefinition('assets.packages', new Definition(Packages::class));
-        $container->setDefinition('assets.empty_version_strategy', new Definition(EmptyVersionStrategy::class));
+        $container = $this->mockContainerWithAssets('FooBarBundle', 'Foo\Bar\FooBarBundle', $bundlePath);
         $container->setDefinition('assets._version_default', new Definition(StaticVersionStrategy::class));
-        $container->set('kernel', $kernel);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('assets._package_bar'));
+        $this->assertTrue($container->hasDefinition('assets._package_foo_bar'));
 
-        $service = $container->getDefinition('assets._package_bar');
+        $service = $container->getDefinition('assets._package_foo_bar');
 
         $this->assertSame('assets._version_default', (string) $service->getArgument(1));
     }
 
     public function testSupportsBundlesWithWrongSuffix(): void
     {
-        $bundle = $this->mockBundle('FooBarPackage');
-        $kernel = $this->createMock(Kernel::class);
-
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->willReturn([$bundle])
-        ;
-
-        $container = $this->mockContainer();
-        $container->setDefinition('assets.packages', new Definition(Packages::class));
-        $container->setDefinition('assets.empty_version_strategy', new Definition(EmptyVersionStrategy::class));
-        $container->set('kernel', $kernel);
+        $bundlePath = static::getTempDir().'/FooBarPackage';
+        $container = $this->mockContainerWithAssets('FooBarPackage', 'Foo\Bar\FooBarPackage', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
@@ -225,17 +133,10 @@ class AddAssetsPackagesPassTest extends TestCase
             'vendor/bar' => '3.2.1',
         ];
 
-        $kernel = $this->createMock(Kernel::class);
-
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->willReturn([])
-        ;
-
         $container = $this->mockContainer();
         $container->setDefinition('assets.packages', new Definition(Packages::class));
-        $container->set('kernel', $kernel);
+        $container->setParameter('kernel.bundles', []);
+        $container->setParameter('kernel.bundles_metadata', []);
         $container->setParameter('kernel.packages', $composer);
 
         $pass = new AddAssetsPackagesPass();
@@ -256,36 +157,22 @@ class AddAssetsPackagesPassTest extends TestCase
     }
 
     /**
-     * Mocks a bundle.
+     * Mocks a container with assets packages.
      *
      * @param string $name
-     * @param bool   $addPublicFolder
+     * @param string $class
+     * @param string $path
      *
-     * @return Bundle|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContainerBuilder
      */
-    private function mockBundle(string $name, bool $addPublicFolder = true): Bundle
+    private function mockContainerWithAssets(string $name, string $class, string $path): ContainerBuilder
     {
-        /** @var Bundle|\PHPUnit_Framework_MockObject_MockObject $bundle */
-        $bundle = $this
-            ->getMockBuilder(Bundle::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->setMockClassName($name)
-            ->getMock()
-        ;
+        $container = $this->mockContainer();
+        $container->setDefinition('assets.packages', new Definition(Packages::class));
+        $container->setDefinition('assets.empty_version_strategy', new Definition(EmptyVersionStrategy::class));
+        $container->setParameter('kernel.bundles', [$name => $class]);
+        $container->setParameter('kernel.bundles_metadata', [$name => ['path' => $path]]);
 
-        $bundle
-            ->expects($this->once())
-            ->method('getPath')
-            ->willReturn(static::getTempDir().'/'.$bundle->getName())
-        ;
-
-        if ($addPublicFolder) {
-            (new Filesystem())->mkdir(static::getTempDir().'/'.$bundle->getName().'/Resources/public');
-        }
-
-        return $bundle;
+        return $container;
     }
 }
