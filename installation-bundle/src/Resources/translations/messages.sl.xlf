@@ -1,0 +1,373 @@
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="1">
+        <source>install_tool</source>
+        <target>Contao namestitveno orodje</target>
+        
+      </trans-unit>
+      <trans-unit id="2">
+        <source>an_error_occurred</source>
+        <target>Prišlo je do napake</target>
+        
+      </trans-unit>
+      <trans-unit id="3">
+        <source>locked_headline</source>
+        <target>Namestitveno orodje je bilo zakljenjeno!</target>
+        
+      </trans-unit>
+      <trans-unit id="4">
+        <source>locked_explanation</source>
+        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zakljenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep zaženite &lt;code&gt;app/console doctrine:cache:clear contato.cache&lt;/code&gt; v ukazni vrstici.</target>
+        
+      </trans-unit>
+      <trans-unit id="5">
+        <source>file_permissions_headline</source>
+        <target>PHP nima dovoljenja za pisanje datotek!</target>
+        
+      </trans-unit>
+      <trans-unit id="6">
+        <source>file_permissions_explanation</source>
+        <target>Strežnik ne podpira dostopa do datotek preko PHP; najverjetneje je PHP zagnan kot Apache modul kot drugi uporabnik. Prosimo kontaktirajte administratorja strežnika za pomoč pri odpravi problema.</target>
+        
+      </trans-unit>
+      <trans-unit id="7">
+        <source>file_permissions_warning</source>
+        <target>&lt;strong&gt;Ne poskušajte odpraviti napake sami, tako da dovolite pisanje datotek in direktorijev za vse!&lt;/strong&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="8">
+        <source>accept_license</source>
+        <target>Sprejmi licenčne pogoje</target>
+        
+      </trans-unit>
+      <trans-unit id="9">
+        <source>set_password</source>
+        <target>Geslo namestitvenega orodja</target>
+        
+      </trans-unit>
+      <trans-unit id="10">
+        <source>set_password_hint</source>
+        <target>Vpišite geslo, da bi preprečili neavtoriziran dostop.</target>
+        
+      </trans-unit>
+      <trans-unit id="11">
+        <source>password</source>
+        <target>Geslo</target>
+        
+      </trans-unit>
+      <trans-unit id="12">
+        <source>confirmation</source>
+        <target>Ponovno vnesite geslo</target>
+        
+      </trans-unit>
+      <trans-unit id="13">
+        <source>save_password</source>
+        <target>Shrani geslo.</target>
+        
+      </trans-unit>
+      <trans-unit id="14">
+        <source>password_confirmation_mismatch</source>
+        <target>Gesli se ne ujemata!</target>
+        
+      </trans-unit>
+      <trans-unit id="15">
+        <source>password_too_short</source>
+        <target>Geslo mora vsebovati najmanj %d znakov!</target>
+        
+      </trans-unit>
+      <trans-unit id="16">
+        <source>login</source>
+        <target>Prijava v namestitveno orodje</target>
+        
+      </trans-unit>
+      <trans-unit id="17">
+        <source>login_explanation</source>
+        <target>Vnesite geslo namestitvenega orodja. Namestitveno geslo NI enako geslu za vpis v Contao administracijo.</target>
+        
+      </trans-unit>
+      <trans-unit id="18">
+        <source>allow_cookies</source>
+        <target>Piškotki morajo biti omogočeni.</target>
+        
+      </trans-unit>
+      <trans-unit id="19">
+        <source>login</source>
+        <target>Prijava</target>
+        
+      </trans-unit>
+      <trans-unit id="20">
+        <source>invalid_password</source>
+        <target>Napačno geslo!</target>
+        
+      </trans-unit>
+      <trans-unit id="21">
+        <source>database_connection</source>
+        <target>Povezava do podatkovne baze</target>
+        
+      </trans-unit>
+      <trans-unit id="22">
+        <source>database_connected</source>
+        <target>Povezava s podatkovno bazo je bila uspešna.</target>
+        
+      </trans-unit>
+      <trans-unit id="23">
+        <source>database_dot_in_dbname</source>
+        
+      </trans-unit>
+      <trans-unit id="24">
+        <source>database_could_not_connect</source>
+        <target>Povezava s podatkovno bazo ni bila mogoča.</target>
+        
+      </trans-unit>
+      <trans-unit id="25">
+        <source>database_connection_explain</source>
+        <target>Prosimo, vnesite parametre za povezavo s podatkovno bazo.</target>
+        
+      </trans-unit>
+      <trans-unit id="26">
+        <source>database_host</source>
+        <target>Gostitelj</target>
+        
+      </trans-unit>
+      <trans-unit id="27">
+        <source>database_port</source>
+        <target>Številka vrat</target>
+        
+      </trans-unit>
+      <trans-unit id="28">
+        <source>database_user</source>
+        <target>Uporabniško ime</target>
+        
+      </trans-unit>
+      <trans-unit id="29">
+        <source>database_password</source>
+        <target>Geslo</target>
+        
+      </trans-unit>
+      <trans-unit id="30">
+        <source>database_name</source>
+        <target>Naziv podatkovne baze</target>
+        
+      </trans-unit>
+      <trans-unit id="31">
+        <source>save_settings</source>
+        <target>Shranite nastavitve</target>
+        
+      </trans-unit>
+      <trans-unit id="32">
+        <source>update_tables</source>
+        <target>Posodobite podatkovno bazo</target>
+        
+      </trans-unit>
+      <trans-unit id="33">
+        <source>update_tables_explain</source>
+        <target>Pomočnik za posodobitev lahko upravlja le tabele, katera imena se začnejo z &lt;code&gt;tl_&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="34">
+        <source>update_tables_confirm</source>
+        <target>Podatkovna baza je posodobljena.</target>
+        
+      </trans-unit>
+      <trans-unit id="35">
+        <source>update_save</source>
+        <target>Posodobi podatkovno bazo</target>
+        
+      </trans-unit>
+      <trans-unit id="36">
+        <source>CREATE</source>
+        <target>Ustvari tabele</target>
+        
+      </trans-unit>
+      <trans-unit id="37">
+        <source>ALTER_ADD</source>
+        <target>Dodaj stolpce</target>
+        
+      </trans-unit>
+      <trans-unit id="38">
+        <source>ALTER_CHANGE</source>
+        <target>Spremeni stolpce</target>
+        
+      </trans-unit>
+      <trans-unit id="39">
+        <source>ALTER_DROP</source>
+        <target>Odstrani stolpce</target>
+        
+      </trans-unit>
+      <trans-unit id="40">
+        <source>DROP</source>
+        <target>Odstrani tabelo</target>
+        
+      </trans-unit>
+      <trans-unit id="41">
+        <source>select_all</source>
+        <target>Izberi vse</target>
+        
+      </trans-unit>
+      <trans-unit id="42">
+        <source>template_import</source>
+        <target>Uvozi predlogo</target>
+        
+      </trans-unit>
+      <trans-unit id="43">
+        <source>template_import_explain</source>
+        <target>Tukaj lahko uvozite &lt;code&gt;.sql&lt;/code&gt; datoteko iz &lt;code&gt;templates&lt;/code&gt; direktorija. Vsi obstoječi podatki bodo odstranjeni. Če želite samo uvoziti prelogo, raje uporabite upravljalnik predlog v Contao administraciji.</target>
+        
+      </trans-unit>
+      <trans-unit id="44">
+        <source>import_exception</source>
+        <target>Uvoz je bil neuspešen. Preverite če je podatkovna baza posodobljena in če je predloga skladna z vašo Contao različico.</target>
+        
+      </trans-unit>
+      <trans-unit id="45">
+        <source>import_empty_source</source>
+        <target>Prosimo, izberite datoteko predloge!</target>
+        
+      </trans-unit>
+      <trans-unit id="46">
+        <source>import_data_will_be_deleted</source>
+        <target>Vsi obstoječi podatki bodo izbrisani!</target>
+        
+      </trans-unit>
+      <trans-unit id="47">
+        <source>imported_on</source>
+        <target>Predloga uvožena na %s</target>
+        
+      </trans-unit>
+      <trans-unit id="48">
+        <source>templates</source>
+        <target>Predloge</target>
+        
+      </trans-unit>
+      <trans-unit id="49">
+        <source>do_not_truncate</source>
+        <target>Ne izprazni tabel</target>
+        
+      </trans-unit>
+      <trans-unit id="50">
+        <source>import_confirm</source>
+        <target>Vsi obstoječi podatki bodo izbrisani! Res želite nadaljevati?</target>
+        
+      </trans-unit>
+      <trans-unit id="51">
+        <source>template_save</source>
+        <target>Uvozi predlogo</target>
+        
+      </trans-unit>
+      <trans-unit id="52">
+        <source>admin_create</source>
+        <target>Ustvari skrbniški račun</target>
+        
+      </trans-unit>
+      <trans-unit id="53">
+        <source>admin_create_explain</source>
+        <target>Tukaj lahko ustvarite skrbniški račun za prijavo v Contao administracijo.</target>
+        
+      </trans-unit>
+      <trans-unit id="54">
+        <source>admin_confirm</source>
+        <target>Skrbniški račun je bil ustvarjen.</target>
+        
+      </trans-unit>
+      <trans-unit id="55">
+        <source>admin_username</source>
+        <target>Uporabniško ime</target>
+        
+      </trans-unit>
+      <trans-unit id="56">
+        <source>admin_name</source>
+        <target>Naziv</target>
+        
+      </trans-unit>
+      <trans-unit id="57">
+        <source>admin_email</source>
+        <target>E-poštni naslov</target>
+        
+      </trans-unit>
+      <trans-unit id="58">
+        <source>admin_save</source>
+        <target>Ustvari skrbniški račun</target>
+        
+      </trans-unit>
+      <trans-unit id="59">
+        <source>admin_error_extnd</source>
+        <target>Zaradi varnostnih razlogo ni mogoče uporabiti sledečih znakov: #()/&lt;=&gt;</target>
+        
+      </trans-unit>
+      <trans-unit id="60">
+        <source>admin_error_no_space</source>
+        <target>Uporabniško ime ne sme vsebovati presledkov.</target>
+        
+      </trans-unit>
+      <trans-unit id="61">
+        <source>admin_error_email</source>
+        <target>Prosimo vpišite veljaven e-poštni naslov!</target>
+        
+      </trans-unit>
+      <trans-unit id="62">
+        <source>admin_error_password_match</source>
+        <target>Gesli se ne ujemata!</target>
+        
+      </trans-unit>
+      <trans-unit id="63">
+        <source>admin_error_password_user</source>
+        <target>Uporabniško ime in geslo ne smeta biti enaka!</target>
+        
+      </trans-unit>
+      <trans-unit id="64">
+        <source>admin_error</source>
+        <target>Prosimo, izpolnite vsa polja za ustvarjanje skrbniškega računa!</target>
+        
+      </trans-unit>
+      <trans-unit id="65">
+        <source>congratulations</source>
+        <target>Čestitamo!</target>
+        
+      </trans-unit>
+      <trans-unit id="66">
+        <source>congratulations_explain</source>
+        <target>Contao je bil uspešno nameščen.</target>
+        
+      </trans-unit>
+      <trans-unit id="67">
+        <source>installation_complete</source>
+        <target>Namestitev končana</target>
+        
+      </trans-unit>
+      <trans-unit id="68">
+        <source>installation_complete_explain</source>
+        <target>Nadaljujte v Contao administracijo in preverite sistemske nastavitve.</target>
+        
+      </trans-unit>
+      <trans-unit id="69">
+        <source>back_end</source>
+        <target>Contao administracija</target>
+        
+      </trans-unit>
+      <trans-unit id="70">
+        <source>old_database</source>
+        <target>Podatkovna baza je prestara!</target>
+        
+      </trans-unit>
+      <trans-unit id="71">
+        <source>old_database_explanation</source>
+        <target>Potrebujete najmanj Contao 3.2 za nadgradnjo v Contao 4.</target>
+        
+      </trans-unit>
+      <trans-unit id="72">
+        <source>console_explanation</source>
+        <target>Naloge po zaključku namestitve ni bilo mogoče dokončati.</target>
+        
+      </trans-unit>
+      <trans-unit id="73">
+        <source>duplicate_subscriptions</source>
+        
+      </trans-unit>
+      <trans-unit id="74">
+        <source>duplicates_purged</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
