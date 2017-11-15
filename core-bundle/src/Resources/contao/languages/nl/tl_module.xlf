@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_module.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Geef het aantal resultaten per pagina op.</target>
+        <target>Het aantal items per pagina. Stel in op 0 om paginering uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>

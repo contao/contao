@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.8 (2017-11-15)
 
  * Prevent SQL injections in the back end search panel (see CVE-2017-16558).
  * Support class named services in System::import() and System::importStatic() (see #1176).

@@ -230,8 +230,8 @@
         <target>Объединять скрипты</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (recommended).</source>
-        <target>Объединять .css- и .js-файлы (рекомендуется).</target>
+        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
+        <target>Объединять .css и .js файлы (не включать для HTTP/2).</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -286,8 +286,8 @@
         <target>Тег viewport</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
-        <source>Here you can set a custom viewport tag.</source>
-        <target>Вы можете установить пользовательский тег viewport.</target>
+        <source>Here you can set the viewport tag.</source>
+        <target>Вы можете установить тег viewport.</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>

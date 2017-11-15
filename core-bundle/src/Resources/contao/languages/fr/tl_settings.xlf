@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
+        <target>Désactiver le planificateur de commandes périodiques et exécuter la route &lt;em&gt;_contao/cron&lt;/em&gt; par une tâche cron réelle (que vous avez à configurer manuellement). </target>
       </trans-unit>
       <trans-unit id="tl_settings.minifyMarkup.0">
         <source>Minify the markup</source>
