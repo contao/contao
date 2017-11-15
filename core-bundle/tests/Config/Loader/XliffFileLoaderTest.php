@@ -141,7 +141,7 @@ TXT;
     /**
      * Test that the loader overwrites the language array correctly.
      */
-    public function testOverridesKeysInLangArray()
+    public function testOverridesKeysInLangArray(): void
     {
         $GLOBALS['TL_LANG']['MSC']['third'] = 'is-a-string';
 

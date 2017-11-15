@@ -5068,7 +5068,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$strField = \Input::post('tl_field', true);
 			$strKeyword = ltrim(\Input::postRaw('tl_value'), '*');
 
-			if ($strField && !in_array($strField, $searchFields, true))
+			if ($strField && !\in_array($strField, $searchFields, true))
 			{
 				$strField = '';
 				$strKeyword = '';
