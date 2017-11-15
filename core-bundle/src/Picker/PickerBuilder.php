@@ -11,7 +11,6 @@
 namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
