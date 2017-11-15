@@ -10,6 +10,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
         <source>RSS/Atom feeds</source>
+        <target>RSS/Atom beslemeleri</target>
       </trans-unit>
     </body>
   </file>

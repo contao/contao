@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.0">
         <source>Article</source>
-        <target>ID articolo</target>
+        <target>Articolo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.0">
         <source>Article</source>
-        <target>ID articolo</target>
+        <target>Articolo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the event.</source>

@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
-        <target>برگه بازگردانی</target>
+        <target>برگه‌ی تغییر مسیر</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
