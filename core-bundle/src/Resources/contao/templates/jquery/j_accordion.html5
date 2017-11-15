@@ -1,5 +1,5 @@
 
-<script src="<?= TL_ASSETS_URL ?>assets/jquery-ui/js/jquery-ui.min.js"></script>
+<script src="<?= $this->asset('js/jquery-ui.min.js', 'contao-components/jquery-ui') ?>"></script>
 <script>
   jQuery(function($) {
     $(document).accordion({

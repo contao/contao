@@ -16,6 +16,22 @@ services:
             # The priority must be higher than the one of the request attribute value resolver (defaults to 100)
             - { name: controller.argument_value_resolver, priority: 101 }
 
+    contao.assets.files_context:
+        class: Contao\CoreBundle\Asset\ContaoContext
+        arguments:
+            - "@contao.framework"
+            - "@request_stack"
+            - 'staticFiles'
+            - "%kernel.debug%"
+
+    contao.assets.plugins_context:
+        class: Contao\CoreBundle\Asset\ContaoContext
+        arguments:
+            - "@contao.framework"
+            - "@request_stack"
+            - 'staticPlugins'
+            - "%kernel.debug%"
+
     contao.cache:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:

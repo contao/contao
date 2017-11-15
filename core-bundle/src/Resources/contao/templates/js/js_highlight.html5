@@ -5,5 +5,5 @@ $GLOBALS['TL_CSS'][] = 'assets/highlight/css/foundation.css|static';
 
 ?>
 
-<script src="<?= TL_ASSETS_URL ?>assets/highlight/js/highlight.pack.js"></script>
+<script src="<?= $this->asset('js/highlight.pack.js', 'contao-components/highlight') ?>"></script>
 <script>hljs.initHighlightingOnLoad()</script>

@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FrontendTemplate;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -207,5 +209,25 @@ EOF
 
         $this->assertSame('', ob_get_clean());
         $this->assertSame($obLevel, ob_get_level());
+    }
+
+    public function testLoadsTheAssetsPackages(): void
+    {
+        $packages = $this->createMock(Packages::class);
+
+        $packages
+            ->expects($this->once())
+            ->method('getUrl')
+            ->with('/path/to/asset', 'package_name')
+            ->willReturnArgument(0)
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('assets.packages', $packages);
+
+        \System::setContainer($container);
+
+        $template = new FrontendTemplate();
+        $template->asset('/path/to/asset', 'package_name');
     }
 }

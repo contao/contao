@@ -19,7 +19,7 @@
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
-  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
+  <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
   <?= $this->javascripts ?>
 
 </head>

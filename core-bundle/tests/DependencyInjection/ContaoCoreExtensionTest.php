@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\ArgumentResolver\ModelResolver;
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Command\AutomatorCommand;
@@ -38,6 +39,7 @@ use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener;
 use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener as HeaderReplayUserSessionListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
+use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\LocaleListener;
 use Contao\CoreBundle\EventListener\MapFragmentsToGlobalsListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
@@ -491,6 +493,21 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
     }
 
+    public function testRegistersTheAssetInsertTagListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.insert_tags.asset'));
+
+        $definition = $this->container->getDefinition('contao.listener.insert_tags.asset');
+
+        $this->assertSame(AssetListener::class, $definition->getClass());
+        $this->assertSame('assets.packages', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
+    }
+
     public function testRegistersTheArgumentResolverModel(): void
     {
         $this->assertTrue($this->container->has('contao.argument_resolver.model'));
@@ -504,6 +521,32 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey('controller.argument_value_resolver', $tags);
         $this->assertSame(101, $tags['controller.argument_value_resolver'][0]['priority']);
+    }
+
+    public function testRegistersTheAssetPluginContext(): void
+    {
+        $this->assertTrue($this->container->has('contao.assets.plugins_context'));
+
+        $definition = $this->container->getDefinition('contao.assets.plugins_context');
+
+        $this->assertSame(ContaoContext::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('request_stack', (string) $definition->getArgument(1));
+        $this->assertSame('staticPlugins', $definition->getArgument(2));
+        $this->assertSame('%kernel.debug%', $definition->getArgument(3));
+    }
+
+    public function testRegistersTheAssetFilesContext(): void
+    {
+        $this->assertTrue($this->container->has('contao.assets.files_context'));
+
+        $definition = $this->container->getDefinition('contao.assets.files_context');
+
+        $this->assertSame(ContaoContext::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('request_stack', (string) $definition->getArgument(1));
+        $this->assertSame('staticFiles', $definition->getArgument(2));
+        $this->assertSame('%kernel.debug%', $definition->getArgument(3));
     }
 
     public function testRegistersTheContaoCache(): void

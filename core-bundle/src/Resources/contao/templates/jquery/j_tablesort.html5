@@ -5,7 +5,7 @@ $GLOBALS['TL_CSS'][] = 'assets/tablesorter/css/tablesorter.min.css|static';
 
 ?>
 
-<script src="<?= TL_ASSETS_URL ?>assets/tablesorter/js/tablesorter.min.js"></script>
+<script src="<?= $this->asset('js/tablesorter.min.js', 'contao-components/tablesorter') ?>"></script>
 <script>
   jQuery(function($) {
     $('.ce_table .sortable').each(function(i, table) {

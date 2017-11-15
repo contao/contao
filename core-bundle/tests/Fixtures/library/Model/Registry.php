@@ -19,4 +19,9 @@ class Registry
     {
         return 5;
     }
+
+    public function isRegistered()
+    {
+        return false;
+    }
 }

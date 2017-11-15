@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Use the Symfony assets component for the Contao assets (see #1165).
  * Do not log known exceptions with a pretty error screen (see #1139).
 
 ### 4.5.0-beta1 (2017-11-06)

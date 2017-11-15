@@ -5,7 +5,7 @@ $GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|stati
 
 ?>
 
-<script src="<?= TL_ASSETS_URL ?>assets/mediaelement/js/mediaelement-and-player.min.js"></script>
+<script src="<?= $this->asset('js/mediaelement-and-player.min.js', 'contao-components/mediaelement') ?>"></script>
 <script>
   (function() {
     var e = document.querySelectorAll(':not(picture) > video, :not(picture) > audio');

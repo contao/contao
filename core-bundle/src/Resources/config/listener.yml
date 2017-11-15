@@ -70,6 +70,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    contao.listener.insert_tags.asset:
+        class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
+        arguments:
+            - "@assets.packages"
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleListener
         arguments:
