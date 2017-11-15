@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>
-        <target>Текст догађаја</target>
+        <target>Текст дешавања</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.1">
         <source>Here you can enter the event text.</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.1">
         <source>Create a recurring event.</source>
-        <target>Креирање понављајућег догађаја.</target>
+        <target>Креирање понављајућег дешавања.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEach.0">
         <source>Interval</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Додај прилог</target>
+        <target>Додај прилоге</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.1">
         <source>Add one or more downloadable files to the event.</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
-        <target>Страница преусмерења</target>
+        <target>Страница преусмеравања</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
@@ -215,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
-        <target>Објави догађај</target>
+        <target>Објави дешавање</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>
@@ -359,7 +359,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader.0">
         <source>Edit calendar</source>
-        <target>Уреди календар</target>
+        <target>Уреди календар ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader.1">
         <source>Edit the calendar settings</source>

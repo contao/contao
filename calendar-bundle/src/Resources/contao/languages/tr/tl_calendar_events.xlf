@@ -251,7 +251,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
-        <target>Tarih ve zaman</target>
+        <target>Tarih ve saat</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
