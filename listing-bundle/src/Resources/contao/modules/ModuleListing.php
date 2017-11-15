@@ -124,7 +124,7 @@ class ModuleListing extends \Module
 		{
 			$this->Template->searchable = true;
 
-			if ($strSearch && !in_array($strSearch, $arrSearchFields, true))
+			if ($strSearch && !\in_array($strSearch, $arrSearchFields, true))
 			{
 				$strSearch = '';
 				$strFor = '';
@@ -191,14 +191,14 @@ class ModuleListing extends \Module
 
 		$order_by = \Input::get('order_by');
 
-		if ($order_by && !in_array($order_by, $arrFields, true))
+		if ($order_by && !\in_array($order_by, $arrFields, true))
 		{
 			$order_by = '';
 		}
 
 		$sort = \Input::get('sort');
 
-		if ($sort && !in_array($sort, array('asc', 'desc')))
+		if ($sort && !\in_array($sort, array('asc', 'desc')))
 		{
 			$sort = '';
 		}
