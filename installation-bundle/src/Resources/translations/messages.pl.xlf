@@ -113,6 +113,7 @@
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
+        <target>Nazwa bazy danych nie może zawierać kropek!</target>
         
       </trans-unit>
       <trans-unit id="24">
@@ -362,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Znaleziono zduplikowane subskrypcje newslettera:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Zduplikowane rekordy zostały usunięte automatycznie. Kopia zapasowa oryginalnych subskrypcji została utworzona w &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>

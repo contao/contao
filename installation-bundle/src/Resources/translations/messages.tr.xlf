@@ -363,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Çift bülten aboneliği bulundu:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Çift kayıtlar otomatik olarak silinir. Özgün aboneliklerin yedeği &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt; içinde saklanır.</target>
         
       </trans-unit>
     </body>
