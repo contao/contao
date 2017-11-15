@@ -1,6 +1,6 @@
 # Contao listing bundle change log
 
-### DEV
+### 4.4.8 (2017-11-15)
 
  * Prevent SQL injections in the listing module (see CVE-2017-16558).
 
