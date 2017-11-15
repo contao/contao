@@ -369,7 +369,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('twig', (string) $definition->getArgument(1));
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
         $this->assertSame('security.token_storage', (string) $definition->getArgument(3));
-        $this->assertSame('logger', (string) $definition->getArgument(4));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(4));
+        $this->assertSame('logger', (string) $definition->getArgument(5));
 
         $tags = $definition->getTags();
 
@@ -871,7 +872,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.menu.renderer');
 
         $this->assertSame(ListRenderer::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.menu.matcher', (string) $definition->getArgument(0));
     }
 

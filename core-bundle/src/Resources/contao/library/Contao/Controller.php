@@ -1054,7 +1054,8 @@ abstract class Controller extends \System
 	{
 		$router = \System::getContainer()->get('router');
 
-		$generate = function ($route) use ($router) {
+		$generate = function ($route) use ($router)
+		{
 			return substr($router->generate($route), \strlen(\Environment::get('path')) + 1);
 		};
 

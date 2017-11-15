@@ -89,7 +89,7 @@ class BackendTemplate extends \Template
 				$strStyleSheets = \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
 			}
 
-			$this->stylesheets = $strStyleSheets;
+			$this->stylesheets .= $strStyleSheets;
 		}
 
 		// JavaScripts
@@ -123,7 +123,7 @@ class BackendTemplate extends \Template
 				$strJavaScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strJavaScripts;
 			}
 
-			$this->javascripts = $strJavaScripts;
+			$this->javascripts .= $strJavaScripts;
 		}
 
 		// MooTools scripts (added at the page bottom)
@@ -136,7 +136,7 @@ class BackendTemplate extends \Template
 				$strMootools .= $script;
 			}
 
-			$this->mootools = $strMootools;
+			$this->mootools .= $strMootools;
 		}
 
 		$strBuffer = $this->parse();

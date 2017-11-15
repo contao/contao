@@ -162,7 +162,7 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
-			elseif (!class_exists($strClass) && $container->has($strClass))
+			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
@@ -204,7 +204,7 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
 			}
-			elseif (!class_exists($strClass) && $container->has($strClass))
+			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}

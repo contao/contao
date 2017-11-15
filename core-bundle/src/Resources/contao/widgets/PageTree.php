@@ -95,7 +95,12 @@ class PageTree extends \Widget
 		// Store the order value
 		if ($this->orderField != '')
 		{
-			$arrNew = explode(',', \Input::post($this->strOrderName));
+			$arrNew = array();
+			
+			if ($order = \Input::post($this->strOrderName))
+			{
+				$arrNew = explode(',', $order);
+			}
 
 			// Only proceed if the value has changed
 			if ($arrNew !== $this->{$this->orderField})
@@ -169,7 +174,7 @@ class PageTree extends \Widget
 		$arrValues = array();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 
-		if (!empty($this->varValue)) // Can be an array
+		if (!empty($this->varValue)) // can be an array
 		{
 			$objPages = \PageModel::findMultipleByIds((array)$this->varValue);
 
@@ -229,7 +234,11 @@ class PageTree extends \Widget
 		}
 		else
 		{
-			$extras = ['fieldType' => $this->fieldType];
+			$extras = array
+			(
+				'fieldType' => $this->fieldType,
+				'source' => $this->strTable.'.'.$this->currentRecord,
+			);
 
 			if (\is_array($this->rootNodes))
 			{

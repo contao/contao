@@ -12,9 +12,18 @@ body {
 	padding:12px;
 }
 
+/* Main */
+#main {
+	padding:0 9px;
+}
+
 /* Table */
 .tl_help_table {
-	margin:0 9px 18px;
+	width:100%;
+	margin:0 0 18px;
+}
+.tl_help_table a {
+	text-decoration:underline;
 }
 .tl_help_table td {
 	padding:12px 0;

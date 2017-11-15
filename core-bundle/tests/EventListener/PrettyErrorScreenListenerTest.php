@@ -225,6 +225,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage($userClass);
+        $scopeMatcher = $this->mockScopeMatcher();
         $logger = $this->createMock(LoggerInterface::class);
 
         $logger
@@ -232,7 +233,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->method('critical')
         ;
 
-        return new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $logger);
+        return new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher, $logger);
     }
 
     /**
@@ -249,6 +250,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         if (null === $request) {
             $request = new Request();
+            $request->attributes->set('_scope', 'backend');
         }
 
         return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
