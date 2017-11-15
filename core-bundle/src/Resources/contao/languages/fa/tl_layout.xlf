@@ -229,7 +229,7 @@
         <target>ترکیب اسکریپت‌ها</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (recommended).</source>
+        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -284,7 +284,7 @@
         <target>برچسب ویوپورت</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
-        <source>Here you can set a custom viewport tag.</source>
+        <source>Here you can set the viewport tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>

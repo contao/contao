@@ -67,6 +67,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests the object instantiation.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testCanBeInstantiated()
     {
@@ -79,6 +83,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests creating an image from dimensions.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testCreatesImagesFromDimensions()
     {
@@ -107,7 +115,10 @@ class GdImageTest extends TestCase
      *
      * @param string $type
      *
+     * @group legacy
      * @dataProvider getImageTypes
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testCreatesImagesFromFiles($type)
     {
@@ -130,7 +141,10 @@ class GdImageTest extends TestCase
      *
      * @param string $type
      *
+     * @group legacy
      * @dataProvider getImageTypes
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testSavesImagesToFiles($type)
     {
@@ -162,6 +176,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests that an invalid file type triggers an exception.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testFailsIfTheFileTypeIsInvalid()
     {
@@ -172,6 +190,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests that the image can be copied.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testCopiesImages()
     {
@@ -230,6 +252,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests that an image can be converted to a palette image.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testConvertsImagesToPaletteImages()
     {
@@ -263,6 +289,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests that a true color image can be converted to a palette image.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testConvertsTrueColorImagesToPaletteImages()
     {
@@ -294,6 +324,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests the colors can be counted.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testCountsTheImageColors()
     {
@@ -314,6 +348,10 @@ class GdImageTest extends TestCase
 
     /**
      * Tests the isSemitransparent() method.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
     public function testRecognizesSemitransparentImages()
     {

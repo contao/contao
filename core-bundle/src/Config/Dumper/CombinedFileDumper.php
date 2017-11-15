@@ -37,11 +37,6 @@ class CombinedFileDumper implements DumperInterface
     private $cacheDir;
 
     /**
-     * @var bool
-     */
-    private $addNamespace;
-
-    /**
      * @var string
      */
     private $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
@@ -52,14 +47,12 @@ class CombinedFileDumper implements DumperInterface
      * @param Filesystem      $filesystem
      * @param LoaderInterface $loader
      * @param string          $cacheDir
-     * @param bool            $addNamespace
      */
-    public function __construct(Filesystem $filesystem, LoaderInterface $loader, $cacheDir, $addNamespace = false)
+    public function __construct(Filesystem $filesystem, LoaderInterface $loader, $cacheDir)
     {
         $this->filesystem = $filesystem;
         $this->loader = $loader;
         $this->cacheDir = $cacheDir;
-        $this->addNamespace = $addNamespace;
     }
 
     /**

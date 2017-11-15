@@ -46,8 +46,7 @@
         <target>Ierobežot platumu</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
-        <source>Limit the maximum width of the back end.</source>
-        <target>Ierobežot aizmugures maksimālo platumu.</target>
+        <source>Limit the maximum width of the back end to 1140px.</source>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

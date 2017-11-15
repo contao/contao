@@ -68,6 +68,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             $twig,
             $this->mockContaoFramework(),
             $this->mockTokenStorage(),
+            $this->mockScopeMatcher(),
             $logger
         );
     }
@@ -93,12 +94,16 @@ class PrettyErrorScreenListenerTest extends TestCase
             $twig,
             $this->mockContaoFramework(),
             $this->mockTokenStorage(BackendUser::class),
+            $this->mockScopeMatcher(),
             $logger
         );
 
+        $request = new Request();
+        $request->attributes->set('_scope', 'backend');
+
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new InternalServerErrorHttpException('', new InternalServerErrorException())
         );
@@ -125,9 +130,12 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
 
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             $exception
         );
@@ -162,9 +170,12 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testRendersServiceUnavailableHttpExceptions()
     {
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new ServiceUnavailableHttpException('', new ServiceUnavailableException())
         );
@@ -184,9 +195,12 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testRendersUnknownHttpExceptions()
     {
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new ConflictHttpException()
         );
@@ -206,9 +220,12 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testRendersTheErrorScreen()
     {
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new InternalServerErrorHttpException('', new ForwardPageNotFoundException())
         );
@@ -238,6 +255,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             $twig,
             $this->mockContaoFramework(),
             $this->mockTokenStorage(),
+            $this->mockScopeMatcher(),
             $logger
         );
 
@@ -258,6 +276,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_format', 'json');
+        $request->attributes->set('_scope', 'backend');
 
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
@@ -269,7 +288,13 @@ class PrettyErrorScreenListenerTest extends TestCase
         /** @var PrettyErrorScreenListener|\PHPUnit_Framework_MockObject_MockObject $listener */
         $listener = $this
             ->getMockBuilder(PrettyErrorScreenListener::class)
-            ->disableOriginalConstructor()
+            ->setConstructorArgs([
+                true,
+                $this->createMock(\Twig_Environment::class),
+                $this->mockContaoFramework(),
+                $this->mockTokenStorage(BackendUser::class),
+                $this->mockScopeMatcher(),
+            ])
             ->setMethods(['handleException'])
             ->getMock()
         ;
@@ -287,9 +312,12 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testDoesNothingIfThePageHandlerDoesNotExist()
     {
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+
         $event = new GetResponseForExceptionEvent(
             $this->mockKernel(),
-            new Request(),
+            $request,
             HttpKernelInterface::MASTER_REQUEST,
             new AccessDeniedHttpException('', new AccessDeniedException())
         );

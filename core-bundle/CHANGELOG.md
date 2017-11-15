@@ -1,5 +1,11 @@
 # Contao core bundle change log
 
+### 4.4.8 (2017-11-15)
+
+ * Prevent SQL injections in the back end search panel (see CVE-2017-16558).
+ * Support class named services in System::import() and System::importStatic() (see #1176).
+ * Only show pretty error screens on Contao routes (see #1149).
+
 ### 4.4.7 (2017-10-12)
 
  * Show broken images in the file manager (see #1116).

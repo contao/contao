@@ -1385,9 +1385,11 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       </trans-unit>
       <trans-unit id="MSC.profile">
         <source>Profile</source>
+        <target>Profil</target>
       </trans-unit>
       <trans-unit id="MSC.profileTitle">
         <source>User profile</source>
+        <target>Profil użytkownika</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
@@ -1815,9 +1817,11 @@ Ten e-mail został wygenerowane przez Contao. Nie odpowiadaj na niego.
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
+        <target>Powiadomienia</target>
       </trans-unit>
       <trans-unit id="MSC.noSystemMessages">
         <source>Currently there are no alerts.</source>
+        <target>Obecnie nie ma żadnych powiadomień.</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>

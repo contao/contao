@@ -140,7 +140,7 @@ class ContaoAuthenticatorTest extends TestCase
                     return $user;
                 }
 
-                throw new UsernameNotFoundException();
+                throw new UsernameNotFoundException('Can only load user "frontend" or "backend".');
             })
         ;
 

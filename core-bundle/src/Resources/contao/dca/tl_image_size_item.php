@@ -362,8 +362,7 @@ class tl_image_size_item extends Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_image_size_item::invisible', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish image size item ID "'.$intId.'"', __METHOD__, TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish image size item ID ' . $intId . '.');
 		}
 
 		// Set the current record

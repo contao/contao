@@ -46,8 +46,8 @@
         <target>幅を制限</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
-        <source>Limit the maximum width of the back end.</source>
-        <target>バックエンドの最大の幅を制限します。</target>
+        <source>Limit the maximum width of the back end to 1140px.</source>
+        <target>バックエンドの最大幅を1140pxに制限します。</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

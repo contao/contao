@@ -121,21 +121,29 @@ class WidgetTest extends TestCase
         ;
 
         $widget
-            ->setInputCallback(function () { return 'foobar'; })
+            ->setInputCallback(
+                function () {
+                    return 'foobar';
+                }
+            )
             ->validate()
         ;
 
         $this->assertSame('foobar', $widget->value);
 
         $widget
-            ->setInputCallback(function () { return null; })
+            ->setInputCallback(
+                function () {
+                    return null;
+                }
+            )
             ->validate()
         ;
 
         $this->assertNull($widget->value);
 
         $widget
-            ->setInputCallback(null)
+            ->setInputCallback()
             ->validate() // getPost() should be called once here
         ;
     }

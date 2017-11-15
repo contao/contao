@@ -151,7 +151,7 @@ class ContaoTableProcessorTest extends TestCase
 
         $this->assertSame($input, $context->getIp());
 
-        $processor = $this->createContaoTableProcessor($requestStack, null, true);
+        $processor = $this->createContaoTableProcessor($requestStack);
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];
@@ -241,7 +241,7 @@ class ContaoTableProcessorTest extends TestCase
 
         $this->assertSame('k.jones', $context->getUsername());
 
-        $tokenStorage->setToken(null);
+        $tokenStorage->setToken();
 
         /** @var ContaoContext $context */
         $context = $processor(['context' => ['contao' => new ContaoContext(__METHOD__)]])['extra']['contao'];

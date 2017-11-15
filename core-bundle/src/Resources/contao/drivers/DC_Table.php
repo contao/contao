@@ -93,6 +93,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected $arrModule = array();
 
+	/**
+	 * Preserve this record when revising tables
+	 * @var int
+	 */
+	protected $intPreserveRecord;
+
 
 	/**
 	 * Initialize the object
@@ -236,16 +242,17 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
-		$route   = $request->attributes->get('_route');
+		$route = $request->attributes->get('_route');
 
 		// Store the current referer
 		if (!empty($this->ctable) && !\Input::get('act') && !\Input::get('key') && !\Input::get('token') && $route == 'contao_backend' && !\Environment::get('isAjaxRequest'))
 		{
+			$strKey = \Input::get('popup') ? 'popupReferer' : 'referer';
 			$strRefererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
-			$session = $objSession->get('referer');
+			$session = $objSession->get($strKey);
 			$session[$strRefererId][$this->strTable] = substr(\Environment::get('requestUri'), strlen(\Environment::get('path')) + 1);
-			$objSession->set('referer', $session);
+			$objSession->set($strKey, $session);
 		}
 	}
 
@@ -353,11 +360,6 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$return .= $this->paginationMenu();
 			}
 		}
-
-		// Store the current IDs
-		$session = $objSession->all();
-		$session['CURRENT']['IDS'] = $this->current;
-		$objSession->replace($session);
 
 		return $return;
 	}
@@ -3321,15 +3323,35 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Delete all new but incomplete records (tstamp=0)
 		if (!empty($new_records[$this->strTable]) && is_array($new_records[$this->strTable]))
 		{
-			$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('intval', $new_records[$this->strTable])) . ") AND tstamp=0");
+			$intPreserved = null;
 
-			if ($objStmt->affectedRows > 0)
+			// Unset the preserved record (see #1129)
+			if ($this->intPreserveRecord && ($index = array_search($this->intPreserveRecord, $new_records[$this->strTable])) !== false)
 			{
-				$reload = true;
+				$intPreserved = $new_records[$this->strTable][$index];
+				unset($new_records[$this->strTable][$index]);
+			}
+
+			// Remove the entries from the database
+			if (!empty($new_records[$this->strTable]))
+			{
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('intval', $new_records[$this->strTable])) . ") AND tstamp=0");
+
+				if ($objStmt->affectedRows > 0)
+				{
+					$reload = true;
+				}
 			}
 
 			// Remove the entries from the session
-			unset($new_records[$this->strTable]);
+			if ($intPreserved !== null)
+			{
+				$new_records[$this->strTable] = array($intPreserved);
+			}
+			else
+			{
+				unset($new_records[$this->strTable]);
+			}
 
 			$objSessionBag->set('new_records', $new_records);
 		}
@@ -5046,8 +5068,14 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$strField = \Input::post('tl_field', true);
 			$strKeyword = ltrim(\Input::postRaw('tl_value'), '*');
 
+			if ($strField && !in_array($strField, $searchFields, true))
+			{
+				$strField = '';
+				$strKeyword = '';
+			}
+
 			// Make sure the regular expression is valid
-			if ($strKeyword != '')
+			if ($strField && $strKeyword)
 			{
 				try
 				{
@@ -5165,7 +5193,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$strSort = \Input::post('tl_sort');
 
 			// Validate the user input (thanks to aulmn) (see #4971)
-			if (in_array($strSort, $sortingFields))
+			if (in_array($strSort, $sortingFields, true))
 			{
 				$session['sorting'][$this->strTable] = in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strSort]['flag'], array(2, 4, 6, 8, 10, 12)) ? "$strSort DESC" : $strSort;
 				$objSessionBag->replace($session);
@@ -6014,6 +6042,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 
 			$this->root = $arrRoot;
+		}
+
+		if (isset($attributes['preserveRecord']))
+		{
+			list($table, $id) = explode('.', $attributes['preserveRecord']);
+
+			if ($table == $this->strTable)
+			{
+				$this->intPreserveRecord = $id;
+			}
 		}
 
 		return $attributes;

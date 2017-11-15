@@ -20,7 +20,7 @@ class MemoryHeaderStorage implements HeaderStorageInterface
     /**
      * @var array
      */
-    private $headers = [];
+    private $headers;
 
     /**
      * Constructor.

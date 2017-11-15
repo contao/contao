@@ -115,6 +115,7 @@ services:
             - "@twig"
             - "@contao.framework"
             - "@security.token_storage"
+            - "@contao.routing.scope_matcher"
             - "@logger"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }

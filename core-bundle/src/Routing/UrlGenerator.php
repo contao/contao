@@ -197,7 +197,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param RequestContext $context
      * @param array          $parameters
-     * @param string         $referenceType
+     * @param int            $referenceType
      */
     private function addHostToContext(RequestContext $context, array $parameters, &$referenceType)
     {

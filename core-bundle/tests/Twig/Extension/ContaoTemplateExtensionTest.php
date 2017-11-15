@@ -116,7 +116,7 @@ class ContaoTemplateExtensionTest extends TestCase
         $requestStack->push($request);
 
         if (null === $framework) {
-            $framework = $this->mockContaoFramework(null, null, [], []);
+            $framework = $this->mockContaoFramework();
         }
 
         return new ContaoTemplateExtension($requestStack, $framework, $this->mockScopeMatcher());

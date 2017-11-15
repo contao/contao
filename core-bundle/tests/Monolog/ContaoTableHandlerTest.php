@@ -126,6 +126,8 @@ class ContaoTableHandlerTest extends TestCase
                     case 'doctrine.dbal.default_connection':
                         return $connection;
                 }
+
+                return null;
             })
         ;
 

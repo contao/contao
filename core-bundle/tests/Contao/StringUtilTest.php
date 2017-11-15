@@ -376,19 +376,19 @@ class StringUtilTest extends TestCase
             ],
             '(<?)' => [
                 'This <? var_dump() ?> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>='),
+                PHP_VERSION_ID >= 70000,
             ],
             '(<%)' => [
                 'This <% var_dump() ?> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>=') || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+                PHP_VERSION_ID >= 70000 || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
             ],
             '(<script language="php">)' => [
                 'This <script language="php"> var_dump() </script> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>='),
+                PHP_VERSION_ID >= 70000,
             ],
             '(<script language=\'php\'>)' => [
                 'This <script language=\'php\'> var_dump() </script> is a test.',
-                version_compare(PHP_VERSION, '7.0.0', '>='),
+                PHP_VERSION_ID >= 70000,
             ],
         ];
     }
@@ -424,19 +424,19 @@ class StringUtilTest extends TestCase
             ],
             '(<?)' => [
                 ['foo' => 'This <? var_dump() ?> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>='),
+                PHP_VERSION_ID >= 70000,
             ],
             '(<%)' => [
                 ['foo' => 'This <% var_dump() ?> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>=') || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+                PHP_VERSION_ID >= 70000 || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
             ],
             '(<script language="php">)' => [
                 ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>='),
+                PHP_VERSION_ID >= 70000,
             ],
             '(<script language=\'php\'>)' => [
                 ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
-                version_compare(PHP_VERSION, '7.0.0', '>='),
+                PHP_VERSION_ID >= 70000,
             ],
         ];
     }

@@ -942,7 +942,8 @@ abstract class DataContainer extends \Backend
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
 
-		$this->objPickerCallback = function ($value) use ($picker, $provider) {
+		$this->objPickerCallback = function ($value) use ($picker, $provider)
+		{
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
 

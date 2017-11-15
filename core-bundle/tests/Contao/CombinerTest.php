@@ -92,6 +92,10 @@ class CombinerTest extends TestCase
 
     /**
      * Tests the CSS combiner.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesCssFiles()
     {
@@ -204,7 +208,7 @@ EOF;
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/(test)/file.css"]])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/(test)/file.css']])
         );
     }
 
@@ -230,6 +234,10 @@ EOF;
 
     /**
      * Tests the SCSS Combiner.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesScssFiles()
     {
@@ -270,6 +278,10 @@ EOF;
 
     /**
      * Tests the JS Combiner.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesJsFiles()
     {

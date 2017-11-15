@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_content.embed.1">
         <source>Use the wildcard &quot;%s&quot; to embed the link in a phrase (e.g. &lt;em&gt;For more information please visit %s&lt;/em&gt;).</source>
-        <target>Gebruik de wildcard &quot;%s&quot; om de link te inbedden in een zin (b.v. &lt;em&gt;Voor meer informatie kunt u terecht op %s&lt;/ em&gt;).</target>
+        <target>Gebruik de wildcard &quot;%s&quot; om de link te inbedden in een zin (b.v. &lt;em&gt;Voor meer informatie kunt u terecht op %s&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.0">
         <source>Lightbox</source>
@@ -359,7 +359,7 @@
       </trans-unit>
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
-        <target>Geef het aantal resultaten per pagina op.</target>
+        <target>Het aantal items per pagina. Stel in op 0 om paginering uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
         <source>Total number of images</source>

@@ -372,7 +372,7 @@ class ImageFactoryTest extends TestCase
     {
         $imageMock = $this->createMock(ImageInterface::class);
         $imageFactory = $this->getImageFactory();
-        $image = $imageFactory->create($imageMock, (new ResizeConfiguration()));
+        $image = $imageFactory->create($imageMock, new ResizeConfiguration());
 
         $this->assertSameImage($imageMock, $image);
     }
@@ -619,8 +619,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests the executeResize hook.
      *
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook()
     {
@@ -716,8 +720,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests the getImage hook.
      *
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook()
     {
@@ -828,8 +836,12 @@ class ImageFactoryTest extends TestCase
     /**
      * Tests empty getImage and executeResize hooks.
      *
+     * @group legacy
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue()
     {
@@ -879,10 +891,6 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'emptyHookCallback']],
-        ];
-
-        $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[get_class($this), 'emptyHookCallback']],
         ];
 
@@ -913,7 +921,7 @@ class ImageFactoryTest extends TestCase
      * @param ContaoFrameworkInterface|null $framework
      * @param bool                          $bypassCache
      * @param array                         $imagineOptions
-     * @param string                        $validExtensions
+     * @param array|null                    $validExtensions
      *
      * @return ImageFactory
      */
