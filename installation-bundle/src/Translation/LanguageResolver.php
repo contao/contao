@@ -87,11 +87,9 @@ class LanguageResolver
                 }
             }
 
-            $locale = $chunks[0];
-
             // Language only, e.g. "en" or "fr"
-            if (preg_match('/^[a-z]{2}$/', $locale)) {
-                $locales[] = $locale;
+            if (preg_match('/^[a-z]{2}$/', $chunks[0])) {
+                $locales[] = $chunks[0];
             }
         }
 

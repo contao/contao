@@ -108,8 +108,7 @@ class Version447Update extends AbstractVersionUpdate
             $this->addMessage(sprintf('<li>%s</li>', $duplicate->email));
         }
 
-        if ($this->hasMessage())
-        {
+        if ($this->hasMessage()) {
             $translator = $this->container->get('translator');
 
             $this->prependMessage(sprintf('<p>%s</p><ul>', $translator->trans('duplicate_subscriptions')));
