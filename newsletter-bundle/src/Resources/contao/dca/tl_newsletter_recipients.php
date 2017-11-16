@@ -403,7 +403,7 @@ class tl_newsletter_recipients extends Backend
 			$label .= ' <span style="color:#999;padding-left:3px">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
 		}
 
-		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', TL_ASSETS_URL, Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
+		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
 	}
 
 
