@@ -239,8 +239,11 @@ class UserSessionListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
+
         $listener = $this->mockListener($session);
-        $listener->onKernelRequest($this->mockGetResponseEvent($request));
+        $listener->onKernelRequest($event);
     }
 
     public function testDoesNotStoreTheSessionUponSubrequests(): void
@@ -262,8 +265,44 @@ class UserSessionListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
+
         $listener = $this->mockListener($session, $connection);
-        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
+        $listener->onKernelResponse($event);
+    }
+
+    public function testDoesNotReplaceTheSessionIfNotAContaoRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $listener = $this->mockListener($session);
+        $listener->onKernelRequest($this->mockGetResponseEvent());
+    }
+
+    public function testDoesNotStoreTheSessionIfNotAContaoRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->expects($this->never())
+            ->method('update')
+        ;
+
+        $listener = $this->mockListener($session, $connection);
+        $listener->onKernelResponse($this->mockFilterResponseEvent());
     }
 
     public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void

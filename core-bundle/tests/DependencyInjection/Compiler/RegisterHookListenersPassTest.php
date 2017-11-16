@@ -233,6 +233,37 @@ class RegisterHookListenersPassTest extends TestCase
         );
     }
 
+    public function testDoesNothingIfThereIsNoFramework(): void
+    {
+        $container = $this->createMock(ContainerBuilder::class);
+
+        $container
+            ->method('hasDefinition')
+            ->with('contao.framework')
+            ->willReturn(false)
+        ;
+
+        $container
+            ->expects($this->never())
+            ->method('findTaggedServiceIds')
+        ;
+
+        $pass = new RegisterHookListenersPass();
+        $pass->process($container);
+    }
+
+    public function testDoesNothingIfThereAreNoHooks(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $pass = new RegisterHookListenersPass();
+        $pass->process($container);
+
+        $definition = $container->getDefinition('contao.framework');
+
+        $this->assertEmpty($definition->getMethodCalls());
+    }
+
     public function testFailsIfTheHookAttributeIsMissing(): void
     {
         $definition = new Definition('Test\HookListener');

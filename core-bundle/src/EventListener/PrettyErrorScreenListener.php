@@ -329,10 +329,8 @@ class PrettyErrorScreenListener
                 return true;
             }
 
-            foreach (array_keys(self::$mapper) as $class) {
-                if ($exception instanceof $class) {
-                    return false;
-                }
+            if (isset(self::$mapper[\get_class($exception)])) {
+                return false;
             }
         } while (null !== ($exception = $exception->getPrevious()));
 

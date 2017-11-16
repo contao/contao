@@ -198,6 +198,19 @@ class StoreRefererListenerTest extends TestCase
         ];
     }
 
+    public function testDoesNotStoreTheRefererIfNotAContaoRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+
+        $session
+            ->expects($this->never())
+            ->method('set')
+        ;
+
+        $listener = $this->mockListener($session);
+        $listener->onKernelResponse($this->mockResponseEvent());
+    }
+
     public function testDoesNotStoreTheRefererUponSubrequests(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -210,8 +223,11 @@ class StoreRefererListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
+
         $listener = $this->mockListener($session);
-        $listener->onKernelResponse($this->mockResponseEvent($request));
+        $listener->onKernelResponse($event);
     }
 
     public function testDoesNotStoreTheRefererIfTheBackEndSessionCannotBeModified(): void

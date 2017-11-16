@@ -171,6 +171,13 @@ class ContaoContextTest extends TestCase
         $this->assertFalse($context->isSecure());
     }
 
+    public function testDoesNotReadTheSslConfigurationIfThereIsNoRequest(): void
+    {
+        $context = $this->mockContaoContext('');
+
+        $this->assertFalse($context->isSecure());
+    }
+
     /**
      * Mocks a page model with details.
      *

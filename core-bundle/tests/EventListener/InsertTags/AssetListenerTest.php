@@ -33,7 +33,7 @@ class AssetListenerTest extends TestCase
             ->expects($this->once())
             ->method('getUrl')
             ->with('foo/bar', 'package')
-            ->willReturnArgument(0)
+            ->willReturn('/foo/bar')
         ;
 
         $listener = new AssetListener($packages);
@@ -49,7 +49,7 @@ class AssetListenerTest extends TestCase
             ->expects($this->once())
             ->method('getUrl')
             ->with('foo/bar', null)
-            ->willReturnArgument(0)
+            ->willReturn('/foo/bar')
         ;
 
         $listener = new AssetListener($packages);
