@@ -54,7 +54,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $meta = $container->getParameter('kernel.bundles_metadata');
 
         foreach ($bundles as $name => $class) {
-            if (!is_dir($originDir = $meta[$name]['path'].'/Resources/public')) {
+            if (!is_dir($meta[$name]['path'].'/Resources/public')) {
                 continue;
             }
 

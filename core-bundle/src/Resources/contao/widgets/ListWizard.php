@@ -127,7 +127,7 @@ class ListWizard extends \Widget
 	 */
 	public function importList(DataContainer $dc)
 	{
-		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importListWizard($dc);
+		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importListWizardAction($dc);
 
 		if ($response instanceof RedirectResponse)
 		{

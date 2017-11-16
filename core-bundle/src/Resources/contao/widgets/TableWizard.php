@@ -176,7 +176,7 @@ class TableWizard extends \Widget
 	 */
 	public function importTable(DataContainer $dc)
 	{
-		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importTableWizard($dc);
+		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importTableWizardAction($dc);
 
 		if ($response instanceof RedirectResponse)
 		{

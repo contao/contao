@@ -64,7 +64,7 @@ class BackendCsvImportControllerTest extends TestCase
 
         $html = $this
             ->mockController($request)
-            ->importListWizard($this->mockDataContainer())
+            ->importListWizardAction($this->mockDataContainer())
             ->getContent()
         ;
 
@@ -105,7 +105,7 @@ EOF;
             $this->getFixturesDir()
         );
 
-        $response = $controller->importListWizard($this->mockDataContainer());
+        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -118,7 +118,7 @@ EOF;
 
         $html = $this
             ->mockController($request)
-            ->importTableWizard($this->mockDataContainer())
+            ->importTableWizardAction($this->mockDataContainer())
             ->getContent()
         ;
 
@@ -159,7 +159,7 @@ EOF;
             $this->getFixturesDir()
         );
 
-        $response = $controller->importTableWizard($this->mockDataContainer());
+        $response = $controller->importTableWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -172,7 +172,7 @@ EOF;
 
         $html = $this
             ->mockController($request)
-            ->importOptionWizard($this->mockDataContainer())
+            ->importOptionWizardAction($this->mockDataContainer())
             ->getContent()
         ;
 
@@ -217,7 +217,7 @@ EOF;
             $this->getFixturesDir()
         );
 
-        $response = $controller->importOptionWizard($this->mockDataContainer());
+        $response = $controller->importOptionWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -231,7 +231,7 @@ EOF;
 
         $response = $this
             ->mockController($request)
-            ->importListWizard($this->mockDataContainer())
+            ->importListWizardAction($this->mockDataContainer())
         ;
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
@@ -252,7 +252,7 @@ EOF;
 
         $this->expectException(InternalServerErrorException::class);
 
-        $controller->importListWizard($this->mockDataContainer());
+        $controller->importListWizardAction($this->mockDataContainer());
     }
 
     /**

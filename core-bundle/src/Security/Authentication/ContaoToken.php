@@ -17,7 +17,7 @@ use Contao\FrontendUser;
 use Contao\User;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class ContaoToken extends AbstractToken
 {
@@ -51,7 +51,7 @@ class ContaoToken extends AbstractToken
      *
      * @param User $user
      *
-     * @return RoleInterface[]
+     * @return Role[]
      */
     private function getRolesFromUser(User $user): array
     {

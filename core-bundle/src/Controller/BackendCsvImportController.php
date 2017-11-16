@@ -82,7 +82,7 @@ class BackendCsvImportController
      *
      * @return Response
      */
-    public function importListWizard(DataContainer $dc): Response
+    public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
             function (array $data, array $row): array {
@@ -103,7 +103,7 @@ class BackendCsvImportController
      *
      * @return Response
      */
-    public function importTableWizard(DataContainer $dc): Response
+    public function importTableWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
             function (array $data, array $row): array {
@@ -125,7 +125,7 @@ class BackendCsvImportController
      *
      * @return Response
      */
-    public function importOptionWizard(DataContainer $dc): Response
+    public function importOptionWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
             function (array $data, array $row): array {
