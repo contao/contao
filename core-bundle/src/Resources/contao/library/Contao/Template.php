@@ -365,7 +365,10 @@ abstract class Template extends \Controller
 	 */
 	public function asset($path, $packageName = null)
 	{
-		return \System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
+		$url = \System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
+
+		// Contao paths are relative to the <base> tag, so remove leading slashes
+		return ltrim($url, '/');
 	}
 
 

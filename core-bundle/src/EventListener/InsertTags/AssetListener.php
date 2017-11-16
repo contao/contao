@@ -40,10 +40,13 @@ class AssetListener
     {
         $chunks = explode('::', $tag);
 
-        if ('asset' === $chunks[0]) {
-            return $this->packages->getUrl($chunks[1], $chunks[2] ?? null);
+        if ('asset' !== $chunks[0]) {
+            return false;
         }
 
-        return false;
+        $url = $this->packages->getUrl($chunks[1], $chunks[2] ?? null);
+
+        // Contao paths are relative to the <base> tag, so remove leading slashes
+        return ltrim($url, '/');
     }
 }

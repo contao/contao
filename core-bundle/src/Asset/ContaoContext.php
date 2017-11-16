@@ -57,7 +57,7 @@ class ContaoContext implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         if ($this->debug) {
             return '';
