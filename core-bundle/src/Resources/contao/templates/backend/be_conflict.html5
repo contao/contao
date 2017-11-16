@@ -16,7 +16,7 @@
     $objCombiner->add('system/themes/'. $this->theme .'/diff.css');
     echo $objCombiner->getCombinedFile();
   ?>">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/conflict.css">
+  <link rel="stylesheet" href="<?= Controller::addAssetsUrlTo('system/themes/'.$this->theme.'/conflict.css') ?>">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>

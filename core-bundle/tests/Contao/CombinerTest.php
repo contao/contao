@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
 use Contao\Config;
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -55,10 +56,17 @@ class CombinerTest extends ContaoTestCase
 
         \define('TL_ERROR', 'ERROR');
         \define('TL_ROOT', $this->getTempDir());
-        \define('TL_ASSETS_URL', '');
+
+        $context = $this->createMock(ContaoContext::class);
+
+        $context
+            ->method('getStaticUrl')
+            ->willReturn('')
+        ;
 
         $this->container = new ContainerBuilder();
         $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $this->container->set('contao.assets.assets_context', $context);
 
         System::setContainer($this->container);
     }

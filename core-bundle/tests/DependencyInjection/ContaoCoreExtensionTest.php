@@ -525,9 +525,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheAssetPluginContext(): void
     {
-        $this->assertTrue($this->container->has('contao.assets.plugins_context'));
+        $this->assertTrue($this->container->has('contao.assets.assets_context'));
 
-        $definition = $this->container->getDefinition('contao.assets.plugins_context');
+        $definition = $this->container->getDefinition('contao.assets.assets_context');
 
         $this->assertSame(ContaoContext::class, $definition->getClass());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));

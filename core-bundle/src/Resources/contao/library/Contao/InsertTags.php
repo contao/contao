@@ -87,6 +87,7 @@ class InsertTags extends \Controller
 		}
 
 		$strBuffer = '';
+		$container = \System::getContainer();
 
 		// Create one cache per cache setting (see #7700)
 		static $arrItCache;
@@ -120,7 +121,7 @@ class InsertTags extends \Controller
 				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
 				{
 					/** @var FragmentHandler $fragmentHandler */
-					$fragmentHandler = \System::getContainer()->get('fragment.handler');
+					$fragmentHandler = $container->get('fragment.handler');
 
 					$strBuffer .= $fragmentHandler->render(
 						new ControllerReference(
@@ -534,7 +535,7 @@ class InsertTags extends \Controller
 				// Last update
 				case 'last_update':
 					$strQuery = "SELECT MAX(tstamp) AS tc";
-					$bundles = \System::getContainer()->getParameter('kernel.bundles');
+					$bundles = $container->getParameter('kernel.bundles');
 
 					if (isset($bundles['ContaoNewsBundle']))
 					{
@@ -575,9 +576,9 @@ class InsertTags extends \Controller
 					$strRequest = \Environment::get('request');
 
 					// ESI request
-					if (preg_match('/^' . preg_quote(ltrim(\System::getContainer()->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
+					if (preg_match('/^' . preg_quote(ltrim($container->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
 					{
-						$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+						$request = $container->get('request_stack')->getCurrentRequest();
 						$strRequest = $request->query->get('request');
 					}
 
@@ -664,17 +665,17 @@ class InsertTags extends \Controller
 							break;
 
 						case 'files_url':
-							$arrCache[$strTag] = TL_FILES_URL;
+							$arrCache[$strTag] = $container->get('contao.assets.files_context')->getStaticUrl();
 							break;
 
 						case 'assets_url':
 						case 'plugins_url':
 						case 'script_url':
-							$arrCache[$strTag] = TL_ASSETS_URL;
+							$arrCache[$strTag] = $container->get('contao.assets.assets_context')->getStaticUrl();
 							break;
 
 						case 'base_url':
-							$arrCache[$strTag] = \System::getContainer()->get('request_stack')->getCurrentRequest()->getBaseUrl();
+							$arrCache[$strTag] = $container->get('request_stack')->getCurrentRequest()->getBaseUrl();
 							break;
 					}
 					break;
@@ -838,7 +839,7 @@ class InsertTags extends \Controller
 						if (strtolower($elements[0]) == 'image')
 						{
 							$dimensions = '';
-							$src = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl(TL_ROOT);
+							$src = $container->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl(TL_ROOT);
 							$objFile = new \File(rawurldecode($src));
 
 							// Add the image dimensions
@@ -847,18 +848,19 @@ class InsertTags extends \Controller
 								$dimensions = ' width="' . \StringUtil::specialchars($imgSize[0]) . '" height="' . \StringUtil::specialchars($imgSize[1]) . '"';
 							}
 
-							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . \StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . \StringUtil::specialchars($class) . '"' : '') . '>';
+							$arrCache[$strTag] = '<img src="' . \Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . \StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . \StringUtil::specialchars($class) . '"' : '') . '>';
 						}
 
 						// Picture
 						else
 						{
-							$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $strFile, $size);
+							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+							$picture = $container->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $strFile, $size);
 
 							$picture = array
 							(
-								'img' => $picture->getImg(TL_ROOT, TL_FILES_URL),
-								'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL)
+								'img' => $picture->getImg(TL_ROOT, $staticUrl),
+								'sources' => $picture->getSources(TL_ROOT, $staticUrl)
 							);
 
 							$picture['alt'] = $alt;
@@ -880,7 +882,7 @@ class InsertTags extends \Controller
 								$attribute = ' data-lightbox="' . \StringUtil::specialchars(substr($rel, 8)) . '"';
 							}
 
-							$arrCache[$strTag] = '<a href="' . TL_FILES_URL . $strFile . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
+							$arrCache[$strTag] = '<a href="' . \Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
 						}
 					}
 					catch (\Exception $e)
@@ -967,7 +969,7 @@ class InsertTags extends \Controller
 						}
 					}
 
-					\System::getContainer()
+					$container
 						->get('monolog.logger.contao')
 						->log(LogLevel::INFO, 'Unknown insert tag: ' . $strTag)
 					;
@@ -1061,7 +1063,7 @@ class InsertTags extends \Controller
 								}
 							}
 
-							\System::getContainer()
+							$container
 								->get('monolog.logger.contao')
 								->log(LogLevel::INFO, 'Unknown insert tag flag: ' . $flag)
 							;

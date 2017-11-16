@@ -235,6 +235,7 @@ class Picture
 		);
 
 		$container = \System::getContainer();
+		$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
 		$picture = $container
 			->get('contao.image.picture_generator')
@@ -249,8 +250,8 @@ class Picture
 
 		return array
 		(
-			'img' => $picture->getImg(TL_ROOT, TL_FILES_URL),
-			'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL),
+			'img' => $picture->getImg(TL_ROOT, $staticUrl),
+			'sources' => $picture->getSources(TL_ROOT, $staticUrl),
 		);
 	}
 

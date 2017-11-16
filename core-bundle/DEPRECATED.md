@@ -1,6 +1,24 @@
 Deprecated features
 ===================
 
+### TL_ASSETS_URL and TL_FILES_URL
+
+The constants `TL_ASSETS_URL` and `TL_FILES_URL` have been deprecated in
+Contao 4.5 and will be removed in Contao 5.0. Use the assets or files context
+instead:
+
+```php
+// Old syntax
+echo TL_ASSETS_URL;
+echo TL_FILES_URL;
+
+// New syntax
+$container = System::getContainer();
+echo $container->get('contao.assets.assets_context')->getStaticUrl();
+echo $container->get('contao.assets.files_context')->getStaticUrl();
+```
+
+
 ### Image service
 
 The `Image` and `Picture` classes have been deprecated in favor of the image

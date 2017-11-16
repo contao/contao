@@ -406,7 +406,7 @@ class PageRegular extends \Frontend
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
 					{
-						$this->Template->mooScripts .= \Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . TL_ASSETS_URL . 'assets/jquery/js/jquery.min.js">\x3C/script>\')') . "\n";
+						$this->Template->mooScripts .= \Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . \Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') .'">\x3C/script>\')') . "\n";
 					}
 				}
 				else
@@ -439,7 +439,7 @@ class PageRegular extends \Frontend
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->mooSource == 'moo_fallback')
 					{
-						$this->Template->mooScripts .= \Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . TL_ASSETS_URL . 'assets/mootools/js/mootools-core.min.js">\x3C/script>\')') . "\n";
+						$this->Template->mooScripts .= \Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . \Controller::addAssetsUrlTo('assets/mootools/js/mootools-core.min.js') . '">\x3C/script>\')') . "\n";
 					}
 
 					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-more.min.js|static';
@@ -570,12 +570,12 @@ class PageRegular extends \Frontend
 
 							if ($objFile !== null)
 							{
-								$strStyleSheet = \Template::generateStyleTag(TL_ASSETS_URL . $objFile->path, $media);
+								$strStyleSheet = \Template::generateStyleTag(\Controller::addFilesUrlTo($objFile->path), $media);
 							}
 						}
 						else
 						{
-							$strStyleSheet = \Template::generateStyleTag(TL_ASSETS_URL . 'assets/css/' . $objStylesheets->name . '.css', $media);
+							$strStyleSheet = \Template::generateStyleTag(\Controller::addAssetsUrlTo('assets/css/' . $objStylesheets->name . '.css'), $media);
 						}
 
 						if ($objStylesheets->cc)

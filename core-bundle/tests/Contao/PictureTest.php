@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
@@ -69,7 +70,6 @@ class PictureTest extends TestCase
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
         \define('TL_ERROR', 'ERROR');
-        \define('TL_FILES_URL', 'http://example.com/');
         \define('TL_ROOT', $this->getTempDir());
 
         System::setContainer($this->mockContainerWithImageServices());
@@ -349,11 +349,19 @@ class PictureTest extends TestCase
             FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => null]),
         ];
 
+        $context = $this->createMock(ContaoContext::class);
+
+        $context
+            ->method('getStaticUrl')
+            ->willReturn('http://example.com/')
+        ;
+
         $framework = $this->mockContaoFramework($adapters);
 
         $container = $this->mockContainer($this->getTempDir());
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
         $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
+        $container->set('contao.assets.files_context', $context);
 
         $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
         $resizer->setFramework($framework);

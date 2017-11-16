@@ -294,7 +294,7 @@ class Combiner extends \System
 	{
 		if ($strUrl === null)
 		{
-			$strUrl = TL_ASSETS_URL;
+			$strUrl = \System::getContainer()->get('contao.assets.assets_context')->getStaticUrl();
 		}
 
 		$arrPrefix = array();

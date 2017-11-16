@@ -16,20 +16,20 @@ services:
             # The priority must be higher than the one of the request attribute value resolver (defaults to 100)
             - { name: controller.argument_value_resolver, priority: 101 }
 
+    contao.assets.assets_context:
+        class: Contao\CoreBundle\Asset\ContaoContext
+        arguments:
+            - "@contao.framework"
+            - "@request_stack"
+            - 'staticPlugins'
+            - "%kernel.debug%"
+
     contao.assets.files_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - "@contao.framework"
             - "@request_stack"
             - 'staticFiles'
-            - "%kernel.debug%"
-
-    contao.assets.plugins_context:
-        class: Contao\CoreBundle\Asset\ContaoContext
-        arguments:
-            - "@contao.framework"
-            - "@request_stack"
-            - 'staticPlugins'
             - "%kernel.debug%"
 
     contao.cache:
@@ -142,6 +142,17 @@ services:
     contao.fragment.page_type.delegating_renderer:
         class: Contao\CoreBundle\Fragment\PageType\DelegatingPageTypeRenderer
 
+    contao.framework:
+        class: Contao\CoreBundle\Framework\ContaoFramework
+        arguments:
+            - "@request_stack"
+            - "@router"
+            - "@session"
+            - "@contao.routing.scope_matcher"
+            - "%kernel.project_dir%"
+            - "%contao.error_level%"
+        public: true
+
     contao.image.imagine:
         class: Imagine\Gd\Imagine
         public: true
@@ -193,17 +204,6 @@ services:
             - "@contao.framework"
             - "%contao.image.bypass_cache%"
             - "%contao.image.imagine_options%"
-        public: true
-
-    contao.framework:
-        class: Contao\CoreBundle\Framework\ContaoFramework
-        arguments:
-            - "@request_stack"
-            - "@router"
-            - "@session"
-            - "@contao.routing.scope_matcher"
-            - "%kernel.project_dir%"
-            - "%contao.error_level%"
         public: true
 
     contao.menu.backend_menu_renderer:

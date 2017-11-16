@@ -165,6 +165,8 @@ class BackendTemplate extends \Template
 	 */
 	protected function getLocaleString()
 	{
+		$container = \System::getContainer();
+
 		return
 			'var Contao={'
 				. 'theme:"' . \Backend::getTheme() . '",'
@@ -175,10 +177,10 @@ class BackendTemplate extends \Template
 					. 'loading:"' . $GLOBALS['TL_LANG']['MSC']['loadingData'] . '",'
 					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '"'
 				. '},'
-				. 'script_url:"' . TL_ASSETS_URL . '",'
+				. 'script_url:"' . $container->get('contao.assets.assets_context')->getStaticUrl() . '",'
 				. 'path:"' . \Environment::get('path') . '",'
 				. 'request_token:"' . REQUEST_TOKEN . '",'
-				. 'referer_id:"' . \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
+				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
 			. '};';
 	}
 

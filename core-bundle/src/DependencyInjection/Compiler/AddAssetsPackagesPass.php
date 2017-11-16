@@ -42,7 +42,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     private function addBundles(ContainerBuilder $container): void
     {
         $packages = $container->getDefinition('assets.packages');
-        $context = new Reference('contao.assets.plugins_context');
+        $context = new Reference('contao.assets.assets_context');
 
         if ($container->hasDefinition('assets._version_default')) {
             $version = new Reference('assets._version_default');
@@ -79,7 +79,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         }
 
         $packages = $container->getDefinition('assets.packages');
-        $context = new Reference('contao.assets.plugins_context');
+        $context = new Reference('contao.assets.assets_context');
         $components = $container->getParameter('kernel.packages');
 
         foreach ($components as $name => $version) {

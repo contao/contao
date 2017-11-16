@@ -91,7 +91,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $service = $container->getDefinition('assets._package_foo_bar');
         $this->assertSame('bundles/foobar', $service->getArgument(0));
         $this->assertSame('assets.empty_version_strategy', (string) $service->getArgument(1));
-        $this->assertSame('contao.assets.plugins_context', (string) $service->getArgument(2));
+        $this->assertSame('contao.assets.assets_context', (string) $service->getArgument(2));
     }
 
     public function testUsesTheDefaultVersionStrategyForBundles(): void

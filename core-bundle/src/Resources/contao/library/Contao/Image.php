@@ -696,7 +696,8 @@ class Image
 			return '';
 		}
 
-		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+		$container = \System::getContainer();
+		$webDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		if (!is_file(TL_ROOT . '/' . $src))
 		{
@@ -719,9 +720,9 @@ class Image
 			$src = substr($src, \strlen($webDir) + 1);
 		}
 
-		$static = (strncmp($src, 'assets/', 7) === 0) ? TL_ASSETS_URL : TL_FILES_URL;
+		$context = (strncmp($src, 'assets/', 7) === 0) ? 'assets_context' : 'files_context';
 
-		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . \StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
+		return '<img src="' . \Controller::addStaticUrlTo(\System::urlEncode($src), $container->get('contao.assets.'.$context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . \StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
 
 

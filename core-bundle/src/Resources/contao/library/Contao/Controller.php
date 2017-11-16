@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -792,7 +793,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateStyleTag(static::addStaticUrlTo($stylesheet), $options->media);
+					$strScripts .= \Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media);
 				}
 			}
 		}
@@ -810,7 +811,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateStyleTag(static::addStaticUrlTo($stylesheet), $options->media);
+					$strScripts .= \Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media);
 				}
 			}
 		}
@@ -852,7 +853,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateScriptTag(static::addStaticUrlTo($javascript), $options->async);
+					$strScripts .= \Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async);
 				}
 			}
 
@@ -1520,13 +1521,15 @@ abstract class Controller extends \System
 
 		try
 		{
-			$src = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size)->getUrl(TL_ROOT);
-			$picture = \System::getContainer()->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
+			$container = \System::getContainer();
+			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+			$src = $container->get('contao.image.image_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size)->getUrl(TL_ROOT);
+			$picture = $container->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
 			(
-				'img' => $picture->getImg(TL_ROOT, TL_FILES_URL),
-				'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL)
+				'img' => $picture->getImg(TL_ROOT, $staticUrl),
+				'sources' => $picture->getSources(TL_ROOT, $staticUrl)
 			);
 
 			if ($src !== $arrItem['singleSRC'])
@@ -1650,7 +1653,7 @@ abstract class Controller extends \System
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
 					{
-						$objTemplate->$strHrefKey = TL_FILES_URL . \System::urlEncode($arrItem['imageUrl']);
+						$objTemplate->$strHrefKey = static::addFilesUrlTo(\System::urlEncode($arrItem['imageUrl']));
 					}
 
 					$objTemplate->attributes = ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
@@ -1665,7 +1668,7 @@ abstract class Controller extends \System
 		// Fullsize view
 		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
 		{
-			$objTemplate->$strHrefKey = TL_FILES_URL . \System::urlEncode($arrItem['singleSRC']);
+			$objTemplate->$strHrefKey = static::addFilesUrlTo(\System::urlEncode($arrItem['singleSRC']));
 			$objTemplate->attributes = ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
 		}
 
@@ -1676,7 +1679,7 @@ abstract class Controller extends \System
 		}
 
 		// Do not urlEncode() here because getImage() already does (see #3817)
-		$objTemplate->src = TL_FILES_URL . $src;
+		$objTemplate->src = static::addFilesUrlTo($src);
 		$objTemplate->singleSRC = $arrItem['singleSRC'];
 		$objTemplate->linkTitle = $arrItem['linkTitle'] ?: $arrItem['title'];
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
@@ -1809,11 +1812,8 @@ abstract class Controller extends \System
 			}
 		}
 
-		$pluginsUrl = \System::getContainer()->get('contao.assets.plugins_context')->getBasePath();
-		$filesUrl = \System::getContainer()->get('contao.assets.files_context')->getBasePath();
-
-		\define('TL_ASSETS_URL', $pluginsUrl ? $pluginsUrl.'/' : '');
-		\define('TL_FILES_URL', $filesUrl ? $filesUrl.'/' : '');
+		\define('TL_ASSETS_URL', \System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
+		\define('TL_FILES_URL', \System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		\define('TL_SCRIPT_URL', TL_ASSETS_URL);
@@ -1824,25 +1824,56 @@ abstract class Controller extends \System
 	/**
 	 * Add a static URL to a script
 	 *
-	 * @param string $script The script path
+	 * @param string             $script The script path
+	 * @param ContaoContext|null $context
 	 *
 	 * @return string The script path with the static URL
 	 */
-	public static function addStaticUrlTo($script)
+	public static function addStaticUrlTo($script, ContaoContext $context = null)
 	{
-		// The feature is not used
-		if (TL_ASSETS_URL == '')
-		{
-			return $script;
-		}
-
-		// Absolut URLs
+		// Absolute URLs
 		if (preg_match('@^https?://@', $script))
 		{
 			return $script;
 		}
 
-		return TL_ASSETS_URL . $script;
+		if ($context === null)
+		{
+			$context = \System::getContainer()->get('contao.assets.assets_context');
+		}
+
+		if ($strStaticUrl = $context->getStaticUrl())
+		{
+			return $strStaticUrl . $script;
+		}
+
+		return $script;
+	}
+
+
+	/**
+	 * Add the assets URL to a script
+	 *
+	 * @param string $script The script path
+	 *
+	 * @return string The script path with the assets URL
+	 */
+	public static function addAssetsUrlTo($script)
+	{
+		return static::addStaticUrlTo($script, \System::getContainer()->get('contao.assets.assets_context'));
+	}
+
+
+	/**
+	 * Add the files URL to a script
+	 *
+	 * @param string $script The script path
+	 *
+	 * @return string The script path with the files URL
+	 */
+	public static function addFilesUrlTo($script)
+	{
+		return static::addStaticUrlTo($script, \System::getContainer()->get('contao.assets.files_context'));
 	}
 
 

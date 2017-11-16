@@ -96,6 +96,20 @@ class ContaoContext implements ContextInterface
     }
 
     /**
+     * Returns the base path with a trailing slash if not empty.
+     *
+     * @return string
+     */
+    public function getStaticUrl(): string
+    {
+        if ($path = $this->getBasePath()) {
+            return $path.'/';
+        }
+
+        return '';
+    }
+
+    /**
      * Gets the current page model.
      *
      * @return PageModel|null
