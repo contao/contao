@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\Api;
 
 use Contao\ManagerBundle\Api\Command\GetConfigCommand;
 use Contao\ManagerBundle\Api\Command\SetConfigCommand;
+use Contao\ManagerBundle\Api\Command\VersionCommand;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -22,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = 1;
 
     /**
      * @var string
@@ -96,6 +97,7 @@ class Application extends BaseApplication
     {
         $commands = parent::getDefaultCommands();
 
+        $commands[] = new VersionCommand();
         $commands[] = new GetConfigCommand();
         $commands[] = new SetConfigCommand();
 
