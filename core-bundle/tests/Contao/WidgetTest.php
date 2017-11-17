@@ -37,6 +37,16 @@ class WidgetTest extends TestCase
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        \define('TL_MODE', 'FE');
+    }
+
+    /**
      * @param string $key
      * @param string $input
      * @param mixed  $value
