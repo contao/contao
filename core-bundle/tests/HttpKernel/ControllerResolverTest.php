@@ -78,6 +78,7 @@ class ControllerResolverTest extends TestCase
         $decorated
             ->expects($this->once())
             ->method('getArguments')
+            ->willReturn([])
         ;
 
         $resolver = new ControllerResolver($decorated, new FragmentRegistry());

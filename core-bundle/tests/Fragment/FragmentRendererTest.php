@@ -99,7 +99,7 @@ class FragmentRendererTest extends TestCase
         $handler
             ->expects($this->once())
             ->method('render')
-            ->with($uri, 'inline',$options)
+            ->with($uri, 'inline', $options)
         ;
 
         $renderer = new FragmentRenderer($registry, $handler, new ServiceLocator([]));

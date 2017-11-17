@@ -326,7 +326,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->mockResponseEvent($exception);
 
-        $listener = $this->mockListener(FrontendUser::class, false);
+        $listener = $this->mockListener(FrontendUser::class);
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());

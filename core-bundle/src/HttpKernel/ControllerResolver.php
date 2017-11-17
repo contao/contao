@@ -57,7 +57,7 @@ class ControllerResolver implements ControllerResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function getArguments(Request $request, $controller)
+    public function getArguments(Request $request, $controller): array
     {
         return $this->resolver->getArguments($request, $controller);
     }

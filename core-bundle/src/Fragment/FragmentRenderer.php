@@ -74,7 +74,9 @@ class FragmentRenderer implements FragmentRendererInterface
         }
 
         if ($this->preHandlers->has($uri->controller)) {
-            $this->preHandlers->get($uri->controller)->preHandleFragment($uri, $config);
+            /** @var FragmentPreHandlerInterface $preHandler */
+            $preHandler = $this->preHandlers->get($uri->controller);
+            $preHandler->preHandleFragment($uri, $config);
         }
     }
 

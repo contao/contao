@@ -62,7 +62,6 @@ class PageLayoutListener
 
             /** @var Environment $environment */
             $environment = $this->framework->getAdapter(Environment::class);
-
             $mobile = $environment->get('agent')->mobile;
         }
 

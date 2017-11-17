@@ -126,7 +126,6 @@ class Translator implements TranslatorInterface
     {
         /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
-
         $system->loadLanguageFile($name);
     }
 }

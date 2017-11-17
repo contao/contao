@@ -288,7 +288,6 @@ class PrettyErrorScreenListener
     {
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
-
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 
         return [
