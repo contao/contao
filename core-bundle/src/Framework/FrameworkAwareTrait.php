@@ -17,7 +17,7 @@ trait FrameworkAwareTrait
     /**
      * @var ContaoFrameworkInterface
      */
-    private $framework;
+    protected $framework;
 
     /**
      * Sets the framework service.
