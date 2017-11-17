@@ -98,6 +98,10 @@ class ContaoDataCollectorTest extends TestCase
             $collector->getSummary()
         );
 
+        $collector->reset();
+
+        $this->assertSame([], $collector->getSummary());
+
         unset($GLOBALS['objPage']);
     }
 

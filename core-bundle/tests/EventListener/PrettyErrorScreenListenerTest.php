@@ -368,9 +368,9 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * Mocks a response event.
      *
-     * @param \Exception $exception
+     * @param \Exception   $exception
      * @param Request|null $request
-     * @param bool $isSubRequest
+     * @param bool         $isSubRequest
      *
      * @return GetResponseForExceptionEvent
      */

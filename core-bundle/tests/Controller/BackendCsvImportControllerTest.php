@@ -15,8 +15,11 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\FileUpload;
+use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +101,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockFramework(['files/data.csv']),
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
@@ -152,7 +155,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockFramework(['files/data.csv']),
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
@@ -210,7 +213,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockFramework(['files/data.csv']),
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
@@ -225,14 +228,31 @@ EOF;
 
     public function testRedirectsIfThePostDataIsIncomplete(): void
     {
+        $connection = $this->createMock(Connection::class);
+
         $request = new Request();
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $response = $this
-            ->mockController($request)
-            ->importListWizardAction($this->mockDataContainer())
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
         ;
+
+        $controller = new BackendCsvImportController(
+            $this->mockFramework(['files/data.csv'], true),
+            $connection,
+            $requestStack,
+            $translator,
+            $this->getFixturesDir()
+        );
+
+        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame(303, $response->getStatusCode());
@@ -243,7 +263,7 @@ EOF;
         $connection = $this->createMock(Connection::class);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockFramework(),
             $connection,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
@@ -253,6 +273,104 @@ EOF;
         $this->expectException(InternalServerErrorException::class);
 
         $controller->importListWizardAction($this->mockDataContainer());
+    }
+
+    public function testFailsIfThereAreNoFiles(): void
+    {
+        $connection = $this->createMock(Connection::class);
+
+        $request = new Request();
+        $request->query->set('key', 'lw');
+        $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $controller = new BackendCsvImportController(
+            $this->mockFramework([], true),
+            $connection,
+            $requestStack,
+            $translator,
+            $this->getFixturesDir()
+        );
+
+        $response = $controller->importListWizardAction($this->mockDataContainer());
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertSame(303, $response->getStatusCode());
+    }
+
+    public function testFailsIfTheFileExtensionIsNotCsv(): void
+    {
+        $connection = $this->createMock(Connection::class);
+
+        $request = new Request();
+        $request->query->set('key', 'lw');
+        $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $controller = new BackendCsvImportController(
+            $this->mockFramework(['files/data.jpg'], true),
+            $connection,
+            $requestStack,
+            $translator,
+            $this->getFixturesDir()
+        );
+
+        $response = $controller->importListWizardAction($this->mockDataContainer());
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertSame(303, $response->getStatusCode());
+    }
+
+    /**
+     * Mocks the Contao framework.
+     *
+     * @param array $files
+     * @param bool  $expectError
+     *
+     * @return ContaoFrameworkInterface
+     */
+    private function mockFramework(array $files = [], bool $expectError = false): ContaoFrameworkInterface
+    {
+        $uploader = $this->createMock(FileUpload::class);
+
+        $uploader
+            ->method('uploadTo')
+            ->willReturn($files)
+        ;
+
+        $adapter = $this->mockAdapter(['addError']);
+
+        $adapter
+            ->expects($expectError ? $this->once() : $this->never())
+            ->method('addError')
+        ;
+
+        $framework = $this->mockContaoFramework([Message::class => $adapter]);
+
+        $framework
+            ->method('createInstance')
+            ->willReturn($uploader)
+        ;
+
+        return $framework;
     }
 
     /**
@@ -275,7 +393,7 @@ EOF;
         ;
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockFramework(),
             $this->createMock(Connection::class),
             $requestStack,
             $translator,

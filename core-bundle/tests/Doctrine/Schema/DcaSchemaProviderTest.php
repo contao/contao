@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
+use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
@@ -380,5 +382,32 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->expectException('RuntimeException');
 
         $provider->createSchema();
+    }
+
+    public function testCreatesSchemaFromOrm(): void
+    {
+        $metadata = new ClassMetadata('tl_member');
+        $metadata->setTableName('tl_member');
+
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm([$metadata])
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+    }
+
+    public function testDoesNotCreateTheSchemaFromOrmIfThereIsNoMetadata(): void
+    {
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm()
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
     }
 }

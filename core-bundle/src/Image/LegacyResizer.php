@@ -42,9 +42,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
      */
     public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options): ImageInterface
     {
-        if ((!empty($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize']))
-            || (!empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']))
-        ) {
+        if ($this->hasExecuteResizeHook() || $this->hasGetImageHook()) {
             @trigger_error('Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. Replace the contao.image.resizer service instead.', E_USER_DEPRECATED);
 
             $this->legacyImage = null;
@@ -77,10 +75,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             }
         }
 
-        if ($this->legacyImage
-            && isset($GLOBALS['TL_HOOKS']['executeResize'])
-            && \is_array($GLOBALS['TL_HOOKS']['executeResize'])
-        ) {
+        if ($this->legacyImage && $this->hasExecuteResizeHook()) {
             foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}($this->legacyImage);
 
@@ -98,10 +93,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
      */
     protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options): ImageInterface
     {
-        if ($this->legacyImage
-            && isset($GLOBALS['TL_HOOKS']['getImage'])
-            && \is_array($GLOBALS['TL_HOOKS']['getImage'])
-        ) {
+        if ($this->legacyImage && $this->hasGetImageHook()) {
             foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}(
                     $this->legacyImage->getOriginalPath(),
@@ -140,5 +132,25 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         }
 
         return parent::executeResize($image, $coordinates, $path, $options);
+    }
+
+    /**
+     * Checks if the executeResize hook is set.
+     *
+     * @return bool
+     */
+    private function hasExecuteResizeHook(): bool
+    {
+        return !empty($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize']);
+    }
+
+    /**
+     * Checks if the getImage hook is set.
+     *
+     * @return bool
+     */
+    private function hasGetImageHook(): bool
+    {
+        return !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']);
     }
 }

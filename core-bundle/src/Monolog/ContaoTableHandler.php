@@ -153,10 +153,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
         $framework = $this->container->get('contao.framework');
 
-        if (!isset($GLOBALS['TL_HOOKS']['addLogEntry'])
-            || !\is_array($GLOBALS['TL_HOOKS']['addLogEntry'])
-            || !$framework->isInitialized()
-        ) {
+        if (!$this->hasAddLogEntryHook() || !$framework->isInitialized()) {
             return;
         }
 
@@ -172,5 +169,15 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($message, $func, $action);
         }
+    }
+
+    /**
+     * Checks if the addLogEntry hook is set.
+     *
+     * @return bool
+     */
+    private function hasAddLogEntryHook(): bool
+    {
+        return !empty($GLOBALS['TL_HOOKS']['addLogEntry']) && \is_array($GLOBALS['TL_HOOKS']['addLogEntry']);
     }
 }

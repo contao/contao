@@ -169,7 +169,7 @@ class BackendCsvImportController
 
         $this->framework->initialize();
 
-        $uploader = new FileUpload();
+        $uploader = $this->framework->createInstance(FileUpload::class);
         $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
         if (null !== $submitLabel) {
@@ -180,7 +180,8 @@ class BackendCsvImportController
             try {
                 $data = $this->fetchData($uploader, $request->request->get('separator'), $callback);
             } catch (\RuntimeException $e) {
-                Message::addError($e->getMessage());
+                $message = $this->framework->getAdapter(Message::class);
+                $message->addError($e->getMessage());
 
                 return new RedirectResponse($request->getUri(), 303);
             }
