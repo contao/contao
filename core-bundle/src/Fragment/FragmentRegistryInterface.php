@@ -14,58 +14,54 @@ namespace Contao\CoreBundle\Fragment;
 
 interface FragmentRegistryInterface
 {
-    public const CONTENT_ELEMENT_FRAGMENT = 'contao.fragment.content_element';
-    public const FRONTEND_MODULE_FRAGMENT = 'contao.fragment.frontend_module';
-    public const PAGE_TYPE_FRAGMENT = 'contao.fragment.page_type';
-
-    public const CONTENT_ELEMENT_RENDERER = 'contao.fragment.content_element_renderer';
-    public const FRONTEND_MODULE_RENDERER = 'contao.fragment.frontend_module_renderer';
-    public const PAGE_TYPE_RENDERER = 'contao.fragment.page_type_renderer';
-
     /**
-     * Adds a fragment.
+     * Adds a fragment or overwrites an existing fragment with the same identifier.
      *
-     * The $options array must contain at least the following three keys:
-     *
-     *     - tag (which contains the fragment tag, e.g. "contao.fragment.frontend_module")
-     *     - type (which contains the type within that fragment type, e.g. "navigation")
-     *     - controller (which contains the controller reference to that fragment)
-     *
-     * If a fragment with the same identifier already exists, it will be overwritten.
-     *
-     * @param string $identifier
-     * @param object $fragment
-     * @param array  $options
+     * @param string         $identifier
+     * @param FragmentConfig $config
      *
      * @return FragmentRegistryInterface
      */
-    public function addFragment(string $identifier, $fragment, array $options): self;
+    public function add(string $identifier, FragmentConfig $config): self;
+
+    /**
+     * Removes a fragment.
+     *
+     * @param string $identifier
+     *
+     * @return FragmentRegistryInterface
+     */
+    public function remove(string $identifier): self;
+
+    /**
+     * Checks whether the registry has a fragment.
+     *
+     * @param string $identifier
+     *
+     * @return bool
+     */
+    public function has(string $identifier): bool;
 
     /**
      * Returns a fragment by its identifier.
      *
      * @param string $identifier
      *
-     * @return object|null
+     * @return FragmentConfig|null
      */
-    public function getFragment(string $identifier);
+    public function get(string $identifier): ?FragmentConfig;
 
     /**
-     * Returns an array of fragments that optionally match a given filter callable,
-     * which receives the identifier the fragment instance as arguments.
+     * Returns all fragment identifiers.
      *
-     * @param callable|null $filter
-     *
-     * @return object[]
+     * @return string[]
      */
-    public function getFragments(callable $filter = null): array;
+    public function keys(): array;
 
     /**
-     * Returns the fragment options.
+     * Returns all fragments.
      *
-     * @param string $identifier
-     *
-     * @return array
+     * @return FragmentConfig[]
      */
-    public function getOptions(string $identifier): array;
+    public function all(): array;
 }

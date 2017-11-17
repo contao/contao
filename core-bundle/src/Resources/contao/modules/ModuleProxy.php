@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
-use Contao\CoreBundle\Fragment\FrontendModule\FrontendModuleRendererInterface;
-use Symfony\Component\HttpFoundation\Response;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 
 /**
  * Proxy for new front end module fragments so they are accessible via $GLOBALS['FE_MOD'].
@@ -21,31 +19,26 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ModuleProxy extends Module
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function generate()
-    {
-        $container = \System::getContainer();
-        $response = new Response();
+	/**
+	 * {@inheritdoc}
+	 */
+	public function generate()
+	{
+		$reference = new FrontendModuleReference($this->objModel, $this->strColumn);
 
-        /** @var FrontendModuleRendererInterface $frontendModuleRenderer */
-        $frontendModuleRenderer = $container->get(FragmentRegistryInterface::FRONTEND_MODULE_RENDERER);
+		if ('BE' === TL_MODE)
+		{
+			$reference->setBackendScope();
+		}
 
-        $result = $frontendModuleRenderer->render($this->objModel, $this->strColumn);
+		return \System::getContainer()->get('contao.fragment.renderer')->render($reference);
+	}
 
-        if (null !== $result) {
-            $response->setContent($result);
-        }
-
-        return $response->getContent();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function compile()
-    {
-        // noop
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function compile()
+	{
+		// noop
+	}
 }

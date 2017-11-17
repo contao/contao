@@ -41,7 +41,6 @@ use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener as HeaderRe
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\LocaleListener;
-use Contao\CoreBundle\EventListener\MapFragmentsToGlobalsListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
@@ -49,15 +48,11 @@ use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
-use Contao\CoreBundle\Fragment\ContentElement\DefaultContentElementRenderer;
-use Contao\CoreBundle\Fragment\ContentElement\DelegatingContentElementRenderer;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
-use Contao\CoreBundle\Fragment\FrontendModule\DefaultFrontendModuleRenderer;
-use Contao\CoreBundle\Fragment\FrontendModule\DelegatingFrontendModuleRenderer;
-use Contao\CoreBundle\Fragment\PageType\DefaultPageTypeRenderer;
-use Contao\CoreBundle\Fragment\PageType\DelegatingPageTypeRenderer;
+use Contao\CoreBundle\Fragment\FragmentRenderer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
+use Contao\CoreBundle\HttpKernel\ControllerResolver;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
@@ -89,6 +84,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
@@ -330,17 +326,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
-    }
-
-    public function testRegistersTheMapFragmentsToGlobalsListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.map_fragments_to_globals'));
-
-        $definition = $this->container->getDefinition('contao.listener.map_fragments_to_globals');
-
-        $this->assertSame(MapFragmentsToGlobalsListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void
@@ -670,6 +655,17 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('doctrine', (string) $definition->getArgument(1));
     }
 
+    public function testRegistersTheControllerResolver(): void
+    {
+        $this->assertTrue($this->container->has('contao.controller_resolver'));
+
+        $definition = $this->container->getDefinition('contao.controller_resolver');
+
+        $this->assertSame(ControllerResolver::class, $definition->getClass());
+        $this->assertSame('contao.controller_resolver.inner', (string) $definition->getArgument(0));
+        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(1));
+    }
+
     public function testRegistersTheFragmentRegistry(): void
     {
         $this->assertTrue($this->container->has('contao.fragment.registry'));
@@ -679,94 +675,29 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(FragmentRegistry::class, $definition->getClass());
     }
 
-    public function testRegistersTheContentElementRendererAlias(): void
+    public function testRegistersTheFragmentRenderer(): void
     {
-        $this->assertTrue($this->container->hasAlias('contao.fragment.content_element_renderer'));
-    }
+        $this->assertTrue($this->container->has('contao.fragment.renderer'));
 
-    public function testRegistersTheDefaultContentElementRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.content_element.default_renderer'));
+        $definition = $this->container->getDefinition('contao.fragment.renderer');
 
-        $definition = $this->container->getDefinition('contao.fragment.content_element.default_renderer');
-
-        $this->assertSame(DefaultContentElementRenderer::class, $definition->getClass());
+        $this->assertSame(FragmentRenderer::class, $definition->getClass());
         $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(0));
         $this->assertSame('fragment.handler', (string) $definition->getArgument(1));
-        $this->assertSame('request_stack', (string) $definition->getArgument(2));
+        $this->assertSame('contao.fragment.pre_handlers', (string) $definition->getArgument(2));
+    }
+
+    public function testRegistersTheFragmentPreHandlers(): void
+    {
+        $this->assertTrue($this->container->has('contao.fragment.pre_handlers'));
+
+        $definition = $this->container->getDefinition('contao.fragment.pre_handlers');
+
+        $this->assertSame(ServiceLocator::class, $definition->getClass());
 
         $tags = $definition->getTags();
 
-        $this->assertArrayHasKey('contao.fragment.content_element_renderer', $tags);
-    }
-
-    public function testRegistersTheDelegatingContentElementRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.content_element.delegating_renderer'));
-
-        $definition = $this->container->getDefinition('contao.fragment.content_element.delegating_renderer');
-
-        $this->assertSame(DelegatingContentElementRenderer::class, $definition->getClass());
-    }
-
-    public function testRegistersTheFrontendModuleRenderer(): void
-    {
-        $this->assertTrue($this->container->hasAlias('contao.fragment.frontend_module_renderer'));
-    }
-
-    public function testRegistersTheDefaultFrontendModuleRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.frontend_module.default_renderer'));
-
-        $definition = $this->container->getDefinition('contao.fragment.frontend_module.default_renderer');
-
-        $this->assertSame(DefaultFrontendModuleRenderer::class, $definition->getClass());
-        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(0));
-        $this->assertSame('fragment.handler', (string) $definition->getArgument(1));
-        $this->assertSame('request_stack', (string) $definition->getArgument(2));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.fragment.frontend_module_renderer', $tags);
-    }
-
-    public function testRegistersTheDelegatingFrontendModuleRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.frontend_module.delegating_renderer'));
-
-        $definition = $this->container->getDefinition('contao.fragment.frontend_module.delegating_renderer');
-
-        $this->assertSame(DelegatingFrontendModuleRenderer::class, $definition->getClass());
-    }
-
-    public function testRegistersThePageTypeRenderer(): void
-    {
-        $this->assertTrue($this->container->hasAlias('contao.fragment.page_type_renderer'));
-    }
-
-    public function testRegistersTheDefaultPageTypeRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.page_type.default_renderer'));
-
-        $definition = $this->container->getDefinition('contao.fragment.page_type.default_renderer');
-
-        $this->assertSame(DefaultPageTypeRenderer::class, $definition->getClass());
-        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(0));
-        $this->assertSame('fragment.handler', (string) $definition->getArgument(1));
-        $this->assertSame('request_stack', (string) $definition->getArgument(2));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.fragment.page_type_renderer', $tags);
-    }
-
-    public function testRegistersTheDelegatingPageTypeRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.page_type.delegating_renderer'));
-
-        $definition = $this->container->getDefinition('contao.fragment.page_type.delegating_renderer');
-
-        $this->assertSame(DelegatingPageTypeRenderer::class, $definition->getClass());
+        $this->assertArrayHasKey('container.service_locator', $tags);
     }
 
     public function testRegistersTheImageImagineService(): void

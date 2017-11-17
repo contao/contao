@@ -19,8 +19,9 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\FragmentRegistryPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -62,7 +63,8 @@ class ContaoCoreBundleTest extends TestCase
             AddImagineClassPass::class,
             DoctrineMigrationsPass::class,
             PickerProviderPass::class,
-            FragmentRegistryPass::class,
+            RegisterFragmentsPass::class,
+            MapFragmentsToGlobalsPass::class,
             RegisterHookListenersPass::class,
         ];
 
@@ -108,5 +110,26 @@ class ContaoCoreBundleTest extends TestCase
         $assetsPosition = array_search(AddAssetsPackagesPass::class, $classes, true);
 
         $this->assertTrue($packagesPosition < $assetsPosition);
+    }
+
+    public function testAddsFragmentsPassBeforeHooksPass(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.root_dir', $this->getFixturesDir().'/app');
+
+        $bundle = new ContaoCoreBundle();
+        $bundle->build($container);
+
+        $classes = [];
+
+        foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
+            $reflection = new \ReflectionClass($pass);
+            $classes[] = $reflection->getName();
+        }
+
+        $fragmentsPosition = array_search(RegisterFragmentsPass::class, $classes, true);
+        $hookPosition = array_search(RegisterHookListenersPass::class, $classes, true);
+
+        $this->assertTrue($fragmentsPosition < $hookPosition);
     }
 }

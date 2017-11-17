@@ -20,22 +20,12 @@ class FragmentRegistry implements FragmentRegistryInterface
     private $fragments = [];
 
     /**
-     * @var array
-     */
-    private $fragmentOptions = [];
-
-    /**
      * {@inheritdoc}
      */
-    public function addFragment(string $identifier, $fragment, array $options): FragmentRegistryInterface
+    public function add(string $identifier, FragmentConfig $config): FragmentRegistryInterface
     {
-        if (3 !== \count(array_intersect(array_keys($options), ['tag', 'type', 'controller']))) {
-            throw new \InvalidArgumentException('Missing the three basic options "tag", "type" and "controller".');
-        }
-
         // Override existing fragments with the same identifier
-        $this->fragments[$identifier] = $fragment;
-        $this->fragmentOptions[$identifier] = $options;
+        $this->fragments[$identifier] = $config;
 
         return $this;
     }
@@ -43,34 +33,42 @@ class FragmentRegistry implements FragmentRegistryInterface
     /**
      * {@inheritdoc}
      */
-    public function getFragment(string $identifier)
+    public function remove(string $identifier): FragmentRegistryInterface
     {
-        return $this->fragments[$identifier];
+        unset($this->fragments[$identifier]);
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getOptions(string $identifier): array
+    public function has(string $identifier): bool
     {
-        return $this->fragmentOptions[$identifier];
+        return isset($this->fragments[$identifier]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFragments(callable $filter = null): array
+    public function get(string $identifier): ?FragmentConfig
     {
-        $matches = [];
+        return $this->fragments[$identifier] ?? null;
+    }
 
-        foreach ($this->fragments as $identifier => $fragment) {
-            if (null !== $filter && !$filter($identifier, $fragment)) {
-                continue;
-            }
+    /**
+     * {@inheritdoc}
+     */
+    public function all(): array
+    {
+        return $this->fragments;
+    }
 
-            $matches[$identifier] = $fragment;
-        }
-
-        return $matches;
+    /**
+     * {@inheritdoc}
+     */
+    public function keys(): array
+    {
+        return array_keys($this->fragments);
     }
 }

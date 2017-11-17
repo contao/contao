@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Fragment\ContentElement\ContentElementRendererInterface;
-use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
-use Symfony\Component\HttpFoundation\Response;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 
 /**
  * Proxy for new content element fragments so they are accessible via $GLOBALS['TL_CTE'].
@@ -21,31 +19,26 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ContentProxy extends ContentElement
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function generate()
-    {
-        $container = \System::getContainer();
-        $response = new Response();
+	/**
+	 * {@inheritdoc}
+	 */
+	public function generate()
+	{
+		$reference = new ContentElementReference($this->objModel, $this->strColumn);
 
-        /** @var ContentElementRendererInterface $contentElementRenderer */
-        $contentElementRenderer = $container->get(FragmentRegistryInterface::CONTENT_ELEMENT_RENDERER);
+		if ('BE' === TL_MODE)
+		{
+			$reference->setBackendScope();
+		}
 
-        $result = $contentElementRenderer->render($this->objModel, $this->strColumn);
+		return \System::getContainer()->get('contao.fragment.renderer')->render($reference);
+	}
 
-        if (null !== $result) {
-            $response->setContent($result);
-        }
-
-        return $response->getContent();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function compile()
-    {
-        // noop
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	protected function compile()
+	{
+		// noop
+	}
 }
