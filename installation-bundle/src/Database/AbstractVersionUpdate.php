@@ -65,7 +65,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
      *
      * @return bool
      */
-    abstract public function shouldBeRun();
+    abstract public function shouldBeRun(): bool;
 
     /**
      * Runs the update.
