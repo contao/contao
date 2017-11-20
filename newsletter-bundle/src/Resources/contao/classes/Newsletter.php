@@ -1000,7 +1000,7 @@ class Newsletter extends \Backend
 				{
 					while ($objItem->next())
 					{
-						$arrPages[] = sprintf($strUrl, ($objItem->alias ?: $objItem->id));
+						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));
 					}
 				}
 			}
