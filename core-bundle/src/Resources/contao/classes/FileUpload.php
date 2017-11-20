@@ -169,7 +169,7 @@ class FileUpload extends \Backend
 					// Set CHMOD and resize if neccessary
 					if ($this->Files->move_uploaded_file($file['tmp_name'], $strNewFile))
 					{
-						$this->Files->chmod($strNewFile, \Config::get('defaultFileChmod'));
+						$this->Files->chmod($strNewFile, 0666 & ~umask());
 
 						// Notify the user
 						\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['fileUploaded'], $file['name']));

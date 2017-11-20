@@ -251,7 +251,7 @@ class FormFileUpload extends \Widget implements \uploadable
 
 					// Move the file to its destination
 					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$this->Files->chmod($strUploadFolder . '/' . $file['name'], \Config::get('defaultFileChmod'));
+					$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
 
 					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];
