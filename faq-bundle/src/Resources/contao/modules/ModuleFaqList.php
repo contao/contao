@@ -163,6 +163,6 @@ class ModuleFaqList extends \Module
 			}
 		}
 
-		return sprintf($this->arrTargets[$jumpTo], ($objFaq->alias ?: $objFaq->id));
+		return sprintf(preg_replace('/%(?!s)/', '%%', $this->arrTargets[$jumpTo]), ($objFaq->alias ?: $objFaq->id));
 	}
 }
