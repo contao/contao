@@ -141,6 +141,7 @@ class Comments extends \Frontend
 		}
 
 		$objTemplate->comments = $arrComments;
+		$objTemplate->hlcText = $GLOBALS['TL_LANG']['MSC']['comments'];
 		$objTemplate->addComment = $GLOBALS['TL_LANG']['MSC']['addComment'];
 		$objTemplate->name = $GLOBALS['TL_LANG']['MSC']['com_name'];
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
