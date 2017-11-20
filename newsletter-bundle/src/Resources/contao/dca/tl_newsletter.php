@@ -233,6 +233,10 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'filter'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_newsletter', 'addSenderPlaceholder')
+			),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'senderName' => array
@@ -244,6 +248,10 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'flag'                    => 11,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_newsletter', 'addSenderNamePlaceholder')
+			),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'sent' => array
@@ -498,6 +506,49 @@ class tl_newsletter extends Backend
 			}
 
 			$varValue .= '-' . $dc->id;
+		}
+
+		return $varValue;
+	}
+
+
+	/**
+	 * Add the sender address as placeholder
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function addSenderPlaceholder($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->pid)
+		{
+			$objChannel = $this->Database->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
+										 ->execute($dc->activeRecord->pid);
+
+			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['placeholder'] = $objChannel->sender;
+		}
+
+		return $varValue;
+	}
+
+	/**
+	 * Add the sender name as placeholder
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function addSenderNamePlaceholder($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->pid)
+		{
+			$objChannel = $this->Database->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")
+										 ->execute($dc->activeRecord->pid);
+
+			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['placeholder'] = $objChannel->senderName;
 		}
 
 		return $varValue;
