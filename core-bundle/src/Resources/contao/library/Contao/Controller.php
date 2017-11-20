@@ -980,7 +980,7 @@ abstract class Controller extends \System
 		$query = new Query(\Environment::get('queryString'));
 
 		// Remove the request token and referer ID
-		$query = $query->without(array_merge(array('rt', 'ref'), $arrUnset));
+		$query = $query->withoutPairs(array_merge(array('rt', 'ref'), $arrUnset));
 
 		// Merge the request string to be added
 		$query = $query->merge(str_replace('&amp;', '&', $strRequest));

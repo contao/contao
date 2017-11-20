@@ -310,7 +310,7 @@ abstract class System
 
 			/** @var Query $queryObj */
 			$queryObj = new Query($query);
-			$queryObj = $queryObj->without($params);
+			$queryObj = $queryObj->withoutPairs($params);
 
 			return $path . $queryObj->getUriComponent();
 		};
