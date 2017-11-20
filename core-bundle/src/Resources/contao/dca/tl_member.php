@@ -542,7 +542,7 @@ class tl_member extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
 		}
 
-		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
+		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" title="'.StringUtil::specialchars($title).'" target="_blank">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 

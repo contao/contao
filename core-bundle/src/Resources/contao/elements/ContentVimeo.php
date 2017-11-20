@@ -40,7 +40,7 @@ class ContentVimeo extends \ContentElement
 
 		if (TL_MODE == 'BE')
 		{
-			return '<p><a href="https://vimeo.com/' . $this->vimeo . '" target="_blank">vimeo.com/' . $this->vimeo . '</a></p>';
+			return '<p><a href="https://vimeo.com/' . $this->vimeo . '" target="_blank" rel="noopener">vimeo.com/' . $this->vimeo . '</a></p>';
 		}
 
 		return parent::generate();

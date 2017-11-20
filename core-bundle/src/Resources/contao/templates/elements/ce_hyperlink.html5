@@ -6,7 +6,7 @@
     <figure class="image_container" itemscope itemtype="http://schema.org/ImageObject">
 
       <?= $this->embed_pre ?>
-      <a href="<?= $this->href ?>"<?php if ($this->linkTitle): ?> title="<?= $this->linkTitle ?>"<?php endif; ?> class="hyperlink_img"<?= $this->attribute ?><?= $this->target ?> itemprop="contentUrl"><?php $this->insert('picture_default', $this->picture); ?></a>
+      <a href="<?= $this->href ?>"<?php if ($this->linkTitle) echo ' title="' . $this->linkTitle . '"'; ?> class="hyperlink_img"<?= $this->attribute ?><?= $this->target ?> itemprop="contentUrl"><?php $this->insert('picture_default', $this->picture); ?></a>
       <?= $this->embed_post ?>
 
       <?php if ($this->caption): ?>

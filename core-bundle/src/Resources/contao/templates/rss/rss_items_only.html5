@@ -4,7 +4,7 @@
 
   <?php foreach ($this->items as $item): ?>
     <div class="rss_items_only<?= $item['class'] ?>">
-      <h2><a href="<?= $item['link'] ?>" target="_blank"><?= $item['title'] ?></a></h2>
+      <h2><a href="<?= $item['link'] ?>" target="_blank" rel="noopener"><?= $item['title'] ?></a></h2>
       <div class="description"><?= $item['description'] ?></div>
     </div>
   <?php endforeach; ?>
