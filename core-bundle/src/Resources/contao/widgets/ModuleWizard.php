@@ -171,7 +171,7 @@ class ModuleWizard extends \Widget
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . \Image::getHtml('drag.svg') . '</button>';
 				}
 				elseif ($button == 'enable')
 				{

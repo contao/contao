@@ -111,7 +111,7 @@ class CheckBoxWizard extends \Widget
 		// Generate options and add buttons
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '">' . \Image::getHtml('drag.svg') . '</button> ');
+			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . \Image::getHtml('drag.svg') . '</button> ');
 		}
 
 		// Add a "no entries found" message if there are no options

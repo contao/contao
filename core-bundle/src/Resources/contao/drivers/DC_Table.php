@@ -4466,7 +4466,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							// Drag handle
 							if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 							{
-								$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['cut'][1], $row[$i]['id'])) . '">' . \Image::getHtml('drag.svg') . '</button>';
+								$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['cut'][1], $row[$i]['id'])) . '" aria-hidden="true">' . \Image::getHtml('drag.svg') . '</button>';
 							}
 						}
 
