@@ -383,7 +383,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'dateFormat' => array
@@ -392,7 +392,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard'=>true, 'decodeEntities'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
 			'explanation'             => 'dateFormat',
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
@@ -402,7 +402,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'datimFormat' => array
@@ -411,7 +411,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'validAliasCharacters' => array
