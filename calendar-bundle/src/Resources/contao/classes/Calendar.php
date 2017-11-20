@@ -368,7 +368,7 @@ class Calendar extends \Frontend
 				{
 					while ($objEvents->next())
 					{
-						$arrPages[] = sprintf($strUrl, ($objEvents->alias ?: $objEvents->id));
+						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvents->alias ?: $objEvents->id));
 					}
 				}
 			}
@@ -454,7 +454,7 @@ class Calendar extends \Frontend
 				break;
 
 			default:
-				$link = sprintf($strUrl, ($objEvent->alias ?: $objEvent->id));
+				$link = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvent->alias ?: $objEvent->id));
 				break;
 		}
 
