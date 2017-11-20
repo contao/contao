@@ -354,6 +354,10 @@ $GLOBALS['TL_PURGE'] = array
  */
 $GLOBALS['TL_CROP'] = array
 (
+	'image_sizes' => array
+	(
+		// will be added dynamically
+	),
 	'relative' => array
 	(
 		'proportional', 'box'
