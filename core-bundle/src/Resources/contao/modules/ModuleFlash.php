@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+@trigger_error('Using the Contao\ModuleFlash class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 
 /**
  * Front end module "flash".
@@ -17,6 +19,8 @@ namespace Contao;
  * @property string $version
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
  */
 class ModuleFlash extends \Module
 {
