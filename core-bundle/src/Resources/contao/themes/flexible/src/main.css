@@ -653,9 +653,6 @@ table.tl_listing {
 	text-align:right;
 	white-space:nowrap;
 }
-.tl_listing_container .tl_content ul li > * {
-	vertical-align:middle;
-}
 .tl_listing.picker .tl_file,.tl_listing.picker .tl_folder,.tl_listing.picker .tl_right_nowrap,.tl_listing_container.picker .tl_content_header,.tl_listing_container.picker .tl_content {
 	background-image:linear-gradient(90deg, transparent calc(100% - 26px), #f0f0f2 26px);
 }
