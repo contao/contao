@@ -458,11 +458,11 @@ abstract class Backend extends \Controller
 
 					if ($objRow->title != '')
 					{
-						$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
+						$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
 					}
 					elseif ($objRow->name != '')
 					{
-						$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
+						$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 					}
 				}
 			}

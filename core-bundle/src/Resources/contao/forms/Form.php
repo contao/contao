@@ -388,27 +388,31 @@ class Form extends \Hybrid
 			$email->fromName = $GLOBALS['TL_ADMIN_NAME'];
 
 			// Get the "reply to" address
-			if (\strlen(\Input::post('email', true)))
+			if (!empty(\Input::post('email', true)))
 			{
 				$replyTo = \Input::post('email', true);
 
-				// Add name
-				if (\strlen(\Input::post('name')))
+				// Add the name
+				if (!empty(\Input::post('name')))
 				{
 					$replyTo = '"' . \Input::post('name') . '" <' . $replyTo . '>';
+				}
+				elseif (!empty(\Input::post('firstname')) && !empty(\Input::post('lastname')))
+				{
+					$replyTo = '"' . \Input::post('firstname') . ' ' . \Input::post('lastname') . '" <' . $replyTo . '>';
 				}
 
 				$email->replyTo($replyTo);
 			}
 
 			// Fallback to default subject
-			if (!\strlen($email->subject))
+			if (!$email->subject)
 			{
 				$email->subject = $this->replaceInsertTags($this->subject, false);
 			}
 
 			// Send copy to sender
-			if (\strlen($arrSubmitted['cc']))
+			if (!empty($arrSubmitted['cc']))
 			{
 				$email->sendCc(\Input::post('email', true));
 				unset($_SESSION['FORM_DATA']['cc']);
@@ -465,7 +469,7 @@ class Form extends \Hybrid
 		}
 
 		// Store the values in the database
-		if ($this->storeValues && $this->targetTable != '')
+		if ($this->storeValues && $this->targetTable)
 		{
 			$arrSet = array();
 
