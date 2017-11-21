@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Support sorting enclosures (see contao/calendar-bundle#16).
  * Show the default value of overwritable fields as placeholder (see #1120). 
  * Also use STRONG instead of SPAN in the breadcrumb menu (see #1154).
  * Use the Symfony assets component for the Contao assets (see #1165).

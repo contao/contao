@@ -1360,6 +1360,9 @@ ul.sgallery li {
 	background:url("icons/arrow_left.svg") 6px bottom no-repeat;
 	transform:rotate(-2deg);
 }
+.widget + .subpal .sort_hint {
+	left:260px;
+}
 .widget + .widget .sort_hint {
 	left:320px;
 }

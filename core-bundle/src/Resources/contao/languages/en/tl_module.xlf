@@ -314,12 +314,6 @@
       <trans-unit id="tl_module.multiSRC.1">
         <source>Please select one or more files from the files directory.</source>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
       </trans-unit>

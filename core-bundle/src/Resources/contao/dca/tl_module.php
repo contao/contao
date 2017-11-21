@@ -271,7 +271,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'orderPages' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['orderSRC'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
 			'sql'                     => "blob NULL"
 		),
 		'showHidden' => array
@@ -573,7 +573,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'orderSRC' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['orderSRC'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
 			'sql'                     => "blob NULL"
 		),
 		'html' => array
