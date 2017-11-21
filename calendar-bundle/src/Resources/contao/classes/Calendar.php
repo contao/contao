@@ -264,6 +264,14 @@ class Calendar extends \Frontend
 					$strDescription = $this->replaceInsertTags($strDescription, false);
 					$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
+					if (\is_array($event['media:content']))
+					{
+						foreach ($event['media:content'] as $enclosure)
+						{
+							$objItem->addEnclosure($enclosure, $strLink, 'media:content');
+						}
+					}
+
 					if (\is_array($event['enclosure']))
 					{
 						foreach ($event['enclosure'] as $enclosure)
@@ -470,6 +478,7 @@ class Calendar extends \Frontend
 
 		// Reset the enclosures (see #5685)
 		$arrEvent['enclosure'] = array();
+		$arrEvent['media:content'] = array();
 
 		// Add the article image as enclosure
 		if ($objEvent->addImage)
@@ -478,7 +487,7 @@ class Calendar extends \Frontend
 
 			if ($objFile !== null)
 			{
-				$arrEvent['enclosure'][] = $objFile->path;
+				$arrEvent['media:content'][] = $objFile->path;
 			}
 		}
 
