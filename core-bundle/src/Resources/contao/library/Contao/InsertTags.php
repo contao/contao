@@ -599,13 +599,32 @@ class InsertTags extends \Controller
 
 				// Conditional tags (if)
 				case 'iflng':
-					if ($elements[1] != '' && $elements[1] != $objPage->language)
+					if ($elements[1] != '')
 					{
-						for (; $_rit<$_cnt; $_rit+=2)
+						$langs = \StringUtil::trimsplit(',', $elements[1]);
+
+						// Check if there are wildcards (see #8313)
+						foreach ($langs as $k=>$v)
 						{
-							if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
+							if (substr($v, -1) == '*')
 							{
-								break;
+								$langs[$k] = substr($v, 0, -1);
+
+								if (\strlen($objPage->language) > 2 && substr($objPage->language, 0, 2) == $langs[$k])
+								{
+									$langs[] = $objPage->language;
+								}
+							}
+						}
+
+						if (!\in_array($objPage->language, $langs))
+						{
+							for (; $_rit<$_cnt; $_rit+=2)
+							{
+								if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
+								{
+									break;
+								}
 							}
 						}
 					}
@@ -617,6 +636,20 @@ class InsertTags extends \Controller
 					if ($elements[1] != '')
 					{
 						$langs = \StringUtil::trimsplit(',', $elements[1]);
+
+						// Check if there are wildcards (see #8313)
+						foreach ($langs as $k=>$v)
+						{
+							if (substr($v, -1) == '*')
+							{
+								$langs[$k] = substr($v, 0, -1);
+
+								if (\strlen($objPage->language) > 2 && substr($objPage->language, 0, 2) == $langs[$k])
+								{
+									$langs[] = $objPage->language;
+								}
+							}
+						}
 
 						if (\in_array($objPage->language, $langs))
 						{

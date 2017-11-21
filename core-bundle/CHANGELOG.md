@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Support wildcards in the "iflng" and "ifnlng" insert tags (see contao/core#8313).
  * Add the FilesModel::findByPid() method (see #925).
  * Support sorting enclosures (see contao/calendar-bundle#16).
  * Show the default value of overwritable fields as placeholder (see #1120). 
