@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Support media:content tags when generating feeds (see contao/news-bundle#7).
  * Support wildcards in the "iflng" and "ifnlng" insert tags (see contao/core#8313).
  * Add the FilesModel::findByPid() method (see #925).
  * Support sorting enclosures (see contao/calendar-bundle#16).

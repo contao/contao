@@ -109,10 +109,11 @@ class FeedItem
 	/**
 	 * Add an enclosure
 	 *
-	 * @param string $strFile The file path
-	 * @param string $strUrl  The base URL
+	 * @param string $strFile  The file path
+	 * @param string $strUrl   The base URL
+	 * @param string $strMedia The media type
 	 */
-	public function addEnclosure($strFile, $strUrl=null)
+	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure')
 	{
 		if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile))
 		{
@@ -128,6 +129,7 @@ class FeedItem
 
 		$this->arrData['enclosure'][] = array
 		(
+			'media' => $strMedia,
 			'url' => $strUrl . \System::urlEncode($strFile),
 			'length' => $objFile->size,
 			'type' => $objFile->mime

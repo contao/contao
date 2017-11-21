@@ -134,7 +134,7 @@ class Feed
 		$this->adjustPublicationDate();
 
 		$xml  = '<?xml version="1.0" encoding="' . \Config::get('characterSet') . '"?>';
-		$xml .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
+		$xml .= '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">';
 		$xml .= '<channel>';
 		$xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
 		$xml .= '<description>' . \StringUtil::specialchars($this->description) . '</description>';
@@ -175,7 +175,14 @@ class Feed
 			{
 				foreach ($objItem->enclosure as $arrEnclosure)
 				{
-					$xml .= '<enclosure url="' . $arrEnclosure['url'] . '" length="' . $arrEnclosure['length'] . '" type="' . $arrEnclosure['type'] . '" />';
+					if (!empty($arrEnclosure['media']) && $arrEnclosure['media'] == 'media:content')
+					{
+						$xml .= '<media:content url="' . $arrEnclosure['url'] . '" type="' . $arrEnclosure['type'] . '" />';
+					}
+					else
+					{
+						$xml .= '<enclosure url="' . $arrEnclosure['url'] . '" length="' . $arrEnclosure['length'] . '" type="' . $arrEnclosure['type'] . '" />';
+					}
 				}
 			}
 
@@ -199,7 +206,7 @@ class Feed
 		$this->adjustPublicationDate();
 
 		$xml  = '<?xml version="1.0" encoding="' . \Config::get('characterSet') . '"?>';
-		$xml .= '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="' . $this->language . '">';
+		$xml .= '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="' . $this->language . '">';
 		$xml .= '<title>' . \StringUtil::specialchars($this->title) . '</title>';
 		$xml .= '<subtitle>' . \StringUtil::specialchars($this->description) . '</subtitle>';
 		$xml .= '<link rel="alternate" href="' . \StringUtil::specialchars($this->link) . '" />';
@@ -227,7 +234,14 @@ class Feed
 			{
 				foreach ($objItem->enclosure as $arrEnclosure)
 				{
-					$xml .= '<link rel="enclosure" type="' . $arrEnclosure['type'] . '" href="' . $arrEnclosure['url'] . '" length="' . $arrEnclosure['length'] . '" />';
+					if (!empty($arrEnclosure['media']) && $arrEnclosure['media'] == 'media:content')
+					{
+						$xml .= '<media:content url="' . $arrEnclosure['url'] . '" type="' . $arrEnclosure['type'] . '" />';
+					}
+					else
+					{
+						$xml .= '<link rel="enclosure" type="' . $arrEnclosure['type'] . '" href="' . $arrEnclosure['url'] . '" length="' . $arrEnclosure['length'] . '" />';
+					}
 				}
 			}
 
