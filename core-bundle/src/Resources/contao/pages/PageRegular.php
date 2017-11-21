@@ -768,6 +768,59 @@ class PageRegular extends \Frontend
 		// Add a placeholder for dynamic scripts (see #4203, #5583)
 		$strScripts .= '[[TL_BODY]]';
 
+		// Add the external JavaScripts
+		$arrExternalJs = \StringUtil::deserialize($objLayout->externalJs);
+
+		// External JavaScripts
+		if (!empty($arrExternalJs) && \is_array($arrExternalJs))
+		{
+			// Consider the sorting order (see #5038)
+			if ($objLayout->orderExtJs != '')
+			{
+				$tmp = \StringUtil::deserialize($objLayout->orderExtJs);
+
+				if (!empty($tmp) && \is_array($tmp))
+				{
+					// Remove all values
+					$arrOrder = array_map(function () {}, array_flip($tmp));
+
+					// Move the matching elements to their position in $arrOrder
+					foreach ($arrExternalJs as $k=>$v)
+					{
+						if (array_key_exists($v, $arrOrder))
+						{
+							$arrOrder[$v] = $v;
+							unset($arrExternalJs[$k]);
+						}
+					}
+
+					// Append the left-over JavaScripts at the end
+					if (!empty($arrExternalJs))
+					{
+						$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
+					}
+
+					// Remove empty (unreplaced) entries
+					$arrExternalJs = array_values(array_filter($arrOrder));
+					unset($arrOrder);
+				}
+			}
+		}
+
+		// Get the file entries from the database
+		$objFiles = \FilesModel::findMultipleByUuids($arrExternalJs);
+
+		if ($objFiles !== null)
+		{
+			while ($objFiles->next())
+			{
+				if (file_exists(TL_ROOT . '/' . $objFiles->path))
+				{
+					$strScripts .= \Template::generateScriptTag($objFiles->path);
+				}
+			}
+		}
+
 		// Add the custom JavaScript
 		if ($objLayout->script != '')
 		{

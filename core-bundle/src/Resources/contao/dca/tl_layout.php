@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,externalJs,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -249,7 +249,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'orderExt' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['orderExt'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
 			'sql'                     => "blob NULL"
 		),
 		'loadingOrder' => array
@@ -436,6 +436,19 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
+		),
+		'externalJs' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['externalJs'],
+			'exclude'                 => true,
+			'inputType'               => 'fileTree',
+			'eval'                    => array('multiple'=>true, 'orderField'=>'orderExtJs', 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js'),
+			'sql'                     => "blob NULL"
+		),
+		'orderExtJs' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
+			'sql'                     => "blob NULL"
 		),
 		'scripts' => array
 		(

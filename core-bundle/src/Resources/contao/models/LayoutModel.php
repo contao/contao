@@ -48,6 +48,8 @@ namespace Contao;
  * @property string  $mooSource
  * @property string  $mootools
  * @property string  $analytics
+ * @property string  $externalJs
+ * @property string  $orderExtJs
  * @property string  $script
  * @property string  $scripts
  * @property boolean $static
@@ -91,6 +93,8 @@ namespace Contao;
  * @method static LayoutModel|null findOneByMooSource($val, array $opt=array())
  * @method static LayoutModel|null findOneByMootools($val, array $opt=array())
  * @method static LayoutModel|null findOneByAnalytics($val, array $opt=array())
+ * @method static LayoutModel|null findOneByExternalJs($val, array $opt=array())
+ * @method static LayoutModel|null findOneByOrderExtJs($val, array $opt=array())
  * @method static LayoutModel|null findOneByScript($val, array $opt=array())
  * @method static LayoutModel|null findOneByScripts($val, array $opt=array())
  * @method static LayoutModel|null findOneByStatic($val, array $opt=array())
@@ -130,6 +134,8 @@ namespace Contao;
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByMooSource($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByMootools($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByAnalytics($val, array $opt=array())
+ * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByExternalJs($val, array $opt=array())
+ * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByOrderExtJs($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByScript($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByScripts($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByStatic($val, array $opt=array())
@@ -173,6 +179,8 @@ namespace Contao;
  * @method static integer countByMooSource($val, array $opt=array())
  * @method static integer countByMootools($val, array $opt=array())
  * @method static integer countByAnalytics($val, array $opt=array())
+ * @method static integer countByExternalJs($val, array $opt=array())
+ * @method static integer countByOrderExtJs($val, array $opt=array())
  * @method static integer countByScript($val, array $opt=array())
  * @method static integer countByScripts($val, array $opt=array())
  * @method static integer countByStatic($val, array $opt=array())
