@@ -50,7 +50,6 @@ namespace Contao;
  * @method static FilesModel|null findOneByImportantPartHeight($val, array $opt=array())
  * @method static FilesModel|null findOneByMeta($val, array $opt=array())
  *
- * @method static Model\Collection|FilesModel[]|FilesModel|null findByPid($val, array $opt=array())
  * @method static Model\Collection|FilesModel[]|FilesModel|null findByTstamp($val, array $opt=array())
  * @method static Model\Collection|FilesModel[]|FilesModel|null findByType($val, array $opt=array())
  * @method static Model\Collection|FilesModel[]|FilesModel|null findByExtension($val, array $opt=array())
@@ -130,6 +129,28 @@ class FilesModel extends \Model
 		}
 
 		return static::findOneBy('id', $intId, $arrOptions);
+	}
+
+
+	/**
+	 * Find a file by its parent ID
+	 *
+	 * @param mixed $intPid     The parent ID
+	 * @param array $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|FilesModel[]|FilesModel|null A collection of models or null if there are no files
+	 */
+	public static function findByPid($intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		// Convert UUIDs to binary
+		if (\Validator::isStringUuid($intPid))
+		{
+			$intPid = \StringUtil::uuidToBin($intPid);
+		}
+
+		return static::findBy(array("$t.uuid=UNHEX(?)"), bin2hex($intPid), $arrOptions);
 	}
 
 
