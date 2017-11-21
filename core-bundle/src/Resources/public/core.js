@@ -2322,6 +2322,13 @@ var Backend =
 				el.removeEvent('click', boundEvent);
 			}
 
+			// Do not propagate the form field click events
+			el.getElements('label,input[type="checkbox"],input[type="radio"]').each(function(i) {
+				i.addEvent('click', function(e) {
+					e.stopPropagation();
+				});
+			});
+
 			boundEvent = clickEvent.bind(el);
 
 			el.addEvent('click', boundEvent);

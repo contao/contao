@@ -13,7 +13,7 @@
         "gulp-rename": "^1.2.2",
         "gulp-svgo": "^1.2.5",
         "gulp-uglify": "^3.0.0",
-        "pump": "^1.0.2"
+        "pump": "^1.0.3"
     },
     "repository": {
         "type": "git",
