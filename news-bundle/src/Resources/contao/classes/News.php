@@ -176,8 +176,8 @@ class News extends \Frontend
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
-				$objItem = new \FeedItem();
 
+				$objItem = new \FeedItem();
 				$objItem->title = $objArticle->headline;
 				$objItem->link = $this->getLink($objArticle, $strUrl);
 				$objItem->published = $objArticle->date;
@@ -223,7 +223,7 @@ class News extends \Frontend
 
 					if ($objFile !== null)
 					{
-						$objItem->addEnclosure($objFile->path, $strLink);
+						$objItem->addEnclosure($objFile->path, $strLink, 'media:content');
 					}
 				}
 
