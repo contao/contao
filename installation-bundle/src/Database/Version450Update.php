@@ -21,17 +21,13 @@ class Version450Update extends AbstractVersionUpdate
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist(['tl_module'])) {
+        if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
         }
 
-        $columns = $schemaManager->listTableColumns('tl_module');
+        $columns = $schemaManager->listTableColumns('tl_layout');
 
-        if (!isset($columns['news_order'])) {
-            return false;
-        }
-
-        return 32 !== $columns['news_order']->getLength();
+        return !isset($columns['externaljs']);
     }
 
     /**
@@ -57,11 +53,11 @@ class Version450Update extends AbstractVersionUpdate
                 news_order = 'descending'
         ");
 
-        $this->connection->query("
+        $this->connection->query('
             ALTER TABLE
-                tl_module
-            CHANGE
-                news_order news_order VARCHAR(32) DEFAULT '' NOT NULL
-        ");
+                tl_layout
+            ADD
+                externalJs BLOB DEFAULT NULL
+        ');
     }
 }
