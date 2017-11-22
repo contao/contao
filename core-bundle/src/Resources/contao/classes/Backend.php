@@ -1099,7 +1099,7 @@ abstract class Backend extends \Controller
 
 		if (isset($extras['context']))
 		{
-			$context = 'link';
+			$context = $extras['context'];
 			unset($extras['context']);
 		}
 
