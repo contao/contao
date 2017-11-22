@@ -279,23 +279,12 @@ class Date
 			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
 		}
 
-		$arrCharacterMapper = array
-		(
-			'a' => $GLOBALS['TL_LANG']['DATE']['a'],
-			'A' => $GLOBALS['TL_LANG']['DATE']['A'],
-			'd' => $GLOBALS['TL_LANG']['DATE']['d'],
-			'j' => $GLOBALS['TL_LANG']['DATE']['j'],
-			'm' => $GLOBALS['TL_LANG']['DATE']['m'],
-			'n' => $GLOBALS['TL_LANG']['DATE']['n'],
-			'y' => $GLOBALS['TL_LANG']['DATE']['y'],
-			'Y' => $GLOBALS['TL_LANG']['DATE']['Y'],
-			'h' => $GLOBALS['TL_LANG']['DATE']['h'],
-			'H' => $GLOBALS['TL_LANG']['DATE']['H'],
-			'g' => $GLOBALS['TL_LANG']['DATE']['g'],
-			'G' => $GLOBALS['TL_LANG']['DATE']['G'],
-			'i' => $GLOBALS['TL_LANG']['DATE']['i'],
-			's' => $GLOBALS['TL_LANG']['DATE']['s'],
-		);
+		$arrCharacterMapper = array();
+
+		foreach ($GLOBALS['TL_LANG']['DATE'] as $k=>$v)
+		{
+			$arrCharacterMapper[$k] = $v;
+		}
 
 		$arrInputFormat = array();
 		$arrCharacters = str_split($strFormat);
