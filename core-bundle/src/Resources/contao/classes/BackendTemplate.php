@@ -57,12 +57,10 @@ class BackendTemplate extends \Template
 		// User agent class (see #3074 and #6277)
 		$this->ua = \Environment::get('agent')->class;
 
-		if (\Config::get('limitWidth'))
+		if (\Config::get('fullscreen'))
 		{
-			$this->ua .= ' lw';
+			$this->ua .= ' fullscreen';
 		}
-
-		$strWebDir = \System::getContainer()->getParameter('contao.web_dir');
 
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
