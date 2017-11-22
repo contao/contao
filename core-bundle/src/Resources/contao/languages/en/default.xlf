@@ -491,6 +491,48 @@
       <trans-unit id="CHMOD.cworld">
         <source>Everybody</source>
       </trans-unit>
+      <trans-unit id="DATE.a">
+        <source>am</source>
+      </trans-unit>
+      <trans-unit id="DATE.A">
+        <source>AM</source>
+      </trans-unit>
+      <trans-unit id="DATE.d">
+        <source>DD</source>
+      </trans-unit>
+      <trans-unit id="DATE.j">
+        <source>D</source>
+      </trans-unit>
+      <trans-unit id="DATE.m">
+        <source>MM</source>
+      </trans-unit>
+      <trans-unit id="DATE.n">
+        <source>M</source>
+      </trans-unit>
+      <trans-unit id="DATE.y">
+        <source>YY</source>
+      </trans-unit>
+      <trans-unit id="DATE.Y">
+        <source>YYYY</source>
+      </trans-unit>
+      <trans-unit id="DATE.h">
+        <source>hh</source>
+      </trans-unit>
+      <trans-unit id="DATE.H">
+        <source>hh</source>
+      </trans-unit>
+      <trans-unit id="DATE.g">
+        <source>h</source>
+      </trans-unit>
+      <trans-unit id="DATE.G">
+        <source>h</source>
+      </trans-unit>
+      <trans-unit id="DATE.i">
+        <source>mm</source>
+      </trans-unit>
+      <trans-unit id="DATE.s">
+        <source>ss</source>
+      </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
       </trans-unit>
