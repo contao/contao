@@ -93,10 +93,10 @@
         <source>By clicking the "read more …" button, visitors will be redirected to an article.</source>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
-        <source>External URL</source>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
-        <source>By clicking the "read more …" button, visitors will be redirected to an external website.</source>
+        <source>By clicking the "read more …" button, visitors will be redirected to a custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
