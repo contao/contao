@@ -5,7 +5,7 @@ parameters:
     database_user: ~
     database_password: ~
     database_name: ~
-    mailer_transport: mail
+    mailer_transport: sendmail
     mailer_host: 127.0.0.1
     mailer_user: ~
     mailer_password: ~
