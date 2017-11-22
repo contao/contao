@@ -159,11 +159,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'eval'                    => array('doNotCopy'=>true, 'tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
-		'source' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['source'],
-			'eval'                    => array('fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'csv', 'class'=>'mandatory')
-		),
 		'addedOn' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['addedOn'],
