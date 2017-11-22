@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Add the "require an item" option to the site structure (see contao/core#8361).
  * Support adding external JavaScripts to a page layout (see #690).
  * Support media:content tags when generating feeds (see contao/news-bundle#7).
  * Support wildcards in the "iflng" and "ifnlng" insert tags (see contao/core#8313).

@@ -185,6 +185,33 @@ class FrontendIndex extends \Frontend
 			}
 		}
 
+		// Trigger the 404 page if an item is required but not given (see #8361)
+		if ($objPage->requireItem)
+		{
+			$hasItem = false;
+
+			if (\Config::get('useAutoItem'))
+			{
+				$hasItem = isset($_GET['auto_item']);
+			}
+			else
+			{
+				foreach ($GLOBALS['TL_AUTO_ITEM'] as $item)
+				{
+					if (isset($_GET[$item]))
+					{
+						$hasItem = true;
+						break;
+					}
+				}
+			}
+
+			if (!$hasItem)
+			{
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			}
+		}
+
 		// Load a website root page object (will redirect to the first active regular page)
 		if ($objPage->type == 'root')
 		{

@@ -59,6 +59,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $cgroup
  * @property string  $chmod
  * @property boolean $noSearch
+ * @property boolean $requireItem
  * @property string  $cssClass
  * @property string  $sitemap
  * @property boolean $hide
