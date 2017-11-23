@@ -92,10 +92,6 @@ class CombinerTest extends TestCase
 
     /**
      * Tests the CSS combiner.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesCssFiles()
     {
@@ -234,10 +230,6 @@ EOF;
 
     /**
      * Tests the SCSS Combiner.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesScssFiles()
     {
@@ -278,10 +270,6 @@ EOF;
 
     /**
      * Tests the JS Combiner.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesJsFiles()
     {
