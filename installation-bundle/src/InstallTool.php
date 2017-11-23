@@ -121,11 +121,11 @@ class InstallTool
     /**
      * Checks if a database connection can be established.
      *
-     * @param string $name
+     * @param string|null $name
      *
      * @return bool
      */
-    public function canConnectToDatabase(string $name): bool
+    public function canConnectToDatabase(?string $name): bool
     {
         if (null === $this->connection) {
             return false;
