@@ -100,17 +100,25 @@ class ParameterDumper
      * Escapes % and @.
      *
      * @return array<string,array>
+     *
+     * @see http://symfony.com/doc/current/service_container/parameters.html#parameters-in-configuration-files
      */
     private function getEscapedValues(): array
     {
         $parameters = [];
 
         foreach ($this->parameters['parameters'] as $key => $value) {
-            if (false !== strpos($value, '%')) {
-                $parameters[$key] = str_replace('%', '%%', $value);
-            } else {
-                $parameters[$key] = $value;
+            if (\is_string($value)) {
+                if (0 === strpos($value, '@')) {
+                    $value = '@'.$value;
+                }
+
+                if (false !== strpos($value, '%')) {
+                    $value = str_replace('%', '%%', $value);
+                }
             }
+
+            $parameters[$key] = $value;
         }
 
         return ['parameters' => $parameters];
