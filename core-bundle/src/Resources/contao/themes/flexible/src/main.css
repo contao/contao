@@ -1773,26 +1773,6 @@ fieldset.collapsed > legend {
 	color:#ccc;
 }
 
-/* Widescreen */
-@media (min-width:1441px) {
-	body:not(.fullscreen) {
-		padding:8px 0;
-	}
-	body:not(.fullscreen) #container,body:not(.fullscreen) #left,body:not(.fullscreen) #main {
-		min-height:calc(100vh - 56px);
-	}
-	body:not(.fullscreen) #header .inner {
-		border-top-left-radius:2px;
-		border-top-right-radius:2px;
-	}
-	body:not(.fullscreen) #left,body:not(.fullscreen) #left .version {
-		border-bottom-left-radius:2px;
-	}
-	body:not(.fullscreen) #main {
-		border-bottom-right-radius:2px;
-	}
-}
-
 /* Tablet */
 @media (max-width:991px) {
 	body {
