@@ -326,14 +326,6 @@
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>Vælg venligst en eller flere filer eller mapper (filer i en mappe inkluderes automatisk).</target>
       </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>Rækkefølge</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Rækkefølgen elementerne skal sorteres i.</target>
-      </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
         <target>Brug hjemmemappe</target>

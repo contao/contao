@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>لطفا یک یا چند پرونده از دایرکتوری پرونده‌ها انتخاب نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>ترتیب مرتب‌سازی</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>ترتیب چیدن آیتم‌ها.</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>کد اچ‌تی‌ام‌ال</target>

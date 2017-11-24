@@ -17,13 +17,17 @@
         <source>A custom field to insert HTML code.</source>
         <target>Utiliza este campo para introducir código HTML en el formulario.</target>
       </trans-unit>
-      <trans-unit id="FFL.fieldset.0">
-        <source>Fieldset</source>
-        <target>Conjunto de campos</target>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
       </trans-unit>
-      <trans-unit id="FFL.fieldset.1">
-        <source>A container for form fields with an optional legend.</source>
-        <target>Un contenedor para campos de formulario con una etiqueta opcional.</target>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>
@@ -336,30 +340,6 @@
       <trans-unit id="tl_form_field.doNotOverwrite.1">
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Añadir un id numérico al nombre del archivo si éste ya existe.</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsType.0">
-        <source>Operation mode</source>
-        <target>Modalidad de operación</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsType.1">
-        <source>Please select the operation mode of the fieldset element.</source>
-        <target>Seleccione la modalidad de operación del elemento del conjunto de campos.</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStart.0">
-        <source>Wrapper start</source>
-        <target>Inicio de contenedor</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStart.1">
-        <source>Marks the beginning of a fieldset and can contain a legend.</source>
-        <target>Marca el inicio de un conjunto de campos y puede contener una etiqueta.</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStop.0">
-        <source>Wrapper stop</source>
-        <target>Final de contenedor</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStop.1">
-        <source>Marks the end of a fieldset.</source>
-        <target>Marca el final de un conjunto de campos.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>

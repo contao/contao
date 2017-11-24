@@ -326,14 +326,6 @@
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>Válasszon egy vagy több fájlt vagy mappát. Mappa választása esetén benne lévő fájlok automatikusan csatolva lesznek.</target>
       </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>Rendezési sorrend</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Elemek rendezési sorrendje.</target>
-      </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
         <target>Home könyvtár alkalmazása</target>

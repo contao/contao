@@ -209,14 +209,6 @@
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
         <target>Aquí puedes añadir ficheros CSS, SCSS o LESS externos desde el sistema de ficheros.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.orderExt.0">
-        <source>Sort order</source>
-        <target>Ordenamiento</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.orderExt.1">
-        <source>The sort order of the style sheets.</source>
-        <target>Orden de las hojas de estilo.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
         <target>Orden de carga</target>
@@ -293,8 +285,7 @@
         <target>Etiqueta &quot;título&quot;</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can set a custom title tag.</source>
-        <target>Aquí puede establecer una etiqueta de título personalizada.</target>
+        <source>Here you can overwrite the title tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -383,6 +374,12 @@
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
         <target>Aquí puede seleccionar una o varias plantillas Analytics.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.0">
+        <source>External JavaScripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.1">
+        <source>Here you can add external JS files from the file system.</source>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

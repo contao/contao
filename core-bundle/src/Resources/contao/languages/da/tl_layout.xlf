@@ -206,14 +206,6 @@
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
         <target>Her kan du tilføje externe CSS, SCSS eller LESS filer fra fil systemet.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.orderExt.0">
-        <source>Sort order</source>
-        <target>Rækkefølge</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.orderExt.1">
-        <source>The sort order of the style sheets.</source>
-        <target>Rækkefølgen på style sheetsne.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
         <target>Rækkefølge for indlæsning</target>
@@ -287,7 +279,7 @@
         <target>Title tag</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can set a custom title tag.</source>
+        <source>Here you can overwrite the title tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -373,6 +365,12 @@
       </trans-unit>
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.0">
+        <source>External JavaScripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.1">
+        <source>Here you can add external JS files from the file system.</source>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

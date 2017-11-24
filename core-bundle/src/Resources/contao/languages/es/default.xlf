@@ -653,6 +653,48 @@
         <source>Everybody</source>
         <target>Todos</target>
       </trans-unit>
+      <trans-unit id="DATE.a">
+        <source>am</source>
+      </trans-unit>
+      <trans-unit id="DATE.A">
+        <source>AM</source>
+      </trans-unit>
+      <trans-unit id="DATE.d">
+        <source>DD</source>
+      </trans-unit>
+      <trans-unit id="DATE.j">
+        <source>D</source>
+      </trans-unit>
+      <trans-unit id="DATE.m">
+        <source>MM</source>
+      </trans-unit>
+      <trans-unit id="DATE.n">
+        <source>M</source>
+      </trans-unit>
+      <trans-unit id="DATE.y">
+        <source>YY</source>
+      </trans-unit>
+      <trans-unit id="DATE.Y">
+        <source>YYYY</source>
+      </trans-unit>
+      <trans-unit id="DATE.h">
+        <source>hh</source>
+      </trans-unit>
+      <trans-unit id="DATE.H">
+        <source>hh</source>
+      </trans-unit>
+      <trans-unit id="DATE.g">
+        <source>h</source>
+      </trans-unit>
+      <trans-unit id="DATE.G">
+        <source>h</source>
+      </trans-unit>
+      <trans-unit id="DATE.i">
+        <source>mm</source>
+      </trans-unit>
+      <trans-unit id="DATE.s">
+        <source>ss</source>
+      </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
         <target>Domingo</target>
@@ -2309,6 +2351,10 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+      </trans-unit>
+      <trans-unit id="MSC.sortOrder">
+        <source>Sort order</source>
+        <target>Ordenamiento</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

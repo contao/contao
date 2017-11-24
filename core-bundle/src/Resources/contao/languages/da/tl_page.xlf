@@ -264,6 +264,12 @@
         <source>Exclude the page from the search index.</source>
         <target>Hvis du vælger denne mulighed, vil den nuværende side blive ekskluderet fra søgeoperationer på webstedet.</target>
       </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>CSS-klasse</target>
@@ -385,10 +391,6 @@
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
         <target>Adgangstilladelser</target>
-      </trans-unit>
-      <trans-unit id="tl_page.search_legend">
-        <source>Search settings</source>
-        <target>Indstillinger for søgning</target>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>

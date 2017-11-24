@@ -328,14 +328,6 @@
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>لطفا یک یا چند پرونده یا پوشه را انتخاب کنید. اگر یک پوشه را انتخاب کنید، همه پرونده‌های داخل پوشه به صورت خودکار گنجانده خواهند شد.</target>
       </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>ترتیب مرتب‌سازی</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>ترتیب چیدن آیتم‌ها.</target>
-      </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
         <target>استفاده از دایرکتوری شخصی</target>

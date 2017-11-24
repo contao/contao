@@ -86,8 +86,7 @@
         <target>Edytor zawartości</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
-        <source>Here you can edit the file source (press F11 to toggle full screen mode).</source>
-        <target>Tutaj możesz edytować źródło pliku (wciśnij F11, aby włączyć tryb pełnoekranowy).</target>
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files</source>

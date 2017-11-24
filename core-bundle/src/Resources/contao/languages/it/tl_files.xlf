@@ -86,8 +86,7 @@
         <target>Editor sorgente</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
-        <source>Here you can edit the file source (press F11 to toggle full screen mode).</source>
-        <target>Qui è possibile modificare il file di origine (premere F11 per passare alla modalità a schermo intero).</target>
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files</source>

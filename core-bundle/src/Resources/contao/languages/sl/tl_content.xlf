@@ -326,14 +326,6 @@
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>Prosimo, izberite eno ali več datotek ali map iz datotečnega imenika. V kolikor izberete mapo, bo njena vsebina vključena samodejno.</target>
       </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>Vrstni red</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Razvrstitev elementov</target>
-      </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
         <target>Uporabi domač direktorij</target>

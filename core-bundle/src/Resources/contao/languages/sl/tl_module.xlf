@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>Prosimo, izberite eno ali več datotek iz imenika.</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>Vrstni red</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Razvrstitev elementov</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>HTML koda</target>

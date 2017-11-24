@@ -78,8 +78,7 @@
         <target>Kilderedigering</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
-        <source>Here you can edit the file source (press F11 to toggle full screen mode).</source>
-        <target>Her kan du redigere kildefilen (tryk F11 for at aktivere fuldskærmsvisning).</target>
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files</source>

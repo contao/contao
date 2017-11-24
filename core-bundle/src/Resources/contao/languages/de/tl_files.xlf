@@ -86,7 +86,7 @@
         <target>Quelltexteditor</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
-        <source>Here you can edit the file source (press F11 to toggle full screen mode).</source>
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
         <target>Hier können Sie den Quelltext der Datei bearbeiten (Vollbildansicht mit F11).</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">

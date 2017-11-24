@@ -84,8 +84,7 @@
         <target>Forrás szerkesztő</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
-        <source>Here you can edit the file source (press F11 to toggle full screen mode).</source>
-        <target>Itt lehet szerkeszteni a forrás fájlt (az F11 gombbal teljes képernyős módba válthat).</target>
+        <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files</source>

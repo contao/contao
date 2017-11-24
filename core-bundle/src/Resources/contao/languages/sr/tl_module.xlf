@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>Изаберите један или више фајлова из директоријума фајлова.</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>Начин сортирања</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Распоред сортирања ставки.</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>HTML код</target>

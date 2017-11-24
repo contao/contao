@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>Выберите один или несколько файлов из каталога.</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>Порядок сортировки</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Порядок сортировки элементов.</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>HTML-код</target>

@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>Válasszon ki egy vagy több fájlt.</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>Rendezési sorrend</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Elemek rendezési sorrendje.</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>HTML kód</target>

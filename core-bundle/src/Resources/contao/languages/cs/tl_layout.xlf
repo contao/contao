@@ -209,14 +209,6 @@
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
         <target>Zde můžete přidat externí soubory kaskádovitých stylů CSS, SCSS nebo LESS z manažera souborů .</target>
       </trans-unit>
-      <trans-unit id="tl_layout.orderExt.0">
-        <source>Sort order</source>
-        <target>Seřadit podle</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.orderExt.1">
-        <source>The sort order of the style sheets.</source>
-        <target>Seřadit kaskádovité styly podle.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
         <target>Pořadí načítání</target>
@@ -294,8 +286,7 @@
         <target>Hlavní tag</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can set a custom title tag.</source>
-        <target>Sem můžete zadat vlastní název tagu.</target>
+        <source>Here you can overwrite the title tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -384,6 +375,12 @@
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
         <target>Zde můžete vybrat jednu nebo více analýzových předloh.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.0">
+        <source>External JavaScripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.1">
+        <source>Here you can add external JS files from the file system.</source>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

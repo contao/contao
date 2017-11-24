@@ -3,19 +3,19 @@
     <body>
       <trans-unit id="tl_user.username.0">
         <source>Username</source>
-        <target>Nazwa</target>
+        <target>Login</target>
       </trans-unit>
       <trans-unit id="tl_user.username.1">
         <source>Please enter a unique username.</source>
-        <target>Wprowadź nazwę redaktora.</target>
+        <target>Wprowadź unikalny login redaktora.</target>
       </trans-unit>
       <trans-unit id="tl_user.name.0">
         <source>Name</source>
-        <target>Imię i nazwisko</target>
+        <target>Nazwa wyświetlana</target>
       </trans-unit>
       <trans-unit id="tl_user.name.1">
         <source>Please enter the first and last name.</source>
-        <target>Wprowadź imię i nazwisko.</target>
+        <target>Wprowadź nazwę wyświetlaną.</target>
       </trans-unit>
       <trans-unit id="tl_user.email.0">
         <source>E-mail address</source>
@@ -41,13 +41,11 @@
         <source>Here you can override the global back end theme.</source>
         <target>Tu możesz wybrać wygląd panelu administratora.</target>
       </trans-unit>
-      <trans-unit id="tl_user.limitWidth.0">
-        <source>Limit width</source>
-        <target>Ogranicz szerokość</target>
+      <trans-unit id="tl_user.fullscreen.0">
+        <source>Fullscreen</source>
       </trans-unit>
-      <trans-unit id="tl_user.limitWidth.1">
-        <source>Limit the maximum width of the back end to 1140px.</source>
-        <target>Ogranicz maksymalną szerokość backendu do 1140px.</target>
+      <trans-unit id="tl_user.fullscreen.1">
+        <source>Do not limit the width of the back end.</source>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

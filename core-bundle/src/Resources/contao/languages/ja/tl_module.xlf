@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>ファイルディレクトリからファイルを1つ以上選択してください。</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>並べ替えの順序</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>項目を並べ替える順序です。</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>HTMLコード</target>

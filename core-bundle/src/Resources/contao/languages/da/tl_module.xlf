@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>Vælg en eller flere filer fra mappen filer.</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>Rækkefølge</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Rækkefølgen elementerne skal sorteres i.</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>HTML-kode</target>

@@ -329,14 +329,6 @@
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>Изаберите један или више фајлова или фолдера из директоријума фајлова. Ако изаберете фолдер, сви фајлови унутар њега ће бити придодати аутоматски.</target>
       </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>Начин сортирања</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Распоред сортирања ставки.</target>
-      </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
         <target>Користи почетни директоријум</target>

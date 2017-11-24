@@ -329,14 +329,6 @@
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>ファイルディレクトリから、ファイルやフォルダーを1つ以上選択してください。フォルダーを選択すると、その中のファイルも自動的に含まれます。</target>
       </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>並べ替えの順序</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>項目を並べ替える順序です。</target>
-      </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
         <target>ホームディレクトリの使用</target>

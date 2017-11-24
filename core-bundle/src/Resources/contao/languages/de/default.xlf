@@ -653,6 +653,62 @@
         <source>Everybody</source>
         <target>Alle</target>
       </trans-unit>
+      <trans-unit id="DATE.a">
+        <source>am</source>
+        <target>am</target>
+      </trans-unit>
+      <trans-unit id="DATE.A">
+        <source>AM</source>
+        <target>AM</target>
+      </trans-unit>
+      <trans-unit id="DATE.d">
+        <source>DD</source>
+        <target>TT</target>
+      </trans-unit>
+      <trans-unit id="DATE.j">
+        <source>D</source>
+        <target>T</target>
+      </trans-unit>
+      <trans-unit id="DATE.m">
+        <source>MM</source>
+        <target>MM</target>
+      </trans-unit>
+      <trans-unit id="DATE.n">
+        <source>M</source>
+        <target>M</target>
+      </trans-unit>
+      <trans-unit id="DATE.y">
+        <source>YY</source>
+        <target>JJ</target>
+      </trans-unit>
+      <trans-unit id="DATE.Y">
+        <source>YYYY</source>
+        <target>JJJJ</target>
+      </trans-unit>
+      <trans-unit id="DATE.h">
+        <source>hh</source>
+        <target>hh</target>
+      </trans-unit>
+      <trans-unit id="DATE.H">
+        <source>hh</source>
+        <target>hh</target>
+      </trans-unit>
+      <trans-unit id="DATE.g">
+        <source>h</source>
+        <target>h</target>
+      </trans-unit>
+      <trans-unit id="DATE.G">
+        <source>h</source>
+        <target>h</target>
+      </trans-unit>
+      <trans-unit id="DATE.i">
+        <source>mm</source>
+        <target>mm</target>
+      </trans-unit>
+      <trans-unit id="DATE.s">
+        <source>ss</source>
+        <target>ss</target>
+      </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
         <target>Sonntag</target>
@@ -2318,6 +2374,10 @@ Diese E-Mail wurde von Contao generiert. Sie können nicht darauf antworten.
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
         <target>ASCII-Zahlen und -Buchstaben</target>
+      </trans-unit>
+      <trans-unit id="MSC.sortOrder">
+        <source>Sort order</source>
+        <target>Sortierreihenfolge</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

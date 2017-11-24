@@ -209,14 +209,6 @@
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
         <target>Вы можете добавить внешние CSS, SCSS или LESS файлы из файловой системы.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.orderExt.0">
-        <source>Sort order</source>
-        <target>Порядок сортировки</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.orderExt.1">
-        <source>The sort order of the style sheets.</source>
-        <target>Порядок сортировки таблиц стилей.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
         <target>Порядок загрузки</target>
@@ -294,8 +286,8 @@
         <target>Тег title (название)</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can set a custom title tag.</source>
-        <target>Вы можете установить пользовательский тег title.</target>
+        <source>Here you can overwrite the title tag.</source>
+        <target>Вы можете переписать тег title.</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -384,6 +376,14 @@
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
         <target>Вы можете выбрать один или несколько шаблонов статистики.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.0">
+        <source>External JavaScripts</source>
+        <target>Внешние JavaScripts</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.1">
+        <source>Here you can add external JS files from the file system.</source>
+        <target>Вы можете добавить внешние файлы JS из файловой системы.</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

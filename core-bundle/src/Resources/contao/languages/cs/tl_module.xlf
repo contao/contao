@@ -417,14 +417,6 @@
         <source>Please select one or more files from the files directory.</source>
         <target>Vyberte jeden nebo více souborů z adresáře</target>
       </trans-unit>
-      <trans-unit id="tl_module.orderSRC.0">
-        <source>Sort order</source>
-        <target>Seřadit podle</target>
-      </trans-unit>
-      <trans-unit id="tl_module.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Způsob řazení položek.</target>
-      </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
         <target>Kód HTML</target>

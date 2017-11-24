@@ -273,6 +273,12 @@
         <source>Exclude the page from the search index.</source>
         <target>Indexeer deze pagina niet voor de zoekmachine.</target>
       </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>CSS class</target>
@@ -396,10 +402,6 @@
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
         <target>Toegangsrechten</target>
-      </trans-unit>
-      <trans-unit id="tl_page.search_legend">
-        <source>Search settings</source>
-        <target>Zoek instellingen</target>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>
