@@ -1026,7 +1026,11 @@ var Backend =
 		var hgt = 0;
 
 		$$('div.limit_height').each(function(div) {
-			var toggler, button, size, style;
+			var parent = div.getParent('.tl_content'),
+				toggler, button, size, style;
+
+			// Return if the element is a wrapper
+			if (parent && (parent.hasClass('wrapper_start') || parent.hasClass('wrapper_stop'))) return;
 
 			if (hgt === 0) {
 				hgt = div.className.replace(/[^0-9]*/, '').toInt();
