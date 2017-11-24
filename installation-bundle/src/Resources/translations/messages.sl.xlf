@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zakljenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep zaženite &lt;code&gt;app/console doctrine:cache:clear contato.cache&lt;/code&gt; v ukazni vrstici.</target>
         
       </trans-unit>
       <trans-unit id="5">

@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Por razones de seguridad, la herramienta de instalación ha sido bloqueada después de que se introdujo una contraseña equivocada más de tres veces seguidas. Para desbloquearlo ejecute &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; en la línea de comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
