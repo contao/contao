@@ -53,6 +53,24 @@ class Version450Update extends AbstractVersionUpdate
                 news_order = 'descending'
         ");
 
+        $this->connection->query("
+            UPDATE
+                tl_form_field
+            SET
+                type = 'fieldsetStart'
+            WHERE
+                type = 'fieldset' AND fsType = 'fsStart'
+        ");
+
+        $this->connection->query("
+            UPDATE
+                tl_form_field
+            SET
+                type = 'fieldsetStop'
+            WHERE
+                type = 'fieldset' AND fsType = 'fsStop'
+        ");
+
         $this->connection->query('
             ALTER TABLE
                 tl_layout
