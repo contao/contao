@@ -31,8 +31,8 @@ if ($request->server->has('HTTP_CLIENT_IP')
     ##########################################################################
     #                                                                        #
     #  Access to debug front controllers is only allowed on localhost or     #
-    #  with authentication. Use the "contao:install-web-dir" command to set  #
-    #  a password for the dev entry point.                                   #
+    #  with authentication. Use the "contao:install-web-dir -p" command to   #
+    #  set a password for the dev entry point.                               #
     #                                                                        #
     ##########################################################################
     $accessKey = @getenv('APP_DEV_ACCESSKEY', true);
