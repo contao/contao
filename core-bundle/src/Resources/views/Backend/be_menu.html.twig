@@ -1,0 +1,25 @@
+{% trans_default_domain 'contao_default' %}
+<nav id="tl_navigation" role="navigation">
+    <a href="{{ app.request.requestUri }}#skipNavigation" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
+
+    <ul class="tl_level_1">
+        {% for item in tree %}
+            <li class="tl_level_1_group {% if item.displayChildren %}node-expanded{% else %}node-collapsed{% endif %}{% if item is knp_menu_ancestor %} trail{% endif %}">
+                <a href="{{ item.attributes.href ?: item.uri }}" title="{{ item.attributes.title }}" class="group-{{ item.name }}" onclick="return AjaxRequest.toggleNavigation(this, '{{ item.name }}', '{{ path('contao_backend') }}')">{{ item.label }}</a>
+            </li>
+            {% if item.hasChildren %}
+                <li class="tl_parent" id="{{ item.name }}"{% if not item.displayChildren %} style="display:none"{% endif %}>
+                    <ul class="tl_level_2">
+                        {% for child in item.children %}
+                            <li{% if child is knp_menu_current %} class="active"{% endif %}>
+                                <a href="{{ child.attributes.href ?: item.uri }}" title="{{ child.attributes.title }}" class="navigation {{ child.attributes.class }}">{{ child.label }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <a id="skipNavigation" class="invisible">&nbsp;</a>
+</nav>
