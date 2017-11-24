@@ -174,12 +174,10 @@
         <target>Klikom na &quot;pročitaj više...&quot; dugme posjetitelj se preusmjerava na članak.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>Vanjski URL</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Klikom na link &quot;Opširnije...&quot; posjetitelji će biti preusmjereni na vanjske web stranice.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

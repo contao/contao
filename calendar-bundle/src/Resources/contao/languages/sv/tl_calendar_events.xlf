@@ -174,12 +174,10 @@
         <target>Genom att klicka på &quot;läs mer ...&quot; knappen, kommer besökarna att omdirigeras till en artikel.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>Extern URL</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Genom att klicka på &quot;läs mer...&quot; så kommer besökare att vidarebefodras till en extern sida.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

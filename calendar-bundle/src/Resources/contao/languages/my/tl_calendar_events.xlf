@@ -174,12 +174,10 @@
         <target>&quot;နောက်ထပ်ဖတ်ရှု...&quot; ခလုတ်ကိုနှိပ်ပါကဆောင်းပါးသို့လည်ပတ်သူများကိုဦးတည်ရာပြောင်းခေါ်ဆောင်သွား။</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>ပြင်ပယူအာအယ်</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>&quot;နောက်ထပ်ဖတ်ရှု...&quot; ခလုတ်ကိုနှိပ်ပါကပြင်ပဝဘ်ဆိုက်သို့လည်ပတ်သူများကိုဦးတည်ရာပြောင်းခေါ်ဆောင်သွား။</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

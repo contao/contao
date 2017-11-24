@@ -174,12 +174,10 @@
         <target>Ha az &quot;Olvasson tovább...&quot; gombra kattint, a látogató a kiválasztott cikkhez lesz átirányítva.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>Külső URL</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Ha az &quot;Olvasson tovább...&quot; gombra kattint, a látogató egy külső weboldalra lesz átirányítva.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

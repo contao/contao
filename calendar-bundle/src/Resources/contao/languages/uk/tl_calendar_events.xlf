@@ -174,12 +174,10 @@
         <target>Натисканням на гіперпосилання &quot;читати далі ...&quot;, відвідувачі будуть перенаправлятися на статтю.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>Зовнішній URL</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>При натисненні на гіперпосилання &quot;читати далі...&quot; відвідувачі будуть спрямовані на інший сайт, де вони зможуть прочитати статтю цілком.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

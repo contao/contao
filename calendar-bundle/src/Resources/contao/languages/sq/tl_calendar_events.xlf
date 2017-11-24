@@ -174,12 +174,10 @@
         <target>Shtypja e butonit &quot;Lexo më shumë...&quot; i posedon vizitorët në një faqe të artikujve.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>URL ekstern</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Shtypja e butonit &quot;Lexo më shumë...&quot; i posedon vizitorët në një faqe të jashtme, ku mund ta lexojnë tërë lajmin.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
