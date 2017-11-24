@@ -104,11 +104,11 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'fsType', 'multiple', 'storeFile', 'imageSubmit'),
+		'__selector__'                => array('type', 'multiple', 'storeFile', 'imageSubmit'),
 		'default'                     => '{type_legend},type',
 		'explanation'                 => '{type_legend},type;{text_legend},text;{expert_legend:hide},class;{template_legend:hide},customTpl',
-		'fieldsetfsStart'             => '{type_legend},type;{fconfig_legend},fsType,label;{expert_legend:hide},class;{template_legend:hide},customTpl',
-		'fieldsetfsStop'              => '{type_legend},type;{fconfig_legend},fsType;{template_legend:hide},customTpl',
+		'fieldsetStart'               => '{type_legend},type;{fconfig_legend},label;{expert_legend:hide},class;{template_legend:hide},customTpl',
+		'fieldsetStop'                => '{type_legend},type;{template_legend:hide},customTpl',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl',
 		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl',
 		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl',
@@ -324,17 +324,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'fsType' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['fsType'],
-			'default'                 => 'fsStart',
-			'exclude'                 => true,
-			'inputType'               => 'radio',
-			'options'                 => array('fsStart', 'fsStop'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_form_field'],
-			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'class' => array
 		(

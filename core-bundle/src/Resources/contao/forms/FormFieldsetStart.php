@@ -10,17 +10,13 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 
 /**
- * Class FormFieldset
- *
- * @property string  $fsType
+ * Class FormFieldsetStart
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormFieldset extends \Widget
+class FormFieldsetStart extends \Widget
 {
 
 	/**
@@ -28,16 +24,7 @@ class FormFieldset extends \Widget
 	 *
 	 * @var string
 	 */
-	protected $strTemplate = 'form_fieldset';
-
-
-	/**
-	 * Do not validate
-	 */
-	public function validate()
-	{
-		return;
-	}
+	protected $strTemplate = 'form_fieldsetStart';
 
 
 	/**
@@ -54,15 +41,7 @@ class FormFieldset extends \Widget
 		{
 			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
-			if ($this->fsType == 'fsStart')
-			{
-				$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['tl_form_field']['fsStart'][0]) . ' ###' . ($this->label ? '<br>' . $this->label : '');
-			}
-			else
-			{
-				$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['tl_form_field']['fsStop'][0]) . ' ###';
-			}
+			$objTemplate->title = $this->label;
 
 			return $objTemplate->parse();
 		}
@@ -78,13 +57,8 @@ class FormFieldset extends \Widget
 	 */
 	public function generate()
 	{
-		if ($this->fsType == 'fsStart')
-		{
-			return "  <fieldset" . ($this->strClass ? ' class="' . $this->strClass . '"' : '') . ">\n" . (($this->label != '') ? "  <legend>" . $this->label . "</legend>\n" : '');
-		}
-		else
-		{
-			return "  </fieldset>\n";
-		}
+		return sprintf('<fieldset%s>%s',
+						($this->strClass ? ' class="' . $this->strClass . '"' : ''),
+						($this->label ? '<legend>' . $this->label . '</legend>' : ''));
 	}
 }

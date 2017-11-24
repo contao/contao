@@ -237,19 +237,20 @@ $GLOBALS['BE_FFL'] = array
  */
 $GLOBALS['TL_FFL'] = array
 (
-	'explanation' => 'FormExplanation',
-	'html'        => 'FormHtml',
-	'fieldset'    => 'FormFieldset',
-	'text'        => 'FormTextField',
-	'password'    => 'FormPassword',
-	'textarea'    => 'FormTextArea',
-	'select'      => 'FormSelectMenu',
-	'radio'       => 'FormRadioButton',
-	'checkbox'    => 'FormCheckBox',
-	'upload'      => 'FormFileUpload',
-	'hidden'      => 'FormHidden',
-	'captcha'     => 'FormCaptcha',
-	'submit'      => 'FormSubmit'
+    'explanation'   => 'FormExplanation',
+    'html'          => 'FormHtml',
+    'fieldsetStart' => 'FormFieldsetStart',
+    'fieldsetStop'  => 'FormFieldsetStop',
+    'text'          => 'FormTextField',
+    'password'      => 'FormPassword',
+    'textarea'      => 'FormTextArea',
+    'select'        => 'FormSelectMenu',
+    'radio'         => 'FormRadioButton',
+    'checkbox'      => 'FormCheckBox',
+    'upload'        => 'FormFileUpload',
+    'hidden'        => 'FormHidden',
+    'captcha'       => 'FormCaptcha',
+    'submit'        => 'FormSubmit',
 );
 
 
@@ -430,12 +431,14 @@ $GLOBALS['TL_WRAPPERS'] = array
 	'start' => array
 	(
 		'accordionStart',
-		'sliderStart'
+		'sliderStart',
+		'fieldsetStart'
 	),
 	'stop' => array
 	(
 		'accordionStop',
-		'sliderStop'
+		'sliderStop',
+		'fieldsetStop'
 	),
 	'single' => array
 	(
