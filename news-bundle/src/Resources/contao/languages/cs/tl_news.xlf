@@ -122,12 +122,10 @@
         <target>Při kliknutí na odkaz &quot;čti dál…&quot; bude návštěvník přesměrován na tento článek.</target>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
-        <source>External URL</source>
-        <target>Externí internetová adresa</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Při kliknutí na odkaz &quot;čti dál…&quot; bude návštěvník přesměrován na zadanou internetovou adresu.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>

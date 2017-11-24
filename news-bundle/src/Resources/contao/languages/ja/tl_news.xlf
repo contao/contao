@@ -122,12 +122,10 @@
         <target>&quot;続きを読む...&quot;ボタンをクリックするとアーティクルに移動します。</target>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
-        <source>External URL</source>
-        <target>外部のウェブサイト</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>&quot;続きを読む...&quot;のボタンをクリックすると外部のウェブサイトに移動します。</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>

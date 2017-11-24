@@ -21,10 +21,6 @@
         <source>Currently there are no news items.</source>
         <target>No existen artículos de noticias actualmente.</target>
       </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-        <target>Comentarios</target>
-      </trans-unit>
       <trans-unit id="MSC.commentCount">
         <source>(comments: %s)</source>
         <target>(%s comentarios)</target>

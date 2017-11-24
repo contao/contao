@@ -21,10 +21,6 @@
         <source>Currently there are no news items.</source>
         <target>Şu anda bir haber yok.</target>
       </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-        <target>Yorumlar</target>
-      </trans-unit>
       <trans-unit id="MSC.commentCount">
         <source>(comments: %s)</source>
         <target>(yorum: %s)</target>

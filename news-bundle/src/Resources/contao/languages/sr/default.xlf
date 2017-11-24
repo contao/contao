@@ -21,10 +21,6 @@
         <source>Currently there are no news items.</source>
         <target>Тренутно нема нових вести.</target>
       </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-        <target>Коментари</target>
-      </trans-unit>
       <trans-unit id="MSC.commentCount">
         <source>(comments: %s)</source>
         <target>(коментари: %s)</target>

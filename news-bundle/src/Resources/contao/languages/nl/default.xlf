@@ -21,10 +21,6 @@
         <source>Currently there are no news items.</source>
         <target>Momenteel zijn er geen nieuwsitems.</target>
       </trans-unit>
-      <trans-unit id="MSC.comments">
-        <source>Comments</source>
-        <target>Reacties</target>
-      </trans-unit>
       <trans-unit id="MSC.commentCount">
         <source>(comments: %s)</source>
         <target>(reacties: %s)</target>
