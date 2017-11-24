@@ -14,16 +14,16 @@
         "symfony/symfony": "3.4.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/swiftmailer-bundle": "^3.1.5",
-        "sensio/framework-extra-bundle": "^5.0",
+        "contao/core-bundle": "4.5.*",
+        "contao/installation-bundle": "4.5.*",
+        "contao/manager-plugin": "^2.2",
         "doctrine/doctrine-bundle": "^1.6",
         "friendsofsymfony/http-cache": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
         "php-http/guzzle6-adapter": "^1.1",
-        "terminal42/header-replay-bundle": "^1.3",
-        "contao/manager-plugin": "^2.2",
-        "contao/core-bundle": "dev-develop",
-        "contao/installation-bundle": "dev-develop"
+        "sensio/framework-extra-bundle": "^5.0",
+        "terminal42/header-replay-bundle": "^1.3"
     },
     "require-dev": {
         "composer/composer": "^1.0",
