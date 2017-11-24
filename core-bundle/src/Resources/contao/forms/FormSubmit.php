@@ -89,7 +89,6 @@ class FormSubmit extends \Widget
 	 */
 	public function validate()
 	{
-		return;
 	}
 
 

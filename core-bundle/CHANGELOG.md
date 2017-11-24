@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Display form fieldsets as wrappers in the back end view (see #1102).
  * Replace the back end "limit width" option with a "fullscreen" option (see #1082).
  * Support translating the date format strings (see #872).
  * Add the "require an item" option to the site structure (see contao/core#8361).

@@ -34,7 +34,6 @@ class FormHtml extends \Widget
 	 */
 	public function validate()
 	{
-		return;
 	}
 
 

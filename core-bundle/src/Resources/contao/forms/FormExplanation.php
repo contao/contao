@@ -41,7 +41,6 @@ class FormExplanation extends \Widget
 	 */
 	public function validate()
 	{
-		return;
 	}
 
 
