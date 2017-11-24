@@ -17,6 +17,8 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
+use Knp\Menu\MenuItem;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -43,7 +45,17 @@ class FaqPickerProviderTest extends ContaoTestCase
 
         $menuFactory
             ->method('createItem')
-            ->willReturnArgument(1)
+            ->willReturnCallback(
+                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                    $item = new MenuItem($name, $menuFactory);
+                    $item->setLabel($data['label']);
+                    $item->setLinkAttributes($data['linkAttributes']);
+                    $item->setCurrent($data['current']);
+                    $item->setUri($data['uri']);
+
+                    return $item;
+                }
+            )
         ;
 
         $router = $this->createMock(RouterInterface::class);
@@ -85,15 +97,13 @@ class FaqPickerProviderTest extends ContaoTestCase
             $picker = $encoded;
         }
 
-        $this->assertSame(
-            [
-                'label' => 'Faq picker',
-                'linkAttributes' => ['class' => 'faqPicker'],
-                'current' => true,
-                'uri' => 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($picker), '+/=', '-_,')),
-            ],
-            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'))
-        );
+        $item = $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'));
+        $uri = 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($picker), '+/=', '-_,'));
+
+        $this->assertSame('Faq picker', $item->getLabel());
+        $this->assertSame(['class' => 'faqPicker'], $item->getLinkAttributes());
+        $this->assertTrue($item->isCurrent());
+        $this->assertSame($uri, $item->getUri());
     }
 
     public function testChecksIfAMenuItemIsCurrent(): void
