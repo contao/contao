@@ -81,7 +81,8 @@ namespace {
 	class FormCaptcha extends \Contao\FormCaptcha {}
 	class FormCheckBox extends \Contao\FormCheckBox {}
 	class FormExplanation extends \Contao\FormExplanation {}
-	class FormFieldset extends \Contao\FormFieldset {}
+	class FormFieldsetStart extends \Contao\FormFieldsetStart {}
+	class FormFieldsetStop extends \Contao\FormFieldsetStop {}
 	class FormFileUpload extends \Contao\FormFileUpload {}
 	class FormHidden extends \Contao\FormHidden {}
 	class FormHtml extends \Contao\FormHtml {}
