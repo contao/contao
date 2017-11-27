@@ -117,7 +117,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				'button_callback'     => array('tl_calendar_events', 'toggleIcon')
+				'button_callback'     => array('tl_calendar_events', 'toggleIcon'),
+				'showInHeader'        => true
 			),
 			'show' => array
 			(
