@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<nav class="pagination block" role="navigation" aria-label="<?= $this->pagination ?>">
+<nav class="pagination block" aria-label="<?= $this->pagination ?>">
 
   <p><?= $this->total ?></p>
 

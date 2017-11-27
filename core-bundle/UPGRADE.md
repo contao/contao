@@ -19,7 +19,7 @@ element as container and a `<strong>` element to mark the active item:
 </div>
 
 <!-- NEW -->
-<nav class="pagination block" role="navigation" aria-label="...">
+<nav class="pagination block" aria-label="...">
   ...
   <li><strong class="active">...</strong></li>
   ...

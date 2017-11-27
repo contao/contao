@@ -1,5 +1,5 @@
 
-<nav class="pagination <?= $this->class ?>" role="navigation" aria-label="<?= $this->pagination ?>">
+<nav class="pagination <?= $this->class ?>" aria-label="<?= $this->pagination ?>">
 
   <p><?= $this->total ?></p>
 
