@@ -767,7 +767,7 @@ abstract class DataContainer extends \Backend
 	 */
 	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['list']['operations']))
+		if (empty($GLOBALS['TL_DCA'][$strTable]['list']['operations']) || !\is_array($GLOBALS['TL_DCA'][$strTable]['list']['operations']))
 		{
 			return '';
 		}
@@ -854,7 +854,7 @@ abstract class DataContainer extends \Backend
 	 */
 	protected function generateGlobalButtons()
 	{
-		if (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']))
+		if (empty($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']) || !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']))
 		{
 			return '';
 		}
@@ -910,6 +910,84 @@ abstract class DataContainer extends \Backend
 			}
 
 			$return .= '<a href="'.$this->addToUrl($v['href']).'" class="'.$v['class'].'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ';
+		}
+
+		return $return;
+	}
+
+
+	/**
+	 * Compile header buttons from the table configuration array and return them as HTML
+	 *
+	 * @param array  $arrRow
+	 * @param string $strPtable
+	 *
+	 * @return string
+	 */
+	protected function generateHeaderButtons($arrRow, $strPtable)
+	{
+		if (empty($GLOBALS['TL_DCA'][$strPtable]['list']['operations']) || !\is_array($GLOBALS['TL_DCA'][$strPtable]['list']['operations']))
+		{
+			return '';
+		}
+
+		$return = '';
+
+		foreach ($GLOBALS['TL_DCA'][$strPtable]['list']['operations'] as $k=> $v)
+		{
+			if (empty($v['showInHeader']) || \Input::get('act') == 'select' && !$v['showOnSelect'])
+			{
+				continue;
+			}
+
+			$v = \is_array($v) ? $v : array($v);
+			$id = \StringUtil::specialchars(rawurldecode($arrRow['id']));
+
+			$label = $v['label'][0] ?: $k;
+			$title = sprintf($v['label'][1] ?: $k, $id);
+			$attributes = ($v['attributes'] != '') ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
+
+			// Add the key as CSS class
+			if (strpos($attributes, 'class="') !== false)
+			{
+				$attributes = str_replace('class="', 'class="' . $k . ' ', $attributes);
+			}
+			else
+			{
+				$attributes = ' class="' . $k . '"' . $attributes;
+			}
+
+			// Add the parent table to the href
+			if (isset($v['href']))
+			{
+				$v['href'] .= '&amp;table=' . $strPtable;
+			}
+			else
+			{
+				$v['href'] = 'table=' . $strPtable;
+			}
+
+			// Call a custom function instead of using the default button
+			if (\is_array($v['button_callback']))
+			{
+				$this->import($v['button_callback'][0]);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
+				continue;
+			}
+			elseif (\is_callable($v['button_callback']))
+			{
+				$return .= $v['button_callback']($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
+				continue;
+			}
+
+			if ($k == 'show')
+			{
+				$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1').'" title="'.\StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strTable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
+			}
+			else
+			{
+				$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].(\Input::get('nb') ? '&amp;nc=1' : '')).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
+			}
 		}
 
 		return $return;

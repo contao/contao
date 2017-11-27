@@ -124,7 +124,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_article']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				'button_callback'     => array('tl_article', 'toggleIcon')
+				'button_callback'     => array('tl_article', 'toggleIcon'),
+				'showInHeader'        => true
 			),
 			'show' => array
 			(

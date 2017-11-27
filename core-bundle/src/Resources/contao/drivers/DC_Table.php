@@ -4115,19 +4115,11 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$imagePasteAfter = \Image::getHtml('pasteafter.svg', $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]);
 			$imageEditHeader = \Image::getHtml('header.svg', $GLOBALS['TL_LANG'][$this->strTable]['editheader'][0]);
 
-			$strToggleIcon = '';
-
-			if (isset($GLOBALS['TL_DCA'][$this->ptable]['list']['operations']['toggle']['button_callback']) && \is_array($callback = $GLOBALS['TL_DCA'][$this->ptable]['list']['operations']['toggle']['button_callback']))
-			{
-				$this->import($callback[0]);
-				$strToggleIcon = ' '.$this->{$callback[0]}->{$callback[1]}($objParent->row(), 'table='.$this->ptable, $GLOBALS['TL_LANG'][$this->ptable]['toggle'][0], '', 'visible.svg', 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,'.$objParent->id.')"');
-			}
-
 			$return .= '
 <div class="tl_content_right">'.((\Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? '
 <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$objParent->id . (!$blnMultiboard ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>' : ((!$GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] && $this->User->canEditFieldsOf($this->ptable)) ? '
-<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(\Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.\StringUtil::specialchars(isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1]) ? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] : $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a>' . $strToggleIcon : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
+<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(\Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.\StringUtil::specialchars(isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1]) ? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] : $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
 <a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]).'">'.$imagePasteNew.'</a>' : ''))) . '
 </div>';
 
