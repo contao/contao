@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Add the toggle icon of the parent record in parent view (see contao/core#2266).
  * Decrease the number of DB queries by reusing the page model (see #1090).
 
 ### 4.5.0-beta2 (2017-11-24)
