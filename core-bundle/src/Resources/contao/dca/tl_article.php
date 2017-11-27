@@ -535,12 +535,10 @@ class tl_article extends Backend
 						throw new Contao\CoreBundle\Exception\AccessDeniedException('Page ID ' . $id . ' is not mounted.');
 					}
 
-					$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
+					$objPage = PageModel::findById($id);
 
 					// Check whether the current user has permission for the current page
-					if ($objPage->numRows && !$this->User->isAllowed($permission, $objPage->row()))
+					if ($objPage !== null && !$this->User->isAllowed($permission, $objPage->row()))
 					{
 						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (\strlen(Input::get('id')) ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
 					}
@@ -733,9 +731,7 @@ class tl_article extends Backend
 	 */
 	public function editArticle($row, $href, $label, $title, $icon, $attributes)
 	{
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
@@ -760,9 +756,7 @@ class tl_article extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
 
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
@@ -788,9 +782,7 @@ class tl_article extends Backend
 			return '';
 		}
 
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
@@ -810,9 +802,7 @@ class tl_article extends Backend
 	 */
 	public function cutArticle($row, $href, $label, $title, $icon, $attributes)
 	{
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
@@ -839,9 +829,7 @@ class tl_article extends Backend
 			return ($row['type'] == 'root' || !$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $row) || $cr) ? Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
 		}
 
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && \in_array($row['id'], $arrClipboard['id'])) || !$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) || $cr) ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
 	}
@@ -861,9 +849,7 @@ class tl_article extends Backend
 	 */
 	public function deleteArticle($row, $href, $label, $title, $icon, $attributes)
 	{
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		return $this->User->isAllowed(BackendUser::CAN_DELETE_ARTICLES, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
@@ -973,9 +959,7 @@ class tl_article extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['pid']);
+		$objPage = PageModel::findById($row['pid']);
 
 		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
 		{

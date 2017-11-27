@@ -2,6 +2,10 @@
 
 ### DEV
 
+ * Decrease the number of DB queries by reusing the page model (see #1090).
+
+### 4.5.0-beta2 (2017-11-24)
+
  * Display form fieldsets as wrappers in the back end view (see #1102).
  * Replace the back end "limit width" option with a "fullscreen" option (see #1082).
  * Support translating the date format strings (see #872).

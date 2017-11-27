@@ -897,11 +897,9 @@ class tl_page extends Backend
 					}
 
 					// Get the page object
-					$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
+					$objPage = PageModel::findById($id);
 
-					if ($objPage->numRows < 1)
+					if ($objPage === null)
 					{
 						continue;
 					}
@@ -1458,11 +1456,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$objSubpages = $this->Database->prepare("SELECT * FROM tl_page WHERE pid=?")
-									  ->limit(1)
-									  ->execute($row['id']);
+		$objSubpages = PageModel::findByPid($row['id']);
 
-		return ($objSubpages->numRows && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 
@@ -1537,12 +1533,8 @@ class tl_page extends Backend
 				}
 			}
 
-			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-									  ->limit(1)
-									  ->execute($row['pid']);
-
 			// Disable "paste after" button if there is no permission 2 (move) or 1 (create) for the parent page
-			if (!$disablePA && $objPage->numRows)
+			if (!$disablePA && ($objPage = Model::getClassFromTable($table)::findById($row['pid'])) !== null)
 			{
 				if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row())))
 				{
@@ -1734,11 +1726,7 @@ class tl_page extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								  ->limit(1)
-								  ->execute($row['id']);
-
-		if (!$this->User->hasAccess($row['type'], 'alpty') || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+		if (!$this->User->hasAccess($row['type'], 'alpty') || ($objPage = PageModel::findById($row['id'])) === null || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
 		{
 			return Image::getHtml($icon) . ' ';
 		}
