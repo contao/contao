@@ -37,24 +37,6 @@ class Version450Update extends AbstractVersionUpdate
     {
         $this->connection->query("
             UPDATE
-                tl_module
-            SET
-                news_order = 'order_date_asc'
-            WHERE
-                news_order = 'ascending'
-        ");
-
-        $this->connection->query("
-            UPDATE
-                tl_module
-            SET
-                news_order = 'order_date_desc'
-            WHERE
-                news_order = 'descending'
-        ");
-
-        $this->connection->query("
-            UPDATE
                 tl_form_field
             SET
                 type = 'fieldsetStart'
@@ -70,6 +52,31 @@ class Version450Update extends AbstractVersionUpdate
             WHERE
                 type = 'fieldset' AND fsType = 'fsStop'
         ");
+
+        $columns = $this->connection
+            ->getSchemaManager()
+            ->listTableColumns('tl_module')
+        ;
+
+        if (isset($columns['news_order'])) {
+            $this->connection->query("
+                UPDATE
+                    tl_module
+                SET
+                    news_order = 'order_date_asc'
+                WHERE
+                    news_order = 'ascending'
+            ");
+
+            $this->connection->query("
+                UPDATE
+                    tl_module
+                SET
+                    news_order = 'order_date_desc'
+                WHERE
+                    news_order = 'descending'
+            ");
+        }
 
         $this->connection->query('
             ALTER TABLE
