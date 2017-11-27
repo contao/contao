@@ -72,6 +72,9 @@ namespace Contao;
  * @property string  $posterSRC
  * @property string  $playerSize
  * @property boolean $autoplay
+ * @property array   $youtubeOptions
+ * @property integer $youtubeStart
+ * @property integer $youtubeStop
  * @property integer $sliderDelay
  * @property integer $sliderSpeed
  * @property integer $sliderStartSlide
