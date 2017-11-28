@@ -157,7 +157,7 @@ class ModuleNewsList extends \ModuleNews
 	/**
 	 * Count the total matching items
 	 *
-	 * @param array $newsArchives
+	 * @param array   $newsArchives
 	 * @param boolean $blnFeatured
 	 *
 	 * @return integer
@@ -188,10 +188,10 @@ class ModuleNewsList extends \ModuleNews
 	/**
 	 * Fetch the matching items
 	 *
-	 * @param  array   $newsArchives
-	 * @param  boolean $blnFeatured
-	 * @param  integer $limit
-	 * @param  integer $offset
+	 * @param array   $newsArchives
+	 * @param boolean $blnFeatured
+	 * @param integer $limit
+	 * @param integer $offset
 	 *
 	 * @return Model\Collection|NewsModel|null
 	 */

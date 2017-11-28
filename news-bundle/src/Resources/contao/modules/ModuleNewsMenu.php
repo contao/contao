@@ -305,7 +305,7 @@ class ModuleNewsMenu extends \ModuleNews
 	/**
 	 * Return all weeks of the current month as array
 	 *
-	 * @param array  $arrData
+	 * @param array $arrData
 	 *
 	 * @return array
 	 */
@@ -342,7 +342,7 @@ class ModuleNewsMenu extends \ModuleNews
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
 			{
 				$arrDays[$strWeekClass][$i]['label'] = '&nbsp;';
-				$arrDays[$strWeekClass][$i]['class'] = 'days empty' . $strClass ;
+				$arrDays[$strWeekClass][$i]['class'] = 'days empty' . $strClass;
 				$arrDays[$strWeekClass][$i]['events'] = array();
 
 				continue;

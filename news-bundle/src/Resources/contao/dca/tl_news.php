@@ -631,7 +631,7 @@ class tl_news extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$slugOptions = [];
+			$slugOptions = array();
 
 			// Read the slug options from the associated page
 			if (($objNewsArchive = NewsArchiveModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objNewsArchive->jumpTo)) !== null)
