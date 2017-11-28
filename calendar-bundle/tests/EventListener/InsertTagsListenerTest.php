@@ -54,10 +54,24 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $properties);
+        $events = $this->mockAdapter(['generateEventUrl']);
+
+        $events
+            ->method('generateEventUrl')
+            ->willReturnCallback(
+                function (CalendarEventsModel $model, bool $absolute): string {
+                    if ($absolute) {
+                        return 'http://domain.tld/events/the-foobar-event.html';
+                    }
+
+                    return 'events/the-foobar-event.html';
+                }
+            )
+        ;
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
-            Events::class => $this->mockConfiguredAdapter(['generateEventUrl' => 'events/the-foobar-event.html']),
+            Events::class => $events,
         ];
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
@@ -75,6 +89,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         $this->assertSame(
             'events/the-foobar-event.html',
             $listener->onReplaceInsertTags('event_url::2')
+        );
+
+        $this->assertSame(
+            'http://domain.tld/events/the-foobar-event.html',
+            $listener->onReplaceInsertTags('event_url::2', false, null, ['absolute'])
         );
 
         $this->assertSame(

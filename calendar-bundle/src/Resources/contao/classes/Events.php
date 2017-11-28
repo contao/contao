@@ -390,12 +390,13 @@ abstract class Events extends \Module
 	 * Generate a URL and return it as string
 	 *
 	 * @param CalendarEventsModel $objEvent
+	 * @param boolean             $blnAbsolute
 	 *
 	 * @return string
 	 */
-	public static function generateEventUrl($objEvent)
+	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objEvent->id;
+		$strCacheKey = 'id_' . $objEvent->id . ($blnAbsolute ? '_absolute' : '');
 
 		// Load the URL from cache
 		if (isset(self::$arrUrlCache[$strCacheKey]))
@@ -425,7 +426,7 @@ abstract class Events extends \Module
 				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
+					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -433,8 +434,10 @@ abstract class Events extends \Module
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
+					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
+
 					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
 				}
 				break;
 		}
@@ -450,7 +453,9 @@ abstract class Events extends \Module
 			}
 			else
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand($objPage->getFrontendUrl((\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id)));
+				$params = (\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
+
+				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
 		}
 
