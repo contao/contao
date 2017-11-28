@@ -478,7 +478,7 @@ class tl_newsletter extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$slugOptions = [];
+			$slugOptions = array();
 
 			// Read the slug options from the associated page
 			if (($objChannel = NewsletterChannelModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objChannel->jumpTo)) !== null)
