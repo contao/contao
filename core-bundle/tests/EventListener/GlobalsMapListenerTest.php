@@ -30,7 +30,7 @@ class GlobalsMapListenerTest extends TestCase
      * @param array $expected
      *
      * @dataProvider getValuesData
-
+     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
