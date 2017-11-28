@@ -603,7 +603,7 @@ class Versions extends \Controller
 		return '
 <div class="tl_version_panel">
 
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_version" class="tl_form" method="post">
+<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_version" class="tl_form" method="post" aria-label="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']).'">
 <div class="tl_formbody">
 <input type="hidden" name="FORM_SUBMIT" value="tl_version">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">

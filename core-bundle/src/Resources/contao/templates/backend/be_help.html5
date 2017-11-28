@@ -33,7 +33,7 @@
 <body class="<?= $this->ua ?> popup">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <?= $this->explanation ?>
       <?php if (!empty($this->rows)): ?>
         <table class="tl_help_table">
@@ -51,7 +51,7 @@
           <?php endforeach; ?>
         </table>
       <?php endif; ?>
-    </div>
+    </main>
   </div>
 
 </body>

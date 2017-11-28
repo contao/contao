@@ -33,7 +33,7 @@
 <body class="<?= $this->ua ?> popup">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <table class="tl_show">
         <tr>
           <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
@@ -101,7 +101,7 @@
           </div>
         </div>
       <?php endif; ?>
-    </div>
+    </main>
   </div>
 
 </body>

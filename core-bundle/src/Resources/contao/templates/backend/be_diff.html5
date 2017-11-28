@@ -26,7 +26,7 @@
 <body class="<?= $this->ua ?>">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <form action="<?= $this->action ?>" method="post">
         <div class="formbody">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
@@ -55,7 +55,7 @@
       <div id="diff">
         <?= $this->content ?>
       </div>
-    </div>
+    </main>
   </div>
 
 </body>

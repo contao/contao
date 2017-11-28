@@ -34,7 +34,7 @@
 <body class="<?= $this->ua ?>">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <h1><?= $this->h1 ?></h1>
       <p><?= $this->explain1 ?></p>
       <p><?= $this->explain2 ?></p>
@@ -42,7 +42,7 @@
       <div class="submit_container">
         <a href="<?= $this->href ?>" class="tl_submit"><?= $this->button ?></a>
       </div>
-    </div>
+    </main>
   </div>
 
 </body>

@@ -34,7 +34,7 @@
 <body class="<?= $this->ua ?>">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <form action="<?= $this->action ?>" class="tl_login_form" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">
@@ -54,7 +54,7 @@
           </div>
         </div>
       </form>
-    </div>
+    </main>
     <?= $this->messages ?>
   </div>
 

@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Add roles and ARIA landmarks in the back end (see #768).
  * Add all the player options to the YouTube element (see #938).
  * Add the toggle icon of the parent record in parent view (see contao/core#2266).
  * Decrease the number of DB queries by reusing the page model (see #1090).

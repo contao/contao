@@ -42,7 +42,7 @@
 <body class="<?= $this->ua ?> popup">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <?php if ($this->managerHref || $this->switchHref): ?>
         <div id="manager" class="legacy">
           <?php if ($this->switchHref): ?>
@@ -72,7 +72,7 @@
         <?= $this->breadcrumb ?>
         <?= $this->main ?>
       </div>
-    </div>
+    </main>
   </div>
 
   <script>

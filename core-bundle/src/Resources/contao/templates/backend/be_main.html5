@@ -48,24 +48,26 @@
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
-      <div id="header"<?php if ($this->pageOffset) echo ' class="down"'; ?>>
+      <header id="header"<?php if ($this->pageOffset) echo ' class="down"'; ?>>
         <div class="inner">
           <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
-          <ul id="tmenu">
-            <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0) echo ' <sup>' . $this->systemErrorMessagesCount . '</sup>'; ?></a></li>
-            <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
-            <li class="submenu">
-              <h2><?= $this->username ?></h2>
-              <ul class="level_2">
-                <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
-                <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
-                <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
-              </ul>
-            </li>
-            <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
-          </ul>
+          <nav aria-label="<?= $this->headerNavigation ?>">
+            <ul id="tmenu">
+              <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0) echo ' <sup>' . $this->systemErrorMessagesCount . '</sup>'; ?></a></li>
+              <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
+              <li class="submenu">
+                <h2><?= $this->username ?></h2>
+                <ul class="level_2">
+                  <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
+                  <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
+                  <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
+                </ul>
+              </li>
+              <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
+            </ul>
+          </nav>
         </div>
-      </div>
+      </header>
     <?php endif; ?>
   <?php $this->endblock(); ?>
 
@@ -74,20 +76,20 @@
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>
-          <div id="left">
+          <aside id="left">
             <?= $this->menu; ?>
             <div class="version">
               <?php $this->block('version'); ?>
                 <?= $this->version ?><br><?= $this->learnMore ?>
               <?php $this->endblock(); ?>
             </div>
-          </div>
+          </aside>
         <?php endif; ?>
       <?php $this->endblock(); ?>
 
       <?php $this->block('main'); ?>
-        <div id="main">
-          <h1 class="main_headline"><?= $this->headline ?></h1>
+        <main id="main" aria-labelledby="main_headline">
+          <h1 id="main_headline"><?= $this->headline ?></h1>
           <div class="content">
             <?php if ($this->pickerMenu): ?>
               <div id="picker-menu">
@@ -99,7 +101,7 @@
             <?php endif; ?>
             <?= $this->main ?>
           </div>
-        </div>
+        </main>
       <?php $this->endblock(); ?>
 
     </div>
