@@ -356,12 +356,13 @@ class News extends \Frontend
 	 *
 	 * @param NewsModel $objItem
 	 * @param boolean   $blnAddArchive
+	 * @param boolean   $blnAbsolute
 	 *
 	 * @return string
 	 */
-	public static function generateNewsUrl($objItem, $blnAddArchive=false)
+	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objItem->id;
+		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '');
 
 		// Load the URL from cache
 		if (isset(self::$arrUrlCache[$strCacheKey]))
@@ -391,7 +392,7 @@ class News extends \Frontend
 				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
 				{
 					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = ampersand($objTarget->getFrontendUrl());
+					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
 				}
 				break;
 
@@ -399,8 +400,10 @@ class News extends \Frontend
 			case 'article':
 				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
+					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
+
 					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = ampersand($objPid->getFrontendUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
+					self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
 				}
 				break;
 		}
@@ -416,7 +419,9 @@ class News extends \Frontend
 			}
 			else
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand($objPage->getFrontendUrl((\Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id)));
+				$params = (\Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
+
+				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
 
 			// Add the current archive parameter (news archive)

@@ -48,10 +48,13 @@ class InsertTagsListener
      * Replaces news insert tags.
      *
      * @param string $tag
+     * @param bool   $useCache
+     * @param mixed  $cacheValue
+     * @param array  $flags
      *
      * @return string|false
      */
-    public function onReplaceInsertTags(string $tag)
+    public function onReplaceInsertTags(string $tag, bool $useCache = true, $cacheValue = null, array $flags = [])
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -61,7 +64,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::$supportedTags, true)) {
-            return $this->replaceNewsInsertTags($key, $elements[1]);
+            return $this->replaceNewsInsertTags($key, $elements[1], $flags);
         }
 
         return false;
@@ -93,10 +96,11 @@ class InsertTagsListener
      *
      * @param string $insertTag
      * @param string $idOrAlias
+     * @param array  $flags
      *
      * @return string
      */
-    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias): string
+    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $flags): string
     {
         $this->framework->initialize();
 
@@ -107,7 +111,7 @@ class InsertTagsListener
             return '';
         }
 
-        return $this->generateReplacement($news, $insertTag);
+        return $this->generateReplacement($news, $insertTag, $flags);
     }
 
     /**
@@ -115,10 +119,11 @@ class InsertTagsListener
      *
      * @param NewsModel $news
      * @param string    $insertTag
+     * @param array     $flags
      *
      * @return string
      */
-    private function generateReplacement(NewsModel $news, string $insertTag): string
+    private function generateReplacement(NewsModel $news, string $insertTag, array $flags): string
     {
         /** @var News $adapter */
         $adapter = $this->framework->getAdapter(News::class);
@@ -127,7 +132,7 @@ class InsertTagsListener
             case 'news':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $adapter->generateNewsUrl($news),
+                    $adapter->generateNewsUrl($news, false, \in_array('absolute', $flags, true)),
                     StringUtil::specialchars($news->headline),
                     $news->headline
                 );
@@ -135,12 +140,12 @@ class InsertTagsListener
             case 'news_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $adapter->generateNewsUrl($news),
+                    $adapter->generateNewsUrl($news, false, \in_array('absolute', $flags, true)),
                     StringUtil::specialchars($news->headline)
                 );
 
             case 'news_url':
-                return $adapter->generateNewsUrl($news);
+                return $adapter->generateNewsUrl($news, false, \in_array('absolute', $flags, true));
 
             case 'news_title':
                 return StringUtil::specialchars($news->headline);

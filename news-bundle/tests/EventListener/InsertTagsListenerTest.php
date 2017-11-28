@@ -53,11 +53,25 @@ class InsertTagsListenerTest extends ContaoTestCase
             'teaser' => '<p>Foo does not equal bar.</p>',
         ];
 
-        $eventModel = $this->mockClassWithProperties(NewsModel::class, $properties);
+        $newsModel = $this->mockClassWithProperties(NewsModel::class, $properties);
+        $news = $this->mockAdapter(['generateNewsUrl']);
+
+        $news
+            ->method('generateNewsUrl')
+            ->willReturnCallback(
+                function (NewsModel $model, bool $addArchive, bool $absolute): string {
+                    if ($absolute) {
+                        return 'http://domain.tld/news/foo-is-not-bar.html';
+                    }
+
+                    return 'news/foo-is-not-bar.html';
+                }
+            )
+        ;
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
-            News::class => $this->mockConfiguredAdapter(['generateNewsUrl' => 'news/foo-is-not-bar.html']),
+            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            News::class => $news,
         ];
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
@@ -75,6 +89,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         $this->assertSame(
             'news/foo-is-not-bar.html',
             $listener->onReplaceInsertTags('news_url::2')
+        );
+
+        $this->assertSame(
+            'http://domain.tld/news/foo-is-not-bar.html',
+            $listener->onReplaceInsertTags('news_url::2', false, null, ['absolute'])
         );
 
         $this->assertSame(
