@@ -391,7 +391,7 @@ class tl_faq extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$slugOptions = [];
+			$slugOptions = array();
 
 			// Read the slug options from the associated page
 			if (($objFaqCategory = FaqCategoryModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objFaqCategory->jumpTo)) !== null)
