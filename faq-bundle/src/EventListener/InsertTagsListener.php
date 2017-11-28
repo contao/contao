@@ -48,10 +48,13 @@ class InsertTagsListener
      * Replaces FAQ insert tags.
      *
      * @param string $tag
+     * @param bool   $useCache
+     * @param mixed  $cacheValue
+     * @param array  $flags
      *
      * @return string|false
      */
-    public function onReplaceInsertTags(string $tag)
+    public function onReplaceInsertTags(string $tag, bool $useCache = true, $cacheValue = null, array $flags = [])
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -67,7 +70,7 @@ class InsertTagsListener
 
         $faq = $adapter->findByIdOrAlias($elements[1]);
 
-        if (null === $faq || false === ($url = $this->generateUrl($faq))) {
+        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', $flags, true)))) {
             return '';
         }
 
@@ -78,10 +81,11 @@ class InsertTagsListener
      * Generates the URL for an FAQ.
      *
      * @param FaqModel $faq
+     * @param bool     $absolute
      *
      * @return string|false
      */
-    private function generateUrl(FaqModel $faq)
+    private function generateUrl(FaqModel $faq, bool $absolute)
     {
         /** @var PageModel $jumpTo */
         if (!($category = $faq->getRelated('pid')) instanceof FaqCategoryModel
@@ -92,8 +96,9 @@ class InsertTagsListener
 
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
+        $params = ($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id);
 
-        return $jumpTo->getFrontendUrl(($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id));
+        return $absolute ? $jumpTo->getAbsoluteUrl($params) : $jumpTo->getFrontendUrl($params);
     }
 
     /**

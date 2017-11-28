@@ -36,6 +36,11 @@ class InsertTagsListenerTest extends ContaoTestCase
             ->willReturn('faq/what-does-foobar-mean.html')
         ;
 
+        $page
+            ->method('getAbsoluteUrl')
+            ->willReturn('http://domain.tld/faq/what-does-foobar-mean.html')
+        ;
+
         $categoryModel = $this->createMock(FaqCategoryModel::class);
 
         $categoryModel
@@ -74,6 +79,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         $this->assertSame(
             'faq/what-does-foobar-mean.html',
             $listener->onReplaceInsertTags('faq_url::2')
+        );
+
+        $this->assertSame(
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            $listener->onReplaceInsertTags('faq_url::2', false, null, ['absolute'])
         );
 
         $this->assertSame(
