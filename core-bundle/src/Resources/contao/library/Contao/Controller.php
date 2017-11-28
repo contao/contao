@@ -507,9 +507,9 @@ abstract class Controller extends \System
 	/**
 	 * Generate a form and return it as string
 	 *
-	 * @param mixed   $varId      A form ID or a Model object
-	 * @param string  $strColumn  The column the form is in
-	 * @param boolean $blnModule  Render the form as module
+	 * @param mixed   $varId     A form ID or a Model object
+	 * @param string  $strColumn The column the form is in
+	 * @param boolean $blnModule Render the form as module
 	 *
 	 * @return string The form HTML markup
 	 */
@@ -1110,7 +1110,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$arrParams = [];
+		$arrParams = array();
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1856,7 +1856,7 @@ abstract class Controller extends \System
 	/**
 	 * Add a static URL to a script
 	 *
-	 * @param string             $script The script path
+	 * @param string             $script  The script path
 	 * @param ContaoContext|null $context
 	 *
 	 * @return string The script path with the static URL

@@ -399,6 +399,7 @@ abstract class Widget extends \Controller
 				{
 					return $this->getEmptyStringOrNull();
 				}
+
 				return $this->varValue;
 				break;
 
@@ -897,7 +898,7 @@ abstract class Widget extends \Controller
 			switch ($this->rgxp)
 			{
 				// Special validation rule for style sheets
-				case (strncmp($this->rgxp, 'digit_', 6) === 0):
+				case strncmp($this->rgxp, 'digit_', 6) === 0:
 					$textual = explode('_', $this->rgxp);
 					array_shift($textual);
 
@@ -1302,7 +1303,7 @@ abstract class Widget extends \Controller
 	 * @param mixed              $varValue The field value
 	 * @param string             $strField The field name in the database
 	 * @param string             $strTable The table name in the database
-     * @param DataContainer|null $objDca   An optional DataContainer object
+	 * @param DataContainer|null $objDca   An optional DataContainer object
 	 *
 	 * @return array An attributes array that can be passed to a widget
 	 */

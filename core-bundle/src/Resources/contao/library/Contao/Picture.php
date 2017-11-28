@@ -87,7 +87,7 @@ class Picture
 	 * Create a picture instance from the given image path and size
 	 *
 	 * @param string|File   $file The image path or File instance
-	 * @param array|integer $size  The image size as array (width, height, resize mode) or an tl_image_size ID
+	 * @param array|integer $size The image size as array (width, height, resize mode) or an tl_image_size ID
 	 *
 	 * @return static The created picture instance
 	 */

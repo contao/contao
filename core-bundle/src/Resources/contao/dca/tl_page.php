@@ -1049,7 +1049,7 @@ class tl_page extends Backend
 		{
 			$autoAlias = true;
 			$objPage = PageModel::findWithDetails($dc->activeRecord->id);
-			$slugOptions = ['locale' => $objPage->language];
+			$slugOptions = array('locale' => $objPage->language);
 
 			if ($objPage->validAliasCharacters)
 			{

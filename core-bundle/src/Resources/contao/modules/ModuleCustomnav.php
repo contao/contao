@@ -170,7 +170,7 @@ class ModuleCustomnav extends \Module
 					$row['href'] = $href;
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
-					$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objModel->description);
+					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -196,7 +196,7 @@ class ModuleCustomnav extends \Module
 					$row['href'] = $href;
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
-					$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objModel->description);
+					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)

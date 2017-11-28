@@ -96,7 +96,7 @@ class PageTree extends \Widget
 		if ($this->orderField != '')
 		{
 			$arrNew = array();
-			
+
 			if ($order = \Input::post($this->strOrderName))
 			{
 				$arrNew = explode(',', $order);
@@ -176,7 +176,7 @@ class PageTree extends \Widget
 
 		if (!empty($this->varValue)) // can be an array
 		{
-			$objPages = \PageModel::findMultipleByIds((array)$this->varValue);
+			$objPages = \PageModel::findMultipleByIds((array) $this->varValue);
 
 			if ($objPages !== null)
 			{

@@ -591,7 +591,7 @@ class tl_article extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$slugOptions = [];
+			$slugOptions = array();
 
 			// Read the slug options from the associated page
 			if (($objPage = PageModel::findWithDetails($dc->activeRecord->pid)) !== null)
@@ -884,7 +884,7 @@ class tl_article extends Backend
 				}
 
 				// Set the new alias
-				$slugOptions = [];
+				$slugOptions = array();
 
 				// Read the slug options from the associated page
 				if (($objPage = PageModel::findWithDetails($objArticle->pid)) !== null)

@@ -114,7 +114,7 @@ class FrontendTemplate extends \Template
 		// Add the meta keywords
 		if (\strlen($arrKeywords[0]))
 		{
-			$this->keywords = str_replace(array("\n", "\r", '"'), array(' ' , '', ''), implode(', ', array_unique($arrKeywords)));
+			$this->keywords = str_replace(array("\n", "\r", '"'), array(' ', '', ''), implode(', ', array_unique($arrKeywords)));
 		}
 
 		// Parse the template

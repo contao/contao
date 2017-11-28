@@ -8,8 +8,8 @@
  * @license LGPL-3.0+
  */
 
-$countries =
-[
+$countries = array
+(
 	'ad' => 'Andorra',
 	'ae' => 'United Arab Emirates',
 	'af' => 'Afghanistan',
@@ -265,4 +265,4 @@ $countries =
 	'za' => 'South Africa',
 	'zm' => 'Zambia',
 	'zw' => 'Zimbabwe',
-];
+);

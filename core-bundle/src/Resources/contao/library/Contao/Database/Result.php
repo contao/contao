@@ -85,8 +85,8 @@ class Result
 	 *
 	 * @param DoctrineStatement $statement The database statement
 	 * @param string            $strQuery  The query string
-     *
-     * @todo Try to find a solution that works without fetchAll().
+	 *
+	 * @todo Try to find a solution that works without fetchAll().
 	 */
 	public function __construct(DoctrineStatement $statement, $strQuery)
 	{

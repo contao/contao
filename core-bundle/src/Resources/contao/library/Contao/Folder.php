@@ -125,6 +125,7 @@ class Folder extends \System
 				{
 					$this->arrPathinfo = $this->getPathinfo();
 				}
+
 				return $this->arrPathinfo['basename'];
 				break;
 
@@ -134,6 +135,7 @@ class Folder extends \System
 				{
 					$this->arrPathinfo = $this->getPathinfo();
 				}
+
 				return $this->arrPathinfo[$strKey];
 				break;
 
@@ -172,7 +174,7 @@ class Folder extends \System
 	 */
 	public function isEmpty()
 	{
-		return (\count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1);
+		return \count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1;
 	}
 
 

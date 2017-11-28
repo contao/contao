@@ -368,7 +368,7 @@ function basename_natcasecmp($a, $b)
  */
 function basename_natcasercmp($a, $b)
 {
-	return - strnatcasecmp(basename($a), basename($b));
+	return -strnatcasecmp(basename($a), basename($b));
 }
 
 
@@ -565,7 +565,7 @@ function array_delete($arrStack, $intIndex)
  */
 function array_is_assoc($arrArray)
 {
-	return (\is_array($arrArray) && array_keys($arrArray) !== range(0, (sizeof($arrArray) - 1)));
+	return \is_array($arrArray) && array_keys($arrArray) !== range(0, (sizeof($arrArray) - 1));
 }
 
 

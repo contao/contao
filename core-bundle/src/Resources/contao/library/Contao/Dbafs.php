@@ -345,7 +345,7 @@ class Dbafs
 			{
 				while ($objFiles->next())
 				{
-					/**@var FilesModel $objNew */
+					/** @var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
 					$objNew->pid    = $objNewFile->uuid;

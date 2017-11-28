@@ -243,7 +243,7 @@ class Request
 	 */
 	public function hasError()
 	{
-		return ($this->strError != '');
+		return $this->strError != '';
 	}
 
 
@@ -286,6 +286,7 @@ class Request
 
 			default:
 				$this->strError = 'Invalid schema ' . $uri['scheme'];
+
 				return;
 				break;
 		}

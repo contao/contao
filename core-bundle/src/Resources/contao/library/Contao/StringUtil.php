@@ -679,10 +679,10 @@ class StringUtil
 		};
 
 		// The last item is true if it is inside a matching if-tag
-		$arrStack = [true];
+		$arrStack = array(true);
 
 		// The last item is true if any if/elseif at that level was true
-		$arrIfStack = [true];
+		$arrIfStack = array(true);
 
 		// Tokenize the string into tag and text blocks
 		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
@@ -1086,8 +1086,8 @@ class StringUtil
 	/**
 	 * Split a string into fragments, remove whitespace and return fragments as array
 	 *
-	 * @param string  $strPattern The split pattern
-	 * @param string  $strString  The input string
+	 * @param string $strPattern The split pattern
+	 * @param string $strString  The input string
 	 *
 	 * @return array The fragments array
 	 */

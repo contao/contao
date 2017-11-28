@@ -819,12 +819,12 @@ class Image
 	/**
 	 * Resize an image and store the resized version in the image target folder
 	 *
-	 * @param string  $image        The image path
-	 * @param integer $width        The target width
-	 * @param integer $height       The target height
-	 * @param string  $mode         The resize mode
-	 * @param string  $target       An optional target path
-	 * @param boolean $force        Override existing target images
+	 * @param string  $image  The image path
+	 * @param integer $width  The target width
+	 * @param integer $height The target height
+	 * @param string  $mode   The resize mode
+	 * @param string  $target An optional target path
+	 * @param boolean $force  Override existing target images
 	 *
 	 * @return string|null The path of the resized image or null
 	 *

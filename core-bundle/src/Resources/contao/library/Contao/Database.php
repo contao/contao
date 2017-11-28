@@ -667,7 +667,7 @@ class Database
 		$statement = $this->resConnection->executeQuery('SHOW TABLE STATUS LIKE ' . $this->resConnection->quote($strTable));
 		$status = $statement->fetch(\PDO::FETCH_ASSOC);
 
-		return ($status['Data_length'] + $status['Index_length']);
+		return $status['Data_length'] + $status['Index_length'];
 	}
 
 

@@ -47,7 +47,7 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<var><video>'
 	. '<wbr>';
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
-$GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = [];
+$GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 
 // Database
 $GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8';
@@ -92,7 +92,7 @@ $GLOBALS['TL_CONFIG']['maxResultsPerPage']    = 500;
 $GLOBALS['TL_CONFIG']['maxImageWidth']        = 0;
 $GLOBALS['TL_CONFIG']['defaultUser']          = 0;
 $GLOBALS['TL_CONFIG']['defaultGroup']         = 0;
-$GLOBALS['TL_CONFIG']['defaultChmod']         = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'g4', 'g5', 'g6'];
+$GLOBALS['TL_CONFIG']['defaultChmod']         = array('u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'g4', 'g5', 'g6');
 $GLOBALS['TL_CONFIG']['editableFiles']        = 'htm,html,css,scss,less,js,txt,log,xml,svg,svgz';
 $GLOBALS['TL_CONFIG']['templateFiles']        = 'tpl,html5,xhtml';
 $GLOBALS['TL_CONFIG']['allowedDownload']
@@ -105,7 +105,7 @@ $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
 $GLOBALS['TL_CONFIG']['fullscreen']           = false;
 $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
-$GLOBALS['TL_CONFIG']['rootFiles']            = [];
+$GLOBALS['TL_CONFIG']['rootFiles']            = array();
 $GLOBALS['TL_CONFIG']['fileSyncExclude']      = '';
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
 $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';

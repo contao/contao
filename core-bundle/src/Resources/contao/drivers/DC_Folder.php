@@ -359,7 +359,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 									}
 
 									$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-									continue(2);
+									continue 2;
 								}
 							}
 						}
@@ -2372,24 +2372,24 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			// Add a message depending on the type
 			switch ($type)
 			{
-				case 'Added';
+				case 'Added':
 					$arrMessages[] = '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncAdded'], \StringUtil::specialchars($file)) . '</p>';
 					break;
 
-				case 'Changed';
+				case 'Changed':
 					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncChanged'], \StringUtil::specialchars($file)) . '</p>';
 					break;
 
-				case 'Unchanged';
+				case 'Unchanged':
 					$arrMessages[] = '<p class="tl_confirm hidden">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncUnchanged'], \StringUtil::specialchars($file)) . '</p>';
 					break;
 
-				case 'Moved';
+				case 'Moved':
 					list($source, $target) = explode(' to ', $file, 2);
 					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncMoved'], \StringUtil::specialchars($source), \StringUtil::specialchars($target)) . '</p>';
 					break;
 
-				case 'Deleted';
+				case 'Deleted':
 					$arrMessages[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncDeleted'], \StringUtil::specialchars($file)) . '</p>';
 					break;
 			}

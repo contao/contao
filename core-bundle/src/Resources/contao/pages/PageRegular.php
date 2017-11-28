@@ -220,7 +220,7 @@ class PageRegular extends \Frontend
 
 		// Assign the title and description
 		$this->Template->title = \StringUtil::stripInsertTags($this->replaceInsertTags($objLayout->titleTag)); // see #7097
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ' , '', ''), $objPage->description);
+		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);

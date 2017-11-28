@@ -296,7 +296,7 @@ class BackendUser extends \User
 			$permission[] = 'u'.$int;
 		}
 
-		return (\count(array_intersect($permission, $chmod)) > 0);
+		return \count(array_intersect($permission, $chmod)) > 0;
 	}
 
 
@@ -314,7 +314,7 @@ class BackendUser extends \User
 			return true;
 		}
 
-		return (\count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0);
+		return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0;
 	}
 
 

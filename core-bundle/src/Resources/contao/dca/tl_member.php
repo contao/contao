@@ -549,7 +549,7 @@ class tl_member extends Backend
 	/**
 	 * Call the "setNewPassword" callback
 	 *
-	 * @param string $strPassword
+	 * @param string                    $strPassword
 	 * @param DataContainer|MemberModel $user
 	 *
 	 * @return string

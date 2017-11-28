@@ -360,7 +360,7 @@ abstract class Module extends \Frontend
 						// Hide the link if the target page is invisible
 						if (!$objNext instanceof PageModel || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
 						{
-							continue(2);
+							continue 2;
 						}
 
 						$href = $objNext->getFrontendUrl();
@@ -407,7 +407,7 @@ abstract class Module extends \Frontend
 				$row['href'] = $href;
 				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);
 				$row['target'] = '';
-				$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objSubpage->description);
+				$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
 				// Override the link target
 				if ($objSubpage->type == 'redirect' && $objSubpage->target)

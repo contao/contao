@@ -577,10 +577,10 @@ abstract class DataContainer extends \Backend
 		{
 			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
 
-			$fileBrowserTypes = [];
+			$fileBrowserTypes = array();
 			$pickerBuilder = \System::getContainer()->get('contao.picker.builder');
 
-			foreach (['file' => 'image', 'link' => 'file'] as $context => $fileBrowserType)
+			foreach (array('file' => 'image', 'link' => 'file') as $context => $fileBrowserType)
 			{
 				if ($pickerBuilder->supportsContext($context))
 				{

@@ -28,7 +28,7 @@ class RebuildIndex extends \Backend implements \executable
 	 */
 	public function isActive()
 	{
-		return (\Config::get('enableSearch') && \Input::get('act') == 'index');
+		return \Config::get('enableSearch') && \Input::get('act') == 'index';
 	}
 
 

@@ -408,7 +408,7 @@ class PageModel extends \Model
 	/**
 	 * Find the first published regular page by its parent ID
 	 *
-	 * @param integer $intPid The parent page's ID
+	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return PageModel|null The model or null if there is no published regular page

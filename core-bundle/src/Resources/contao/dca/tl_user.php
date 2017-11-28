@@ -563,7 +563,7 @@ class tl_user extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
-		$image = $row['admin'] ? 'admin' :  'user';
+		$image = $row['admin'] ? 'admin' : 'user';
 		$time = \Date::floorToMinute();
 
 		$disabled = $row['start'] !== '' && $row['start'] > $time || $row['stop'] !== '' && $row['stop'] < $time;

@@ -301,7 +301,7 @@ abstract class Backend extends \Controller
 		{
 			if (isset($arrGroup[$module]))
 			{
-				$arrModule =& $arrGroup[$module];
+				$arrModule = &$arrGroup[$module];
 				break;
 			}
 		}

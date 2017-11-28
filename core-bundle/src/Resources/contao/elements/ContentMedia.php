@@ -51,7 +51,7 @@ class ContentMedia extends \ContentElement
 			return '';
 		}
 
-		$objFiles = \FilesModel::findMultipleByUuidsAndExtensions($source, array('mp4','m4v','mov','wmv','webm','ogv','m4a','mp3','wma','mpeg','wav','ogg'));
+		$objFiles = \FilesModel::findMultipleByUuidsAndExtensions($source, array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv', 'm4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'));
 
 		if ($objFiles === null)
 		{
@@ -103,7 +103,7 @@ class ContentMedia extends \ContentElement
 		$objFirst = $objFiles->current();
 
 		// Pre-sort the array by preference
-		if (\in_array($objFirst->extension , array('mp4','m4v','mov','wmv','webm','ogv')))
+		if (\in_array($objFirst->extension , array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv')))
 		{
 			$this->Template->isVideo = true;
 			$arrFiles = array('mp4'=>null, 'm4v'=>null, 'mov'=>null, 'wmv'=>null, 'webm'=>null, 'ogv'=>null);

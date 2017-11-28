@@ -182,6 +182,7 @@ class File extends \System
 				{
 					$this->arrPathinfo = $this->getPathinfo();
 				}
+
 				return $this->arrPathinfo['basename'];
 				break;
 
@@ -191,6 +192,7 @@ class File extends \System
 				{
 					$this->arrPathinfo = $this->getPathinfo();
 				}
+
 				return $this->arrPathinfo[$strKey];
 
 			case 'extension':
@@ -198,6 +200,7 @@ class File extends \System
 				{
 					$this->arrPathinfo = $this->getPathinfo();
 				}
+
 				return strtolower($this->arrPathinfo['extension']);
 				break;
 
@@ -206,6 +209,7 @@ class File extends \System
 				{
 					$this->arrPathinfo = $this->getPathinfo();
 				}
+
 				return $this->arrPathinfo['extension'];
 				break;
 
@@ -301,6 +305,7 @@ class File extends \System
 						static::$arrImageSizeCache[$strCacheKey] = $this->arrImageSize;
 					}
 				}
+
 				return $this->arrImageSize;
 				break;
 
@@ -351,6 +356,7 @@ class File extends \System
 						}
 					}
 				}
+
 				return $this->arrImageViewSize;
 				break;
 
@@ -383,11 +389,11 @@ class File extends \System
 				break;
 
 			case 'isRgbImage':
-				return ($this->channels == 3);
+				return $this->channels == 3;
 				break;
 
 			case 'isCmykImage':
-				return ($this->channels == 4);
+				return $this->channels == 4;
 				break;
 
 			case 'handle':
@@ -395,6 +401,7 @@ class File extends \System
 				{
 					$this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
 				}
+
 				return $this->resFile;
 				break;
 

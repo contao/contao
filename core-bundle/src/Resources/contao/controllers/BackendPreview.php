@@ -84,7 +84,7 @@ class BackendPreview extends \Backend
 
 		if ($strUrl === null)
 		{
-			$strUrl = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = \System::getContainer()->get('router')->generate('contao_root', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$objTemplate->url = $strUrl;

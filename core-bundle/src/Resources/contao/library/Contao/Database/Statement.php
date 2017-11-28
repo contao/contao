@@ -264,8 +264,8 @@ class Statement
 	 * @param string $strQuery The query string
 	 *
 	 * @return Result|Statement The result object or the statement object if there is no result set
-     *
-     * @throws \Exception If the query string is empty
+	 *
+	 * @throws \Exception If the query string is empty
 	 */
 	public function query($strQuery='')
 	{
