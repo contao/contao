@@ -169,6 +169,7 @@ services:
         class: Contao\Image\PictureGenerator
         arguments:
             - "@contao.image.resizer"
+            - "@contao.image.resize_calculator"
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory

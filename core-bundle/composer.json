@@ -15,7 +15,7 @@
         "ext-gd": "*",
         "ext-pcre": "*",
         "ausi/slug-generator": "^1.0",
-        "contao/image": "^0.3.1",
+        "contao/image": "^0.3.5",
         "contao/imagine-svg": "^0.1.2",
         "doctrine/dbal": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",

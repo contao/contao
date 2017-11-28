@@ -788,6 +788,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PictureGenerator::class, $definition->getClass());
         $this->assertSame('contao.image.resizer', (string) $definition->getArgument(0));
+        $this->assertSame('contao.image.resize_calculator', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheImagePictureFactory(): void
