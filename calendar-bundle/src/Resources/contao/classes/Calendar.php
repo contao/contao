@@ -220,7 +220,7 @@ class Calendar extends \Frontend
 				{
 					if ($arrFeed['maxItems'] > 0 && $count++ >= $arrFeed['maxItems'])
 					{
-						break(3);
+						break 3;
 					}
 
 					$objItem = new \FeedItem();

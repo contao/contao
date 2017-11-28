@@ -676,7 +676,7 @@ class tl_calendar_events extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$slugOptions = [];
+			$slugOptions = array();
 
 			// Read the slug options from the associated page
 			if (($objCalendar = CalendarModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objCalendar->jumpTo)) !== null)
@@ -1020,8 +1020,8 @@ class tl_calendar_events extends Backend
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer        $intId
-	 * @param boolean        $blnVisible
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
