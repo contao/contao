@@ -47,8 +47,8 @@ use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
+use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
-use Contao\CoreBundle\Fragment\FragmentRenderer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\HttpKernel\ControllerResolver;
@@ -651,6 +651,22 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(1));
     }
 
+    public function testRegistersTheFragmentHandler(): void
+    {
+        $this->assertTrue($this->container->has('contao.fragment.handler'));
+
+        $definition = $this->container->getDefinition('contao.fragment.handler');
+
+        $this->assertSame(FragmentHandler::class, $definition->getClass());
+        $this->assertSame('fragment.handler', $definition->getDecoratedService()[0]);
+        $this->assertNull($definition->getArgument(0));
+        $this->assertSame('contao.fragment.handler.inner', (string) $definition->getArgument(1));
+        $this->assertSame('request_stack', (string) $definition->getArgument(2));
+        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(3));
+        $this->assertSame('contao.fragment.pre_handlers', (string) $definition->getArgument(4));
+        $this->assertSame('%kernel.debug%', $definition->getArgument(5));
+    }
+
     public function testRegistersTheFragmentRegistry(): void
     {
         $this->assertTrue($this->container->has('contao.fragment.registry'));
@@ -658,18 +674,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.fragment.registry');
 
         $this->assertSame(FragmentRegistry::class, $definition->getClass());
-    }
-
-    public function testRegistersTheFragmentRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.fragment.renderer'));
-
-        $definition = $this->container->getDefinition('contao.fragment.renderer');
-
-        $this->assertSame(FragmentRenderer::class, $definition->getClass());
-        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(0));
-        $this->assertSame('fragment.handler', (string) $definition->getArgument(1));
-        $this->assertSame('contao.fragment.pre_handlers', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheFragmentPreHandlers(): void

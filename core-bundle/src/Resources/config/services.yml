@@ -93,6 +93,17 @@ services:
             - "@contao.framework"
             - "@doctrine"
 
+    contao.fragment.handler:
+        class: Contao\CoreBundle\Fragment\FragmentHandler
+        decorates: fragment.handler
+        arguments:
+            - ~ # fragment renderer locator
+            - "@contao.fragment.handler.inner"
+            - "@request_stack"
+            - "@contao.fragment.registry"
+            - "@contao.fragment.pre_handlers"
+            - "%kernel.debug%"
+
     contao.fragment.pre_handlers:
         class: Symfony\Component\DependencyInjection\ServiceLocator
         arguments: [[]]
@@ -100,13 +111,6 @@ services:
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
-
-    contao.fragment.renderer:
-        class: Contao\CoreBundle\Fragment\FragmentRenderer
-        arguments:
-            - "@contao.fragment.registry"
-            - "@fragment.handler"
-            - "@contao.fragment.pre_handlers"
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework

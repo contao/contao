@@ -29,21 +29,24 @@ class ModelArgumentResolverTest extends TestCase
     }
 
     /**
+     * @param string $name
+     * @param string $class
+     *
      * @dataProvider getArguments
      */
-    public function testResolvesTheModel(): void
+    public function testResolvesTheModel(string $name, string $class): void
     {
         $pageModel = new PageModel();
         $pageModel->setRow(['id' => 42]);
 
         $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->mockContaoFramework([$class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
+        $metadata = new ArgumentMetadata($name, $class, false, false, '');
 
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
         $generator = $resolver->resolve($request, $metadata);

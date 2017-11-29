@@ -25,6 +25,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
 {
@@ -64,6 +65,7 @@ class ContaoCoreBundleTest extends TestCase
             DoctrineMigrationsPass::class,
             PickerProviderPass::class,
             RegisterFragmentsPass::class,
+            FragmentRendererPass::class,
             MapFragmentsToGlobalsPass::class,
             RegisterHookListenersPass::class,
         ];
