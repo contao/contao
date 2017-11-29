@@ -185,6 +185,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'headline' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['headline'],
+			'default'                 => array('value'=>'', 'unit'=>'h2'),
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'inputUnit',

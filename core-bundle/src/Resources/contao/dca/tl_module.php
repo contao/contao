@@ -170,6 +170,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'headline' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['headline'],
+			'default'                 => array('value'=>'', 'unit'=>'h2'),
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
