@@ -27,7 +27,12 @@
   <?php endif; ?>
 
   <?php if ($this->location): ?>
-    <p class="location"><?= $this->locationLabel ?>: <?= $this->location ?></p>
+    <p class="location" itemprop="location" itemscope itemtype="http://schema.org/Place">
+      <?= $this->locationLabel ?>: <span itemprop="name"><?= $this->location ?></span>
+      <?php if ($this->address): ?>
+        (<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?= $this->address ?></span>)
+      <?php endif; ?>
+    </p>
   <?php endif; ?>
 
   <?php if ($this->enclosure): ?>
