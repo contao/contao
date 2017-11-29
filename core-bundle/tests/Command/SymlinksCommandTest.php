@@ -49,6 +49,9 @@ class SymlinksCommandTest extends TestCase
 
     public function testSymlinksTheContaoFolders(): void
     {
+        $fs = new Filesystem();
+        $fs->mkdir($this->getFixturesDir().'/system/themes/default');
+
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
         $container = $this->mockContainer($this->getFixturesDir());
@@ -62,22 +65,25 @@ class SymlinksCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertSame(0, $code);
-        $this->assertContains('web/system/modules/foobar/assets', $display);
-        $this->assertContains('system/modules/foobar/assets', $display);
-        $this->assertContains('web/system/modules/foobar/html', $display);
-        $this->assertContains('system/modules/foobar/html', $display);
-        $this->assertContains('web/system/modules/foobar/html/foo', $display);
-        $this->assertContains('Skipped because system/modules/foobar/html will be symlinked.', $display);
-        $this->assertContains('system/themes/flexible', $display);
-        $this->assertContains('vendor/contao/test-bundle/Resources/contao/themes/flexible', $display);
-        $this->assertContains('web/assets', $display);
-        $this->assertContains('assets', $display);
-        $this->assertContains('web/system/themes', $display);
-        $this->assertContains('system/themes', $display);
-        $this->assertContains('system/logs', $display);
-        $this->assertContains('var/logs', $display);
-        $this->assertContains('system/config/tcpdf.php ', $display);
+        $this->assertSame(1, $code);
+        $this->assertContains(' web/system/modules/foobar/html/foo/bar ', $display);
+        $this->assertContains(' Skipped because system/modules/foobar/html will be symlinked. ', $display);
+        $this->assertContains(' web/system/modules/foobar/assets ', $display);
+        $this->assertContains(' system/modules/foobar/assets ', $display);
+        $this->assertContains(' web/system/modules/foobar/html ', $display);
+        $this->assertContains(' system/modules/foobar/html ', $display);
+        $this->assertContains(' system/themes/default ', $display);
+        $this->assertContains(' The path "system/themes/default" exists and is not a symlink. ', $display);
+        $this->assertContains(' system/themes/flexible ', $display);
+        $this->assertContains(' vendor/contao/test-bundle/Resources/contao/themes/flexible ', $display);
+        $this->assertContains(' web/assets ', $display);
+        $this->assertContains(' assets ', $display);
+        $this->assertContains(' web/system/themes ', $display);
+        $this->assertContains(' system/themes ', $display);
+        $this->assertContains(' system/logs ', $display);
+        $this->assertContains(' var/logs ', $display);
+        $this->assertContains(' system/config/tcpdf.php ', $display);
+        $this->assertContains(' vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php ', $display);
     }
 
     public function testIsLockedWhileRunning(): void
