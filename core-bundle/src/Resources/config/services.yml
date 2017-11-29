@@ -8,14 +8,6 @@ services:
             calls:
                 - ["setContainer", ["@service_container"]]
 
-    contao.argument_resolver.model:
-        class: Contao\CoreBundle\ArgumentResolver\ModelResolver
-        arguments:
-            - "@contao.framework"
-        tags:
-            # The priority must be higher than the one of the request attribute value resolver (defaults to 100)
-            - { name: controller.argument_value_resolver, priority: 101 }
-
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
@@ -199,6 +191,15 @@ services:
         class: Knp\Menu\Renderer\ListRenderer
         arguments:
             - "@contao.menu.matcher"
+
+    contao.model_argument_resolver:
+        class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
+        arguments:
+            - "@contao.framework"
+            - "@contao.routing.scope_matcher"
+        tags:
+            # The priority must be higher than the one of the request attribute value resolver (defaults to 100)
+            - { name: controller.argument_value_resolver, priority: 101 }
 
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler

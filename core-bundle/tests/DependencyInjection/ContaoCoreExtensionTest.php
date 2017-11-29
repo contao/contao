@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
-use Contao\CoreBundle\ArgumentResolver\ModelResolver;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
@@ -53,6 +52,7 @@ use Contao\CoreBundle\Fragment\FragmentRenderer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\HttpKernel\ControllerResolver;
+use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
@@ -493,21 +493,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
     }
 
-    public function testRegistersTheArgumentResolverModel(): void
-    {
-        $this->assertTrue($this->container->has('contao.argument_resolver.model'));
-
-        $definition = $this->container->getDefinition('contao.argument_resolver.model');
-
-        $this->assertSame(ModelResolver::class, $definition->getClass());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('controller.argument_value_resolver', $tags);
-        $this->assertSame(101, $tags['controller.argument_value_resolver'][0]['priority']);
-    }
-
     public function testRegistersTheAssetPluginContext(): void
     {
         $this->assertTrue($this->container->has('contao.assets.assets_context'));
@@ -848,6 +833,22 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ListRenderer::class, $definition->getClass());
         $this->assertSame('contao.menu.matcher', (string) $definition->getArgument(0));
+    }
+
+    public function testRegistersTheModelArgumentResolver(): void
+    {
+        $this->assertTrue($this->container->has('contao.model_argument_resolver'));
+
+        $definition = $this->container->getDefinition('contao.model_argument_resolver');
+
+        $this->assertSame(ModelArgumentResolver::class, $definition->getClass());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('controller.argument_value_resolver', $tags);
+        $this->assertSame(101, $tags['controller.argument_value_resolver'][0]['priority']);
     }
 
     public function testRegistersTheMonologHandler(): void

@@ -24,8 +24,8 @@ class FragmentReference extends ControllerReference
     {
         parent::__construct($fragment, $attributes, $query);
 
-        if (!isset($this->attributes['scope'])) {
-            $this->attributes['scope'] = ContaoCoreBundle::SCOPE_FRONTEND;
+        if (!isset($this->attributes['_scope'])) {
+            $this->attributes['_scope'] = ContaoCoreBundle::SCOPE_FRONTEND;
         }
     }
 
@@ -34,7 +34,7 @@ class FragmentReference extends ControllerReference
      */
     public function setFrontendScope(): void
     {
-        $this->attributes['scope'] = ContaoCoreBundle::SCOPE_FRONTEND;
+        $this->attributes['_scope'] = ContaoCoreBundle::SCOPE_FRONTEND;
     }
 
     /**
@@ -44,7 +44,7 @@ class FragmentReference extends ControllerReference
      */
     public function isFrontendScope(): bool
     {
-        return ContaoCoreBundle::SCOPE_FRONTEND === $this->attributes['scope'];
+        return ContaoCoreBundle::SCOPE_FRONTEND === $this->attributes['_scope'];
     }
 
     /**
@@ -52,7 +52,7 @@ class FragmentReference extends ControllerReference
      */
     public function setBackendScope(): void
     {
-        $this->attributes['scope'] = ContaoCoreBundle::SCOPE_BACKEND;
+        $this->attributes['_scope'] = ContaoCoreBundle::SCOPE_BACKEND;
     }
 
     /**
@@ -62,6 +62,6 @@ class FragmentReference extends ControllerReference
      */
     public function isBackendScope(): bool
     {
-        return ContaoCoreBundle::SCOPE_BACKEND === $this->attributes['scope'];
+        return ContaoCoreBundle::SCOPE_BACKEND === $this->attributes['_scope'];
     }
 }

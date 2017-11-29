@@ -30,14 +30,14 @@ class FragmentReferenceTest extends TestCase
     {
         $reference = new FragmentReference('');
 
-        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $reference->attributes['scope']);
+        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $reference->attributes['_scope']);
     }
 
     public function testDoesNotOverrideAGivenScope(): void
     {
-        $reference = new FragmentReference('', ['scope' => 'foobar']);
+        $reference = new FragmentReference('', ['_scope' => 'foobar']);
 
-        $this->assertSame('foobar', $reference->attributes['scope']);
+        $this->assertSame('foobar', $reference->attributes['_scope']);
     }
 
     public function testReadsAndWritesScopes(): void
@@ -45,18 +45,18 @@ class FragmentReferenceTest extends TestCase
         $reference = new FragmentReference('');
 
         $this->assertTrue($reference->isFrontendScope());
-        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $reference->attributes['scope']);
+        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $reference->attributes['_scope']);
 
         $reference->setBackendScope();
 
         $this->assertTrue($reference->isBackendScope());
         $this->assertFalse($reference->isFrontendScope());
-        $this->assertSame(ContaoCoreBundle::SCOPE_BACKEND, $reference->attributes['scope']);
+        $this->assertSame(ContaoCoreBundle::SCOPE_BACKEND, $reference->attributes['_scope']);
 
         $reference->setFrontendScope();
 
         $this->assertTrue($reference->isFrontendScope());
         $this->assertFalse($reference->isBackendScope());
-        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $reference->attributes['scope']);
+        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $reference->attributes['_scope']);
     }
 }
