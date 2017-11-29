@@ -274,7 +274,7 @@ abstract class ModuleNews extends \Module
 					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span itemprop="author">' . $objAuthor->name . '</span>';
 					}
 					break;
 
@@ -328,7 +328,7 @@ abstract class ModuleNews extends \Module
 		// Internal link
 		if ($objArticle->source != 'external')
 		{
-			return sprintf('<a href="%s" title="%s" itemprop="url">%s%s</a>',
+			return sprintf('<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
 							\News::generateNewsUrl($objArticle, $blnAddArchive),
 							\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 							$strLink,
@@ -348,7 +348,7 @@ abstract class ModuleNews extends \Module
 		}
 
 		// External link
-		return sprintf('<a href="%s" title="%s"%s itemprop="url">%s</a>',
+		return sprintf('<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
 						$strArticleUrl,
 						\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
 						($objArticle->target ? ' target="_blank"' : ''),
