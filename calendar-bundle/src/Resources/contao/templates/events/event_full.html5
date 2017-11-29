@@ -8,6 +8,15 @@
     <p class="recurring"><?= $this->recurring ?><?php if ($this->until) echo ' ' . $this->until; ?>.</p>
   <?php endif; ?>
 
+  <?php if ($this->location): ?>
+    <p class="location" itemprop="location" itemscope itemtype="http://schema.org/Place">
+      <span itemprop="name"><?= $this->location ?></span>
+      <?php if ($this->address): ?>
+        (<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?= $this->address ?></span>)
+      <?php endif; ?>
+    </p>
+  <?php endif; ?>
+
   <?php if ($this->hasDetails): ?>
     <?= $this->details ?>
   <?php else: ?>
@@ -24,15 +33,6 @@
         <?= $this->teaser ?>
       <?php endif; ?>
     </div>
-  <?php endif; ?>
-
-  <?php if ($this->location): ?>
-    <p class="location" itemprop="location" itemscope itemtype="http://schema.org/Place">
-      <?= $this->locationLabel ?>: <span itemprop="name"><?= $this->location ?></span>
-      <?php if ($this->address): ?>
-        (<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?= $this->address ?></span>)
-      <?php endif; ?>
-    </p>
   <?php endif; ?>
 
   <?php if ($this->enclosure): ?>

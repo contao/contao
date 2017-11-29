@@ -15,6 +15,15 @@
 
   <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time): ?>, <?= $this->time ?><?php endif; ?></time></p>
 
+  <?php if ($this->location): ?>
+    <p class="location" itemprop="location" itemscope itemtype="http://schema.org/Place">
+      <span itemprop="name"><?= $this->location ?></span>
+      <?php if ($this->address): ?>
+        (<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?= $this->address ?></span>)
+      <?php endif; ?>
+    </p>
+  <?php endif; ?>
+
   <div class="ce_text block" itemprop="description">
     <?php if (!$this->addBefore): ?>
       <?= $this->teaser ?>
