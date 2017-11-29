@@ -60,7 +60,7 @@
         <source>Location address</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.1">
-        <source>Here you can enter the postal address of the event location.</source>
+        <source>Here you can enter the address of the event location.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
