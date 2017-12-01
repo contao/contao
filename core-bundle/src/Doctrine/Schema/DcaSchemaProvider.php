@@ -155,6 +155,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $collation = null;
 
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
@@ -163,6 +164,10 @@ class DcaSchemaProvider
 
         if (preg_match('/default (\'[^\']*\'|\d+)/i', $def, $match)) {
             $default = trim($match[1], "'");
+        }
+
+        if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+            $collation = $match[1];
         }
 
         $options = [
@@ -180,6 +185,10 @@ class DcaSchemaProvider
         if (null !== $scale && null !== $precision) {
             $options['scale'] = $scale;
             $options['precision'] = $precision;
+        }
+
+        if (null !== $collation) {
+            $options['platformOptions'] = ['collation' => $collation];
         }
 
         $table->addColumn($columnName, $type, $options);
