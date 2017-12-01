@@ -49,7 +49,7 @@ doctrine:
                 default_table_options:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
-                    engine: MyISAM
+                    engine: InnoDB
         types:
             binary_string:
                 class: "Contao\\CoreBundle\\Doctrine\\DBAL\\Types\\BinaryStringType"
