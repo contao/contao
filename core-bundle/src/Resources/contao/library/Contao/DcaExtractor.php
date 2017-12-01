@@ -522,7 +522,7 @@ class DcaExtractor extends \Controller
 		// Add the default engine and charset if none is given
 		if (empty($sql['engine']))
 		{
-			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'MyISAM';
+			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
 		}
 		if (empty($sql['charset']))
 		{

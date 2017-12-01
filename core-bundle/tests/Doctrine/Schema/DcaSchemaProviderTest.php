@@ -207,8 +207,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testReadsTheTableOptions(): void
     {
+        $options = 'ENGINE=InnoDB ROW_FORMAT=DYNAMIC';
+
         $provider = $this->getProvider(
-            ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci']]
+            [
+                'tl_member' => [
+                    'TABLE_OPTIONS' => $options.' DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                ],
+            ]
         );
 
         $schema = $provider->createSchema();
@@ -216,13 +222,20 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertSame('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertSame('utf8', $schema->getTable('tl_member')->getOption('charset'));
-        $this->assertSame('utf8_unicode_ci', $schema->getTable('tl_member')->getOption('collate'));
+        $table = $schema->getTable('tl_member');
+
+        $this->assertSame('InnoDB', $table->getOption('engine'));
+        $this->assertSame('utf8', $table->getOption('charset'));
+        $this->assertSame('utf8_unicode_ci', $table->getOption('collate'));
+        $this->assertSame('DYNAMIC', $table->getOption('row_format'));
 
         $provider = $this->getProvider(
             [],
-            ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci']]
+            [
+                'tl_member' => [
+                    'TABLE_OPTIONS' => $options.' DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                ],
+            ]
         );
 
         $schema = $provider->createSchema();
@@ -230,18 +243,32 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertSame('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertSame('utf8mb4', $schema->getTable('tl_member')->getOption('charset'));
-        $this->assertSame('utf8mb4_unicode_ci', $schema->getTable('tl_member')->getOption('collate'));
+        $table = $schema->getTable('tl_member');
 
-        $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=Latin1']]);
+        $this->assertSame('InnoDB', $table->getOption('engine'));
+        $this->assertSame('utf8mb4', $table->getOption('charset'));
+        $this->assertSame('utf8mb4_unicode_ci', $table->getOption('collate'));
+        $this->assertSame('DYNAMIC', $table->getOption('row_format'));
+
+        $provider = $this->getProvider(
+            [
+                'tl_member' => [
+                    'TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_general_ci',
+                ],
+            ]
+        );
+
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
-        $this->assertSame('InnoDB', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertSame('Latin1', $schema->getTable('tl_member')->getOption('charset'));
+        $table = $schema->getTable('tl_member');
+
+        $this->assertSame('MyISAM', $table->getOption('engine'));
+        $this->assertSame('latin1', $table->getOption('charset'));
+        $this->assertSame('latin1_general_ci', $table->getOption('collate'));
+        $this->assertFalse($table->hasOption('row_format'));
     }
 
     public function testCreatesTheTableDefinitions(): void
