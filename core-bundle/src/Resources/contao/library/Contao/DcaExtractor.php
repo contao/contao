@@ -372,6 +372,10 @@ class DcaExtractor extends \Controller
 			{
 				$return['TABLE_OPTIONS'] .= ' DEFAULT CHARSET=' . $v;
 			}
+			elseif ($k == 'collate')
+			{
+				$return['TABLE_OPTIONS'] .= ' COLLATE ' . $v;
+			}
 		}
 
 		return $return;
@@ -513,21 +517,28 @@ class DcaExtractor extends \Controller
 			return;
 		}
 
+		$params = \System::getContainer()->get('doctrine.dbal.default_connection')->getParams();
+
 		// Add the default engine and charset if none is given
 		if (empty($sql['engine']))
 		{
-			$sql['engine'] = 'MyISAM';
+			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'MyISAM';
 		}
 		if (empty($sql['charset']))
 		{
-			$sql['charset'] = \Config::get('dbCharset');
+			$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
+		}
+		if (empty($sql['collate']))
+		{
+			$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';
 		}
 
 		// Meta
 		$this->arrMeta = array
 		(
-			'engine'  => $sql['engine'],
-			'charset' => $sql['charset']
+			'engine' => $sql['engine'],
+			'charset' => $sql['charset'],
+			'collate' => $sql['collate']
 		);
 
 		// Fields

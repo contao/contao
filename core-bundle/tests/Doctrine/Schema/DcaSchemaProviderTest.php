@@ -63,7 +63,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertTrue($table->getColumn('title')->getNotnull());
         $this->assertFalse($table->getColumn('title')->getFixed());
         $this->assertSame(128, $table->getColumn('title')->getLength());
-        $this->assertSame('utf8_bin', $table->getColumn('title')->getPlatformOption('collation'));
+        $this->assertSame('utf8mb4_bin', $table->getColumn('title')->getPlatformOption('collation'));
 
         if (null !== ($default = $table->getColumn('title')->getDefault())) {
             $this->assertSame('', $default);
@@ -143,7 +143,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'TABLE_FIELDS' => [
                             'id' => "`id` int(10) NOT NULL default '0'",
                             'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) COLLATE utf8_bin NOT NULL default ''",
+                            'title' => "`title` varchar(128) COLLATE utf8mb4_bin NOT NULL default ''",
                             'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
@@ -165,7 +165,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'SCHEMA_FIELDS' => [
                             ['name' => 'id', 'type' => 'integer'],
                             ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'platformOptions' => ['collation' => 'utf8_bin']],
+                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'platformOptions' => ['collation' => 'utf8mb4_bin']],
                             ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => 'Foobar'],
                             ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
                             ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
@@ -188,7 +188,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'TABLE_FIELDS' => [
                             'id' => "`id` int(10) NOT NULL default '0'",
                             'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) COLLATE utf8_bin NOT NULL default ''",
+                            'title' => "`title` varchar(128) COLLATE utf8mb4_bin NOT NULL default ''",
                             'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
@@ -207,7 +207,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testReadsTheTableOptions(): void
     {
-        $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
+        $provider = $this->getProvider(
+            ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci']]
+        );
+
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
@@ -215,15 +218,21 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $this->assertSame('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
         $this->assertSame('utf8', $schema->getTable('tl_member')->getOption('charset'));
+        $this->assertSame('utf8_unicode_ci', $schema->getTable('tl_member')->getOption('collate'));
 
-        $provider = $this->getProvider([], ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8']]);
+        $provider = $this->getProvider(
+            [],
+            ['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci']]
+        );
+
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());
         $this->assertTrue($schema->hasTable('tl_member'));
 
         $this->assertSame('MyISAM', $schema->getTable('tl_member')->getOption('engine'));
-        $this->assertSame('utf8', $schema->getTable('tl_member')->getOption('charset'));
+        $this->assertSame('utf8mb4', $schema->getTable('tl_member')->getOption('charset'));
+        $this->assertSame('utf8mb4_unicode_ci', $schema->getTable('tl_member')->getOption('collate'));
 
         $provider = $this->getProvider(['tl_member' => ['TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=Latin1']]);
         $schema = $provider->createSchema();

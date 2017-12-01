@@ -328,7 +328,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'flag'                    => 1,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE utf8_bin NULL"
+			'sql'                     => 'varchar(64) COLLATE utf8mb4_bin NULL'
 		),
 		'password' => array
 		(

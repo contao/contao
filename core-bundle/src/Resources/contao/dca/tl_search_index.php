@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		),
 		'word' => array
 		(
-			'sql'                     => "varchar(64) COLLATE utf8_bin NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE utf8mb4_bin NOT NULL default ''"
 		),
 		'relevance' => array
 		(

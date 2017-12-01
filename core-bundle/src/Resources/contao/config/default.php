@@ -50,8 +50,8 @@ $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 
 // Database
-$GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8';
-$GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8_general_ci';
+$GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';
+$GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_unicode_ci';
 
 // Encryption
 $GLOBALS['TL_CONFIG']['encryptionMode']   = 'cfb';

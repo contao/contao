@@ -97,6 +97,10 @@ class DcaSchemaProvider
                 if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('charset', $match[1]);
                 }
+
+                if (preg_match('/COLLATE ([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('collate', $match[1]);
+                }
             }
         }
     }
