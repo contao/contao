@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			(
 				array('tl_news_feed', 'checkFeedAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
 		),
 		'language' => array
 		(
