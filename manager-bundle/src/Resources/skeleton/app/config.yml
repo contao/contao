@@ -45,7 +45,11 @@ doctrine:
                 user: "%database_user%"
                 password: "%database_password%"
                 dbname: "%database_name%"
-                charset: UTF8
+                charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collate: utf8mb4_unicode_ci
+                    engine: MyISAM
         types:
             binary_string:
                 class: "Contao\\CoreBundle\\Doctrine\\DBAL\\Types\\BinaryStringType"
