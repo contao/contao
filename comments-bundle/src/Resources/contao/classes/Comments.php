@@ -200,7 +200,7 @@ class Comments extends \Frontend
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
 				'value'     => $this->User->email,
 				'inputType' => 'text',
-				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>128, 'decodeEntities'=>true)
+				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true)
 			),
 			'website' => array
 			(
