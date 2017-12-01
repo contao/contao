@@ -150,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				array('tl_newsletter', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
 		),
 		'content' => array
 		(
@@ -232,12 +232,12 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
 			),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'senderName' => array
 		(
