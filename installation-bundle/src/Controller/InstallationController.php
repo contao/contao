@@ -43,6 +43,7 @@ class InstallationController implements ContainerAwareInterface
     private $context = [
         'has_admin' => false,
         'hide_admin' => false,
+        'sql_message' => '',
     ];
 
     /**
@@ -371,9 +372,12 @@ class InstallationController implements ContainerAwareInterface
             /** @var AbstractVersionUpdate $update */
             $update = new $class($this->container->get('database_connection'));
 
-            if ($update instanceof AbstractVersionUpdate && $update->shouldBeRun()) {
+            if ($update instanceof AbstractVersionUpdate) {
                 $update->setContainer($this->container);
-                $update->run();
+
+                if ($update->shouldBeRun()) {
+                    $update->run();
+                }
 
                 if ($message = $update->getMessage()) {
                     $messages[] = $message;

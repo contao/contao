@@ -18,6 +18,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\TestCase;
 
 class InstallerTest extends TestCase
@@ -29,7 +30,33 @@ class InstallerTest extends TestCase
         $this->assertInstanceOf('Contao\InstallationBundle\Database\Installer', $installer);
     }
 
-    public function testReturnsTheAlterTableDropCommand(): void
+    public function testReturnsTheAlterTableCommands(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $toSchema = new Schema();
+        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foobar']);
+        $commands = $installer->getCommands();
+
+        $this->assertArrayHasKey('ALTER_TABLE', $commands);
+        $this->assertArrayHasKey('ee29f009565bbcde0939a9dc4f293817', $commands['ALTER_TABLE']);
+        $this->assertArrayHasKey('54c731444c10507ebd29bd0b24d71616', $commands['ALTER_TABLE']);
+
+        $this->assertSame(
+            'ALTER TABLE tl_foobar ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
+            $commands['ALTER_TABLE']['ee29f009565bbcde0939a9dc4f293817']
+        );
+
+        $this->assertSame(
+            'ALTER TABLE tl_foobar CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+            $commands['ALTER_TABLE']['54c731444c10507ebd29bd0b24d71616']
+        );
+    }
+
+    public function testReturnsTheDropColumnCommands(): void
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
@@ -45,7 +72,7 @@ class InstallerTest extends TestCase
         $this->assertSame('ALTER TABLE tl_foobar DROP bar', reset($commands['ALTER_DROP']));
     }
 
-    public function testReturnsTheAlterTableAddCommand(): void
+    public function testReturnsTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
@@ -64,7 +91,7 @@ class InstallerTest extends TestCase
         $this->assertSame('ALTER TABLE tl_foobar ADD bar VARCHAR(255) NOT NULL', $commands[0]);
     }
 
-    public function testHandlesDecimalsInTheAlterTableDropCommand(): void
+    public function testHandlesDecimalsInTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar');
@@ -82,7 +109,7 @@ class InstallerTest extends TestCase
         $this->assertSame('ALTER TABLE tl_foobar ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
     }
 
-    public function testHandlesDefaultsInTheAlterTableDropCommand(): void
+    public function testHandlesDefaultsInTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar');
@@ -100,7 +127,7 @@ class InstallerTest extends TestCase
         $this->assertSame("ALTER TABLE tl_foobar ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
     }
 
-    public function testHandlesMixedColumnsInTheAlterTableDropCommand(): void
+    public function testHandlesMixedColumnsInTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
         $fromSchema->createTable('tl_foobar');
@@ -144,16 +171,29 @@ class InstallerTest extends TestCase
      *
      * @param Schema|null $fromSchema
      * @param Schema|null $toSchema
+     * @param array       $tables
      *
      * @return Installer|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null): Installer
+    private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = []): Installer
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
 
         $schemaManager
             ->method('createSchema')
             ->willReturn($fromSchema)
+        ;
+
+        $schemaManager
+            ->method('listTableNames')
+            ->willReturn($tables)
+        ;
+
+        $statement = $this->createMock(Statement::class);
+
+        $statement
+            ->method('fetch')
+            ->willReturn((object) ['Engine' => 'MyISAM', 'Collation' => 'utf8_unicode_ci'])
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -166,6 +206,24 @@ class InstallerTest extends TestCase
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
+        ;
+
+        $connection
+            ->method('query')
+            ->willReturn($statement)
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(
+                [
+                    'defaultTableOptions' => [
+                        'charset' => 'utf8mb4',
+                        'collate' => 'utf8mb4_unicode_ci',
+                        'engine' => 'InnoDB',
+                    ],
+                ]
+            )
         ;
 
         $schemaProvider = $this->createMock(DcaSchemaProvider::class);

@@ -88,6 +88,7 @@ class Installer
     {
         $return = [
             'CREATE' => [],
+            'ALTER_TABLE' => [],
             'ALTER_CHANGE' => [],
             'ALTER_ADD' => [],
             'DROP' => [],
@@ -153,6 +154,8 @@ class Installer
             }
         }
 
+        $this->checkEngineAndCollation($return);
+
         $return = array_filter($return);
 
         // HOOK: allow third-party developers to modify the array (see #3281)
@@ -183,5 +186,46 @@ class Installer
         }
 
         return $schema;
+    }
+
+    /**
+     * Checks engine and collation and adds the ALTER TABLE queries.
+     *
+     * @param array $sql
+     */
+    private function checkEngineAndCollation(array &$sql): void
+    {
+        $params = $this->connection->getParams();
+        $charset = $params['defaultTableOptions']['charset'];
+        $collate = $params['defaultTableOptions']['collate'];
+        $engine = $params['defaultTableOptions']['engine'];
+        $tables = $this->connection->getSchemaManager()->listTableNames();
+
+        foreach ($tables as $table) {
+            if (0 !== strncmp($table, 'tl_', 3)) {
+                continue;
+            }
+
+            $tableOptions = $this->connection
+                ->query("SHOW TABLE STATUS LIKE '".$table."'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            if ($tableOptions->Engine !== $engine) {
+                if ('InnoDB' === $engine) {
+                    $command = 'ALTER TABLE '.$table.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+                } else {
+                    $command = 'ALTER TABLE '.$table.' ENGINE = '.$engine;
+                }
+
+                $sql['ALTER_TABLE'][md5($command)] = $command;
+            }
+
+            if ($tableOptions->Collation !== $collate) {
+                $command = 'ALTER TABLE '.$table.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
+
+                $sql['ALTER_TABLE'][md5($command)] = $command;
+            }
+        }
     }
 }
