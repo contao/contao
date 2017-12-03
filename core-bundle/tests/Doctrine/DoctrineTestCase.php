@@ -20,7 +20,9 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Statement;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
@@ -31,15 +33,45 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
+     * @param Statement|null $statement
+     *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistry(): Registry
+    protected function mockDoctrineRegistry(Statement $statement = null): Registry
     {
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+
+        $schemaManager
+            ->method('tablesExist')
+            ->willReturn(true)
+        ;
+
         $connection = $this->createMock(Connection::class);
 
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
+        ;
+
+        $connection
+            ->method('query')
+            ->willReturn($statement)
+        ;
+
+        $connection
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(
+                [
+                    'defaultTableOptions' => [
+                        'collate' => 'utf8mb4_unicode_ci',
+                    ],
+                ]
+            )
         ;
 
         $registry = $this->createMock(Registry::class);
@@ -185,16 +217,17 @@ abstract class DoctrineTestCase extends TestCase
     }
 
     /**
-     * @param array $dca
-     * @param array $file
+     * @param array          $dca
+     * @param array          $file
+     * @param Statement|null $statement
      *
      * @return DcaSchemaProvider
      */
-    protected function getProvider(array $dca = [], array $file = []): DcaSchemaProvider
+    protected function getProvider(array $dca = [], array $file = [], Statement $statement = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry()
+            $this->mockDoctrineRegistry($statement)
         );
     }
 }

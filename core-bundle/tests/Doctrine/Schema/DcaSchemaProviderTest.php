@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Statement;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
@@ -317,8 +318,22 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
-    public function testHandlesIndexesWithKeyLength(): void
+    /**
+     * @param int   $actual
+     * @param int   $expected
+     * @param array $calls
+     *
+     * @dataProvider getIndexes
+     */
+    public function testHandlesIndexesWithKeyLength(int $actual, int $expected, array $calls): void
     {
+        $statement = $this->createMock(Statement::class);
+
+        $statement
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(...$calls)
+        ;
+
         $provider = $this->getProvider(
             [
                 'tl_files' => [
@@ -326,10 +341,12 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'path' => "`path` varchar(1022) NOT NULL default ''",
                     ],
                     'TABLE_CREATE_DEFINITIONS' => [
-                        'path' => 'KEY `path` (`path`(333))',
+                        'path' => 'KEY `path` (`path`('.$actual.'))',
                     ],
                 ],
-            ]
+            ],
+            [],
+            $statement
         );
 
         $schema = $provider->createSchema();
@@ -345,7 +362,68 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $this->assertTrue($table->hasIndex('path'));
         $this->assertFalse($table->getIndex('path')->isUnique());
-        $this->assertSame(['path(333)'], $table->getIndex('path')->getColumns());
+        $this->assertSame(['path('.$expected.')'], $table->getIndex('path')->getColumns());
+    }
+
+    /**
+     * @return array
+     */
+    public function getIndexes(): array
+    {
+        return [
+            [
+                333,
+                333,
+                [
+                    (object) ['Engine' => 'MyISAM'],
+                    (object) ['Collation' => 'utf8_unicode_ci'],
+                ],
+            ],
+            [
+                333,
+                250,
+                [
+                    (object) ['Engine' => 'MyISAM'],
+                    (object) ['Collation' => 'utf8mb4_unicode_ci'],
+                ],
+            ],
+            [
+                1022,
+                1022,
+                [
+                    (object) ['Engine' => 'InnoDB'],
+                    (object) ['Value' => 1],
+                    (object) ['Collation' => 'utf8_unicode_ci'],
+                ],
+            ],
+            [
+                1022,
+                768,
+                [
+                    (object) ['Engine' => 'InnoDB'],
+                    (object) ['Value' => 1],
+                    (object) ['Collation' => 'utf8mb4_unicode_ci'],
+                ],
+            ],
+            [
+                1022,
+                255,
+                [
+                    (object) ['Engine' => 'InnoDB'],
+                    (object) ['Value' => 0],
+                    (object) ['Collation' => 'utf8_unicode_ci'],
+                ],
+            ],
+            [
+                1022,
+                191,
+                [
+                    (object) ['Engine' => 'InnoDB'],
+                    (object) ['Value' => 0],
+                    (object) ['Collation' => 'utf8mb4_unicode_ci'],
+                ],
+            ],
+        ];
     }
 
     public function testHandlesFulltextIndexes(): void

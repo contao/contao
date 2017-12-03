@@ -301,6 +301,12 @@ class DcaSchemaProvider
             $column = $cm[1];
 
             if (isset($cm[3])) {
+                $maxlen = $this->getMaximumIndexLength($table, $column);
+
+                if ($cm[3] > $maxlen) {
+                    $cm[3] = $maxlen;
+                }
+
                 $column .= '('.$cm[3].')';
             }
 
@@ -348,5 +354,68 @@ class DcaSchemaProvider
         }
 
         return $sqlTarget;
+    }
+
+    /**
+     * Returns the maximum index length of a column depending on the collation.
+     *
+     * @param Table  $table
+     * @param string $column
+     *
+     * @return int
+     */
+    private function getMaximumIndexLength(Table $table, string $column): int
+    {
+        $indexLength = $this->getDefaultIndexLength($table);
+        $connection = $this->doctrine->getConnection();
+        $collation = $connection->getParams()['defaultTableOptions']['collate'];
+
+        // Read the table collation if the table exists
+        if ($connection->getSchemaManager()->tablesExist([$table->getName()])) {
+            $columnOptions = $connection
+                ->query(sprintf("SHOW FULL COLUMNS FROM %s LIKE '%s'", $table->getName(), $column))
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            $collation = $columnOptions->Collation;
+        }
+
+        if (0 === strncmp($collation, 'utf8mb4', 7)) {
+            return (int) floor($indexLength / 4);
+        }
+
+        return (int) floor($indexLength / 3);
+    }
+
+    /**
+     * Returns the default index length of a table.
+     *
+     * @param Table $table
+     *
+     * @return int
+     */
+    private function getDefaultIndexLength(Table $table): int
+    {
+        $connection = $this->doctrine->getConnection();
+
+        $tableOptions = $connection
+            ->query(sprintf("SHOW TABLE STATUS LIKE '%s'", $table->getName()))
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        if ('InnoDB' !== $tableOptions->Engine) {
+            return 1000;
+        }
+
+        $largePrefix = $connection
+            ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        if (\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
+            return 3072;
+        }
+
+        return 767;
     }
 }
