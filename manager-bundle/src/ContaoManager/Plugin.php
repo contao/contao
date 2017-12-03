@@ -214,7 +214,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'server_version' => '5.1',
+                            'server_version' => '5.5',
                         ],
                     ],
                 ],
