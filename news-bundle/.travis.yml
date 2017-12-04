@@ -12,15 +12,17 @@ sudo: false
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
+    - SYMFONY_DEPRECATIONS_HELPER=weak
 
 matrix:
   include:
     - php: 5.6
     - php: 7.0
     - php: 7.1
-    - php: 7.1
+    - php: 7.2
+    - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-    - php: 7.1
+    - php: 7.2
       env: COVERAGE='--coverage-clover build/logs/clover.xml'
   fast_finish: true
 
