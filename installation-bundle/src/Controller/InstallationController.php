@@ -93,6 +93,10 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('old_database.html.twig');
         }
 
+        if ($installTool->hasConfigurationError($this->context)) {
+            return $this->render('configuration_error.html.twig');
+        }
+
         $this->runDatabaseUpdates();
 
         if (null !== ($response = $this->adjustDatabaseTables())) {

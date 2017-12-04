@@ -203,6 +203,55 @@ class InstallTool
     }
 
     /**
+     * Checks the database configuration.
+     */
+    public function hasConfigurationError(array &$context): bool
+    {
+        $row = $this->connection
+            ->query('SELECT @@version as Version')
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        [$version] = explode('-', $row->Version);
+
+        if (version_compare($version, '5.5.7', '<')) {
+            $context['errorCode'] = 1;
+            $context['version'] = $version;
+
+            return true;
+        }
+
+        $params = $this->connection->getParams();
+        $statement = $this->connection->query("SHOW COLLATION LIKE '".$params['defaultTableOptions']['collate']."'");
+
+        if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $context['errorCode'] = 2;
+            $context['collation'] = $params['defaultTableOptions']['collate'];
+
+            return true;
+        }
+
+        $engineFound = false;
+        $statement = $this->connection->query('SHOW ENGINES');
+
+        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+            if ($params['defaultTableOptions']['engine'] === $row->Engine) {
+                $engineFound = true;
+                break;
+            }
+        }
+
+        if (!$engineFound) {
+            $context['errorCode'] = 3;
+            $context['engine'] = $params['defaultTableOptions']['engine'];
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Handles executing the runonce files.
      */
     public function handleRunOnce(): void
