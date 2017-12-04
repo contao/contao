@@ -1,6 +1,6 @@
 # Contao news bundle change log
 
-### DEV
+### 4.5.0-beta3 (2017-12-04)
 
  * Improve the microdata support.
 
