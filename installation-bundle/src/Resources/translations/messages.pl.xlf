@@ -181,193 +181,221 @@
         
       </trans-unit>
       <trans-unit id="37">
+        <source>ALTER_TABLE</source>
+        
+      </trans-unit>
+      <trans-unit id="38">
         <source>ALTER_ADD</source>
         <target>Dodaj kolumny</target>
         
       </trans-unit>
-      <trans-unit id="38">
+      <trans-unit id="39">
         <source>ALTER_CHANGE</source>
         <target>Zmień kolumny</target>
         
       </trans-unit>
-      <trans-unit id="39">
+      <trans-unit id="40">
         <source>ALTER_DROP</source>
         <target>Usuń kolumny</target>
         
       </trans-unit>
-      <trans-unit id="40">
+      <trans-unit id="41">
         <source>DROP</source>
         <target>Usuń tabele</target>
         
       </trans-unit>
-      <trans-unit id="41">
+      <trans-unit id="42">
         <source>select_all</source>
         <target>Zaznacz wszystko</target>
         
       </trans-unit>
-      <trans-unit id="42">
+      <trans-unit id="43">
         <source>template_import</source>
         <target>Importuj szablon</target>
         
       </trans-unit>
-      <trans-unit id="43">
+      <trans-unit id="44">
         <source>template_import_explain</source>
         <target>Tutaj możesz zaimportować plik &lt;code&gt;.sql&lt;/code&gt; z katalogu &lt;code&gt;templates&lt;/code&gt;. Wszystkie istniejące dane zostaną usunięte! Jeśli chcesz tylko zaimportować motyw, użyj menadżera motywów w Contao backend.</target>
         
       </trans-unit>
-      <trans-unit id="44">
+      <trans-unit id="45">
         <source>import_exception</source>
         <target>Import się nie powiódł! Czy baza danych jest aktualna a pliki szablonów kompatybilne z twoją wersją Conto?</target>
         
       </trans-unit>
-      <trans-unit id="45">
+      <trans-unit id="46">
         <source>import_empty_source</source>
         <target>Wybierz plik szablonu!</target>
         
       </trans-unit>
-      <trans-unit id="46">
+      <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
         <target>Wszystkie istniejące dane zostaną usunięte!</target>
         
       </trans-unit>
-      <trans-unit id="47">
+      <trans-unit id="48">
         <source>imported_on</source>
         <target>Szablon zaimportowano %s.</target>
         
       </trans-unit>
-      <trans-unit id="48">
+      <trans-unit id="49">
         <source>templates</source>
         <target>Szablony</target>
         
       </trans-unit>
-      <trans-unit id="49">
+      <trans-unit id="50">
         <source>do_not_truncate</source>
         <target>Nie czyść tabel</target>
         
       </trans-unit>
-      <trans-unit id="50">
+      <trans-unit id="51">
         <source>import_confirm</source>
         <target>Wszystkie istniejąca dane zostaną usunięte! Naprawdę chcesz kontynuować?</target>
         
       </trans-unit>
-      <trans-unit id="51">
+      <trans-unit id="52">
         <source>template_save</source>
         <target>Importuj szablon</target>
         
       </trans-unit>
-      <trans-unit id="52">
+      <trans-unit id="53">
         <source>admin_create</source>
         <target>Utwórz administratora</target>
         
       </trans-unit>
-      <trans-unit id="53">
+      <trans-unit id="54">
         <source>admin_create_explain</source>
         <target>Tutaj możesz utworzyć administratora do zalogowania się w backendzie.</target>
         
       </trans-unit>
-      <trans-unit id="54">
+      <trans-unit id="55">
         <source>admin_confirm</source>
         <target>Administrator został utworzony.</target>
         
       </trans-unit>
-      <trans-unit id="55">
+      <trans-unit id="56">
         <source>admin_username</source>
         <target>Login</target>
         
       </trans-unit>
-      <trans-unit id="56">
+      <trans-unit id="57">
         <source>admin_name</source>
         <target>Nazwa wyświetlana</target>
         
       </trans-unit>
-      <trans-unit id="57">
+      <trans-unit id="58">
         <source>admin_email</source>
         <target>Adres e-mail</target>
         
       </trans-unit>
-      <trans-unit id="58">
+      <trans-unit id="59">
         <source>admin_save</source>
         <target>Utwórz administratora</target>
         
       </trans-unit>
-      <trans-unit id="59">
+      <trans-unit id="60">
         <source>admin_error_extnd</source>
         <target>Z przyczyn bezpieczeństwa nie można tutaj używać znaków: #()/&lt;=&gt;</target>
         
       </trans-unit>
-      <trans-unit id="60">
+      <trans-unit id="61">
         <source>admin_error_no_space</source>
         <target>Nazwa użytkownika nie może zawierać spacji!</target>
         
       </trans-unit>
-      <trans-unit id="61">
+      <trans-unit id="62">
         <source>admin_error_email</source>
         <target>Proszę wprowadzić poprawny adres e-mail!</target>
         
       </trans-unit>
-      <trans-unit id="62">
+      <trans-unit id="63">
         <source>admin_error_password_match</source>
         <target>Hasła się nie zgadzają!</target>
         
       </trans-unit>
-      <trans-unit id="63">
+      <trans-unit id="64">
         <source>admin_error_password_user</source>
         <target>Login oraz hasło nie mogą być takie same!</target>
         
       </trans-unit>
-      <trans-unit id="64">
+      <trans-unit id="65">
         <source>admin_error</source>
         <target>Prosimy wypełnić wszystkie pola aby utworzyć administratora!</target>
         
       </trans-unit>
-      <trans-unit id="65">
+      <trans-unit id="66">
         <source>congratulations</source>
         <target>Gratulacje!</target>
         
       </trans-unit>
-      <trans-unit id="66">
+      <trans-unit id="67">
         <source>congratulations_explain</source>
         <target>Pomyślnie zainstalowałeś Contao.</target>
         
       </trans-unit>
-      <trans-unit id="67">
+      <trans-unit id="68">
         <source>installation_complete</source>
         <target>Instalacja zakończona</target>
         
       </trans-unit>
-      <trans-unit id="68">
+      <trans-unit id="69">
         <source>installation_complete_explain</source>
         <target>Teraz możesz zalogować się do backendu Contao i sprawdzić ustawienia systemowe.</target>
         
       </trans-unit>
-      <trans-unit id="69">
+      <trans-unit id="70">
         <source>back_end</source>
         <target>Contao backend</target>
         
       </trans-unit>
-      <trans-unit id="70">
+      <trans-unit id="71">
         <source>old_database</source>
         <target>Twoja baza danych jest za stara!</target>
         
       </trans-unit>
-      <trans-unit id="71">
+      <trans-unit id="72">
         <source>old_database_explanation</source>
         <target>Potrzebujesz przynamniej Contao 3.2 do aktualizacji do Contao 4.</target>
         
       </trans-unit>
-      <trans-unit id="72">
+      <trans-unit id="73">
         <source>console_explanation</source>
         <target>Zadanie po instalacji nie mogło być zakończone!</target>
         
       </trans-unit>
-      <trans-unit id="73">
+      <trans-unit id="74">
         <source>duplicate_subscriptions</source>
         <target>Znaleziono zduplikowane subskrypcje newslettera:</target>
         
       </trans-unit>
-      <trans-unit id="74">
+      <trans-unit id="75">
         <source>duplicates_purged</source>
         <target>Zduplikowane rekordy zostały usunięte automatycznie. Kopia zapasowa oryginalnych subskrypcji została utworzona w &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="76">
+        <source>unsupported_version</source>
+        
+      </trans-unit>
+      <trans-unit id="77">
+        <source>unsupported_version_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="78">
+        <source>unsupported_collation</source>
+        
+      </trans-unit>
+      <trans-unit id="79">
+        <source>unsupported_collation_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="80">
+        <source>unsupported_engine</source>
+        
+      </trans-unit>
+      <trans-unit id="81">
+        <source>unsupported_engine_explain</source>
         
       </trans-unit>
     </body>
