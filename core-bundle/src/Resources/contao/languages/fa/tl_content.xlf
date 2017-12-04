@@ -439,6 +439,24 @@
         <source>Automatically play the video when the page loads.</source>
         <target>پخش خودکار ویدیو زمان بارگذاری برگه.</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtubeOptions.0">
+        <source>Player options</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeOptions.1">
+        <source>Here you can select the player options.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStart.0">
+        <source>Start at</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStart.1">
+        <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStop.0">
+        <source>Stop at</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStop.1">
+        <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+      </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
         <target>مدت زمان اسلاید</target>
@@ -686,6 +704,27 @@
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>قالب &lt;em&gt;%s&lt;/em&gt; یا &lt;em&gt;%s&lt;/em&gt; باید در چیدمان برگه گنجانده شود.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_cc_load_policy">
+        <source>Show captions by default</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_fs">
+        <source>Hide the fullscreen button</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_hl">
+        <source>Use the Contao page language</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_iv_load_policy">
+        <source>Hide annotations</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_modestbranding">
+        <source>Hide the YouTube logo</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_rel">
+        <source>Do not show related videos at the end</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_showinfo">
+        <source>Hide the top bar in the preview</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

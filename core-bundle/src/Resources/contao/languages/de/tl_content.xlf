@@ -441,6 +441,30 @@
         <source>Automatically play the video when the page loads.</source>
         <target>Das Video automatisch beim Laden der Seite abspielen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtubeOptions.0">
+        <source>Player options</source>
+        <target>Player-Optionen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeOptions.1">
+        <source>Here you can select the player options.</source>
+        <target>Hier können Sie die Player-Optionen auswählen.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStart.0">
+        <source>Start at</source>
+        <target>Start bei</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStart.1">
+        <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Beginnt die Wiedergabe bei der festgelegten Anzahl an Sekunden. Geben Sie 0 ein, um das Feature zu deaktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStop.0">
+        <source>Stop at</source>
+        <target>Stopp bei</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStop.1">
+        <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Beendet die Wiedergabe bei der festgelegten Anzahl an Sekunden. Geben Sie 0 ein, um das Feature zu deaktivieren.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
         <target>Slide-Intervall</target>
@@ -688,6 +712,34 @@
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>Das &lt;em&gt;%s&lt;/em&gt;- oder &lt;em&gt;%s&lt;/em&gt;-Template muss im Seitenlayout eingebunden sein.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_cc_load_policy">
+        <source>Show captions by default</source>
+        <target>Untertitel standardmäßig anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_fs">
+        <source>Hide the fullscreen button</source>
+        <target>Den Fullscreen-Button ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_hl">
+        <source>Use the Contao page language</source>
+        <target>Die Contao-Seitensprache verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_iv_load_policy">
+        <source>Hide annotations</source>
+        <target>Anmerkungen verstecken</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_modestbranding">
+        <source>Hide the YouTube logo</source>
+        <target>Das YouTube-Logo ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_rel">
+        <source>Do not show related videos at the end</source>
+        <target>Keine ähnlichen Videos am Ende zeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_showinfo">
+        <source>Hide the top bar in the preview</source>
+        <target>Die Linkleiste in der Vorschau ausblenden</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

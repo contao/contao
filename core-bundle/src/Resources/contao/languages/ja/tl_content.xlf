@@ -441,6 +441,30 @@
         <source>Automatically play the video when the page loads.</source>
         <target>ページを読み込んだときに自動的に映像を再生します。</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtubeOptions.0">
+        <source>Player options</source>
+        <target>プレーヤーのオプション</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeOptions.1">
+        <source>Here you can select the player options.</source>
+        <target>プレーヤーのオプションを選択できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStart.0">
+        <source>Start at</source>
+        <target>開始秒</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStart.1">
+        <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>指定した秒数から動画を再生します。0にすると動画を再生しません。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStop.0">
+        <source>Stop at</source>
+        <target>終了秒</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtubeStop.1">
+        <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>指定した秒数で動画の再生を停止します。0にすると動画を停止しません。</target>
+      </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
         <target>スライドする間隔</target>
@@ -689,6 +713,34 @@
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>ページレイアウトに&lt;em&gt;%s&lt;/em&gt;または&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_cc_load_policy">
+        <source>Show captions by default</source>
+        <target>初期状態で説明文を表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_fs">
+        <source>Hide the fullscreen button</source>
+        <target>全画面ボタンを非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_hl">
+        <source>Use the Contao page language</source>
+        <target>Contaoのページの言語を使用</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_iv_load_policy">
+        <source>Hide annotations</source>
+        <target>注釈を非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_modestbranding">
+        <source>Hide the YouTube logo</source>
+        <target>YouTubeのロゴ注釈を非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_rel">
+        <source>Do not show related videos at the end</source>
+        <target>終了後に関連した動画を非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_showinfo">
+        <source>Hide the top bar in the preview</source>
+        <target>プレビューの最上部のバーを非表示</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

@@ -19,15 +19,19 @@
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.0">
         <source>Fieldset start</source>
+        <target>フィールドセットの開始</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.1">
         <source>The opening part of a fieldset with an optional legend.</source>
+        <target>フィールドセットの開始を示し、見出しを含められます。</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.0">
         <source>Fieldset stop</source>
+        <target>フィールドセットの終了</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.1">
         <source>The closing part of a fieldset.</source>
+        <target>フィールドセットの終了を示します。</target>
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>

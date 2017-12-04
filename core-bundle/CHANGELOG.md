@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.0-beta3 (2017-12-04)
 
  * Use InnoDB as default storage engine (see #188).
  * Use "utf8mb4" as default charset for MySQL (see #113).

@@ -1747,6 +1747,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
         <source>Meta data</source>
         <target>Meta data</target>
       </trans-unit>
+      <trans-unit id="MSC.versioning">
+        <source>Version management</source>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Versión</target>
@@ -1892,6 +1895,9 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
         <target>Reiniciar los filtros</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchAndFilter">
+        <source>Search and filter functions</source>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2336,6 +2342,15 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Debe agregar una página raíz en la estructura del sitio para introducir metadatos de archivo.</target>
+      </trans-unit>
+      <trans-unit id="MSC.breadcrumbMenu">
+        <source>Breadcrumb menu</source>
+      </trans-unit>
+      <trans-unit id="MSC.mainNavigation">
+        <source>Main navigation</source>
+      </trans-unit>
+      <trans-unit id="MSC.headerNavigation">
+        <source>Header navigation</source>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>

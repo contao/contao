@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
+        <target>Важећи алиас знакови</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Овде можете подесити произвољан сет знакова за генерисање аутоматских алиаса.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -273,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
+        <target>Захтевај ставку</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Покрени учитавање 404 странице ако URL не садржи алиас ставке.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -375,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias_legend">
         <source>Alias settings</source>
+        <target>Подешавања алиаса</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>

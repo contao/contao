@@ -379,9 +379,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.0">
         <source>External JavaScripts</source>
+        <target>外部のJavaScript</target>
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.1">
         <source>Here you can add external JS files from the file system.</source>
+        <target>ファイルシステムから外部のJSファイルを追加できます。</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>
