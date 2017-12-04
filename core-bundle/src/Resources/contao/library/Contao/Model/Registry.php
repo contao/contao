@@ -34,19 +34,19 @@ class Registry implements \Countable
 	 * Models by table and PK
 	 * @var array
 	 */
-	protected $arrRegistry;
+	protected $arrRegistry = array();
 
 	/**
 	 * Aliases to PK's by table and column
 	 * @var array
 	 */
-	protected $arrAliases;
+	protected $arrAliases = array();
 
 	/**
 	 * Models by object hash
 	 * @var array
 	 */
-	protected $arrIdentities;
+	protected $arrIdentities = array();
 
 
 	/**

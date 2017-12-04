@@ -39,6 +39,16 @@ class WidgetTest extends TestCase
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        define('TL_MODE', 'FE');
+    }
+
+    /**
      * Tests reading the POST data.
      *
      * @param string $key
