@@ -66,12 +66,20 @@
         <target>空欄にすると1日だけのイベントを作成します。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
-        <source>Event location</source>
-        <target>イベントの場所</target>
+        <source>Location name</source>
+        <target>会場の名前</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
-        <source>Here you can enter the event location.</source>
-        <target>イベントの場所を入力できます。</target>
+        <source>Here you can enter the name of the event location.</source>
+        <target>イベントの開催場所の名前を入力できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.0">
+        <source>Location address</source>
+        <target>会場の住所</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.1">
+        <source>Here you can enter the address of the event location.</source>
+        <target>イベントの開催場所の住所を入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
@@ -175,9 +183,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
         <source>Custom URL</source>
+        <target>特定のURL</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>&quot;続きを読む...&quot;のボタンをクリックすると特定のURLに移動します。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

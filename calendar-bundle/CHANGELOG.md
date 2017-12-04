@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### DEV
+### 4.5.0-beta3 (2017-12-04)
 
  * Add the "event address" field and update the microdata tags (see #18).
 

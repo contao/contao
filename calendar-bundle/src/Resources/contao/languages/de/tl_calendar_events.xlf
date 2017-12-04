@@ -66,12 +66,20 @@
         <target>Lassen Sie das Feld leer, um ein eintägiges Event zu erstellen.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
-        <source>Event location</source>
+        <source>Location name</source>
         <target>Veranstaltungsort</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
-        <source>Here you can enter the event location.</source>
-        <target>Hier können Sie den Veranstaltungsort eingeben.</target>
+        <source>Here you can enter the name of the event location.</source>
+        <target>Hier können Sie den Namen des Veranstaltungsortes eingeben.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.0">
+        <source>Location address</source>
+        <target>Adresse</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.1">
+        <source>Here you can enter the address of the event location.</source>
+        <target>Hier können Sie die Adresse des Veranstaltungsortes eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
