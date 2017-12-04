@@ -62,6 +62,7 @@ p {
 /* Form tables */
 #sql_wrapper {
 	margin-top:3px;
+	margin-bottom:1em;
 	max-height:300px;
 	overflow:auto;
 	border:1px solid #ddd;
