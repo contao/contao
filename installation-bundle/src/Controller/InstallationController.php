@@ -45,6 +45,7 @@ class InstallationController implements ContainerAwareInterface
     private $context = [
         'has_admin' => false,
         'hide_admin' => false,
+        'sql_message' => '',
     ];
 
     /**
