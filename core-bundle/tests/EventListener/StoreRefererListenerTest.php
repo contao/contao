@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -169,6 +170,32 @@ class StoreRefererListenerTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * Tests that the session is not written if the response status is not 200.
+     */
+    public function testDoesNotStoreTheRefererIfTheResponseIsNotOk()
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response('', 404)
+        );
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getToken')
+        ;
+
+        $listener = $this->getListener(null, $tokenStorage);
+        $listener->onKernelResponse($responseEvent);
     }
 
     /**

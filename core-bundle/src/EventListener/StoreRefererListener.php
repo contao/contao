@@ -71,6 +71,12 @@ class StoreRefererListener
             return;
         }
 
+        $response = $event->getResponse();
+
+        if (200 !== $response->getStatusCode()) {
+            return;
+        }
+
         $token = $this->tokenStorage->getToken();
 
         if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
