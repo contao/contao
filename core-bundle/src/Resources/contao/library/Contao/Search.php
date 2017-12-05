@@ -235,7 +235,7 @@ class Search
 		unset($arrSet);
 
 		// Remove special characters
-		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:,+-]/u'), ' ', $strText);
+		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:+-]/u'), ' ', $strText);
 
 		// Split words
 		$arrWords = preg_split('/ +/', Utf8::strtolower($strText));
