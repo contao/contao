@@ -217,6 +217,12 @@ class FileUpload extends \Backend
 	 */
 	protected function getFilesFromGlobal()
 	{
+		// The "multiple" attribute is not set
+		if (!is_array($_FILES[$this->strName]['name']))
+		{
+			return array($_FILES[$this->strName]);
+		}
+
 		$arrFiles = array();
 		$intCount = count($_FILES[$this->strName]['name']);
 

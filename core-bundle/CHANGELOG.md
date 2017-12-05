@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Handle single file uploads in FileUpload::getFilesFromGlobal() (see #1192).
+
 ### 4.4.8 (2017-11-15)
 
  * Prevent SQL injections in the back end search panel (see CVE-2017-16558).
