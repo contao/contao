@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\UserPasswordCommand;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -44,11 +42,8 @@ class UserPasswordCommandTest extends TestCase
     {
         parent::setUp();
 
-        $adapter = $this->mockEncryptionAdapter();
-        $framework = $this->mockContaoFramework([Encryption::class => $adapter]);
-
         $this->container = new ContainerBuilder();
-        $this->container->set('contao.framework', $framework);
+        $this->container->set('contao.framework', $this->mockContaoFramework());
         $this->container->set('database_connection', $this->createMock(Connection::class));
 
         $this->command = new UserPasswordCommand();
@@ -198,7 +193,14 @@ class UserPasswordCommandTest extends TestCase
             ->method('update')
             ->with(
                 'tl_user',
-                ['password' => 'HA$HED-'.$password.'-HA$HED'],
+                $this->callback(
+                    function ($data) {
+                        $this->assertArrayHasKey('password', $data);
+                        $this->assertSame(PASSWORD_DEFAULT, password_get_info($data['password'])['algo']);
+
+                        return $data;
+                    }
+                ),
                 ['username' => $username]
             )
             ->willReturn(1)
@@ -227,26 +229,5 @@ class UserPasswordCommandTest extends TestCase
                 'kevinjones',
             ],
         ];
-    }
-
-    /**
-     * Mocks an encryption adapter.
-     *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockEncryptionAdapter(): Adapter
-    {
-        $adapter = $this->mockAdapter(['hash']);
-
-        $adapter
-            ->method('hash')
-            ->willReturnCallback(
-                function (string $value): ?string {
-                    return 'HA$HED-'.$value.'-HA$HED';
-                }
-            )
-        ;
-
-        return $adapter;
     }
 }

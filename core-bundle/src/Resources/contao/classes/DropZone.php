@@ -56,8 +56,7 @@ class DropZone extends \FileUpload
         maxFilesize: ' . $intMaxSize . ',
         acceptedFiles: "' . $strAccepted . '",
         previewsContainer: ".dropzone-previews",
-        clickable: ".dropzone",
-        uploadMultiple: true
+        clickable: ".dropzone"
       }).on("addedfile", function() {
         $$(".dz-message").setStyle("display", "none");
       });

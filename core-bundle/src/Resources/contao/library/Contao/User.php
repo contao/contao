@@ -408,21 +408,24 @@ abstract class User extends \System
 			return false;
 		}
 
+		$blnNeedsRehash = true;
+
 		// The password has been generated with crypt()
-		if (\Encryption::test($this->password))
+		if (password_get_info($this->password)['algo'] > 0)
 		{
-			$blnAuthenticated = \Encryption::verify($request->request->get('password'), $this->password);
+			$blnAuthenticated = password_verify($request->request->get('password'), $this->password);
+			$blnNeedsRehash = password_needs_rehash($this->password, PASSWORD_DEFAULT);
 		}
 		else
 		{
 			list($strPassword, $strSalt) = explode(':', $this->password);
 			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1($request->request->get('password'))) : ($strPassword === sha1($strSalt . $request->request->get('password')));
+		}
 
-			// Store a SHA-512 encrpyted version of the password
-			if ($blnAuthenticated)
-			{
-				$this->password = \Encryption::hash($request->request->get('password'));
-			}
+		// Re-hash the password if the algorithm has changed
+		if ($blnAuthenticated && $blnNeedsRehash)
+		{
+			$this->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
 		}
 
 		// HOOK: pass credentials to callback functions

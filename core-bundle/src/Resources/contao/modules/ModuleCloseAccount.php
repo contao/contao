@@ -89,9 +89,9 @@ class ModuleCloseAccount extends \Module
 			if (!$objWidget->hasErrors())
 			{
 				// The password has been generated with crypt()
-				if (\Encryption::test($this->User->password))
+				if (password_get_info($this->User->password)['algo'] > 0)
 				{
-					$blnAuthenticated = \Encryption::verify($objWidget->value, $this->User->password);
+					$blnAuthenticated = password_verify($objWidget->value, $this->User->password);
 				}
 				else
 				{

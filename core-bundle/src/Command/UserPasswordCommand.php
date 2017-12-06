@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\Config;
-use Contao\Encryption;
 use Patchwork\Utf8;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -148,9 +147,6 @@ class UserPasswordCommand extends ContainerAwareCommand
             );
         }
 
-        /** @var Encryption $encryption */
-        $encryption = $framework->getAdapter(Encryption::class);
-
-        return $encryption->hash($password);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

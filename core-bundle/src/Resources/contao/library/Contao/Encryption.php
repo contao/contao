@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+@trigger_error('Using the Contao\Encryption class has been deprecated and will no longer work in Contao 5.0. Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
+
 
 /**
  * Encrypts and decrypts data
@@ -23,6 +25,9 @@ namespace Contao;
  *     $decrypted = Encryption::decrypt($encrypted);
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 3.5, to be removed in Contao 5.0.
+ *             Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.
  */
 class Encryption
 {
@@ -47,14 +52,9 @@ class Encryption
 	 * @param string $strKey   An optional encryption key
 	 *
 	 * @return string The encrypted value
-	 *
-	 * @deprecated Deprecated since Contao 3.5, to be removed in Contao 5.
-	 *             Use a third-party library such as OpenSSL or phpseclib instead.
 	 */
 	public static function encrypt($varValue, $strKey=null)
 	{
-		@trigger_error('Using Encryption::encrypt() has been deprecated and will no longer work in Contao 5.0. Use a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
-
 		// Recursively encrypt arrays
 		if (\is_array($varValue))
 		{
@@ -98,14 +98,9 @@ class Encryption
 	 * @param string $strKey   An optional encryption key
 	 *
 	 * @return string The decrypted value
-	 *
-	 * @deprecated Deprecated since Contao 3.5, to be removed in Contao 5.
-	 *             Use a third-party library such as OpenSSL or phpseclib instead.
 	 */
 	public static function decrypt($varValue, $strKey=null)
 	{
-		@trigger_error('Using Encryption::decrypt() has been deprecated and will no longer work in Contao 5.0. Use a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
-
 		// Recursively decrypt arrays
 		if (\is_array($varValue))
 		{
@@ -175,66 +170,23 @@ class Encryption
 	 * @param string $strPassword The unencrypted password
 	 *
 	 * @return string The encrypted password
-	 *
-	 * @throws \Exception If none of the algorithms is available
 	 */
 	public static function hash($strPassword)
 	{
-		$intCost = \Config::get('bcryptCost') ?: 10;
-
-		if ($intCost < 4 || $intCost > 31)
-		{
-			throw new \Exception("The bcrypt cost has to be between 4 and 31, $intCost given");
-		}
-
-		if (\function_exists('password_hash'))
-		{
-			return password_hash($strPassword, PASSWORD_DEFAULT, array('cost'=>$intCost));
-		}
-		elseif (CRYPT_BLOWFISH == 1)
-		{
-			return crypt($strPassword, '$2y$' . sprintf('%02d', $intCost) . '$' . md5(uniqid(mt_rand(), true)) . '$');
-		}
-		elseif (CRYPT_SHA512 == 1)
-		{
-			return crypt($strPassword, '$6$' . md5(uniqid(mt_rand(), true)) . '$');
-		}
-		elseif (CRYPT_SHA256 == 1)
-		{
-			return crypt($strPassword, '$5$' . md5(uniqid(mt_rand(), true)) . '$');
-		}
-
-		throw new \Exception('None of the required crypt() algorithms is available');
+		return password_hash($strPassword, PASSWORD_DEFAULT);
 	}
 
 
 	/**
-	 * Test whether a password hash has been generated with crypt()
+	 * Test whether a password hash has been generated with a password API compatible algorithm
 	 *
 	 * @param string $strHash The password hash
 	 *
-	 * @return boolean True if the password hash has been generated with crypt()
+	 * @return boolean True if the password hash has been generated with a password API compatible algorithm
 	 */
 	public static function test($strHash)
 	{
-		if (strncmp($strHash, '$2y$', 4) === 0)
-		{
-			return true;
-		}
-		elseif (strncmp($strHash, '$2a$', 4) === 0)
-		{
-			return true;
-		}
-		elseif (strncmp($strHash, '$6$', 3) === 0)
-		{
-			return true;
-		}
-		elseif (strncmp($strHash, '$5$', 3) === 0)
-		{
-			return true;
-		}
-
-		return false;
+		return password_get_info($strHash)['algo'] > 0;
 	}
 
 
@@ -250,38 +202,12 @@ class Encryption
 	 */
 	public static function verify($strPassword, $strHash)
 	{
-		if (\function_exists('password_verify'))
-		{
-			return password_verify($strPassword, $strHash);
-		}
-
-		$getLength = function($str) {
-			return \extension_loaded('mbstring') ? mb_strlen($str, '8bit') : \strlen($str);
-		};
-
-		$newHash = crypt($strPassword, $strHash);
-
-		if (!\is_string($newHash) || $getLength($newHash) != $getLength($strHash) || $getLength($newHash) <= 13)
-		{
-			return false;
-		}
-
-		$intStatus = 0;
-
-		for ($i=0; $i<$getLength($newHash); $i++)
-		{
-			$intStatus |= (\ord($newHash[$i]) ^ \ord($strHash[$i]));
-		}
-
-		return $intStatus === 0;
+		return password_verify($strPassword, $strHash);
 	}
 
 
 	/**
 	 * Initialize the encryption module
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Encryption class is now static.
 	 */
 	protected function __construct()
 	{
@@ -291,9 +217,6 @@ class Encryption
 
 	/**
 	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Encryption class is now static.
 	 */
 	final public function __clone() {}
 
@@ -302,14 +225,9 @@ class Encryption
 	 * Return the object instance (Singleton)
 	 *
 	 * @return Encryption
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Encryption class is now static.
 	 */
 	public static function getInstance()
 	{
-		@trigger_error('Using Encryption::getInstance() has been deprecated and will no longer work in Contao 5.0. The Encryption class is now static.', E_USER_DEPRECATED);
-
 		if (static::$objInstance === null)
 		{
 			static::$objInstance = new static();

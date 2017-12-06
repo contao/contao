@@ -156,6 +156,29 @@ class StoreRefererListenerTest extends TestCase
         ];
     }
 
+    public function testDoesNotStoreTheRefererIfTheResponseIsNotOk(): void
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $responseEvent = new FilterResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response('', 404)
+        );
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getToken')
+        ;
+
+        $listener = $this->mockListener(null, $tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
     /**
      * @param AnonymousToken $noUserReturn
      *
