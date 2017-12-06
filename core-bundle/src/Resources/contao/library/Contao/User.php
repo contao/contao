@@ -409,9 +409,9 @@ abstract class User extends \System
 		}
 
 		// The password has been generated with crypt()
-		if (\Encryption::test($this->password))
+		if (password_get_info($this->password)['algo'] > 0)
 		{
-			$blnAuthenticated = \Encryption::verify($request->request->get('password'), $this->password);
+			$blnAuthenticated = password_verify($request->request->get('password'), $this->password);
 		}
 		else
 		{
@@ -421,7 +421,7 @@ abstract class User extends \System
 			// Store a SHA-512 encrpyted version of the password
 			if ($blnAuthenticated)
 			{
-				$this->password = \Encryption::hash($request->request->get('password'));
+				$this->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
 			}
 		}
 

@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Fix the Encrption class not supporting PHP 7.2 (see contao/core#8820).
  * Handle single file uploads in FileUpload::getFilesFromGlobal() (see #1192).
 
 ### 4.4.8 (2017-11-15)
