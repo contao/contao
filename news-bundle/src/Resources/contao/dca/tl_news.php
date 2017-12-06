@@ -220,7 +220,11 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'sorting'                 => true,
 			'flag'                    => 8,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'load_callback' => array
+			(
+				array('tl_news', 'loadDate')
+			),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'time' => array
@@ -229,7 +233,11 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'default'                 => time(),
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'time', 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'time', 'mandatory'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_news', 'loadTime')
+			),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'subheadline' => array
@@ -662,6 +670,32 @@ class tl_news extends Backend
 		}
 
 		return $varValue;
+	}
+
+
+	/**
+	 * Set the timestamp to 00:00:00 (see #26)
+	 *
+	 * @param integer $value
+	 *
+	 * @return integer
+	 */
+	public function loadDate($value)
+	{
+		return strtotime(date('Y-m-d', $value) . ' 00:00:00');
+	}
+
+
+	/**
+	 * Set the timestamp to 1970-01-01 (see #26)
+	 *
+	 * @param integer $value
+	 *
+	 * @return integer
+	 */
+	public function loadTime($value)
+	{
+		return strtotime('1970-01-01 ' . date('H:i:s', $value));
 	}
 
 

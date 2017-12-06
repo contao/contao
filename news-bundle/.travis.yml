@@ -16,9 +16,10 @@ env:
 matrix:
   include:
     - php: 7.1
-    - php: 7.1
+    - php: 7.2
+    - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-    - php: 7.1
+    - php: 7.2
       env: COVERAGE='--coverage-clover build/logs/clover.xml'
     - php: 7.2
   fast_finish: true

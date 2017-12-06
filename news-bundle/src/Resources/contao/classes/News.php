@@ -479,7 +479,7 @@ class News extends \Frontend
 		}
 
 		// Link to the default page
-		return sprintf($strUrl, ($objItem->alias ?: $objItem->id));
+		return sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));
 	}
 
 
