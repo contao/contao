@@ -184,7 +184,7 @@ class InstallationController implements ContainerAwareInterface
             ]);
         }
 
-        $installTool->persistConfig('installPassword', password_hash($password));
+        $installTool->persistConfig('installPassword', password_hash($password, PASSWORD_DEFAULT));
         $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
