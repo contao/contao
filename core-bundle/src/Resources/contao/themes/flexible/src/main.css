@@ -842,17 +842,9 @@ table.tl_listing {
 	background:none;
 }
 .cte_type {
-	margin-bottom:9px;
+	margin:2px 0 6px;
 	font-size:.75rem;
-	color:#c6c6c6;
-}
-.cte_type.published {
-	padding:1px 0 2px 20px;
-	background:url("icons/published.svg") no-repeat left center;
-}
-.cte_type.unpublished {
-	padding:1px 0 2px 20px;
-	background:url("icons/unpublished.svg") no-repeat left center;
+	color:#808080;
 }
 .cte_type.published,.cte_type.published a {
 	color:#589b0e;
@@ -902,8 +894,12 @@ table.tl_listing {
 	vertical-align:top;
 	margin-top:3px;
 }
+.limit_height .widget {
+    margin-left: 0;
+    margin-right: 0;
+}
 .limit_height .widget-submit {
-	margin-left:183px;
+	margin-left:180px;
 }
 .limit_height .checkbox_container label,.limit_height .radio_container label {
 	display:initial;
