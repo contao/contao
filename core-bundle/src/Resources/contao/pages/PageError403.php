@@ -86,7 +86,7 @@ class PageError403 extends \Frontend
 		}
 		else
 		{
-			$objRootPage = \PageModel::findPublishedById(is_integer($objRootPage) ? $objRootPage : $objRootPage->id);
+			$objRootPage = \PageModel::findPublishedById(\is_integer($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
 
 		// Look for a 403 page

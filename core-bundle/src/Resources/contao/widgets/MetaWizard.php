@@ -47,7 +47,7 @@ class MetaWizard extends \Widget
 			case 'metaFields':
 				if (!array_is_assoc($varValue))
 				{
-					$varValue = array_combine($varValue, array_fill(0, count($varValue), ''));
+					$varValue = array_combine($varValue, array_fill(0, \count($varValue), ''));
 				}
 
 				$this->arrConfiguration['metaFields'] = $varValue;
@@ -69,7 +69,7 @@ class MetaWizard extends \Widget
 	 */
 	public function validator($varInput)
 	{
-		if (!is_array($varInput))
+		if (!\is_array($varInput))
 		{
 			return null; // see #382
 		}
@@ -85,7 +85,7 @@ class MetaWizard extends \Widget
 				if ($v != '')
 				{
 					// Take the fields from the DCA (see #4327)
-					$varInput[$v] = array_combine(array_keys($this->metaFields), array_fill(0, count($this->metaFields), ''));
+					$varInput[$v] = array_combine(array_keys($this->metaFields), array_fill(0, \count($this->metaFields), ''));
 				}
 
 				unset($varInput[$k]);
@@ -123,9 +123,9 @@ class MetaWizard extends \Widget
 		$languages = array_intersect_key($languages, array_flip($existing));
 
 		// Make sure there is at least an empty array
-		if (!is_array($this->varValue) || empty($this->varValue))
+		if (!\is_array($this->varValue) || empty($this->varValue))
 		{
-			if (count($languages) > 0)
+			if (\count($languages) > 0)
 			{
 				$key = isset($languages[$GLOBALS['TL_LANGUAGE']]) ? $GLOBALS['TL_LANGUAGE'] : key($languages);
 				$this->varValue = array($key=>array()); // see #4188
@@ -171,7 +171,7 @@ class MetaWizard extends \Widget
 		// Add the remaining languages
 		foreach ($languages as $k=>$v)
 		{
-			$options[] = '<option value="' . $k . '"' . (in_array($k, $taken) ? ' disabled' : '') . '>' . $v . '</option>';
+			$options[] = '<option value="' . $k . '"' . (\in_array($k, $taken) ? ' disabled' : '') . '>' . $v . '</option>';
 		}
 
 		$return .= '

@@ -86,7 +86,7 @@ class TableWizard extends \Widget
 		$arrRowButtons = array('rcopy', 'rdelete', 'rdrag');
 
 		// Make sure there is at least an empty array
-		if (!is_array($this->varValue) || empty($this->varValue))
+		if (!\is_array($this->varValue) || empty($this->varValue))
 		{
 			$this->varValue = array(array(''));
 		}
@@ -98,7 +98,7 @@ class TableWizard extends \Widget
     <tr>';
 
 		// Add column buttons
-		for ($i=0, $c=count($this->varValue[0]); $i<$c; $i++)
+		for ($i=0, $c=\count($this->varValue[0]); $i<$c; $i++)
 		{
 			$return .= '
       <td>';
@@ -119,13 +119,13 @@ class TableWizard extends \Widget
   <tbody class="sortable">';
 
 		// Add rows
-		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
+		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
     <tr>';
 
 			// Add cells
-			for ($j=0, $d=count($this->varValue[$i]); $j<$d; $j++)
+			for ($j=0, $d=\count($this->varValue[$i]); $j<$d; $j++)
 			{
 				$return .= '
       <td class="tcontainer"><textarea name="'.$this->strId.'['.$i.']['.$j.']" class="tl_textarea noresize" rows="'.$this->intRows.'" cols="'.$this->intCols.'"'.$this->getAttributes().'>'.\StringUtil::specialchars($this->varValue[$i][$j]).'</textarea></td>';

@@ -351,7 +351,7 @@ class BackendCsvImportController
     {
         $files = $uploader->uploadTo('system/tmp');
 
-        if (count($files) < 1) {
+        if (\count($files) < 1) {
             throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['all_fields']);
         }
 

@@ -131,7 +131,7 @@ class ModuleArticlenav extends \Module
 		}
 
 		$this->Template->articles = $articles;
-		$total = count($articles);
+		$total = \count($articles);
 
 		// Link to first element
 		if ($intActive > 1)

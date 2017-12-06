@@ -68,7 +68,7 @@ class ModulePassword extends \Module
 		$this->loadDataContainer('tl_member');
 
 		// Set new password
-		if (strlen(\Input::get('token')))
+		if (\strlen(\Input::get('token')))
 		{
 			$this->setNewPassword();
 
@@ -227,7 +227,7 @@ class ModulePassword extends \Module
 		$objSession = \System::getContainer()->get('session');
 
 		// Validate the field
-		if (strlen(\Input::post('FORM_SUBMIT')) && \Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
+		if (\strlen(\Input::post('FORM_SUBMIT')) && \Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
 		{
 			$objWidget->validate();
 
@@ -249,7 +249,7 @@ class ModulePassword extends \Module
 				}
 
 				// HOOK: set new password callback
-				if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
+				if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && \is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
 				{
 					foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 					{

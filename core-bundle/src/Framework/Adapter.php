@@ -44,6 +44,6 @@ class Adapter
      */
     public function __call($name, array $arguments = [])
     {
-        return call_user_func_array([$this->class, $name], $arguments);
+        return \call_user_func_array([$this->class, $name], $arguments);
     }
 }

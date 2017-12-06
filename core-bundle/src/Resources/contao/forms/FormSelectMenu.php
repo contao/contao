@@ -116,11 +116,11 @@ class FormSelectMenu extends \Widget
 		$options = $this->getPost($this->strName);
 
 		// Check if there is at least one value
-		if ($mandatory && is_array($options))
+		if ($mandatory && \is_array($options))
 		{
 			foreach ($options as $option)
 			{
-				if (strlen($option))
+				if (\strlen($option))
 				{
 					$this->mandatory = false;
 					break;
@@ -190,7 +190,7 @@ class FormSelectMenu extends \Widget
 		}
 
 		// Make sure there are no multiple options in single mode
-		elseif (is_array($this->varValue))
+		elseif (\is_array($this->varValue))
 		{
 			$this->varValue = $this->varValue[0];
 		}
@@ -224,7 +224,7 @@ class FormSelectMenu extends \Widget
 		$blnHasGroups = false;
 
 		// Add empty option if there are none
-		if (empty($this->arrOptions) || !is_array($this->arrOptions))
+		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value' => '', 'label' => '-'));
 		}
@@ -294,13 +294,13 @@ class FormSelectMenu extends \Widget
 		}
 
 		// Make sure there are no multiple options in single mode
-		elseif (is_array($this->varValue))
+		elseif (\is_array($this->varValue))
 		{
 			$this->varValue = $this->varValue[0];
 		}
 
 		// Add empty option if there are none
-		if (empty($this->arrOptions) || !is_array($this->arrOptions))
+		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));
 		}

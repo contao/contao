@@ -125,7 +125,7 @@ class StringUtil
 		// Seperate tags and text
 		$arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-		for ($i=0, $c=count($arrChunks); $i<$c; $i++)
+		for ($i=0, $c=\count($arrChunks); $i<$c; $i++)
 		{
 			// Buffer tags to include them later
 			if (preg_match('/<([^>]+)>/', $arrChunks[$i]))
@@ -162,7 +162,7 @@ class StringUtil
 					}
 
 					// Skip empty tags
-					if (in_array($strTagName, $arrEmptyTags))
+					if (\in_array($strTagName, $arrEmptyTags))
 					{
 						continue;
 					}
@@ -183,7 +183,7 @@ class StringUtil
 					{
 						$arrOpenTags = array_values($arrOpenTags);
 
-						for ($j=count($arrOpenTags)-1; $j>=0; $j--)
+						for ($j=\count($arrOpenTags)-1; $j>=0; $j--)
 						{
 							if ($strTagName == '/' . $arrOpenTags[$j])
 							{
@@ -195,7 +195,7 @@ class StringUtil
 				}
 
 				// If the current chunk contains text, add tags and text to the return string
-				if (strlen($arrChunks[$i]) || $i<$c)
+				if (\strlen($arrChunks[$i]) || $i<$c)
 				{
 					$strReturn .= implode('', $arrTagBuffer) . $arrChunks[$i];
 				}
@@ -615,11 +615,11 @@ class StringUtil
 			{
 				if (strpos($strValue, '.') === false)
 				{
-					$varValue = intval($strValue);
+					$varValue = \intval($strValue);
 				}
 				else
 				{
-					$varValue = floatval($strValue);
+					$varValue = \floatval($strValue);
 				}
 			}
 			elseif (strtolower($strValue) === 'true')
@@ -679,10 +679,10 @@ class StringUtil
 		};
 
 		// The last item is true if it is inside a matching if-tag
-		$arrStack = [true];
+		$arrStack = array(true);
 
 		// The last item is true if any if/elseif at that level was true
-		$arrIfStack = [true];
+		$arrIfStack = array(true);
 
 		// Tokenize the string into tag and text blocks
 		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
@@ -691,8 +691,8 @@ class StringUtil
 		foreach ($arrTags as $strTag)
 		{
 			// True if it is inside a matching if-tag
-			$blnCurrent = $arrStack[count($arrStack) - 1];
-			$blnCurrentIf = $arrIfStack[count($arrIfStack) - 1];
+			$blnCurrent = $arrStack[\count($arrStack) - 1];
+			$blnCurrentIf = $arrIfStack[\count($arrIfStack) - 1];
 
 			if (strncmp($strTag, '{if ', 4) === 0)
 			{
@@ -705,14 +705,14 @@ class StringUtil
 				$blnExpression = $evaluateExpression(substr($strTag, 8, -1));
 				array_pop($arrStack);
 				array_pop($arrIfStack);
-				$arrStack[] = !$blnCurrentIf && $arrStack[count($arrStack) - 1] && $blnExpression;
+				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1] && $blnExpression;
 				$arrIfStack[] = $blnCurrentIf || $blnExpression;
 			}
 			elseif (strncmp($strTag, '{else}', 6) === 0)
 			{
 				array_pop($arrStack);
 				array_pop($arrIfStack);
-				$arrStack[] = !$blnCurrentIf && $arrStack[count($arrStack) - 1];
+				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1];
 				$arrIfStack[] = true;
 			}
 			elseif (strncmp($strTag, '{endif}', 7) === 0)
@@ -727,7 +727,7 @@ class StringUtil
 		}
 
 		// Throw an exception if there is an error
-		if (count($arrStack) !== 1)
+		if (\count($arrStack) !== 1)
 		{
 			throw new \Exception('Error parsing simple tokens');
 		}
@@ -774,7 +774,7 @@ class StringUtil
 		$return = '';
 		$paths = preg_split('/((src|href)="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		for ($i=0, $c=count($paths); $i<$c; $i=$i+4)
+		for ($i=0, $c=\count($paths); $i<$c; $i=$i+4)
 		{
 			$return .= $paths[$i];
 
@@ -811,7 +811,7 @@ class StringUtil
 		$return = '';
 		$paths = preg_split('/((src|href)="([^"]*)\{\{file::([^"\}]+)\}\}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		for ($i=0, $c=count($paths); $i<$c; $i=$i+5)
+		for ($i=0, $c=\count($paths); $i<$c; $i=$i+5)
 		{
 			$return .= $paths[$i];
 
@@ -882,7 +882,7 @@ class StringUtil
 		// Remove the flags from the URL
 		$url = $chunks[0];
 
-		for ($i=1; $i<count($chunks); $i++)
+		for ($i=1; $i<\count($chunks); $i++)
 		{
 			if (empty($chunks[$i]))
 			{
@@ -1037,7 +1037,7 @@ class StringUtil
 	public static function deserialize($varValue, $blnForceArray=false)
 	{
 		// Already an array
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			return $varValue;
 		}
@@ -1049,7 +1049,7 @@ class StringUtil
 		}
 
 		// Not a string
-		if (!is_string($varValue))
+		if (!\is_string($varValue))
 		{
 			return $blnForceArray ? array($varValue) : $varValue;
 		}
@@ -1070,7 +1070,7 @@ class StringUtil
 
 		$varUnserialized = @unserialize($varValue);
 
-		if (is_array($varUnserialized))
+		if (\is_array($varUnserialized))
 		{
 			$varValue = $varUnserialized;
 		}
@@ -1086,8 +1086,8 @@ class StringUtil
 	/**
 	 * Split a string into fragments, remove whitespace and return fragments as array
 	 *
-	 * @param string  $strPattern The split pattern
-	 * @param string  $strString  The input string
+	 * @param string $strPattern The split pattern
+	 * @param string $strString  The input string
 	 *
 	 * @return array The fragments array
 	 */
@@ -1102,7 +1102,7 @@ class StringUtil
 		}
 
 		// Split
-		if (strlen($strPattern) == 1)
+		if (\strlen($strPattern) == 1)
 		{
 			$arrFragments = array_map('trim', explode($strPattern, $strString));
 		}
@@ -1112,7 +1112,7 @@ class StringUtil
 		}
 
 		// Empty array
-		if (count($arrFragments) < 2 && !strlen($arrFragments[0]))
+		if (\count($arrFragments) < 2 && !\strlen($arrFragments[0]))
 		{
 			$arrFragments = array();
 		}
@@ -1137,10 +1137,10 @@ class StringUtil
 
 		if ($length === null)
 		{
-			$length = strlen(TL_ROOT);
+			$length = \strlen(TL_ROOT);
 		}
 
-		if (strncmp($path, TL_ROOT, $length) !== 0 || strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		if (strncmp($path, TL_ROOT, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
 		{
 			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir', $path));
 		}

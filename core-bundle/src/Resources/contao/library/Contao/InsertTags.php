@@ -81,7 +81,7 @@ class InsertTags extends \Controller
 		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
 		$tags = preg_split('~{{([\pL\pN][^{}]*)}}~u', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		if (count($tags) < 2)
+		if (\count($tags) < 2)
 		{
 			return \StringUtil::restoreBasicEntities($strBuffer);
 		}
@@ -92,7 +92,7 @@ class InsertTags extends \Controller
 		static $arrItCache;
 		$arrCache = &$arrItCache[$blnCache];
 
-		for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=2)
+		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
 			$strTag = $tags[$_rit+1];
@@ -108,7 +108,7 @@ class InsertTags extends \Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && !in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && !\in_array('refresh', $flags))
 			{
 				$strBuffer .= $arrCache[$strTag];
 				continue;
@@ -117,13 +117,13 @@ class InsertTags extends \Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
 					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction',
-						['insertTag' => '{{' . $strTag . '}}'],
-						['pageId' => $objPage->id, 'request' => \Environment::get('request')]
+						array('insertTag' => '{{' . $strTag . '}}'),
+						array('pageId' => $objPage->id, 'request' => \Environment::get('request'))
 					), 'esi');
 					continue;
 				}
@@ -189,7 +189,7 @@ class InsertTags extends \Controller
 				case 'label':
 					$keys = explode(':', $elements[1]);
 
-					if (count($keys) < 2)
+					if (\count($keys) < 2)
 					{
 						$arrCache[$strTag] = '';
 						break;
@@ -247,7 +247,7 @@ class InsertTags extends \Controller
 
 					\System::loadLanguageFile($file);
 
-					if (count($keys) == 2)
+					if (\count($keys) == 2)
 					{
 						$arrCache[$strTag] = $GLOBALS['TL_LANG'][$keys[0]][$keys[1]];
 					}
@@ -302,17 +302,17 @@ class InsertTags extends \Controller
 						{
 							$arrCache[$strTag] = \Date::parse(\Config::get('datimFormat'), $value);
 						}
-						elseif (is_array($value))
+						elseif (\is_array($value))
 						{
 							$arrCache[$strTag] = implode(', ', $value);
 						}
-						elseif (is_array($opts) && array_is_assoc($opts))
+						elseif (\is_array($opts) && array_is_assoc($opts))
 						{
 							$arrCache[$strTag] = isset($opts[$value]) ? $opts[$value] : $value;
 						}
-						elseif (is_array($rfrc))
+						elseif (\is_array($rfrc))
 						{
-							$arrCache[$strTag] = isset($rfrc[$value]) ? ((is_array($rfrc[$value])) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
+							$arrCache[$strTag] = isset($rfrc[$value]) ? ((\is_array($rfrc[$value])) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
 						}
 						else
 						{
@@ -340,7 +340,7 @@ class InsertTags extends \Controller
 						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 						// No language files if the page is cached
-						if (!strlen($strTitle))
+						if (!\strlen($strTitle))
 						{
 							$strTitle = 'Go back';
 						}
@@ -611,7 +611,7 @@ class InsertTags extends \Controller
 					{
 						$langs = \StringUtil::trimsplit(',', $elements[1]);
 
-						if (in_array($objPage->language, $langs))
+						if (\in_array($objPage->language, $langs))
 						{
 							for (; $_rit<$_cnt; $_rit+=2)
 							{
@@ -945,7 +945,7 @@ class InsertTags extends \Controller
 
 				// HOOK: pass unknown tags to callback functions
 				default:
-					if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
+					if (isset($GLOBALS['TL_HOOKS']['replaceInsertTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceInsertTags']))
 					{
 						foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 						{
@@ -1014,7 +1014,7 @@ class InsertTags extends \Controller
 							break;
 
 						case 'flatten':
-							if (!is_array($arrCache[$strTag]))
+							if (!\is_array($arrCache[$strTag]))
 							{
 								break;
 							}
@@ -1039,7 +1039,7 @@ class InsertTags extends \Controller
 
 						// HOOK: pass unknown flags to callback functions
 						default:
-							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
+							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))
 							{
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{

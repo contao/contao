@@ -59,7 +59,7 @@ class ModuleRssReader extends \Module
 		$this->objFeed = new \SimplePie();
 		$arrUrls = \StringUtil::trimsplit('[\n\t ]', trim($this->rss_feed));
 
-		if (count($arrUrls) > 1)
+		if (\count($arrUrls) > 1)
 		{
 			$this->objFeed->set_feed_url($arrUrls);
 		}
@@ -128,9 +128,9 @@ class ModuleRssReader extends \Module
 		}
 
 		// Get the items (see #6107)
-		$arrItems = array_slice($this->objFeed->get_items(0, intval($this->numberOfItems) + intval($this->skipFirst)), intval($this->skipFirst), (intval($this->numberOfItems) ?: null));
+		$arrItems = \array_slice($this->objFeed->get_items(0, \intval($this->numberOfItems) + \intval($this->skipFirst)), \intval($this->skipFirst), (\intval($this->numberOfItems) ?: null));
 
-		$limit = count($arrItems);
+		$limit = \count($arrItems);
 		$offset = 0;
 
 		// Split pages
@@ -141,7 +141,7 @@ class ModuleRssReader extends \Module
 			$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
 
 			// Do not index or cache the page if the page number is outside the range
-			if ($page < 1 || $page > max(ceil(count($arrItems)/$this->perPage), 1))
+			if ($page < 1 || $page > max(ceil(\count($arrItems)/$this->perPage), 1))
 			{
 				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
@@ -150,15 +150,15 @@ class ModuleRssReader extends \Module
 			$offset = (($page - 1) * $this->perPage);
 			$limit = $this->perPage + $offset;
 
-			$objPagination = new \Pagination(count($arrItems), $this->perPage, \Config::get('maxPaginationLinks'), $id);
+			$objPagination = new \Pagination(\count($arrItems), $this->perPage, \Config::get('maxPaginationLinks'), $id);
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 
 		$items = array();
-		$last = min($limit, count($arrItems)) - 1;
+		$last = min($limit, \count($arrItems)) - 1;
 
 		/** @var \SimplePie_Item[] $arrItems */
-		for ($i=$offset, $c=count($arrItems); $i<$limit && $i<$c; $i++)
+		for ($i=$offset, $c=\count($arrItems); $i<$limit && $i<$c; $i++)
 		{
 			$items[$i] = array
 			(

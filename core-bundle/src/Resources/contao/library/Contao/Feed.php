@@ -171,7 +171,7 @@ class Feed
 			}
 
 			// Enclosures
-			if (is_array($objItem->enclosure))
+			if (\is_array($objItem->enclosure))
 			{
 				foreach ($objItem->enclosure as $arrEnclosure)
 				{
@@ -223,7 +223,7 @@ class Feed
 			}
 
 			// Enclosures
-			if (is_array($objItem->enclosure))
+			if (\is_array($objItem->enclosure))
 			{
 				foreach ($objItem->enclosure as $arrEnclosure)
 				{

@@ -65,7 +65,7 @@ class Search
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
 		{
-			$arrSet['filesize'] = number_format((strlen($arrData['content']) / 1024 ), 2, '.', '');
+			$arrSet['filesize'] = number_format((\strlen($arrData['content']) / 1024 ), 2, '.', '');
 		}
 
 		// Replace special characters
@@ -127,7 +127,7 @@ class Search
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['indexPage']) && is_array($GLOBALS['TL_HOOKS']['indexPage']))
+		if (isset($GLOBALS['TL_HOOKS']['indexPage']) && \is_array($GLOBALS['TL_HOOKS']['indexPage']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['indexPage'] as $callback)
 			{
@@ -140,7 +140,7 @@ class Search
 
 		$arrMatches = array();
 		preg_match('/<\/head>/', $strContent, $arrMatches, PREG_OFFSET_CAPTURE);
-		$intOffset = strlen($arrMatches[0][0]) + $arrMatches[0][1];
+		$intOffset = \strlen($arrMatches[0][0]) + $arrMatches[0][1];
 
 		// Split page in head and body section
 		$strHead = substr($strContent, 0, $intOffset);
@@ -195,7 +195,7 @@ class Search
 				$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
 							->execute($objIndex->id);
 			}
-			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false || strlen($arrSet['url']) > strlen($objIndex->url))
+			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false || \strlen($arrSet['url']) > \strlen($objIndex->url))
 			{
 				// The current URL is more canonical (shorter and/or less fragments)
 				$arrSet['url'] = $objIndex->url;
@@ -252,7 +252,7 @@ class Search
 
 			$strWord = trim($strWord);
 
-			if (!strlen($strWord) || preg_match('/^[\.:,\'_-]+$/', $strWord))
+			if (!\strlen($strWord) || preg_match('/^[\.:,\'_-]+$/', $strWord))
 			{
 				continue;
 			}
@@ -313,7 +313,7 @@ class Search
 		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\' *+".:,-]/u'), ' ', $strKeywords);
 
 		// Check keyword string
-		if (!strlen($strKeywords))
+		if (!\strlen($strKeywords))
 		{
 			throw new \Exception('Empty keyword string');
 		}
@@ -330,7 +330,7 @@ class Search
 
 		foreach ($arrChunks[0] as $strKeyword)
 		{
-			if (substr($strKeyword, -1) == '*' && strlen($strKeyword) > 1)
+			if (substr($strKeyword, -1) == '*' && \strlen($strKeyword) > 1)
 			{
 				$arrWildcards[] = str_replace('*', '%', $strKeyword);
 				continue;
@@ -364,7 +364,7 @@ class Search
 
 				// Wildcards
 				case '*':
-					if (strlen($strKeyword) > 1)
+					if (\strlen($strKeyword) > 1)
 					{
 						$arrWildcards[] = str_replace('*', '%', $strKeyword);
 					}
@@ -389,10 +389,10 @@ class Search
 		}
 
 		// Count keywords
-		$intPhrases = count($arrPhrases);
-		$intWildcards = count($arrWildcards);
-		$intIncluded = count($arrIncluded);
-		$intExcluded = count($arrExcluded);
+		$intPhrases = \count($arrPhrases);
+		$intWildcards = \count($arrWildcards);
+		$intIncluded = \count($arrIncluded);
+		$intExcluded = \count($arrExcluded);
 
 		$intKeywords = 0;
 		$arrValues = array();
@@ -419,9 +419,9 @@ class Search
 		// Get keywords
 		if (!empty($arrKeywords))
 		{
-			$arrAllKeywords[] = implode(' OR ', array_fill(0, count($arrKeywords), 'word=?'));
+			$arrAllKeywords[] = implode(' OR ', array_fill(0, \count($arrKeywords), 'word=?'));
 			$arrValues = array_merge($arrValues, $arrKeywords);
-			$intKeywords += count($arrKeywords);
+			$intKeywords += \count($arrKeywords);
 		}
 
 		// Get included keywords
@@ -438,9 +438,9 @@ class Search
 			foreach ($arrPhrases as $strPhrase)
 			{
 				$arrWords = explode('[^[:alnum:]]+', Utf8::substr($strPhrase, 7, -7));
-				$arrAllKeywords[] = implode(' OR ', array_fill(0, count($arrWords), 'word=?'));
+				$arrAllKeywords[] = implode(' OR ', array_fill(0, \count($arrWords), 'word=?'));
 				$arrValues = array_merge($arrValues, $arrWords);
-				$intKeywords += count($arrWords);
+				$intKeywords += \count($arrWords);
 			}
 		}
 
@@ -475,7 +475,7 @@ class Search
 		}
 
 		// Limit results to a particular set of pages
-		if (!empty($arrPid) && is_array($arrPid))
+		if (!empty($arrPid) && \is_array($arrPid))
 		{
 			$strQuery .= " AND tl_search_index.pid IN(SELECT id FROM tl_search WHERE pid IN(" . implode(',', array_map('intval', $arrPid)) . "))";
 		}

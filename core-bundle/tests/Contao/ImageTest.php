@@ -39,7 +39,7 @@ class ImageTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$rootDir = dirname(dirname(__DIR__)).'/tmp';
+        self::$rootDir = \dirname(\dirname(__DIR__)).'/tmp';
 
         $fs = new Filesystem();
         $fs->mkdir(self::$rootDir);
@@ -77,8 +77,8 @@ class ImageTest extends TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
-        define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', self::$rootDir);
+        \define('TL_ERROR', 'ERROR');
+        \define('TL_ROOT', self::$rootDir);
 
         $container = $this->mockContainerWithContaoScopes();
         $this->addImageServicesToContainer($container, self::$rootDir);
@@ -1568,7 +1568,7 @@ class ImageTest extends TestCase
     public function testExecutesTheResizeHook()
     {
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
         ];
 
         $file = new File('dummy.jpg');
@@ -1625,7 +1625,7 @@ class ImageTest extends TestCase
             .'_'.$imageObj->getTargetHeight()
             .'_'.$imageObj->getResizeMode()
             .'_'.$imageObj->getTargetPath()
-            .'_'.str_replace('\\', '-', get_class($imageObj))
+            .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg'
         ;
 
@@ -1651,7 +1651,7 @@ class ImageTest extends TestCase
         $imageObj->executeResize();
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[get_class($this), 'getImageHookCallback']],
+            'getImage' => [[\get_class($this), 'getImageHookCallback']],
         ];
 
         $imageObj = new Image($file);
@@ -1709,9 +1709,9 @@ class ImageTest extends TestCase
             .'_'.$targetWidth
             .'_'.$targetHeight
             .'_'.$resizeMode
-            .'_'.str_replace('\\', '-', get_class($fileObj))
+            .'_'.str_replace('\\', '-', \get_class($fileObj))
             .'_'.$targetPath
-            .'_'.str_replace('\\', '-', get_class($imageObj))
+            .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg'
         ;
 

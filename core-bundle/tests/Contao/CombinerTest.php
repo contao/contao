@@ -72,9 +72,9 @@ class CombinerTest extends TestCase
     {
         parent::setUp();
 
-        define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', self::$rootDir);
-        define('TL_ASSETS_URL', '');
+        \define('TL_ERROR', 'ERROR');
+        \define('TL_ROOT', self::$rootDir);
+        \define('TL_ASSETS_URL', '');
 
         $this->container = $this->mockContainerWithContaoScopes();
         $this->container->setParameter('contao.web_dir', self::$rootDir.'/web');

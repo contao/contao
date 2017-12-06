@@ -67,7 +67,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     {
         $reflection = new \ReflectionClass($class);
 
-        if (is_dir($dir = dirname($reflection->getFileName()).'/Resources/contao')) {
+        if (is_dir($dir = \dirname($reflection->getFileName()).'/Resources/contao')) {
             return $dir;
         }
 

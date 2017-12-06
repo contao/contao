@@ -84,18 +84,18 @@ class BackendPreview extends \Backend
 
 		if ($strUrl === null)
 		{
-			$strUrl = \System::getContainer()->get('router')->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = \System::getContainer()->get('router')->generate('contao_root', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$objTemplate->url = $strUrl;
 
 		// Switch to a particular member (see #6546)
-		if (\Input::get('user') && ($this->User->isAdmin || is_array($this->User->amg) && !empty($this->User->amg)))
+		if (\Input::get('user') && ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg)))
 		{
 			$objUser = \MemberModel::findByUsername(\Input::get('user'));
 
 			// Check the allowed member groups
-			if ($objUser !== null && ($this->User->isAdmin || count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
+			if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
 			{
 				$strHash = $this->getSessionHash('FE_USER_AUTH');
 

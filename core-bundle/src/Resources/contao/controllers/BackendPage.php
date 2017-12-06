@@ -79,7 +79,7 @@ class BackendPage extends \Backend
 		$strField = \Input::get('field');
 
 		// Define the current ID
-		define('CURRENT_ID', (\Input::get('table') ? $objSession->get('CURRENT_ID') : \Input::get('id')));
+		\define('CURRENT_ID', (\Input::get('table') ? $objSession->get('CURRENT_ID') : \Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
@@ -113,16 +113,16 @@ class BackendPage extends \Backend
 		$arrValues = array_filter(explode(',', \Input::get('value')));
 
 		// Call the load_callback
-		if (is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $objDca);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$arrValues = $callback($arrValues, $objDca);
 				}

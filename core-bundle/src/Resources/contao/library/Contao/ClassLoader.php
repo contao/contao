@@ -55,7 +55,7 @@ class ClassLoader
 	{
 		@trigger_error('Using ClassLoader::addNamespace() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		if (in_array($name, self::$namespaces))
+		if (\in_array($name, self::$namespaces))
 		{
 			return;
 		}

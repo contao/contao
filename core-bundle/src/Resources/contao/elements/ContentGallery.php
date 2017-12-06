@@ -57,7 +57,7 @@ class ContentGallery extends \ContentElement
 		}
 
 		// Return if there are no files
-		if (!is_array($this->multiSRC) || empty($this->multiSRC))
+		if (!\is_array($this->multiSRC) || empty($this->multiSRC))
 		{
 			return '';
 		}
@@ -187,7 +187,7 @@ class ContentGallery extends \ContentElement
 				{
 					$tmp = \StringUtil::deserialize($this->orderSRC);
 
-					if (!empty($tmp) && is_array($tmp))
+					if (!empty($tmp) && \is_array($tmp))
 					{
 						// Remove all values
 						$arrOrder = array_map(function () {}, array_flip($tmp));
@@ -226,11 +226,11 @@ class ContentGallery extends \ContentElement
 		// Limit the total number of items (see #2652)
 		if ($this->numberOfItems > 0)
 		{
-			$images = array_slice($images, 0, $this->numberOfItems);
+			$images = \array_slice($images, 0, $this->numberOfItems);
 		}
 
 		$offset = 0;
-		$total = count($images);
+		$total = \count($images);
 		$limit = $total;
 
 		// Paginate the result of not randomly sorted (see #8033)
@@ -296,7 +296,7 @@ class ContentGallery extends \ContentElement
 				$key = 'row_' . $rowcount . $class_tr . $class_eo;
 
 				// Empty cell
-				if (!is_array($images[($i+$j)]) || ($j+$i) >= $limit)
+				if (!\is_array($images[($i+$j)]) || ($j+$i) >= $limit)
 				{
 					$objCell->colWidth = $colwidth . '%';
 					$objCell->class = 'col_'.$j . $class_td;

@@ -185,7 +185,7 @@ class Idna
 		// Scheme
 		if (isset($arrUrl['scheme']))
 		{
-			$arrUrl['scheme'] .= ((substr($strUrl, strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
+			$arrUrl['scheme'] .= ((substr($strUrl, \strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
 		}
 
 		// User
@@ -278,7 +278,7 @@ class Idna
 		// Scheme
 		if (isset($arrUrl['scheme']))
 		{
-			$arrUrl['scheme'] .= ((substr($strUrl, strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
+			$arrUrl['scheme'] .= ((substr($strUrl, \strlen($arrUrl['scheme']), 3) == '://') ? '://' : ':');
 		}
 
 		// User

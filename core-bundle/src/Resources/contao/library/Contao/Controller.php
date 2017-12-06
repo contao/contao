@@ -57,7 +57,7 @@ abstract class Controller extends \System
 		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
 		array_push($arrAllowed, 'html5'); // see #3398
 
-		if (!in_array($strFormat, $arrAllowed))
+		if (!\in_array($strFormat, $arrAllowed))
 		{
 			throw new \InvalidArgumentException('Invalid output format ' . $strFormat);
 		}
@@ -106,7 +106,7 @@ abstract class Controller extends \System
 		$arrCustomized = self::braceGlob(TL_ROOT . '/templates/' . $strPrefix . '*.' . $strBrace);
 
 		// Add the customized templates
-		if (is_array($arrCustomized))
+		if (\is_array($arrCustomized))
 		{
 			foreach ($arrCustomized as $strFile)
 			{
@@ -137,7 +137,7 @@ abstract class Controller extends \System
 					{
 						$arrThemeTemplates = self::braceGlob(TL_ROOT . '/' . $objTheme->templates . '/' . $strPrefix . '*.' . $strBrace);
 
-						if (is_array($arrThemeTemplates))
+						if (\is_array($arrThemeTemplates))
 						{
 							foreach ($arrThemeTemplates as $strFile)
 							{
@@ -184,7 +184,7 @@ abstract class Controller extends \System
 	 */
 	public static function getFrontendModule($intId, $strColumn='main')
 	{
-		if (!is_object($intId) && !strlen($intId))
+		if (!\is_object($intId) && !\strlen($intId))
 		{
 			return '';
 		}
@@ -193,7 +193,7 @@ abstract class Controller extends \System
 		global $objPage;
 
 		// Articles
-		if (!is_object($intId) && $intId == 0)
+		if (!\is_object($intId) && $intId == 0)
 		{
 			// Show a particular article only
 			if ($objPage->type == 'regular' && \Input::get('articles'))
@@ -230,13 +230,13 @@ abstract class Controller extends \System
 			}
 
 			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getArticles']) && is_array($GLOBALS['TL_HOOKS']['getArticles']))
+			if (isset($GLOBALS['TL_HOOKS']['getArticles']) && \is_array($GLOBALS['TL_HOOKS']['getArticles']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback)
 				{
 					$return = static::importStatic($callback[0])->{$callback[1]}($objPage->id, $strColumn);
 
-					if (is_string($return))
+					if (\is_string($return))
 					{
 						return $return;
 					}
@@ -289,7 +289,7 @@ abstract class Controller extends \System
 		// Other modules
 		else
 		{
-			if (is_object($intId))
+			if (\is_object($intId))
 			{
 				$objRow = $intId;
 			}
@@ -326,7 +326,7 @@ abstract class Controller extends \System
 			$strBuffer = $objModule->generate();
 
 			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
+			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
 				{
@@ -360,7 +360,7 @@ abstract class Controller extends \System
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		if (is_object($varId))
+		if (\is_object($varId))
 		{
 			$objRow = $varId;
 		}
@@ -400,7 +400,7 @@ abstract class Controller extends \System
 			{
 				$options = \StringUtil::deserialize($objRow->printable);
 
-				if (is_array($options) && in_array('pdf', $options))
+				if (\is_array($options) && \in_array('pdf', $options))
 				{
 					$objArticle = new \ModuleArticle($objRow);
 					$objArticle->generatePdf();
@@ -412,7 +412,7 @@ abstract class Controller extends \System
 		$objRow->multiMode = $blnMultiMode;
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getArticle']) && is_array($GLOBALS['TL_HOOKS']['getArticle']))
+		if (isset($GLOBALS['TL_HOOKS']['getArticle']) && \is_array($GLOBALS['TL_HOOKS']['getArticle']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getArticle'] as $callback)
 			{
@@ -443,13 +443,13 @@ abstract class Controller extends \System
 	 */
 	public static function getContentElement($intId, $strColumn='main')
 	{
-		if (is_object($intId))
+		if (\is_object($intId))
 		{
 			$objRow = $intId;
 		}
 		else
 		{
-			if (!strlen($intId) || $intId < 1)
+			if (!\strlen($intId) || $intId < 1)
 			{
 				return '';
 			}
@@ -485,7 +485,7 @@ abstract class Controller extends \System
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getContentElement']) && is_array($GLOBALS['TL_HOOKS']['getContentElement']))
+		if (isset($GLOBALS['TL_HOOKS']['getContentElement']) && \is_array($GLOBALS['TL_HOOKS']['getContentElement']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getContentElement'] as $callback)
 			{
@@ -506,15 +506,15 @@ abstract class Controller extends \System
 	/**
 	 * Generate a form and return it as string
 	 *
-	 * @param mixed   $varId      A form ID or a Model object
-	 * @param string  $strColumn  The column the form is in
-	 * @param boolean $blnModule  Render the form as module
+	 * @param mixed   $varId     A form ID or a Model object
+	 * @param string  $strColumn The column the form is in
+	 * @param boolean $blnModule Render the form as module
 	 *
 	 * @return string The form HTML markup
 	 */
 	public static function getForm($varId, $strColumn='main', $blnModule=false)
 	{
-		if (is_object($varId))
+		if (\is_object($varId))
 		{
 			$objRow = $varId;
 		}
@@ -550,7 +550,7 @@ abstract class Controller extends \System
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getForm']) && is_array($GLOBALS['TL_HOOKS']['getForm']))
+		if (isset($GLOBALS['TL_HOOKS']['getForm']) && \is_array($GLOBALS['TL_HOOKS']['getForm']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getForm'] as $callback)
 			{
@@ -608,13 +608,13 @@ abstract class Controller extends \System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !in_array($objPage->type, array('root', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($objPage->type, array('root', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !in_array($objPage->type, array('root', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($objPage->type, array('root', 'error_403', 'error_404')))
 		{
 			$sub += 4;
 		}
@@ -626,7 +626,7 @@ abstract class Controller extends \System
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getPageStatusIcon']) && is_array($GLOBALS['TL_HOOKS']['getPageStatusIcon']))
+		if (isset($GLOBALS['TL_HOOKS']['getPageStatusIcon']) && \is_array($GLOBALS['TL_HOOKS']['getPageStatusIcon']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageStatusIcon'] as $callback)
 			{
@@ -663,7 +663,7 @@ abstract class Controller extends \System
 				{
 					$groups = \StringUtil::deserialize($objElement->groups);
 
-					if (empty($groups) || !is_array($groups) || !count(array_intersect($groups, \FrontendUser::getInstance()->groups)))
+					if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, \FrontendUser::getInstance()->groups)))
 					{
 						$blnReturn = false;
 					}
@@ -678,7 +678,7 @@ abstract class Controller extends \System
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['isVisibleElement']) && is_array($GLOBALS['TL_HOOKS']['isVisibleElement']))
+		if (isset($GLOBALS['TL_HOOKS']['isVisibleElement']) && \is_array($GLOBALS['TL_HOOKS']['isVisibleElement']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['isVisibleElement'] as $callback)
 			{
@@ -716,7 +716,7 @@ abstract class Controller extends \System
 	public static function replaceDynamicScriptTags($strBuffer)
 	{
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['replaceDynamicScriptTags']) && is_array($GLOBALS['TL_HOOKS']['replaceDynamicScriptTags']))
+		if (isset($GLOBALS['TL_HOOKS']['replaceDynamicScriptTags']) && \is_array($GLOBALS['TL_HOOKS']['replaceDynamicScriptTags']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['replaceDynamicScriptTags'] as $callback)
 			{
@@ -728,7 +728,7 @@ abstract class Controller extends \System
 		$strScripts = '';
 
 		// Add the internal jQuery scripts
-		if (!empty($GLOBALS['TL_JQUERY']) && is_array($GLOBALS['TL_JQUERY']))
+		if (!empty($GLOBALS['TL_JQUERY']) && \is_array($GLOBALS['TL_JQUERY']))
 		{
 			foreach (array_unique($GLOBALS['TL_JQUERY']) as $script)
 			{
@@ -740,7 +740,7 @@ abstract class Controller extends \System
 		$strScripts = '';
 
 		// Add the internal MooTools scripts
-		if (!empty($GLOBALS['TL_MOOTOOLS']) && is_array($GLOBALS['TL_MOOTOOLS']))
+		if (!empty($GLOBALS['TL_MOOTOOLS']) && \is_array($GLOBALS['TL_MOOTOOLS']))
 		{
 			foreach (array_unique($GLOBALS['TL_MOOTOOLS']) as $script)
 			{
@@ -752,7 +752,7 @@ abstract class Controller extends \System
 		$strScripts = '';
 
 		// Add the internal <body> tags
-		if (!empty($GLOBALS['TL_BODY']) && is_array($GLOBALS['TL_BODY']))
+		if (!empty($GLOBALS['TL_BODY']) && \is_array($GLOBALS['TL_BODY']))
 		{
 			foreach (array_unique($GLOBALS['TL_BODY']) as $script)
 			{
@@ -771,7 +771,7 @@ abstract class Controller extends \System
 		$objCombiner = new \Combiner();
 
 		// Add the CSS framework style sheets
-		if (!empty($GLOBALS['TL_FRAMEWORK_CSS']) && is_array($GLOBALS['TL_FRAMEWORK_CSS']))
+		if (!empty($GLOBALS['TL_FRAMEWORK_CSS']) && \is_array($GLOBALS['TL_FRAMEWORK_CSS']))
 		{
 			foreach (array_unique($GLOBALS['TL_FRAMEWORK_CSS']) as $stylesheet)
 			{
@@ -780,7 +780,7 @@ abstract class Controller extends \System
 		}
 
 		// Add the internal style sheets
-		if (!empty($GLOBALS['TL_CSS']) && is_array($GLOBALS['TL_CSS']))
+		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
@@ -798,7 +798,7 @@ abstract class Controller extends \System
 		}
 
 		// Add the user style sheets
-		if (!empty($GLOBALS['TL_USER_CSS']) && is_array($GLOBALS['TL_USER_CSS']))
+		if (!empty($GLOBALS['TL_USER_CSS']) && \is_array($GLOBALS['TL_USER_CSS']))
 		{
 			foreach (array_unique($GLOBALS['TL_USER_CSS']) as $stylesheet)
 			{
@@ -837,7 +837,7 @@ abstract class Controller extends \System
 		$strScripts = '';
 
 		// Add the internal scripts
-		if (!empty($GLOBALS['TL_JAVASCRIPT']) && is_array($GLOBALS['TL_JAVASCRIPT']))
+		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
 			$objCombiner = new \Combiner();
 			$objCombinerAsync = new \Combiner();
@@ -893,7 +893,7 @@ abstract class Controller extends \System
 		}
 
 		// Add the internal <head> tags
-		if (!empty($GLOBALS['TL_HEAD']) && is_array($GLOBALS['TL_HEAD']))
+		if (!empty($GLOBALS['TL_HEAD']) && \is_array($GLOBALS['TL_HEAD']))
 		{
 			foreach (array_unique($GLOBALS['TL_HEAD']) as $head)
 			{
@@ -918,7 +918,7 @@ abstract class Controller extends \System
 	public static function generateMargin($arrValues, $strType='margin')
 	{
 		// Initialize an empty array (see #5217)
-		if (!is_array($arrValues))
+		if (!\is_array($arrValues))
 		{
 			$arrValues = array('top'=>'', 'right'=>'', 'bottom'=>'', 'left'=>'', 'unit'=>'');
 		}
@@ -1056,7 +1056,7 @@ abstract class Controller extends \System
 
 		$generate = function ($route) use ($router)
 		{
-			return substr($router->generate($route), strlen(\Environment::get('path')) + 1);
+			return substr($router->generate($route), \strlen(\Environment::get('path')) + 1);
 		};
 
 		$arrMapper = array
@@ -1109,7 +1109,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		$arrParams = [];
+		$arrParams = array();
 
 		// Set the language
 		if ($strForceLang != '')
@@ -1145,7 +1145,7 @@ abstract class Controller extends \System
 		// Remove path from absolute URLs
 		if (0 === strpos($strUrl, '/'))
 		{
-			$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 		}
 
 		// Decode sprintf placeholders
@@ -1161,7 +1161,7 @@ abstract class Controller extends \System
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
+		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
@@ -1193,7 +1193,7 @@ abstract class Controller extends \System
 		$arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$strContent = '';
 
-		for ($i=0, $c=count($arrUrls); $i<$c; $i=$i+4)
+		for ($i=0, $c=\count($arrUrls); $i<$c; $i=$i+4)
 		{
 			$strContent .= $arrUrls[$i];
 
@@ -1248,13 +1248,13 @@ abstract class Controller extends \System
 		$arrAllowedTypes = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
 
 		// Check whether the file type is allowed to be downloaded
-		if (!in_array($objFile->extension, $arrAllowedTypes))
+		if (!\in_array($objFile->extension, $arrAllowedTypes))
 		{
 			throw new AccessDeniedException(sprintf('File type "%s" is not allowed', $objFile->extension));
 		}
 
 		// HOOK: post download callback
-		if (isset($GLOBALS['TL_HOOKS']['postDownload']) && is_array($GLOBALS['TL_HOOKS']['postDownload']))
+		if (isset($GLOBALS['TL_HOOKS']['postDownload']) && \is_array($GLOBALS['TL_HOOKS']['postDownload']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['postDownload'] as $callback)
 			{
@@ -1291,7 +1291,7 @@ abstract class Controller extends \System
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		if (($intPage = intval($intPage)) <= 0)
+		if (($intPage = \intval($intPage)) <= 0)
 		{
 			return '';
 		}
@@ -1391,7 +1391,7 @@ abstract class Controller extends \System
 	{
 		$arrPaths = array_filter($arrPaths);
 
-		if (!is_array($arrPaths) || empty($arrPaths))
+		if (!\is_array($arrPaths) || empty($arrPaths))
 		{
 			return array();
 		}
@@ -1418,7 +1418,7 @@ abstract class Controller extends \System
 	 */
 	protected function eliminateNestedPages($arrPages, $strTable=null, $blnSorting=false)
 	{
-		if (!is_array($arrPages) || empty($arrPages))
+		if (!\is_array($arrPages) || empty($arrPages))
 		{
 			return array();
 		}
@@ -1464,7 +1464,7 @@ abstract class Controller extends \System
 		{
 			$size = array(0, 0, (int) $size);
 		}
-		elseif (!is_array($size))
+		elseif (!\is_array($size))
 		{
 			$size = array();
 		}
@@ -1486,7 +1486,7 @@ abstract class Controller extends \System
 		if ($intMaxWidth > 0)
 		{
 			// Subtract the margins before deciding whether to resize (see #6018)
-			if (is_array($arrMargin) && $arrMargin['unit'] == 'px')
+			if (\is_array($arrMargin) && $arrMargin['unit'] == 'px')
 			{
 				$intMargin = (int) $arrMargin['left'] + (int) $arrMargin['right'];
 
@@ -1697,7 +1697,7 @@ abstract class Controller extends \System
 	{
 		$arrEnclosures = \StringUtil::deserialize($arrItem[$strKey]);
 
-		if (!is_array($arrEnclosures) || empty($arrEnclosures))
+		if (!\is_array($arrEnclosures) || empty($arrEnclosures))
 		{
 			return;
 		}
@@ -1736,7 +1736,7 @@ abstract class Controller extends \System
 		{
 			if ($objFiles->type == 'file')
 			{
-				if (!in_array($objFiles->extension, $allowedDownload) || !is_file(TL_ROOT . '/' . $objFiles->path))
+				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file(TL_ROOT . '/' . $objFiles->path))
 				{
 					continue;
 				}
@@ -1796,7 +1796,7 @@ abstract class Controller extends \System
 	 */
 	public static function setStaticUrls($objPage=null)
 	{
-		if (defined('TL_FILES_URL'))
+		if (\defined('TL_FILES_URL'))
 		{
 			return;
 		}
@@ -1819,18 +1819,18 @@ abstract class Controller extends \System
 
 			if ($url == '' || \Config::get('debugMode'))
 			{
-				define($strConstant, '');
+				\define($strConstant, '');
 			}
 			else
 			{
 				$strProtocol = (($objPage !== null && $objPage->rootUseSSL) || \Environment::get('ssl')) ? 'https://' : 'http://';
-				define($strConstant, $strProtocol . preg_replace('@https?://@', '', $url) . \Environment::get('path') . '/');
+				\define($strConstant, $strProtocol . preg_replace('@https?://@', '', $url) . \Environment::get('path') . '/');
 			}
 		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		define('TL_SCRIPT_URL', TL_ASSETS_URL);
-		define('TL_PLUGINS_URL', TL_ASSETS_URL);
+		\define('TL_SCRIPT_URL', TL_ASSETS_URL);
+		\define('TL_PLUGINS_URL', TL_ASSETS_URL);
 	}
 
 
@@ -1916,7 +1916,7 @@ abstract class Controller extends \System
 
 			return $objPage->loadDetails();
 		}
-		elseif (is_object($intId))
+		elseif (\is_object($intId))
 		{
 			$strKey = __METHOD__ . '-' . $intId->id;
 
@@ -1938,7 +1938,7 @@ abstract class Controller extends \System
 		else
 		{
 			// Invalid ID
-			if (!strlen($intId) || $intId < 1)
+			if (!\strlen($intId) || $intId < 1)
 			{
 				return null;
 			}
@@ -2345,9 +2345,9 @@ abstract class Controller extends \System
 	protected static function braceGlob($pattern)
 	{
 		// Use glob() if possible
-		if (false === strpos($pattern, '/**/') && (defined('GLOB_BRACE') || false === strpos($pattern, '{')))
+		if (false === strpos($pattern, '/**/') && (\defined('GLOB_BRACE') || false === strpos($pattern, '{')))
 		{
-			return glob($pattern, defined('GLOB_BRACE') ? GLOB_BRACE : 0);
+			return glob($pattern, \defined('GLOB_BRACE') ? GLOB_BRACE : 0);
 		}
 
 		$finder = new Finder();
@@ -2358,7 +2358,7 @@ abstract class Controller extends \System
 			->files()
 			->followLinks()
 			->sortByName()
-			->in(dirname($pattern))
+			->in(\dirname($pattern))
 		;
 
 		// Match the actual regex and filter the files

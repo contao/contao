@@ -71,14 +71,14 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
 
-        $this->assertTrue(defined('TL_MODE'));
-        $this->assertTrue(defined('TL_START'));
-        $this->assertTrue(defined('TL_ROOT'));
-        $this->assertTrue(defined('TL_REFERER_ID'));
-        $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertFalse(defined('BE_USER_LOGGED_IN'));
-        $this->assertFalse(defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('TL_PATH'));
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertFalse(\defined('BE_USER_LOGGED_IN'));
+        $this->assertFalse(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getRootDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
@@ -109,14 +109,14 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
 
-        $this->assertTrue(defined('TL_MODE'));
-        $this->assertTrue(defined('TL_START'));
-        $this->assertTrue(defined('TL_ROOT'));
-        $this->assertTrue(defined('TL_REFERER_ID'));
-        $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertTrue(defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('TL_PATH'));
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('BE', TL_MODE);
         $this->assertSame($this->getRootDir(), TL_ROOT);
         $this->assertSame('foobar', TL_REFERER_ID);
@@ -139,18 +139,18 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
 
-        $this->assertTrue(defined('TL_MODE'));
-        $this->assertTrue(defined('TL_START'));
-        $this->assertTrue(defined('TL_ROOT'));
-        $this->assertTrue(defined('TL_REFERER_ID'));
-        $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertTrue(defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('TL_PATH'));
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getRootDir(), TL_ROOT);
         $this->assertNull(TL_REFERER_ID);
-        $this->assertSame(null, TL_SCRIPT);
+        $this->assertNull(TL_SCRIPT);
         $this->assertNull(TL_PATH);
     }
 
@@ -179,18 +179,18 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
 
-        $this->assertTrue(defined('TL_MODE'));
-        $this->assertTrue(defined('TL_START'));
-        $this->assertTrue(defined('TL_ROOT'));
-        $this->assertTrue(defined('TL_REFERER_ID'));
-        $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertTrue(defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('TL_PATH'));
-        $this->assertSame(null, TL_MODE);
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
+        $this->assertNull(TL_MODE);
         $this->assertSame($this->getRootDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
-        $this->assertSame(null, TL_SCRIPT);
+        $this->assertNull(TL_SCRIPT);
         $this->assertSame('', TL_PATH);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
@@ -213,14 +213,14 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($container);
         $framework->initialize();
 
-        $this->assertTrue(defined('TL_MODE'));
-        $this->assertTrue(defined('TL_START'));
-        $this->assertTrue(defined('TL_ROOT'));
-        $this->assertTrue(defined('TL_REFERER_ID'));
-        $this->assertTrue(defined('TL_SCRIPT'));
-        $this->assertTrue(defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(defined('TL_PATH'));
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getRootDir(), TL_ROOT);
         $this->assertSame('foobar', TL_REFERER_ID);

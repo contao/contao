@@ -131,7 +131,7 @@ class ContaoTableHandlerTest extends TestCase
             })
         ;
 
-        $GLOBALS['TL_HOOKS']['addLogEntry'][] = [get_class($this), 'addLogEntry'];
+        $GLOBALS['TL_HOOKS']['addLogEntry'][] = [\get_class($this), 'addLogEntry'];
 
         $handler = new ContaoTableHandler();
         $handler->setContainer($container);

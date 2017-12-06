@@ -109,7 +109,7 @@ class PickerConfigTest extends TestCase
             'value' => 'foo',
         ]);
 
-        if (function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
             $data = $encoded;
         }
 
@@ -128,7 +128,7 @@ class PickerConfigTest extends TestCase
             'value' => 'foo',
         ]);
 
-        if (function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
             $data = $encoded;
         }
 
@@ -148,7 +148,7 @@ class PickerConfigTest extends TestCase
     {
         $data = '{"invalid';
 
-        if (function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
             $data = $encoded;
         }
 

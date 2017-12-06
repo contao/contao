@@ -145,7 +145,7 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
         $task = $input->getArgument('task');
 
         if (null !== $task) {
-            if (!in_array($task, $commands, true)) {
+            if (!\in_array($task, $commands, true)) {
                 throw new \InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
             }
 

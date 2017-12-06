@@ -52,7 +52,7 @@ class ModuleRegistration extends \Module
 		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are no editable fields
-		if (!is_array($this->editable) || empty($this->editable))
+		if (!\is_array($this->editable) || empty($this->editable))
 		{
 			return '';
 		}
@@ -75,16 +75,16 @@ class ModuleRegistration extends \Module
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
-		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}();
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback();
 				}
@@ -234,7 +234,7 @@ class ModuleRegistration extends \Module
 				$rgxp = $arrData['eval']['rgxp'];
 
 				// Convert date formats into timestamps (check the eval setting first -> #3063)
-				if ($varValue != '' && in_array($rgxp, array('date', 'time', 'datim')))
+				if ($varValue != '' && \in_array($rgxp, array('date', 'time', 'datim')))
 				{
 					try
 					{
@@ -254,18 +254,18 @@ class ModuleRegistration extends \Module
 				}
 
 				// Save callback
-				if ($objWidget->submitInput() && !$objWidget->hasErrors() && is_array($arrData['save_callback']))
+				if ($objWidget->submitInput() && !$objWidget->hasErrors() && \is_array($arrData['save_callback']))
 				{
 					foreach ($arrData['save_callback'] as $callback)
 					{
 						try
 						{
-							if (is_array($callback))
+							if (\is_array($callback))
 							{
 								$this->import($callback[0]);
 								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, null);
 							}
-							elseif (is_callable($callback))
+							elseif (\is_callable($callback))
 							{
 								$varValue = $callback($varValue, null);
 							}
@@ -389,7 +389,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Make sure newsletter is an array
-		if (isset($arrData['newsletter']) && !is_array($arrData['newsletter']))
+		if (isset($arrData['newsletter']) && !\is_array($arrData['newsletter']))
 		{
 			$arrData['newsletter'] = array($arrData['newsletter']);
 		}
@@ -428,7 +428,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// HOOK: send insert ID and user data
-		if (isset($GLOBALS['TL_HOOKS']['createNewUser']) && is_array($GLOBALS['TL_HOOKS']['createNewUser']))
+		if (isset($GLOBALS['TL_HOOKS']['createNewUser']) && \is_array($GLOBALS['TL_HOOKS']['createNewUser']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['createNewUser'] as $callback)
 			{
@@ -478,7 +478,7 @@ class ModuleRegistration extends \Module
 		if (isset($bundles['ContaoNewsletterBundle']))
 		{
 			// Make sure newsletter is an array
-			if (!is_array($arrData['newsletter']))
+			if (!\is_array($arrData['newsletter']))
 			{
 				if ($arrData['newsletter'] != '')
 				{
@@ -543,7 +543,7 @@ class ModuleRegistration extends \Module
 		$objMember->save();
 
 		// HOOK: post activation callback
-		if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && is_array($GLOBALS['TL_HOOKS']['activateAccount']))
+		if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
 			{
@@ -621,12 +621,12 @@ class ModuleRegistration extends \Module
 
 			$v = \StringUtil::deserialize($v);
 
-			if ($k == 'dateOfBirth' && strlen($v))
+			if ($k == 'dateOfBirth' && \strlen($v))
 			{
 				$v = \Date::parse(\Config::get('dateFormat'), $v);
 			}
 
-			$strData .= $GLOBALS['TL_LANG']['tl_member'][$k][0] . ': ' . (is_array($v) ? implode(', ', $v) : $v) . "\n";
+			$strData .= $GLOBALS['TL_LANG']['tl_member'][$k][0] . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";

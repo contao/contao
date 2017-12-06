@@ -91,7 +91,7 @@ class ModuleQuicklink extends \Module
 		{
 			$tmp = \StringUtil::deserialize($this->orderPages);
 
-			if (!empty($tmp) && is_array($tmp))
+			if (!empty($tmp) && \is_array($tmp))
 			{
 				$arrPages = array_map(function () {}, array_flip($tmp));
 			}

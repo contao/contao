@@ -71,7 +71,7 @@ class ListWizard extends \Widget
 		$arrButtons = array('copy', 'delete', 'drag');
 
 		// Make sure there is at least an empty array
-		if (!is_array($this->varValue) || empty($this->varValue))
+		if (!\is_array($this->varValue) || empty($this->varValue))
 		{
 			$this->varValue = array('');
 		}
@@ -85,7 +85,7 @@ class ListWizard extends \Widget
 		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard">';
 
 		// Add input fields
-		for ($i=0, $c=count($this->varValue); $i<$c; $i++)
+		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
     <li><input type="text" name="'.$this->strId.'[]" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';

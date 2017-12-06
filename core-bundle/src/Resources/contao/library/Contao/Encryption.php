@@ -56,7 +56,7 @@ class Encryption
 	public static function encrypt($varValue, $strKey=null)
 	{
 		// Recursively encrypt arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -102,7 +102,7 @@ class Encryption
 	public static function decrypt($varValue, $strKey=null)
 	{
 		// Recursively decrypt arrays
-		if (is_array($varValue))
+		if (\is_array($varValue))
 		{
 			foreach ($varValue as $k=>$v)
 			{
@@ -152,7 +152,7 @@ class Encryption
 	 */
 	protected static function initialize()
 	{
-		if (!in_array('mcrypt', get_loaded_extensions()))
+		if (!\in_array('mcrypt', get_loaded_extensions()))
 		{
 			throw new \Exception('The PHP mcrypt extension is not installed');
 		}

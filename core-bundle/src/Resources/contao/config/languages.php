@@ -8,8 +8,8 @@
  * @license LGPL-3.0+
  */
 
-$languages =
-[
+$languages = array
+(
 	'aa'    => 'Afar',
 	'ab'    => 'Abkhazian',
 	'ae'    => 'Avestan',
@@ -306,10 +306,10 @@ $languages =
 	'zh_TW' => 'Chinese (Taiwan)',
 	'zu'    => 'Zulu',
 	'zu_ZA' => 'Zulu (South Africa)'
-];
+);
 
-$langsNative =
-[
+$langsNative = array
+(
 	'ar'    => 'العربية',
 	'az'    => 'Azərbaycanca',
 	'az_ZA' => 'Azərbaycanca (Azərbaycan)',
@@ -453,4 +453,4 @@ $langsNative =
 	'zh_CN' => '中文(简体) (中国)',
 	'zh_HK' => '中文(简体) (香港)',
 	'zh_TW' => '中文(简体) (臺灣)'
-];
+);

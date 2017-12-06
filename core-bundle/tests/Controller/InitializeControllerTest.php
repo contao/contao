@@ -43,12 +43,12 @@ class InitializeControllerTest extends TestCase
      */
     public function testReturnsAResponseInTheIndexActionMethod()
     {
-        if (!defined('TL_MODE')) {
-            define('TL_MODE', 'BE');
+        if (!\defined('TL_MODE')) {
+            \define('TL_MODE', 'BE');
         }
 
-        if (!defined('TL_SCRIPT')) {
-            define('TL_SCRIPT', 'index.php');
+        if (!\defined('TL_SCRIPT')) {
+            \define('TL_SCRIPT', 'index.php');
         }
 
         $requestStack = new RequestStack();

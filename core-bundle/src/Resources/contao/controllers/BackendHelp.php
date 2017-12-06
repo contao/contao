@@ -71,16 +71,16 @@ class BackendHelp extends \Backend
 		{
 			$rows = array();
 
-			if (is_array($arrData['options']))
+			if (\is_array($arrData['options']))
 			{
 				$options = $arrData['options'];
 			}
-			elseif (is_array($arrData['options_callback']))
+			elseif (\is_array($arrData['options_callback']))
 			{
 				$this->import($arrData['options_callback'][0]);
 				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}(new \DC_Table($table));
 			}
-			elseif (is_callable($arrData['options_callback']))
+			elseif (\is_callable($arrData['options_callback']))
 			{
 				$options = $arrData['options_callback']();
 			}
@@ -94,9 +94,9 @@ class BackendHelp extends \Backend
 
 			foreach ($options as $key=>$option)
 			{
-				if (is_array($option))
+				if (\is_array($option))
 				{
-					if (is_array($arrData['reference'][$key]))
+					if (\is_array($arrData['reference'][$key]))
 					{
 						$rows[] = array('headspan', $arrData['reference'][$key][0]);
 					}
@@ -116,7 +116,7 @@ class BackendHelp extends \Backend
 					{
 						$rows[] = $arrData['reference'][$key];
 					}
-					elseif (is_array($arrData['reference'][$option]))
+					elseif (\is_array($arrData['reference'][$option]))
 					{
 						$rows[] = $arrData['reference'][$option];
 					}
@@ -136,7 +136,7 @@ class BackendHelp extends \Backend
 			\System::loadLanguageFile('explain');
 			$key = $arrData['explanation'];
 
-			if (!is_array($GLOBALS['TL_LANG']['XPL'][$key]))
+			if (!\is_array($GLOBALS['TL_LANG']['XPL'][$key]))
 			{
 				$objTemplate->explanation = trim($GLOBALS['TL_LANG']['XPL'][$key]);
 			}

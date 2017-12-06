@@ -58,7 +58,7 @@ class ModuleBooknav extends \Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		if (!$this->rootPage || !in_array($this->rootPage, $objPage->trail))
+		if (!$this->rootPage || !\in_array($this->rootPage, $objPage->trail))
 		{
 			return '';
 		}
@@ -126,7 +126,7 @@ class ModuleBooknav extends \Module
 
 		// HOOK: add pagination info
 		$this->Template->currentPage = $intCurrent;
-		$this->Template->pageCount = count($arrLookup);
+		$this->Template->pageCount = \count($arrLookup);
 
 		// Previous page
 		if ($intCurrent > 0)
@@ -155,7 +155,7 @@ class ModuleBooknav extends \Module
 		}
 
 		// Next page
-		if ($intCurrent < (count($arrLookup) - 1))
+		if ($intCurrent < (\count($arrLookup) - 1))
 		{
 			$current = $intCurrent;
 			$intKey = $arrLookup[($current + 1)];
@@ -203,7 +203,7 @@ class ModuleBooknav extends \Module
 			$_groups = \StringUtil::deserialize($objPage->groups);
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objPage->protected || (is_array($_groups) && count(array_intersect($groups, $_groups))) || $this->showProtected)
+			if (!$objPage->protected || (\is_array($_groups) && \count(array_intersect($groups, $_groups))) || $this->showProtected)
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 

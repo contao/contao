@@ -84,16 +84,16 @@ class Registry implements \Countable
 	 */
 	public function count()
 	{
-		return count($this->arrIdentities);
+		return \count($this->arrIdentities);
 	}
 
 
 	/**
 	 * Fetch a model by table name and primary key
 	 *
-	 * @param string  $strTable The table name
-	 * @param mixed   $varKey   The key
-	 * @param string  $strAlias An optional alias
+	 * @param string $strTable The table name
+	 * @param mixed  $varKey   The key
+	 * @param string $strAlias An optional alias
 	 *
 	 * @return Model|null The model or null
 	 */
@@ -122,9 +122,9 @@ class Registry implements \Countable
 	/**
 	 * Fetch a model by one of its aliases
 	 *
-	 * @param string  $strTable The table name
-	 * @param string  $strAlias The alias
-	 * @param mixed   $varValue The alias value
+	 * @param string $strTable The table name
+	 * @param string $strAlias The alias
+	 * @param mixed  $varValue The alias value
 	 *
 	 * @return Model|null The model or null
 	 */
@@ -163,12 +163,12 @@ class Registry implements \Countable
 
 		$strTable = $objModel->getTable();
 
-		if (!is_array($this->arrAliases[$strTable]))
+		if (!\is_array($this->arrAliases[$strTable]))
 		{
 			$this->arrAliases[$strTable] = array();
 		}
 
-		if (!is_array($this->arrRegistry[$strTable]))
+		if (!\is_array($this->arrRegistry[$strTable]))
 		{
 			$this->arrRegistry[$strTable] = array();
 		}

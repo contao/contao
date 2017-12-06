@@ -149,16 +149,16 @@ class StoreRefererListener
      */
     private function prepareBackendReferer($refererId, array $referers = null)
     {
-        if (!is_array($referers)) {
+        if (!\is_array($referers)) {
             $referers = [];
         }
 
-        if (!isset($referers[$refererId]) || !is_array($referers[$refererId])) {
+        if (!isset($referers[$refererId]) || !\is_array($referers[$refererId])) {
             $referers[$refererId] = end($referers) ?: ['last' => ''];
         }
 
         // Make sure we never have more than 25 different referer URLs
-        while (count($referers) >= 25) {
+        while (\count($referers) >= 25) {
             array_shift($referers);
         }
 
@@ -216,6 +216,6 @@ class StoreRefererListener
      */
     private function getRelativeRequestUri(Request $request)
     {
-        return (string) substr($request->getRequestUri(), strlen($request->getBasePath()) + 1);
+        return (string) substr($request->getRequestUri(), \strlen($request->getBasePath()) + 1);
     }
 }

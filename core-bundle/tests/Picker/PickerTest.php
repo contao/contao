@@ -128,7 +128,7 @@ class PickerTest extends TestCase
      */
     public function testReturnsTheCurrentUrl()
     {
-        $this->assertSame(null, $this->picker->getCurrentUrl());
+        $this->assertNull($this->picker->getCurrentUrl());
     }
 
     /**
@@ -144,7 +144,7 @@ class PickerTest extends TestCase
             new PickerConfig('page')
         );
 
-        $this->assertSame(null, $picker->getCurrentUrl());
+        $this->assertNull($picker->getCurrentUrl());
     }
 
     /**

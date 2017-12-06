@@ -100,7 +100,7 @@ class PageForward extends \Frontend
 				}
 
 				// Ignore the query string parameters (see #5867)
-				if (in_array($key, $arrQuery))
+				if (\in_array($key, $arrQuery))
 				{
 					continue;
 				}

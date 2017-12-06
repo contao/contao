@@ -152,7 +152,7 @@ class Updater extends \Controller
 		{
 			$modules = \StringUtil::deserialize($objUser->modules);
 
-			if (!is_array($modules) || empty($modules))
+			if (!\is_array($modules) || empty($modules))
 			{
 				continue;
 			}
@@ -319,7 +319,7 @@ class Updater extends \Controller
 
 				if (strpos($objStyle->gradientAngle, 'deg') !== false)
 				{
-					$angle = (abs(450 - intval($objStyle->gradientAngle)) % 360) . 'deg';
+					$angle = (abs(450 - \intval($objStyle->gradientAngle)) % 360) . 'deg';
 				}
 				else
 				{
@@ -390,11 +390,11 @@ class Updater extends \Controller
 				$arrJQuery = \StringUtil::deserialize($objLayout->jquery);
 
 				// Add j_mediaelement
-				if (!is_array($arrJQuery))
+				if (!\is_array($arrJQuery))
 				{
 					$arrSet['jquery'] = serialize(array('j_mediaelement'));
 				}
-				elseif (!in_array('j_mediaelement', $arrJQuery))
+				elseif (!\in_array('j_mediaelement', $arrJQuery))
 				{
 					$arrJQuery[] = 'j_mediaelement';
 					$arrSet['jquery'] = serialize($arrJQuery);
@@ -482,7 +482,7 @@ class Updater extends \Controller
 			$strSections = '';
 			$tmp = \StringUtil::deserialize($objLayout->sections);
 
-			if (!empty($tmp) && is_array($tmp))
+			if (!empty($tmp) && \is_array($tmp))
 			{
 				$strSections = implode(', ', $tmp);
 			}
@@ -552,7 +552,7 @@ class Updater extends \Controller
 			$strFramework = '';
 			$tmp = \StringUtil::deserialize($objLayout->framework);
 
-			if (!empty($tmp) && is_array($tmp))
+			if (!empty($tmp) && \is_array($tmp))
 			{
 				if (($key = array_search('layout.css', $tmp)) !== false)
 				{
@@ -600,7 +600,7 @@ class Updater extends \Controller
 			{
 				$jquery = \StringUtil::deserialize($objLayout->jquery);
 
-				if (!empty($jquery) && is_array($jquery))
+				if (!empty($jquery) && \is_array($jquery))
 				{
 					if (($key = array_search('j_slider', $jquery)) !== false)
 					{
@@ -618,7 +618,7 @@ class Updater extends \Controller
 			{
 				$mootools = \StringUtil::deserialize($objLayout->mootools);
 
-				if (!empty($mootools) && is_array($mootools))
+				if (!empty($mootools) && \is_array($mootools))
 				{
 					if (($key = array_search('moo_slider', $mootools)) !== false)
 					{
@@ -745,7 +745,7 @@ class Updater extends \Controller
 
 		foreach ($files as $file)
 		{
-			if (in_array($file->getBasename(), $processed))
+			if (\in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
@@ -780,7 +780,7 @@ class Updater extends \Controller
 			}
 
 			// Make sure there are fields (see #6437)
-			if (is_array($GLOBALS['TL_DCA'][$strTable]['fields']))
+			if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields']))
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField=>$arrField)
 				{
@@ -989,16 +989,16 @@ class Updater extends \Controller
 	{
 		$return = new \stdClass();
 
-		if (!is_array($value))
+		if (!\is_array($value))
 		{
 			$return->value = rtrim($value, "\x00");
-			$return->isUuid = (strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
+			$return->isUuid = (\strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, \Config::get('uploadPath') . '/', \strlen(\Config::get('uploadPath')) + 1) !== 0);
 			$return->isNumeric = (is_numeric($return->value) && $return->value > 0);
 		}
 		else
 		{
 			$return->value = array_map(function ($var) { return rtrim($var, "\x00"); }, $value);
-			$return->isUuid = (strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
+			$return->isUuid = (\strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', \strlen(\Config::get('uploadPath')) + 1) !== 0);
 			$return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);
 		}
 

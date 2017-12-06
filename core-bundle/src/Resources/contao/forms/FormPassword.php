@@ -119,7 +119,7 @@ class FormPassword extends \Widget
 	{
 		$this->blnSubmitInput = false;
 
-		if (!strlen($varInput) && (strlen($this->varValue) || !$this->mandatory))
+		if (!\strlen($varInput) && (\strlen($this->varValue) || !$this->mandatory))
 		{
 			return '';
 		}

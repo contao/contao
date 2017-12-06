@@ -245,9 +245,9 @@ class Statement
 	 */
 	public function execute()
 	{
-		$arrParams = func_get_args();
+		$arrParams = \func_get_args();
 
-		if (!empty($arrParams) && is_array($arrParams[0]))
+		if (!empty($arrParams) && \is_array($arrParams[0]))
 		{
 			$arrParams = array_values($arrParams[0]);
 		}
@@ -264,8 +264,8 @@ class Statement
 	 * @param string $strQuery The query string
 	 *
 	 * @return Result|Statement The result object or the statement object if there is no result set
-     *
-     * @throws \Exception If the query string is empty
+	 *
+	 * @throws \Exception If the query string is empty
 	 */
 	public function query($strQuery='')
 	{
@@ -325,7 +325,7 @@ class Statement
 	{
 		foreach ($arrValues as $k=>$v)
 		{
-			switch (gettype($v))
+			switch (\gettype($v))
 			{
 				case 'string':
 					$arrValues[$k] = $this->resConnection->quote($v);
@@ -376,7 +376,7 @@ class Statement
 	{
 		@trigger_error('Using Database\Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database\Statement::execute() instead.', E_USER_DEPRECATED);
 
-		return call_user_func_array(array($this, 'execute'), func_get_args());
+		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 
 
@@ -392,6 +392,6 @@ class Statement
 	{
 		@trigger_error('Using Database\Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database\Statement::execute() instead.', E_USER_DEPRECATED);
 
-		return call_user_func_array(array($this, 'execute'), func_get_args());
+		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 }

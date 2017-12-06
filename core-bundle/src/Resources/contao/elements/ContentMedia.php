@@ -46,12 +46,12 @@ class ContentMedia extends \ContentElement
 
 		$source = \StringUtil::deserialize($this->playerSRC);
 
-		if (!is_array($source) || empty($source))
+		if (!\is_array($source) || empty($source))
 		{
 			return '';
 		}
 
-		$objFiles = \FilesModel::findMultipleByUuidsAndExtensions($source, array('mp4','m4v','mov','wmv','webm','ogv','m4a','mp3','wma','mpeg','wav','ogg'));
+		$objFiles = \FilesModel::findMultipleByUuidsAndExtensions($source, array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv', 'm4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'));
 
 		if ($objFiles === null)
 		{
@@ -103,7 +103,7 @@ class ContentMedia extends \ContentElement
 		$objFirst = $objFiles->current();
 
 		// Pre-sort the array by preference
-		if (in_array($objFirst->extension , array('mp4','m4v','mov','wmv','webm','ogv')))
+		if (\in_array($objFirst->extension , array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv')))
 		{
 			$this->Template->isVideo = true;
 			$arrFiles = array('mp4'=>null, 'm4v'=>null, 'mov'=>null, 'wmv'=>null, 'webm'=>null, 'ogv'=>null);
@@ -124,7 +124,7 @@ class ContentMedia extends \ContentElement
 		{
 			$arrMeta = \StringUtil::deserialize($objFiles->meta);
 
-			if (is_array($arrMeta) && isset($arrMeta[$strLanguage]))
+			if (\is_array($arrMeta) && isset($arrMeta[$strLanguage]))
 			{
 				$strTitle = $arrMeta[$strLanguage]['title'];
 			}
@@ -141,7 +141,7 @@ class ContentMedia extends \ContentElement
 
 		$size = \StringUtil::deserialize($this->playerSize);
 
-		if (!is_array($size) || empty($size[0]) || empty($size[1]))
+		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
 			if ($this->Template->isVideo)
 			{

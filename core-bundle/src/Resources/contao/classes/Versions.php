@@ -164,7 +164,7 @@ class Versions extends \Controller
 		}
 
 		// Delete old versions from the database
-		$tstamp = time() - intval(\Config::get('versionPeriod'));
+		$tstamp = time() - \intval(\Config::get('versionPeriod'));
 		$this->Database->query("DELETE FROM tl_version WHERE tstamp<$tstamp");
 
 		// Get the new record
@@ -182,7 +182,7 @@ class Versions extends \Controller
 		{
 			$objModel = \FilesModel::findByPk($this->intPid);
 
-			if ($objModel !== null && in_array($objModel->extension, \StringUtil::trimsplit(',', strtolower(\Config::get('editableFiles')))))
+			if ($objModel !== null && \in_array($objModel->extension, \StringUtil::trimsplit(',', strtolower(\Config::get('editableFiles')))))
 			{
 				$objFile = new \File($objModel->path);
 
@@ -225,7 +225,7 @@ class Versions extends \Controller
 		{
 			$chunks = \StringUtil::deserialize($objRecord->headline);
 
-			if (is_array($chunks) && isset($chunks['value']))
+			if (\is_array($chunks) && isset($chunks['value']))
 			{
 				$strDescription = $chunks['value'];
 			}
@@ -250,16 +250,16 @@ class Versions extends \Controller
 					   ->execute($this->intPid, time(), $intVersion, $this->strTable, $this->getUsername(), $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($objRecord->row()));
 
 		// Trigger the oncreate_version_callback
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $objRecord->row());
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($this->strTable, $this->intPid, $intVersion, $objRecord->row());
 				}
@@ -293,7 +293,7 @@ class Versions extends \Controller
 
 		$data = \StringUtil::deserialize($objData->data);
 
-		if (!is_array($data))
+		if (!\is_array($data))
 		{
 			return;
 		}
@@ -303,7 +303,7 @@ class Versions extends \Controller
 		{
 			$objModel = \FilesModel::findByPk($this->intPid);
 
-			if ($objModel !== null && in_array($objModel->extension, \StringUtil::trimsplit(',', strtolower(\Config::get('editableFiles')))))
+			if ($objModel !== null && \in_array($objModel->extension, \StringUtil::trimsplit(',', strtolower(\Config::get('editableFiles')))))
 			{
 				$objFile = new \File($objModel->path);
 
@@ -343,16 +343,16 @@ class Versions extends \Controller
 					   ->execute($this->strTable, $this->intPid, $intVersion);
 
 		// Trigger the onrestore_version_callback
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_version_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($this->strTable, $this->intPid, $intVersion, $data);
 				}
@@ -360,18 +360,18 @@ class Versions extends \Controller
 		}
 
 		// Trigger the deprecated onrestore_callback
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback']))
 		{
 			@trigger_error('Using the onrestore_callback has been deprecated and will no longer work in Contao 5.0. Use the onrestore_version_callback instead.', E_USER_DEPRECATED);
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($this->intPid, $this->strTable, $data, $intVersion);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($this->intPid, $this->strTable, $data, $intVersion);
 				}
@@ -481,7 +481,7 @@ class Versions extends \Controller
 							continue;
 						}
 
-						$blnIsBinary = ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'fileTree' || in_array($k, $arrOrder));
+						$blnIsBinary = ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'fileTree' || \in_array($k, $arrOrder));
 
 						// Decrypt the values
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'])
@@ -491,11 +491,11 @@ class Versions extends \Controller
 						}
 
 						// Convert serialized arrays into strings
-						if (is_array(($tmp = \StringUtil::deserialize($to[$k]))) && !is_array($to[$k]))
+						if (\is_array(($tmp = \StringUtil::deserialize($to[$k]))) && !\is_array($to[$k]))
 						{
 							$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 						}
-						if (is_array(($tmp = \StringUtil::deserialize($from[$k]))) && !is_array($from[$k]))
+						if (\is_array(($tmp = \StringUtil::deserialize($from[$k]))) && !\is_array($from[$k]))
 						{
 							$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 						}
@@ -530,17 +530,17 @@ class Versions extends \Controller
 						}
 
 						// Convert strings into arrays
-						if (!is_array($to[$k]))
+						if (!\is_array($to[$k]))
 						{
 							$to[$k] = explode("\n", $to[$k]);
 						}
-						if (!is_array($from[$k]))
+						if (!\is_array($from[$k]))
 						{
 							$from[$k] = explode("\n", $from[$k]);
 						}
 
 						$objDiff = new \Diff($from[$k], $to[$k]);
-						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
+						$strBuffer .= $objDiff->render(new DiffRenderer(array('field'=>($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['label'][0] ?: (isset($GLOBALS['TL_LANG']['MSC'][$k]) ? (\is_array($GLOBALS['TL_LANG']['MSC'][$k]) ? $GLOBALS['TL_LANG']['MSC'][$k][0] : $GLOBALS['TL_LANG']['MSC'][$k]) : $k)))));
 					}
 				}
 			}
@@ -792,11 +792,11 @@ class Versions extends \Controller
 	 */
 	protected function implodeRecursive($var, $binary=false)
 	{
-		if (!is_array($var))
+		if (!\is_array($var))
 		{
 			return $binary ? \StringUtil::binToUuid($var) : $var;
 		}
-		elseif (!is_array(current($var)))
+		elseif (!\is_array(current($var)))
 		{
 			if ($binary)
 			{

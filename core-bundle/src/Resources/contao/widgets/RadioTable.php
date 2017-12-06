@@ -92,12 +92,12 @@ class RadioTable extends \Widget
 	 */
 	public function generate()
 	{
-		if (empty($this->arrOptions) || !is_array($this->arrOptions))
+		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
 		{
 			return '';
 		}
 
-		$rows = ceil(count($this->arrOptions) / $this->intCols);
+		$rows = ceil(\count($this->arrOptions) / $this->intCols);
 		$return = '<table id="ctrl_'.$this->strName.'" class="tl_radio_table'.(($this->strClass != '') ? ' ' . $this->strClass : '').'">';
 
 		for ($i=0; $i<$rows; $i++)
@@ -111,7 +111,7 @@ class RadioTable extends \Widget
 				$value = $this->arrOptions[$j]['value'];
 				$label = $this->arrOptions[$j]['label'];
 
-				if (strlen($value))
+				if (\strlen($value))
 				{
 					$label = \Image::getHtml($value.'.svg', $label, 'title="'.\StringUtil::specialchars($label).'"');
 					$return .= '

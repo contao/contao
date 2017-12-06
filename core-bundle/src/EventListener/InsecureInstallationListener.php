@@ -38,7 +38,7 @@ class InsecureInstallationListener
         $request = $event->getRequest();
 
         // Skip the check on localhost
-        if (in_array($request->getClientIp(), $this->localIps, true)) {
+        if (\in_array($request->getClientIp(), $this->localIps, true)) {
             return;
         }
 

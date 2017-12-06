@@ -138,7 +138,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
-            if (in_array($file->getBasename(), $processed, true)) {
+            if (\in_array($file->getBasename(), $processed, true)) {
                 continue;
             }
 
@@ -174,7 +174,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             foreach ($files as $file) {
                 $name = substr($file->getBasename(), 0, -4);
 
-                if (in_array($name, $processed, true)) {
+                if (\in_array($name, $processed, true)) {
                     continue;
                 }
 
@@ -206,7 +206,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $files = $this->findDcaFiles();
 
         foreach ($files as $file) {
-            if (in_array($file->getBasename(), $processed, true)) {
+            if (\in_array($file->getBasename(), $processed, true)) {
                 continue;
             }
 
@@ -301,7 +301,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $languages[] = $language->language;
 
             // Also cache "de" if "de-CH" is requested
-            if (strlen($language->language) > 2) {
+            if (\strlen($language->language) > 2) {
                 $languages[] = substr($language->language, 0, 2);
             }
         }

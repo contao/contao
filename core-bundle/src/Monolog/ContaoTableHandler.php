@@ -158,7 +158,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
         if (!$framework->isInitialized()
             || !isset($GLOBALS['TL_HOOKS']['addLogEntry'])
-            || !is_array($GLOBALS['TL_HOOKS']['addLogEntry'])
+            || !\is_array($GLOBALS['TL_HOOKS']['addLogEntry'])
         ) {
             return;
         }

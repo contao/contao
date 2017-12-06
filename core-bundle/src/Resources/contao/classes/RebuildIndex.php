@@ -28,7 +28,7 @@ class RebuildIndex extends \Backend implements \executable
 	 */
 	public function isActive()
 	{
-		return (\Config::get('enableSearch') && \Input::get('act') == 'index');
+		return \Config::get('enableSearch') && \Input::get('act') == 'index';
 	}
 
 
@@ -69,7 +69,7 @@ class RebuildIndex extends \Backend implements \executable
 			$arrPages = $this->findSearchablePages();
 
 			// HOOK: take additional pages
-			if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && is_array($GLOBALS['TL_HOOKS']['getSearchablePages']))
+			if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback)
 				{
@@ -122,7 +122,7 @@ class RebuildIndex extends \Backend implements \executable
 			$rand = rand();
 
 			// Display the pages
-			for ($i=0, $c=count($arrPages); $i<$c; $i++)
+			for ($i=0, $c=\count($arrPages); $i<$c; $i++)
 			{
 				$strBuffer .= '<span class="page_url" data-url="' . $arrPages[$i] . '#' . $rand . $i . '">' . \StringUtil::specialchars(\StringUtil::substr(rawurldecode($arrPages[$i]), 100)) . '</span><br>';
 				unset($arrPages[$i]); // see #5681
@@ -152,7 +152,7 @@ class RebuildIndex extends \Backend implements \executable
 		// Default variables
 		$objTemplate->user = $arrUser;
 		$objTemplate->indexLabel = $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][0];
-		$objTemplate->indexHelp = (\Config::get('showHelp') && strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
+		$objTemplate->indexHelp = (\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
 		$objTemplate->indexSubmit = $GLOBALS['TL_LANG']['tl_maintenance']['indexSubmit'];
 
 		return $objTemplate->parse();

@@ -41,7 +41,7 @@ class InitializeController extends Controller
         $realRequest = Request::createFromGlobals();
         $scope = ContaoCoreBundle::SCOPE_FRONTEND;
 
-        if (defined('TL_MODE') && 'BE' === TL_MODE) {
+        if (\defined('TL_MODE') && 'BE' === TL_MODE) {
             $scope = ContaoCoreBundle::SCOPE_BACKEND;
         }
 

@@ -188,7 +188,7 @@ class FormTextField extends \Widget
 	 */
 	protected function validator($varInput)
 	{
-		if (is_array($varInput))
+		if (\is_array($varInput))
 		{
 			return parent::validator($varInput);
 		}
