@@ -105,7 +105,7 @@ class ModuleFaq extends \Frontend
 				{
 					while ($objItems->next())
 					{
-						$arrPages[] = sprintf($strUrl, ($objItems->alias ?: $objItems->id));
+						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItems->alias ?: $objItems->id));
 					}
 				}
 			}
