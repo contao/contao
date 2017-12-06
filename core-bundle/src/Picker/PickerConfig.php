@@ -28,7 +28,7 @@ class PickerConfig implements \JsonSerializable
     private $extras;
 
     /**
-     * @var string
+     * @var string|int
      */
     private $value;
 
@@ -40,10 +40,10 @@ class PickerConfig implements \JsonSerializable
     /**
      * Constructor.
      *
-     * @param string $context
-     * @param array  $extras
-     * @param string $value
-     * @param string $current
+     * @param string     $context
+     * @param array      $extras
+     * @param string|int $value
+     * @param string     $current
      */
     public function __construct($context, array $extras = [], $value = '', $current = '')
     {
