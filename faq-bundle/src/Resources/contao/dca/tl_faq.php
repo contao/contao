@@ -420,8 +420,9 @@ class tl_faq extends Backend
 		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
 
 		return '
-<div class="cte_type ' . $key . '"><strong>' . $arrRow['question'] . '</strong> - ' . $date . '</div>
+<div class="cte_type ' . $key . '">' . $date . '</div>
 <div class="limit_height' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
+<h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";
 	}
