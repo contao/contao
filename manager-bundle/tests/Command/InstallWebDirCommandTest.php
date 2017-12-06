@@ -177,13 +177,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
             ->willReturn(['contao_manager' => ['dev_accesskey' => password_hash('foo:bar', PASSWORD_DEFAULT)]])
         ;
 
-        $this->command
-            ->getApplication()
-            ->getKernel()
-            ->expects($this->atLeastOnce())
-            ->method('getManagerConfig')
-            ->willReturn($config)
-        ;
+        $this->command->setApplication($this->mockApplication($config));
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->getTempDir()]);
@@ -260,9 +254,11 @@ class InstallWebDirCommandTest extends ContaoTestCase
     /**
      * Mocks the application.
      *
+     * @param ManagerConfig|null $config
+     *
      * @return Application
      */
-    private function mockApplication(): Application
+    private function mockApplication(ManagerConfig $config = null): Application
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', 'foobar');
@@ -274,6 +270,14 @@ class InstallWebDirCommandTest extends ContaoTestCase
             ->method('getContainer')
             ->willReturn($container)
         ;
+
+        if (null !== $config) {
+            $kernel
+                ->expects($this->atLeastOnce())
+                ->method('getManagerConfig')
+                ->willReturn($config)
+            ;
+        }
 
         $container->set('kernel', $kernel);
 
