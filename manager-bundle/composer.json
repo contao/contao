@@ -28,6 +28,7 @@
     "require-dev": {
         "composer/composer": "^1.0",
         "contao/test-case": "^1.1",
+        "egulias/email-validator": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.6",
         "ocramius/proxy-manager": "^2.0",
         "phpunit/phpunit": "^6.1",
