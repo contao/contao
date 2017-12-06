@@ -117,7 +117,7 @@ class ModuleNewsletterList extends \Module
 				(
 					'subject' => $objNewsletter->subject,
 					'title' => \StringUtil::stripInsertTags($objNewsletter->subject),
-					'href' => sprintf($strUrl, $strAlias),
+					'href' => sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), $strAlias),
 					'date' => \Date::parse($objPage->dateFormat, $objNewsletter->date),
 					'datim' => \Date::parse($objPage->datimFormat, $objNewsletter->date),
 					'time' => \Date::parse($objPage->timeFormat, $objNewsletter->date),
