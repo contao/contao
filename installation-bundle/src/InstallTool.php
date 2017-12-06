@@ -207,6 +207,10 @@ class InstallTool
 
     /**
      * Checks the database configuration.
+     *
+     * @param array $context
+     *
+     * @return bool
      */
     public function hasConfigurationError(array &$context): bool
     {
@@ -390,7 +394,7 @@ class InstallTool
             ':name' => strtr($name, $replace),
             ':email' => $email,
             ':username' => strtr($username, $replace),
-            ':password' => password_hash($password),
+            ':password' => password_hash($password, PASSWORD_DEFAULT),
             ':language' => $language,
         ]);
     }
