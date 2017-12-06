@@ -53,7 +53,7 @@ class Version330Update extends AbstractVersionUpdate
             $framework = '';
             $tmp = StringUtil::deserialize($layout->framework);
 
-            if (!empty($tmp) && is_array($tmp)) {
+            if (!empty($tmp) && \is_array($tmp)) {
                 if (false !== ($key = array_search('layout.css', $tmp, true))) {
                     array_insert($tmp, $key + 1, 'responsive.css');
                 }

@@ -249,11 +249,11 @@ class InstallationController implements ContainerAwareInterface
         $filesystem->rename($cacheDir, $oldCacheDir);
         $filesystem->remove($oldCacheDir);
 
-        if (function_exists('opcache_reset')) {
+        if (\function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -283,11 +283,11 @@ class InstallationController implements ContainerAwareInterface
 
         $warmer->warmUp($cacheDir);
 
-        if (function_exists('opcache_reset')) {
+        if (\function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -411,7 +411,7 @@ class InstallationController implements ContainerAwareInterface
 
         $sql = $request->request->get('sql');
 
-        if (!empty($sql) && is_array($sql)) {
+        if (!empty($sql) && \is_array($sql)) {
             foreach ($sql as $hash) {
                 $installer->execCommand($hash);
             }
@@ -444,7 +444,7 @@ class InstallationController implements ContainerAwareInterface
 
         $template = $request->request->get('template');
 
-        if ('' === $template || !in_array($template, $templates, true)) {
+        if ('' === $template || !\in_array($template, $templates, true)) {
             $this->context['import_error'] = $this->trans('import_empty_source');
 
             return null;

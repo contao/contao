@@ -93,6 +93,6 @@ class LanguageResolver
             }
         }
 
-        return array_slice(array_unique($locales), 0, 8);
+        return \array_slice(array_unique($locales), 0, 8);
     }
 }

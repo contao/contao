@@ -126,10 +126,10 @@ class Installer
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
                     $prefix = $matches[1];
-                    $sql = substr($sql, strlen($prefix));
+                    $sql = substr($sql, \strlen($prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
 
-                    for ($i = 0, $count = count($parts); $i < $count; ++$i) {
+                    for ($i = 0, $count = \count($parts); $i < $count; ++$i) {
                         $part = $parts[$i];
                         $command = $prefix.' '.$part;
 
@@ -162,7 +162,7 @@ class Installer
         $return = array_filter($return);
 
         // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
+        if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && \is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
             foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
                 $return = \System::importStatic($callback[0])->{$callback[1]}($return);
             }
