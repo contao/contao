@@ -410,16 +410,16 @@ abstract class User extends \System
 
 		$blnNeedsRehash = true;
 
-		// The password has been generated with crypt()
-		if (password_get_info($this->password)['algo'] > 0)
+		// Handle old sha1() passwords with an optional salt
+		if (preg_match('/^[a-f0-9]{40}(:[a-f0-9]{23})?$/', $this->password))
 		{
-			$blnAuthenticated = password_verify($request->request->get('password'), $this->password);
-			$blnNeedsRehash = password_needs_rehash($this->password, PASSWORD_DEFAULT);
+			list($strPassword, $strSalt) = explode(':', $this->password);
+			$blnAuthenticated = ($strPassword === sha1($strSalt . $request->request->get('password')));
 		}
 		else
 		{
-			list($strPassword, $strSalt) = explode(':', $this->password);
-			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1($request->request->get('password'))) : ($strPassword === sha1($strSalt . $request->request->get('password')));
+			$blnAuthenticated = password_verify($request->request->get('password'), $this->password);
+			$blnNeedsRehash = password_needs_rehash($this->password, PASSWORD_DEFAULT);
 		}
 
 		// Re-hash the password if the algorithm has changed
