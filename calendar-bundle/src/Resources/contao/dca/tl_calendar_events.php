@@ -223,6 +223,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'flag'                    => 8,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'time', 'mandatory'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_calendar_events', 'loadTime')
+			),
 			'sql'                     => "int(10) unsigned NULL"
 		),
 		'endTime' => array
@@ -232,6 +236,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'time', 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_calendar_events', 'loadTime')
+			),
 			'save_callback' => array
 			(
 				array('tl_calendar_events', 'setEmptyEndTime')
@@ -720,6 +728,19 @@ class tl_calendar_events extends Backend
 
 
 	/**
+	 * Set the timestamp to 1970-01-01 (see #26)
+	 *
+	 * @param integer $value
+	 *
+	 * @return integer
+	 */
+	public function loadTime($value)
+	{
+		return strtotime('1970-01-01 ' . date('H:i:s', $value));
+	}
+
+
+	/**
 	 * Automatically set the end time if not set
 	 *
 	 * @param mixed         $varValue
@@ -876,7 +897,7 @@ class tl_calendar_events extends Backend
 		$arrSet['endTime'] = $dc->activeRecord->startDate;
 
 		// Set end date
-		if (\strlen($dc->activeRecord->endDate))
+		if ($dc->activeRecord->endDate)
 		{
 			if ($dc->activeRecord->endDate > $dc->activeRecord->startDate)
 			{
@@ -898,7 +919,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Adjust end time of "all day" events
-		elseif ((\strlen($dc->activeRecord->endDate) && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
+		elseif (($dc->activeRecord->endDate && $arrSet['endDate'] == $arrSet['endTime']) || $arrSet['startTime'] == $arrSet['endTime'])
 		{
 			$arrSet['endTime'] = (strtotime('+ 1 day', $arrSet['endTime']) - 1);
 		}
