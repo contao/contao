@@ -54,7 +54,7 @@ class ModuleNewsletterList extends \Module
 		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
-		if (!is_array($this->nl_channels) || empty($this->nl_channels))
+		if (!\is_array($this->nl_channels) || empty($this->nl_channels))
 		{
 			return '';
 		}
@@ -87,7 +87,7 @@ class ModuleNewsletterList extends \Module
 					continue;
 				}
 
-				$jumpTo = intval($objTarget->jumpTo);
+				$jumpTo = \intval($objTarget->jumpTo);
 
 				// A jumpTo page is not mandatory for newsletter channels (see #6521) but required for the list module
 				if ($jumpTo < 1)

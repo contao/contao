@@ -86,7 +86,7 @@ class NewsletterRecipientsModel extends \Model
 	 */
 	public static function findByEmailAndPids($strEmail, $arrPids, array $arrOptions=array())
 	{
-		if (!is_array($arrPids) || empty($arrPids))
+		if (!\is_array($arrPids) || empty($arrPids))
 		{
 			return null;
 		}

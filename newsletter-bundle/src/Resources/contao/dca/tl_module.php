@@ -149,7 +149,7 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
+		if (!$this->User->isAdmin && !\is_array($this->User->newsletters))
 		{
 			return array();
 		}
