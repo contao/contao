@@ -178,15 +178,32 @@ class Encryption
 
 
 	/**
-	 * Test whether a password hash has been generated with a password API compatible algorithm
+	 * Test whether a password hash has been generated with crypt()
 	 *
 	 * @param string $strHash The password hash
 	 *
-	 * @return boolean True if the password hash has been generated with a password API compatible algorithm
+	 * @return boolean True if the password hash has been generated with crypt()
 	 */
 	public static function test($strHash)
 	{
-		return password_get_info($strHash)['algo'] > 0;
+		if (strncmp($strHash, '$2y$', 4) === 0)
+		{
+			return true;
+		}
+		elseif (strncmp($strHash, '$2a$', 4) === 0)
+		{
+			return true;
+		}
+		elseif (strncmp($strHash, '$6$', 3) === 0)
+		{
+			return true;
+		}
+		elseif (strncmp($strHash, '$5$', 3) === 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 
