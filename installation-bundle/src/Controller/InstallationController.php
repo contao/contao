@@ -10,7 +10,6 @@
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Encryption;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
@@ -185,7 +184,7 @@ class InstallationController implements ContainerAwareInterface
             ]);
         }
 
-        $installTool->persistConfig('installPassword', Encryption::hash($password));
+        $installTool->persistConfig('installPassword', password_hash($password));
         $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
@@ -206,7 +205,7 @@ class InstallationController implements ContainerAwareInterface
 
         $installTool = $this->container->get('contao.install_tool');
 
-        $verified = Encryption::verify(
+        $verified = password_verify(
             $request->request->get('password'),
             $installTool->getConfig('installPassword')
         );

@@ -12,7 +12,6 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
-use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -347,7 +346,7 @@ class InstallTool
             ':name' => strtr($name, $replace),
             ':email' => $email,
             ':username' => strtr($username, $replace),
-            ':password' => Encryption::hash($password),
+            ':password' => password_hash($password),
             ':language' => $language,
         ]);
     }
