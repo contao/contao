@@ -265,7 +265,7 @@ class tl_faq_category extends Backend
 		}
 
 		// Set root IDs
-		if (!is_array($this->User->faqs) || empty($this->User->faqs))
+		if (!\is_array($this->User->faqs) || empty($this->User->faqs))
 		{
 			$root = array(0);
 		}
@@ -295,14 +295,14 @@ class tl_faq_category extends Backend
 
 			case 'edit':
 				// Dynamically add the record to the user profile
-				if (!in_array(Input::get('id'), $root))
+				if (!\in_array(Input::get('id'), $root))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $objSession->getBag('contao_backend');
 
 					$arrNew = $objSessionBag->get('new_records');
 
-					if (is_array($arrNew['tl_faq_category']) && in_array(Input::get('id'), $arrNew['tl_faq_category']))
+					if (\is_array($arrNew['tl_faq_category']) && \in_array(Input::get('id'), $arrNew['tl_faq_category']))
 					{
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
@@ -313,7 +313,7 @@ class tl_faq_category extends Backend
 							{
 								$arrFaqp = StringUtil::deserialize($objGroup->faqp);
 
-								if (is_array($arrFaqp) && in_array('create', $arrFaqp))
+								if (\is_array($arrFaqp) && \in_array('create', $arrFaqp))
 								{
 									$arrFaqs = StringUtil::deserialize($objGroup->faqs, true);
 									$arrFaqs[] = Input::get('id');
@@ -333,7 +333,7 @@ class tl_faq_category extends Backend
 
 							$arrFaqp = StringUtil::deserialize($objUser->faqp);
 
-							if (is_array($arrFaqp) && in_array('create', $arrFaqp))
+							if (\is_array($arrFaqp) && \in_array('create', $arrFaqp))
 							{
 								$arrFaqs = StringUtil::deserialize($objUser->faqs, true);
 								$arrFaqs[] = Input::get('id');
@@ -353,7 +353,7 @@ class tl_faq_category extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
+				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
 				}
@@ -375,7 +375,7 @@ class tl_faq_category extends Backend
 				break;
 
 			default:
-				if (strlen(Input::get('act')))
+				if (\strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ categories.');
 				}

@@ -130,7 +130,7 @@ class FaqModel extends \Model
 	 */
 	public static function findPublishedByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!is_array($arrPids) || empty($arrPids))
+		if (!\is_array($arrPids) || empty($arrPids))
 		{
 			return null;
 		}
@@ -185,7 +185,7 @@ class FaqModel extends \Model
 	 */
 	public static function findPublishedByPids($arrPids, array $arrOptions=array())
 	{
-		if (!is_array($arrPids) || empty($arrPids))
+		if (!\is_array($arrPids) || empty($arrPids))
 		{
 			return null;
 		}

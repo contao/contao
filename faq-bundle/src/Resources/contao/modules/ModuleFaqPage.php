@@ -54,7 +54,7 @@ class ModuleFaqPage extends \Module
 		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Return if there are no categories
-		if (!is_array($this->faq_categories) || empty($this->faq_categories))
+		if (!\is_array($this->faq_categories) || empty($this->faq_categories))
 		{
 			return '';
 		}
@@ -132,14 +132,14 @@ class ModuleFaqPage extends \Module
 		}
 
 		$arrFaqs = array_values(array_filter($arrFaqs));
-		$limit_i = count($arrFaqs) - 1;
+		$limit_i = \count($arrFaqs) - 1;
 
 		// Add classes first, last, even and odd
 		for ($i=0; $i<=$limit_i; $i++)
 		{
 			$class = (($i == 0) ? 'first ' : '') . (($i == $limit_i) ? 'last ' : '') . (($i%2 == 0) ? 'even' : 'odd');
 			$arrFaqs[$i]['class'] = trim($class);
-			$limit_j = count($arrFaqs[$i]['items']) - 1;
+			$limit_j = \count($arrFaqs[$i]['items']) - 1;
 
 			for ($j=0; $j<=$limit_j; $j++)
 			{
