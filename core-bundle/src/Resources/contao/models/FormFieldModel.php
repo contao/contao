@@ -187,7 +187,7 @@ class FormFieldModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$arrColumns[] = "$t.invisible=''";
 		}

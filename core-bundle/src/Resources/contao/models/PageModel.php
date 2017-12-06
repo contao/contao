@@ -281,7 +281,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.id=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -304,7 +304,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -346,7 +346,7 @@ class PageModel extends \Model
 				$arrOptions['order'] = "$t.dns DESC" . (!empty($varLanguage) ? ", " . $objDatabase->findInSet("$t.language", array_reverse($varLanguage)) . " DESC" : "") . ", $t.sorting";
 			}
 
-			if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+			if (!static::isPreviewMode($arrOptions))
 			{
 				$time = \Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -364,7 +364,7 @@ class PageModel extends \Model
 				$arrOptions['order'] = "$t.dns DESC, $t.fallback";
 			}
 
-			if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+			if (!static::isPreviewMode($arrOptions))
 			{
 				$time = \Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -388,7 +388,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -416,7 +416,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='regular'");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -444,7 +444,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_403'");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -472,7 +472,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_404'");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -515,7 +515,7 @@ class PageModel extends \Model
 		$arrColumns = array("$t.alias IN('" . implode("','", array_filter($arrAliases)) . "')");
 
 		// Check the publication status (see #4652)
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -543,7 +543,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -601,7 +601,7 @@ class PageModel extends \Model
 			$arrColumns[] = "$t.guests=''";
 		}
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -634,7 +634,7 @@ class PageModel extends \Model
 			$arrColumns[] = "$t.guests=''";
 		}
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -673,7 +673,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
@@ -695,7 +695,7 @@ class PageModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.type=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";

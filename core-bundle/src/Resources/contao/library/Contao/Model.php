@@ -1298,4 +1298,22 @@ abstract class Model
 	{
 		return \Model\Collection::createFromDbResult($objResult, $strTable);
 	}
+
+
+	/**
+	 * Check if the preview mode is enabled
+	 *
+	 * @param array $arrOptions The options array
+	 *
+	 * @return boolean
+	 */
+	protected static function isPreviewMode(array $arrOptions)
+	{
+		if (isset($arrOptions['ignoreFePreview']))
+		{
+			return false;
+		}
+
+		return \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN;
+	}
 }
