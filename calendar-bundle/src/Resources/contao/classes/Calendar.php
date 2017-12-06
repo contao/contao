@@ -112,7 +112,7 @@ class Calendar extends \Frontend
 	{
 		$arrCalendars = \StringUtil::deserialize($arrFeed['calendars']);
 
-		if (!is_array($arrCalendars) || empty($arrCalendars))
+		if (!\is_array($arrCalendars) || empty($arrCalendars))
 		{
 			return;
 		}
@@ -178,7 +178,7 @@ class Calendar extends \Frontend
 				{
 					$arrRepeat = \StringUtil::deserialize($objArticle->repeatEach);
 
-					if (!is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -220,7 +220,7 @@ class Calendar extends \Frontend
 				{
 					if ($arrFeed['maxItems'] > 0 && $count++ >= $arrFeed['maxItems'])
 					{
-						break(3);
+						break 3;
 					}
 
 					$objItem = new \FeedItem();
@@ -264,7 +264,7 @@ class Calendar extends \Frontend
 					$strDescription = $this->replaceInsertTags($strDescription, false);
 					$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
-					if (is_array($event['enclosure']))
+					if (\is_array($event['enclosure']))
 					{
 						foreach ($event['enclosure'] as $enclosure)
 						{
@@ -318,7 +318,7 @@ class Calendar extends \Frontend
 				}
 
 				// Skip calendars outside the root nodes
-				if (!empty($arrRoot) && !in_array($objCalendar->jumpTo, $arrRoot))
+				if (!empty($arrRoot) && !\in_array($objCalendar->jumpTo, $arrRoot))
 				{
 					continue;
 				}
@@ -487,7 +487,7 @@ class Calendar extends \Frontend
 		{
 			$arrEnclosure = \StringUtil::deserialize($objEvent->enclosure, true);
 
-			if (is_array($arrEnclosure))
+			if (\is_array($arrEnclosure))
 			{
 				$objFile = \FilesModel::findMultipleByUuids($arrEnclosure);
 

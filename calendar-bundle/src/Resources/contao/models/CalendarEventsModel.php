@@ -198,7 +198,7 @@ class CalendarEventsModel extends \Model
 	 */
 	public static function findPublishedByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!is_array($arrPids) || empty($arrPids))
+		if (!\is_array($arrPids) || empty($arrPids))
 		{
 			return null;
 		}
@@ -230,8 +230,8 @@ class CalendarEventsModel extends \Model
 	public static function findCurrentByPid($intPid, $intStart, $intEnd, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$intStart = intval($intStart);
-		$intEnd = intval($intEnd);
+		$intStart = \intval($intStart);
+		$intEnd = \intval($intEnd);
 
 		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
 
@@ -289,7 +289,7 @@ class CalendarEventsModel extends \Model
 	 */
 	public static function findUpcomingByPids($arrIds, $intLimit=0, array $arrOptions=array())
 	{
-		if (!is_array($arrIds) || empty($arrIds))
+		if (!\is_array($arrIds) || empty($arrIds))
 		{
 			return null;
 		}

@@ -184,7 +184,7 @@ class tl_module_calendar extends Backend
 	 */
 	public function getCalendars()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->calendars))
+		if (!$this->User->isAdmin && !\is_array($this->User->calendars))
 		{
 			return array();
 		}
