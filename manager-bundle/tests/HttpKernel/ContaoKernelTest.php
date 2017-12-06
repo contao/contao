@@ -133,12 +133,12 @@ class ContaoKernelTest extends TestCase
             ->method('load')
             ->willReturnCallback(
                 function ($resource) use (&$files) {
-                    if (is_string($resource)) {
+                    if (\is_string($resource)) {
                         $files[] = basename($resource);
-                    } elseif (is_callable($resource)) {
+                    } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'dev');
-                        call_user_func($resource, $container);
+                        \call_user_func($resource, $container);
                     }
                 }
             )

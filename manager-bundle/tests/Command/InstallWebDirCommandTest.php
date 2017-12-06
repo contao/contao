@@ -134,7 +134,7 @@ class InstallWebDirCommandTest extends TestCase
         $commandTester->execute(['path' => $this->tmpdir]);
 
         foreach ($this->webFiles as $file) {
-            if (in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
+            if (\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
                 $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
             } else {
                 $this->assertStringNotEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
