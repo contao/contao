@@ -112,7 +112,7 @@ class News extends \Frontend
 	{
 		$arrArchives = \StringUtil::deserialize($arrFeed['archives']);
 
-		if (!is_array($arrArchives) || empty($arrArchives))
+		if (!\is_array($arrArchives) || empty($arrArchives))
 		{
 			return;
 		}
@@ -232,7 +232,7 @@ class News extends \Frontend
 				{
 					$arrEnclosure = \StringUtil::deserialize($objArticle->enclosure, true);
 
-					if (is_array($arrEnclosure))
+					if (\is_array($arrEnclosure))
 					{
 						$objFile = \FilesModel::findMultipleByUuids($arrEnclosure);
 
@@ -291,7 +291,7 @@ class News extends \Frontend
 				}
 
 				// Skip news archives outside the root nodes
-				if (!empty($arrRoot) && !in_array($objArchive->jumpTo, $arrRoot))
+				if (!empty($arrRoot) && !\in_array($objArchive->jumpTo, $arrRoot))
 				{
 					continue;
 				}

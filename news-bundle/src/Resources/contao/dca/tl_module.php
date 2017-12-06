@@ -171,7 +171,7 @@ class tl_module_news extends Backend
 	 */
 	public function getNewsArchives()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->news))
+		if (!$this->User->isAdmin && !\is_array($this->User->news))
 		{
 			return array();
 		}

@@ -31,7 +31,7 @@ abstract class ModuleNews extends \Module
 	 */
 	protected function sortOutProtected($arrArchives)
 	{
-		if (!is_array($arrArchives) || empty($arrArchives))
+		if (!\is_array($arrArchives) || empty($arrArchives))
 		{
 			return $arrArchives;
 		}
@@ -53,7 +53,7 @@ abstract class ModuleNews extends \Module
 
 					$groups = \StringUtil::deserialize($objArchive->groups);
 
-					if (!is_array($groups) || empty($groups) || !count(array_intersect($groups, $this->User->groups)))
+					if (!\is_array($groups) || empty($groups) || !\count(array_intersect($groups, $this->User->groups)))
 					{
 						continue;
 					}
@@ -196,7 +196,7 @@ abstract class ModuleNews extends \Module
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['parseArticles']) && is_array($GLOBALS['TL_HOOKS']['parseArticles']))
+		if (isset($GLOBALS['TL_HOOKS']['parseArticles']) && \is_array($GLOBALS['TL_HOOKS']['parseArticles']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseArticles'] as $callback)
 			{
@@ -252,7 +252,7 @@ abstract class ModuleNews extends \Module
 	{
 		$meta = \StringUtil::deserialize($this->news_metaFields);
 
-		if (!is_array($meta))
+		if (!\is_array($meta))
 		{
 			return array();
 		}
@@ -279,7 +279,7 @@ abstract class ModuleNews extends \Module
 					break;
 
 				case 'comments':
-					if ($objArticle->noComments || !in_array('comments', \ModuleLoader::getActive()) || $objArticle->source != 'default')
+					if ($objArticle->noComments || !\in_array('comments', \ModuleLoader::getActive()) || $objArticle->source != 'default')
 					{
 						break;
 					}

@@ -75,7 +75,7 @@ class ModuleNewsReader extends \ModuleNews
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Do not index or cache the page if there are no archives
-		if (!is_array($this->news_archives) || empty($this->news_archives))
+		if (!\is_array($this->news_archives) || empty($this->news_archives))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -146,7 +146,7 @@ class ModuleNewsReader extends \ModuleNews
 		}
 
 		// Adjust the comments headline level
-		$intHl = min(intval(str_replace('h', '', $this->hl)), 5);
+		$intHl = min(\intval(str_replace('h', '', $this->hl)), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
 		$this->import('Comments');
