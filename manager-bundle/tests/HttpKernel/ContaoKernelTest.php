@@ -138,7 +138,8 @@ class ContaoKernelTest extends TestCase
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
                         $container->setParameter('kernel.environment', 'dev');
-                        \call_user_func($resource, $container);
+
+                        $resource($container);
                     }
                 }
             )
