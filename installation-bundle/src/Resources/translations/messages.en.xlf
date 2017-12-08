@@ -326,6 +326,14 @@
         <source>unsupported_engine_explain</source>
         <target>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
       </trans-unit>
+      <trans-unit id="82">
+        <source>innodb_large_prefix</source>
+        <target>The innodb_large_prefix option is not enabled!</target>
+      </trans-unit>
+      <trans-unit id="83">
+        <source>innodb_large_prefix_explain</source>
+        <target>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

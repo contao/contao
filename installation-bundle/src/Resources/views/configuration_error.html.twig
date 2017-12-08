@@ -29,6 +29,18 @@
                 default_table_options:
                     engine: MyISAM</pre>
       </div>
+    {% elseif errorCode == 4 %}
+      <p class="tl_error">{{ 'innodb_large_prefix'|trans }}</p>
+      <p>{{ 'innodb_large_prefix_explain'|trans|raw }}</p>
+      <div id="sql_wrapper">
+        <pre>doctrine:
+    dbal:
+        connections:
+            default:
+                default_table_options:
+                    charset: utf8
+                    collate: utf8_unicode_ci</pre>
+      </div>
     {% endif %}
   </fieldset>
 {% endblock %}

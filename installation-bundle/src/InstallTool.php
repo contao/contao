@@ -228,12 +228,12 @@ class InstallTool
             return true;
         }
 
-        $params = $this->connection->getParams();
-        $statement = $this->connection->query("SHOW COLLATION LIKE '".$params['defaultTableOptions']['collate']."'");
+        $options = $this->connection->getParams()['defaultTableOptions'];
+        $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
 
         if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
             $context['errorCode'] = 2;
-            $context['collation'] = $params['defaultTableOptions']['collate'];
+            $context['collation'] = $options['collate'];
 
             return true;
         }
@@ -242,7 +242,7 @@ class InstallTool
         $statement = $this->connection->query('SHOW ENGINES');
 
         while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if ($params['defaultTableOptions']['engine'] === $row->Engine) {
+            if ($options['engine'] === $row->Engine) {
                 $engineFound = true;
                 break;
             }
@@ -250,9 +250,22 @@ class InstallTool
 
         if (!$engineFound) {
             $context['errorCode'] = 3;
-            $context['engine'] = $params['defaultTableOptions']['engine'];
+            $context['engine'] = $options['engine'];
 
             return true;
+        }
+
+        if ('InnoDB' === $options['engine'] && false !== strpos($options['collate'], 'utf8mb4')) {
+            $row = $this->connection
+                ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+                $context['errorCode'] = 4;
+
+                return true;
+            }
         }
 
         return false;
