@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, start &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; op de opdrachtregel.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -182,6 +183,7 @@
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_TABLE</source>
+        <target>Tabellen wijzigen</target>
         
       </trans-unit>
       <trans-unit id="38">
@@ -376,26 +378,42 @@
       </trans-unit>
       <trans-unit id="76">
         <source>unsupported_version</source>
+        <target>Database versie wordt niet ondersteund!</target>
         
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contao vereist tenminste MySQL 5.5.7 maar u heeft versie %s. Werk uw database versie bij.</target>
         
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
+        <target>De geconfigureerde sortering wordt niet ondersteund!</target>
         
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
+        <target>De geconfigureerde vergelijking&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer dit (aanbevolen) of configureer een andere tekenset en sortering in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
         
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
+        <target>De geconfigureerde database-engine wordt niet ondersteund!</target>
         
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
+        <target>De database-engine&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer deze (aanbevolen) of configureer een andere database-engine in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>innodb_large_prefix</source>
+        <target>De innodb_large_prefix option is niet ingeschakeld!</target>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>innodb_large_prefix_explain</source>
+        <target>De &lt;code&gt;innodb_large_prefix&lt;/code&gt; optie is niet ingeschakeld op uw server. Schakel dit in (aanbevolen) of configureer een andere tekenset en sortering in het &lt;code&gt;app/config/config.yml&lt;/code&gt; bestand.</target>
         
       </trans-unit>
     </body>

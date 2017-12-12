@@ -398,6 +398,14 @@
         <source>unsupported_engine_explain</source>
         
       </trans-unit>
+      <trans-unit id="82">
+        <source>innodb_large_prefix</source>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>innodb_large_prefix_explain</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

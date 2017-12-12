@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, führen Sie den Befehl &lt;code&gt;vendor/bin/contao-console doctrine:cache:clear contao.cache&lt;/code&gt; auf der Konsole aus.</target>
+        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, führen Sie den Befehl &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; auf der Konsole aus.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -404,6 +404,16 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>Die konfigurierte Datenbank-Engine &lt;code&gt;%s&lt;/code&gt; ist auf Ihrem Server nicht verfügbar. Bitte installieren Sie sie (empfohlen) oder konfigurieren Sie eine andere Datenbank-Engine in der Datei &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>innodb_large_prefix</source>
+        <target>Die innodb_large_prefix-Option ist nicht aktiv!</target>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>innodb_large_prefix_explain</source>
+        <target>Die &lt;code&gt;innodb_large_prefix&lt;/code&gt;-Option ist auf Ihrem Server nicht aktiv. Bitte aktivieren Sie sie (empfohlen) oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>
