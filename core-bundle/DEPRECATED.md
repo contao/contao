@@ -1,6 +1,16 @@
 Deprecated features
 ===================
 
+### kernel.packages
+
+The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be
+removed in Contao 5.0. Use `PackageUtil::getVersion()` instead.
+
+```php
+$coreVersion = PackageUtil::getVersion('contao/core-bundle');
+```
+
+
 ### TL_ASSETS_URL and TL_FILES_URL
 
 The constants `TL_ASSETS_URL` and `TL_FILES_URL` have been deprecated in

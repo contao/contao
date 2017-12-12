@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -52,9 +53,7 @@ class BackendCustom extends BackendMain
 	 */
 	public function run()
 	{
-		$packages = $this->getContainer()->getParameter('kernel.packages');
-
-		$this->Template->version = $packages['contao/core-bundle'];
+		$this->Template->version = PackageUtil::getVersion('contao/core-bundle');
 
 		// Ajax request
 		if ($_POST && \Environment::get('isAjaxRequest'))

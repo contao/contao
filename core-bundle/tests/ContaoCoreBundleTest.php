@@ -73,13 +73,6 @@ class ContaoCoreBundleTest extends TestCase
         $container = $this->createMock(ContainerBuilder::class);
 
         $container
-            ->expects($this->once())
-            ->method('getParameter')
-            ->with('kernel.root_dir')
-            ->willReturn($this->getFixturesDir().'/app')
-        ;
-
-        $container
             ->expects($this->exactly(\count($passes)))
             ->method('addCompilerPass')
             ->with(

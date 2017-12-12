@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Util\PackageUtil;
+use PackageVersions\Versions;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
@@ -70,7 +72,17 @@ class AddAssetsPackagesPassTest extends TestCase
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
 
-        $this->assertEmpty($container->getDefinition('assets.packages')->getMethodCalls());
+        $calls = $container->getDefinition('assets.packages')->getMethodCalls();
+        $found = false;
+
+        foreach ($calls as $call) {
+            if ('addPackage' === $call[0] && 'bar_foo' === $call[1][0]) {
+                $found = true;
+                break;
+            }
+        }
+
+        $this->assertFalse($found);
     }
 
     public function testUsesTheBundleNameAsPackageName(): void
@@ -82,10 +94,16 @@ class AddAssetsPackagesPassTest extends TestCase
         $pass->process($container);
 
         $calls = $container->getDefinition('assets.packages')->getMethodCalls();
+        $found = false;
 
-        $this->assertCount(1, $calls);
-        $this->assertSame('addPackage', $calls[0][0]);
-        $this->assertSame('foo_bar', $calls[0][1][0]);
+        foreach ($calls as $call) {
+            if ('addPackage' === $call[0] && 'foo_bar' === $call[1][0]) {
+                $found = true;
+                break;
+            }
+        }
+
+        $this->assertTrue($found);
         $this->assertTrue($container->hasDefinition('assets._package_foo_bar'));
 
         $service = $container->getDefinition('assets._package_foo_bar');
@@ -128,32 +146,27 @@ class AddAssetsPackagesPassTest extends TestCase
 
     public function testRegistersTheContaoComponents(): void
     {
-        $composer = [
-            'contao-components/foo' => '1.2.3',
-            'vendor/bar' => '3.2.1',
-        ];
-
         $container = $this->mockContainer();
         $container->setDefinition('assets.packages', new Definition(Packages::class));
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.bundles_metadata', []);
-        $container->setParameter('kernel.packages', $composer);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('assets._package_contao-components/foo'));
-        $this->assertTrue($container->hasDefinition('assets._version_contao-components/foo'));
-        $this->assertFalse($container->hasDefinition('assets._package_vendor/bar'));
-        $this->assertFalse($container->hasDefinition('assets._version_vendor/bar'));
+        $this->assertTrue($container->hasDefinition('assets._package_contao-components/contao'));
+        $this->assertTrue($container->hasDefinition('assets._version_contao-components/contao'));
+        $this->assertFalse($container->hasDefinition('assets._package_contao/image'));
+        $this->assertFalse($container->hasDefinition('assets._version_contao/image'));
 
-        $service = $container->getDefinition('assets._package_contao-components/foo');
+        $service = $container->getDefinition('assets._package_contao-components/contao');
 
-        $this->assertSame('assets._version_contao-components/foo', (string) $service->getArgument(1));
+        $this->assertSame('assets._version_contao-components/contao', (string) $service->getArgument(1));
 
-        $version = $container->getDefinition('assets._version_contao-components/foo');
+        $expectedVersion = PackageUtil::getVersion('contao-components/contao');
+        $actualVersion = $container->getDefinition('assets._version_contao-components/contao')->getArgument(0);
 
-        $this->assertSame('1.2.3', $version->getArgument(0));
+        $this->assertSame($expectedVersion, $actualVersion);
     }
 
     /**

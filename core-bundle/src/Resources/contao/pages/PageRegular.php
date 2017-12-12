@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -392,16 +393,16 @@ class PageRegular extends \Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-		$arrPackages = \System::getContainer()->getParameter('kernel.packages');
-
 		// jQuery scripts
 		if ($objLayout->addJQuery)
 		{
 			if ($objLayout->jSource == 'j_googleapis' || $objLayout->jSource == 'j_fallback')
 			{
-				if (isset($arrPackages['contao-components/jquery']))
+				try
 				{
-					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $arrPackages['contao-components/jquery'] . '.min.js') . "\n";
+					$version = PackageUtil::getVersion('contao-components/jquery');
+
+					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $version . '.min.js') . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
@@ -409,7 +410,7 @@ class PageRegular extends \Frontend
 						$this->Template->mooScripts .= \Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . \Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') .'">\x3C/script>\')') . "\n";
 					}
 				}
-				else
+				catch (\OutOfBoundsException $e)
 				{
 					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
 				}
@@ -425,15 +426,17 @@ class PageRegular extends \Frontend
 		{
 			if ($objLayout->mooSource == 'moo_googleapis' || $objLayout->mooSource == 'moo_fallback')
 			{
-				if (isset($arrPackages['contao-components/mootools']))
+				try
 				{
-					if (version_compare($arrPackages['contao-components/mootools'], '1.5.1', '>'))
+					$version = PackageUtil::getVersion('contao-components/jquery');
+
+					if (version_compare($version, '1.5.1', '>'))
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $arrPackages['contao-components/mootools'] . '/mootools.min.js') . "\n";
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js') . "\n";
 					}
 					else
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $arrPackages['contao-components/mootools'] . '/mootools-yui-compressed.js') . "\n";
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js') . "\n";
 					}
 
 					// Local fallback (thanks to DyaGa)
@@ -445,7 +448,7 @@ class PageRegular extends \Frontend
 					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-more.min.js|static';
 					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-mobile.min.js|static';
 				}
-				else
+				catch (\OutOfBoundsException $e)
 				{
 					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools.min.js|static';
 				}

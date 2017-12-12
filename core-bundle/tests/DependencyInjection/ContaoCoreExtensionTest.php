@@ -611,7 +611,6 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.data_collector');
 
         $this->assertSame(ContaoDataCollector::class, $definition->getClass());
-        $this->assertSame('%kernel.packages%', (string) $definition->getArgument(0));
 
         $conditionals = $definition->getInstanceofConditionals();
 
