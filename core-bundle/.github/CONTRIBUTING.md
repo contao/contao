@@ -13,7 +13,7 @@ propose changes to this document in a pull request.
 * Include the version of Contao and PHP you are using.
 * Include screenshots if possible; they are immensely helpful.
 * If you are reporting a bug, please include any related error message you are
-  seeing and also check the `var/logs/` directory for related log files.
+  seeing and also check the `var/logs/` directory for related log files.
 
 ## Pull requests
 
