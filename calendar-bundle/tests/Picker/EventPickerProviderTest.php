@@ -29,7 +29,7 @@ class EventPickerProviderTest extends ContaoTestCase
     /**
      * @var EventPickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}
