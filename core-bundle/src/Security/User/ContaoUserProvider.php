@@ -24,19 +24,25 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+@trigger_error('Using the ContaoUserProvider class has been deprecated and will no longer work in Contao 5.0. Use the BackendUserProvider or FrontendUserProvider service instead.', E_USER_DEPRECATED);
+
+/**
+ * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0; use
+ *             the BackendUserProvider or FrontendUserProvider service instead
+ */
 class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterface
 {
     use ContainerAwareTrait;
 
     /**
-     * @var ScopeMatcher
-     */
-    protected $scopeMatcher;
-
-    /**
      * @var ContaoFrameworkInterface
      */
     private $framework;
+
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
 
     /**
      * @param ContaoFrameworkInterface $framework

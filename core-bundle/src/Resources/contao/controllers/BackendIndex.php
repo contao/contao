@@ -35,32 +35,6 @@ class BackendIndex extends \Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		// Login
-		if ($this->User->login())
-		{
-			$strUrl = 'contao/main.php';
-
-			// Redirect to the last page visited
-			if (\Input::get('referer', true) != '')
-			{
-				$strUrl = base64_decode(\Input::get('referer', true));
-			}
-
-			$this->redirect($strUrl);
-		}
-
-		// Reload the page if authentication fails
-		elseif (!empty($_POST['username']) && !empty($_POST['password']))
-		{
-			$this->reload();
-		}
-
-		// Reload the page once after a logout to create a new session ID
-		elseif ($this->User->logout())
-		{
-			$this->reload();
-		}
-
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('tl_user');
 	}

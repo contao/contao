@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 
 /**
@@ -61,21 +62,15 @@ class BackendSwitch extends \Backend
 
 		$strUser = '';
 		$strHash = $this->getSessionHash('FE_USER_AUTH');
+		$session = \System::getContainer()->get('session');
 
 		// Get the front end user
-		if (FE_USER_LOGGED_IN)
+		if ($session->has(\FrontendUser::SECURITY_SESSION_KEY) && ($token = unserialize($session->get(\FrontendUser::SECURITY_SESSION_KEY))) instanceof TokenInterface)
 		{
-			$objUser = $this->Database->prepare("SELECT username FROM tl_member WHERE id=(SELECT pid FROM tl_session WHERE hash=?)")
-									  ->limit(1)
-									  ->execute($strHash);
-
-			if ($objUser->numRows)
-			{
-				$strUser = $objUser->username;
-			}
+			$strUser = $token->getUser()->getUsername();
 		}
 
-		$blnCanSwitchUser = ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');
@@ -106,25 +101,28 @@ class BackendSwitch extends \Backend
 			// Switch user accounts
 			if ($blnCanSwitchUser)
 			{
-				// Remove old sessions
-				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
-							   ->execute(($time - \Config::get('sessionTimeout')), $strHash);
-
 			   // Log in the front end user
 				if (\Input::post('user'))
 				{
-					$objUser = \MemberModel::findByUsername(\Input::post('user'));
+					// Authenticate the new FrontendUser at the Symfony firewall
+					\System::getContainer()->get('contao.security.frontend_preview_authenticator')->authenticateFrontendUser(\Input::post('user'));
 
-					// Check the allowed member groups
-					if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
+					if ($session->has(\FrontendUser::SECURITY_SESSION_KEY) && ($token = unserialize($session->get(\FrontendUser::SECURITY_SESSION_KEY))) instanceof TokenInterface)
 					{
-						// Insert the new session
-						$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-									   ->execute($objUser->id, $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+						$objUser = \MemberModel::findByUsername($token->getUser()->getUsername());
 
-						// Set the cookie
-						$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
-						$objTemplate->user = \Input::post('user');
+						// Check the allowed member groups
+						if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
+						{
+							// Set the cookie
+							$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
+							$objTemplate->user = \Input::post('user');
+						}
+						else
+						{
+							// Remove Symfony frontend authentication, if not allowed
+							$session->remove(\FrontendUser::SECURITY_SESSION_KEY);
+						}
 					}
 				}
 
@@ -134,6 +132,9 @@ class BackendSwitch extends \Backend
 					// Remove cookie
 					$this->setCookie('FE_USER_AUTH', $strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
 					$objTemplate->user = '';
+
+					// Remove the Symfony frontend authentication token
+					$session->remove(\FrontendUser::SECURITY_SESSION_KEY);
 				}
 			}
 

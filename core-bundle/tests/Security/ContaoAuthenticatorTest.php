@@ -24,6 +24,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ContaoAuthenticatorTest extends SecurityTestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoAuthenticator class has been deprecated %s.
+     */
     public function testCanBeInstantiated(): void
     {
         $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
@@ -41,6 +46,11 @@ class ContaoAuthenticatorTest extends SecurityTestCase
         $this->assertSame('anon.', $token->getUsername());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoToken class has been deprecated %s.
+     */
     public function testAuthenticatesTheToken(): void
     {
         $provider = $this->mockUserProvider();
@@ -103,6 +113,10 @@ class ContaoAuthenticatorTest extends SecurityTestCase
      * Mocks a user object.
      *
      * @return User|\PHPUnit_Framework_MockObject_MockObject
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoAuthenticator class has been deprecated %s.
      */
     private function mockUser(): User
     {
@@ -120,6 +134,10 @@ class ContaoAuthenticatorTest extends SecurityTestCase
      * Mocks a user provider object.
      *
      * @return UserProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoAuthenticator class has been deprecated %s.
      */
     private function mockUserProvider(): UserProviderInterface
     {

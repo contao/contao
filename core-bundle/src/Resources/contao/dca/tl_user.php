@@ -26,12 +26,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'onsubmit_callback' => array
 		(
-			array('tl_user', 'storeDateAdded'),
-			array('tl_user', 'checkRemoveSession')
-		),
-		'ondelete_callback' => array
-		(
-			array('tl_user', 'removeSession')
+			array('tl_user', 'storeDateAdded')
 		),
 		'sql' => array
 		(
@@ -654,30 +649,22 @@ class tl_user extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		if (!$this->User->isAdmin)
+		$authorizationChecker = System::getContainer()->get('security.authorization_checker');
+
+		if (!$authorizationChecker->isGranted('ROLE_ALLOWED_TO_SWITCH'))
 		{
 			return '';
 		}
 
-		if (Input::get('key') == 'su' && Input::get('id'))
+		if ($this->User->id == $row['id'])
 		{
-			$objUser = $this->Database->prepare("SELECT id, username FROM tl_user WHERE id=?")
-									  ->execute(Input::get('id'));
-
-			if (!$objUser->numRows)
-			{
-				throw new Exception('Invalid user ID ' . Input::get('id'));
-			}
-
-			$this->Database->prepare("UPDATE tl_session SET pid=?, su=1 WHERE hash=?")
-						   ->execute($objUser->id, $this->getSessionHash('BE_USER_AUTH'));
-
-			$this->log('User "' . $this->User->username . '" has switched to user "' . $objUser->username . '"', __METHOD__, TL_ACCESS);
-
-			$this->redirect('contao/main.php');
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
 		}
 
-		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
+		$router = \System::getContainer()->get('router');
+		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
+
+		return '<a href="'.$url.'" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
 
 
@@ -818,42 +805,6 @@ class tl_user extends Backend
 
 		$this->Database->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
 					   ->execute($time, $dc->id);
-	}
-
-
-	/**
-	 * Check whether the user session should be removed
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function checkRemoveSession(DataContainer $dc)
-	{
-		if (!$dc->activeRecord)
-		{
-			return;
-		}
-
-		if ($dc->activeRecord->disable || ($dc->activeRecord->start != '' && $dc->activeRecord->start > time()) || ($dc->activeRecord->stop != '' && $dc->activeRecord->stop < time()))
-		{
-			$this->removeSession($dc);
-		}
-	}
-
-
-	/**
-	 * Remove the session if a user is deleted (see #5353)
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function removeSession(DataContainer $dc)
-	{
-		if (!$dc->activeRecord)
-		{
-			return;
-		}
-
-		$this->Database->prepare("DELETE FROM tl_session WHERE name='BE_USER_AUTH' AND pid=?")
-					   ->execute($dc->activeRecord->id);
 	}
 
 

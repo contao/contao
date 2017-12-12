@@ -24,6 +24,10 @@ class ContaoTokenTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoToken class has been deprecated %s.
      */
     public function testCanBeInstantiated(): void
     {
@@ -35,6 +39,10 @@ class ContaoTokenTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoToken class has been deprecated %s.
      */
     public function testHandlesFrontEndUsers(): void
     {
@@ -53,6 +61,10 @@ class ContaoTokenTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoToken class has been deprecated %s.
      */
     public function testHandlesBackEndUsers(): void
     {
@@ -72,6 +84,10 @@ class ContaoTokenTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoToken class has been deprecated %s.
      */
     public function testFailsIfTheUserIsNotAuthenticated(): void
     {

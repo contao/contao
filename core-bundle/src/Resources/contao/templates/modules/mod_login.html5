@@ -13,16 +13,19 @@
       <?php endif; ?>
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+      <?php if ($this->targetPath): ?>
+        <input type="hidden" name="<?= $this->targetName ?>" value="<?= StringUtil::specialchars($this->targetPath) ?>">
+      <?php endif; ?>
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
       <?php else: ?>
         <div class="widget widget-text">
           <label for="username"><?= $this->username ?></label>
-          <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>"><br>
+          <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" required><br>
         </div>
         <div class="widget widget-password">
           <label for="password"><?= $this->password ?></label>
-          <input type="password" name="password" id="password" class="text password" value="">
+          <input type="password" name="password" id="password" class="text password" value="" required>
         </div>
         <?php if ($this->autologin): ?>
           <div class="widget widget-checkbox">

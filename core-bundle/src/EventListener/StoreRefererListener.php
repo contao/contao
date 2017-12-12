@@ -24,7 +24,7 @@ class StoreRefererListener
     /**
      * @var TokenStorageInterface
      */
-    protected $tokenStorage;
+    private $tokenStorage;
     /**
      * @var SessionInterface
      */

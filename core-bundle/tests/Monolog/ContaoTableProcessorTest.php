@@ -15,13 +15,13 @@ namespace Contao\CoreBundle\Tests\Monolog;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
-use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ContaoTableProcessorTest extends TestCase
 {
@@ -232,7 +232,7 @@ class ContaoTableProcessorTest extends TestCase
 
     public function testAddsTheUsername(): void
     {
-        $token = $this->createMock(ContaoToken::class);
+        $token = $this->createMock(UsernamePasswordToken::class);
 
         $token
             ->method('getUsername')

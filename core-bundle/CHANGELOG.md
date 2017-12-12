@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Use the Symfony security component for authentication (see #685).
+
 ### 4.5.0-beta3 (2017-12-04)
 
  * Use InnoDB as default storage engine (see #188).

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\UserSessionListener;
-use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
@@ -31,6 +30,7 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\User;
 
 class UserSessionListenerTest extends TestCase
@@ -57,7 +57,7 @@ class UserSessionListenerTest extends TestCase
         ];
 
         $user = $this->mockClassWithProperties($userClass, ['session' => $sessionValues]);
-        $token = $this->createMock(ContaoToken::class);
+        $token = $this->createMock(UsernamePasswordToken::class);
 
         $token
             ->method('getUser')
@@ -119,7 +119,7 @@ class UserSessionListenerTest extends TestCase
             ->willReturn($userTable)
         ;
 
-        $token = $this->createMock(ContaoToken::class);
+        $token = $this->createMock(UsernamePasswordToken::class);
 
         $token
             ->method('getUser')
@@ -307,7 +307,7 @@ class UserSessionListenerTest extends TestCase
 
     public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void
     {
-        $token = $this->createMock(ContaoToken::class);
+        $token = $this->createMock(UsernamePasswordToken::class);
 
         $token
             ->method('getUser')
@@ -337,7 +337,7 @@ class UserSessionListenerTest extends TestCase
 
     public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
     {
-        $token = $this->createMock(ContaoToken::class);
+        $token = $this->createMock(UsernamePasswordToken::class);
 
         $token
             ->method('getUser')

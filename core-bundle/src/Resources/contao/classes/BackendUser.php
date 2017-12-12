@@ -10,10 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 
 /**
@@ -30,7 +30,7 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendUser extends \User
+class BackendUser extends User
 {
 
 	/**
@@ -70,8 +70,14 @@ class BackendUser extends \User
 	const CAN_DELETE_ARTICLES = 6;
 
 	/**
+	 * Symfony Security session key
+	 * @var string
+	 */
+	const SECURITY_SESSION_KEY = '_security_contao_backend';
+
+	/**
 	 * Current object instance (do not remove)
-	 * @var object
+	 * @var BackendUser
 	 */
 	protected static $objInstance;
 
@@ -99,6 +105,12 @@ class BackendUser extends \User
 	 */
 	protected $arrFilemountIds;
 
+	/**
+	 * Symfony security roles
+	 * @var array
+	 */
+	protected $roles = array('ROLE_USER');
+
 
 	/**
 	 * Initialize the object
@@ -109,6 +121,50 @@ class BackendUser extends \User
 
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
+	}
+
+
+	/**
+	 * Instantiate a new user object
+	 *
+	 * @return static|User The object instance
+	 */
+	public static function getInstance()
+	{
+		if (static::$objInstance !== null)
+		{
+			return static::$objInstance;
+		}
+
+		/** @var TokenInterface $token */
+		$token = \System::getContainer()->get('security.token_storage')->getToken();
+
+		// Try to load token from security storage
+		if ($token !== null && is_a($token->getUser(), static::class))
+		{
+			return static::loadUserByUsername($token->getUser()->getUsername());
+		}
+
+		/** @var SessionInterface $session */
+		$session = \System::getContainer()->get('session');
+
+		if (!$session->has(self::SECURITY_SESSION_KEY))
+		{
+			return parent::getInstance();
+		}
+
+		// Try to load a possibly authenticated back end user from the session
+		if (!($token = unserialize($session->get(self::SECURITY_SESSION_KEY))) instanceof TokenInterface)
+		{
+			return parent::getInstance();
+		}
+
+		if ($token->isAuthenticated())
+		{
+			return static::loadUserByUsername($token->getUser()->getUsername());
+		}
+
+		return parent::getInstance();
 	}
 
 
@@ -160,32 +216,15 @@ class BackendUser extends \User
 	 * Redirect to the login screen if authentication fails
 	 *
 	 * @return boolean True if the user could be authenticated
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use the security.authentication.success event instead.
 	 */
 	public function authenticate()
 	{
-		// Do not redirect if authentication is successful
-		if (parent::authenticate())
-		{
-			return true;
-		}
+		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use the security.authentication.success event instead.', E_USER_DEPRECATED);
 
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
-		$route = $request->attributes->get('_route');
-
-		if ($route == 'contao_backend_login')
-		{
-			return false;
-		}
-
-		$parameters = array();
-
-		// Redirect to the last page visited upon login
-		if ($request->query->count() > 0 && \in_array($route, array('contao_backend', 'contao_backend_preview')))
-		{
-			$parameters['referer'] = base64_encode($request->getRequestUri());
-		}
-
-		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
+		return false;
 	}
 
 
@@ -552,5 +591,19 @@ class BackendUser extends \User
 		}
 
 		return $arrModules;
+	}
+
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getRoles()
+	{
+		if ($this->isAdmin)
+		{
+			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH');
+		}
+
+		return $this->roles;
 	}
 }

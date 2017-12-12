@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RouterInterface;
 
 @trigger_error('Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.', E_USER_DEPRECATED);
 
@@ -54,33 +56,29 @@ class ModuleLogout extends \Module
 			return $objTemplate->parse();
 		}
 
-		// Set last page visited
-		if ($this->redirectBack)
-		{
-			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
-		}
-
-		$this->import('FrontendUser', 'User');
 		$strRedirect = \Environment::get('base');
 
-		// Redirect to last page visited
-		if ($this->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))
+		// Set last page visited
+		if ($this->redirectBack && $this->getReferer())
 		{
-			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
+			$strRedirect = $this->getReferer();
 		}
 
 		// Redirect to jumpTo page
 		elseif ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
-			$strRedirect = $objTarget->getFrontendUrl();
+			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		// Log out and redirect
-		if ($this->User->logout())
-		{
-			$this->redirect($strRedirect);
-		}
+		/** @var Session $session */
+		$session = System::getContainer()->get('session');
+		$session->set('_contao_logout_target', $strRedirect);
+
+		/** @var RouterInterface $router */
+		$router = System::getContainer()->get('router');
+
+		$this->redirect($router->generate('contao_frontend_logout'));
 
 		return '';
 	}

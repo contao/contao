@@ -95,16 +95,17 @@ class RebuildIndex extends \Backend implements \executable
 			// Calculate the hash
 			$strHash = $this->getSessionHash('FE_USER_AUTH');
 
-			// Remove old sessions
-			$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
-						   ->execute(($time - \Config::get('sessionTimeout')), $strHash);
-
 			// Log in the front end user
 			if (is_numeric(\Input::get('user')) && \Input::get('user') > 0)
 			{
-				// Insert a new session
-				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+				$objUser = $this->Database->prepare("SELECT username FROM tl_member WHERE id=?")
+										  ->execute(\Input::get('user'));
+
+				if ($objUser->numRows)
+				{
+					// Authenticate the new FrontendUser on the Symfony firewall
+					\System::getContainer()->get('contao.security.frontend_preview_authenticator')->authenticateFrontendUser($objUser->username);
+				}
 
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
@@ -116,6 +117,9 @@ class RebuildIndex extends \Backend implements \executable
 				// Unset the cookies
 				$this->setCookie('FE_USER_AUTH', $strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
 				$this->setCookie('FE_AUTO_LOGIN', \Input::cookie('FE_AUTO_LOGIN'), ($time - 86400), null, null, \Environment::get('ssl'), true);
+
+				// Remove the Symfony frontend authentication token
+				\System::getContainer()->get('session')->remove(\FrontendUser::SECURITY_SESSION_KEY);
 			}
 
 			$strBuffer = '';

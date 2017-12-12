@@ -15,6 +15,8 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 
 /**
@@ -48,24 +50,21 @@ class BackendMain extends \Backend
 	 */
 	public function __construct()
 	{
+		/** @var AuthorizationCheckerInterface $authorizationChecker */
+		$authorizationChecker = \System::getContainer()->get('security.authorization_checker');
+
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!$authorizationChecker->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
 		// Password change required
-		if ($this->User->pwChange)
+		if ($this->User->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
-			$objSession = $this->Database->prepare("SELECT su FROM tl_session WHERE hash=?")
-										 ->execute($this->getSessionHash('BE_USER_AUTH'));
-
-			if (!$objSession->su)
-			{
-				$this->redirect('contao/password.php');
-			}
+			$this->redirect('contao/password.php');
 		}
 
 		// Front end redirect
@@ -215,6 +214,24 @@ class BackendMain extends \Backend
 			$this->Template->websiteTitle = \Config::get('websiteTitle');
 		}
 
+		/** @var AuthorizationCheckerInterface $authorizationChecker */
+		$authorizationChecker = $container->get('security.authorization_checker');
+
+		/** @var RouterInterface $router */
+		$router = $container->get('router');
+
+		// Generate the logout button
+		if ($authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		{
+			$logout = $GLOBALS['TL_LANG']['MSC']['backBT'];
+			$logoutLink = $router->generate('contao_backend', array('_switch_user' => '_exit'));
+		}
+		else
+		{
+			$logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
+			$logoutLink = $router->generate('contao_backend_logout');
+		}
+
 		$this->Template->theme = \Backend::getTheme();
 		$this->Template->base = \Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
@@ -226,10 +243,11 @@ class BackendMain extends \Backend
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
 		$this->Template->profileTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->pageOffset = \Input::cookie('BE_PAGE_OFFSET');
-		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
+		$this->Template->logout = $logout;
+		$this->Template->logoutLink = $logoutLink;
 		$this->Template->logoutTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);
 		$this->Template->user = $this->User;
-		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['user'] . ' ' . $GLOBALS['TL_USERNAME'];
+		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['user'] . ' ' . $this->User->getUsername();
 		$this->Template->request = ampersand(\Environment::get('request'));
 		$this->Template->top = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 		$this->Template->modules = $this->User->navigation();
@@ -265,7 +283,7 @@ class BackendMain extends \Backend
 			elseif (\Input::get('do') != '')
 			{
 				$event = new PreviewUrlCreateEvent(\Input::get('do'), CURRENT_ID);
-				\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
+				$container->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
 
 				if (($strQuery = $event->getQuery()) !== null)
 				{

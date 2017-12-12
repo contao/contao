@@ -15,9 +15,11 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class BackendControllerTest extends TestCase
@@ -31,8 +33,15 @@ class BackendControllerTest extends TestCase
 
     public function testReturnsAResponseInTheActionMethods(): void
     {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
+        $previewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
+
         $container = $this->mockContainer();
         $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.security.frontend_preview_authenticator', $previewAuthenticator);
+        $container->set('request_stack', $requestStack);
 
         $controller = new BackendController();
         $controller->setContainer($container);

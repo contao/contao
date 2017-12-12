@@ -43,7 +43,7 @@
         "symfony/framework-bundle": "^3.4",
         "symfony/http-foundation": "^3.4",
         "symfony/lock": "^3.4",
-        "symfony/security": "^3.4",
+        "symfony/security-bundle": "^3.4",
         "symfony/swiftmailer-bundle": "^3.1.5",
         "symfony/yaml": "^3.4",
         "tecnickcom/tcpdf": "^6.0",

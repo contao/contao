@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
-use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +25,7 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class StoreRefererListenerTest extends TestCase
 {
@@ -49,7 +49,7 @@ class StoreRefererListenerTest extends TestCase
 
         $tokenStorage
             ->method('getToken')
-            ->willReturn($this->createMock(ContaoToken::class))
+            ->willReturn($this->createMock(UsernamePasswordToken::class))
         ;
 
         // Set the current referer URLs
@@ -266,7 +266,7 @@ class StoreRefererListenerTest extends TestCase
 
         $tokenStorage
             ->method('getToken')
-            ->willReturn($this->createMock(ContaoToken::class))
+            ->willReturn($this->createMock(UsernamePasswordToken::class))
         ;
 
         $request = new Request();

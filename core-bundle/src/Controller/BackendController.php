@@ -85,7 +85,14 @@ class BackendController extends Controller
      */
     public function previewAction(): Response
     {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
         $this->container->get('contao.framework')->initialize();
+
+        $this->container
+            ->get('contao.security.frontend_preview_authenticator')
+            ->authenticateFrontendUser($request->get('user'))
+        ;
 
         $controller = new BackendPreview();
 
@@ -223,5 +230,14 @@ class BackendController extends Controller
         }
 
         return new RedirectResponse($picker->getCurrentUrl());
+    }
+
+    /**
+     * Symfony will un-authenticate the user automatically by calling this route.
+     *
+     * @Route("/contao/logout", name="contao_backend_logout")
+     */
+    public function logoutAction(): void
+    {
     }
 }

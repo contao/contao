@@ -99,14 +99,6 @@ class BackendPreview extends \Backend
 			{
 				$strHash = $this->getSessionHash('FE_USER_AUTH');
 
-				// Remove old sessions
-				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
-							   ->execute((time() - \Config::get('sessionTimeout')), $strHash);
-
-				// Insert the new session
-				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute($objUser->id, time(), 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
-
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, (time() + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
 				$objTemplate->user = \Input::post('user');

@@ -60,7 +60,7 @@
                 <ul class="level_2">
                   <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
                   <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
-                  <li><a href="<?= $this->route('contao_backend_login') ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
+                  <li><a href="<?= $this->logoutLink ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
                 </ul>
               </li>
               <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>

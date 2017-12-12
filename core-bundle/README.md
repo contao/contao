@@ -23,7 +23,7 @@ Edit your `composer.json` file and add the following:
 
 ```json
 "require": {
-    "contao/core-bundle": "^4.4"
+    "contao/core-bundle": "^4.5"
 },
 "config": {
     "component-dir": "assets"
@@ -99,29 +99,83 @@ Edit your `app/config/security.yml` file:
 ```yml
 security:
     providers:
-        contao.security.user_provider:
-            id: contao.security.user_provider
+        contao.security.backend_user_provider:
+            id: contao.security.backend_user_provider
+
+        contao.security.frontend_user_provider:
+            id: contao.security.frontend_user_provider
+
+    encoders:
+        default:
+            algorithm: bcrypt
+
+        legacy:
+            id: contao.security.legacy_password_encoder
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
 
-        install:
-            pattern: ^/(contao/install|install\.php)
+        contao_install:
+            pattern: ^/contao/install
             security: false
 
-        backend:
+        contao_backend:
             request_matcher: contao.routing.backend_matcher
-            stateless: true
-            simple_preauth:
-                authenticator: contao.security.authenticator
+            provider: contao.security.backend_user_provider
+            user_checker: contao.security.user_checker
+            anonymous: ~
+            switch_user: true
+            logout_on_user_change: true
 
-        frontend:
+            form_login:
+                login_path: contao_backend_login
+                check_path: contao_backend_login
+                default_target_path: contao_backend
+                success_handler: contao.security.authentication_success_handler
+                failure_handler: contao.security.authentication_failure_handler
+                username_parameter: username
+                password_parameter: password
+
+            logout:
+                path: contao_backend_logout
+                target: contao_backend
+                success_handler: contao.security.logout_success_handler
+                handlers:
+                    - contao.security.logout_handler
+
+        contao_frontend:
             request_matcher: contao.routing.frontend_matcher
-            stateless: true
-            simple_preauth:
-                authenticator: contao.security.authenticator
+            provider: contao.security.frontend_user_provider
+            user_checker: contao.security.user_checker
+            anonymous: ~
+            switch_user: false
+            logout_on_user_change: true
+
+            form_login:
+                login_path: contao_frontend_login
+                check_path: contao_frontend_login
+                default_target_path: contao_index
+                failure_handler: contao.security.authentication_failure_handler
+                success_handler: contao.security.authentication_success_handler
+                username_parameter: username
+                password_parameter: password
+                remember_me: true
+
+            remember_me:
+                secret: '%secret%'
+                remember_me_parameter: autologin
+
+            logout:
+                path: contao_frontend_logout
+                success_handler: contao.security.logout_success_handler
+                handlers:
+                    - contao.security.logout_handler
+
+    access_control:
+        - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao, roles: ROLE_USER }
 ```
 
 Edit your `app/config/config.yml` file and add the following:

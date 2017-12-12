@@ -25,6 +25,13 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 
+@trigger_error('Using the ContaoAuthenticator class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+/**
+ * Class ContaoAuthenticator.
+ *
+ * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0
+ */
 class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthenticatorInterface
 {
     use ContainerAwareTrait;
@@ -32,7 +39,7 @@ class ContaoAuthenticator implements ContainerAwareInterface, SimplePreAuthentic
     /**
      * @var ScopeMatcher
      */
-    protected $scopeMatcher;
+    private $scopeMatcher;
 
     /**
      * @param ScopeMatcher $scopeMatcher

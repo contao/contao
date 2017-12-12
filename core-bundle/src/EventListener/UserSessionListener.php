@@ -31,7 +31,7 @@ class UserSessionListener
     /**
      * @var TokenStorageInterface
      */
-    protected $tokenStorage;
+    private $tokenStorage;
 
     /**
      * @var SessionInterface

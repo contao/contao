@@ -21,6 +21,11 @@ use Symfony\Component\Security\Core\User\User;
 
 class ContaoUserProviderTest extends SecurityTestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoUserProvider class has been deprecated %s.
+     */
     public function testCanBeInstantiated(): void
     {
         $provider = $this->mockProvider('backend');
@@ -31,6 +36,10 @@ class ContaoUserProviderTest extends SecurityTestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoUserProvider class has been deprecated %s.
      */
     public function testProvidesTheBackEndUser(): void
     {
@@ -42,6 +51,10 @@ class ContaoUserProviderTest extends SecurityTestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoUserProvider class has been deprecated %s.
      */
     public function testProvidesTheFrontEndUser(): void
     {
@@ -108,6 +121,10 @@ class ContaoUserProviderTest extends SecurityTestCase
      * @param string|null $scope
      *
      * @return ContaoUserProvider
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using the ContaoUserProvider class has been deprecated %s.
      */
     private function mockProvider(string $scope = null): ContaoUserProvider
     {
