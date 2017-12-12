@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.0-RC1 (2017-12-12)
 
  * Use the Symfony security component for authentication (see #685).
 

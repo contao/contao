@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Hier kunt u het bronbestand bewerken (druk op F11 voor volledig scherm).</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files</source>

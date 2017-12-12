@@ -19,15 +19,19 @@
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.0">
         <source>Fieldset start</source>
+        <target>Fieldset start</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.1">
         <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Het begin van een fieldset met optioneel een legenda.</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.0">
         <source>Fieldset stop</source>
+        <target>Fieldset stop</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.1">
         <source>The closing part of a fieldset.</source>
+        <target>Het afsluitend gedeelte van een fieldset.</target>
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>

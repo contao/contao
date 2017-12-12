@@ -443,21 +443,27 @@
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.0">
         <source>Player options</source>
+        <target>Opties speler</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.1">
         <source>Here you can select the player options.</source>
+        <target>Selecteer hier de opties voor de speler.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.0">
         <source>Start at</source>
+        <target>Begin bij</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Start het afspelen van de video met het opgegeven aantal seconden. Stel in op 0 om dit uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.0">
         <source>Stop at</source>
+        <target>Stop bij</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Stopt het afspelen van de video met het opgegeven aantal seconden. Stel in op 0 om dit uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -709,24 +715,31 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
+        <target>Ondertitels standaard tonen</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_fs">
         <source>Hide the fullscreen button</source>
+        <target>Verberg de knop voor volledig scherm</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
+        <target>Gebruik de Contao-pagina taal</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
+        <target>Verberg opmerkingen</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_modestbranding">
         <source>Hide the YouTube logo</source>
+        <target>Verberg het YouTube logo</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Do not show related videos at the end</source>
+        <target>Geen gerelateerde video's aan het einde laten zien</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
+        <target>Verberg de bovenste balk in de preview</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

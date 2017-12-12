@@ -287,6 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can overwrite the title tag.</source>
+        <target>Hier kunt u de titel-tag overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -378,9 +379,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.0">
         <source>External JavaScripts</source>
+        <target>Externe JavaScripts</target>
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.1">
         <source>Here you can add external JS files from the file system.</source>
+        <target>Hier kunt u extra JS bestand vanuit het bestandssysteem toevoegen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

@@ -275,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
+        <target>Vereist een artikel</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Voer een 404-fout uit als de pagina-URL geen artikel alias bevat.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>

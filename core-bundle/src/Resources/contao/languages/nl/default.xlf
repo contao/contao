@@ -655,45 +655,59 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>am</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>AM</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
+        <target>DD</target>
       </trans-unit>
       <trans-unit id="DATE.j">
         <source>D</source>
+        <target>D</target>
       </trans-unit>
       <trans-unit id="DATE.m">
         <source>MM</source>
+        <target>MM</target>
       </trans-unit>
       <trans-unit id="DATE.n">
         <source>M</source>
+        <target>M</target>
       </trans-unit>
       <trans-unit id="DATE.y">
         <source>YY</source>
+        <target>YY</target>
       </trans-unit>
       <trans-unit id="DATE.Y">
         <source>YYYY</source>
+        <target>YYYY</target>
       </trans-unit>
       <trans-unit id="DATE.h">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.H">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.g">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.G">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.i">
         <source>mm</source>
+        <target>mm</target>
       </trans-unit>
       <trans-unit id="DATE.s">
         <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1751,6 +1765,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Versie management</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -1902,6 +1917,7 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
+        <target>Zoek- en filterfuncties</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2349,12 +2365,15 @@ Deze e-mail is aangemaakt door Contao. U kunt niet rechtstreeks hierop antwoorde
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
+        <target>Broodkruimel menu</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>
+        <target>Hoofdnavigatie</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
+        <target>Header navigatie</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
