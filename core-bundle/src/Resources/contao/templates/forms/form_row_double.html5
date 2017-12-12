@@ -1,0 +1,16 @@
+
+<div class="<?= $this->prefix ?><?php if ($this->class) echo ' ' . $this->class; ?>">
+  <?php $this->block('label'); ?>
+  <?php $this->endblock(); ?>
+
+  <?php $this->block('field'); ?>
+  <?php $this->endblock(); ?>
+</div>
+
+<div class="<?= $this->prefix ?> confirm<?php if ($this->class) echo ' ' . $this->class; ?>">
+  <?php $this->block('label2'); ?>
+  <?php $this->endblock(); ?>
+
+  <?php $this->block('field2'); ?>
+  <?php $this->endblock(); ?>
+</div>
