@@ -24,15 +24,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Tests the FaqPickerProvider class.
- */
 class FaqPickerProviderTest extends ContaoTestCase
 {
     /**
      * @var FaqPickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}
