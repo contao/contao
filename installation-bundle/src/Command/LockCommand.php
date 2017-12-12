@@ -25,7 +25,7 @@ class LockCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:install:lock')
@@ -36,7 +36,7 @@ class LockCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $file = $this->getContainer()->getParameter('kernel.project_dir').'/var/install_lock';
 
