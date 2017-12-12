@@ -203,6 +203,7 @@ contao:
             interlace:    plane
     security:
         disable_ip_check: false
+        token_lifetime: 3600
 ```
 
 You can also overwrite any parameter stored in the `localconfig.php` file:
