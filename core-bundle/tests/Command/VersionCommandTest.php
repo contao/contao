@@ -16,7 +16,6 @@ use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\Util\PackageUtil;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class VersionCommandTest extends TestCase
 {
