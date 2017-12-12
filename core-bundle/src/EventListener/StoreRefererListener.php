@@ -22,13 +22,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class StoreRefererListener
 {
     /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-    /**
      * @var SessionInterface
      */
     private $session;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * @var AuthenticationTrustResolverInterface

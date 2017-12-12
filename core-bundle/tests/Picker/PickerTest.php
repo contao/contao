@@ -25,7 +25,7 @@ class PickerTest extends TestCase
     /**
      * @var Picker
      */
-    protected $picker;
+    private $picker;
 
     /**
      * {@inheritdoc}

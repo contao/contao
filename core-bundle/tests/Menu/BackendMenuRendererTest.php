@@ -22,12 +22,12 @@ class BackendMenuRendererTest extends TestCase
     /**
      * @var Environment|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $templating;
+    private $templating;
 
     /**
      * @var BackendMenuRenderer
      */
-    protected $renderer;
+    private $renderer;
 
     /**
      * {@inheritdoc}

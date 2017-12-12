@@ -29,7 +29,7 @@ class PagePickerProviderTest extends ContaoTestCase
     /**
      * @var PagePickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}

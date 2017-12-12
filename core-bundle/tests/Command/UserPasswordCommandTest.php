@@ -28,12 +28,12 @@ class UserPasswordCommandTest extends TestCase
     /**
      * @var UserPasswordCommand
      */
-    protected $command;
+    private $command;
 
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    private $container;
 
     /**
      * {@inheritdoc}

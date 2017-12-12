@@ -28,7 +28,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
     /**
      * @var ArticlePickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}

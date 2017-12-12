@@ -202,7 +202,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertTrue(\strlen($this->session->get($sessionKey)) > 0);
 
         /** @var UsernamePasswordToken $token */
-        $token = @unserialize($this->session->get($sessionKey));
+        $token = unserialize(
+            $this->session->get($sessionKey),
+            ['allowed_classes' => [UsernamePasswordToken::class]]
+        );
 
         $this->assertInstanceOf(UsernamePasswordToken::class, $token);
         $this->assertTrue($token->isAuthenticated());

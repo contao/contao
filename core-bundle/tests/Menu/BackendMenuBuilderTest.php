@@ -23,12 +23,12 @@ class BackendMenuBuilderTest extends TestCase
     /**
      * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $eventDispatcher;
+    private $eventDispatcher;
 
     /**
      * @var BackendMenuBuilder
      */
-    protected $builder;
+    private $builder;
 
     /**
      * {@inheritdoc}

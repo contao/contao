@@ -15,6 +15,15 @@ namespace Contao\CoreBundle\Event;
 final class ContaoCoreEvents
 {
     /**
+     * The contao.backend_menu_build event is triggered when the backend menu is built.
+     *
+     * @var string
+     *
+     * @see MenuEvent
+     */
+    public const BACKEND_MENU_BUILD = 'contao.backend_menu_build';
+
+    /**
      * The contao.image_sizes_all event is triggered when the image sizes are generated.
      *
      * @var string
@@ -49,15 +58,6 @@ final class ContaoCoreEvents
      * @see PreviewUrlConvertEvent
      */
     public const PREVIEW_URL_CONVERT = 'contao.preview_url_convert';
-
-    /**
-     * The contao.backend_menu_build event is triggered when the backend menu is built.
-     *
-     * @var string
-     *
-     * @see MenuEvent
-     */
-    public const BACKEND_MENU_BUILD = 'contao.backend_menu_build';
 
     /**
      * The contao.slug_valid_characters event is triggered when the valid slug characters options are generated.

@@ -20,7 +20,7 @@ class ContaoModuleBundleTest extends TestCase
     /**
      * @var ContaoModuleBundle
      */
-    protected $bundle;
+    private $bundle;
 
     /**
      * {@inheritdoc}

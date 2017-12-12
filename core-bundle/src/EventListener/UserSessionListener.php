@@ -29,11 +29,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserSessionListener
 {
     /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
      * @var SessionInterface
      */
     private $session;
@@ -42,6 +37,11 @@ class UserSessionListener
      * @var Connection
      */
     private $connection;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * @var AuthenticationTrustResolverInterface

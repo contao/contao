@@ -27,7 +27,7 @@ class PickerBuilderTest extends ContaoTestCase
     /**
      * @var PickerBuilder
      */
-    protected $builder;
+    private $builder;
 
     /**
      * {@inheritdoc}

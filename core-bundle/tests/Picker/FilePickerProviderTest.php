@@ -31,7 +31,7 @@ class FilePickerProviderTest extends ContaoTestCase
     /**
      * @var FilePickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}

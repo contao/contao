@@ -20,7 +20,7 @@ class PickerConfigTest extends TestCase
     /**
      * @var PickerConfig
      */
-    protected $config;
+    private $config;
 
     /**
      * {@inheritdoc}
