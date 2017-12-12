@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
+        <target>Aangepaste URL</target>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
+        <target>Door op de &quot;lees meer...&quot; link te klikken worden bezoekers doorverwezen naar een aangepaste URL.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
