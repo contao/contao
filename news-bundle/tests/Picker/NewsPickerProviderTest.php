@@ -29,7 +29,7 @@ class NewsPickerProviderTest extends ContaoTestCase
     /**
      * @var NewsPickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}
