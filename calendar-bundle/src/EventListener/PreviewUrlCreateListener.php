@@ -44,6 +44,8 @@ class PreviewUrlCreateListener
      * Adds a query to the front end preview URL.
      *
      * @param PreviewUrlCreateEvent $event
+     * 
+     * @throws \RuntimeException
      */
     public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void
     {
@@ -52,6 +54,10 @@ class PreviewUrlCreateListener
         }
 
         $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         // Return on the calendar list page
         if ('tl_calendar_events' === $request->query->get('table') && !$request->query->has('act')) {
