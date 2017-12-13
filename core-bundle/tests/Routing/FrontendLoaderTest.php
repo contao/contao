@@ -40,32 +40,30 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
+        $frontend = $collection->get('contao_frontend');
 
-        $this->assertSame(
-            ContaoCoreBundle::SCOPE_FRONTEND,
-            $collection->get('contao_frontend')->getDefault('_scope')
-        );
+        $this->assertNotNull($frontend);
+        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $frontend->getDefault('_scope'));
 
-        $this->assertSame(
-            ContaoCoreBundle::SCOPE_FRONTEND,
-            $collection->get('contao_index')->getDefault('_scope')
-        );
+        $index = $collection->get('contao_index');
+
+        $this->assertNotNull($index);
+        $this->assertSame(ContaoCoreBundle::SCOPE_FRONTEND, $index->getDefault('_scope'));
     }
 
     public function testReturnsTheDefaultController(): void
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
+        $frontend = $collection->get('contao_frontend');
 
-        $this->assertSame(
-            'ContaoCoreBundle:Frontend:index',
-            $collection->get('contao_frontend')->getDefault('_controller')
-        );
+        $this->assertNotNull($frontend);
+        $this->assertSame('ContaoCoreBundle:Frontend:index', $frontend->getDefault('_controller'));
 
-        $this->assertSame(
-            'ContaoCoreBundle:Frontend:index',
-            $collection->get('contao_index')->getDefault('_controller')
-        );
+        $index = $collection->get('contao_index');
+
+        $this->assertNotNull($index);
+        $this->assertSame('ContaoCoreBundle:Frontend:index', $index->getDefault('_controller'));
     }
 
     public function testFailsToGenerateTheFrontEndUrlIfTheAliasIsMissing(): void

@@ -69,18 +69,29 @@ class FrontendPreviewAuthenticator
      * Authenticates a front end user based on the username.
      *
      * @param null $username
+     * 
+     * @throws \RuntimeException
      */
     public function authenticateFrontendUser($username = null): void
     {
-        $providerKey = 'contao_frontend';
-        $request = $this->requestStack->getCurrentRequest();
-
-        // Check if a back end user is authenticated
-        if (null === $this->tokenStorage->getToken() || !$this->tokenStorage->getToken()->isAuthenticated()) {
+        if (null === $username) {
             return;
         }
 
-        if (null === $username || !$request->hasSession()) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        if (!$request->hasSession()) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        // Check if a back end user is authenticated
+        if (null === $token || !$token->isAuthenticated()) {
             return;
         }
 
@@ -97,7 +108,7 @@ class FrontendPreviewAuthenticator
             return;
         }
 
-        $token = new UsernamePasswordToken($user, null, $providerKey, (array) $user->getRoles());
+        $token = new UsernamePasswordToken($user, null, 'contao_frontend', (array) $user->getRoles());
 
         if (false === $token->isAuthenticated()) {
             if ($request->hasPreviousSession()) {

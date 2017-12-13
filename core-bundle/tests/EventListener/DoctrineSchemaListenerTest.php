@@ -121,6 +121,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $index = $event->getIndex();
 
+        $this->assertNotNull($index);
         $this->assertInstanceOf('Doctrine\DBAL\Schema\Index', $index);
         $this->assertSame('path', $index->getName());
         $this->assertSame(['path(333)'], $index->getColumns());

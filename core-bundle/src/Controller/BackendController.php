@@ -79,6 +79,8 @@ class BackendController extends Controller
     }
 
     /**
+     * @throws \RuntimeException
+     *
      * @return Response
      *
      * @Route("/contao/preview", name="contao_backend_preview")
@@ -86,6 +88,10 @@ class BackendController extends Controller
     public function previewAction(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         $this->container->get('contao.framework')->initialize();
 

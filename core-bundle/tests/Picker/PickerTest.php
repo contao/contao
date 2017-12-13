@@ -72,6 +72,7 @@ class PickerTest extends TestCase
 
         $pagePicker = $menu->getChild('pagePicker');
 
+        $this->assertNotNull($pagePicker);
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $pagePicker);
         $this->assertTrue($pagePicker->isCurrent());
         $this->assertSame('Page picker', $pagePicker->getLabel());
@@ -83,6 +84,7 @@ class PickerTest extends TestCase
     {
         $provider = $this->picker->getCurrentProvider();
 
+        $this->assertNotNull($provider);
         $this->assertInstanceOf('Contao\CoreBundle\Picker\PagePickerProvider', $provider);
         $this->assertSame('pagePicker', $provider->getName());
     }

@@ -16,7 +16,7 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -52,14 +52,19 @@ class AuthenticationFailureHandlerTest extends TestCase
 
         $handler = $this->mockFailureHandler($translator, $utils);
         $response = $handler->onAuthenticationFailure($request, new AuthenticationException());
-        $error = $request->getSession()->get('_security.last_error');
+
+        /** @var Session $session */
+        $session = $request->getSession();
+
+        $this->assertNotNull($session);
+
+        $error = $session->get('_security.last_error');
 
         $this->assertTrue($response->headers->contains('location', '/'));
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertInstanceOf('Symfony\Component\Security\Core\Exception\AuthenticationException', $error);
 
-        /** @var FlashBagInterface $flashBag */
-        $flashBag = $request->getSession()->getFlashBag();
+        $flashBag = $session->getFlashBag();
 
         $this->assertSame(
             'Login failed (note that usernames and passwords are case-sensitive)!',
@@ -88,14 +93,19 @@ class AuthenticationFailureHandlerTest extends TestCase
 
         $handler = $this->mockFailureHandler($translator, $utils);
         $response = $handler->onAuthenticationFailure($request, new AuthenticationException());
-        $error = $request->getSession()->get('_security.last_error');
+
+        /** @var Session $session */
+        $session = $request->getSession();
+
+        $this->assertNotNull($session);
+
+        $error = $session->get('_security.last_error');
 
         $this->assertTrue($response->headers->contains('location', '/contao/login'));
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertInstanceOf('Symfony\Component\Security\Core\Exception\AuthenticationException', $error);
 
-        /** @var FlashBagInterface $flashBag */
-        $flashBag = $request->getSession()->getFlashBag();
+        $flashBag = $session->getFlashBag();
 
         $this->assertSame(
             'Login failed (note that usernames and passwords are case-sensitive)!',

@@ -132,11 +132,19 @@ class UserSessionListener
     /**
      * Returns the user object depending on the container scope.
      *
+     * @throws \RuntimeException
+     *
      * @return FrontendUser|BackendUser|null
      */
     private function getUserObject()
     {
-        return $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token) {
+            throw new \RuntimeException('The token storage did not contain a token');
+        }
+
+        return $token->getUser();
     }
 
     /**

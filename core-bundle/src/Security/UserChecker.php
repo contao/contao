@@ -113,6 +113,8 @@ class UserChecker implements UserCheckerInterface
      * Locks the account if there are too many login attempts.
      *
      * @param User $user
+     *
+     * @throws \RuntimeException
      */
     private function checkLoginAttempts(User $user): void
     {
@@ -143,14 +145,19 @@ class UserChecker implements UserCheckerInterface
 
         // Send admin notification
         if ($config->get('adminEmail')) {
-            $realName = $user->name;
             $request = $this->requestStack->getCurrentRequest();
+
+            if (null === $request) {
+                throw new \RuntimeException('The request stack did not contain a request');
+            }
+
+            $realName = $user->name;
 
             if ($this->scopeMatcher->isFrontendRequest($request)) {
                 $realName = sprintf('%s %s', $user->firstname, $user->lastname);
             }
 
-            $website = Idna::decode($this->requestStack->getCurrentRequest()->getSchemeAndHttpHost());
+            $website = Idna::decode($request->getSchemeAndHttpHost());
             $subject = $this->translator->trans('MSC.lockedAccount.0', [], 'contao_default');
 
             $body = $this->translator->trans(

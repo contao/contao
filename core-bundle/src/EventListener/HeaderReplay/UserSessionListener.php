@@ -77,6 +77,8 @@ class UserSessionListener
      *
      * @param Request $request
      *
+     * @throws \RuntimeException
+     *
      * @return bool
      */
     private function hasFrontendUser(Request $request): bool
@@ -85,10 +87,16 @@ class UserSessionListener
             return false;
         }
 
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session object');
+        }
+
         $sessionHash = sha1(
             sprintf(
                 '%s%sFE_USER_AUTH',
-                $request->getSession()->getId(),
+                $session->getId(),
                 $this->disableIpCheck ? '' : $request->getClientIp()
             )
         );
@@ -101,6 +109,8 @@ class UserSessionListener
      *
      * @param Request $request
      *
+     * @throws \RuntimeException
+     *
      * @return bool
      */
     private function hasBackendUser(Request $request): bool
@@ -109,10 +119,16 @@ class UserSessionListener
             return false;
         }
 
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session object');
+        }
+
         $sessionHash = sha1(
             sprintf(
                 '%s%sBE_USER_AUTH',
-                $request->getSession()->getId(),
+                $session->getId(),
                 $this->disableIpCheck ? '' : $request->getClientIp()
             )
         );

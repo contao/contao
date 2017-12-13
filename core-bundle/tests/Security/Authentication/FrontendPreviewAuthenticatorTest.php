@@ -111,7 +111,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testReturnsImmediatelyIfNoUsernameIsGiven(): void
     {
         $this->mockRequestStack();
-        $this->createTokenStorageMock(true);
+        $this->createTokenStorageMock();
         $this->mockLogger();
         $this->mockUserProvider();
 
@@ -129,7 +129,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testReturnsImmediatelyIfThereIsNoSession(): void
     {
         $this->mockRequestStack();
-        $this->createTokenStorageMock(true);
+        $this->createTokenStorageMock();
         $this->mockLogger();
         $this->mockUserProvider();
 
@@ -229,7 +229,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ;
 
             $this->tokenStorage
-                ->expects($this->exactly(2))
+                ->expects($this->once())
                 ->method('getToken')
                 ->willReturn($this->token)
             ;

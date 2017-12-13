@@ -29,6 +29,8 @@ class InitializeController extends Controller
     /**
      * Initializes the Contao framework.
      *
+     * @throws \RuntimeException
+     *
      * @return InitializeControllerResponse
      *
      * @Route("/_contao/initialize", name="contao_initialize")
@@ -38,6 +40,11 @@ class InitializeController extends Controller
         @trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
+
+        if (null === $masterRequest) {
+            throw new \RuntimeException('The request stack did not contain a master request');
+        }
+
         $realRequest = Request::createFromGlobals();
         $scope = ContaoCoreBundle::SCOPE_FRONTEND;
 

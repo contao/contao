@@ -44,11 +44,19 @@ class SwitchUserListener
      * Logs successful user impersonations.
      *
      * @param SwitchUserEvent $event
+     *
+     * @throws \RuntimeException
      */
     public function onSwitchUser(SwitchUserEvent $event): void
     {
+        $token = $this->tokenStorage->getToken();
+
+        if (null === $token) {
+            throw new \RuntimeException('The token storage did not contain a token');
+        }
+
         /** @var BackendUser $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $token->getUser();
 
         /** @var BackendUser $targetUser */
         $targetUser = $event->getTargetUser();

@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Do not use this controller directly!
+ * @internal Do not use this controller in your code
  *
  * It is supposed to be used within ESI requests that are protected by the
  * Symfony fragment URI signer. If you use it directly, make sure to add a

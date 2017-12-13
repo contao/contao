@@ -58,12 +58,19 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
      * @param Request                 $request
      * @param AuthenticationException $exception
      *
+     * @throws \RuntimeException
+     * 
      * @return RedirectResponse
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {
         /** @var Session $session */
         $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session object');
+        }
+
         $session->set(Security::AUTHENTICATION_ERROR, $exception);
 
         $session->getFlashBag()->set(

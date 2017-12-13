@@ -99,21 +99,33 @@ class BackendMenuListenerTest extends TestCase
 
         // Test category node
         $categoryNode = $tree->getChild('category1');
+        $this->assertNotNull($categoryNode);
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $categoryNode);
         $this->assertCount(2, $categoryNode->getChildren());
 
         // Test module node
         $moduleNode = $categoryNode->getChild('node1');
+        $this->assertNotNull($moduleNode);
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $moduleNode);
         $this->assertCount(0, $moduleNode->getChildren());
 
         // Test expanded/collapsed
-        $this->assertTrue($tree->getChild('category1')->getDisplayChildren());
-        $this->assertFalse($tree->getChild('category2')->getDisplayChildren());
+        $childNode = $tree->getChild('category1');
+        $this->assertNotNull($childNode);
+        $this->assertTrue($childNode->getDisplayChildren());
+
+        $childNode = $tree->getChild('category2');
+        $this->assertNotNull($childNode);
+        $this->assertFalse($childNode->getDisplayChildren());
 
         // Test active/not active
-        $this->assertTrue($categoryNode->getChild('node1')->isCurrent());
-        $this->assertFalse($categoryNode->getChild('node2')->isCurrent());
+        $childNode = $categoryNode->getChild('node1');
+        $this->assertNotNull($childNode);
+        $this->assertTrue($childNode->isCurrent());
+
+        $childNode = $categoryNode->getChild('node2');
+        $this->assertNotNull($childNode);
+        $this->assertFalse($childNode->isCurrent());
     }
 
     public function testDoesNotModifyTheTreeIfNoUserOrTokenIsGiven(): void
