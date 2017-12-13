@@ -8,6 +8,7 @@ services:
 
     contao_manager.plugin_loader:
         synthetic: true
+        public: true
 
     contao_manager.routing_loader:
         class: Contao\ManagerBundle\Routing\RouteLoader

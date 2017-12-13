@@ -100,6 +100,7 @@ class ContaoManagerExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_manager.plugin_loader');
 
         $this->assertTrue($definition->isSynthetic());
+        $this->assertTrue($definition->isPublic());
     }
 
     public function testRegistersTheRoutingLoader(): void
