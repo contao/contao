@@ -134,11 +134,17 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to accept the license.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
     private function acceptLicense(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_license' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('license.html.twig');
@@ -152,11 +158,17 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set the install tool password.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
     private function setPassword(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_password' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('password.html.twig');
@@ -191,11 +203,17 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to log in.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
     private function login(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_login' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('login.html.twig');
@@ -293,12 +311,19 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set up the database connection.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
     {
-        $parameters = [];
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        $parameters = [];
 
         $parameters['parameters'] = [
             'database_host' => $this->getContainerParameter('database_host'),
@@ -394,6 +419,8 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      *
+     * @throws \RuntimeException
+     *
      * @return RedirectResponse|null
      */
     private function adjustDatabaseTables(): ?RedirectResponse
@@ -405,6 +432,10 @@ class InstallationController implements ContainerAwareInterface
         $this->context['sql_form'] = $installer->getCommands();
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_database_update' !== $request->request->get('FORM_SUBMIT')) {
             return null;
@@ -424,6 +455,8 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      *
+     * @throws \RuntimeException
+     *
      * @return RedirectResponse|null
      */
     private function importExampleWebsite(): ?RedirectResponse
@@ -438,6 +471,10 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_template_import' !== $request->request->get('FORM_SUBMIT')) {
             return null;
@@ -470,6 +507,8 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Creates an admin user.
      *
+     * @throws \RuntimeException
+     *
      * @return RedirectResponse|null
      */
     private function createAdminUser(): ?RedirectResponse
@@ -489,6 +528,10 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_admin' !== $request->request->get('FORM_SUBMIT')) {
             return null;
@@ -601,17 +644,27 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Returns a redirect response to reload the page.
      *
+     * @throws \RuntimeException
+     *
      * @return RedirectResponse
      */
     private function getRedirectResponse(): RedirectResponse
     {
-        return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        return new RedirectResponse($request->getRequestUri());
     }
 
     /**
      * Adds the default values to the context.
      *
      * @param array $context
+     *
+     * @throws \RuntimeException
      *
      * @return array
      */
@@ -632,7 +685,13 @@ class InstallationController implements ContainerAwareInterface
         }
 
         if (!isset($context['path'])) {
-            $context['path'] = $this->container->get('request_stack')->getCurrentRequest()->getBasePath();
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+
+            if (null === $request) {
+                throw new \RuntimeException('The request stack did not contain a request');
+            }
+
+            $context['path'] = $request->getBasePath();
         }
 
         return $context;
