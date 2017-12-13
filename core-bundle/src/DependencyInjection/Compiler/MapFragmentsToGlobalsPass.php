@@ -39,6 +39,7 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
         $modules = $this->getGlobalsMap($tags, 'FE_MOD', ModuleProxy::class);
 
         $listener = new Definition(GlobalsMapListener::class, [array_merge($elements, $modules)]);
+        $listener->setPublic(true);
         $listener->addTag('contao.hook', ['hook' => 'initializeSystem', 'priority' => 255]);
 
         $container->setDefinition('contao.listener.'.ContainerBuilder::hash($listener), $listener);

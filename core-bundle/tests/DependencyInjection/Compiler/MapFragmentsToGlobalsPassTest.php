@@ -43,7 +43,7 @@ class MapFragmentsToGlobalsPassTest extends TestCase
         $pass = new MapFragmentsToGlobalsPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition('contao.listener.mswqzqr');
+        $definition = $container->getDefinition('contao.listener.uigfyml');
 
         $this->assertSame(
             [
@@ -70,6 +70,8 @@ class MapFragmentsToGlobalsPassTest extends TestCase
             ],
             $definition->getArguments()[0]
         );
+
+        $this->assertTrue($definition->isPublic());
     }
 
     public function testFailsIfTheCategoryIsMissing(): void

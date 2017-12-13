@@ -18,7 +18,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class UserBackendMenuListener
+class BackendMenuListener
 {
     /**
      * @var TokenStorageInterface

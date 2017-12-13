@@ -15,6 +15,7 @@ services:
             - "@request_stack"
             - 'staticPlugins'
             - "%kernel.debug%"
+        public: true
 
     contao.assets.files_context:
         class: Contao\CoreBundle\Asset\ContaoContext
@@ -23,6 +24,7 @@ services:
             - "@request_stack"
             - 'staticFiles'
             - "%kernel.debug%"
+        public: true
 
     contao.cache:
         class: Doctrine\Common\Cache\FilesystemCache
@@ -80,6 +82,16 @@ services:
         tags:
             - { name: nelmio_cors.options_provider }
 
+    contao.csrf.token_manager:
+        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+        arguments:
+            - "@security.csrf.token_generator"
+            - "@contao.csrf.token_storage"
+        public: true
+
+    contao.csrf.token_storage:
+        class: Contao\CoreBundle\Csrf\MemoryTokenStorage
+
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
@@ -104,8 +116,10 @@ services:
 
     contao.fragment.pre_handlers:
         class: Symfony\Component\DependencyInjection\ServiceLocator
-        arguments: [[]]
-        tags: ['container.service_locator']
+        arguments:
+            - []
+        tags:
+            - 'container.service_locator'
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
@@ -138,6 +152,7 @@ services:
             - "%contao.image.target_dir%"
             - "@contao.image.resize_calculator"
             - "@filesystem"
+        public: true
 
     contao.image.image_factory:
         class: Contao\CoreBundle\Image\ImageFactory
@@ -158,12 +173,14 @@ services:
             - "@database_connection"
             - "@event_dispatcher"
             - "@contao.framework"
+        public: true
 
     contao.image.picture_generator:
         class: Contao\Image\PictureGenerator
         arguments:
             - "@contao.image.resizer"
             - "@contao.image.resize_calculator"
+        public: true
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
@@ -179,12 +196,14 @@ services:
         class: Contao\CoreBundle\Menu\BackendMenuRenderer
         arguments:
             - "@twig"
+        public: true
 
     contao.menu.backend_menu_builder:
         class: Contao\CoreBundle\Menu\BackendMenuBuilder
         arguments:
             - "@knp_menu.factory"
             - "@event_dispatcher"
+        public: true
 
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
@@ -193,6 +212,7 @@ services:
         class: Knp\Menu\Renderer\ListRenderer
         arguments:
             - "@contao.menu.matcher"
+        public: true
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -225,6 +245,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
+        public: true
 
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider
@@ -312,41 +333,6 @@ services:
         calls:
             - ["matchAttribute", ["_scope", "frontend"]]
 
-    contao.session.contao_backend:
-        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
-        arguments:
-            - "_contao_be_attributes"
-        calls:
-            - ["setName", ["contao_backend"]]
-
-    contao.session.contao_frontend:
-        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
-        arguments:
-            - "_contao_fe_attributes"
-        calls:
-            - ["setName", ["contao_frontend"]]
-
-    contao.slug.generator:
-        class: Ausi\SlugGenerator\SlugGenerator
-        arguments:
-            - { validChars: "0-9a-z" }
-
-    contao.slug.valid_characters:
-        class: Contao\CoreBundle\Slug\ValidCharacters
-        arguments:
-            - "@event_dispatcher"
-            - "@translator"
-
-    contao.csrf.token_manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
-        arguments:
-            - "@security.csrf.token_generator"
-            - "@contao.csrf.token_storage"
-        public: true
-
-    contao.csrf.token_storage:
-        class: Contao\CoreBundle\Csrf\MemoryTokenStorage
-
     security.authentication.provider.dao:
         class: Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider
         abstract: true
@@ -385,7 +371,6 @@ services:
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\BackendUserProvider
-        public: false
         arguments:
             - "@contao.framework"
 
@@ -400,7 +385,6 @@ services:
 
     contao.security.frontend_user_provider:
         class: Contao\CoreBundle\Security\User\FrontendUserProvider
-        public: false
         arguments:
             - "@contao.framework"
 
@@ -435,6 +419,31 @@ services:
         arguments:
             - "@contao.framework"
             - "@contao.routing.scope_matcher"
+
+    contao.session.contao_backend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        arguments:
+            - "_contao_be_attributes"
+        calls:
+            - ["setName", ["contao_backend"]]
+
+    contao.session.contao_frontend:
+        class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
+        arguments:
+            - "_contao_fe_attributes"
+        calls:
+            - ["setName", ["contao_frontend"]]
+
+    contao.slug.generator:
+        class: Ausi\SlugGenerator\SlugGenerator
+        arguments:
+            - { validChars: "0-9a-z" }
+
+    contao.slug.valid_characters:
+        class: Contao\CoreBundle\Slug\ValidCharacters
+        arguments:
+            - "@event_dispatcher"
+            - "@translator"
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator

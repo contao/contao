@@ -14,19 +14,19 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\EventListener\UserBackendMenuListener;
+use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class UserBackendMenuListenerTest extends TestCase
+class BackendMenuListenerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $listener = new UserBackendMenuListener($this->createMock(TokenStorageInterface::class));
+        $listener = new BackendMenuListener($this->createMock(TokenStorageInterface::class));
 
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserBackendMenuListener', $listener);
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\BackendMenuListener', $listener);
     }
 
     public function testCreatesANodeListFromTheBackendUserMenuArray(): void
@@ -88,7 +88,7 @@ class UserBackendMenuListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new UserBackendMenuListener($tokenStorage);
+        $listener = new BackendMenuListener($tokenStorage);
         $listener->onBuild($event);
 
         $tree = $event->getTree();
@@ -128,7 +128,7 @@ class UserBackendMenuListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new UserBackendMenuListener($tokenStorage);
+        $listener = new BackendMenuListener($tokenStorage);
         $listener->onBuild($event);
 
         $tree = $event->getTree();
