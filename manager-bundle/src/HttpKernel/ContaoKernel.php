@@ -216,7 +216,7 @@ class ContaoKernel extends Kernel
     }
 
     /**
-     * Sets the project directory (the Contao kernel does not know it's location).
+     * Sets the project directory (the Contao kernel does not know its location).
      *
      * @param string $projectDir
      */
