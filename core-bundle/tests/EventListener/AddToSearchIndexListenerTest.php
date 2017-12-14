@@ -115,6 +115,27 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
+     * Tests that the listener does nothing if the request method is not GET.
+     */
+    public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet()
+    {
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $listener = new AddToSearchIndexListener($this->framework);
+        $event = $this->mockPostResponseEvent(null, Request::METHOD_POST);
+
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
+
+        $listener->onKernelTerminate($event);
+    }
+
+    /**
      * Tests that the listener does nothing if the request is a fragment.
      */
     public function testDoesNotIndexTheResponseUponFragmentRequests()
@@ -139,12 +160,14 @@ class AddToSearchIndexListenerTest extends TestCase
      * Returns a PostResponseEvent mock object.
      *
      * @param string|null $requestUri
+     * @param string      $requestMethod
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|PostResponseEvent
      */
-    private function mockPostResponseEvent($requestUri = null)
+    private function mockPostResponseEvent($requestUri = null, $requestMethod = Request::METHOD_GET)
     {
         $request = new Request();
+        $request->setMethod($requestMethod);
 
         if (null !== $requestUri) {
             $request->server->set('REQUEST_URI', $requestUri);
