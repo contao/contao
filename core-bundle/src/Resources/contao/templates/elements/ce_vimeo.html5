@@ -2,6 +2,6 @@
 
 <?php $this->block('content'); ?>
 
-  <iframe<?= $this->size ?> src="<?= $this->src ?>" frameborder="0" allowfullscreen></iframe>
+  <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
 
 <?php $this->endblock(); ?>
