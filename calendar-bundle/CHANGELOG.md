@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### DEV
+### 4.4.9 (2017-12-14)
 
  * Do not always create a new version when an event is saved (see contao/news-bundle#26).
 
