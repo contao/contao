@@ -52,7 +52,7 @@ class GeneratePageListener
     {
         $newsfeeds = StringUtil::deserialize($objLayout->newsfeeds);
 
-        if (empty($newsfeeds) || !is_array($newsfeeds)) {
+        if (empty($newsfeeds) || !\is_array($newsfeeds)) {
             return;
         }
 

@@ -67,6 +67,7 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.listener.generate_page');
 
         $this->assertSame(GeneratePageListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
@@ -80,6 +81,7 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.listener.insert_tags');
 
         $this->assertSame(InsertTagsListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
@@ -133,7 +135,6 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.picker.news_provider');
 
         $this->assertSame(NewsPickerProvider::class, $definition->getClass());
-        $this->assertFalse($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
 
         $conditionals = $definition->getInstanceofConditionals();

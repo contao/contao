@@ -12,7 +12,6 @@ EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('Resources')
-    ->exclude('Fixtures')
     ->in([__DIR__.'/src', __DIR__.'/tests'])
 ;
 
@@ -20,24 +19,33 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'psr0' => false,
-        'strict_comparison' => true,
-        'strict_param' => true,
+        '@PHPUnit60Migration:risky' => true,
+        'align_multiline_comment' => true,
         'array_syntax' => ['syntax' => 'short'],
-        'heredoc_to_nowdoc' => true,
-        'header_comment' => ['header' => $header],
-        'ordered_imports' => true,
-        'ordered_class_elements' => true,
-        'php_unit_strict' => true,
-        'phpdoc_order' => true,
-        'no_useless_return' => true,
-        'no_useless_else' => true,
-        'no_unreachable_default_argument_value' => true,
+        'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
         'general_phpdoc_annotation_remove' => [
             'expectedException',
             'expectedExceptionMessage',
         ],
+        'header_comment' => ['header' => $header],
+        'heredoc_to_nowdoc' => true,
+        'linebreak_after_opening_tag' => true,
+        'no_superfluous_elseif' => true,
+        'no_unreachable_default_argument_value' => true,
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'ordered_class_elements' => true,
+        'ordered_imports' => true,
+        'php_unit_strict' => true,
+        'phpdoc_add_missing_param_annotation' => true,
+        'phpdoc_order' => true,
+        'phpdoc_types_order' => [
+            'null_adjustment' => 'always_last',
+            'sort_algorithm' => 'none',
+        ],
+        'strict_comparison' => true,
+        'strict_param' => true,
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)
