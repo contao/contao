@@ -1,6 +1,6 @@
 # Contao news bundle change log
 
-### DEV
+### 4.4.9 (2017-12-14)
 
  * Do not always create a new version when a news is saved (see #26).
 
