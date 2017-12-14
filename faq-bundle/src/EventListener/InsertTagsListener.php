@@ -62,7 +62,7 @@ class InsertTagsListener
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
 
-        if (!in_array($key, $this->supportedTags, true)) {
+        if (!\in_array($key, $this->supportedTags, true)) {
             return false;
         }
 

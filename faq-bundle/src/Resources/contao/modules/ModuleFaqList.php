@@ -61,7 +61,7 @@ class ModuleFaqList extends \Module
 		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Return if there are no categories
-		if (!is_array($this->faq_categories) || empty($this->faq_categories))
+		if (!\is_array($this->faq_categories) || empty($this->faq_categories))
 		{
 			return '';
 		}
@@ -110,13 +110,13 @@ class ModuleFaqList extends \Module
 		$arrFaq = array_values(array_filter($arrFaq));
 
 		$cat_count = 0;
-		$cat_limit = count($arrFaq);
+		$cat_limit = \count($arrFaq);
 
 		// Add classes
 		foreach ($arrFaq as $k=>$v)
 		{
 			$count = 0;
-			$limit = count($v['items']);
+			$limit = \count($v['items']);
 
 			for ($i=0; $i<$limit; $i++)
 			{
@@ -143,7 +143,7 @@ class ModuleFaqList extends \Module
 	{
 		/** @var FaqCategoryModel $objCategory */
 		$objCategory = $objFaq->getRelated('pid');
-		$jumpTo = intval($objCategory->jumpTo);
+		$jumpTo = \intval($objCategory->jumpTo);
 
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
 		if ($jumpTo < 1)
@@ -163,6 +163,6 @@ class ModuleFaqList extends \Module
 			}
 		}
 
-		return sprintf($this->arrTargets[$jumpTo], ($objFaq->alias ?: $objFaq->id));
+		return sprintf(preg_replace('/%(?!s)/', '%%', $this->arrTargets[$jumpTo]), ($objFaq->alias ?: $objFaq->id));
 	}
 }

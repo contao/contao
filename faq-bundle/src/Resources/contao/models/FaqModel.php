@@ -130,7 +130,7 @@ class FaqModel extends \Model
 	 */
 	public static function findPublishedByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!is_array($arrPids) || empty($arrPids))
+		if (!\is_array($arrPids) || empty($arrPids))
 		{
 			return null;
 		}
@@ -139,7 +139,7 @@ class FaqModel extends \Model
 		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
 		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")";
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$arrColumns[] = "$t.published='1'";
 		}
@@ -161,7 +161,7 @@ class FaqModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$arrColumns[] = "$t.published='1'";
 		}
@@ -185,7 +185,7 @@ class FaqModel extends \Model
 	 */
 	public static function findPublishedByPids($arrPids, array $arrOptions=array())
 	{
-		if (!is_array($arrPids) || empty($arrPids))
+		if (!\is_array($arrPids) || empty($arrPids))
 		{
 			return null;
 		}
@@ -193,7 +193,7 @@ class FaqModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$arrColumns[] = "$t.published='1'";
 		}

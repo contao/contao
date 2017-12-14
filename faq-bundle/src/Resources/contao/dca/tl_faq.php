@@ -215,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'fieldType'=>'radio', 'mandatory'=>true),
+			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'mandatory'=>true),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array
@@ -264,7 +264,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'fieldType'=>'radio', 'filesOnly'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'fullsize' => array
@@ -420,8 +420,9 @@ class tl_faq extends Backend
 		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
 
 		return '
-<div class="cte_type ' . $key . '"><strong>' . $arrRow['question'] . '</strong> - ' . $date . '</div>
+<div class="cte_type ' . $key . '">' . $date . '</div>
 <div class="limit_height' . (!Config::get('doNotCollapse') ? ' h40' : '') . '">
+<h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";
 	}
@@ -441,7 +442,7 @@ class tl_faq extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('tid')))
+		if (\strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -485,16 +486,16 @@ class tl_faq extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_faq']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -524,16 +525,16 @@ class tl_faq extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_faq']['fields']['published']['save_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_faq']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_faq']['fields']['published']['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -553,16 +554,16 @@ class tl_faq extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onsubmit_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_faq']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_faq']['config']['onsubmit_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}

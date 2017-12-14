@@ -55,7 +55,7 @@ class ModuleFaq extends \Frontend
 				}
 
 				// Skip FAQs outside the root nodes
-				if (!empty($arrRoot) && !in_array($objFaq->jumpTo, $arrRoot))
+				if (!empty($arrRoot) && !\in_array($objFaq->jumpTo, $arrRoot))
 				{
 					continue;
 				}
@@ -105,7 +105,7 @@ class ModuleFaq extends \Frontend
 				{
 					while ($objItems->next())
 					{
-						$arrPages[] = sprintf($strUrl, ($objItems->alias ?: $objItems->id));
+						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItems->alias ?: $objItems->id));
 					}
 				}
 			}
