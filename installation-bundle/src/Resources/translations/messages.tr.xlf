@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Kurulum aracı parolayı üç kez üst üste yanlış yazdığınızdan güvenlik nedeniyle kilitlendi. Kilidi açmak için komut satırına &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; komutunu yazın.</target>
         
       </trans-unit>
       <trans-unit id="5">

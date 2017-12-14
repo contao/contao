@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Ze względów bezpieczeństwa, instalator został zablokowany po wprowadzeniu trzech nieprawidłowych haseł z rzędu. Aby go odblokować, uruchom &lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt; w linii komend.</target>
         
       </trans-unit>
       <trans-unit id="5">
