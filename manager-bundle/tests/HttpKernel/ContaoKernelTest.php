@@ -109,7 +109,10 @@ class ContaoKernelTest extends ContaoTestCase
                     if (\is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (\is_callable($resource)) {
-                        $resource(new ContainerBuilder());
+                        $container = new ContainerBuilder();
+                        $container->setParameter('kernel.environment', 'dev');
+
+                        $resource($container);
                     }
                 }
             )

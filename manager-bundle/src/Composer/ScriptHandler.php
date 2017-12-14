@@ -71,12 +71,13 @@ class ScriptHandler
 
         $process = new Process(
             sprintf(
-                '%s %s%s %s%s --env=prod',
+                '%s %s%s %s%s --env=%s',
                 escapeshellarg($phpPath),
                 escapeshellarg(__DIR__.'/../../bin/contao-console'),
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
-                self::getVerbosityFlag($event)
+                self::getVerbosityFlag($event),
+                getenv('SYMFONY_ENV') ?: 'prod'
             )
         );
 
