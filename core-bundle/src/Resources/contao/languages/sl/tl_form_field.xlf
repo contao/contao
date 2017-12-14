@@ -432,6 +432,13 @@
         <source>Please select an image from the files directory.</source>
         <target>Prosimo, izberite sliko</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.invisible.0">
+        <source>Invisible</source>
+        <target>Nevidno</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible.1">
+        <source>Hide the form field on the website.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
         <target>Vrsta vnosnega polja in naziv</target>
@@ -471,6 +478,10 @@
       <trans-unit id="tl_form_field.image_legend">
         <source>Image button</source>
         <target>Gumb s sliko</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible_legend">
+        <source>Visibility</source>
+        <target>Vidnost</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New field</source>

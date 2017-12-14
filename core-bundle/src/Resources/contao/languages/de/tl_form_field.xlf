@@ -433,6 +433,14 @@
         <source>Please select an image from the files directory.</source>
         <target>Bitte wählen Sie ein Bild aus der Dateiübersicht.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.invisible.0">
+        <source>Invisible</source>
+        <target>Unsichtbar</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible.1">
+        <source>Hide the form field on the website.</source>
+        <target>Das Formularfeld auf der Webseite nicht anzeigen.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
         <target>Feldtyp und -name</target>
@@ -472,6 +480,10 @@
       <trans-unit id="tl_form_field.image_legend">
         <source>Image button</source>
         <target>Bildschaltfläche</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible_legend">
+        <source>Visibility</source>
+        <target>Sichtbarkeit</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New field</source>
