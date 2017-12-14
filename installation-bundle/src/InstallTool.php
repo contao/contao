@@ -12,9 +12,9 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
-use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -61,13 +61,15 @@ class InstallTool
      */
     public function isLocked()
     {
-        $cache = \System::getContainer()->get('contao.cache');
+        $file = $this->rootDir.'/var/install_lock';
 
-        if ($cache->contains('login-count')) {
-            return (int) $cache->fetch('login-count') >= 3;
+        if (!file_exists($file)) {
+            return false;
         }
 
-        return false;
+        $count = file_get_contents($this->rootDir.'/var/install_lock');
+
+        return (int) $count >= 3;
     }
 
     /**
@@ -95,15 +97,15 @@ class InstallTool
      */
     public function increaseLoginCount()
     {
-        $cache = \System::getContainer()->get('contao.cache');
+        $count = 0;
+        $file = $this->rootDir.'/var/install_lock';
 
-        if ($cache->contains('login-count')) {
-            $count = (int) $cache->fetch('login-count') + 1;
-        } else {
-            $count = 1;
+        if (file_exists($file)) {
+            $count = file_get_contents($this->rootDir.'/var/install_lock');
         }
 
-        $cache->save('login-count', $count);
+        $fs = new Filesystem();
+        $fs->dumpFile($file, (int) $count + 1);
     }
 
     /**
@@ -205,7 +207,7 @@ class InstallTool
 
         $column = $this->connection->fetchAssoc($sql." AND COLUMN_NAME = 'sections'");
 
-        return !in_array($column['Type'], ['varchar(1022)', 'blob'], true);
+        return !\in_array($column['Type'], ['varchar(1022)', 'blob'], true);
     }
 
     /**
@@ -344,7 +346,7 @@ class InstallTool
             ':name' => strtr($name, $replace),
             ':email' => $email,
             ':username' => strtr($username, $replace),
-            ':password' => Encryption::hash($password),
+            ':password' => password_hash($password, PASSWORD_DEFAULT),
             ':language' => $language,
         ]);
     }

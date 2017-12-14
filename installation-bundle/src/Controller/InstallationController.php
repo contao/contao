@@ -10,7 +10,6 @@
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Encryption;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
@@ -45,6 +44,7 @@ class InstallationController implements ContainerAwareInterface
     private $context = [
         'has_admin' => false,
         'hide_admin' => false,
+        'sql_message' => '',
     ];
 
     /**
@@ -184,7 +184,7 @@ class InstallationController implements ContainerAwareInterface
             ]);
         }
 
-        $installTool->persistConfig('installPassword', Encryption::hash($password));
+        $installTool->persistConfig('installPassword', password_hash($password, PASSWORD_DEFAULT));
         $this->container->get('contao.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
@@ -205,7 +205,7 @@ class InstallationController implements ContainerAwareInterface
 
         $installTool = $this->container->get('contao.install_tool');
 
-        $verified = Encryption::verify(
+        $verified = password_verify(
             $request->request->get('password'),
             $installTool->getConfig('installPassword')
         );
@@ -249,11 +249,11 @@ class InstallationController implements ContainerAwareInterface
         $filesystem->rename($cacheDir, $oldCacheDir);
         $filesystem->remove($oldCacheDir);
 
-        if (function_exists('opcache_reset')) {
+        if (\function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -283,11 +283,11 @@ class InstallationController implements ContainerAwareInterface
 
         $warmer->warmUp($cacheDir);
 
-        if (function_exists('opcache_reset')) {
+        if (\function_exists('opcache_reset')) {
             opcache_reset();
         }
 
-        if (function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -411,7 +411,7 @@ class InstallationController implements ContainerAwareInterface
 
         $sql = $request->request->get('sql');
 
-        if (!empty($sql) && is_array($sql)) {
+        if (!empty($sql) && \is_array($sql)) {
             foreach ($sql as $hash) {
                 $installer->execCommand($hash);
             }
@@ -444,7 +444,7 @@ class InstallationController implements ContainerAwareInterface
 
         $template = $request->request->get('template');
 
-        if ('' === $template || !in_array($template, $templates, true)) {
+        if ('' === $template || !\in_array($template, $templates, true)) {
             $this->context['import_error'] = $this->trans('import_empty_source');
 
             return null;

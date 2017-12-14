@@ -69,7 +69,7 @@ class LanguageResolver
 
         // The implementation differs from the original implementation and also works with .jp browsers
         preg_match_all(
-            '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
+            '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.\d+))?/i',
             $this->requestStack->getCurrentRequest()->headers->get('accept-language'),
             $accepted
         );
@@ -93,6 +93,6 @@ class LanguageResolver
             }
         }
 
-        return array_slice(array_unique($locales), 0, 8);
+        return \array_slice(array_unique($locales), 0, 8);
     }
 }

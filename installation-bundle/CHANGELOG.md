@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### 4.4.9 (2017-12-14)
+
+ * Use a simpler lock mechanism in the install tool (see #73).
+
 ### 4.4.3 (2017-08-16)
 
  * Warm up the Symfony cache after the database credentials have been set (see #63).
