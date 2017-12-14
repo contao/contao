@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Show the "invisible" field when editing a form field (see #1199).
  * Only add pages requested via GET to the search index (see #1194).
  * Fix the Encrption class not supporting PHP 7.2 (see contao/core#8820).
  * Handle single file uploads in FileUpload::getFilesFromGlobal() (see #1192).
