@@ -69,6 +69,17 @@ services:
             - "@contao.framework"
             - "@doctrine"
 
+    contao.framework:
+        class: Contao\CoreBundle\Framework\ContaoFramework
+        arguments:
+            - "@request_stack"
+            - "@router"
+            - "@session"
+            - "@contao.routing.scope_matcher"
+            - "%kernel.project_dir%"
+            - "%contao.error_level%"
+        public: true
+
     contao.image.imagine:
         class: Imagine\Gd\Imagine
         public: true
@@ -86,6 +97,7 @@ services:
             - "%contao.image.target_dir%"
             - "@contao.image.resize_calculator"
             - "@filesystem"
+        public: true
 
     contao.image.image_factory:
         class: Contao\CoreBundle\Image\ImageFactory
@@ -106,11 +118,13 @@ services:
             - "@database_connection"
             - "@event_dispatcher"
             - "@contao.framework"
+        public: true
 
     contao.image.picture_generator:
         class: Contao\Image\PictureGenerator
         arguments:
             - "@contao.image.resizer"
+        public: true
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
@@ -122,17 +136,6 @@ services:
             - "%contao.image.imagine_options%"
         public: true
 
-    contao.framework:
-        class: Contao\CoreBundle\Framework\ContaoFramework
-        arguments:
-            - "@request_stack"
-            - "@router"
-            - "@session"
-            - "@contao.routing.scope_matcher"
-            - "%kernel.project_dir%"
-            - "%contao.error_level%"
-        public: true
-
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
 
@@ -140,6 +143,7 @@ services:
         class: Knp\Menu\Renderer\ListRenderer
         arguments:
             - "@contao.menu.matcher"
+        public: true
 
     contao.monolog.handler:
         class: Contao\CoreBundle\Monolog\ContaoTableHandler
@@ -163,6 +167,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
+        public: true
 
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider
