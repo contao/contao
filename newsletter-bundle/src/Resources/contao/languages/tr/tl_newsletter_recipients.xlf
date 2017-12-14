@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirmed.1">
         <source>The date of confirmation (double opt-in).</source>
-        <target>Abonelik onaylama tarihi (double-opt-in).</target>
+        <target>Abonelik onaylama tarihi (double opt-in).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email_legend">
         <source>E-mail address</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.import.0">
         <source>CSV import</source>
-        <target>CSV yükle</target>
+        <target>CSV ithali</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.import.1">
         <source>Import recipients from a CSV file</source>

@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="MOD.newsletter.0">
         <source>Newsletters</source>
-        <target>Haber abonelikleri</target>
+        <target>Haberler</target>
       </trans-unit>
       <trans-unit id="MOD.newsletter.1">
         <source>Manage subscriptions and send newsletters</source>
-        <target>Haber abonelikleri ve gönderimini denetle</target>
+        <target>Abonelik yönetimi ve bülten gönderimi</target>
       </trans-unit>
       <trans-unit id="MOD.tl_newsletter_recipients">
         <source>Recipients</source>
@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="MOD.tl_newsletter">
         <source>Newsletters</source>
-        <target>Haberler abonelikleri</target>
+        <target>Haberler</target>
       </trans-unit>
       <trans-unit id="FMD.newsletter">
         <source>Newsletter</source>
-        <target>Haber abonelik</target>
+        <target>Bülten</target>
       </trans-unit>
       <trans-unit id="FMD.subscribe.0">
         <source>Subscribe</source>
@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="FMD.subscribe.1">
         <source>Generates a form to subscribe to one or more channels</source>
-        <target>Bir yada birden fazla kanala abone olmak için bir form oluşturur</target>
+        <target>Bir ya da bir kaç kanala abone olmak için bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.unsubscribe.0">
         <source>Unsubscribe</source>
@@ -35,23 +35,23 @@
       </trans-unit>
       <trans-unit id="FMD.unsubscribe.1">
         <source>Generates a form to unsubscribe from one or more channels</source>
-        <target>Bir yada birden fazla kanalın aboneliğinden ayrılmak için bir form oluşturur</target>
+        <target>Bir ya da bir kaç kanalın aboneliğinden ayrılmak için bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.newsletterlist.0">
         <source>Newsletter list</source>
-        <target>Haber abonelik listesi</target>
+        <target>Bülten listesi</target>
       </trans-unit>
       <trans-unit id="FMD.newsletterlist.1">
         <source>Adds a list of newsletters to the page</source>
-        <target>Sayfaya haber abonelik listesini ekler</target>
+        <target>Sayfaya bülten listesini ekler</target>
       </trans-unit>
       <trans-unit id="FMD.newsletterreader.0">
         <source>Newsletter reader</source>
-        <target>Haber abonelik okuyucu</target>
+        <target>Bülten okuyucu</target>
       </trans-unit>
       <trans-unit id="FMD.newsletterreader.1">
         <source>Shows the details of a newsletter</source>
-        <target>Bir haber aboneliğinin ayrıntılarını görüntüler</target>
+        <target>Bir bültenin ayrıntılarını görüntüle</target>
       </trans-unit>
     </body>
   </file>
