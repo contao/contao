@@ -1,7 +1,6 @@
 services:
     contao_manager.cache.clear_bundle:
         class: Contao\ManagerBundle\Cache\BundleCacheClearer
-        public: false
         arguments:
             - "@filesystem"
         tags:
@@ -17,3 +16,4 @@ services:
             - "@routing.loader"
             - "@contao_manager.plugin_loader"
             - "@kernel"
+        public: true
