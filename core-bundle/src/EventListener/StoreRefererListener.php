@@ -71,6 +71,12 @@ class StoreRefererListener
             return;
         }
 
+        $request = $event->getRequest();
+
+        if (!$request->isMethod(Request::METHOD_GET)) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if (200 !== $response->getStatusCode()) {
@@ -82,8 +88,6 @@ class StoreRefererListener
         if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
             return;
         }
-
-        $request = $event->getRequest();
 
         if ($this->scopeMatcher->isBackendRequest($request)) {
             $this->storeBackendReferer($request);
