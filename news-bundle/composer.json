@@ -56,7 +56,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "4.5.x-dev"
+            "dev-master": "4.6.x-dev"
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
