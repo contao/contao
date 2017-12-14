@@ -923,7 +923,7 @@ class StyleSheets extends \Backend
 			$own = preg_replace('/url\("(?!data:|\/)/', 'url("' . $strGlue, $own);
 			$own = preg_split('/[\n\r]+/', $own);
 			$own = implode(($blnWriteToFile ? '' : $lb), $own);
-			$return .= $lb . (!$blnWriteToFile ? \StringUtil::specialchars($own) : $own);
+			$return .= $lb . ((!$blnWriteToFile && !$export) ? \StringUtil::specialchars($own) : $own);
 		}
 
 		// Allow custom definitions
