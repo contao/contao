@@ -46,6 +46,9 @@
         "source": "https://github.com/contao/comments-bundle"
     },
     "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
         "contao-manager-plugin": "Contao\\CommentsBundle\\ContaoManager\\Plugin"
     }
 }
