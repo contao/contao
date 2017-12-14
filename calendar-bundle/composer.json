@@ -57,6 +57,9 @@
         "source": "https://github.com/contao/calendar-bundle"
     },
     "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
         "contao-manager-plugin": "Contao\\CalendarBundle\\ContaoManager\\Plugin"
     }
 }
