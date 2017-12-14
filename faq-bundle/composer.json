@@ -57,6 +57,9 @@
         "source": "https://github.com/contao/faq-bundle"
     },
     "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
         "contao-manager-plugin": "Contao\\FaqBundle\\ContaoManager\\Plugin"
     }
 }
