@@ -72,7 +72,7 @@ class Newsletter extends \Backend
 		{
 			$files = \StringUtil::deserialize($objNewsletter->files);
 
-			if (!empty($files) && is_array($files))
+			if (!empty($files) && \is_array($files))
 			{
 				$objFiles = \FilesModel::findMultipleByUuids($files);
 
@@ -185,7 +185,7 @@ class Newsletter extends \Backend
 				// Deactivate rejected addresses
 				if (!empty($_SESSION['REJECTED_RECIPIENTS']))
 				{
-					$intRejected = count($_SESSION['REJECTED_RECIPIENTS']);
+					$intRejected = \count($_SESSION['REJECTED_RECIPIENTS']);
 					\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
@@ -246,7 +246,7 @@ class Newsletter extends \Backend
   <tr class="row_2">
     <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['template'][0] . '</td>
     <td class="col_1">' . $objNewsletter->template . '</td>
-  </tr>' . ((!empty($arrAttachments) && is_array($arrAttachments)) ? '
+  </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
   <tr class="row_3">
     <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
     <td class="col_1">' . implode(', ', $arrAttachments) . '</td>
@@ -326,7 +326,7 @@ class Newsletter extends \Backend
 		$objEmail->logFile = TL_NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
-		if (!empty($arrAttachments) && is_array($arrAttachments))
+		if (!empty($arrAttachments) && \is_array($arrAttachments))
 		{
 			foreach ($arrAttachments as $strAttachment)
 			{
@@ -395,7 +395,7 @@ class Newsletter extends \Backend
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['sendNewsletter']) && is_array($GLOBALS['TL_HOOKS']['sendNewsletter']))
+		if (isset($GLOBALS['TL_HOOKS']['sendNewsletter']) && \is_array($GLOBALS['TL_HOOKS']['sendNewsletter']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sendNewsletter'] as $callback)
 			{
@@ -603,7 +603,7 @@ class Newsletter extends \Backend
 		$arrNewsletters = \StringUtil::deserialize($arrData['newsletter'], true);
 
 		// Return if there are no newsletters
-		if (!is_array($arrNewsletters))
+		if (!\is_array($arrNewsletters))
 		{
 			return;
 		}
@@ -613,7 +613,7 @@ class Newsletter extends \Backend
 		// Add recipients
 		foreach ($arrNewsletters as $intNewsletter)
 		{
-			$intNewsletter = intval($intNewsletter);
+			$intNewsletter = \intval($intNewsletter);
 
 			if ($intNewsletter < 1)
 			{
@@ -642,7 +642,7 @@ class Newsletter extends \Backend
 		$arrNewsletters = \StringUtil::deserialize($objUser->newsletter, true);
 
 		// Return if there are no newsletters
-		if (!is_array($arrNewsletters))
+		if (!\is_array($arrNewsletters))
 		{
 			return;
 		}
@@ -650,7 +650,7 @@ class Newsletter extends \Backend
 		// Activate e-mail addresses
 		foreach ($arrNewsletters as $intNewsletter)
 		{
-			$intNewsletter = intval($intNewsletter);
+			$intNewsletter = \intval($intNewsletter);
 
 			if ($intNewsletter < 1)
 			{
@@ -747,7 +747,7 @@ class Newsletter extends \Backend
 		$arrDelete = array_values(array_diff($arrChannel, $varValue));
 
 		// Delete existing recipients
-		if (!empty($arrDelete) && is_array($arrDelete))
+		if (!empty($arrDelete) && \is_array($arrDelete))
 		{
 			$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('intval', $arrDelete)) . ") AND email=?")
 						   ->execute($objUser->email);
@@ -756,7 +756,7 @@ class Newsletter extends \Backend
 		// Add recipients
 		foreach ($varValue as $intId)
 		{
-			$intId = intval($intId);
+			$intId = \intval($intId);
 
 			if ($intId < 1)
 			{
@@ -895,14 +895,14 @@ class Newsletter extends \Backend
 		{
 			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
 
-			if (!is_array($newsletters) || empty($newsletters))
+			if (!\is_array($newsletters) || empty($newsletters))
 			{
 				return array();
 			}
 
 			while ($objNewsletter->next())
 			{
-				if (in_array($objNewsletter->id, $newsletters))
+				if (\in_array($objNewsletter->id, $newsletters))
 				{
 					$arrNewsletters[$objNewsletter->id] = $objNewsletter->title;
 				}
@@ -950,7 +950,7 @@ class Newsletter extends \Backend
 				}
 
 				// Skip channels outside the root nodes
-				if (!empty($arrRoot) && !in_array($objNewsletter->jumpTo, $arrRoot))
+				if (!empty($arrRoot) && !\in_array($objNewsletter->jumpTo, $arrRoot))
 				{
 					continue;
 				}
@@ -1000,7 +1000,7 @@ class Newsletter extends \Backend
 				{
 					while ($objItem->next())
 					{
-						$arrPages[] = sprintf($strUrl, ($objItem->alias ?: $objItem->id));
+						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));
 					}
 				}
 			}

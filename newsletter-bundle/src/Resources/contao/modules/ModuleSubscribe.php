@@ -57,7 +57,7 @@ class ModuleSubscribe extends \Module
 		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
-		if (!is_array($this->nl_channels) || empty($this->nl_channels))
+		if (!\is_array($this->nl_channels) || empty($this->nl_channels))
 		{
 			return '';
 		}
@@ -118,7 +118,7 @@ class ModuleSubscribe extends \Module
 
 			if ($varSubmitted !== false)
 			{
-				call_user_func_array(array($this, 'addRecipient'), $varSubmitted);
+				\call_user_func_array(array($this, 'addRecipient'), $varSubmitted);
 			}
 		}
 
@@ -208,7 +208,7 @@ class ModuleSubscribe extends \Module
 		}
 
 		// HOOK: post activation callback
-		if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
+		if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
 			{
@@ -248,7 +248,7 @@ class ModuleSubscribe extends \Module
 		// Validate the channel selection
 		$arrChannels = \Input::post('channels');
 
-		if (!is_array($arrChannels))
+		if (!\is_array($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
@@ -258,7 +258,7 @@ class ModuleSubscribe extends \Module
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		if (!is_array($arrChannels) || empty($arrChannels))
+		if (!\is_array($arrChannels) || empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
@@ -278,7 +278,7 @@ class ModuleSubscribe extends \Module
 
 		$arrNew = array_diff($arrChannels, $arrSubscriptions);
 
-		if (!is_array($arrNew) || empty($arrNew))
+		if (!\is_array($arrNew) || empty($arrNew))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['subscribed'];
