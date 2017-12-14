@@ -173,8 +173,10 @@ class FormFileUpload extends \Widget implements \uploadable
 
 		if ($arrImageSize = @getimagesize($file['tmp_name']))
 		{
+			$intImageWidth = \Config::get('imageWidth');
+
 			// Image exceeds maximum image width
-			if ($arrImageSize[0] > \Config::get('imageWidth'))
+			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 			{
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], \Config::get('imageWidth')));
 				unset($_FILES[$this->strName]);
@@ -182,8 +184,10 @@ class FormFileUpload extends \Widget implements \uploadable
 				return;
 			}
 
+			$intImageHeight = \Config::get('imageHeight');
+
 			// Image exceeds maximum image height
-			if ($arrImageSize[1] > \Config::get('imageHeight'))
+			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 			{
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], \Config::get('imageHeight')));
 				unset($_FILES[$this->strName]);

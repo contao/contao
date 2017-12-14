@@ -44,7 +44,11 @@ class RebuildIndex extends \Backend implements \executable
 			return '';
 		}
 
+		$this->import('BackendUser', 'User');
+
 		$time = time();
+		$arrUser = array(''=>'-');
+		$objUser = null;
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_rebuild_index');
@@ -52,6 +56,29 @@ class RebuildIndex extends \Backend implements \executable
 		$objTemplate->indexHeadline = $GLOBALS['TL_LANG']['tl_maintenance']['searchIndex'];
 		$objTemplate->isActive = $this->isActive();
 		$objTemplate->message = \Message::generateUnwrapped(__CLASS__);
+
+		// Get the active front end users
+		if ($this->User->isAdmin)
+		{
+			$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+		}
+		else
+		{
+			$amg = \StringUtil::deserialize($this->User->amg);
+
+			if (!empty($amg) && \is_array($amg))
+			{
+				$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE (GROUPS LIKE '%\"" . implode('"%\' OR', array_map('intval', $amg)) . "\"%') AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+			}
+		}
+
+		if ($objUser !== null)
+		{
+			while ($objUser->next())
+			{
+				$arrUser[$objUser->id] = $objUser->username . ' (' . $objUser->id . ')';
+			}
+		}
 
 		// Rebuild the index
 		if (\Input::get('act') == 'index')
@@ -95,11 +122,13 @@ class RebuildIndex extends \Backend implements \executable
 			// Calculate the hash
 			$strHash = $this->getSessionHash('FE_USER_AUTH');
 
+			$strUser = \Input::get('user');
+
 			// Log in the front end user
-			if (is_numeric(\Input::get('user')) && \Input::get('user') > 0)
+			if (is_numeric($strUser) && $strUser > 0 && isset($arrUser[$strUser]))
 			{
 				$objUser = $this->Database->prepare("SELECT username FROM tl_member WHERE id=?")
-										  ->execute(\Input::get('user'));
+										  ->execute($strUser);
 
 				if ($objUser->numRows)
 				{
@@ -141,16 +170,6 @@ class RebuildIndex extends \Backend implements \executable
 			$objTemplate->isRunning = true;
 
 			return $objTemplate->parse();
-		}
-
-		$arrUser = array(''=>'-');
-
-		// Get active front end users
-		$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
-
-		while ($objUser->next())
-		{
-			$arrUser[$objUser->id] = $objUser->username . ' (' . $objUser->id . ')';
 		}
 
 		// Default variables

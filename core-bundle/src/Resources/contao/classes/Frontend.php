@@ -354,13 +354,11 @@ abstract class Frontend extends \Controller
 
 					static::redirect($strUrl, 301);
 				}
-				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null)
+
+				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
+				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
 				{
-					// Redirect if the page is not the language fall back or the alias is not "index" or "/" (see #8498 and #8560)
-					if (!$objRootPage->fallback || !\in_array($objPage->alias, array('index', '/')))
-					{
-						static::redirect($objPage->getFrontendUrl(), 302);
-					}
+					static::redirect($objPage->getFrontendUrl(), 302);
 				}
 			}
 		}

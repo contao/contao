@@ -651,6 +651,8 @@ class Date
 			return $strDate;
 		}
 
+		\System::loadLanguageFile('default');
+
 		if (!$GLOBALS['TL_LANG']['MSC']['dayShortLength'])
 		{
 			$GLOBALS['TL_LANG']['MSC']['dayShortLength'] = 3;

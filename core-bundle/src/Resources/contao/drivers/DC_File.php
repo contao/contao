@@ -537,7 +537,7 @@ class DC_File extends \DataContainer implements \editable
 			}
 
 			// Build possible palette names from the selector values
-			if (!\count($sValues))
+			if (empty($sValues))
 			{
 				$names = array('default');
 			}
