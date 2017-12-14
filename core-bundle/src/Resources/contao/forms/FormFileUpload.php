@@ -187,7 +187,7 @@ class FormFileUpload extends \Widget implements \uploadable
 			$intImageHeight = \Config::get('imageHeight');
 
 			// Image exceeds maximum image height
-			if ($intImageHeight && $arrImageSize[1] > $intImageHeight)
+			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 			{
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], \Config::get('imageHeight')));
 				unset($_FILES[$this->strName]);
