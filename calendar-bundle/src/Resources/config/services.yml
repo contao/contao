@@ -6,7 +6,6 @@ services:
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
-        public: false
         arguments:
             - "@knp_menu.factory"
             - "@router"

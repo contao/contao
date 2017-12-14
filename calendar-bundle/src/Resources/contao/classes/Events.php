@@ -61,7 +61,7 @@ abstract class Events extends \Module
 	 */
 	protected function sortOutProtected($arrCalendars)
 	{
-		if (!is_array($arrCalendars) || empty($arrCalendars))
+		if (!\is_array($arrCalendars) || empty($arrCalendars))
 		{
 			return $arrCalendars;
 		}
@@ -83,7 +83,7 @@ abstract class Events extends \Module
 
 					$groups = \StringUtil::deserialize($objCalendar->groups);
 
-					if (!is_array($groups) || empty($groups) || count(array_intersect($groups, $this->User->groups)) < 1)
+					if (!\is_array($groups) || empty($groups) || \count(array_intersect($groups, $this->User->groups)) < 1)
 					{
 						continue;
 					}
@@ -108,7 +108,7 @@ abstract class Events extends \Module
 	 */
 	protected function getAllEvents($arrCalendars, $intStart, $intEnd)
 	{
-		if (!is_array($arrCalendars))
+		if (!\is_array($arrCalendars))
 		{
 			return array();
 		}
@@ -134,7 +134,7 @@ abstract class Events extends \Module
 				{
 					$arrRepeat = \StringUtil::deserialize($objEvents->repeatEach);
 
-					if (!is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -179,7 +179,7 @@ abstract class Events extends \Module
 		}
 
 		// HOOK: modify the result set
-		if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && is_array($GLOBALS['TL_HOOKS']['getAllEvents']))
+		if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
 			{
@@ -208,7 +208,7 @@ abstract class Events extends \Module
 		global $objPage;
 
 		// Backwards compatibility (4th argument was $strUrl)
-		if (func_num_args() > 6)
+		if (\func_num_args() > 6)
 		{
 			@trigger_error('Calling Events::addEvent() with 7 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $strUrl as 4th argument anymore.', E_USER_DEPRECATED);
 
@@ -255,7 +255,7 @@ abstract class Events extends \Module
 		{
 			$arrRange = \StringUtil::deserialize($objEvents->repeatEach);
 
-			if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
 				$strKey = 'cal_' . $arrRange['unit'];
 				$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);

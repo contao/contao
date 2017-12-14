@@ -98,7 +98,7 @@ class ModuleEventMenu extends \ModuleCalendar
 		{
 			foreach ($arrDay as $arrEvents)
 			{
-				$arrData[substr($intDay, 0, 4)] += count($arrEvents);
+				$arrData[substr($intDay, 0, 4)] += \count($arrEvents);
 			}
 		}
 
@@ -107,7 +107,7 @@ class ModuleEventMenu extends \ModuleCalendar
 
 		$arrItems = array();
 		$count = 0;
-		$limit = count($arrData);
+		$limit = \count($arrData);
 
 		// Prepare navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -142,7 +142,7 @@ class ModuleEventMenu extends \ModuleCalendar
 		{
 			foreach ($arrDay as $arrEvents)
 			{
-				$arrData[substr($intDay, 0, 4)][substr($intDay, 4, 2)] += count($arrEvents);
+				$arrData[substr($intDay, 0, 4)][substr($intDay, 4, 2)] += \count($arrEvents);
 			}
 		}
 
@@ -160,12 +160,12 @@ class ModuleEventMenu extends \ModuleCalendar
 		foreach ($arrData as $intYear=>$arrMonth)
 		{
 			$count = 0;
-			$limit = count($arrMonth);
+			$limit = \count($arrMonth);
 
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;
-				$intMonth = (intval($intMonth) - 1);
+				$intMonth = (\intval($intMonth) - 1);
 
 				$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
 
