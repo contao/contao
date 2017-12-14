@@ -121,12 +121,12 @@ class PageSelector extends \Widget
 					$arrIds = array();
 
 					// Respect existing limitations
-					if (is_array($this->rootNodes))
+					if (\is_array($this->rootNodes))
 					{
 						while ($objRoot->next())
 						{
 							// Predefined node set (see #3563)
-							if (count(array_intersect($this->rootNodes, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
+							if (\count(array_intersect($this->rootNodes, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
 							{
 								$arrFound[] = $objRoot->id;
 								$arrIds[] = $objRoot->id;
@@ -147,7 +147,7 @@ class PageSelector extends \Widget
 						while ($objRoot->next())
 						{
 							// Show only mounted pages to regular users
-							if (count(array_intersect($this->User->pagemounts, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
+							if (\count(array_intersect($this->User->pagemounts, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
 							{
 								$arrFound[] = $objRoot->id;
 								$arrIds[] = $objRoot->id;
@@ -164,9 +164,9 @@ class PageSelector extends \Widget
 		$strNode = $objSessionBag->get('tl_page_picker');
 
 		// Unset the node if it is not within the predefined node set (see #5899)
-		if ($strNode > 0 && is_array($this->rootNodes))
+		if ($strNode > 0 && \is_array($this->rootNodes))
 		{
-			if (!in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
+			if (!\in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
 			{
 				$objSessionBag->remove('tl_page_picker');
 			}
@@ -184,7 +184,7 @@ class PageSelector extends \Widget
 			$root = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'];
 
 			// Allow only those roots that are allowed in root nodes
-			if (is_array($this->rootNodes))
+			if (\is_array($this->rootNodes))
 			{
 				$root = array_intersect(array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')), $root);
 
@@ -206,7 +206,7 @@ class PageSelector extends \Widget
 		}
 
 		// Predefined node set (see #3563)
-		elseif (is_array($this->rootNodes))
+		elseif (\is_array($this->rootNodes))
 		{
 			$nodes = $this->eliminateNestedPages($this->rootNodes);
 
@@ -384,7 +384,7 @@ class PageSelector extends \Widget
 		$folderAttribute = 'style="margin-left:20px"';
 		$session[$node][$id] = is_numeric($session[$node][$id]) ? $session[$node][$id] : 0;
 		$level = ($intMargin / $intSpacing + 1);
-		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1 || in_array($id, $this->arrNodes));
+		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1 || \in_array($id, $this->arrNodes));
 
 		if (!empty($childs))
 		{
@@ -427,7 +427,7 @@ class PageSelector extends \Widget
 		{
 			$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 
-			for ($k=0, $c=count($childs); $k<$c; $k++)
+			for ($k=0, $c=\count($childs); $k<$c; $k++)
 			{
 				$return .= $this->renderPagetree($childs[$k], ($intMargin + $intSpacing), $objPage->protected, $blnNoRecursion, $arrFound);
 			}
@@ -449,7 +449,7 @@ class PageSelector extends \Widget
 			return;
 		}
 
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
 		}

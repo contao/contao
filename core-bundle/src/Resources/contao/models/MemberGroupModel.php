@@ -80,7 +80,7 @@ class MemberGroupModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.id=?");
 
-		if (isset($arrOptions['ignoreFePreview']) || !BE_USER_LOGGED_IN)
+		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = \Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.disable=''";
@@ -120,7 +120,7 @@ class MemberGroupModel extends \Model
 	{
 		@trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
 
-		if (!is_array($arrIds) || empty($arrIds))
+		if (!\is_array($arrIds) || empty($arrIds))
 		{
 			return null;
 		}

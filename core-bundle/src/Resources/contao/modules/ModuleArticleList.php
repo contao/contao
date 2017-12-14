@@ -63,7 +63,7 @@ class ModuleArticleList extends \Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		if (!strlen($this->inColumn))
+		if (!\strlen($this->inColumn))
 		{
 			$this->inColumn = 'main';
 		}
@@ -100,7 +100,7 @@ class ModuleArticleList extends \Module
 		while ($objArticles->next())
 		{
 			// Skip first article
-			if (++$intCount <= intval($this->skipFirst))
+			if (++$intCount <= \intval($this->skipFirst))
 			{
 				continue;
 			}

@@ -48,7 +48,7 @@ class PickerBuilderTest extends TestCase
             ->willReturn('/_contao/picker?context=page')
         ;
 
-        $this->builder = new PickerBuilder(new MenuFactory(), $router, new RequestStack());
+        $this->builder = new PickerBuilder(new MenuFactory(), $router);
     }
 
     /**

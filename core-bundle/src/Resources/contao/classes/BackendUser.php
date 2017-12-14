@@ -128,15 +128,15 @@ class BackendUser extends \User
 				break;
 
 			case 'groups':
-				return is_array($this->arrData['groups']) ? $this->arrData['groups'] : array($this->arrData['groups']);
+				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : array($this->arrData['groups']);
 				break;
 
 			case 'pagemounts':
-				return is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] != '') ? array($this->arrData['pagemounts']) : false);
+				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] != '') ? array($this->arrData['pagemounts']) : false);
 				break;
 
 			case 'filemounts':
-				return is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] != '') ? array($this->arrData['filemounts']) : false);
+				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] != '') ? array($this->arrData['filemounts']) : false);
 				break;
 
 			case 'filemountIds':
@@ -144,7 +144,7 @@ class BackendUser extends \User
 				break;
 
 			case 'fop':
-				return is_array($this->arrData['fop']) ? $this->arrData['fop'] : (($this->arrData['fop'] != '') ? array($this->arrData['fop']) : false);
+				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : (($this->arrData['fop'] != '') ? array($this->arrData['fop']) : false);
 				break;
 
 			case 'alexf':
@@ -180,7 +180,7 @@ class BackendUser extends \User
 		$parameters = array();
 
 		// Redirect to the last page visited upon login
-		if ($request->query->count() > 0 && in_array($route, array('contao_backend', 'contao_backend_preview')))
+		if ($request->query->count() > 0 && \in_array($route, array('contao_backend', 'contao_backend_preview')))
 		{
 			$parameters['referer'] = base64_encode($request->getRequestUri());
 		}
@@ -204,12 +204,12 @@ class BackendUser extends \User
 			return true;
 		}
 
-		if (!is_array($field))
+		if (!\is_array($field))
 		{
 			$field = array($field);
 		}
 
-		if (is_array($this->$array) && array_intersect($field, $this->$array))
+		if (\is_array($this->$array) && array_intersect($field, $this->$array))
 		{
 			return true;
 		}
@@ -277,20 +277,20 @@ class BackendUser extends \User
 			}
 			if ($row['cuser'] === false)
 			{
-				$row['cuser'] = intval(\Config::get('defaultUser'));
+				$row['cuser'] = \intval(\Config::get('defaultUser'));
 			}
 			if ($row['cgroup'] === false)
 			{
-				$row['cgroup'] = intval(\Config::get('defaultGroup'));
+				$row['cgroup'] = \intval(\Config::get('defaultGroup'));
 			}
 		}
 
 		// Set permissions
 		$chmod = \StringUtil::deserialize($row['chmod']);
-		$chmod = is_array($chmod) ? $chmod : array($chmod);
+		$chmod = \is_array($chmod) ? $chmod : array($chmod);
 		$permission = array('w'.$int);
 
-		if (in_array($row['cgroup'], $this->groups))
+		if (\in_array($row['cgroup'], $this->groups))
 		{
 			$permission[] = 'g'.$int;
 		}
@@ -300,7 +300,7 @@ class BackendUser extends \User
 			$permission[] = 'u'.$int;
 		}
 
-		return (count(array_intersect($permission, $chmod)) > 0);
+		return \count(array_intersect($permission, $chmod)) > 0;
 	}
 
 
@@ -318,7 +318,7 @@ class BackendUser extends \User
 			return true;
 		}
 
-		return (count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0);
+		return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0;
 	}
 
 
@@ -375,7 +375,7 @@ class BackendUser extends \User
 		$depends = array('modules', 'themes', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
 
 		// HOOK: Take custom permissions
-		if (!empty($GLOBALS['TL_PERMISSIONS']) && is_array($GLOBALS['TL_PERMISSIONS']))
+		if (!empty($GLOBALS['TL_PERMISSIONS']) && \is_array($GLOBALS['TL_PERMISSIONS']))
 		{
 			$depends = array_merge($depends, $GLOBALS['TL_PERMISSIONS']);
 		}
@@ -390,7 +390,7 @@ class BackendUser extends \User
 		}
 
 		// Merge permissions
-		$inherit = in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
+		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
 		$time = \Date::floorToMinute();
 
 		foreach ((array) $this->groups as $id)
@@ -408,7 +408,7 @@ class BackendUser extends \User
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
 					{
-						$this->$field = array_merge((is_array($this->$field) ? $this->$field : (($this->$field != '') ? array($this->$field) : array())), $value);
+						$this->$field = array_merge((\is_array($this->$field) ? $this->$field : (($this->$field != '') ? array($this->$field) : array())), $value);
 						$this->$field = array_unique($this->$field);
 					}
 				}
@@ -416,7 +416,7 @@ class BackendUser extends \User
 		}
 
 		// Make sure pagemounts and filemounts are set!
-		if (!is_array($this->pagemounts))
+		if (!\is_array($this->pagemounts))
 		{
 			$this->pagemounts = array();
 		}
@@ -425,7 +425,7 @@ class BackendUser extends \User
 			$this->pagemounts = array_filter($this->pagemounts);
 		}
 
-		if (!is_array($this->filemounts))
+		if (!\is_array($this->filemounts))
 		{
 			$this->filemounts = array();
 		}
@@ -484,7 +484,7 @@ class BackendUser extends \User
 			{
 				$arrModules[$strGroupName]['class'] = ' node-expanded';
 				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
-				$arrModules[$strGroupName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
+				$arrModules[$strGroupName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>\Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
 				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
@@ -496,7 +496,7 @@ class BackendUser extends \User
 					{
 						$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
-						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
+						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>$strRefererId));
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;
@@ -506,7 +506,7 @@ class BackendUser extends \User
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getUserNavigation']) && is_array($GLOBALS['TL_HOOKS']['getUserNavigation']))
+		if (isset($GLOBALS['TL_HOOKS']['getUserNavigation']) && \is_array($GLOBALS['TL_HOOKS']['getUserNavigation']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getUserNavigation'] as $callback)
 			{
@@ -527,7 +527,7 @@ class BackendUser extends \User
 				$arrModules[$strGroupName]['isClosed'] = true;
 			}
 
-			if (isset($arrGroupModules['modules']) && is_array($arrGroupModules['modules']))
+			if (isset($arrGroupModules['modules']) && \is_array($arrGroupModules['modules']))
 			{
 				foreach ($arrGroupModules['modules'] as $strModuleName => $arrModuleConfig)
 				{

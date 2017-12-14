@@ -184,7 +184,7 @@ function deserialize($varValue, $blnForceArray=false)
 	@trigger_error('Using deserialize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::deserialize() instead.', E_USER_DEPRECATED);
 
 	// Already an array
-	if (is_array($varValue))
+	if (\is_array($varValue))
 	{
 		return $varValue;
 	}
@@ -196,7 +196,7 @@ function deserialize($varValue, $blnForceArray=false)
 	}
 
 	// Not a string
-	if (!is_string($varValue))
+	if (!\is_string($varValue))
 	{
 		return $blnForceArray ? array($varValue) : $varValue;
 	}
@@ -217,7 +217,7 @@ function deserialize($varValue, $blnForceArray=false)
 
 	$varUnserialized = @unserialize($varValue);
 
-	if (is_array($varUnserialized))
+	if (\is_array($varUnserialized))
 	{
 		$varValue = $varUnserialized;
 	}
@@ -253,7 +253,7 @@ function trimsplit($strPattern, $strString)
 	}
 
 	// Split
-	if (strlen($strPattern) == 1)
+	if (\strlen($strPattern) == 1)
 	{
 		$arrFragments = array_map('trim', explode($strPattern, $strString));
 	}
@@ -263,7 +263,7 @@ function trimsplit($strPattern, $strString)
 	}
 
 	// Empty array
-	if (count($arrFragments) < 2 && !strlen($arrFragments[0]))
+	if (\count($arrFragments) < 2 && !\strlen($arrFragments[0]))
 	{
 		$arrFragments = array();
 	}
@@ -368,7 +368,7 @@ function basename_natcasecmp($a, $b)
  */
 function basename_natcasercmp($a, $b)
 {
-	return - strnatcasecmp(basename($a), basename($b));
+	return -strnatcasecmp(basename($a), basename($b));
 }
 
 
@@ -399,7 +399,7 @@ function natcaseksort($arrArray)
  */
 function length_sort_asc($a, $b)
 {
-	return strlen($a) - strlen($b);
+	return \strlen($a) - \strlen($b);
 }
 
 
@@ -413,7 +413,7 @@ function length_sort_asc($a, $b)
  */
 function length_sort_desc($a, $b)
 {
-	return strlen($b) - strlen($a);
+	return \strlen($b) - \strlen($a);
 }
 
 
@@ -426,14 +426,14 @@ function length_sort_desc($a, $b)
  */
 function array_insert(&$arrCurrent, $intIndex, $arrNew)
 {
-	if (!is_array($arrCurrent))
+	if (!\is_array($arrCurrent))
 	{
 		$arrCurrent = $arrNew;
 
 		return;
 	}
 
-	if (is_array($arrNew))
+	if (\is_array($arrNew))
 	{
 		$arrBuffer = array_splice($arrCurrent, 0, $intIndex);
 		$arrCurrent = array_merge_recursive($arrBuffer, $arrNew, $arrCurrent);
@@ -467,7 +467,7 @@ function array_duplicate($arrStack, $intIndex)
 		$arrStack[] = $arrBuffer[$i];
 	}
 
-	for ($i=$intIndex, $c=count($arrBuffer); $i<$c; $i++)
+	for ($i=$intIndex, $c=\count($arrBuffer); $i<$c; $i++)
 	{
 		$arrStack[] = $arrBuffer[$i];
 	}
@@ -520,7 +520,7 @@ function array_move_down($arrStack, $intIndex)
 {
 	@trigger_error('Using array_move_down() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-	if (($intIndex+1) < count($arrStack))
+	if (($intIndex+1) < \count($arrStack))
 	{
 		$arrBuffer = $arrStack[$intIndex];
 		$arrStack[$intIndex] = $arrStack[($intIndex+1)];
@@ -565,7 +565,7 @@ function array_delete($arrStack, $intIndex)
  */
 function array_is_assoc($arrArray)
 {
-	return (is_array($arrArray) && array_keys($arrArray) !== range(0, (sizeof($arrArray) - 1)));
+	return \is_array($arrArray) && array_keys($arrArray) !== range(0, (sizeof($arrArray) - 1));
 }
 
 

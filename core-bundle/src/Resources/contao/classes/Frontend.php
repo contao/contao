@@ -82,7 +82,7 @@ abstract class Frontend extends \Controller
 		// Remove the URL suffix if not just a language root (e.g. en/) is requested
 		if ($strRequest != '' && (!\Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
 		{
-			$intSuffixLength = strlen(\Config::get('urlSuffix'));
+			$intSuffixLength = \strlen(\Config::get('urlSuffix'));
 
 			// Return false if the URL suffix does not match (see #2864)
 			if ($intSuffixLength > 0)
@@ -131,7 +131,7 @@ abstract class Frontend extends \Controller
 			// Compile all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news)
 			while ($strAlias != '/' && strpos($strAlias, '/') !== false)
 			{
-				$strAlias = dirname($strAlias);
+				$strAlias = \dirname($strAlias);
 				$arrOptions[] = $strAlias;
 			}
 
@@ -200,7 +200,7 @@ abstract class Frontend extends \Controller
 				// Remove the alias from the request string, explode it and then re-insert the alias at the beginning
 				else
 				{
-					$arrFragments = explode('/', substr($strRequest, strlen($objPage->alias) + 1));
+					$arrFragments = explode('/', substr($strRequest, \strlen($objPage->alias) + 1));
 					array_unshift($arrFragments, $objPage->alias);
 				}
 			}
@@ -220,13 +220,13 @@ abstract class Frontend extends \Controller
 		}
 
 		// Add the second fragment as auto_item if the number of fragments is even
-		if (\Config::get('useAutoItem') && count($arrFragments) % 2 == 0)
+		if (\Config::get('useAutoItem') && \count($arrFragments) % 2 == 0)
 		{
 			array_insert($arrFragments, 1, array('auto_item'));
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) && is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl']))
+		if (isset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageIdFromUrl'] as $callback)
 			{
@@ -235,13 +235,13 @@ abstract class Frontend extends \Controller
 		}
 
 		// Return if the alias is empty (see #4702 and #4972)
-		if ($arrFragments[0] == '' && count($arrFragments) > 1)
+		if ($arrFragments[0] == '' && \count($arrFragments) > 1)
 		{
 			return false;
 		}
 
 		// Add the fragments to the $_GET array
-		for ($i=1, $c=count($arrFragments); $i<$c; $i+=2)
+		for ($i=1, $c=\count($arrFragments); $i<$c; $i+=2)
 		{
 			// Skip key value pairs if the key is empty (see #4702)
 			if ($arrFragments[$i] == '')
@@ -256,7 +256,7 @@ abstract class Frontend extends \Controller
 			}
 
 			// Return false if the request contains an auto_item keyword (duplicate content) (see #4012)
-			if (\Config::get('useAutoItem') && in_array($arrFragments[$i], $GLOBALS['TL_AUTO_ITEM']))
+			if (\Config::get('useAutoItem') && \in_array($arrFragments[$i], $GLOBALS['TL_AUTO_ITEM']))
 			{
 				return false;
 			}
@@ -292,12 +292,12 @@ abstract class Frontend extends \Controller
 	public static function getRootPageFromUrl()
 	{
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl']))
+		if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback)
 			{
 				/** @var PageModel $objRootPage */
-				if (is_object($objRootPage = static::importStatic($callback[0])->{$callback[1]}()))
+				if (\is_object($objRootPage = static::importStatic($callback[0])->{$callback[1]}()))
 				{
 					return $objRootPage;
 				}
@@ -348,17 +348,15 @@ abstract class Frontend extends \Controller
 					$arrParams = array('_locale' => $objRootPage->language);
 
 					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
-					$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+					$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 
 					static::redirect($strUrl, 301);
 				}
-				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null)
+
+				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
+				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
 				{
-					// Redirect if the page is not the language fall back or the alias is not "index" or "/" (see #8498 and #8560)
-					if (!$objRootPage->fallback || !in_array($objPage->alias, array('index', '/')))
-					{
-						static::redirect($objPage->getFrontendUrl(), 302);
-					}
+					static::redirect($objPage->getFrontendUrl(), 302);
 				}
 			}
 		}
@@ -417,7 +415,7 @@ abstract class Frontend extends \Controller
 		foreach ($arrGet as $k=>$v)
 		{
 			// Omit the key if it is an auto_item key (see #5037)
-			if (\Config::get('useAutoItem') && ($k == 'auto_item' || in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if (\Config::get('useAutoItem') && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
 				$strParams = $strConnector . urlencode($v) . $strParams;
 			}
@@ -443,7 +441,7 @@ abstract class Frontend extends \Controller
 		$arrParams['_locale'] = $objPage->rootLanguage;
 
 		$strUrl = \System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
-		$strUrl = substr($strUrl, strlen(\Environment::get('path')) + 1);
+		$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 
 		return $strUrl;
 	}
@@ -469,7 +467,7 @@ abstract class Frontend extends \Controller
 		// Always redirect if there are additional arguments (see #5734)
 		$blnForceRedirect = ($strParams !== null || $strForceLang !== null);
 
-		if (is_array($intId))
+		if (\is_array($intId))
 		{
 			if ($intId['id'] != '')
 			{
@@ -571,7 +569,7 @@ abstract class Frontend extends \Controller
 		// Convert the language to a locale (see #5678)
 		$strLanguage = str_replace('-', '_', $strLanguage);
 
-		if (!is_array($arrData) || !isset($arrData[$strLanguage]))
+		if (!\is_array($arrData) || !isset($arrData[$strLanguage]))
 		{
 			return array();
 		}
@@ -645,7 +643,7 @@ abstract class Frontend extends \Controller
 				// Do not index the page if certain parameters are set
 				foreach (array_keys($_GET) as $key)
 				{
-					if (in_array($key, $GLOBALS['TL_NOINDEX_KEYS']) || strncmp($key, 'page_', 5) === 0)
+					if (\in_array($key, $GLOBALS['TL_NOINDEX_KEYS']) || strncmp($key, 'page_', 5) === 0)
 					{
 						$blnIndex = false;
 						break;

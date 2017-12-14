@@ -56,7 +56,7 @@ class FeedItem
 	 */
 	public function __construct($arrData=null)
 	{
-		if (is_array($arrData))
+		if (\is_array($arrData))
 		{
 			$this->arrData = $arrData;
 		}

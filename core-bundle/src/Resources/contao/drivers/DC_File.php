@@ -43,16 +43,16 @@ class DC_File extends \DataContainer implements \editable
 		$this->strTable = $strTable;
 
 		// Call onload_callback (e.g. to check permissions)
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($this);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($this);
 				}
@@ -143,7 +143,7 @@ class DC_File extends \DataContainer implements \editable
 						$legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
 					}
-					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] || !is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]))
+					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] || !\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]))
 					{
 						unset($boxes[$k][$kk]);
 					}
@@ -225,7 +225,7 @@ class DC_File extends \DataContainer implements \editable
 							$this->varValue = \StringUtil::deserialize($this->varValue);
 						}
 
-						if (!is_array($this->varValue))
+						if (!\is_array($this->varValue))
 						{
 							$this->varValue = htmlspecialchars($this->varValue);
 						}
@@ -239,16 +239,16 @@ class DC_File extends \DataContainer implements \editable
 					}
 
 					// Call load_callback
-					if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback']))
+					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback']))
 					{
 						foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
 						{
-							if (is_array($callback))
+							if (\is_array($callback))
 							{
 								$this->import($callback[0]);
 								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
 							}
-							elseif (is_callable($callback))
+							elseif (\is_callable($callback))
 							{
 								$this->varValue = $callback($this->varValue, $this);
 							}
@@ -278,16 +278,16 @@ class DC_File extends \DataContainer implements \editable
 		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
 
 		// Call the buttons_callback (see #4691)
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback']))
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$arrButtons = $callback($arrButtons, $this);
 				}
@@ -320,16 +320,16 @@ class DC_File extends \DataContainer implements \editable
 		if (\Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
 		{
 			// Call onsubmit_callback
-			if (is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback']))
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback']))
 			{
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
 				{
-					if (is_array($callback))
+					if (\is_array($callback))
 					{
 						$this->import($callback[0]);
 						$this->{$callback[0]}->{$callback[1]}($this);
 					}
-					elseif (is_callable($callback))
+					elseif (\is_callable($callback))
 					{
 						$callback($this);
 					}
@@ -389,7 +389,7 @@ class DC_File extends \DataContainer implements \editable
 			{
 				$varValue = \StringUtil::deserialize($varValue);
 
-				if (!is_array($varValue))
+				if (!\is_array($varValue))
 				{
 					$varValue = \StringUtil::binToUuid($varValue);
 				}
@@ -400,7 +400,7 @@ class DC_File extends \DataContainer implements \editable
 			}
 
 			// Convert date formats into timestamps
-			if ($varValue != '' && in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+			if ($varValue != '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 			{
 				$objDate = new \Date($varValue, \Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 				$varValue = $objDate->tstamp;
@@ -411,7 +411,7 @@ class DC_File extends \DataContainer implements \editable
 			{
 				$varValue = \StringUtil::deserialize($varValue);
 
-				if (!is_array($varValue))
+				if (!\is_array($varValue))
 				{
 					$varValue = \StringUtil::restoreBasicEntities($varValue);
 				}
@@ -423,16 +423,16 @@ class DC_File extends \DataContainer implements \editable
 		}
 
 		// Trigger the save_callback
-		if (is_array($arrData['save_callback']))
+		if (\is_array($arrData['save_callback']))
 		{
 			foreach ($arrData['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$varValue = $callback($varValue, $this);
 				}
@@ -442,25 +442,25 @@ class DC_File extends \DataContainer implements \editable
 		$strCurrent = $this->varValue;
 
 		// Handle arrays and strings
-		if (is_array($strCurrent))
+		if (\is_array($strCurrent))
 		{
 			$strCurrent = serialize($strCurrent);
 		}
-		elseif (is_string($strCurrent))
+		elseif (\is_string($strCurrent))
 		{
 			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, \Config::get('characterSet'));
 		}
 
 		// Save the value if there was no error
-		if ((strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']) && $strCurrent != $varValue)
+		if ((\strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']) && $strCurrent != $varValue)
 		{
 			\Config::persist($this->strField, $varValue);
 
 			$deserialize = \StringUtil::deserialize($varValue);
-			$prior = is_bool(\Config::get($this->strField)) ? (\Config::get($this->strField) ? 'true' : 'false') : \Config::get($this->strField);
+			$prior = \is_bool(\Config::get($this->strField)) ? (\Config::get($this->strField) ? 'true' : 'false') : \Config::get($this->strField);
 
 			// Add a log entry
-			if (!is_array(\StringUtil::deserialize($prior)) && !is_array($deserialize))
+			if (!\is_array(\StringUtil::deserialize($prior)) && !\is_array($deserialize))
 			{
 				if ($arrData['inputType'] == 'password' || $arrData['inputType'] == 'textStore')
 				{
@@ -517,7 +517,7 @@ class DC_File extends \DataContainer implements \editable
 						$sValues[] = $name;
 
 						// Look for a subpalette
-						if (strlen($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
+						if (\strlen($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
 						{
 							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
 						}
@@ -528,7 +528,7 @@ class DC_File extends \DataContainer implements \editable
 						$key = $name .'_'. $trigger;
 
 						// Look for a subpalette
-						if (strlen($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
+						if (\strlen($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
 						{
 							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
 						}
@@ -537,11 +537,11 @@ class DC_File extends \DataContainer implements \editable
 			}
 
 			// Build possible palette names from the selector values
-			if (!count($sValues))
+			if (empty($sValues))
 			{
 				$names = array('default');
 			}
-			elseif (count($sValues) > 1)
+			elseif (\count($sValues) > 1)
 			{
 				$names = $this->combiner($sValues);
 			}
@@ -553,7 +553,7 @@ class DC_File extends \DataContainer implements \editable
 			// Get an existing palette
 			foreach ($names as $paletteName)
 			{
-				if (strlen($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
+				if (\strlen($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
 				{
 					$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
 					break;

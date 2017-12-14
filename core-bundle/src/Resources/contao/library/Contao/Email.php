@@ -308,7 +308,7 @@ class Email
 	 */
 	public function sendCc()
 	{
-		$this->objMessage->setCc($this->compileRecipients(func_get_args()));
+		$this->objMessage->setCc($this->compileRecipients(\func_get_args()));
 	}
 
 
@@ -320,7 +320,7 @@ class Email
 	 */
 	public function sendBcc()
 	{
-		$this->objMessage->setBcc($this->compileRecipients(func_get_args()));
+		$this->objMessage->setBcc($this->compileRecipients(\func_get_args()));
 	}
 
 
@@ -332,7 +332,7 @@ class Email
 	 */
 	public function replyTo()
 	{
-		$this->objMessage->setReplyTo($this->compileRecipients(func_get_args()));
+		$this->objMessage->setReplyTo($this->compileRecipients(\func_get_args()));
 	}
 
 
@@ -371,7 +371,7 @@ class Email
 	 */
 	public function sendTo()
 	{
-		$arrRecipients = $this->compileRecipients(func_get_args());
+		$arrRecipients = $this->compileRecipients(\func_get_args());
 
 		if (empty($arrRecipients))
 		{
@@ -410,7 +410,7 @@ class Email
 				// Check for internal images
 				if (!empty($arrMatches) && isset($arrMatches[0]))
 				{
-					for ($i=0, $c=count($arrMatches[0]); $i<$c; $i++)
+					for ($i=0, $c=\count($arrMatches[0]); $i<$c; $i++)
 					{
 						$url = $arrMatches[3][$i];
 
@@ -517,7 +517,7 @@ class Email
 
 		foreach ($arrRecipients as $varRecipients)
 		{
-			if (!is_array($varRecipients))
+			if (!\is_array($varRecipients))
 			{
 				$varRecipients = \StringUtil::splitCsv($varRecipients);
 			}

@@ -104,7 +104,7 @@ class TrblField extends \Widget
 			return parent::optionSelected(1, 1);
 		}
 
-		if (empty($this->varValue) || !is_array($this->varValue))
+		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			return '';
 		}
@@ -133,7 +133,7 @@ class TrblField extends \Widget
 		$arrFields = array();
 		$arrKeys = array('top', 'right', 'bottom', 'left');
 
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array();
 		}

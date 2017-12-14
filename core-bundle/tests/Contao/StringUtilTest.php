@@ -30,8 +30,8 @@ class StringUtilTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        if (!defined('TL_ERROR')) {
-            define('TL_ERROR', 'ERROR');
+        if (!\defined('TL_ERROR')) {
+            \define('TL_ERROR', 'ERROR');
         }
     }
 
@@ -40,8 +40,8 @@ class StringUtilTest extends TestCase
      */
     protected function setUp()
     {
-        if (!defined('TL_ROOT')) {
-            define('TL_ROOT', $this->getRootDir());
+        if (!\defined('TL_ROOT')) {
+            \define('TL_ROOT', $this->getRootDir());
         }
 
         System::setContainer($this->mockContainerWithContaoScopes());
@@ -380,7 +380,7 @@ class StringUtilTest extends TestCase
             ],
             '(<%)' => [
                 'This <% var_dump() ?> is a test.',
-                PHP_VERSION_ID >= 70000 || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+                PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
             ],
             '(<script language="php">)' => [
                 'This <script language="php"> var_dump() </script> is a test.',
@@ -428,7 +428,7 @@ class StringUtilTest extends TestCase
             ],
             '(<%)' => [
                 ['foo' => 'This <% var_dump() ?> is a test.'],
-                PHP_VERSION_ID >= 70000 || !in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+                PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
             ],
             '(<script language="php">)' => [
                 ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
@@ -521,7 +521,7 @@ class StringUtilTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
 
-        StringUtil::stripRootDir(dirname($this->getRootDir()).'/');
+        StringUtil::stripRootDir(\dirname($this->getRootDir()).'/');
     }
 
     /**

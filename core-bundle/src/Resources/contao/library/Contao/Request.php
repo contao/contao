@@ -243,7 +243,7 @@ class Request
 	 */
 	public function hasError()
 	{
-		return ($this->strError != '');
+		return $this->strError != '';
 	}
 
 
@@ -286,11 +286,12 @@ class Request
 
 			default:
 				$this->strError = 'Invalid schema ' . $uri['scheme'];
+
 				return;
 				break;
 		}
 
-		if (!is_resource($fp))
+		if (!\is_resource($fp))
 		{
 			$this->strError = trim($errno .' '. $errstr);
 
@@ -308,7 +309,7 @@ class Request
 		(
 			'Host' => 'Host: ' . $host,
 			'User-Agent' => 'User-Agent: Contao (+https://contao.org/)',
-			'Content-Length' => 'Content-Length: '. strlen($this->strData),
+			'Content-Length' => 'Content-Length: '. \strlen($this->strData),
 			'Connection' => 'Connection: close'
 		);
 
@@ -414,7 +415,7 @@ class Request
 			$code = floor($code / 100) * 100;
 		}
 
-		$this->intCode = intval($code);
+		$this->intCode = \intval($code);
 
 		switch ($this->intCode)
 		{

@@ -117,7 +117,7 @@ class TimePeriod extends \Widget
 			return parent::optionSelected(1, 1);
 		}
 
-		if (empty($this->varValue) || !is_array($this->varValue))
+		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			return '';
 		}
@@ -149,7 +149,7 @@ class TimePeriod extends \Widget
 								   $arrUnit['label']);
 		}
 
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array('value'=>$this->varValue);
 		}

@@ -271,13 +271,13 @@ class Config
 		$this->Files->rename('system/tmp/' . $strTemp, 'system/config/localconfig.php');
 
 		// Reset the Zend OPcache
-		if (function_exists('opcache_invalidate'))
+		if (\function_exists('opcache_invalidate'))
 		{
 			opcache_invalidate(TL_ROOT . '/system/config/localconfig.php', true);
 		}
 
 		// Recompile the APC file (thanks to Trenker)
-		if (function_exists('apc_compile_file') && !ini_get('apc.stat'))
+		if (\function_exists('apc_compile_file') && !ini_get('apc.stat'))
 		{
 			apc_compile_file(TL_ROOT . '/system/config/localconfig.php');
 		}
@@ -464,7 +464,7 @@ class Config
 			return;
 		}
 
-		if ($container->hasParameter('contao.localconfig') && is_array($params = $container->getParameter('contao.localconfig')))
+		if ($container->hasParameter('contao.localconfig') && \is_array($params = $container->getParameter('contao.localconfig')))
 		{
 			foreach ($params as $key=>$value)
 			{
@@ -526,7 +526,7 @@ class Config
 			return $varValue;
 		}
 
-		if (is_bool($varValue))
+		if (\is_bool($varValue))
 		{
 			return $varValue ? 'true' : 'false';
 		}

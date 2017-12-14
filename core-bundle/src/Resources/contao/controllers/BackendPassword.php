@@ -85,7 +85,7 @@ class BackendPassword extends \Backend
 			else
 			{
 				// Make sure the password has been changed
-				if (\Encryption::verify($pw, $this->User->password))
+				if (password_verify($pw, $this->User->password))
 				{
 					\Message::addError($GLOBALS['TL_LANG']['MSC']['pw_change']);
 				}
@@ -94,16 +94,16 @@ class BackendPassword extends \Backend
 					$this->loadDataContainer('tl_user');
 
 					// Trigger the save_callback
-					if (is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback']))
+					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback']))
 					{
 						foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback'] as $callback)
 						{
-							if (is_array($callback))
+							if (\is_array($callback))
 							{
 								$this->import($callback[0]);
 								$pw = $this->{$callback[0]}->{$callback[1]}($pw);
 							}
-							elseif (is_callable($callback))
+							elseif (\is_callable($callback))
 							{
 								$pw = $callback($pw);
 							}
@@ -112,7 +112,7 @@ class BackendPassword extends \Backend
 
 					$objUser = \UserModel::findByPk($this->User->id);
 					$objUser->pwChange = '';
-					$objUser->password = \Encryption::hash($pw);
+					$objUser->password = password_hash($pw, PASSWORD_DEFAULT);
 					$objUser->save();
 
 					\Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);

@@ -101,7 +101,7 @@ class ModuleArticle extends \Module
 			$arrCss = \StringUtil::deserialize($this->teaserCssID);
 
 			// Override the CSS ID and class
-			if (is_array($arrCss) && count($arrCss) == 2)
+			if (\is_array($arrCss) && \count($arrCss) == 2)
 			{
 				if ($arrCss[0] == '')
 				{
@@ -210,14 +210,14 @@ class ModuleArticle extends \Module
 		{
 			$options = \StringUtil::deserialize($this->printable);
 
-			if (!empty($options) && is_array($options))
+			if (!empty($options) && \is_array($options))
 			{
 				$this->Template->printable = true;
-				$this->Template->printButton = in_array('print', $options);
-				$this->Template->pdfButton = in_array('pdf', $options);
-				$this->Template->facebookButton = in_array('facebook', $options);
-				$this->Template->twitterButton = in_array('twitter', $options);
-				$this->Template->gplusButton = in_array('gplus', $options);
+				$this->Template->printButton = \in_array('print', $options);
+				$this->Template->pdfButton = \in_array('pdf', $options);
+				$this->Template->facebookButton = \in_array('facebook', $options);
+				$this->Template->twitterButton = \in_array('twitter', $options);
+				$this->Template->gplusButton = \in_array('gplus', $options);
 			}
 		}
 
@@ -240,7 +240,7 @@ class ModuleArticle extends \Module
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['compileArticle']) && is_array($GLOBALS['TL_HOOKS']['compileArticle']))
+		if (isset($GLOBALS['TL_HOOKS']['compileArticle']) && \is_array($GLOBALS['TL_HOOKS']['compileArticle']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['compileArticle'] as $callback)
 			{
@@ -274,7 +274,7 @@ class ModuleArticle extends \Module
 		$strArticle = preg_replace($arrSearch, '', $strArticle);
 
 		// HOOK: allow individual PDF routines
-		if (isset($GLOBALS['TL_HOOKS']['printArticleAsPdf']) && is_array($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
+		if (isset($GLOBALS['TL_HOOKS']['printArticleAsPdf']) && \is_array($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['printArticleAsPdf'] as $callback)
 			{

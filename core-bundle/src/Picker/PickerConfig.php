@@ -28,7 +28,7 @@ class PickerConfig implements \JsonSerializable
     private $extras;
 
     /**
-     * @var string
+     * @var string|int
      */
     private $value;
 
@@ -40,10 +40,10 @@ class PickerConfig implements \JsonSerializable
     /**
      * Constructor.
      *
-     * @param string $context
-     * @param array  $extras
-     * @param string $value
-     * @param string $current
+     * @param string     $context
+     * @param array      $extras
+     * @param string|int $value
+     * @param string     $current
      */
     public function __construct($context, array $extras = [], $value = '', $current = '')
     {
@@ -150,7 +150,7 @@ class PickerConfig implements \JsonSerializable
     {
         $data = json_encode($this);
 
-        if (function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($data))) {
             $data = $encoded;
         }
 
@@ -170,7 +170,7 @@ class PickerConfig implements \JsonSerializable
     {
         $decoded = base64_decode(strtr($data, '-_,', '+/='), true);
 
-        if (function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($decoded))) {
+        if (\function_exists('gzdecode') && false !== ($uncompressed = @gzdecode($decoded))) {
             $decoded = $uncompressed;
         }
 

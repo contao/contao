@@ -283,7 +283,7 @@ class FrontendUser extends \User
 		$GLOBALS['TL_USERNAME'] = $this->username;
 
 		// Make sure that groups is an array
-		if (!is_array($this->groups))
+		if (!\is_array($this->groups))
 		{
 			$this->groups = ($this->groups != '') ? array($this->groups) : array();
 		}

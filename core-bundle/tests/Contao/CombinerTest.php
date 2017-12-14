@@ -72,9 +72,9 @@ class CombinerTest extends TestCase
     {
         parent::setUp();
 
-        define('TL_ERROR', 'ERROR');
-        define('TL_ROOT', self::$rootDir);
-        define('TL_ASSETS_URL', '');
+        \define('TL_ERROR', 'ERROR');
+        \define('TL_ROOT', self::$rootDir);
+        \define('TL_ASSETS_URL', '');
 
         $this->container = $this->mockContainerWithContaoScopes();
         $this->container->setParameter('contao.web_dir', self::$rootDir.'/web');
@@ -92,10 +92,6 @@ class CombinerTest extends TestCase
 
     /**
      * Tests the CSS combiner.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesCssFiles()
     {
@@ -234,10 +230,6 @@ EOF;
 
     /**
      * Tests the SCSS Combiner.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesScssFiles()
     {
@@ -278,10 +270,6 @@ EOF;
 
     /**
      * Tests the JS Combiner.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using Combiner::getDebugMarkup() has been deprecated %s.
      */
     public function testCombinesJsFiles()
     {

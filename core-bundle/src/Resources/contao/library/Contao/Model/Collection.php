@@ -58,7 +58,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		{
 			if (!$objModel instanceof Model)
 			{
-				throw new \InvalidArgumentException('Invalid type: ' . gettype($objModel));
+				throw new \InvalidArgumentException('Invalid type: ' . \gettype($objModel));
 			}
 		}
 
@@ -267,7 +267,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 */
 	public function count()
 	{
-		return count($this->arrModels);
+		return \count($this->arrModels);
 	}
 
 
@@ -343,7 +343,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 */
 	public function last()
 	{
-		$this->intIndex = count($this->arrModels) - 1;
+		$this->intIndex = \count($this->arrModels) - 1;
 
 		return $this;
 	}

@@ -171,7 +171,7 @@ trait TemplateInheritance
 			}
 
 			// Combine the contents of the child blocks
-			elseif (is_array($this->arrBlocks[$name]))
+			elseif (\is_array($this->arrBlocks[$name]))
 			{
 				$callback = function($current, $parent) {
 					return str_replace('[[TL_PARENT]]', $parent, $current);
@@ -207,7 +207,7 @@ trait TemplateInheritance
 			ob_clean();
 
 			// Check for nested blocks
-			if (count($this->arrBlockNames) > 1)
+			if (\count($this->arrBlockNames) > 1)
 			{
 				throw new \Exception('Nested blocks are not allowed in child templates');
 			}

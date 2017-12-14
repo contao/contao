@@ -150,9 +150,9 @@ class ModuleChangePassword extends \Module
 				// Validate the old password
 				if ($strKey == 'oldPassword')
 				{
-					if (\Encryption::test($objMember->password))
+					if (password_get_info($objMember->password)['algo'] > 0)
 					{
-						$blnAuthenticated = \Encryption::verify($objWidget->value, $objMember->password);
+						$blnAuthenticated = password_verify($objWidget->value, $objMember->password);
 					}
 					else
 					{
@@ -194,7 +194,7 @@ class ModuleChangePassword extends \Module
 			}
 
 			// HOOK: set new password callback
-			if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
+			if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && \is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 				{

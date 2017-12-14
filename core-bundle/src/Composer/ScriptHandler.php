@@ -56,7 +56,7 @@ class ScriptHandler
             return;
         }
 
-        if (!function_exists('random_bytes')) {
+        if (!\function_exists('random_bytes')) {
             self::loadRandomCompat($event);
         }
 
@@ -175,7 +175,7 @@ class ScriptHandler
         }
 
         foreach ($config as $v) {
-            if (is_array($v) && isset($v['file']) && is_file($v['file'])) {
+            if (\is_array($v) && isset($v['file']) && is_file($v['file'])) {
                 return false;
             }
         }

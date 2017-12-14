@@ -202,7 +202,7 @@ class Files
 		$this->validate($strOldName, $strNewName);
 
 		// Windows fix: delete the target file
-		if (defined('PHP_WINDOWS_VERSION_BUILD') && file_exists(TL_ROOT . '/' . $strNewName) && strcasecmp($strOldName, $strNewName) !== 0)
+		if (\defined('PHP_WINDOWS_VERSION_BUILD') && file_exists(TL_ROOT . '/' . $strNewName) && strcasecmp($strOldName, $strNewName) !== 0)
 		{
 			$this->delete($strNewName);
 		}
@@ -330,7 +330,7 @@ class Files
 	 */
 	protected function validate()
 	{
-		foreach (func_get_args() as $strPath)
+		foreach (\func_get_args() as $strPath)
 		{
 			if ($strPath == '') // see #5795
 			{

@@ -30,7 +30,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsContext($context)
     {
-        return in_array($context, ['page', 'link'], true) && $this->getUser()->hasAccess('page', 'modules');
+        return \in_array($context, ['page', 'link'], true) && $this->getUser()->hasAccess('page', 'modules');
     }
 
     /**
@@ -70,7 +70,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
                 $attributes['preserveRecord'] = $source;
             }
 
-            if (is_array($rootNodes = $config->getExtra('rootNodes'))) {
+            if (\is_array($rootNodes = $config->getExtra('rootNodes'))) {
                 $attributes['rootNodes'] = $rootNodes;
             }
 

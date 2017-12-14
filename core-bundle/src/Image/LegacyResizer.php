@@ -42,8 +42,8 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
      */
     public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options)
     {
-        if (!empty($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize'])
-            || !empty($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage'])
+        if (!empty($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize'])
+            || !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage'])
         ) {
             @trigger_error('Using the executeResize and getImage hooks has been deprecated and will no longer work in Contao 5.0. Replace the contao.image.resizer service instead.', E_USER_DEPRECATED);
 
@@ -51,7 +51,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             $legacyPath = $image->getPath();
 
             if (0 === strpos($legacyPath, TL_ROOT.'/') || 0 === strpos($legacyPath, TL_ROOT.'\\')) {
-                $legacyPath = substr($legacyPath, strlen(TL_ROOT) + 1);
+                $legacyPath = substr($legacyPath, \strlen(TL_ROOT) + 1);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
                 $this->legacyImage->setTargetWidth($config->getWidth());
                 $this->legacyImage->setTargetHeight($config->getHeight());
@@ -63,7 +63,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                         || 0 === strpos($options->getTargetPath(), TL_ROOT.'\\')
                     )
                 ) {
-                    $this->legacyImage->setTargetPath(substr($options->getTargetPath(), strlen(TL_ROOT) + 1));
+                    $this->legacyImage->setTargetPath(substr($options->getTargetPath(), \strlen(TL_ROOT) + 1));
                 }
 
                 $importantPart = $image->getImportantPart();
@@ -78,13 +78,13 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         }
 
         if (isset($GLOBALS['TL_HOOKS']['executeResize'])
-            && is_array($GLOBALS['TL_HOOKS']['executeResize'])
+            && \is_array($GLOBALS['TL_HOOKS']['executeResize'])
             && $this->legacyImage
         ) {
             foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}($this->legacyImage);
 
-                if (is_string($return)) {
+                if (\is_string($return)) {
                     return $this->createImage($image, TL_ROOT.'/'.$return);
                 }
             }
@@ -99,7 +99,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options)
     {
         if (isset($GLOBALS['TL_HOOKS']['getImage'])
-            && is_array($GLOBALS['TL_HOOKS']['getImage'])
+            && \is_array($GLOBALS['TL_HOOKS']['getImage'])
             && $this->legacyImage
         ) {
             foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
@@ -114,7 +114,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                     $this->legacyImage
                 );
 
-                if (is_string($return)) {
+                if (\is_string($return)) {
                     return $this->createImage($image, TL_ROOT.'/'.$return);
                 }
             }

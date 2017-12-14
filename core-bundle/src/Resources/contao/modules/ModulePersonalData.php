@@ -54,7 +54,7 @@ class ModulePersonalData extends \Module
 		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
-		if (!is_array($this->editable) || empty($this->editable) || !FE_USER_LOGGED_IN)
+		if (!\is_array($this->editable) || empty($this->editable) || !FE_USER_LOGGED_IN)
 		{
 			return '';
 		}
@@ -84,16 +84,16 @@ class ModulePersonalData extends \Module
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
-		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}();
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback();
 				}
@@ -164,7 +164,7 @@ class ModulePersonalData extends \Module
 			// Use strlen() here (see #3277)
 			if ($arrData['eval']['mandatory'])
 			{
-				if (is_array($this->User->$field))
+				if (\is_array($this->User->$field))
 				{
 					if (empty($this->User->$field))
 					{
@@ -173,7 +173,7 @@ class ModulePersonalData extends \Module
 				}
 				else
 				{
-					if (!strlen($this->User->$field))
+					if (!\strlen($this->User->$field))
 					{
 						$arrData['eval']['required'] = true;
 					}
@@ -183,16 +183,16 @@ class ModulePersonalData extends \Module
 			$varValue = $this->User->$field;
 
 			// Call the load_callback
-			if (isset($arrData['load_callback']) && is_array($arrData['load_callback']))
+			if (isset($arrData['load_callback']) && \is_array($arrData['load_callback']))
 			{
 				foreach ($arrData['load_callback'] as $callback)
 				{
-					if (is_array($callback))
+					if (\is_array($callback))
 					{
 						$this->import($callback[0]);
 						$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
 					}
-					elseif (is_callable($callback))
+					elseif (\is_callable($callback))
 					{
 						$varValue = $callback($varValue, $this->User, $this);
 					}
@@ -225,7 +225,7 @@ class ModulePersonalData extends \Module
 				$rgxp = $arrData['eval']['rgxp'];
 
 				// Convert date formats into timestamps (check the eval setting first -> #3063)
-				if ($varValue != '' && in_array($rgxp, array('date', 'time', 'datim')))
+				if ($varValue != '' && \in_array($rgxp, array('date', 'time', 'datim')))
 				{
 					try
 					{
@@ -245,18 +245,18 @@ class ModulePersonalData extends \Module
 				}
 
 				// Trigger the save_callback (see #5247)
-				if ($objWidget->submitInput() && !$objWidget->hasErrors() && is_array($arrData['save_callback']))
+				if ($objWidget->submitInput() && !$objWidget->hasErrors() && \is_array($arrData['save_callback']))
 				{
 					foreach ($arrData['save_callback'] as $callback)
 					{
 						try
 						{
-							if (is_array($callback))
+							if (\is_array($callback))
 							{
 								$this->import($callback[0]);
 								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
 							}
-							elseif (is_callable($callback))
+							elseif (\is_callable($callback))
 							{
 								$varValue = $callback($varValue, $this->User, $this);
 							}
@@ -334,7 +334,7 @@ class ModulePersonalData extends \Module
 		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			// HOOK: updated personal data
-			if (isset($GLOBALS['TL_HOOKS']['updatePersonalData']) && is_array($GLOBALS['TL_HOOKS']['updatePersonalData']))
+			if (isset($GLOBALS['TL_HOOKS']['updatePersonalData']) && \is_array($GLOBALS['TL_HOOKS']['updatePersonalData']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
@@ -344,16 +344,16 @@ class ModulePersonalData extends \Module
 			}
 
 			// Call the onsubmit_callback
-			if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
+			if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
 			{
 				foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] as $callback)
 				{
-					if (is_array($callback))
+					if (\is_array($callback))
 					{
 						$this->import($callback[0]);
 						$this->{$callback[0]}->{$callback[1]}($this->User, $this);
 					}
-					elseif (is_callable($callback))
+					elseif (\is_callable($callback))
 					{
 						$callback($this->User, $this);
 					}

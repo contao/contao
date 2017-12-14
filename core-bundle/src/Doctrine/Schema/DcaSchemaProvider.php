@@ -53,7 +53,7 @@ class DcaSchemaProvider
      */
     public function createSchema()
     {
-        if (0 !== count($this->doctrine->getManagerNames())) {
+        if (0 !== \count($this->doctrine->getManagerNames())) {
             return $this->createSchemaFromOrm();
         }
 
@@ -82,7 +82,7 @@ class DcaSchemaProvider
 
             if (isset($definitions['TABLE_FIELDS'])) {
                 foreach ($definitions['TABLE_FIELDS'] as $fieldName => $sql) {
-                    $this->parseColumnSql($table, $fieldName, substr($sql, strlen($fieldName) + 3));
+                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen($fieldName) + 3));
                 }
             }
 
@@ -155,6 +155,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $collation = null;
 
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
@@ -163,6 +164,10 @@ class DcaSchemaProvider
 
         if (preg_match('/default (\'[^\']*\'|\d+)/i', $def, $match)) {
             $default = trim($match[1], "'");
+        }
+
+        if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+            $collation = $match[1];
         }
 
         $options = [
@@ -180,6 +185,10 @@ class DcaSchemaProvider
         if (null !== $scale && null !== $precision) {
             $options['scale'] = $scale;
             $options['precision'] = $precision;
+        }
+
+        if (null !== $collation) {
+            $options['platformOptions'] = ['collation' => $collation];
         }
 
         $table->addColumn($columnName, $type, $options);
@@ -319,7 +328,7 @@ class DcaSchemaProvider
         if (!empty($sqlLegacy)) {
             foreach ($sqlLegacy as $table => $categories) {
                 foreach ($categories as $category => $fields) {
-                    if (is_array($fields)) {
+                    if (\is_array($fields)) {
                         foreach ($fields as $name => $sql) {
                             $sqlTarget[$table][$category][$name] = $sql;
                         }

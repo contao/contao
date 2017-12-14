@@ -376,7 +376,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['bgimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'context' => 'file', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes')), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'bgposition' => array
@@ -577,7 +577,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['liststyleimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'dcaPicker'=>array('do'=>'files', 'context' => 'file', 'icon'=>'pickfile.svg'), 'fieldType'=>'radio', 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes')), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'own' => array
@@ -646,7 +646,7 @@ class tl_style extends Backend
 	public function checkCategory($varValue)
 	{
 		// Do not change the value if it has been set already
-		if (strlen($varValue) || Input::post('FORM_SUBMIT') == 'tl_style')
+		if (\strlen($varValue) || Input::post('FORM_SUBMIT') == 'tl_style')
 		{
 			return $varValue;
 		}
@@ -658,7 +658,7 @@ class tl_style extends Backend
 		$filter = $objSessionBag->get('filter');
 
 		// Return the current category
-		if (strlen($filter[$key]['category']))
+		if (\strlen($filter[$key]['category']))
 		{
 			return $filter[$key]['category'];
 		}
@@ -677,7 +677,7 @@ class tl_style extends Backend
 
 		$session = $objSession->get('style_sheet_updater');
 
-		if (!is_array($session) || empty($session))
+		if (!\is_array($session) || empty($session))
 		{
 			return;
 		}
@@ -756,7 +756,7 @@ class tl_style extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('tid')))
+		if (\strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -792,16 +792,16 @@ class tl_style extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -828,16 +828,16 @@ class tl_style extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -857,16 +857,16 @@ class tl_style extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
+		if (\is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] as $callback)
 			{
-				if (is_array($callback))
+				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (is_callable($callback))
+				elseif (\is_callable($callback))
 				{
 					$callback($dc);
 				}

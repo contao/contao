@@ -136,7 +136,7 @@ class Password extends \Widget
 			$this->blnSubmitInput = true;
 			\Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
-			return \Encryption::hash($varInput);
+			return password_hash($varInput, PASSWORD_DEFAULT);
 		}
 
 		return '';
@@ -153,11 +153,11 @@ class Password extends \Widget
 		return sprintf('<input type="password" autocomplete="off" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s%s',
 						$this->strName,
 						$this->strId,
-						(strlen($this->strClass) ? ' ' . $this->strClass : ''),
+						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
 						(($this->varValue != '') ? '*****' : ''),
 						$this->getAttributes(),
 						$this->wizard,
-						((strlen($this->description) && \Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">'.$this->description.'</p>' : ''));
+						((\strlen($this->description) && \Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">'.$this->description.'</p>' : ''));
 	}
 
 
@@ -170,7 +170,7 @@ class Password extends \Widget
 	{
 		return sprintf('<label for="ctrl_%s_confirm" class="confirm%s">%s%s%s</label>',
 						$this->strId,
-						(strlen($this->strClass) ? ' ' . $this->strClass : ''),
+						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
 						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
 						$GLOBALS['TL_LANG']['MSC']['confirm'][0],
 						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
@@ -187,9 +187,9 @@ class Password extends \Widget
 		return sprintf('<input type="password" autocomplete="off" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
 						$this->strName,
 						$this->strId,
-						(strlen($this->strClass) ? ' ' . $this->strClass : ''),
+						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
 						(($this->varValue != '') ? '*****' : ''),
 						$this->getAttributes(),
-						((strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && \Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['confirm'][1].'</p>' : ''));
+						((\strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && \Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['confirm'][1].'</p>' : ''));
 	}
 }

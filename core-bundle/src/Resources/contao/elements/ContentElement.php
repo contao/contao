@@ -174,8 +174,8 @@ abstract class ContentElement extends \Frontend
 		}
 
 		$arrHeadline = \StringUtil::deserialize($objElement->headline);
-		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -268,7 +268,7 @@ abstract class ContentElement extends \Frontend
 			$this->Template->hl = $this->hl;
 		}
 
-		if (!empty($this->objModel->classes) && is_array($this->objModel->classes))
+		if (!empty($this->objModel->classes) && \is_array($this->objModel->classes))
 		{
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}

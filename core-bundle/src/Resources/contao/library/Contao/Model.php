@@ -423,7 +423,7 @@ abstract class Model
 	public function save()
 	{
 		// Deprecated call
-		if (count(func_get_args()))
+		if (\count(\func_get_args()))
 		{
 			throw new \InvalidArgumentException('The $blnForceInsert argument has been removed (see system/docs/UPGRADE.md)');
 		}
@@ -447,7 +447,7 @@ abstract class Model
 			foreach ($this->arrModified as $k=>$v)
 			{
 				// Only set fields that exist in the DB
-				if (in_array($k, $arrFields))
+				if (\in_array($k, $arrFields))
 				{
 					$arrSet[$k] = $arrRow[$k];
 				}
@@ -486,7 +486,7 @@ abstract class Model
 			// Remove fields that do not exist in the DB
 			foreach ($arrSet as $k=>$v)
 			{
-				if (!in_array($k, $arrFields))
+				if (!\in_array($k, $arrFields))
 				{
 					unset($arrSet[$k]);
 				}
@@ -849,7 +849,7 @@ abstract class Model
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
-		if (empty($arrIds) || !is_array($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}
@@ -947,7 +947,7 @@ abstract class Model
 		$blnModel = false;
 		$arrColumn = (array) $strColumn;
 
-		if (count($arrColumn) == 1 && ($arrColumn[0] === static::getPk() || in_array($arrColumn[0], static::getUniqueFields())))
+		if (\count($arrColumn) == 1 && ($arrColumn[0] === static::getPk() || \in_array($arrColumn[0], static::getUniqueFields())))
 		{
 			$blnModel = true;
 		}
@@ -1007,19 +1007,19 @@ abstract class Model
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
-			return call_user_func_array('static::findBy', $args);
+			return \call_user_func_array('static::findBy', $args);
 		}
 		elseif (strncmp($name, 'findOneBy', 9) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
-			return call_user_func_array('static::findOneBy', $args);
+			return \call_user_func_array('static::findOneBy', $args);
 		}
 		elseif (strncmp($name, 'countBy', 7) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 
-			return call_user_func_array('static::countBy', $args);
+			return \call_user_func_array('static::countBy', $args);
 		}
 
 		throw new \Exception("Unknown method $name");
@@ -1054,14 +1054,14 @@ abstract class Model
 		{
 			$arrColumn = (array) $arrOptions['column'];
 
-			if (count($arrColumn) == 1)
+			if (\count($arrColumn) == 1)
 			{
 				// Support table prefixes
 				$arrColumn[0] = preg_replace('/^' . preg_quote(static::getTable(), '/') . '\./', '', $arrColumn[0]);
 
-				if ($arrColumn[0] == static::$strPk || in_array($arrColumn[0], static::getUniqueFields()))
+				if ($arrColumn[0] == static::$strPk || \in_array($arrColumn[0], static::getUniqueFields()))
 				{
-					$varKey = is_array($arrOptions['value']) ? $arrOptions['value'][0] : $arrOptions['value'];
+					$varKey = \is_array($arrOptions['value']) ? $arrOptions['value'][0] : $arrOptions['value'];
 					$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varKey, $arrColumn[0]);
 
 					if ($objModel !== null)
@@ -1297,5 +1297,23 @@ abstract class Model
 	protected static function createCollectionFromDbResult(Database\Result $objResult, $strTable)
 	{
 		return \Model\Collection::createFromDbResult($objResult, $strTable);
+	}
+
+
+	/**
+	 * Check if the preview mode is enabled
+	 *
+	 * @param array $arrOptions The options array
+	 *
+	 * @return boolean
+	 */
+	protected static function isPreviewMode(array $arrOptions)
+	{
+		if (isset($arrOptions['ignoreFePreview']))
+		{
+			return false;
+		}
+
+		return \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN;
 	}
 }

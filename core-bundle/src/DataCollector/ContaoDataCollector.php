@@ -133,7 +133,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $data = $this->data;
 
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             return [];
         }
 
@@ -174,7 +174,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
      */
     private function getData($key)
     {
-        if (!isset($this->data[$key]) || !is_array($this->data[$key])) {
+        if (!isset($this->data[$key]) || !\is_array($this->data[$key])) {
             return [];
         }
 
@@ -199,7 +199,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             'framework' => $framework,
             'models' => $modelCount,
             'frontend' => isset($GLOBALS['objPage']),
-            'preview' => defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
+            'preview' => \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
             'layout' => $this->getLayoutName(),
             'template' => $this->getTemplateName(),
         ];

@@ -104,11 +104,11 @@ class FormCheckBox extends \Widget
 		$options = $this->getPost($this->strName);
 
 		// Check if there is at least one value
-		if ($mandatory && is_array($options))
+		if ($mandatory && \is_array($options))
 		{
 			foreach ($options as $option)
 			{
-				if (strlen($option))
+				if (\strlen($option))
 				{
 					$this->mandatory = false;
 					break;
@@ -158,7 +158,7 @@ class FormCheckBox extends \Widget
 	public function getAttributes($arrStrip=array())
 	{
 		// The "required" attribute only makes sense for single checkboxes
-		if (count($this->arrOptions) == 1 && $this->mandatory)
+		if (\count($this->arrOptions) == 1 && $this->mandatory)
 		{
 			$this->arrAttributes['required'] = 'required';
 		}
@@ -205,7 +205,7 @@ class FormCheckBox extends \Widget
 					array
 					(
 						'type'       => 'option',
-						'name'       => $this->strName . ((count($this->arrOptions) > 1) ? '[]' : ''),
+						'name'       => $this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
 						'id'         => $this->strId . '_' . $i,
 						'value'      => $arrOption['value'],
 						'checked'    => $this->isChecked($arrOption),
@@ -255,7 +255,7 @@ class FormCheckBox extends \Widget
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
 			$strOptions .= sprintf('<span><input type="checkbox" name="%s" id="opt_%s" class="checkbox" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
-									$this->strName . ((count($this->arrOptions) > 1) ? '[]' : ''),
+									$this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
 									$this->strId.'_'.$i,
 									$arrOption['value'],
 									$this->isChecked($arrOption),

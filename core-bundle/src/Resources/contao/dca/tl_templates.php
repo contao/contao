@@ -247,7 +247,7 @@ class tl_templates extends Backend
 		foreach ($files as $file)
 		{
 			$strRelpath = StringUtil::stripRootDir($file->getPathname());
-			$strModule = preg_replace('@^(vendor|system/modules)/([^/]+(/.*-bundle)?)/.*$@', '$2', strtr($strRelpath, '\\', '/'));
+			$strModule = preg_replace('@^(vendor/([^/]+/[^/]+)/|system/modules/([^/]+)/).*$@', '$2$3', strtr($strRelpath, '\\', '/'));
 			$arrAllTemplates[$strModule][$strRelpath] = basename($strRelpath);
 		}
 
@@ -456,7 +456,7 @@ class tl_templates extends Backend
 
 		// Templates to compare against
 		$arrComparable = array();
-		$intPrefixLength = strlen($strPrefix);
+		$intPrefixLength = \strlen($strPrefix);
 
 		foreach ($arrTemplates as $k => $v)
 		{

@@ -311,7 +311,7 @@ class tl_form extends Backend
 		}
 
 		// Set root IDs
-		if (!is_array($this->User->forms) || empty($this->User->forms))
+		if (!\is_array($this->User->forms) || empty($this->User->forms))
 		{
 			$root = array(0);
 		}
@@ -341,14 +341,14 @@ class tl_form extends Backend
 
 			case 'edit':
 				// Dynamically add the record to the user profile
-				if (!in_array(Input::get('id'), $root))
+				if (!\in_array(Input::get('id'), $root))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $objSession->getBag('contao_backend');
 
 					$arrNew = $objSessionBag->get('new_records');
 
-					if (is_array($arrNew['tl_form']) && in_array(Input::get('id'), $arrNew['tl_form']))
+					if (\is_array($arrNew['tl_form']) && \in_array(Input::get('id'), $arrNew['tl_form']))
 					{
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
@@ -359,7 +359,7 @@ class tl_form extends Backend
 							{
 								$arrFormp = StringUtil::deserialize($objGroup->formp);
 
-								if (is_array($arrFormp) && in_array('create', $arrFormp))
+								if (\is_array($arrFormp) && \in_array('create', $arrFormp))
 								{
 									$arrForms = StringUtil::deserialize($objGroup->forms, true);
 									$arrForms[] = Input::get('id');
@@ -379,7 +379,7 @@ class tl_form extends Backend
 
 							$arrFormp = StringUtil::deserialize($objUser->formp);
 
-							if (is_array($arrFormp) && in_array('create', $arrFormp))
+							if (\is_array($arrFormp) && \in_array('create', $arrFormp))
 							{
 								$arrForms = StringUtil::deserialize($objUser->forms, true);
 								$arrForms[] = Input::get('id');
@@ -399,7 +399,7 @@ class tl_form extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
+				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form ID ' . Input::get('id') . '.');
 				}
@@ -421,7 +421,7 @@ class tl_form extends Backend
 				break;
 
 			default:
-				if (strlen(Input::get('act')))
+				if (\strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' forms.');
 				}

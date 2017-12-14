@@ -155,14 +155,14 @@ class FileSelector extends \Widget
 					{
 						while ($objRoot->next())
 						{
-							if (strncmp($this->path . '/', $objRoot->path . '/', strlen($this->path) + 1) === 0)
+							if (strncmp($this->path . '/', $objRoot->path . '/', \strlen($this->path) + 1) === 0)
 							{
-								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
 								{
 									$arrFound[] = $objRoot->path;
 								}
 
-								$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+								$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 							}
 						}
 					}
@@ -171,31 +171,31 @@ class FileSelector extends \Widget
 						// Show all files to admins
 						while ($objRoot->next())
 						{
-							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
 							{
 								$arrFound[] = $objRoot->path;
 							}
 
-							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 						}
 					}
 					else
 					{
-						if (is_array($this->User->filemounts))
+						if (\is_array($this->User->filemounts))
 						{
 							while ($objRoot->next())
 							{
 								// Show only mounted folders to regular users
 								foreach ($this->User->filemounts as $path)
 								{
-									if (strncmp($path . '/', $objRoot->path . '/', strlen($path) + 1) === 0)
+									if (strncmp($path . '/', $objRoot->path . '/', \strlen($path) + 1) === 0)
 									{
-										if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || in_array($objRoot->extension, $this->arrValidFileTypes))
+										if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
 										{
 											$arrFound[] = $objRoot->path;
 										}
 
-										$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : dirname($objRoot->path);
+										$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 									}
 								}
 							}
@@ -213,7 +213,7 @@ class FileSelector extends \Widget
 		// Unset the node if it is not within the path (see #5899)
 		if ($strNode != '' && $this->path != '')
 		{
-			if (strncmp($strNode . '/', $this->path . '/', strlen($this->path) + 1) !== 0)
+			if (strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
 			{
 				$objSessionBag->remove('tl_files_picker');
 			}
@@ -374,7 +374,7 @@ class FileSelector extends \Widget
 		}
 
 		// Make sure that $this->varValue is an array (see #3369)
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
 		}
@@ -447,11 +447,11 @@ class FileSelector extends \Widget
 		$folderClass = ($this->files || $this->filesOnly) ? 'tl_folder' : 'tl_file';
 
 		// Process folders
-		for ($f=0, $c=count($folders); $f<$c; $f++)
+		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
 			$content = scan($folders[$f]);
 			$currentFolder = \StringUtil::stripRootDir($folders[$f]);
-			$countFiles = count($content);
+			$countFiles = \count($content);
 
 			// Check whether there are subfolders or files
 			foreach ($content as $file)
@@ -464,13 +464,13 @@ class FileSelector extends \Widget
 				{
 					--$countFiles;
 				}
-				elseif (!empty($arrFound) && !in_array($currentFolder . '/' . $file, $arrFound) && !preg_grep('/^' . preg_quote($currentFolder . '/' . $file, '/') . '\//', $arrFound))
+				elseif (!empty($arrFound) && !\in_array($currentFolder . '/' . $file, $arrFound) && !preg_grep('/^' . preg_quote($currentFolder . '/' . $file, '/') . '\//', $arrFound))
 				{
 					--$countFiles;
 				}
 			}
 
-			if (!empty($arrFound) && $countFiles < 1 && !in_array($currentFolder, $arrFound))
+			if (!empty($arrFound) && $countFiles < 1 && !\in_array($currentFolder, $arrFound))
 			{
 				continue;
 			}
@@ -479,7 +479,7 @@ class FileSelector extends \Widget
 			$folderAttribute = 'style="margin-left:20px"';
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
 			$currentFolder = \StringUtil::stripRootDir($folders[$f]);
-			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
+			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || \count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
 			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
 			// Add a toggle button if there are childs
@@ -535,7 +535,7 @@ class FileSelector extends \Widget
 		// Process files
 		if ($this->files || $this->filesOnly)
 		{
-			for ($h=0, $c=count($files); $h<$c; $h++)
+			for ($h=0, $c=\count($files); $h<$c; $h++)
 			{
 				$thumbnail = '';
 				$currentFile = \StringUtil::stripRootDir($files[$h]);
@@ -543,13 +543,13 @@ class FileSelector extends \Widget
 
 				$objFile = new \File($currentFile);
 
-				if (!empty($this->arrValidFileTypes) && !in_array($objFile->extension, $this->arrValidFileTypes))
+				if (!empty($this->arrValidFileTypes) && !\in_array($objFile->extension, $this->arrValidFileTypes))
 				{
 					continue;
 				}
 
 				// Ignore files not matching the search criteria
-				if (!empty($arrFound) && !in_array($currentFile, $arrFound))
+				if (!empty($arrFound) && !\in_array($currentFile, $arrFound))
 				{
 					continue;
 				}
@@ -609,7 +609,7 @@ class FileSelector extends \Widget
 			return;
 		}
 
-		if (!is_array($this->varValue))
+		if (!\is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
 		}
@@ -666,7 +666,7 @@ class FileSelector extends \Widget
 				return false;
 			}
 
-			$path = dirname($path);
+			$path = \dirname($path);
 		}
 		while ($path != '.');
 

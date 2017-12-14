@@ -309,7 +309,7 @@ abstract class User extends \System
 		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
 
 		// HOOK: post authenticate callback
-		if (isset($GLOBALS['TL_HOOKS']['postAuthenticate']) && is_array($GLOBALS['TL_HOOKS']['postAuthenticate']))
+		if (isset($GLOBALS['TL_HOOKS']['postAuthenticate']) && \is_array($GLOBALS['TL_HOOKS']['postAuthenticate']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback)
 			{
@@ -346,7 +346,7 @@ abstract class User extends \System
 			$blnLoaded = false;
 
 			// HOOK: pass credentials to callback functions
-			if (isset($GLOBALS['TL_HOOKS']['importUser']) && is_array($GLOBALS['TL_HOOKS']['importUser']))
+			if (isset($GLOBALS['TL_HOOKS']['importUser']) && \is_array($GLOBALS['TL_HOOKS']['importUser']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 				{
@@ -408,25 +408,28 @@ abstract class User extends \System
 			return false;
 		}
 
-		// The password has been generated with crypt()
-		if (\Encryption::test($this->password))
+		$blnNeedsRehash = true;
+
+		// Handle old sha1() passwords with an optional salt
+		if (preg_match('/^[a-f0-9]{40}(:[a-f0-9]{23})?$/', $this->password))
 		{
-			$blnAuthenticated = \Encryption::verify($request->request->get('password'), $this->password);
+			list($strPassword, $strSalt) = explode(':', $this->password);
+			$blnAuthenticated = ($strPassword === sha1($strSalt . $request->request->get('password')));
 		}
 		else
 		{
-			list($strPassword, $strSalt) = explode(':', $this->password);
-			$blnAuthenticated = ($strSalt == '') ? ($strPassword === sha1($request->request->get('password'))) : ($strPassword === sha1($strSalt . $request->request->get('password')));
+			$blnAuthenticated = password_verify($request->request->get('password'), $this->password);
+			$blnNeedsRehash = password_needs_rehash($this->password, PASSWORD_DEFAULT);
+		}
 
-			// Store a SHA-512 encrpyted version of the password
-			if ($blnAuthenticated)
-			{
-				$this->password = \Encryption::hash($request->request->get('password'));
-			}
+		// Re-hash the password if the algorithm has changed
+		if ($blnAuthenticated && $blnNeedsRehash)
+		{
+			$this->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
 		}
 
 		// HOOK: pass credentials to callback functions
-		if (!$blnAuthenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && is_array($GLOBALS['TL_HOOKS']['checkCredentials']))
+		if (!$blnAuthenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && \is_array($GLOBALS['TL_HOOKS']['checkCredentials']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback)
 			{
@@ -468,7 +471,7 @@ abstract class User extends \System
 		$this->log('User "' . $this->username . '" has logged in', __METHOD__, TL_ACCESS);
 
 		// HOOK: post login callback
-		if (isset($GLOBALS['TL_HOOKS']['postLogin']) && is_array($GLOBALS['TL_HOOKS']['postLogin']))
+		if (isset($GLOBALS['TL_HOOKS']['postLogin']) && \is_array($GLOBALS['TL_HOOKS']['postLogin']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback)
 			{
@@ -682,7 +685,7 @@ abstract class User extends \System
 		}
 
 		// HOOK: post logout callback
-		if (isset($GLOBALS['TL_HOOKS']['postLogout']) && is_array($GLOBALS['TL_HOOKS']['postLogout']))
+		if (isset($GLOBALS['TL_HOOKS']['postLogout']) && \is_array($GLOBALS['TL_HOOKS']['postLogout']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['postLogout'] as $callback)
 			{
@@ -713,13 +716,13 @@ abstract class User extends \System
 		$groups = \StringUtil::deserialize($this->arrData['groups']);
 
 		// No groups assigned
-		if (empty($groups) || !is_array($groups))
+		if (empty($groups) || !\is_array($groups))
 		{
 			return false;
 		}
 
 		// Group ID found
-		if (in_array($id, $groups))
+		if (\in_array($id, $groups))
 		{
 			return true;
 		}

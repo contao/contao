@@ -64,7 +64,7 @@ class ContentTable extends \ContentElement
 				// Add cell
 				$arrHeader[] = array
 				(
-					'class' => 'head_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
+					'class' => 'head_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
 					'content' => (($v != '') ? nl2br_html5($v) : '&nbsp;')
 				);
 			}
@@ -73,7 +73,7 @@ class ContentTable extends \ContentElement
 		}
 
 		$this->Template->header = $arrHeader;
-		$limit = $this->tfoot ? (count($rows)-1) : count($rows);
+		$limit = $this->tfoot ? (\count($rows)-1) : \count($rows);
 
 		// Table body
 		for ($j=0; $j<$limit; $j++)
@@ -101,7 +101,7 @@ class ContentTable extends \ContentElement
 					$class_td .= ' col_first';
 				}
 
-				if ($i == (count($rows[$j]) - 1))
+				if ($i == (\count($rows[$j]) - 1))
 				{
 					$class_td .= ' col_last';
 				}
@@ -119,11 +119,11 @@ class ContentTable extends \ContentElement
 		// Table footer
 		if ($this->tfoot)
 		{
-			foreach ($rows[(count($rows)-1)] as $i=>$v)
+			foreach ($rows[(\count($rows)-1)] as $i=>$v)
 			{
 				$arrFooter[] = array
 				(
-					'class' => 'foot_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (count($rows[(count($rows)-1)]) - 1)) ? ' col_last' : ''),
+					'class' => 'foot_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[(\count($rows)-1)]) - 1)) ? ' col_last' : ''),
 					'content' => (($v != '') ? nl2br_html5($v) : '&nbsp;')
 				);
 			}

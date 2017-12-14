@@ -102,7 +102,7 @@ class PictureFactory implements PictureFactoryInterface
             $image = $this->imageFactory->create($path);
         }
 
-        if (is_array($size) && isset($size[2]) && 1 === substr_count($size[2], '_')) {
+        if (\is_array($size) && isset($size[2]) && 1 === substr_count($size[2], '_')) {
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfigurationInterface::MODE_CROP;
         }
@@ -133,7 +133,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function createConfig($size)
     {
-        if (!is_array($size)) {
+        if (!\is_array($size)) {
             $size = [0, 0, $size];
         }
 

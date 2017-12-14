@@ -139,7 +139,7 @@ class Image
 		$arrAllowedTypes = \StringUtil::trimsplit(',', strtolower(\Config::get('validImageTypes')));
 
 		// Check the file type
-		if (!in_array($this->fileObj->extension, $arrAllowedTypes))
+		if (!\in_array($this->fileObj->extension, $arrAllowedTypes))
 		{
 			throw new \InvalidArgumentException('Image type "' . $this->fileObj->extension . '" was not allowed to be processed');
 		}
@@ -386,9 +386,9 @@ class Image
 		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
 
 		// Strip the web/ prefix (see #337)
-		if (strncmp($path, $webDir . '/', strlen($webDir) + 1) === 0)
+		if (strncmp($path, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
-			$path = substr($path, strlen($webDir) + 1);
+			$path = substr($path, \strlen($webDir) + 1);
 		}
 
 		return $path;
@@ -439,13 +439,13 @@ class Image
 			&& $this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath())
 		) {
 			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['executeResize']) && is_array($GLOBALS['TL_HOOKS']['executeResize']))
+			if (isset($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
 				{
 					$return = \System::importStatic($callback[0])->{$callback[1]}($this);
 
-					if (is_string($return))
+					if (\is_string($return))
 					{
 						$this->resizedPath = \System::urlEncode($return);
 
@@ -714,9 +714,9 @@ class Image
 		$objFile = new \File($src);
 
 		// Strip the web/ prefix (see #337)
-		if (strncmp($src, $webDir . '/', strlen($webDir) + 1) === 0)
+		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
-			$src = substr($src, strlen($webDir) + 1);
+			$src = substr($src, \strlen($webDir) + 1);
 		}
 
 		$static = (strncmp($src, 'assets/', 7) === 0) ? TL_ASSETS_URL : TL_FILES_URL;
@@ -761,7 +761,7 @@ class Image
 	{
 		@trigger_error('Using Image::create() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
-		if (is_string($image))
+		if (\is_string($image))
 		{
 			$image = new \File(rawurldecode($image));
 		}
@@ -770,12 +770,12 @@ class Image
 		$imageObj = new static($image);
 
 		// tl_image_size ID as resize mode
-		if (is_array($size) && !empty($size[2]) && is_numeric($size[2]))
+		if (\is_array($size) && !empty($size[2]) && is_numeric($size[2]))
 		{
 			$size = (int) $size[2];
 		}
 
-		if (is_array($size))
+		if (\is_array($size))
 		{
 			$size = $size + array(0, 0, 'crop');
 
@@ -818,12 +818,12 @@ class Image
 	/**
 	 * Resize an image and store the resized version in the image target folder
 	 *
-	 * @param string  $image        The image path
-	 * @param integer $width        The target width
-	 * @param integer $height       The target height
-	 * @param string  $mode         The resize mode
-	 * @param string  $target       An optional target path
-	 * @param boolean $force        Override existing target images
+	 * @param string  $image  The image path
+	 * @param integer $width  The target width
+	 * @param integer $height The target height
+	 * @param string  $mode   The resize mode
+	 * @param string  $target An optional target path
+	 * @param boolean $force  Override existing target images
 	 *
 	 * @return string|null The path of the resized image or null
 	 *

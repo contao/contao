@@ -99,7 +99,7 @@ class ModuleBreadcrumb extends \Module
 		}
 
 		/** @var PageModel[] $pages */
-		for ($i=(count($pages)-1); $i>0; $i--)
+		for ($i=(\count($pages)-1); $i>0; $i--)
 		{
 			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !BE_USER_LOGGED_IN))
 			{
@@ -207,7 +207,7 @@ class ModuleBreadcrumb extends \Module
 		$items[0]['class'] = 'first';
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateBreadcrumb']) && is_array($GLOBALS['TL_HOOKS']['generateBreadcrumb']))
+		if (isset($GLOBALS['TL_HOOKS']['generateBreadcrumb']) && \is_array($GLOBALS['TL_HOOKS']['generateBreadcrumb']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generateBreadcrumb'] as $callback)
 			{

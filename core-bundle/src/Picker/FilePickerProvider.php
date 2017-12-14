@@ -59,7 +59,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsContext($context)
     {
-        return in_array($context, ['file', 'link'], true) && $this->getUser()->hasAccess('files', 'modules');
+        return \in_array($context, ['file', 'link'], true) && $this->getUser()->hasAccess('files', 'modules');
     }
 
     /**

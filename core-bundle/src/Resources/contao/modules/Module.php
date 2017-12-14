@@ -154,8 +154,8 @@ abstract class Module extends \Frontend
 		}
 
 		$arrHeadline = \StringUtil::deserialize($objModule->headline);
-		$this->headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -243,7 +243,7 @@ abstract class Module extends \Frontend
 			$this->Template->hl = $this->hl;
 		}
 
-		if (!empty($this->objModel->classes) && is_array($this->objModel->classes))
+		if (!empty($this->objModel->classes) && \is_array($this->objModel->classes))
 		{
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
@@ -298,7 +298,7 @@ abstract class Module extends \Frontend
 		$objTemplate = new \FrontendTemplate($this->navigationTpl);
 
 		$objTemplate->pid = $pid;
-		$objTemplate->type = get_class($this);
+		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897
 		$objTemplate->level = 'level_' . $level++;
 
@@ -324,10 +324,10 @@ abstract class Module extends \Frontend
 			}
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || (is_array($_groups) && count(array_intersect($_groups, $groups))) || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always'))
+			if (!$objSubpage->protected || (\is_array($_groups) && \count(array_intersect($_groups, $groups))) || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always'))
 			{
 				// Check whether there will be subpages
-				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
+				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
@@ -360,7 +360,7 @@ abstract class Module extends \Frontend
 						// Hide the link if the target page is invisible
 						if (!$objNext instanceof PageModel || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
 						{
-							continue(2);
+							continue 2;
 						}
 
 						$href = $objNext->getFrontendUrl();
@@ -372,7 +372,7 @@ abstract class Module extends \Frontend
 				}
 
 				$row = $objSubpage->row();
-				$trail = in_array($objSubpage->id, $objPage->trail);
+				$trail = \in_array($objSubpage->id, $objPage->trail);
 
 				// Active page
 				if (($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
@@ -407,7 +407,7 @@ abstract class Module extends \Frontend
 				$row['href'] = $href;
 				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);
 				$row['target'] = '';
-				$row['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objSubpage->description);
+				$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
 				// Override the link target
 				if ($objSubpage->type == 'redirect' && $objSubpage->target)
@@ -422,7 +422,7 @@ abstract class Module extends \Frontend
 		// Add classes first and last
 		if (!empty($items))
 		{
-			$last = count($items) - 1;
+			$last = \count($items) - 1;
 
 			$items[0]['class'] = trim($items[0]['class'] . ' first');
 			$items[$last]['class'] = trim($items[$last]['class'] . ' last');

@@ -8,10 +8,10 @@
  * @license LGPL-3.0+
  */
 
-$timezones =
-[
-	'General' =>
-	[
+$timezones = array
+(
+	'General' => array
+	(
 		'CET',
 		'CST6CDT',
 		'EST',
@@ -21,9 +21,9 @@ $timezones =
 		'MST',
 		'MST7MDT',
 		'PST8PDT'
-	],
-	'Africa' =>
-	[
+	),
+	'Africa' => array
+	(
 		'Africa/Abidjan',
 		'Africa/Accra',
 		'Africa/Addis_Ababa',
@@ -75,9 +75,9 @@ $timezones =
 		'Africa/Tripoli',
 		'Africa/Tunis',
 		'Africa/Windhoek'
-	],
-	'America' =>
-	[
+	),
+	'America' => array
+	(
 		'America/Adak',
 		'America/Anchorage',
 		'America/Anguilla',
@@ -218,9 +218,9 @@ $timezones =
 		'America/Winnipeg',
 		'America/Yakutat',
 		'America/Yellowknife'
-	],
-	'Antarctica' =>
-	[
+	),
+	'Antarctica' => array
+	(
 		'Antarctica/Casey',
 		'Antarctica/Davis',
 		'Antarctica/DumontDUrville',
@@ -231,9 +231,9 @@ $timezones =
 		'Antarctica/South_Pole',
 		'Antarctica/Syowa',
 		'Antarctica/Vostok'
-	],
-	'Asia' =>
-	[
+	),
+	'Asia' => array
+	(
 		'Asia/Aden',
 		'Asia/Almaty',
 		'Asia/Amman',
@@ -317,9 +317,9 @@ $timezones =
 		'Asia/Yakutsk',
 		'Asia/Yekaterinburg',
 		'Asia/Yerevan'
-	],
-	'Atlantic' =>
-	[
+	),
+	'Atlantic' => array
+	(
 		'Atlantic/Azores',
 		'Atlantic/Bermuda',
 		'Atlantic/Canary',
@@ -331,9 +331,9 @@ $timezones =
 		'Atlantic/South_Georgia',
 		'Atlantic/St_Helena',
 		'Atlantic/Stanley'
-	],
-	'Australia' =>
-	[
+	),
+	'Australia' => array
+	(
 		'Australia/ACT',
 		'Australia/Adelaide',
 		'Australia/Brisbane',
@@ -356,16 +356,16 @@ $timezones =
 		'Australia/Victoria',
 		'Australia/West',
 		'Australia/Yancowinna'
-	],
-	'Brazil' =>
-	[
+	),
+	'Brazil' => array
+	(
 		'Brazil/Acre',
 		'Brazil/DeNoronha',
 		'Brazil/East',
 		'Brazil/West'
-	],
-	'Canada' =>
-	[
+	),
+	'Canada' => array
+	(
 		'Canada/Atlantic',
 		'Canada/Central',
 		'Canada/East-Saskatchewan',
@@ -375,14 +375,14 @@ $timezones =
 		'Canada/Pacific',
 		'Canada/Saskatchewan',
 		'Canada/Yukon'
-	],
-	'Chile' =>
-	[
+	),
+	'Chile' => array
+	(
 		'Chile/Continental',
 		'Chile/EasterIsland'
-	],
-	'Europe' =>
-	[
+	),
+	'Europe' => array
+	(
 		'Europe/Amsterdam',
 		'Europe/Andorra',
 		'Europe/Athens',
@@ -436,9 +436,9 @@ $timezones =
 		'Europe/Zagreb',
 		'Europe/Zaporozhye',
 		'Europe/Zurich'
-	],
-	'Indian' =>
-	[
+	),
+	'Indian' => array
+	(
 		'Indian/Antananarivo',
 		'Indian/Chagos',
 		'Indian/Christmas',
@@ -450,15 +450,15 @@ $timezones =
 		'Indian/Mauritius',
 		'Indian/Mayotte',
 		'Indian/Reunion'
-	],
-	'Mexico' =>
-	[
+	),
+	'Mexico' => array
+	(
 		'Mexico/BajaNorte',
 		'Mexico/BajaSur',
 		'Mexico/General'
-	],
-	'Pacific' =>
-	[
+	),
+	'Pacific' => array
+	(
 		'Pacific/Apia',
 		'Pacific/Auckland',
 		'Pacific/Chatham',
@@ -499,9 +499,9 @@ $timezones =
 		'Pacific/Wake',
 		'Pacific/Wallis',
 		'Pacific/Yap'
-	],
-	'United States' =>
-	[
+	),
+	'United States' => array
+	(
 		'US/Alaska',
 		'US/Aleutian',
 		'US/Arizona',
@@ -515,5 +515,5 @@ $timezones =
 		'US/Pacific',
 		'US/Pacific-New',
 		'US/Samoa'
-	]
-];
+	)
+);

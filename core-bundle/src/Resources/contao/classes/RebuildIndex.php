@@ -28,7 +28,7 @@ class RebuildIndex extends \Backend implements \executable
 	 */
 	public function isActive()
 	{
-		return (\Config::get('enableSearch') && \Input::get('act') == 'index');
+		return \Config::get('enableSearch') && \Input::get('act') == 'index';
 	}
 
 
@@ -44,7 +44,11 @@ class RebuildIndex extends \Backend implements \executable
 			return '';
 		}
 
+		$this->import('BackendUser', 'User');
+
 		$time = time();
+		$arrUser = array(''=>'-');
+		$objUser = null;
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_rebuild_index');
@@ -52,6 +56,29 @@ class RebuildIndex extends \Backend implements \executable
 		$objTemplate->indexHeadline = $GLOBALS['TL_LANG']['tl_maintenance']['searchIndex'];
 		$objTemplate->isActive = $this->isActive();
 		$objTemplate->message = \Message::generateUnwrapped(__CLASS__);
+
+		// Get the active front end users
+		if ($this->User->isAdmin)
+		{
+			$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+		}
+		else
+		{
+			$amg = \StringUtil::deserialize($this->User->amg);
+
+			if (!empty($amg) && \is_array($amg))
+			{
+				$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE (GROUPS LIKE '%\"" . implode('"%\' OR', array_map('intval', $amg)) . "\"%') AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+			}
+		}
+
+		if ($objUser !== null)
+		{
+			while ($objUser->next())
+			{
+				$arrUser[$objUser->id] = $objUser->username . ' (' . $objUser->id . ')';
+			}
+		}
 
 		// Rebuild the index
 		if (\Input::get('act') == 'index')
@@ -69,7 +96,7 @@ class RebuildIndex extends \Backend implements \executable
 			$arrPages = $this->findSearchablePages();
 
 			// HOOK: take additional pages
-			if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && is_array($GLOBALS['TL_HOOKS']['getSearchablePages']))
+			if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback)
 				{
@@ -99,12 +126,14 @@ class RebuildIndex extends \Backend implements \executable
 			$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
 						   ->execute(($time - \Config::get('sessionTimeout')), $strHash);
 
+			$strUser = \Input::get('user');
+
 			// Log in the front end user
-			if (is_numeric(\Input::get('user')) && \Input::get('user') > 0)
+			if (is_numeric($strUser) && $strUser > 0 && isset($arrUser[$strUser]))
 			{
 				// Insert a new session
 				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute(\Input::get('user'), $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+							   ->execute($strUser, $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
 
 				// Set the cookie
 				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
@@ -122,7 +151,7 @@ class RebuildIndex extends \Backend implements \executable
 			$rand = rand();
 
 			// Display the pages
-			for ($i=0, $c=count($arrPages); $i<$c; $i++)
+			for ($i=0, $c=\count($arrPages); $i<$c; $i++)
 			{
 				$strBuffer .= '<span class="page_url" data-url="' . $arrPages[$i] . '#' . $rand . $i . '">' . \StringUtil::specialchars(\StringUtil::substr(rawurldecode($arrPages[$i]), 100)) . '</span><br>';
 				unset($arrPages[$i]); // see #5681
@@ -139,20 +168,10 @@ class RebuildIndex extends \Backend implements \executable
 			return $objTemplate->parse();
 		}
 
-		$arrUser = array(''=>'-');
-
-		// Get active front end users
-		$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
-
-		while ($objUser->next())
-		{
-			$arrUser[$objUser->id] = $objUser->username . ' (' . $objUser->id . ')';
-		}
-
 		// Default variables
 		$objTemplate->user = $arrUser;
 		$objTemplate->indexLabel = $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][0];
-		$objTemplate->indexHelp = (\Config::get('showHelp') && strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
+		$objTemplate->indexHelp = (\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
 		$objTemplate->indexSubmit = $GLOBALS['TL_LANG']['tl_maintenance']['indexSubmit'];
 
 		return $objTemplate->parse();

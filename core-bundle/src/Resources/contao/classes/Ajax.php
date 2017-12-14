@@ -83,14 +83,14 @@ class Ajax extends \Backend
 			// Toggle navigation menu
 			case 'toggleNavigation':
 				$bemod = $objSessionBag->get('backend_modules');
-				$bemod[\Input::post('id')] = intval(\Input::post('state'));
+				$bemod[\Input::post('id')] = \intval(\Input::post('state'));
 				$objSessionBag->set('backend_modules', $bemod);
 				throw new NoContentResponseException();
 
 			// Load a navigation menu group
 			case 'loadNavigation':
 				$bemod = $objSessionBag->get('backend_modules');
-				$bemod[\Input::post('id')] = intval(\Input::post('state'));
+				$bemod[\Input::post('id')] = \intval(\Input::post('state'));
 				$objSessionBag->set('backend_modules', $bemod);
 
 				$this->import('BackendUser', 'User');
@@ -116,7 +116,7 @@ class Ajax extends \Backend
 				}
 
 				$nodes = $objSessionBag->get($this->strAjaxKey);
-				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
+				$nodes[$this->strAjaxId] = \intval(\Input::post('state'));
 				$objSessionBag->set($this->strAjaxKey, $nodes);
 				throw new NoContentResponseException();
 
@@ -135,27 +135,27 @@ class Ajax extends \Backend
 				}
 
 				$nodes = $objSessionBag->get($this->strAjaxKey);
-				$nodes[$this->strAjaxId] = intval(\Input::post('state'));
+				$nodes[$this->strAjaxId] = \intval(\Input::post('state'));
 				$objSessionBag->set($this->strAjaxKey, $nodes);
 				break;
 
 			// Toggle the visibility of a fieldset
 			case 'toggleFieldset':
 				$fs = $objSessionBag->get('fieldset_states');
-				$fs[\Input::post('table')][\Input::post('id')] = intval(\Input::post('state'));
+				$fs[\Input::post('table')][\Input::post('id')] = \intval(\Input::post('state'));
 				$objSessionBag->set('fieldset_states', $fs);
 				throw new NoContentResponseException();
 
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
 				$state = $objSessionBag->get('checkbox_groups');
-				$state[\Input::post('id')] = intval(\Input::post('state'));
+				$state[\Input::post('id')] = \intval(\Input::post('state'));
 				$objSessionBag->set('checkbox_groups', $state);
 				break;
 
 			// HOOK: pass unknown actions to callback functions
 			default:
-				if (isset($GLOBALS['TL_HOOKS']['executePreActions']) && is_array($GLOBALS['TL_HOOKS']['executePreActions']))
+				if (isset($GLOBALS['TL_HOOKS']['executePreActions']) && \is_array($GLOBALS['TL_HOOKS']['executePreActions']))
 				{
 					foreach ($GLOBALS['TL_HOOKS']['executePreActions'] as $callback)
 					{
@@ -192,11 +192,11 @@ class Ajax extends \Backend
 		{
 			// Load nodes of the page structure tree
 			case 'loadStructure':
-				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView($this->strAjaxId, intval(\Input::post('level')))));
+				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView($this->strAjaxId, \intval(\Input::post('level')))));
 
 			// Load nodes of the file manager tree
 			case 'loadFileManager':
-				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(\Input::post('folder', true), intval(\Input::post('level')))));
+				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(\Input::post('folder', true), \intval(\Input::post('level')))));
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
@@ -204,16 +204,16 @@ class Ajax extends \Backend
 				$strField = $dc->field = \Input::post('name');
 
 				// Call the load_callback
-				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
 				{
 					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
 					{
-						if (is_array($callback))
+						if (\is_array($callback))
 						{
 							$this->import($callback[0]);
 							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
 						}
-						elseif (is_callable($callback))
+						elseif (\is_callable($callback))
 						{
 							$varValue = $callback($varValue, $dc);
 						}
@@ -226,7 +226,7 @@ class Ajax extends \Backend
 				/** @var PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
-				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), intval(\Input::post('level')))));
+				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), \intval(\Input::post('level')))));
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
@@ -234,16 +234,16 @@ class Ajax extends \Backend
 				$strField = $dc->field = \Input::post('name');
 
 				// Call the load_callback
-				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
 				{
 					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
 					{
-						if (is_array($callback))
+						if (\is_array($callback))
 						{
 							$this->import($callback[0]);
 							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
 						}
-						elseif (is_callable($callback))
+						elseif (\is_callable($callback))
 						{
 							$varValue = $callback($varValue, $dc);
 						}
@@ -259,7 +259,7 @@ class Ajax extends \Backend
 				// Load a particular node
 				if (\Input::post('folder', true) != '')
 				{
-					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), intval(\Input::post('level')))));
+					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), \intval(\Input::post('level')))));
 				}
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
@@ -314,16 +314,16 @@ class Ajax extends \Backend
 				}
 
 				// Call the load_callback
-				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
+				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback']))
 				{
 					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
 					{
-						if (is_array($callback))
+						if (\is_array($callback))
 						{
 							$this->import($callback[0]);
 							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
 						}
-						elseif (is_callable($callback))
+						elseif (\is_callable($callback))
 						{
 							$varValue = $callback($varValue, $dc);
 						}
@@ -390,7 +390,7 @@ class Ajax extends \Backend
 				$this->import('BackendUser', 'User');
 
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
-				if (!is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !in_array(\Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][\Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . \Input::post('field'), 'alexf')))
+				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(\Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][\Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . \Input::post('field'), 'alexf')))
 				{
 					$this->log('Field "' . \Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
 					throw new BadRequestHttpException('Bad request');
@@ -401,7 +401,7 @@ class Ajax extends \Backend
 					if (\Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', \Input::post('id'));
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . (intval(\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . (\intval(\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
 
 						if (\Input::post('load'))
 						{
@@ -410,7 +410,7 @@ class Ajax extends \Backend
 					}
 					else
 					{
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . (intval(\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . (\intval(\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
 
 						if (\Input::post('load'))
 						{
@@ -420,7 +420,7 @@ class Ajax extends \Backend
 				}
 				elseif ($dc instanceof DC_File)
 				{
-					$val = (intval(\Input::post('state') == 1) ? true : false);
+					$val = (\intval(\Input::post('state') == 1) ? true : false);
 					\Config::persist(\Input::post('field'), $val);
 
 					if (\Input::post('load'))
@@ -453,7 +453,7 @@ class Ajax extends \Backend
 	 */
 	protected function executePostActionsHook(DataContainer $dc)
 	{
-		if (isset($GLOBALS['TL_HOOKS']['executePostActions']) && is_array($GLOBALS['TL_HOOKS']['executePostActions']))
+		if (isset($GLOBALS['TL_HOOKS']['executePostActions']) && \is_array($GLOBALS['TL_HOOKS']['executePostActions']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['executePostActions'] as $callback)
 			{

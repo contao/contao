@@ -33,9 +33,19 @@ class WidgetTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
-        if (!function_exists('utf8_decode_entities')) {
+        if (!\function_exists('utf8_decode_entities')) {
             include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        \define('TL_MODE', 'FE');
     }
 
     /**

@@ -105,7 +105,7 @@ class Message
 			return;
 		}
 
-		if (!in_array($strType, static::getTypes()))
+		if (!\in_array($strType, static::getTypes()))
 		{
 			throw new \Exception("Invalid message type $strType");
 		}

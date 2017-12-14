@@ -12,9 +12,7 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\Config;
 use Contao\CoreBundle\Command\UserPasswordCommand;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -45,16 +43,10 @@ class UserPasswordCommandTest extends TestCase
      */
     public function setUp()
     {
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [Encryption::class => $this->mockEncryptionAdapter()]
-        );
-
         $connection = $this->createMock(Connection::class);
 
         $this->container = $this->mockContainerWithContaoScopes();
-        $this->container->set('contao.framework', $framework);
+        $this->container->set('contao.framework', $this->mockContaoFramework());
         $this->container->set('database_connection', $connection);
 
         $this->command = new UserPasswordCommand();
@@ -195,7 +187,6 @@ class UserPasswordCommandTest extends TestCase
             null,
             [
                 Config::class => $this->mockConfigAdapter(16),
-                Encryption::class => $this->mockEncryptionAdapter(),
             ]
         );
 
@@ -264,7 +255,14 @@ class UserPasswordCommandTest extends TestCase
             ->method('update')
             ->with(
                 'tl_user',
-                ['password' => 'HA$HED-'.$password.'-HA$HED'],
+                $this->callback(
+                    function ($data) {
+                        $this->assertArrayHasKey('password', $data);
+                        $this->assertSame(PASSWORD_DEFAULT, password_get_info($data['password'])['algo']);
+
+                        return $data;
+                    }
+                ),
                 ['username' => $username]
             )
             ->willReturn(1)
@@ -298,30 +296,5 @@ class UserPasswordCommandTest extends TestCase
                 'kevinjones',
             ],
         ];
-    }
-
-    /**
-     * Mocks an encryption adapter.
-     *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockEncryptionAdapter()
-    {
-        $encryption = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hash'])
-            ->getMock();
-
-        $encryption
-            ->method('hash')
-            ->willReturnCallback(
-                function ($password) {
-                    return 'HA$HED-'.$password.'-HA$HED';
-                }
-            )
-        ;
-
-        return $encryption;
     }
 }

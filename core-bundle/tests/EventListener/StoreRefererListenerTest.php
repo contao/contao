@@ -172,6 +172,59 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
+     * Tests that the session is not written if the response status is not 200.
+     */
+    public function testDoesNotStoreTheRefererIfTheRequestMethodIsNotGet()
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+        $request->setMethod(Request::METHOD_POST);
+
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response('', 404)
+        );
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getToken')
+        ;
+
+        $listener = $this->getListener(null, $tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
+     * Tests that the session is not written if the response status is not 200.
+     */
+    public function testDoesNotStoreTheRefererIfTheResponseStatusIsNot200()
+    {
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response('', 404)
+        );
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getToken')
+        ;
+
+        $listener = $this->getListener(null, $tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    /**
      * Tests that the session is not written when there is no user.
      *
      * @param AnonymousToken $noUserReturn

@@ -110,7 +110,7 @@ class ZipWriter
 	 */
 	public function __destruct()
 	{
-		if (is_resource($this->resFile))
+		if (\is_resource($this->resFile))
 		{
 			fclose($this->resFile);
 		}
@@ -167,18 +167,18 @@ class ZipWriter
 		$arrFile['last_mod_file_hex']         = $this->unixToHex($intTime);
 		$arrFile['crc-32']                    = pack('V', crc32($strData));
 
-		$intUncompressed = strlen($strData);
+		$intUncompressed = \strlen($strData);
 
 		// Compress data
 		$strData = gzcompress($strData);
-		$strData = substr(substr($strData, 0, strlen($strData) - 4), 2);
+		$strData = substr(substr($strData, 0, \strlen($strData) - 4), 2);
 
-		$intCompressed = strlen($strData);
+		$intCompressed = \strlen($strData);
 
 		// Continue file
 		$arrFile['compressed_size']           = pack('V', $intCompressed);
 		$arrFile['uncompressed_size']         = pack('V', $intUncompressed);
-		$arrFile['file_name_length']          = pack('v', strlen($strName));
+		$arrFile['file_name_length']          = pack('v', \strlen($strName));
 		$arrFile['extra_field_length']        = "\x00\x00";
 		$arrFile['file_name']                 = $strName;
 		$arrFile['extra_field']               = '';
@@ -227,7 +227,7 @@ class ZipWriter
 		$arrArchive['number_of_disk_with_cd'] = "\x00\x00";
 		$arrArchive['total_cd_entries_disk']  = pack('v', $this->intCount);
 		$arrArchive['total_cd_entries']       = pack('v', $this->intCount);
-		$arrArchive['size_of_cd']             = pack('V', strlen($this->strCentralDir));
+		$arrArchive['size_of_cd']             = pack('V', \strlen($this->strCentralDir));
 		$arrArchive['offset_start_cd']        = pack('V', @ftell($this->resFile));
 		$arrArchive['zipfile_comment_length'] = "\x00\x00";
 		$arrArchive['zipfile_comment']        = '';
@@ -243,7 +243,7 @@ class ZipWriter
 		if (!file_exists(TL_ROOT . '/' . $this->strFile))
 		{
 			// Handle open_basedir restrictions
-			if (($strFolder = dirname($this->strFile)) == '.')
+			if (($strFolder = \dirname($this->strFile)) == '.')
 			{
 				$strFolder = '';
 			}
