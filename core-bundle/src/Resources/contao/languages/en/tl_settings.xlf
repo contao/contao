@@ -96,7 +96,7 @@
         <source>Anonymize IP addresses</source>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
+        <source>Anonymize any IP address that is stored in the database.</source>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>

@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -55,6 +56,33 @@ class BackendPreview extends \Backend
 	 */
 	public function run()
 	{
+		$objRouter = \System::getContainer()->get('router');
+
+		// Switch to a particular member (see #6546)
+		if ($strUser = \Input::get('user'))
+		{
+			$objAuthenticator = \System::getContainer()->get('contao.security.frontend_preview_authenticator');
+
+			if (!$objAuthenticator->authenticateFrontendUser($strUser, false))
+			{
+				$objAuthenticator->removeFrontendAuthentication();
+			}
+
+			$arrParameters = [];
+
+			if (\Input::get('url'))
+			{
+				$arrParameters['url'] = \Input::get('url');
+			}
+
+			if (\Input::get('page'))
+			{
+				$arrParameters['page'] = \Input::get('page');
+			}
+
+			return new RedirectResponse($objRouter->generate('contao_backend_preview', $arrParameters));
+		}
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_preview');
 
@@ -63,7 +91,8 @@ class BackendPreview extends \Backend
 		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->site = \Input::get('site', true);
-		$objTemplate->switchHref = \System::getContainer()->get('router')->generate('contao_backend_switch');
+		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');
+		$objTemplate->user = \System::getContainer()->get('contao.security.token_checker')->getUsername(\FrontendUser::SECURITY_SESSION_KEY);
 
 		$strUrl = null;
 
@@ -88,22 +117,6 @@ class BackendPreview extends \Backend
 		}
 
 		$objTemplate->url = $strUrl;
-
-		// Switch to a particular member (see #6546)
-		if (\Input::get('user') && ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg)))
-		{
-			$objUser = \MemberModel::findByUsername(\Input::get('user'));
-
-			// Check the allowed member groups
-			if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
-			{
-				$strHash = $this->getSessionHash('FE_USER_AUTH');
-
-				// Set the cookie
-				$this->setCookie('FE_USER_AUTH', $strHash, (time() + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
-				$objTemplate->user = \Input::post('user');
-			}
-		}
 
 		return $objTemplate->getResponse();
 	}

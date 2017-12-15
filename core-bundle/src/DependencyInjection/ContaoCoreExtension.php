@@ -80,7 +80,6 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
-        $container->setParameter('contao.security.disable_ip_check', $mergedConfig['security']['disable_ip_check']);
         $container->setParameter('contao.security.token_lifetime', $mergedConfig['security']['token_lifetime']);
 
         if (isset($mergedConfig['localconfig'])) {

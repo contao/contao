@@ -12,23 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
+use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     /**
      * @var SessionInterface
      */
@@ -50,15 +45,13 @@ class FrontendPreviewAuthenticator
     private $logger;
 
     /**
-     * @param RequestStack          $requestStack
      * @param SessionInterface      $session
      * @param TokenStorageInterface $tokenStorage
      * @param UserProviderInterface $userProvider
      * @param LoggerInterface|null  $logger
      */
-    public function __construct(RequestStack $requestStack, SessionInterface $session, TokenStorageInterface $tokenStorage, UserProviderInterface $userProvider, LoggerInterface $logger = null)
+    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
-        $this->requestStack = $requestStack;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->userProvider = $userProvider;
@@ -68,35 +61,119 @@ class FrontendPreviewAuthenticator
     /**
      * Authenticates a front end user based on the username.
      *
-     * @param null $username
-     * 
-     * @throws \RuntimeException
+     * @param string $username
+     * @param bool   $showUnpublished
+     *
+     * @return bool
      */
-    public function authenticateFrontendUser($username = null): void
+    public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
-        if (null === $username) {
-            return;
+        $backendUser = $this->loadBackendUser();
+
+        if (null === $backendUser) {
+            return false;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
-            throw new \RuntimeException('The request stack did not contain a request');
+        // The back end user does not have permission to log in front end users
+        if (!$backendUser->isAdmin && (empty($backendUser->amg) || !\is_array($backendUser->amg))) {
+            return false;
         }
 
-        if (!$request->hasSession()) {
-            return;
+        $frontendUser = $this->loadFrontendUser($username, $backendUser);
+
+        if (null === $frontendUser) {
+            return false;
+        }
+
+        $token = new FrontendPreviewToken($frontendUser, $showUnpublished);
+
+        $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+
+        return true;
+    }
+
+    /**
+     * Authenticates a front end guest.
+     *
+     * @param bool $showUnpublished
+     *
+     * @return bool
+     */
+    public function authenticateFrontendGuest(bool $showUnpublished): bool
+    {
+        $backendUser = $this->loadBackendUser();
+
+        if (null === $backendUser) {
+            return false;
+        }
+
+        $token = new FrontendPreviewToken(null, $showUnpublished);
+
+        $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+
+        return true;
+    }
+
+    /**
+     * Removes a front end authentication from the session.
+     *
+     * @return bool
+     */
+    public function removeFrontendAuthentication(): bool
+    {
+        if (!$this->session->isStarted() || !$this->session->has(FrontendUser::SECURITY_SESSION_KEY)) {
+            return false;
+        }
+
+        $this->session->remove(FrontendUser::SECURITY_SESSION_KEY);
+
+        return true;
+    }
+
+    /**
+     * Loads the back end user.
+     *
+     * @return BackendUser|null
+     */
+    private function loadBackendUser(): ?BackendUser
+    {
+        if (!$this->session->isStarted()) {
+            return null;
         }
 
         $token = $this->tokenStorage->getToken();
 
         // Check if a back end user is authenticated
         if (null === $token || !$token->isAuthenticated()) {
-            return;
+            return null;
         }
 
+        $backendUser = $token->getUser();
+
+        if (!$backendUser instanceof BackendUser) {
+            return null;
+        }
+
+        return $backendUser;
+    }
+
+    /**
+     * Loads the front end user and checks its group access permissions.
+     *
+     * @param string      $username
+     * @param BackendUser $backendUser
+     *
+     * @return FrontendUser|null
+     */
+    private function loadFrontendUser(string $username, BackendUser $backendUser): ?FrontendUser
+    {
         try {
-            $user = $this->userProvider->loadUserByUsername($username);
+            $frontendUser = $this->userProvider->loadUserByUsername($username);
+
+            // Make sure the user provider returned a front end user
+            if (!$frontendUser instanceof FrontendUser) {
+                throw new UsernameNotFoundException('User is not a front end user');
+            }
         } catch (UsernameNotFoundException $e) {
             if (null !== $this->logger) {
                 $this->logger->info(
@@ -105,17 +182,17 @@ class FrontendPreviewAuthenticator
                 );
             }
 
-            return;
+            return null;
         }
 
-        $token = new UsernamePasswordToken($user, null, 'contao_frontend', (array) $user->getRoles());
+        $allowedGroups = StringUtil::deserialize($backendUser->amg, true);
+        $frontendGroups = StringUtil::deserialize($frontendUser->groups, true);
 
-        if (false === $token->isAuthenticated()) {
-            if ($request->hasPreviousSession()) {
-                $this->session->remove(FrontendUser::SECURITY_SESSION_KEY);
-            }
-        } else {
-            $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+        // The front end user does not belong to a group that the back end user is allowed to log in
+        if (!$backendUser->isAdmin && !\count(array_intersect($frontendGroups, $allowedGroups))) {
+            return null;
         }
+
+        return $frontendUser;
     }
 }

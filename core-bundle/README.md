@@ -202,7 +202,6 @@ contao:
             jpeg_quality: 80
             interlace:    plane
     security:
-        disable_ip_check: false
         token_lifetime: 3600
 ```
 

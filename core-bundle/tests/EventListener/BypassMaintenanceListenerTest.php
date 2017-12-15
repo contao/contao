@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
+use Contao\CoreBundle\Security\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -23,20 +25,25 @@ class BypassMaintenanceListenerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $listener = new BypassMaintenanceListener($this->mockSession(), false);
+        $listener = new BypassMaintenanceListener($this->createMock(TokenChecker::class));
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\BypassMaintenanceListener', $listener);
     }
 
     public function testAddsTheRequestAttribute(): void
     {
-        $request = new Request();
-        $request->cookies->set('BE_USER_AUTH', 'e15514a266be75c17ed284935ededa5a2c17ac85');
-
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $tokenChecker = $this->createMock(TokenChecker::class);
 
-        $listener = new BypassMaintenanceListener($this->mockSession(), false);
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasAuthenticatedToken')
+            ->with(BackendUser::SECURITY_SESSION_KEY)
+            ->willReturn(true)
+        ;
+
+        $listener = new BypassMaintenanceListener($tokenChecker);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->getRequest()->attributes->get('_bypass_maintenance'));
@@ -45,10 +52,17 @@ class BypassMaintenanceListenerTest extends TestCase
     public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $request = new Request();
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $tokenChecker = $this->createMock(TokenChecker::class);
 
-        $listener = new BypassMaintenanceListener($this->mockSession(), false);
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasAuthenticatedToken')
+            ->with(BackendUser::SECURITY_SESSION_KEY)
+            ->willReturn(false)
+        ;
+
+        $listener = new BypassMaintenanceListener($tokenChecker);
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->getRequest()->attributes->has('_bypass_maintenance'));

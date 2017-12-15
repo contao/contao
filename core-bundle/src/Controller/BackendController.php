@@ -79,26 +79,13 @@ class BackendController extends Controller
     }
 
     /**
-     * @throws \RuntimeException
-     *
      * @return Response
      *
      * @Route("/contao/preview", name="contao_backend_preview")
      */
     public function previewAction(): Response
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-        if (null === $request) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
         $this->container->get('contao.framework')->initialize();
-
-        $this->container
-            ->get('contao.security.frontend_preview_authenticator')
-            ->authenticateFrontendUser($request->get('user'))
-        ;
 
         $controller = new BackendPreview();
 

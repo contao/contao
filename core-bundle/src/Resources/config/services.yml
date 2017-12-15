@@ -364,11 +364,6 @@ services:
             - "@contao.framework"
             - "@router"
 
-    contao.security.authenticator:
-        class: Contao\CoreBundle\Security\ContaoAuthenticator
-        arguments:
-            - "@contao.routing.scope_matcher"
-
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\BackendUserProvider
         arguments:
@@ -377,7 +372,6 @@ services:
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
         arguments:
-            - "@request_stack"
             - "@session"
             - "@security.token_storage"
             - "@contao.security.frontend_user_provider"
@@ -403,6 +397,12 @@ services:
             - "@router"
             - "@contao.routing.scope_matcher"
 
+    contao.security.token_checker:
+        class: Contao\CoreBundle\Security\TokenChecker
+        arguments:
+            - "@session"
+        public: true
+
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\UserChecker
         arguments:
@@ -413,12 +413,6 @@ services:
             - "@request_stack"
             - "@contao.framework"
             - "@logger"
-
-    contao.security.user_provider:
-        class: Contao\CoreBundle\Security\User\ContaoUserProvider
-        arguments:
-            - "@contao.framework"
-            - "@contao.routing.scope_matcher"
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag

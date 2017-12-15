@@ -92,7 +92,7 @@ class UserCheckerTest extends TestCase
     {
         $userChecker = $this->getUserChecker();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\UserCHecker', $userChecker);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\UserChecker', $userChecker);
     }
 
     public function testReturnsImmediatelyIfNoContaoUserIsGiven(): void

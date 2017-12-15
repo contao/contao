@@ -59,7 +59,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
      * @param AuthenticationException $exception
      *
      * @throws \RuntimeException
-     * 
+     *
      * @return RedirectResponse
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
@@ -91,7 +91,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
     private function determineTargetUrl(Request $request): string
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
-            return $request->getRequestUri();
+            return 'contao_backend_login';
         }
 
         return (string) $request->headers->get('referer', '/');

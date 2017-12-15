@@ -12,8 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 
 /**
@@ -664,13 +662,12 @@ abstract class Frontend extends \Controller
 	 *
 	 * @return bool True if authenticated
 	 */
-	protected function getAuthenticationStatus($sessionKey = '')
+	protected function getAuthenticationStatus(string $sessionKey)
 	{
-		/** @var SessionInterface $session */
-		$session = \System::getContainer()->get('session');
+		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
 
 		// Validate the session ID and timeout
-		if ($session->has($sessionKey) && ($token = unserialize($session->get($sessionKey))) instanceof TokenInterface && $token->isAuthenticated())
+		if ($objTokenChecker->hasAuthenticatedToken($sessionKey))
 		{
 			// Disable the cache if a back end user is logged in
 			if (TL_MODE == 'FE' && $sessionKey == BackendUser::SECURITY_SESSION_KEY)
@@ -678,7 +675,7 @@ abstract class Frontend extends \Controller
 				$_SESSION['DISABLE_CACHE'] = true;
 
 				// Always return false if we are not in preview mode (show hidden elements)
-				if (!\Input::cookie('FE_PREVIEW'))
+				if (!$objTokenChecker->isPreviewMode(FrontendUser::SECURITY_SESSION_KEY))
 				{
 					return false;
 				}
@@ -695,7 +692,7 @@ abstract class Frontend extends \Controller
 		}
 
 		// Remove the session if it is invalid to enable loading cached pages
-		$session->remove($sessionKey);
+		\System::getContainer()->get('session')->remove($sessionKey);
 
 		return false;
 	}

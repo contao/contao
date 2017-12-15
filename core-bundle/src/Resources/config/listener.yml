@@ -26,8 +26,7 @@ services:
     contao.listener.bypass_maintenance:
         class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
         arguments:
-            - "@session"
-            - "%contao.security.disable_ip_check%"
+            - "@contao.security.token_checker"
         tags:
             # The priority must be higher than the one of the Lexik maintenance bundle (defaults to 0)
             # and lower than the header replay header (defaults to 7)
@@ -60,7 +59,7 @@ services:
         class: Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener
         arguments:
             - "@contao.routing.scope_matcher"
-            - "%contao.security.disable_ip_check%"
+            - "@contao.security.token_checker"
         tags:
             - { name: kernel.event_listener, event: terminal42.header_replay, method: onReplay }
 

@@ -489,7 +489,6 @@ class Config
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
 			'debugMode'        => 'kernel.debug',
-			'disableIpCheck'   => 'contao.security.disable_ip_check',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)

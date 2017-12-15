@@ -60,88 +60,42 @@ class BackendSwitch extends \Backend
 			$this->getDatalistOptions();
 		}
 
-		$strUser = '';
-		$strHash = $this->getSessionHash('FE_USER_AUTH');
-		$session = \System::getContainer()->get('session');
-
-		// Get the front end user
-		if ($session->has(\FrontendUser::SECURITY_SESSION_KEY) && ($token = unserialize($session->get(\FrontendUser::SECURITY_SESSION_KEY))) instanceof TokenInterface)
-		{
-			$strUser = $token->getUser()->getUsername();
-		}
-
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
-
-		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new \BackendTemplate('be_switch');
-		$objTemplate->user = $strUser;
-		$objTemplate->show = \Input::cookie('FE_PREVIEW');
-		$objTemplate->update = false;
-		$objTemplate->canSwitchUser = $blnCanSwitchUser;
+		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
+		$strUser = $objTokenChecker->getUsername(FrontendUser::SECURITY_SESSION_KEY);
+		$blnShowUnpublished = $objTokenChecker->isPreviewMode(FrontendUser::SECURITY_SESSION_KEY);
+		$blnUpdate = false;
 
 		// Switch
 		if (\Input::post('FORM_SUBMIT') == 'tl_switch')
 		{
-			$time = time();
-
-			// Hide unpublished elements
-			if (\Input::post('unpublished') == 'hide')
-			{
-				$this->setCookie('FE_PREVIEW', 0, ($time - 86400), null, null, \Environment::get('ssl'), true);
-				$objTemplate->show = 0;
-			}
-
-			// Show unpublished elements
-			else
-			{
-				$this->setCookie('FE_PREVIEW', 1, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
-				$objTemplate->show = 1;
-			}
+			$blnUpdate = true;
+			$objAuthenticator = \System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$blnShowUnpublished = \Input::post('unpublished') != 'hide';
 
 			// Switch user accounts
-			if ($blnCanSwitchUser)
+			if ($blnCanSwitchUser && \Input::post('user'))
 			{
-			   // Log in the front end user
-				if (\Input::post('user'))
-				{
-					// Authenticate the new FrontendUser at the Symfony firewall
-					\System::getContainer()->get('contao.security.frontend_preview_authenticator')->authenticateFrontendUser(\Input::post('user'));
-
-					if ($session->has(\FrontendUser::SECURITY_SESSION_KEY) && ($token = unserialize($session->get(\FrontendUser::SECURITY_SESSION_KEY))) instanceof TokenInterface)
-					{
-						$objUser = \MemberModel::findByUsername($token->getUser()->getUsername());
-
-						// Check the allowed member groups
-						if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
-						{
-							// Set the cookie
-							$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
-							$objTemplate->user = \Input::post('user');
-						}
-						else
-						{
-							// Remove Symfony frontend authentication, if not allowed
-							$session->remove(\FrontendUser::SECURITY_SESSION_KEY);
-						}
-					}
-				}
-
-				// Log out the front end user
-				else
-				{
-					// Remove cookie
-					$this->setCookie('FE_USER_AUTH', $strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
-					$objTemplate->user = '';
-
-					// Remove the Symfony frontend authentication token
-					$session->remove(\FrontendUser::SECURITY_SESSION_KEY);
-				}
+				$strUser = \Input::post('user');
 			}
 
-			$objTemplate->update = true;
+			if ($strUser)
+			{
+				$objAuthenticator->authenticateFrontendUser($strUser, $blnShowUnpublished);
+			}
+			else
+			{
+				$objAuthenticator->authenticateFrontendGuest($blnShowUnpublished);
+			}
 		}
 
-		// Default variables
+		/** @var BackendTemplate|object $objTemplate */
+		$objTemplate = new \BackendTemplate('be_switch');
+		$objTemplate->user = (string) $strUser;
+		$objTemplate->show = $blnShowUnpublished;
+		$objTemplate->update = $blnUpdate;
+		$objTemplate->canSwitchUser = $blnCanSwitchUser;
+
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];

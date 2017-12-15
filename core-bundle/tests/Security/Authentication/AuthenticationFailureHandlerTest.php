@@ -87,7 +87,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $utils
             ->expects($this->once())
             ->method('createRedirectResponse')
-            ->with($request, '/contao/login')
+            ->with($request, 'contao_backend_login')
             ->willReturn(new RedirectResponse('/contao/login'))
         ;
 

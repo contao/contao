@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\HeaderReplay;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\TokenChecker;
+use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\Request;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
@@ -25,23 +28,23 @@ class UserSessionListener
     private $scopeMatcher;
 
     /**
-     * @var bool
+     * @var TokenChecker
      */
-    private $disableIpCheck;
+    private $tokenChecker;
 
     /**
      * @param ScopeMatcher $scopeMatcher
-     * @param bool         $disableIpCheck
+     * @param TokenChecker $tokenChecker
      */
-    public function __construct(ScopeMatcher $scopeMatcher, bool $disableIpCheck)
+    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker)
     {
         $this->scopeMatcher = $scopeMatcher;
-        $this->disableIpCheck = $disableIpCheck;
+        $this->tokenChecker = $tokenChecker;
     }
 
     /**
-     * Sets the "force no cache" header on the replay response to disable reverse proxy
-     * caching if a back end user is logged in (front end preview mode).
+     * Sets the "force no cache" header on the replay response to disable reverse
+     * proxy caching if a user is logged in (front end preview mode).
      *
      * @param HeaderReplayEvent $event
      */
@@ -69,70 +72,14 @@ class UserSessionListener
             return false;
         }
 
-        return $this->hasFrontendUser($request) || $this->hasBackendUser($request);
-    }
-
-    /**
-     * Checks if there is a front end user.
-     *
-     * @param Request $request
-     *
-     * @throws \RuntimeException
-     *
-     * @return bool
-     */
-    private function hasFrontendUser(Request $request): bool
-    {
-        if (!$request->cookies->has('FE_USER_AUTH')) {
-            return false;
+        if ($this->tokenChecker->hasAuthenticatedToken(BackendUser::SECURITY_SESSION_KEY)) {
+            return true;
         }
 
-        $session = $request->getSession();
-
-        if (null === $session) {
-            throw new \RuntimeException('The request did not contain a session object');
+        if ($this->tokenChecker->hasAuthenticatedToken(FrontendUser::SECURITY_SESSION_KEY)) {
+            return true;
         }
 
-        $sessionHash = sha1(
-            sprintf(
-                '%s%sFE_USER_AUTH',
-                $session->getId(),
-                $this->disableIpCheck ? '' : $request->getClientIp()
-            )
-        );
-
-        return $request->cookies->get('FE_USER_AUTH') === $sessionHash;
-    }
-
-    /**
-     * Checks if there is a back end user.
-     *
-     * @param Request $request
-     *
-     * @throws \RuntimeException
-     *
-     * @return bool
-     */
-    private function hasBackendUser(Request $request): bool
-    {
-        if (!$request->cookies->has('BE_USER_AUTH')) {
-            return false;
-        }
-
-        $session = $request->getSession();
-
-        if (null === $session) {
-            throw new \RuntimeException('The request did not contain a session object');
-        }
-
-        $sessionHash = sha1(
-            sprintf(
-                '%s%sBE_USER_AUTH',
-                $session->getId(),
-                $this->disableIpCheck ? '' : $request->getClientIp()
-            )
-        );
-
-        return $request->cookies->get('BE_USER_AUTH') === $sessionHash;
+        return false;
     }
 }
