@@ -62,6 +62,9 @@
         "source": "https://github.com/contao/manager-bundle"
     },
     "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }
 }
