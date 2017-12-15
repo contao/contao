@@ -138,10 +138,11 @@ class CommentsModel extends \Model
 	 *
 	 * @param string  $strSource The source element
 	 * @param integer $intParent The parent ID
+	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return integer The number of comments
 	 */
-	public static function countPublishedBySourceAndParent($strSource, $intParent)
+	public static function countPublishedBySourceAndParent($strSource, $intParent, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.source=? AND $t.parent=?");
