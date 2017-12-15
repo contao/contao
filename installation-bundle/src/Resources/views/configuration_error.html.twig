@@ -5,7 +5,7 @@
     <h3>{{ 'an_error_occurred'|trans }}</h3>
     {% if errorCode == 1 %}
       <p class="tl_error">{{ 'unsupported_version'|trans }}</p>
-      <p>{{ 'unsupported_version_explain'|trans|format(type, version) }}</p>
+      <p>{{ 'unsupported_version_explain'|trans|format(version) }}</p>
     {% elseif errorCode == 2 %}
       <p class="tl_error">{{ 'unsupported_collation'|trans }}</p>
       <p>{{ 'unsupported_collation_explain'|trans|format(collation)|raw }}</p>
