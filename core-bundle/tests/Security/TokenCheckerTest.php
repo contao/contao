@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Test\Security;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Security\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -30,7 +31,8 @@ class TokenCheckerTest extends TestCase
 
     public function testAuthenticatesAUserFromTheSessionToken(): void
     {
-        $token = new PreAuthenticatedToken('foobar', null, 'foobar', ['foobar']);
+        $user = $this->createMock(BackendUser::class);
+        $token = new PreAuthenticatedToken($user, null, 'foobar', ['foobar']);
         $session = $this->createMock(SessionInterface::class);
 
         $session
@@ -88,6 +90,36 @@ class TokenCheckerTest extends TestCase
             ->method('has')
             ->with(FrontendUser::SECURITY_SESSION_KEY)
             ->willReturn(false)
+        ;
+
+        $tokenChecker = new TokenChecker($session);
+
+        $this->assertFalse($tokenChecker->hasAuthenticatedToken(FrontendUser::SECURITY_SESSION_KEY));
+    }
+
+    public function testDoesNotAuthenticateIfTheUserIsNotAnObject(): void
+    {
+        $token = new PreAuthenticatedToken('foobar', null, 'foobar', ['foobar']);
+        $session = $this->createMock(SessionInterface::class);
+
+        $session
+            ->expects($this->once())
+            ->method('isStarted')
+            ->willReturn(true)
+        ;
+
+        $session
+            ->expects($this->once())
+            ->method('has')
+            ->with(FrontendUser::SECURITY_SESSION_KEY)
+            ->willReturn(true)
+        ;
+
+        $session
+            ->expects($this->once())
+            ->method('get')
+            ->with(FrontendUser::SECURITY_SESSION_KEY)
+            ->willReturn(serialize($token))
         ;
 
         $tokenChecker = new TokenChecker($session);

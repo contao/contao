@@ -41,7 +41,9 @@ class TokenChecker
      */
     public function hasAuthenticatedToken(string $sessionKey): bool
     {
-        return null !== $this->getToken($sessionKey);
+        $token = $this->getToken($sessionKey);
+
+        return null !== $token && $token->getUser() instanceof User;
     }
 
     /**

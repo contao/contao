@@ -68,7 +68,7 @@ class BackendPreview extends \Backend
 				$objAuthenticator->removeFrontendAuthentication();
 			}
 
-			$arrParameters = [];
+			$arrParameters = array();
 
 			if (\Input::get('url'))
 			{

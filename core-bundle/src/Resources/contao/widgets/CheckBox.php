@@ -135,7 +135,7 @@ class CheckBox extends \Widget
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
 			{
-				$arrOptions[] = $this->generateCheckbox($v, standardize($i).'_'.$k);
+				$arrOptions[] = $this->generateCheckbox($v, \StringUtil::standardize($i).'_'.$k);
 			}
 
 			$arrOptions[] = '</fieldset>';

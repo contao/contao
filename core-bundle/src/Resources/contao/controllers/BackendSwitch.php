@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 
 /**
@@ -74,7 +73,7 @@ class BackendSwitch extends \Backend
 			$blnShowUnpublished = \Input::post('unpublished') != 'hide';
 
 			// Switch user accounts
-			if ($blnCanSwitchUser && \Input::post('user'))
+			if ($blnCanSwitchUser && isset($_POST['user']))
 			{
 				$strUser = \Input::post('user');
 			}
