@@ -34,6 +34,12 @@ class GlobalsMapListener
      */
     public function onInitializeSystem(): void
     {
-        $GLOBALS = array_replace_recursive($GLOBALS, $this->globals);
+        foreach ($this->globals as $key => $value) {
+            if (\is_array($value)) {
+                $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key], $value);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
     }
 }
