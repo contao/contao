@@ -24,8 +24,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 			(
 				'id' => 'primary',
 				'url' => 'unique',
-				'checksum,pid' => 'unique',
-				'text' => 'fulltext'
+				'checksum,pid' => 'unique'
 			)
 		)
 	),
