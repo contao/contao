@@ -167,29 +167,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    public function testAccesskeyFromManagerConfig(): void
-    {
-        $config = $this->createMock(ManagerConfig::class);
-
-        $config
-            ->expects($this->atLeastOnce())
-            ->method('all')
-            ->willReturn(['contao_manager' => ['dev_accesskey' => password_hash('foo:bar', PASSWORD_DEFAULT)]])
-        ;
-
-        $this->command->setApplication($this->mockApplication($config));
-
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir()]);
-
-        $this->assertFileExists($this->getTempDir().'/.env');
-
-        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
-
-        $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
-        $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
-    }
-
     public function testAccesskeyFromInput(): void
     {
         $commandTester = new CommandTester($this->command);
