@@ -84,7 +84,7 @@ label[for="password"],label[for="confirm"] {
 
 /* Error messages */
 .tl_message {
-	max-width:500px;
+	max-width:420px;
 	margin:36px auto 0;
 	text-align:center;
 }

@@ -106,6 +106,7 @@ body:not(.fullscreen) #header .inner {
 	display:block;
 	color:inherit;
 	padding:6px 20px 6px 40px;
+	white-space:nowrap;
 }
 #tmenu ul.level_2 li a:hover {
 	background-color:#eee;
