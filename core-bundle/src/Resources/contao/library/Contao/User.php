@@ -714,11 +714,6 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 			return false;
 		}
 
-		if ((int) $this->tstamp !== (int) $user->tstamp)
-		{
-			return false;
-		}
-
 		return true;
 	}
 
