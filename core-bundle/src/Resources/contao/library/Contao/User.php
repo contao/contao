@@ -680,7 +680,7 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 */
 	public function serialize()
 	{
-		return serialize(array($this->id, $this->tstamp, $this->username, $this->password, $this->salt, $this->disable, $this->admin));
+		return serialize(array($this->id, $this->username, $this->password, $this->salt, $this->disable, $this->admin, $this->groups));
 	}
 
 
@@ -689,7 +689,7 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 */
 	public function unserialize($serialized)
 	{
-		list($this->id, $this->tstamp, $this->username, $this->password, $this->salt, $this->disable, $this->admin) = unserialize($serialized, array('allowed_classes'=>false));
+		list($this->id, $this->username, $this->password, $this->salt, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
 	}
 
 
@@ -710,6 +710,16 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 		}
 
 		if ($this->getRoles() !== $user->getRoles())
+		{
+			return false;
+		}
+
+		if ((bool) $this->admin !== (bool) $user->admin)
+		{
+			return false;
+		}
+
+		if ($this->groups !== $user->groups)
 		{
 			return false;
 		}

@@ -170,7 +170,7 @@ class BackendUser extends User
 				break;
 
 			case 'groups':
-				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : array($this->arrData['groups']);
+				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : (($this->arrData['groups'] != '') ? array($this->arrData['groups']) : array());
 				break;
 
 			case 'pagemounts':
