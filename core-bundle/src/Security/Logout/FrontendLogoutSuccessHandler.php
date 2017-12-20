@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Security\Logout;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
-use Symfony\Component\Security\Http\ParameterBagUtils;
 
 class FrontendLogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
@@ -24,7 +23,7 @@ class FrontendLogoutSuccessHandler extends DefaultLogoutSuccessHandler
      */
     public function onLogoutSuccess(Request $request): RedirectResponse
     {
-        if ($targetUrl = ParameterBagUtils::getRequestParameterValue($request, 'redirect')) {
+        if ($targetUrl = $request->query->get('redirect')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 

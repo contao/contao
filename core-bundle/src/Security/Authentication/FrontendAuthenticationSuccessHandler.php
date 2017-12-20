@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\ParameterBagUtils;
 
 class FrontendAuthenticationSuccessHandler extends AuthenticationSuccessHandler
 {
@@ -41,15 +40,13 @@ class FrontendAuthenticationSuccessHandler extends AuthenticationSuccessHandler
     /**
      * {@inheritdoc}
      */
-    protected function determineTargetUrl(Request $request)
+    protected function determineTargetUrl(Request $request): string
     {
         if (!$this->user instanceof FrontendUser) {
             return parent::determineTargetUrl($request);
         }
 
-        if (ParameterBagUtils::getRequestParameterValue($request, '_always_use_target_path')
-            && ($targetUrl = ParameterBagUtils::getRequestParameterValue($request, '_target_path'))
-        ) {
+        if ($targetUrl = $this->getFixedTargetPath($request)) {
             return $targetUrl;
         }
 
@@ -63,5 +60,21 @@ class FrontendAuthenticationSuccessHandler extends AuthenticationSuccessHandler
         }
 
         return parent::determineTargetUrl($request);
+    }
+
+    /**
+     * Returns the fixed target path.
+     *
+     * @param Request $request
+     *
+     * @return string|null
+     */
+    private function getFixedTargetPath(Request $request): ?string
+    {
+        if (!$request->request->get('_always_use_target_path')) {
+            return null;
+        }
+
+        return $request->request->get('_target_path');
     }
 }
