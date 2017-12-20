@@ -31,7 +31,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 				'id' => 'primary',
 				'username' => 'unique',
 				'email' => 'index',
-				'autologin' => 'unique',
 				'activation' => 'index'
 			)
 		)
