@@ -68,11 +68,11 @@ class UserChecker implements UserCheckerInterface
      */
     private function checkIfAccountIsLocked(User $user): void
     {
-        if (false !== $user->isAccountNonLocked()) {
+        $lockedSeconds = $user->locked - time();
+
+        if ($lockedSeconds <= 0) {
             return;
         }
-
-        $lockedSeconds = $user->locked - time();
 
         $ex = new LockedException(
             $lockedSeconds,
@@ -91,7 +91,7 @@ class UserChecker implements UserCheckerInterface
      */
     private function checkIfAccountIsDisabled(User $user): void
     {
-        if (false !== $user->isEnabled()) {
+        if (!$user->disable) {
             return;
         }
 

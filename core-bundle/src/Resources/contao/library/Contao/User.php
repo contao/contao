@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
@@ -100,7 +99,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class User extends System implements AdvancedUserInterface, EncoderAwareInterface, EquatableInterface, \Serializable
+abstract class User extends System implements UserInterface, EncoderAwareInterface, EquatableInterface, \Serializable
 {
 
 	/**
@@ -634,44 +633,6 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 		$this->encoder = $encoder;
 
 		return $this;
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isAccountNonExpired()
-	{
-		$time = time();
-
-		return (!$this->start || $this->start < $time) && (!$this->stop || $this->stop > $time);
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isAccountNonLocked()
-	{
-		return $this->locked < time();
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isCredentialsNonExpired()
-	{
-		return true;
-	}
-
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isEnabled()
-	{
-		return !$this->disable;
 	}
 
 
