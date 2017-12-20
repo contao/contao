@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use League\Uri\Components\Query;
+use League\Uri\Http;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -52,10 +54,12 @@ class PageLogout extends \Frontend
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		list ($strLogoutUrl, $strQuery) = explode('?', $strLogoutUrl);
+		$uri = Http::createFromString($strLogoutUrl);
 
-		$strQuery = ($strQuery ? '&' : '') . 'redirect=' . $strRedirect;
+		// Add the redirect= parameter to the logout URL
+		$query = new Query($uri->getQuery());
+		$query = $query->merge('redirect=' . $strRedirect);
 
-		return new RedirectResponse($strLogoutUrl.'?'.$strQuery);
+		return new RedirectResponse((string) $uri->withQuery((string) $query));
 	}
 }

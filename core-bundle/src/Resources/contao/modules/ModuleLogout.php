@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use League\Uri\Components\Query;
+use League\Uri\Http;
 use Patchwork\Utf8;
 
 @trigger_error('Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.', E_USER_DEPRECATED);
@@ -76,11 +78,13 @@ class ModuleLogout extends \Module
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		list ($strLogoutUrl, $strQuery) = explode('?', $strLogoutUrl);
+		$uri = Http::createFromString($strLogoutUrl);
 
-		$strQuery = ($strQuery ? '&' : '') . 'redirect=' . $strRedirect;
+		// Add the redirect= parameter to the logout URL
+		$query = new Query($uri->getQuery());
+		$query = $query->merge('redirect=' . $strRedirect);
 
-		$this->redirect($strLogoutUrl.'?'.$strQuery);
+		$this->redirect((string) $uri->withQuery((string) $query));
 
 		return '';
 	}
