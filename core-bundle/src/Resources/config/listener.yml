@@ -16,13 +16,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
-    contao.listener.authentication:
-        class: Contao\CoreBundle\EventListener\AuthenticationListener
-        arguments:
-            - "@logger"
-        tags:
-            - { name: kernel.event_listener, event: security.authentication.failure, method: onAuthenticationFailure }
-
     contao.listener.backend_menu_listener:
         class: Contao\CoreBundle\EventListener\BackendMenuListener
         arguments:

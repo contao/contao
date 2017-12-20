@@ -212,23 +212,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
 
-    public function testRegistersTheAuthenticationListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.authentication'));
-
-        $definition = $this->container->getDefinition('contao.listener.authentication');
-
-        $this->assertSame(AuthenticationListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('logger', (string) $definition->getArgument(0));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('security.authentication.failure', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onAuthenticationFailure', $tags['kernel.event_listener'][0]['method']);
-    }
-
     public function testRegistersTheBackendMenuListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.backend_menu_listener'));

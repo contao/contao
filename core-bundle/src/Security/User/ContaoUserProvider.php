@@ -58,7 +58,7 @@ class ContaoUserProvider implements UserProviderInterface
     public function __construct(ContaoFrameworkInterface $framework, Session $session, string $userClass, LoggerInterface $logger = null)
     {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
-            throw new \RuntimeException(sprintf('Unsupported class "%s"', $userClass));
+            throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
         }
 
         $this->framework = $framework;
@@ -82,7 +82,7 @@ class ContaoUserProvider implements UserProviderInterface
             return $user;
         }
 
-        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $username));
     }
 
     /**
@@ -91,7 +91,7 @@ class ContaoUserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported user class "%s".', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
         $user = $this->loadUserByUsername($user->getUsername());
