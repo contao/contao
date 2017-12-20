@@ -60,7 +60,7 @@ class BackendController extends Controller
         $this->container->get('contao.framework')->initialize();
 
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return new RedirectResponse($this->container->get('security.logout_url_generator')->getLogoutUrl());
+            return new RedirectResponse($this->container->get('router')->generate('contao_backend'));
         }
 
         $controller = new BackendIndex();
