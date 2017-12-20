@@ -714,6 +714,11 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 			return false;
 		}
 
+		if ((bool) $this->disable !== (bool) $user->disable)
+		{
+			return false;
+		}
+
 		return true;
 	}
 
