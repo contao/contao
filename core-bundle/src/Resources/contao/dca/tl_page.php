@@ -1013,8 +1013,6 @@ class tl_page extends Backend
 	 *
 	 * @param DataContainer $dc
 	 *
-	 * @return mixed
-	 *
 	 * @throws Exception
 	 */
 	public function makeRedirectPageMandatory(DataContainer $dc)

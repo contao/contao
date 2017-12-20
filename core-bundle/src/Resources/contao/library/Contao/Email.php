@@ -357,7 +357,7 @@ class Email
 	 */
 	public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
 	{
-		$this->objMessage->attach(\Swift_Attachment::newInstance($strContent, $strFilename, $strMime));
+		$this->objMessage->attach(new \Swift_Attachment($strContent, $strFilename, $strMime));
 	}
 
 

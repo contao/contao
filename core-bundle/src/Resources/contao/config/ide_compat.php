@@ -154,7 +154,6 @@ namespace {
 	class MemberModel extends \Contao\MemberModel {}
 	class ModuleModel extends \Contao\ModuleModel {}
 	class PageModel extends \Contao\PageModel {}
-	class SessionModel extends \Contao\SessionModel {}
 	class StyleModel extends \Contao\StyleModel {}
 	class StyleSheetModel extends \Contao\StyleSheetModel {}
 	class ThemeModel extends \Contao\ThemeModel {}

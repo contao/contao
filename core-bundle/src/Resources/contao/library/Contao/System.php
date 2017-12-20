@@ -1183,8 +1183,6 @@ abstract class System
 	/**
 	 * Enable a back end module
 	 *
-	 * @return boolean True if the module was enabled
-	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Composer to add or remove modules.
 	 */
@@ -1196,8 +1194,6 @@ abstract class System
 
 	/**
 	 * Disable a back end module
-	 *
-	 * @return boolean True if the module was disabled
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Composer to add or remove modules.
