@@ -333,7 +333,15 @@ services:
         calls:
             - ["matchAttribute", ["_scope", "frontend"]]
 
-    security.authentication.provider.dao:
+    contao.security.authentication_failure_handler:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
+        arguments:
+            - "@http_kernel"
+            - "@security.http_utils"
+            - []
+            - "@logger"
+
+    contao.security.authentication_provider:
         class: Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider
         abstract: true
         arguments:
@@ -341,33 +349,39 @@ services:
             - ~ # User checker
             - ~ # Provider-shared key
             - "@security.encoder_factory"
-            - "%security.authentication.hide_user_not_found%"
-            - "@session"
-            - "@translator"
             - "@contao.framework"
-            - "@logger"
-
-    contao.security.authentication_failure_handler:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
-        arguments:
-            - "@http_kernel"
-            - "@security.http_utils"
-            - "@contao.routing.scope_matcher"
             - "@translator"
-            - []
-            - "@logger"
+            - "@request_stack"
+            - "@mailer"
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
             - "@security.http_utils"
             - "@contao.framework"
-            - "@router"
+            - "@translator"
+            - "@logger"
 
     contao.security.backend_user_provider:
-        class: Contao\CoreBundle\Security\User\BackendUserProvider
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - "@contao.framework"
+            - "@session"
+            - "Contao\\BackendUser"
+            - "@logger"
+
+    contao.security.frontend_authentication_success_handler:
+        class: Contao\CoreBundle\Security\Authentication\FrontendAuthenticationSuccessHandler
+        arguments:
+            - "@security.http_utils"
+            - "@contao.framework"
+            - "@translator"
+            - "@logger"
+
+    contao.security.frontend_logout_success_handler:
+        class: Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler
+        arguments:
+            - "@security.http_utils"
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
@@ -378,39 +392,32 @@ services:
             - "@logger"
 
     contao.security.frontend_user_provider:
-        class: Contao\CoreBundle\Security\User\FrontendUserProvider
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - "@contao.framework"
+            - "@session"
+            - "Contao\\FrontendUser"
+            - "@logger"
 
     contao.security.legacy_password_encoder:
         class: Contao\CoreBundle\Security\Encoder\ContaoLegacyPasswordEncoder
 
     contao.security.logout_handler:
-        class: Contao\CoreBundle\Security\LogoutHandler
+        class: Contao\CoreBundle\Security\Logout\LogoutHandler
         arguments:
             - "@contao.framework"
             - "@logger"
-
-    contao.security.logout_success_handler:
-        class: Contao\CoreBundle\Security\LogoutSuccessHandler
-        arguments:
-            - "@router"
-            - "@contao.routing.scope_matcher"
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\TokenChecker
         arguments:
             - "@session"
+            - "@security.authentication.trust_resolver"
         public: true
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\UserChecker
         arguments:
-            - "@translator"
-            - "@mailer"
-            - "@session"
-            - "@contao.routing.scope_matcher"
-            - "@request_stack"
             - "@contao.framework"
             - "@logger"
 

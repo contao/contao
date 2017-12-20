@@ -70,8 +70,9 @@ class FrontendController extends Controller
      *
      * @Route("/_contao/login", name="contao_frontend_login")
      */
-    public function loginAction(): void
+    public function loginAction(): RedirectResponse
     {
+        return $this->redirectToRoute('contao_root');
     }
 
     /**
@@ -79,7 +80,8 @@ class FrontendController extends Controller
      *
      * @Route("/_contao/logout", name="contao_frontend_logout")
      */
-    public function logoutAction(): void
+    public function logoutAction(): RedirectResponse
     {
+        return $this->redirectToRoute('contao_root');
     }
 }

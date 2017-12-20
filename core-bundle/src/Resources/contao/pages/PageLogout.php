@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\RouterInterface;
 
 
 /**
@@ -32,12 +30,19 @@ class PageLogout extends \Frontend
 	 */
 	public function getResponse($objPage)
 	{
+		// Set last page visited
+		if ($objPage->redirectBack)
+		{
+			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
+		}
+
+		$strLogoutUrl = \System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = \Environment::get('base');
 
-		// Set last page visited
-		if ($objPage->redirectBack && $this->getReferer())
+		// Redirect to last page visited
+		if ($objPage->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))
 		{
-			$strRedirect = $this->getReferer();
+			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
 		}
 
 		// Redirect to jumpTo page
@@ -47,13 +52,10 @@ class PageLogout extends \Frontend
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		/** @var Session $session */
-		$session = System::getContainer()->get('session');
-		$session->set('_contao_logout_target', $strRedirect);
+		list ($strLogoutUrl, $strQuery) = explode('?', $strLogoutUrl);
 
-		/** @var RouterInterface $router */
-		$router = System::getContainer()->get('router');
+		$strQuery = ($strQuery ? '&' : '') . 'redirect=' . $strRedirect;
 
-		return new RedirectResponse($router->generate('contao_frontend_logout'));
+		return new RedirectResponse($strLogoutUrl.'?'.$strQuery);
 	}
 }

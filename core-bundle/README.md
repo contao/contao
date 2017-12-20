@@ -129,19 +129,18 @@ security:
             switch_user: true
             logout_on_user_change: true
 
-            form_login:
+            contao_login:
                 login_path: contao_backend_login
                 check_path: contao_backend_login
                 default_target_path: contao_backend
+                always_use_default_target_path: true
                 success_handler: contao.security.authentication_success_handler
                 failure_handler: contao.security.authentication_failure_handler
-                username_parameter: username
-                password_parameter: password
+                remember_me: false
 
             logout:
                 path: contao_backend_logout
-                target: contao_backend
-                success_handler: contao.security.logout_success_handler
+                target: contao_backend_login
                 handlers:
                     - contao.security.logout_handler
 
@@ -153,14 +152,13 @@ security:
             switch_user: false
             logout_on_user_change: true
 
-            form_login:
+            contao_login:
                 login_path: contao_frontend_login
                 check_path: contao_frontend_login
-                default_target_path: contao_index
+                default_target_path: contao_root
+                failure_path: contao_root
                 failure_handler: contao.security.authentication_failure_handler
-                success_handler: contao.security.authentication_success_handler
-                username_parameter: username
-                password_parameter: password
+                success_handler: contao.security.frontend_authentication_success_handler
                 remember_me: true
 
             remember_me:
@@ -169,7 +167,8 @@ security:
 
             logout:
                 path: contao_frontend_logout
-                success_handler: contao.security.logout_success_handler
+                target: contao_root
+                success_handler: contao.security.frontend_logout_success_handler
                 handlers:
                     - contao.security.logout_handler
 
@@ -201,8 +200,6 @@ contao:
         imagine_options:
             jpeg_quality: 80
             interlace:    plane
-    security:
-        token_lifetime: 3600
 ```
 
 You can also overwrite any parameter stored in the `localconfig.php` file:

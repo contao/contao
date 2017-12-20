@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\HeaderReplay;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener;
 use Contao\CoreBundle\Security\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
@@ -35,9 +33,9 @@ class UserSessionListenerTest extends TestCase
     /**
      * @dataProvider getForceNoCacheHeaderData
      *
-     * @param array $sessionKeys
+     * @param string $method
      */
-    public function testAddsTheForceNoCacheHeader(array $sessionKeys): void
+    public function testAddsTheForceNoCacheHeader(string $method): void
     {
         $session = $this->mockSession();
         $session->setId('foobar-id');
@@ -50,12 +48,8 @@ class UserSessionListenerTest extends TestCase
 
         $tokenChecker
             ->expects($this->atLeastOnce())
-            ->method('hasAuthenticatedToken')
-            ->willReturnCallback(
-                function (string $sessionKey) use ($sessionKeys): bool {
-                    return $sessionKeys[$sessionKey];
-                }
-            )
+            ->method($method)
+            ->willReturn(true)
         ;
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
@@ -72,10 +66,7 @@ class UserSessionListenerTest extends TestCase
      */
     public function getForceNoCacheHeaderData(): array
     {
-        return [
-            [[FrontendUser::SECURITY_SESSION_KEY => true, BackendUser::SECURITY_SESSION_KEY => false]],
-            [[FrontendUser::SECURITY_SESSION_KEY => false, BackendUser::SECURITY_SESSION_KEY => true]],
-        ];
+        return [['hasFrontendUser'], ['hasBackendUser']];
     }
 
     public function testDoesNotAddTheForceNoCacheHeaderIfNotInContaoScope(): void
@@ -84,9 +75,8 @@ class UserSessionListenerTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
 
         $tokenChecker
-            ->expects($this->any())
-            ->method('hasAuthenticatedToken')
-            ->willReturn(true)
+            ->expects($this->never())
+            ->method('hasBackendUser')
         ;
 
         $listener = new UserSessionListener($this->mockScopeMatcher(), $tokenChecker);
@@ -103,9 +93,8 @@ class UserSessionListenerTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
 
         $tokenChecker
-            ->expects($this->any())
-            ->method('hasAuthenticatedToken')
-            ->willReturn(true)
+            ->expects($this->never())
+            ->method('hasBackendUser')
         ;
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
@@ -125,8 +114,8 @@ class UserSessionListenerTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
 
         $tokenChecker
-            ->expects($this->any())
-            ->method('hasAuthenticatedToken')
+            ->expects($this->once())
+            ->method('hasBackendUser')
             ->willReturn(false)
         ;
 

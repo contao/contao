@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BackendControllerTest extends TestCase
 {
@@ -37,10 +38,18 @@ class BackendControllerTest extends TestCase
         $requestStack->push(new Request());
 
         $previewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+
+        $authorizationChecker
+            ->expects($this->once())
+            ->method('isGranted')
+            ->willReturn(false)
+        ;
 
         $container = $this->mockContainer();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('contao.security.frontend_preview_authenticator', $previewAuthenticator);
+        $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('request_stack', $requestStack);
 
         $controller = new BackendController();

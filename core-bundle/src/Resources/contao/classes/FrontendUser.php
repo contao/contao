@@ -99,7 +99,7 @@ class FrontendUser extends User
 		}
 
 		// Check for an authenticated user in the session
-		$strUser = \System::getContainer()->get('contao.security.token_checker')->getUsername(self::SECURITY_SESSION_KEY);
+		$strUser = \System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
 
 		if ($strUser !== null)
 		{
@@ -161,44 +161,29 @@ class FrontendUser extends User
 	 * @return boolean
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use the security.authentication.success event instead.
+	 *             Use Symfony security instead.
 	 */
 	public function authenticate()
 	{
-		@trigger_error('Using FrontendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use the security.authentication.success event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return false;
+		return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
 
 	/**
-	 * Add the auto login resources
+	 * Try to login the current user
 	 *
-	 * @return boolean
+	 * @return boolean True if the user could be logged in
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use the security.interactive_login event instead.
+	 *             Use Symfony security instead.
 	 */
 	public function login()
 	{
-		@trigger_error('Using FrontendUser::login() has been deprecated and will no longer work in Contao 5.0. Use the security.interactive_login event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using FrontendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return parent::login();
-	}
-
-
-	/**
-	 * Remove the auto login resources
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 */
-	public function logout()
-	{
-		@trigger_error('Using FrontendUser::logout() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-
-		return parent::logout();
+		return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
 
@@ -249,26 +234,6 @@ class FrontendUser extends User
 			{
 				$this->$k = \StringUtil::deserialize($v);
 			}
-		}
-
-		// Set the language
-		if ($this->language)
-		{
-			if (\System::getContainer()->has('session'))
-			{
-				$session = \System::getContainer()->get('session');
-
-				if ($session->isStarted())
-				{
-					$session->set('_locale', $this->language);
-				}
-			}
-
-			\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
-			\System::getContainer()->get('translator')->setLocale($this->language);
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;

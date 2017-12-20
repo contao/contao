@@ -23,6 +23,8 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -56,6 +58,10 @@ class ContaoCoreBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
+
+        /** @var SecurityExtension $extension */
+        $extension = $container->getExtension('security');
+        $extension->addSecurityListenerFactory(new ContaoLoginFactory());
 
         $container->addCompilerPass(new AddPackagesPass());
         $container->addCompilerPass(new AddAssetsPackagesPass());

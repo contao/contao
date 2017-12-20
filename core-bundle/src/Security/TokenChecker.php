@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewToken;
-use Contao\User;
+use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TokenChecker
@@ -25,39 +27,54 @@ class TokenChecker
     private $session;
 
     /**
-     * @param SessionInterface $session
+     * @var AuthenticationTrustResolverInterface
      */
-    public function __construct(SessionInterface $session)
+    private $trustResolver;
+
+    /**
+     * @param SessionInterface                     $session
+     * @param AuthenticationTrustResolverInterface $trustResolveer
+     */
+    public function __construct(SessionInterface $session, AuthenticationTrustResolverInterface $trustResolveer)
     {
         $this->session = $session;
+        $this->trustResolver = $trustResolveer;
     }
 
     /**
-     * Checks if an authenticated token exists in the session.
-     *
-     * @param string $sessionKey
+     * Checks if a front end user is authenticated.
      *
      * @return bool
      */
-    public function hasAuthenticatedToken(string $sessionKey): bool
+    public function hasFrontendUser(): bool
     {
-        $token = $this->getToken($sessionKey);
+        $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
 
-        return null !== $token && $token->getUser() instanceof User;
+        return null !== $token && $token->getUser() instanceof FrontendUser;
     }
 
     /**
-     * Gets the username of a token in the session.
+     * Checks if a back end user is authenticated.
      *
-     * @param string $sessionKey
+     * @return bool
+     */
+    public function hasBackendUser(): bool
+    {
+        $token = $this->getToken(BackendUser::SECURITY_SESSION_KEY);
+
+        return null !== $token && $token->getUser() instanceof BackendUser;
+    }
+
+    /**
+     * Gets the front end username from the session.
      *
      * @return string|null
      */
-    public function getUsername(string $sessionKey): ?string
+    public function getFrontendUsername(): ?string
     {
-        $token = $this->getToken($sessionKey);
+        $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
 
-        if (null === $token || !$token->getUser() instanceof User) {
+        if (null === $token || !$token->getUser() instanceof FrontendUser) {
             return null;
         }
 
@@ -65,15 +82,29 @@ class TokenChecker
     }
 
     /**
-     * Checks whether the front end preview is active.
+     * Gets the back end username from the session.
      *
-     * @param string $sessionKey
+     * @return string|null
+     */
+    public function getBackendUsername(): ?string
+    {
+        $token = $this->getToken(BackendUser::SECURITY_SESSION_KEY);
+
+        if (null === $token || !$token->getUser() instanceof BackendUser) {
+            return null;
+        }
+
+        return $token->getUser()->getUsername();
+    }
+
+    /**
+     * Tells whether the front end preview can show unpublished fragments.
      *
      * @return bool
      */
-    public function isPreviewMode(string $sessionKey): bool
+    public function isPreviewMode(): bool
     {
-        $token = $this->getToken($sessionKey);
+        $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
 
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();
     }
@@ -94,6 +125,10 @@ class TokenChecker
         $token = unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
 
         if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
+            return null;
+        }
+
+        if ($this->trustResolver->isAnonymous($token)) {
             return null;
         }
 

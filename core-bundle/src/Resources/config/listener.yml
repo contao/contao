@@ -16,6 +16,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.authentication:
+        class: Contao\CoreBundle\EventListener\AuthenticationListener
+        arguments:
+            - "@logger"
+        tags:
+            - { name: kernel.event_listener, event: security.authentication.failure, method: onAuthenticationFailure }
+
     contao.listener.backend_menu_listener:
         class: Contao\CoreBundle\EventListener\BackendMenuListener
         arguments:
@@ -127,32 +134,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
 
-    contao.listener.security.interactive_login:
-        class: Contao\CoreBundle\EventListener\InteractiveLoginListener
-        arguments:
-            - "@contao.framework"
-            - "@logger"
-        tags:
-            - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
-
-    contao.listener.security.switch_user:
-        class: Contao\CoreBundle\EventListener\SwitchUserListener
-        arguments:
-            - "@security.token_storage"
-            - "@logger"
-        tags:
-            - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
-
-    contao.listener.security.token_lifetime:
-        class: Contao\CoreBundle\EventListener\TokenLifetimeListener
-        arguments:
-            - "@security.token_storage"
-            - "@contao.routing.scope_matcher"
-            - "%contao.security.token_lifetime%"
-            - "@logger"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
@@ -162,6 +143,14 @@ services:
             - "@contao.routing.scope_matcher"
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    contao.listener.switch_user:
+        class: Contao\CoreBundle\EventListener\SwitchUserListener
+        arguments:
+            - "@security.token_storage"
+            - "@logger"
+        tags:
+            - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
 
     contao.listener.toggle_view:
         class: Contao\CoreBundle\EventListener\ToggleViewListener

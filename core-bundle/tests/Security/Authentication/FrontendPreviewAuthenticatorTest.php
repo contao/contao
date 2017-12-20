@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewToken;
-use Contao\CoreBundle\Security\User\FrontendUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Psr\Log\LoggerInterface;
@@ -24,6 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
 {
@@ -32,7 +32,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $this->mockSession(),
             $this->mockTokenStorage(FrontendUser::class),
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -52,7 +52,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $this->createMock(TokenStorageInterface::class),
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -80,7 +80,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $tokenStorage,
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -116,7 +116,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $tokenStorage,
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -158,7 +158,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $tokenStorage,
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -208,7 +208,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(FrontendUserProvider::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
             ->expects($this->exactly((int) $isValid))
@@ -275,7 +275,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(FrontendUserProvider::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
             ->expects($this->once())
@@ -346,7 +346,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(FrontendUserProvider::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
             ->expects($this->any())
@@ -418,7 +418,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $session->start();
 
-        $userProvider = $this->createMock(FrontendUserProvider::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
             ->expects($this->any())
@@ -481,7 +481,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $session->start();
 
-        $userProvider = $this->createMock(FrontendUserProvider::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
             ->expects($this->any())
@@ -522,7 +522,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $tokenStorage,
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -561,7 +561,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $tokenStorage,
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -607,7 +607,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $tokenStorage,
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -634,7 +634,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $this->mockTokenStorage(FrontendUser::class),
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -661,7 +661,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $this->mockTokenStorage(FrontendUser::class),
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 
@@ -694,7 +694,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = new FrontendPreviewAuthenticator(
             $session,
             $this->mockTokenStorage(FrontendUser::class),
-            $this->createMock(FrontendUserProvider::class),
+            $this->createMock(UserProviderInterface::class),
             $this->createMock(LoggerInterface::class)
         );
 

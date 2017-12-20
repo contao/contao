@@ -10,11 +10,14 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 
 /**
@@ -87,7 +90,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property boolean $login
  * @property boolean $assignDir
  * @property string  $homeDir
- * @property string  $autologin
  * @property integer $createdOn
  * @property string  $activation
  * @property string  $loginPage
@@ -281,11 +283,11 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 * @return boolean True if the user could be authenticated
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use the security.authentication.success event instead.
+	 *             Use Symfony security instead.
 	 */
 	public function authenticate()
 	{
-		@trigger_error('Using User::authenticate() has been deprecated and will no longer work in Contao 5.0. Use the security.authentication.success event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using User::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
 		return false;
 	}
@@ -297,13 +299,13 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 * @return boolean True if the user could be logged in
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use the security.interactive_login event instead.
+	 *             Use Symfony security instead.
 	 */
 	public function login()
 	{
-		@trigger_error('Using User::login() has been deprecated and will no longer work in Contao 5.0. Use the security.interactive_login event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using User::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return true;
+		return false;
 	}
 
 
@@ -313,12 +315,24 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 * @return boolean True if the account is active
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	protected function checkAccountStatus()
 	{
-		@trigger_error('Using User::checkAccountStatus() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using User::checkAccountStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return false;
+		try
+		{
+			$userChecker = \System::getContainer()->get('contao.security.user_checker');
+			$userChecker->checkPreAuth($this);
+			$userChecker->checkPostAuth($this);
+		}
+		catch (AuthenticationException $exception)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -365,35 +379,59 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 * Regenerate the session ID
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	protected function regenerateSessionId()
 	{
-		@trigger_error('Using User::regenerateSessionId() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using User::regenerateSessionId() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
+
+		$container = \System::getContainer();
+		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
+
+		// Regenerate the session ID to harden against session fixation attacks
+		switch ($strategy)
+		{
+			case SessionAuthenticationStrategy::NONE:
+				break;
+
+			case SessionAuthenticationStrategy::MIGRATE:
+				$container->get('session')->migrate(); // do not destroy the old session
+				break;
+
+			case SessionAuthenticationStrategy::INVALIDATE:
+				$container->get('session')->invalidate();
+				break;
+
+			default:
+				throw new \RuntimeException(sprintf('Invalid session authentication strategy "%s"', $strategy));
+		}
 	}
 
 	/**
 	 * Generate a session
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	protected function generateSession()
 	{
-		@trigger_error('Using User::generateSession() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using User::generateSession() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 	}
 
 
 	/**
 	 * Remove the authentication cookie and destroy the current session
 	 *
-	 * @return boolean True if the user could be logged out
+	 * @throws RedirectResponseException
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	public function logout()
 	{
-		@trigger_error('Using User::logout() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using User::logout() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		return false;
+		throw new RedirectResponseException(\System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
 
 
@@ -450,10 +488,15 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 */
 	public static function loadUserByUsername($username)
 	{
-		$user = new static();
-
 		/** @var Request $request */
 		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			throw new \RuntimeException('The request stack did not contain a request');
+		}
+
+		$user = new static();
 		$isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
 
 		// Load the user object
@@ -610,7 +653,7 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 */
 	public function isAccountNonLocked()
 	{
-		return ($this->locked + \Config::get('lockPeriod')) < time();
+		return $this->locked < time();
 	}
 
 

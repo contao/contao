@@ -38,8 +38,7 @@ class BypassMaintenanceListenerTest extends TestCase
 
         $tokenChecker
             ->expects($this->once())
-            ->method('hasAuthenticatedToken')
-            ->with(BackendUser::SECURITY_SESSION_KEY)
+            ->method('hasBackendUser')
             ->willReturn(true)
         ;
 
@@ -57,8 +56,7 @@ class BypassMaintenanceListenerTest extends TestCase
 
         $tokenChecker
             ->expects($this->once())
-            ->method('hasAuthenticatedToken')
-            ->with(BackendUser::SECURITY_SESSION_KEY)
+            ->method('hasBackendUser')
             ->willReturn(false)
         ;
 

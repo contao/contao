@@ -92,7 +92,7 @@ class BackendPreview extends \Backend
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->site = \Input::get('site', true);
 		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');
-		$objTemplate->user = \System::getContainer()->get('contao.security.token_checker')->getUsername(\FrontendUser::SECURITY_SESSION_KEY);
+		$objTemplate->user = \System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
 
 		$strUrl = null;
 

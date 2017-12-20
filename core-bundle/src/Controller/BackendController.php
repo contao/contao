@@ -59,9 +59,23 @@ class BackendController extends Controller
     {
         $this->container->get('contao.framework')->initialize();
 
+        if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return new RedirectResponse($this->container->get('security.logout_url_generator')->getLogoutUrl());
+        }
+
         $controller = new BackendIndex();
 
         return $controller->run();
+    }
+
+    /**
+     * Symfony will un-authenticate the user automatically by calling this route.
+     *
+     * @Route("/contao/logout", name="contao_backend_logout")
+     */
+    public function logoutAction(): RedirectResponse
+    {
+        return $this->redirectToRoute('contao_backend_login');
     }
 
     /**
@@ -223,14 +237,5 @@ class BackendController extends Controller
         }
 
         return new RedirectResponse($picker->getCurrentUrl());
-    }
-
-    /**
-     * Symfony will un-authenticate the user automatically by calling this route.
-     *
-     * @Route("/contao/logout", name="contao_backend_logout")
-     */
-    public function logoutAction(): void
-    {
     }
 }

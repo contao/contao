@@ -134,12 +134,6 @@
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
       </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
       </trans-unit>
@@ -235,12 +229,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

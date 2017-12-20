@@ -61,8 +61,8 @@ class BackendSwitch extends \Backend
 
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
 		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
-		$strUser = $objTokenChecker->getUsername(FrontendUser::SECURITY_SESSION_KEY);
-		$blnShowUnpublished = $objTokenChecker->isPreviewMode(FrontendUser::SECURITY_SESSION_KEY);
+		$strUser = $objTokenChecker->getFrontendUsername();
+		$blnShowUnpublished = $objTokenChecker->isPreviewMode();
 		$blnUpdate = false;
 
 		// Switch

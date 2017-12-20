@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\HeaderReplay;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TokenChecker;
-use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\Request;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
@@ -72,14 +70,6 @@ class UserSessionListener
             return false;
         }
 
-        if ($this->tokenChecker->hasAuthenticatedToken(BackendUser::SECURITY_SESSION_KEY)) {
-            return true;
-        }
-
-        if ($this->tokenChecker->hasAuthenticatedToken(FrontendUser::SECURITY_SESSION_KEY)) {
-            return true;
-        }
-
-        return false;
+        return $this->tokenChecker->hasBackendUser() || $this->tokenChecker->hasFrontendUser();
     }
 }

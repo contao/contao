@@ -60,7 +60,8 @@ class SwitchUserListenerTest extends TestCase
         $context = [
             'contao' => new ContaoContext(
                 'Contao\CoreBundle\EventListener\SwitchUserListener::onSwitchUser',
-                ContaoContext::ACCESS
+                ContaoContext::ACCESS,
+                'user1'
             ),
         ];
 

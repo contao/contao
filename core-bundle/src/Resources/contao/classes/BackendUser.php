@@ -143,7 +143,7 @@ class BackendUser extends User
 		}
 
 		// Check for an authenticated user in the session
-		$strUser = \System::getContainer()->get('contao.security.token_checker')->getUsername(self::SECURITY_SESSION_KEY);
+		$strUser = \System::getContainer()->get('contao.security.token_checker')->getBackendUsername();
 
 		if ($strUser !== null)
 		{
@@ -204,13 +204,28 @@ class BackendUser extends User
 	 * @return boolean True if the user could be authenticated
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use the security.authentication.success event instead.
+	 *             Use Symfony security instead.
 	 */
 	public function authenticate()
 	{
-		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use the security.authentication.success event instead.', E_USER_DEPRECATED);
+		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return false;
+		return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+	}
+
+	/**
+	 * Try to login the current user
+	 *
+	 * @return boolean True if the user could be logged in
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
+	 */
+	public function login()
+	{
+		@trigger_error('Using BackendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+
+		return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 
@@ -377,26 +392,6 @@ class BackendUser extends User
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
-
-		// Set the language
-		if ($this->language)
-		{
-			if (\System::getContainer()->has('session'))
-			{
-				$session = \System::getContainer()->get('session');
-
-				if ($session->isStarted())
-				{
-					$session->set('_locale', $this->language);
-				}
-			}
-
-			\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
-			\System::getContainer()->get('translator')->setLocale($this->language);
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
-		}
 
 		\Config::set('showHelp', $this->showHelp);
 		\Config::set('useRTE', $this->useRTE);

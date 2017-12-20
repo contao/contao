@@ -416,12 +416,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "blob NULL"
 		),
-		'autologin' => array
-		(
-			'default'                 => null,
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(32) NULL"
-		),
 		'createdOn' => array
 		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),

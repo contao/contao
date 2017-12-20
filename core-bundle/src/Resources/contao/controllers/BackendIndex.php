@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Exception\LockedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 
 /**
@@ -47,6 +49,17 @@ class BackendIndex extends \Backend
 	 */
 	public function run()
 	{
+		$exception = \System::getContainer()->get('security.authentication_utils')->getLastAuthenticationError();
+
+		if ($exception instanceof LockedException)
+		{
+			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
+		}
+		elseif ($exception instanceof AuthenticationException)
+		{
+			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
+		}
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 

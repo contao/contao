@@ -23,6 +23,8 @@ use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
@@ -82,6 +84,25 @@ class ContaoCoreBundleTest extends TestCase
             )
         ;
 
+        $security = $this->createMock(SecurityExtension::class);
+
+        $security
+            ->expects($this->once())
+            ->method('addSecurityListenerFactory')
+            ->with(
+                $this->callback(function ($param) {
+                    return $param instanceof ContaoLoginFactory;
+                })
+            )
+        ;
+
+        $container
+            ->expects($this->once())
+            ->method('getExtension')
+            ->with('security')
+            ->willReturn($security)
+        ;
+
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);
     }
@@ -90,6 +111,7 @@ class ContaoCoreBundleTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getFixturesDir().'/app');
+        $container->registerExtension(new SecurityExtension());
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);
@@ -111,6 +133,7 @@ class ContaoCoreBundleTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.root_dir', $this->getFixturesDir().'/app');
+        $container->registerExtension(new SecurityExtension());
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);

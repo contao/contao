@@ -500,20 +500,40 @@ abstract class Frontend extends \Controller
 	 * @return boolean
 	 *
 	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Frontend::getAuthenticationStatus() instead.
+	 *             Use Symfony security instead.
 	 */
 	protected function getLoginStatus($strCookie)
 	{
-		@trigger_error('Using Frontend::getLoginStatus() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getAuthenticationStatus() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Frontend::getLoginStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		if ($strCookie == 'FE_USER_AUTH')
+		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
+
+		if ($strCookie == 'BE_USER_AUTH' && $objTokenChecker->hasBackendUser())
 		{
-			return $this->getAuthenticationStatus(FrontendUser::SECURITY_SESSION_KEY);
+			// Disable the cache if a back end user is logged in
+			if (TL_MODE == 'FE')
+			{
+				$_SESSION['DISABLE_CACHE'] = true;
+
+				// Always return false if we are not in preview mode (show hidden elements)
+				if (!$objTokenChecker->isPreviewMode())
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
-		if ($strCookie == 'BE_USER_AUTH')
+		if ($strCookie == 'FE_USER_AUTH' && $objTokenChecker->hasFrontendUser())
 		{
-			return $this->getAuthenticationStatus(BackendUser::SECURITY_SESSION_KEY);
+			return true;
+		}
+
+		// Reset the cache settings
+		if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')
+		{
+			$_SESSION['DISABLE_CACHE'] = false;
 		}
 
 		return false;
@@ -653,47 +673,5 @@ abstract class Frontend extends \Controller
 		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
 
 		return null;
-	}
-
-	/**
-	 * Check the authentication status based on the session key
-	 *
-	 * @param string $sessionKey
-	 *
-	 * @return bool True if authenticated
-	 */
-	protected function getAuthenticationStatus(string $sessionKey)
-	{
-		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
-
-		// Validate the session ID and timeout
-		if ($objTokenChecker->hasAuthenticatedToken($sessionKey))
-		{
-			// Disable the cache if a back end user is logged in
-			if (TL_MODE == 'FE' && $sessionKey == BackendUser::SECURITY_SESSION_KEY)
-			{
-				$_SESSION['DISABLE_CACHE'] = true;
-
-				// Always return false if we are not in preview mode (show hidden elements)
-				if (!$objTokenChecker->isPreviewMode(FrontendUser::SECURITY_SESSION_KEY))
-				{
-					return false;
-				}
-			}
-
-			// The session could be verified
-			return true;
-		}
-
-		// Reset the cache settings
-		if (TL_MODE == 'FE' && $sessionKey == BackendUser::SECURITY_SESSION_KEY)
-		{
-			$_SESSION['DISABLE_CACHE'] = false;
-		}
-
-		// Remove the session if it is invalid to enable loading cached pages
-		\System::getContainer()->get('session')->remove($sessionKey);
-
-		return false;
 	}
 }

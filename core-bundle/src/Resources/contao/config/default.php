@@ -77,7 +77,6 @@ $GLOBALS['TL_CONFIG']['undoPeriod']     = 86400;
 $GLOBALS['TL_CONFIG']['versionPeriod']  = 7776000;
 $GLOBALS['TL_CONFIG']['logPeriod']      = 1209600;
 $GLOBALS['TL_CONFIG']['sessionTimeout'] = 3600;
-$GLOBALS['TL_CONFIG']['lockPeriod']     = 300;
 
 // User defaults
 $GLOBALS['TL_CONFIG']['showHelp']   = true;
@@ -86,7 +85,6 @@ $GLOBALS['TL_CONFIG']['useRTE']     = true;
 $GLOBALS['TL_CONFIG']['useCE']      = true;
 
 // Miscellaneous
-$GLOBALS['TL_CONFIG']['loginCount']           = 3;
 $GLOBALS['TL_CONFIG']['resultsPerPage']       = 30;
 $GLOBALS['TL_CONFIG']['maxResultsPerPage']    = 500;
 $GLOBALS['TL_CONFIG']['maxImageWidth']        = 0;
@@ -110,7 +108,6 @@ $GLOBALS['TL_CONFIG']['fileSyncExclude']      = '';
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
 $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
-$GLOBALS['TL_CONFIG']['autologin']            = 7776000;
 $GLOBALS['TL_CONFIG']['staticFiles']          = '';
 $GLOBALS['TL_CONFIG']['staticPlugins']        = '';
 $GLOBALS['TL_CONFIG']['disableCron']          = false;

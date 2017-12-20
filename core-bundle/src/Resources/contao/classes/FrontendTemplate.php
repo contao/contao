@@ -250,7 +250,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function hasAuthenticatedBackendUser()
 	{
-		return \System::getContainer()->get('contao.security.token_checker')->hasAuthenticatedToken(BackendUser::SECURITY_SESSION_KEY);
+		return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 
