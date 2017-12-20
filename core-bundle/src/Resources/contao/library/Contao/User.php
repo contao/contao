@@ -680,7 +680,7 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 */
 	public function serialize()
 	{
-		return serialize(array($this->id, $this->username, $this->password, $this->salt, $this->disable, $this->admin, $this->groups));
+		return serialize(array($this->id, $this->username, $this->disable, $this->admin, $this->groups));
 	}
 
 
@@ -689,7 +689,7 @@ abstract class User extends System implements AdvancedUserInterface, EncoderAwar
 	 */
 	public function unserialize($serialized)
 	{
-		list($this->id, $this->username, $this->password, $this->salt, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
+		list($this->id, $this->username, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
 	}
 
 
