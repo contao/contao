@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
-use Contao\CoreBundle\Security\Authentication\FrontendPreviewToken;
+use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Psr\Log\LoggerInterface;
@@ -36,7 +36,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             $this->createMock(LoggerInterface::class)
         );
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator', $authenticator);
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator',
+            $authenticator
+        );
     }
 
     public function testDoesNotAuthenticateIfTheSessionIsNotStarted(): void

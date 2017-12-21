@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security;
+namespace Contao\CoreBundle\Test\Security\User;
 
-use Contao\CoreBundle\Security\UserChecker;
+use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Tests\TestCase;
 
 class UserCheckerTest extends TestCase
@@ -21,6 +21,6 @@ class UserCheckerTest extends TestCase
     {
         $userChecker = new UserChecker($this->mockContaoFramework());
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\UserChecker', $userChecker);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\User\UserChecker', $userChecker);
     }
 }

@@ -12,15 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Test\Security\Encoder;
 
-use Contao\CoreBundle\Security\Encoder\ContaoLegacyPasswordEncoder;
+use Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-class ContaoLegacyPasswordEncoderTest extends TestCase
+class Sha1PasswordEncoderTest extends TestCase
 {
     /**
-     * @var ContaoLegacyPasswordEncoder
+     * @var Sha1PasswordEncoder
      */
     private $encoder;
 
@@ -31,12 +31,12 @@ class ContaoLegacyPasswordEncoderTest extends TestCase
     {
         parent::setUp();
 
-        $this->encoder = new ContaoLegacyPasswordEncoder();
+        $this->encoder = new Sha1PasswordEncoder();
     }
 
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Encoder\ContaoLegacyPasswordEncoder', $this->encoder);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder', $this->encoder);
     }
 
     public function testEncodesThePassword(): void

@@ -110,7 +110,7 @@ security:
             algorithm: bcrypt
 
         legacy:
-            id: contao.security.legacy_password_encoder
+            id: contao.security.sha1_password_encoder
 
     firewalls:
         dev:
@@ -164,7 +164,7 @@ security:
             remember_me:
                 secret: '%secret%'
                 remember_me_parameter: autologin
-                token_provider: contao.security.autologin_token_provider
+                token_provider: contao.security.database_token_provider
 
             logout:
                 path: contao_frontend_logout

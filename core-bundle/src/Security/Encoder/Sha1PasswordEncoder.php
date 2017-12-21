@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 /**
  * @internal Do not use this class in your code. It will be removed in Contao 5.0.
  */
-class ContaoLegacyPasswordEncoder extends BasePasswordEncoder
+class Sha1PasswordEncoder extends BasePasswordEncoder
 {
     /**
      * {@inheritdoc}

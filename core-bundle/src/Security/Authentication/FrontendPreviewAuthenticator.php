@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;

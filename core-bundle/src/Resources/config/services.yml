@@ -342,7 +342,7 @@ services:
             - "@logger"
 
     contao.security.authentication_provider:
-        class: Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider
+        class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
         abstract: true
         arguments:
             - ~ # User provider
@@ -362,8 +362,8 @@ services:
             - "@translator"
             - "@logger"
 
-    contao.security.autologin_token_provider:
-        class: Contao\CoreBundle\Security\RememberMe\AutologinTokenProvider
+    contao.security.database_token_provider:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider
         arguments:
             - "@database_connection"
 
@@ -404,8 +404,8 @@ services:
             - "Contao\\FrontendUser"
             - "@logger"
 
-    contao.security.legacy_password_encoder:
-        class: Contao\CoreBundle\Security\Encoder\ContaoLegacyPasswordEncoder
+    contao.security.sha1_password_encoder:
+        class: Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder
 
     contao.security.logout_handler:
         class: Contao\CoreBundle\Security\Logout\LogoutHandler
@@ -414,14 +414,14 @@ services:
             - "@logger"
 
     contao.security.token_checker:
-        class: Contao\CoreBundle\Security\TokenChecker
+        class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
         arguments:
             - "@session"
             - "@security.authentication.trust_resolver"
         public: true
 
     contao.security.user_checker:
-        class: Contao\CoreBundle\Security\UserChecker
+        class: Contao\CoreBundle\Security\User\UserChecker
         arguments:
             - "@contao.framework"
             - "@logger"

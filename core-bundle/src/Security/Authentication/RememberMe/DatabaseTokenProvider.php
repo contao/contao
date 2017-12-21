@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Security\RememberMe;
+namespace Contao\CoreBundle\Security\Authentication\RememberMe;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type as DoctrineType;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentTokenInt
 use Symfony\Component\Security\Core\Authentication\RememberMe\TokenProviderInterface;
 use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
-class AutologinTokenProvider implements TokenProviderInterface
+class DatabaseTokenProvider implements TokenProviderInterface
 {
     /**
      * @var Connection

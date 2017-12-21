@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Security;
+namespace Contao\CoreBundle\Security\User;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;

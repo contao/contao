@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Test\Security\Authentication\Provider;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider;
+use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -21,11 +21,11 @@ use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ContaoAuthenticationProviderTest extends TestCase
+class AuthenticationProviderTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $authenticationProvider = new ContaoAuthenticationProvider(
+        $authenticationProvider = new AuthenticationProvider(
             $this->createMock(UserProviderInterface::class),
             $this->createMock(UserCheckerInterface::class),
             'contao_frontend',
@@ -37,7 +37,7 @@ class ContaoAuthenticationProviderTest extends TestCase
         );
 
         $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider',
+            'Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider',
             $authenticationProvider
         );
     }

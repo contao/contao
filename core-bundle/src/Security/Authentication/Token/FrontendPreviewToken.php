@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Security\Authentication;
+namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;

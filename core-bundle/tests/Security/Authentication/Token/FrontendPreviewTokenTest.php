@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Tests\Security\Authentication;
+namespace Contao\CoreBundle\Tests\Security\Authentication\Token;
 
-use Contao\CoreBundle\Security\Authentication\FrontendPreviewToken;
+use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Role\Role;
@@ -23,7 +23,7 @@ class FrontendPreviewTokenTest extends TestCase
     {
         $token = new FrontendPreviewToken(null, false);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\FrontendPreviewToken', $token);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken', $token);
     }
 
     public function testAuthenticatesUsers(): void

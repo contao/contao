@@ -10,10 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Security;
+namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\Authentication\FrontendPreviewToken;
 use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;

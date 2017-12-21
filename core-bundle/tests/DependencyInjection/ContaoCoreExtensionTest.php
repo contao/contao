@@ -77,13 +77,13 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendAuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
-use Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider;
-use Contao\CoreBundle\Security\Encoder\ContaoLegacyPasswordEncoder;
+use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder;
 use Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
-use Contao\CoreBundle\Security\TokenChecker;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
-use Contao\CoreBundle\Security\UserChecker;
+use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Slug\ValidCharacters;
 use Contao\CoreBundle\Tests\TestCase;
@@ -1246,7 +1246,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition('contao.security.authentication_provider');
 
-        $this->assertSame(ContaoAuthenticationProvider::class, $definition->getClass());
+        $this->assertSame(AuthenticationProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertNull($definition->getArgument(0));
         $this->assertNull($definition->getArgument(1));
@@ -1339,13 +1339,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('logger', (string) $definition->getArgument(3));
     }
 
-    public function testRegistersTheSecurityLegacyPasswordEncoder(): void
+    public function testRegistersTheSecuritySha1PasswordEncoder(): void
     {
-        $this->assertTrue($this->container->has('contao.security.legacy_password_encoder'));
+        $this->assertTrue($this->container->has('contao.security.sha1_password_encoder'));
 
-        $definition = $this->container->getDefinition('contao.security.legacy_password_encoder');
+        $definition = $this->container->getDefinition('contao.security.sha1_password_encoder');
 
-        $this->assertSame(ContaoLegacyPasswordEncoder::class, $definition->getClass());
+        $this->assertSame(Sha1PasswordEncoder::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
     }
 

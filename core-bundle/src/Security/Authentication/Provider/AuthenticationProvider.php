@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ContaoAuthenticationProvider extends DaoAuthenticationProvider
+class AuthenticationProvider extends DaoAuthenticationProvider
 {
     /**
      * @var ContaoFrameworkInterface

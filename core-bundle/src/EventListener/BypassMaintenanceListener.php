@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Security\TokenChecker;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class BypassMaintenanceListener

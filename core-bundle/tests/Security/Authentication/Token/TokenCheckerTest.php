@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security;
+namespace Contao\CoreBundle\Test\Security\Authentication\Token;
 
-use Contao\CoreBundle\Security\TokenChecker;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -26,6 +26,6 @@ class TokenCheckerTest extends TestCase
             $this->createMock(AuthenticationTrustResolverInterface::class)
         );
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\TokenChecker', $tokenChecker);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\Token\TokenChecker', $tokenChecker);
     }
 }
