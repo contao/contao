@@ -362,6 +362,11 @@ services:
             - "@translator"
             - "@logger"
 
+    contao.security.autologin_token_provider:
+        class: Contao\CoreBundle\Security\RememberMe\AutologinTokenProvider
+        arguments:
+            - "@database_connection"
+
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:

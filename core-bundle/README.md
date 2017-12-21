@@ -164,6 +164,7 @@ security:
             remember_me:
                 secret: '%secret%'
                 remember_me_parameter: autologin
+                token_provider: contao.security.autologin_token_provider
 
             logout:
                 path: contao_frontend_logout
