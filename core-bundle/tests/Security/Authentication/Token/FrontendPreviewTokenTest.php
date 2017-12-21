@@ -33,7 +33,7 @@ class FrontendPreviewTokenTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->willReturn(['foobar'])
+            ->willReturn(['ROLE_USER'])
         ;
 
         $token = new FrontendPreviewToken($user, false);
@@ -46,7 +46,7 @@ class FrontendPreviewTokenTest extends TestCase
         $this->assertInternalType('array', $roles);
         $this->assertCount(1, $roles);
         $this->assertInstanceOf(Role::class, $roles[0]);
-        $this->assertSame('foobar', $roles[0]->getRole());
+        $this->assertSame('ROLE_USER', $roles[0]->getRole());
     }
 
     public function testAuthenticatesGuests(): void
@@ -62,16 +62,29 @@ class FrontendPreviewTokenTest extends TestCase
         $this->assertCount(0, $roles);
     }
 
-    public function testReturnsTheShowsUnpublishedStatus(): void
+    public function testReturnsThePublicationStatus(): void
     {
         $token = new FrontendPreviewToken(null, true);
 
         $this->assertTrue($token->showUnpublished());
+    }
 
-        $unserialized = unserialize(serialize($token), ['allowed_classes' => true]);
+    public function testSerializesItself(): void
+    {
+        $token = new FrontendPreviewToken(null, true);
 
-        $this->assertInstanceOf(FrontendPreviewToken::class, $unserialized);
-        $this->assertTrue($unserialized->showUnpublished());
+        $this->assertSame($this->getSerializedToken(), $token->serialize());
+    }
+
+    public function testUnserializesItself(): void
+    {
+        $token = new FrontendPreviewToken(null, false);
+
+        $this->assertFalse($token->showUnpublished());
+
+        $token->unserialize($this->getSerializedToken());
+
+        $this->assertTrue($token->showUnpublished());
     }
 
     public function testDoesNotReturnCredentials(): void
@@ -81,11 +94,21 @@ class FrontendPreviewTokenTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->willReturn([])
+            ->willReturn(['ROLE_USER'])
         ;
 
         $token = new FrontendPreviewToken($user, false);
 
         $this->assertNull($token->getCredentials());
+    }
+
+    /**
+     * Returns the serialized token.
+     *
+     * @return string
+     */
+    private function getSerializedToken(): string
+    {
+        return serialize([true, serialize(['anon.', true, [], []])]);
     }
 }
