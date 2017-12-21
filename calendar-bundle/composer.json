@@ -60,6 +60,6 @@
         },
         "contao-manager-plugin": "Contao\\CalendarBundle\\ContaoManager\\Plugin"
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "RC",
     "prefer-stable": true
 }
