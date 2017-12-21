@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>&lt;em&gt;##channels##&lt;/em&gt; (kanal ismi), &lt;em&gt;##domain##&lt;/em&gt; (domain ismi) ve &lt;em&gt;##link##&lt;/em&gt; (etkinleştirme bağlantısı) gibi wildcardları kullanabilirsiniz.</target>
+        <target>&lt;em&gt;##channels##&lt;/em&gt; (kanal ismi) ve &lt;em&gt;##domain##&lt;/em&gt; (domain ismi) gibi wildcardları kullanabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
-        <target>%s üzerindeki aboneliğiniz</target>
+        <target>%s aboneliğiniz</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.1">
         <source>You have subscribed to the following channels on ##domain##:
@@ -69,7 +69,7 @@ Lütfen ##link## tıklayarak aboneliğinizi etkinleştirin. Abonelik başvurusun
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
-        <target>%s üzerindeki aboneliğiniz</target>
+        <target>%s aboneliğiniz</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.1">
         <source>You have unsubscribed from the following channels on ##domain##:
