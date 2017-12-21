@@ -19,7 +19,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\User;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,7 +33,7 @@ class ContaoUserProvider implements UserProviderInterface
     private $framework;
 
     /**
-     * @var Session
+     * @var SessionInterface
      */
     private $session;
 
@@ -49,13 +49,13 @@ class ContaoUserProvider implements UserProviderInterface
 
     /**
      * @param ContaoFrameworkInterface $framework
-     * @param Session                  $session
+     * @param SessionInterface         $session
      * @param string                   $userClass
      * @param LoggerInterface|null     $logger
      *
      * @throws \RuntimeException
      */
-    public function __construct(ContaoFrameworkInterface $framework, Session $session, string $userClass, LoggerInterface $logger = null)
+    public function __construct(ContaoFrameworkInterface $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
     {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
@@ -94,7 +94,8 @@ class ContaoUserProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
-        $user = $this->loadUserByUsername($user->getUsername());
+        /** @var User $user */
+        $user = $this->loadUserByUsername($user->username);
 
         $this->validateSessionLifetime($user);
         $this->triggerPostAuthenticateHook($user);

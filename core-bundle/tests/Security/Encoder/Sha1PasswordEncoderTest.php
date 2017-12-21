@@ -47,7 +47,7 @@ class Sha1PasswordEncoderTest extends TestCase
         $this->assertSame(sha1($salt.$raw), $this->encoder->encodePassword($raw, $salt));
     }
 
-    public function testFailsIfThePasswordIsTooLong(): void
+    public function testFailsToEncodeThePasswordIfItIsTooLong(): void
     {
         $raw = random_bytes(BasePasswordEncoder::MAX_PASSWORD_LENGTH + 1);
         $salt = random_bytes(8);
