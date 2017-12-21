@@ -126,8 +126,7 @@
         <target>Rendi anonimi gli indirizzi IP</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>Rendi anonnimi gli indirizzi IP memorizzati nel database, fatta eccezione per la tabella tl_session (gli IP sono collegati alla sessione come misura di sicurezza)</target>
+        <source>Anonymize all IP addresses that are stored in the database.</source>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -176,14 +175,6 @@
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>Non utilizzare il token quando un modulo viene inviato (non sicuro!).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>Tempo di attesa in caso di blocco account</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>Inserisci il tempo che un utente deve attendere prima che gli sia concesso di ritentare il login per un account bloccato (default: 5 minuti = 300 secondi). Si presume che questa caratteristica scoraggi gli attacchi brute-force.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -312,14 +303,6 @@
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>Inserisci la durata massima di una sessione in secondi (default: 60 minuti = 3600 secondi). Se non c'è alcun input dall'utente per più secondi di quelli indicati la sessione attuale verrà cancellata e l'utente dovrà rifare il login.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>Scadenza login automatico</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>Seleziona la scadenza per il login automatico (90 giorni = 7776000 secondi)</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

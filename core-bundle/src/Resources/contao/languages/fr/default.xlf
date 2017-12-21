@@ -1476,6 +1476,9 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
         <source>Logout</source>
         <target>Se déconnecter</target>
       </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+      </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
         <target>Fermer la session courante</target>
