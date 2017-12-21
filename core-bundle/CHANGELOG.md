@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Only add _locale if prepend_locale is enabled (see #1257).
+
 ### 4.4.9 (2017-12-14)
 
  * Show the "invisible" field when editing a form field (see #1199).
