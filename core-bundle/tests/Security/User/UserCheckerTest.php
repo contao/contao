@@ -45,6 +45,7 @@ class UserCheckerTest extends TestCase
 
         $userChecker = new UserChecker($framework);
         $userChecker->checkPreAuth($user);
+        $userChecker->checkPostAuth($user);
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }

@@ -75,4 +75,53 @@ class LogoutHandlerTest extends TestCase
         $handler = new LogoutHandler($framework, $logger);
         $handler->logout(new Request(), new Response(), $token);
     }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "postLogout" hook has been deprecated %s.
+     */
+    public function testTriggersThePostLogoutHook(): void
+    {
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(__CLASS__)
+            ->willReturn($this)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with('User "foobar" has logged out')
+        ;
+
+        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $token = $this->createMock(TokenInterface::class);
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $GLOBALS['TL_HOOKS']['postLogout'] = [[__CLASS__, 'onPostLogout']];
+
+        $handler = new LogoutHandler($framework, $logger);
+        $handler->logout(new Request(), new Response(), $token);
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * @param UserInterface $user
+     */
+    public function onPostLogout(UserInterface $user): void
+    {
+        $this->assertInstanceOf('Contao\BackendUser', $user);
+    }
 }

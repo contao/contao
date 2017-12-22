@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,7 +84,7 @@ class UserSessionListener
             return;
         }
 
-        $user = $this->getUserObject();
+        $user = $token->getUser();
 
         if (!$user instanceof User) {
             return;
@@ -116,7 +114,7 @@ class UserSessionListener
             return;
         }
 
-        $user = $this->getUserObject();
+        $user = $token->getUser();
 
         if (!$user instanceof User) {
             return;
@@ -127,24 +125,6 @@ class UserSessionListener
             ['session' => serialize($this->getSessionBag($event->getRequest())->all())],
             ['id' => $user->id]
         );
-    }
-
-    /**
-     * Returns the user object depending on the container scope.
-     *
-     * @throws \RuntimeException
-     *
-     * @return FrontendUser|BackendUser|null
-     */
-    private function getUserObject()
-    {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            throw new \RuntimeException('The token storage did not contain a token');
-        }
-
-        return $token->getUser();
     }
 
     /**

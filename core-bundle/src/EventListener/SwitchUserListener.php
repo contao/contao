@@ -51,7 +51,7 @@ class SwitchUserListener
         $token = $this->tokenStorage->getToken();
 
         if (null === $token) {
-            throw new \RuntimeException('The token storage did not contain a token');
+            throw new \RuntimeException('The token storage did not contain a token.');
         }
 
         $sourceUser = $token->getUser()->getUsername();

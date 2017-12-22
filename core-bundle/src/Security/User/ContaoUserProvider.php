@@ -155,7 +155,7 @@ class ContaoUserProvider implements UserProviderInterface
             return;
         }
 
-        @trigger_error('Using the postAuthenticate hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Using the "postAuthenticate" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {
             $this->framework->createInstance($callback[0])->{$callback[1]}($user);

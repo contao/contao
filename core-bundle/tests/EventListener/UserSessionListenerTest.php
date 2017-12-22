@@ -152,11 +152,11 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $noUserReturn
+     * @param AnonymousToken $token
      *
      * @dataProvider noUserProvider
      */
-    public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
+    public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
     {
         $session = $this->createMock(SessionInterface::class);
 
@@ -170,7 +170,7 @@ class UserSessionListenerTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($noUserReturn)
+            ->willReturn($token)
         ;
 
         $request = new Request();
@@ -181,11 +181,11 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $noUserReturn
+     * @param AnonymousToken $token
      *
      * @dataProvider noUserProvider
      */
-    public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
+    public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
     {
         $session = $this->createMock(SessionInterface::class);
 
@@ -199,7 +199,7 @@ class UserSessionListenerTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($noUserReturn)
+            ->willReturn($token)
         ;
 
         $connection = $this->createMock(Connection::class);

@@ -48,4 +48,31 @@ class InitializeControllerTest extends TestCase
 
         $this->assertInstanceOf('Contao\CoreBundle\Response\InitializeControllerResponse', $controller->indexAction());
     }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Custom entry points are deprecated and will no longer work in Contao 5.0.
+     */
+    public function testFailsIfTheRequestIsNotAMasterRequest(): void
+    {
+        $requestStack = $this->createMock(RequestStack::class);
+
+        $requestStack
+            ->expects($this->once())
+            ->method('getMasterRequest')
+            ->willReturn(null)
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('request_stack', $requestStack);
+
+        $controller = new InitializeController();
+        $controller->setContainer($container);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request stack did not contain a master request.');
+
+        $controller->indexAction();
+    }
 }

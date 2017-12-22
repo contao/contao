@@ -211,6 +211,42 @@ class ContaoUserProviderTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "postAuthenticate" hook has been deprecated %s.
+     */
+    public function testTriggersThePostAuthenticateHook(): void
+    {
+        /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
+
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(__CLASS__)
+            ->willReturn($this)
+        ;
+
+        $GLOBALS['TL_HOOKS']['postAuthenticate'] = [[__CLASS__, 'onPostAuthenticate']];
+
+        $userProvider = $this->mockUserProvider($framework);
+
+        $this->assertSame($user, $userProvider->refreshUser($user));
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * @param UserInterface $user
+     */
+    public function onPostAuthenticate(UserInterface $user): void
+    {
+        $this->assertInstanceOf('Contao\BackendUser', $user);
+    }
+
+    /**
      * Mocks a user provider.
      *
      * @param ContaoFrameworkInterface|null $framework

@@ -169,9 +169,9 @@ security:
             logout:
                 path: contao_frontend_logout
                 target: contao_root
-                success_handler: contao.security.frontend_logout_success_handler
                 handlers:
                     - contao.security.logout_handler
+                success_handler: contao.security.frontend_logout_success_handler
 
     access_control:
         - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -267,6 +267,124 @@ class AuthenticationProviderTest extends TestCase
         $provider->checkAuthentication($user, $token);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the checkCredentials hook has been deprecated %s.
+     */
+    public function testTriggersTheCheckCredentialsHook(): void
+    {
+        /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
+        $user->username = 'foo';
+        $user->loginCount = 3;
+
+        $user
+            ->expects($this->once())
+            ->method('getPassword')
+            ->willReturn('foobar')
+        ;
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $currentUser = $this->createMock(UserInterface::class);
+
+        $currentUser
+            ->expects($this->once())
+            ->method('getPassword')
+            ->willReturn('barfoo')
+        ;
+
+        $token = $this->createMock(UsernamePasswordToken::class);
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($currentUser)
+        ;
+
+        $token
+            ->expects($this->once())
+            ->method('getUsername')
+            ->willReturn('foo')
+        ;
+
+        $token
+            ->expects($this->once())
+            ->method('getCredentials')
+            ->willReturn('bar')
+        ;
+
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('initialize')
+        ;
+
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(__CLASS__)
+            ->willReturn($this)
+        ;
+
+        $GLOBALS['TL_HOOKS']['checkCredentials'] = [
+            [__CLASS__, 'onCheckCredentialsTrue'],
+            [__CLASS__, 'onCheckCredentialsFalse'],
+        ];
+
+        $provider = $this->mockProvider($framework);
+        $provider->checkAuthentication($user, $token);
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * @param string        $username
+     * @param string        $password
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
+    public function onCheckCredentialsTrue(string $username, string $password, UserInterface $user): bool
+    {
+        $this->assertSame('foo', $username);
+        $this->assertSame('bar', $password);
+        $this->assertInstanceOf('Contao\FrontendUser', $user);
+
+        return true;
+    }
+
+    /**
+     * @param string        $username
+     * @param string        $password
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
+    public function onCheckCredentialsFalse(string $username, string $password, UserInterface $user): bool
+    {
+        $this->assertSame('foo', $username);
+        $this->assertSame('bar', $password);
+        $this->assertInstanceOf('Contao\FrontendUser', $user);
+
+        return false;
+    }
+
+    /**
+     * Mocks an authentication provider.
+     *
+     * @param ContaoFrameworkInterface|null $framework
+     * @param TranslatorInterface|null      $translator
+     * @param RequestStack|null             $requestStack
+     * @param \Swift_Mailer|null            $mailer
+     *
+     * @return AuthenticationProvider
+     */
     private function mockProvider(ContaoFrameworkInterface $framework = null, TranslatorInterface $translator = null, RequestStack $requestStack = null, \Swift_Mailer $mailer = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);

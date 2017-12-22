@@ -18,9 +18,11 @@ use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BackendControllerTest extends TestCase
@@ -66,6 +68,65 @@ class BackendControllerTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->popupAction());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->switchAction());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->alertsAction());
+    }
+
+    public function testRedirectsToTheBackendIfTheUserIsFullyAuthenticatedUponLogin(): void
+    {
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+
+        $authorizationChecker
+            ->expects($this->once())
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend')
+            ->willReturn('/contao')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('security.authorization_checker', $authorizationChecker);
+        $container->set('router', $router);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        /** @var RedirectResponse $response */
+        $response = $controller->loginAction();
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertSame('/contao', $response->getTargetUrl());
+    }
+
+    public function testRedirectsToTheBackendLoginAfterAUserHasLoggedOut(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend_login')
+            ->willReturn('/contao/login')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('router', $router);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        /** @var RedirectResponse $response */
+        $response = $controller->logoutAction();
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertSame('/contao/login', $response->getTargetUrl());
     }
 
     public function testReturnsAResponseInThePickerActionMethod(): void

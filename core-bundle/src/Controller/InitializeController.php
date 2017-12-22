@@ -42,7 +42,7 @@ class InitializeController extends Controller
         $masterRequest = $this->get('request_stack')->getMasterRequest();
 
         if (null === $masterRequest) {
-            throw new \RuntimeException('The request stack did not contain a master request');
+            throw new \RuntimeException('The request stack did not contain a master request.');
         }
 
         $realRequest = Request::createFromGlobals();

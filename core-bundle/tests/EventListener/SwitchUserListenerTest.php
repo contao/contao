@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Security\User;
+namespace Contao\CoreBundle\Test\EventListener;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
@@ -39,6 +39,25 @@ class SwitchUserListenerTest extends TestCase
         $event = $this->mockSwitchUserEvent('user2');
 
         $listener = new SwitchUserListener($tokenStorage, $logger);
+        $listener->onSwitchUser($event);
+    }
+
+    public function testFailsIfTheTokenStorageDoesNotContainAToken(): void
+    {
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn(null)
+        ;
+
+        $event = new SwitchUserEvent(new Request(), $this->createMock(BackendUser::class));
+        $listener = new SwitchUserListener($tokenStorage, $this->mockLogger());
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The token storage did not contain a token.');
+
         $listener->onSwitchUser($event);
     }
 

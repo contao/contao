@@ -77,7 +77,7 @@ class LogoutHandler implements LogoutHandlerInterface
             return;
         }
 
-        @trigger_error('Using the postLogout hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Using the "postLogout" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         $GLOBALS['TL_USERNAME'] = $user->getUsername();
 

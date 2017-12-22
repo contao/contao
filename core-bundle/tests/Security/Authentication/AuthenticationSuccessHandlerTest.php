@@ -164,6 +164,71 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "postLogin" hook has been deprecated %s.
+     */
+    public function testTriggersThePostLoginHook(): void
+    {
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(__CLASS__)
+            ->willReturn($this)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with('User "foobar" has logged in')
+        ;
+
+        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user->username = 'foobar';
+        $user->lastLogin = time() - 3600;
+        $user->currentLogin = time() - 1800;
+        $user->language = '';
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $GLOBALS['TL_HOOKS']['postLogin'] = [[__CLASS__, 'onPostLogin']];
+
+        $handler = $this->mockSuccessHandler($framework, $logger);
+        $handler->onAuthenticationSuccess(new Request(), $token);
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * @param UserInterface $user
+     */
+    public function onPostLogin(UserInterface $user): void
+    {
+        $this->assertInstanceOf('Contao\BackendUser', $user);
+    }
+
+    /**
      * Mocks an authentication success handler.
      *
      * @param ContaoFrameworkInterface|null $framework
