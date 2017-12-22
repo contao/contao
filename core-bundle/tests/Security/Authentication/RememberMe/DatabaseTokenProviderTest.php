@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication\RememberMe;
 
 use Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider;
+use Contao\CoreBundle\Security\Authentication\RememberMe\PersistentToken;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type as DoctrineType;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentToken;
 use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 class DatabaseTokenProviderTest extends TestCase
@@ -79,11 +79,7 @@ class DatabaseTokenProviderTest extends TestCase
         $provider = new DatabaseTokenProvider($connection);
         $token = $provider->loadTokenBySeries('series');
 
-        $this->assertInstanceOf(
-            'Symfony\Component\Security\Core\Authentication\RememberMe\PersistentToken',
-            $token
-        );
-
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\RememberMe\PersistentToken', $token);
         $this->assertSame(FrontendUser::class, $token->getClass());
         $this->assertSame('foobar', $token->getUsername());
         $this->assertSame('series', $token->getSeries());

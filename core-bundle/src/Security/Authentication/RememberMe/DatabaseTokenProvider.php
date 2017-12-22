@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Security\Authentication\RememberMe;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type as DoctrineType;
-use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentToken;
 use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentTokenInterface;
 use Symfony\Component\Security\Core\Authentication\RememberMe\TokenProviderInterface;
 use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
