@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -94,7 +95,7 @@ class AuthenticationProviderTest extends TestCase
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
-            ->willReturn('barfoo')
+            ->willReturn('foobar')
         ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
@@ -106,11 +107,9 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $provider = $this->mockProvider();
-
-        $this->expectException(BadCredentialsException::class);
-        $this->expectExceptionMessage('The credentials were changed from another session.');
-
         $provider->checkAuthentication($user, $token);
+
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testLocksAUserAfterThreeFailedLoginAttempts(): void
@@ -267,12 +266,34 @@ class AuthenticationProviderTest extends TestCase
         $provider->checkAuthentication($user, $token);
     }
 
+    public function testOnlyHandlesBadCredentialsExceptions(): void
+    {
+        $token = $this->createMock(UsernamePasswordToken::class);
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willThrowException(new AuthenticationException('Unsupported user'))
+        ;
+
+        $provider = $this->mockProvider();
+
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Unsupported user');
+
+        $provider->checkAuthentication($this->createMock(FrontendUser::class), $token);
+    }
+
     /**
+     * @param string $callback
+     * @param bool   $success
+     *
      * @group legacy
+     * @dataProvider getCheckCredentialsHookData
      *
      * @expectedDeprecation Using the checkCredentials hook has been deprecated %s.
      */
-    public function testTriggersTheCheckCredentialsHook(): void
+    public function testTriggersTheCheckCredentialsHook(string $callback, bool $success): void
     {
         /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
@@ -332,15 +353,29 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($this)
         ;
 
-        $GLOBALS['TL_HOOKS']['checkCredentials'] = [
-            [__CLASS__, 'onCheckCredentialsTrue'],
-            [__CLASS__, 'onCheckCredentialsFalse'],
-        ];
+        $GLOBALS['TL_HOOKS']['checkCredentials'] = [[__CLASS__, $callback]];
 
         $provider = $this->mockProvider($framework);
+
+        if (!$success) {
+            $this->expectException(BadCredentialsException::class);
+            $this->expectExceptionMessage('Invalid password submitted for username "foo"');
+        }
+
         $provider->checkAuthentication($user, $token);
 
         unset($GLOBALS['TL_HOOKS']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCheckCredentialsHookData(): array
+    {
+        return [
+            ['onCheckCredentialsTrue', true],
+            ['onCheckCredentialsFalse', false],
+        ];
     }
 
     /**
