@@ -87,7 +87,7 @@ class ContaoUserProviderTest extends TestCase
 
         $adapters = [
             BackendUser::class => $userAdapter,
-            Config::class => $configAdapter
+            Config::class => $configAdapter,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -141,7 +141,7 @@ class ContaoUserProviderTest extends TestCase
 
         $adapters = [
             BackendUser::class => $userAdapter,
-            Config::class => $configAdapter
+            Config::class => $configAdapter,
         ];
 
         $framework = $this->mockContaoFramework($adapters);

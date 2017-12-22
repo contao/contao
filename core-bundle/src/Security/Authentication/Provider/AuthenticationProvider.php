@@ -121,7 +121,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             $user->save();
 
             return new BadCredentialsException(
-                sprintf('Invalid password submitted for username "%s"', $user->getUsername()),
+                sprintf('Invalid password submitted for username "%s"', $user->username),
                 $exception->getCode(),
                 $exception
             );
@@ -138,7 +138,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 
         $exception = new LockedException(
             $lockedSeconds,
-            sprintf('User "%s" has been locked for %s minutes', $user->getUsername(), $lockedMinutes),
+            sprintf('User "%s" has been locked for %s minutes', $user->username, $lockedMinutes),
             0,
             $exception
         );
@@ -181,7 +181,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 
             $body = $this->translator->trans(
                 'MSC.lockedAccount.1',
-                [$user->getUsername(), $realName, $website, $lockedMinutes],
+                [$user->username, $realName, $website, $lockedMinutes],
                 'contao_default'
             );
 

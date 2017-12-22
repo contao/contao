@@ -140,7 +140,7 @@ class TokenCheckerTest extends TestCase
         return [
             [new FrontendPreviewToken(null, true), true],
             [new FrontendPreviewToken(null, false), false],
-            [new UsernamePasswordToken('user', 'password', 'provider') ,false]
+            [new UsernamePasswordToken('user', 'password', 'provider'), false],
         ];
     }
 

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication\RememberMe;
 
-use Contao\FrontendUser;
 use Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider;
+use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type as DoctrineType;
@@ -241,6 +241,5 @@ class DatabaseTokenProviderTest extends TestCase
 
         $provider = new DatabaseTokenProvider($connection);
         $provider->createNewToken($token);
-
     }
 }
