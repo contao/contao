@@ -17,7 +17,6 @@ use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

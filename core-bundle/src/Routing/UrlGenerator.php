@@ -160,7 +160,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 $value = $parameters[$param];
                 unset($parameters[$param]);
 
-                if (!$config->get('useAutoItem') || $hasAutoItem || !\in_array($param, $autoItems, true)) {
+                if ($hasAutoItem || !$config->get('useAutoItem') || !\in_array($param, $autoItems, true)) {
                     return $param.'/'.$value;
                 }
 

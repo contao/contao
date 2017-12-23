@@ -136,7 +136,7 @@ class ImageFactory implements ImageFactoryInterface
             $image->setImportantPart($importantPart);
         }
 
-        if ($resizeConfig->isEmpty() && null === $targetPath) {
+        if (null === $targetPath && $resizeConfig->isEmpty()) {
             return $image;
         }
 
@@ -221,15 +221,15 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null];
         }
 
-        if (isset($size[0]) && $size[0]) {
+        if (!empty($size[0])) {
             $config->setWidth($size[0]);
         }
-        if (isset($size[1]) && $size[1]) {
+        if (!empty($size[1])) {
             $config->setHeight($size[1]);
         }
 
         if (!isset($size[2]) || 1 !== substr_count($size[2], '_')) {
-            if (isset($size[2]) && $size[2]) {
+            if (!empty($size[2])) {
                 $config->setMode($size[2]);
             }
 

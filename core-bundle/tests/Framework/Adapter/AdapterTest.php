@@ -51,6 +51,7 @@ class AdapterTest extends TestCase
 
         $this->expectException('PHPUnit_Framework_Error');
 
+        /* @noinspection PhpUndefinedMethodInspection */
         $adapter->missingMethod();
     }
 }

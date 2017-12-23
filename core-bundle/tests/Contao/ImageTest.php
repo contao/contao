@@ -164,13 +164,11 @@ class ImageTest extends TestCase
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
-                    switch ($key) {
-                        case 'extension':
-                            return 'foobar';
-
-                        default:
-                            return null;
+                    if ('extension' === $key) {
+                        return 'foobar';
                     }
+
+                    return null;
                 }
             ))
         ;
@@ -1103,13 +1101,11 @@ class ImageTest extends TestCase
             ->method('__get')
             ->will($this->returnCallback(
                 function ($key) {
-                    switch ($key) {
-                        case 'extension':
-                            return 'jpg';
-
-                        default:
-                            return null;
+                    if ('extension' === $key) {
+                        return 'jpg';
                     }
+
+                    return null;
                 }
             ))
         ;

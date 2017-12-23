@@ -30,7 +30,7 @@ class BinaryStringType extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        if (isset($fieldDeclaration['fixed']) && $fieldDeclaration['fixed']) {
+        if (!empty($fieldDeclaration['fixed'])) {
             return $platform->getBinaryTypeDeclarationSQL($fieldDeclaration);
         }
 

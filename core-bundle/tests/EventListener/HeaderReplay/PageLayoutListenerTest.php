@@ -57,13 +57,11 @@ class PageLayoutListenerTest extends TestCase
         $envAdapter
             ->method('get')
             ->willReturnCallback(function ($key) use ($agentIsMobile) {
-                switch ($key) {
-                    case 'agent':
-                        return (object) ['mobile' => $agentIsMobile];
-
-                    default:
-                        return null;
+                if ('agent' === $key) {
+                    return (object) ['mobile' => $agentIsMobile];
                 }
+
+                return null;
             })
         ;
 
