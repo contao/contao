@@ -38,10 +38,6 @@ class AutomatorCommandTest extends TestCase
 
     /**
      * Tests generating the task list.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation The Symfony\Component\Filesystem\LockHandler class is deprecated %s.
      */
     public function testGeneratesTheTaskList()
     {
