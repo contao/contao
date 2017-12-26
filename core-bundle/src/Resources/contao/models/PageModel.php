@@ -840,7 +840,7 @@ class PageModel extends \Model
 		}
 
 		// Set some default values
-		$this->protected = (boolean) $this->protected;
+		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? \StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;

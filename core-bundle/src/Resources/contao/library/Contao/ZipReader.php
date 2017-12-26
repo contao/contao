@@ -494,7 +494,7 @@ class ZipReader
 		$strSignature = @fread($this->resFile, 4);
 
 		// Build file list
-		while ($strSignature == self::CENTRAL_DIR_START )
+		while ($strSignature == self::CENTRAL_DIR_START)
 		{
 			$arrFile = array();
 

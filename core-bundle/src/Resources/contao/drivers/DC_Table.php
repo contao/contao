@@ -1243,7 +1243,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting" )
+						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
 														 ->limit(1, $limit - 1)
 														 ->execute($pid);
 
@@ -1271,7 +1271,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting" )
+							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
 															->execute($pid);
 
 							$count = 2;
@@ -5882,7 +5882,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 		elseif (\in_array($mode, array(1, 2)))
 		{
-			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value , 0, 1)) : '-';
+			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value, 0, 1)) : '-';
 		}
 		elseif (\in_array($mode, array(3, 4)))
 		{
@@ -5891,7 +5891,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'] = 2;
 			}
 
-			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value , 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
+			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value, 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
 		}
 		elseif (\in_array($mode, array(5, 6)))
 		{

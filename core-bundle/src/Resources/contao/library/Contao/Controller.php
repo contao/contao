@@ -153,7 +153,7 @@ abstract class Controller extends \System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, function($a) {
+			$v = array_filter($v, function ($a) {
 				return $a != 'root';
 			});
 

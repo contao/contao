@@ -459,7 +459,7 @@ class Environment
 	 */
 	protected static function relativeRequest()
 	{
-		return preg_replace('/^' . preg_quote(static::get('script'),  '/') . '\/?/', '', static::get('request'));
+		return preg_replace('/^' . preg_quote(static::get('script'), '/') . '\/?/', '', static::get('request'));
 	}
 
 
@@ -602,7 +602,7 @@ class Environment
 	 */
 	protected static function encodeRequestString($strRequest)
 	{
-		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', function($matches) { return rawurlencode($matches[0]); }, $strRequest);
+		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', function ($matches) { return rawurlencode($matches[0]); }, $strRequest);
 	}
 
 

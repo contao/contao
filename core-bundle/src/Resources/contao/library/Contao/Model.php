@@ -1117,7 +1117,7 @@ abstract class Model
 
 			return static::createModelFromDbResult($objResult);
 		}
-		else if ($arrOptions['return'] == 'Array')
+		elseif ($arrOptions['return'] == 'Array')
 		{
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}

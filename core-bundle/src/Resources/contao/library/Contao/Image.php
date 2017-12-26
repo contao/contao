@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\Image\Image as NewImage;
-use Contao\Image\ImportantPart;
 use Contao\Image\ImageDimensions;
+use Contao\Image\ImportantPart;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
