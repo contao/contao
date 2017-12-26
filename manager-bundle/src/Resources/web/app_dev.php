@@ -31,7 +31,7 @@ $accessKey = @getenv('APP_DEV_ACCESSKEY', true);
 
 if (isset($_SERVER['HTTP_CLIENT_IP'])
     || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
-    || !(in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1']) || php_sapi_name() === 'cli-server')
+    || !(in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1']) || PHP_SAPI === 'cli-server')
 ) {
     if (false === $accessKey) {
         header('HTTP/1.0 403 Forbidden');
