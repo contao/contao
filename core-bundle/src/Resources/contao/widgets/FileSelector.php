@@ -494,7 +494,7 @@ class FileSelector extends \Widget
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && array_search('.public', $content) !== false)
+			if ($protected === true && \in_array('.public', $content))
 			{
 				$protected = false;
 			}

@@ -124,7 +124,7 @@ class PageTree extends \Widget
 		}
 		elseif (strpos($varInput, ',') === false)
 		{
-			return $this->multiple ? array(\intval($varInput)) : \intval($varInput);
+			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
 		else
 		{
@@ -149,7 +149,7 @@ class PageTree extends \Widget
 
 		if (strpos($varInput, ',') === false)
 		{
-			$arrIds = array(\intval($varInput));
+			$arrIds = array((int) $varInput);
 		}
 		else
 		{

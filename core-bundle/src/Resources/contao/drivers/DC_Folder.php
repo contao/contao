@@ -1224,7 +1224,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Add the versioning routines
 		if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->intId))
 		{
-			if (stristr($this->intId, '__new__') === false)
+			if (stripos($this->intId, '__new__') === false)
 			{
 				$objModel = \FilesModel::findByPath($this->intId);
 
@@ -2168,7 +2168,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->Files->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
 			// New folders
-			if (stristr($this->intId, '__new__') !== false)
+			if (stripos($this->intId, '__new__') !== false)
 			{
 				// Update the database
 				if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
@@ -2615,7 +2615,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && array_search('.public', $content) !== false)
+			if ($protected === true && \in_array('.public', $content))
 			{
 				$protected = false;
 			}

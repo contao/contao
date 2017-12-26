@@ -360,8 +360,6 @@ abstract class Template extends \Controller
 	/**
 	 * Return the debug bar string
 	 *
-	 * @return string The debug bar markup
-	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 */
 	protected function getDebugBar()

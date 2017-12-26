@@ -302,12 +302,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if ($this->strTable == 'tl_undo' && \strlen(\Config::get('undoPeriod')))
 		{
 			$this->Database->prepare("DELETE FROM tl_undo WHERE tstamp<?")
-						   ->execute(\intval(time() - \Config::get('undoPeriod')));
+						   ->execute((time() - (int) \Config::get('undoPeriod')));
 		}
 		elseif ($this->strTable == 'tl_log' && \strlen(\Config::get('logPeriod')))
 		{
 			$this->Database->prepare("DELETE FROM tl_log WHERE tstamp<?")
-						   ->execute(\intval(time() - \Config::get('logPeriod')));
+						   ->execute((time() - (int) \Config::get('logPeriod')));
 		}
 
 		$this->reviseTable();
@@ -886,7 +886,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			foreach ($objRow->row() as $k=>$v)
 			{
-				if (\in_array($k, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'])))
+				if (array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields']))
 				{
 					// Never copy passwords
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'password')
@@ -1355,8 +1355,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 
 				// Set new sorting and new parent ID
-				$this->set['pid'] = \intval($newPID);
-				$this->set['sorting'] = \intval($newSorting);
+				$this->set['pid'] = (int) $newPID;
+				$this->set['sorting'] = (int) $newSorting;
 			}
 		}
 
@@ -1444,7 +1444,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					else $newSorting = ($curSorting + 128);
 
 					// Set new sorting
-					$this->set['sorting'] = \intval($newSorting);
+					$this->set['sorting'] = (int) $newSorting;
 
 					return;
 				}
@@ -1452,7 +1452,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			// ID is not set or not found (insert at the end)
 			$objNextSorting = $this->Database->execute("SELECT MAX(sorting) AS sorting FROM " . $this->strTable);
-			$this->set['sorting'] = (\intval($objNextSorting->sorting) + 128);
+			$this->set['sorting'] = ((int) $objNextSorting->sorting + 128);
 		}
 	}
 
@@ -5401,7 +5401,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if (\intval($v['filter']) == $intFilterPanel)
+			if ((int) $v['filter'] == $intFilterPanel)
 			{
 				$sortingFields[] = $k;
 			}
@@ -5828,7 +5828,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Set the limit filter based on the page number
 		if (isset($_GET['lp']))
 		{
-			$lp = \intval(\Input::get('lp')) - 1;
+			$lp = (int) \Input::get('lp') - 1;
 
 			if ($lp >= 0 && $lp < ceil($this->total / $limit))
 			{

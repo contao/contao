@@ -46,7 +46,7 @@ class Image
 	 *
 	 * @var File
 	 */
-	protected $fileObj = null;
+	protected $fileObj;
 
 	/**
 	 * The resized image path
@@ -777,7 +777,7 @@ class Image
 
 		if (\is_array($size))
 		{
-			$size = $size + array(0, 0, 'crop');
+			$size += array(0, 0, 'crop');
 
 			$imageObj
 				->setTargetWidth($size[0])

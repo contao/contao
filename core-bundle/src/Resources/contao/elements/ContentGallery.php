@@ -261,7 +261,7 @@ class ContentGallery extends \ContentElement
 		$body = array();
 
 		// Rows
-		for ($i=$offset; $i<$limit; $i=($i+$this->perRow))
+		for ($i=$offset; $i<$limit; $i+=$this->perRow)
 		{
 			$class_tr = '';
 

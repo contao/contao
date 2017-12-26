@@ -415,7 +415,7 @@ class Request
 			$code = floor($code / 100) * 100;
 		}
 
-		$this->intCode = \intval($code);
+		$this->intCode = (int) $code;
 
 		switch ($this->intCode)
 		{

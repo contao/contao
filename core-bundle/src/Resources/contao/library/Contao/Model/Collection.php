@@ -253,10 +253,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 			$this->first();
 		}
 
-		/** @var Collection|Model $objModel */
-		$objModel = $this->arrModels[$this->intIndex]->getRelated($strKey);
-
-		return $objModel;
+		return $this->arrModels[$this->intIndex]->getRelated($strKey);
 	}
 
 

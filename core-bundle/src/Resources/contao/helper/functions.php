@@ -498,7 +498,7 @@ function array_move_up($arrStack, $intIndex)
 	}
 	else
 	{
-		array_push($arrStack, $arrStack[$intIndex]);
+		$arrStack[] = $arrStack[$intIndex];
 		array_shift($arrStack);
 	}
 
@@ -565,7 +565,7 @@ function array_delete($arrStack, $intIndex)
  */
 function array_is_assoc($arrArray)
 {
-	return \is_array($arrArray) && array_keys($arrArray) !== range(0, (sizeof($arrArray) - 1));
+	return \is_array($arrArray) && array_keys($arrArray) !== range(0, count($arrArray) - 1);
 }
 
 

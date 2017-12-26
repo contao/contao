@@ -148,7 +148,7 @@ class RebuildIndex extends \Backend implements \executable
 			}
 
 			$strBuffer = '';
-			$rand = rand();
+			$rand = mt_rand();
 
 			// Display the pages
 			for ($i=0, $c=\count($arrPages); $i<$c; $i++)

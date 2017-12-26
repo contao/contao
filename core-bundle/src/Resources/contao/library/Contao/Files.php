@@ -166,7 +166,7 @@ class Files
 	 */
 	public function fputs($resFile, $strContent)
 	{
-		fputs($resFile, $strContent);
+		fwrite($resFile, $strContent);
 	}
 
 
@@ -303,7 +303,7 @@ class Files
 	{
 		$this->validate($strFile);
 
-		return is_writeable(TL_ROOT . '/' . $strFile);
+		return is_writable(TL_ROOT . '/' . $strFile);
 	}
 
 

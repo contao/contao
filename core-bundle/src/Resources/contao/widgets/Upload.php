@@ -30,12 +30,6 @@ class Upload extends \Widget implements \uploadable
 	protected $blnSubmitInput = true;
 
 	/**
-	 * Add a for attribute
-	 * @var boolean
-	 */
-	protected $blnForAttribute = false;
-
-	/**
 	 * Template
 	 * @var string
 	 */

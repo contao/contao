@@ -307,7 +307,7 @@ class PageSelector extends \Widget
 
 		// Load the requested nodes
 		$tree = '';
-		$level = $level * 20;
+		$level *= 20;
 
 		$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=? ORDER BY sorting")
 								  ->execute($id);

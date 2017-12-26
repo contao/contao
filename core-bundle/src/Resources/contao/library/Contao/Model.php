@@ -997,7 +997,7 @@ abstract class Model
 	 * @param string $name The method name
 	 * @param array  $args The passed arguments
 	 *
-	 * @return static|Model\Collection|null A model or model collection
+	 * @return static|Model\Collection|integer|null A model or model collection
 	 *
 	 * @throws \Exception If the method name is invalid
 	 */
@@ -1007,19 +1007,21 @@ abstract class Model
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
-			return \call_user_func_array('static::findBy', $args);
+			return static::findBy(...$args);
 		}
-		elseif (strncmp($name, 'findOneBy', 9) === 0)
+
+		if (strncmp($name, 'findOneBy', 9) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
-			return \call_user_func_array('static::findOneBy', $args);
+			return static::findOneBy(...$args);
 		}
-		elseif (strncmp($name, 'countBy', 7) === 0)
+
+		if (strncmp($name, 'countBy', 7) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 
-			return \call_user_func_array('static::countBy', $args);
+			return static::countBy(...$args);
 		}
 
 		throw new \Exception("Unknown method $name");

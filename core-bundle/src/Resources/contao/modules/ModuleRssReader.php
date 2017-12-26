@@ -128,7 +128,7 @@ class ModuleRssReader extends \Module
 		}
 
 		// Get the items (see #6107)
-		$arrItems = \array_slice($this->objFeed->get_items(0, \intval($this->numberOfItems) + \intval($this->skipFirst)), \intval($this->skipFirst), (\intval($this->numberOfItems) ?: null));
+		$arrItems = \array_slice($this->objFeed->get_items(0, (int) $this->numberOfItems + (int) $this->skipFirst), (int) $this->skipFirst, ((int) $this->numberOfItems ?: null));
 
 		$limit = \count($arrItems);
 		$offset = 0;

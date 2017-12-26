@@ -1332,7 +1332,7 @@ abstract class Backend extends \Controller
 		}
 
 		// Protected folder
-		if (array_search('.htaccess', $arrPages) !== false)
+		if (\in_array('.htaccess', $arrPages))
 		{
 			return '';
 		}

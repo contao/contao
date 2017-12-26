@@ -330,7 +330,7 @@ class Result
 			return false;
 		}
 
-		if (($arrRow = $this->fetchAssoc()) !== false)
+		if ($this->fetchAssoc() !== false)
 		{
 			return $this;
 		}

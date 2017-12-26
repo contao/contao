@@ -178,6 +178,7 @@ class FilesModel extends \Model
 		// Check the model registry (does not work by default due to UNHEX())
 		if (empty($arrOptions))
 		{
+			/** @var FilesModel $objModel */
 			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $strUuid, 'uuid');
 
 			if ($objModel !== null)
