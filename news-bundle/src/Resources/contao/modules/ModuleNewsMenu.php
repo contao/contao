@@ -191,7 +191,7 @@ class ModuleNewsMenu extends \ModuleNews
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;
-				$intMonth = (\intval($intMonth) - 1);
+				$intMonth = (int) $intMonth - 1;
 
 				$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
 
