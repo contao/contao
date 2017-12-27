@@ -223,13 +223,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testDoesNotMergeCacheControlHeaders(): void
     {
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
+        $responseEvent = $this->mockResponseEvent();
         $framework = $this->createMock(ContaoFrameworkInterface::class);
 
         $framework
@@ -238,9 +232,9 @@ class MergeHttpHeadersListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $storage = new MemoryHeaderStorage(['Cache-Control: public, s-maxage=10800']);
+        $headerStorage = new MemoryHeaderStorage(['Cache-Control: public, s-maxage=10800']);
 
-        $listener = new MergeHttpHeadersListener($framework, $storage);
+        $listener = new MergeHttpHeadersListener($framework, $headerStorage);
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();

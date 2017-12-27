@@ -461,7 +461,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testAppliesTheSchemaFilter(): void
     {
-        $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], '/^tl_/');
+        $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], null, '/^tl_/');
         $schema = $provider->createSchema();
 
         $this->assertCount(1, $schema->getTableNames());

@@ -34,16 +34,24 @@ abstract class DoctrineTestCase extends TestCase
      * Mocks a Doctrine registry with database connection.
      *
      * @param Statement|null $statement
+     * @param string|null    $filter
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistry(Statement $statement = null): Registry
+    protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
 
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
+        ;
+
+        $config = $this->createMock(Configuration::class);
+
+        $config
+            ->method('getFilterSchemaAssetsExpression')
+            ->willReturn($filter)
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -72,6 +80,11 @@ abstract class DoctrineTestCase extends TestCase
                     ],
                 ]
             )
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($config)
         ;
 
         $registry = $this->createMock(Registry::class);
@@ -103,6 +116,13 @@ abstract class DoctrineTestCase extends TestCase
      */
     protected function mockDoctrineRegistryWithOrm(array $metadata = []): Registry
     {
+        $config = $this->createMock(Configuration::class);
+
+        $config
+            ->method('getFilterSchemaAssetsExpression')
+            ->willReturn(null)
+        ;
+
         $connection = $this->createMock(Connection::class);
 
         $connection
@@ -114,6 +134,11 @@ abstract class DoctrineTestCase extends TestCase
             ->expects(!empty($metadata) ? $this->once() : $this->never())
             ->method('getSchemaManager')
             ->willReturn(new MySqlSchemaManager($connection))
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($config)
         ;
 
         $factory = $this->createMock(ClassMetadataFactory::class);
@@ -220,14 +245,15 @@ abstract class DoctrineTestCase extends TestCase
      * @param array          $dca
      * @param array          $file
      * @param Statement|null $statement
+     * @param string|null    $filter
      *
      * @return DcaSchemaProvider
      */
-    protected function getProvider(array $dca = [], array $file = [], Statement $statement = null): DcaSchemaProvider
+    protected function getProvider(array $dca = [], array $file = [], Statement $statement = null, string $filter = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry($statement)
+            $this->mockDoctrineRegistry($statement, $filter)
         );
     }
 }
