@@ -95,27 +95,38 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
-        $fromSchema = $this->dropNonContaoTables($this->connection->getSchemaManager()->createSchema());
-        $toSchema = $this->dropNonContaoTables($this->schemaProvider->createSchema());
+        $config = $this->connection->getConfiguration();
+
+        // Overwrite the schema filter (see #78)
+        $previousFilter = $config->getFilterSchemaAssetsExpression();
+        $config->setFilterSchemaAssetsExpression('/^tl_/');
+
+        // Create the from and to schema
+        $fromSchema = $this->connection->getSchemaManager()->createSchema();
+        $toSchema = $this->schemaProvider->createSchema();
+
+        // Reset the schema filter
+        $config->setFilterSchemaAssetsExpression($previousFilter);
+
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
             switch (true) {
-                case 0 === strpos($sql, 'CREATE TABLE '):
+                case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
                     break;
 
-                case 0 === strpos($sql, 'DROP TABLE '):
+                case 0 === strncmp($sql, 'DROP TABLE ', 11):
                     $return['DROP'][md5($sql)] = $sql;
                     break;
 
-                case 0 === strpos($sql, 'CREATE INDEX '):
-                case 0 === strpos($sql, 'CREATE UNIQUE INDEX '):
-                case 0 === strpos($sql, 'CREATE FULLTEXT INDEX '):
+                case 0 === strncmp($sql, 'CREATE INDEX ', 13):
+                case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
+                case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
                     break;
 
-                case 0 === strpos($sql, 'DROP INDEX'):
+                case 0 === strncmp($sql, 'DROP INDEX', 10):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
                     break;
 
@@ -129,16 +140,16 @@ class Installer
                         $command = $prefix.' '.$part;
 
                         switch (true) {
-                            case 0 === strpos($part, 'DROP '):
+                            case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
                                 break;
 
-                            case 0 === strpos($part, 'ADD '):
+                            case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
                                 break;
 
-                            case 0 === strpos($part, 'CHANGE '):
-                            case 0 === strpos($part, 'RENAME '):
+                            case 0 === strncmp($part, 'CHANGE ', 7):
+                            case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
                                 break;
 
@@ -166,26 +177,6 @@ class Installer
         }
 
         $this->commands = $return;
-    }
-
-    /**
-     * Removes tables from the schema that do not start with tl_.
-     *
-     * @param Schema $schema
-     *
-     * @return Schema
-     */
-    private function dropNonContaoTables(Schema $schema): Schema
-    {
-        $needle = $schema->getName().'.tl_';
-
-        foreach ($schema->getTableNames() as $tableName) {
-            if (0 !== stripos($tableName, $needle)) {
-                $schema->dropTable($tableName);
-            }
-        }
-
-        return $schema;
     }
 
     /**

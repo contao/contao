@@ -109,7 +109,7 @@ class ParameterDumper
 
         foreach ($this->parameters['parameters'] as $key => $value) {
             if (\is_string($value)) {
-                if (0 === strpos($value, '@')) {
+                if (0 === strncmp($value, '@', 1)) {
                     $value = '@'.$value;
                 }
 

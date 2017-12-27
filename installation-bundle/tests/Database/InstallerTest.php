@@ -14,6 +14,7 @@ namespace Contao\InstallationBundle\Test\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
@@ -224,6 +225,11 @@ class InstallerTest extends TestCase
                     ],
                 ]
             )
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($this->createMock(Configuration::class))
         ;
 
         $schemaProvider = $this->createMock(DcaSchemaProvider::class);
