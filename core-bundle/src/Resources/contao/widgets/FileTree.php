@@ -70,7 +70,7 @@ class FileTree extends \Widget
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
 			// Retrieve the order value
-			$objRow = $this->Database->prepare("SELECT {$this->orderField} FROM {$this->strTable} WHERE id=?")
+			$objRow = $this->Database->prepare("SELECT ".\Database::quoteColumnName($this->orderField)." FROM {$this->strTable} WHERE id=?")
 									 ->limit(1)
 									 ->execute($this->activeRecord->id);
 
@@ -457,7 +457,7 @@ class FileTree extends \Widget
 			$image = \Image::getPath('placeholder.svg');
 		}
 
-		if (strpos($image, 'data:') === 0)
+		if (strncmp($image, 'data:', 5) === 0)
 		{
 			return '<img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '">';
 		}

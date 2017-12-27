@@ -510,7 +510,7 @@ class Input
 		// Encode opening arrow brackets (see #3998)
 		$varValue = preg_replace_callback('@</?([^\s<>/]*)@', function ($matches) use ($strAllowedTags)
 		{
-			if ($matches[1] == '' || strpos(strtolower($strAllowedTags), '<' . strtolower($matches[1]) . '>') === false)
+			if ($matches[1] == '' || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
 			}
@@ -571,11 +571,11 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', function($matches) {
+		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', function ($matches) {
 			return Utf8::chr(hexdec($matches[1]));
 		}, $varValue);
 
-		$varValue = preg_replace_callback('~&#([0-9]+);~', function($matches) {
+		$varValue = preg_replace_callback('~&#([0-9]+);~', function ($matches) {
 			return Utf8::chr($matches[1]);
 		}, $varValue);
 

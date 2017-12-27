@@ -476,7 +476,7 @@ class DcaExtractor extends \Controller
 				$arrTable['TABLE_OPTIONS'] = $arrTable['TABLE_OPTIONS'][0]; // see #324
 			}
 
-			list($engine,, $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
+			list($engine, , $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
 
 			if ($engine != '')
 			{

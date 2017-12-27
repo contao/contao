@@ -438,7 +438,11 @@ abstract class Frontend extends \Controller
 
 		$arrParams = array();
 		$arrParams['alias'] = $pageId . $strParams;
-		$arrParams['_locale'] = $objPage->rootLanguage;
+
+		if (\Config::get('addLanguageToUrl'))
+		{
+			$arrParams['_locale'] = $objPage->rootLanguage;
+		}
 
 		$strUrl = \System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
 		$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);

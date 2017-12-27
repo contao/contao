@@ -65,7 +65,7 @@ class Search
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
 		{
-			$arrSet['filesize'] = number_format((\strlen($arrData['content']) / 1024 ), 2, '.', '');
+			$arrSet['filesize'] = number_format((\strlen($arrData['content']) / 1024), 2, '.', '');
 		}
 
 		// Replace special characters

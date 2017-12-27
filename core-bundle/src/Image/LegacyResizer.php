@@ -56,12 +56,11 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 $this->legacyImage->setResizeMode($config->getMode());
                 $this->legacyImage->setZoomLevel($config->getZoomLevel());
 
-                if ($options->getTargetPath()
-                    && (0 === strpos($options->getTargetPath(), TL_ROOT.'/')
-                        || 0 === strpos($options->getTargetPath(), TL_ROOT.'\\')
-                    )
+                if (
+                    ($targetPath = $options->getTargetPath())
+                    && (0 === strpos($targetPath, TL_ROOT.'/') || 0 === strpos($targetPath, TL_ROOT.'\\'))
                 ) {
-                    $this->legacyImage->setTargetPath(substr($options->getTargetPath(), \strlen(TL_ROOT) + 1));
+                    $this->legacyImage->setTargetPath(substr($targetPath, \strlen(TL_ROOT) + 1));
                 }
 
                 $importantPart = $image->getImportantPart();
@@ -121,7 +120,8 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             $gdMaxImgHeight = $config->get('gdMaxImgHeight');
 
             // Return the path to the original image if it cannot be handled
-            if ($dimensions->getSize()->getWidth() > $gdMaxImgWidth
+            if (
+                $dimensions->getSize()->getWidth() > $gdMaxImgWidth
                 || $dimensions->getSize()->getHeight() > $gdMaxImgHeight
                 || $coordinates->getSize()->getWidth() > $gdMaxImgWidth
                 || $coordinates->getSize()->getHeight() > $gdMaxImgHeight

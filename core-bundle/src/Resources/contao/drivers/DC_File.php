@@ -231,9 +231,9 @@ class DC_File extends \DataContainer implements \editable
 						}
 						else
 						{
-							foreach ($this->varValue as $k=>$v)
+							foreach ($this->varValue as $key=>$val)
 							{
-								$this->varValue[$k] = htmlspecialchars($v);
+								$this->varValue[$key] = htmlspecialchars($val);
 							}
 						}
 					}

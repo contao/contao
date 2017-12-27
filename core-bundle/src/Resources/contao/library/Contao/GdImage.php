@@ -40,7 +40,7 @@ class GdImage
 	 *
 	 * @var resource
 	 */
-	protected $gdResource = null;
+	protected $gdResource;
 
 
 	/**

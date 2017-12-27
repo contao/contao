@@ -353,6 +353,15 @@ class DcaSchemaProvider
             }
         }
 
+        // Apply the schema filter (see contao/installation-bundle#78)
+        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+            foreach (array_keys($sqlTarget) as $key) {
+                if (!preg_match($filter, $key)) {
+                    unset($sqlTarget[$key]);
+                }
+            }
+        }
+
         return $sqlTarget;
     }
 

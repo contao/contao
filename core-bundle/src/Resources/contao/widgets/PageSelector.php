@@ -292,7 +292,7 @@ class PageSelector extends \Widget
 					break;
 				}
 
-				$objField = $this->Database->prepare("SELECT " . $this->strField . " FROM " . $this->strTable . " WHERE id=?")
+				$objField = $this->Database->prepare("SELECT " . \Database::quoteColumnName($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
 										   ->limit(1)
 										   ->execute($this->strId);
 
@@ -307,7 +307,7 @@ class PageSelector extends \Widget
 
 		// Load the requested nodes
 		$tree = '';
-		$level = $level * 20;
+		$level *= 20;
 
 		$objPage = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=? ORDER BY sorting")
 								  ->execute($id);

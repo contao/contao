@@ -133,12 +133,6 @@ abstract class ContentElement extends \Frontend
 	protected $arrData = array();
 
 	/**
-	 * Processed folders
-	 * @var array
-	 */
-	protected $arrProcessed = array();
-
-	/**
 	 * Style array
 	 * @var array
 	 */

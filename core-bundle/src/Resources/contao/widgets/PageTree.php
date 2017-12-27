@@ -66,7 +66,7 @@ class PageTree extends \Widget
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
 			// Retrieve the order value
-			$objRow = $this->Database->prepare("SELECT {$this->orderField} FROM {$this->strTable} WHERE id=?")
+			$objRow = $this->Database->prepare("SELECT ".\Database::quoteColumnName($this->orderField)." FROM {$this->strTable} WHERE id=?")
 						   ->limit(1)
 						   ->execute($this->activeRecord->id);
 
@@ -124,7 +124,7 @@ class PageTree extends \Widget
 		}
 		elseif (strpos($varInput, ',') === false)
 		{
-			return $this->multiple ? array(\intval($varInput)) : \intval($varInput);
+			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
 		else
 		{
@@ -149,7 +149,7 @@ class PageTree extends \Widget
 
 		if (strpos($varInput, ',') === false)
 		{
-			$arrIds = array(\intval($varInput));
+			$arrIds = array((int) $varInput);
 		}
 		else
 		{

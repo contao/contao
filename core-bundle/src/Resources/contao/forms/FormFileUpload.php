@@ -244,7 +244,7 @@ class FormFileUpload extends \Widget implements \uploadable
 							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
 							{
 								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = \intval(substr($strFile, (strrpos($strFile, '_') + 1)));
+								$intValue = (int) substr($strFile, (strrpos($strFile, '_') + 1));
 
 								$offset = max($offset, $intValue);
 							}

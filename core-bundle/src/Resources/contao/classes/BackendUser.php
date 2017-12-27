@@ -313,11 +313,11 @@ class BackendUser extends User
 			}
 			if ($row['cuser'] === false)
 			{
-				$row['cuser'] = \intval(\Config::get('defaultUser'));
+				$row['cuser'] = (int) \Config::get('defaultUser');
 			}
 			if ($row['cgroup'] === false)
 			{
-				$row['cgroup'] = \intval(\Config::get('defaultGroup'));
+				$row['cgroup'] = (int) \Config::get('defaultGroup');
 			}
 		}
 

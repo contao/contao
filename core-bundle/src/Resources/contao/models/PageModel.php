@@ -842,7 +842,7 @@ class PageModel extends \Model
 		}
 
 		// Set some default values
-		$this->protected = (boolean) $this->protected;
+		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? \StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
@@ -1036,7 +1036,7 @@ class PageModel extends \Model
 		);
 
 		// Make the URL relative to the base path
-		if (0 === strpos($strUrl, '/'))
+		if (0 === strncmp($strUrl, '/', 1))
 		{
 			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 		}

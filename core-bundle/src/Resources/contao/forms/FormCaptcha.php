@@ -155,8 +155,8 @@ class FormCaptcha extends \Widget
 			return;
 		}
 
-		$int1 = rand(1, 9);
-		$int2 = rand(1, 9);
+		$int1 = mt_rand(1, 9);
+		$int2 = mt_rand(1, 9);
 
 		$this->arrCaptcha = array
 		(
@@ -183,7 +183,7 @@ class FormCaptcha extends \Widget
 	{
 		$this->generateCaptcha();
 
-		$question = $GLOBALS['TL_LANG']['SEC']['question' . rand(1, 3)];
+		$question = $GLOBALS['TL_LANG']['SEC']['question' . mt_rand(1, 3)];
 		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';

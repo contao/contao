@@ -302,12 +302,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		if ($this->strTable == 'tl_undo' && \strlen(\Config::get('undoPeriod')))
 		{
 			$this->Database->prepare("DELETE FROM tl_undo WHERE tstamp<?")
-						   ->execute(\intval(time() - \Config::get('undoPeriod')));
+						   ->execute((time() - (int) \Config::get('undoPeriod')));
 		}
 		elseif ($this->strTable == 'tl_log' && \strlen(\Config::get('logPeriod')))
 		{
 			$this->Database->prepare("DELETE FROM tl_log WHERE tstamp<?")
-						   ->execute(\intval(time() - \Config::get('logPeriod')));
+						   ->execute((time() - (int) \Config::get('logPeriod')));
 		}
 
 		$this->reviseTable();
@@ -438,7 +438,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				foreach ((array) $value as $v)
 				{
-					$objKey = $this->Database->prepare("SELECT " . $chunks[1] . " AS value FROM " . $chunks[0] . " WHERE id=?")
+					$objKey = $this->Database->prepare("SELECT " . \Database::quoteColumnName($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE id=?")
 											 ->limit(1)
 											 ->execute($v);
 
@@ -886,7 +886,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			foreach ($objRow->row() as $k=>$v)
 			{
-				if (\in_array($k, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'])))
+				if (array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields']))
 				{
 					// Never copy passwords
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'password')
@@ -1243,7 +1243,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting" )
+						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
 														 ->limit(1, $limit - 1)
 														 ->execute($pid);
 
@@ -1271,7 +1271,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting" )
+							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting")
 															->execute($pid);
 
 							$count = 2;
@@ -1355,8 +1355,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 
 				// Set new sorting and new parent ID
-				$this->set['pid'] = \intval($newPID);
-				$this->set['sorting'] = \intval($newSorting);
+				$this->set['pid'] = (int) $newPID;
+				$this->set['sorting'] = (int) $newSorting;
 			}
 		}
 
@@ -1444,7 +1444,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					else $newSorting = ($curSorting + 128);
 
 					// Set new sorting
-					$this->set['sorting'] = \intval($newSorting);
+					$this->set['sorting'] = (int) $newSorting;
 
 					return;
 				}
@@ -1452,7 +1452,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 			// ID is not set or not found (insert at the end)
 			$objNextSorting = $this->Database->execute("SELECT MAX(sorting) AS sorting FROM " . $this->strTable);
-			$this->set['sorting'] = (\intval($objNextSorting->sorting) + 128);
+			$this->set['sorting'] = ((int) $objNextSorting->sorting + 128);
 		}
 	}
 
@@ -3138,12 +3138,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			{
 				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4)
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "='' WHERE pid=?")
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . \Database::quoteColumnName($this->strField) . "='' WHERE pid=?")
 								   ->execute($this->activeRecord->pid);
 				}
 				else
 				{
-					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
+					$this->Database->execute("UPDATE " . $this->strTable . " SET " . \Database::quoteColumnName($this->strField) . "=''");
 				}
 			}
 
@@ -3156,7 +3156,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrValues = $this->values;
 			array_unshift($arrValues, $varValue);
 
-			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . $this->strField . "=? WHERE " . implode(' AND ', $this->procedure))
+			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . \Database::quoteColumnName($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
 											->execute($arrValues);
 
 			if ($objUpdateStmt->affectedRows)
@@ -3877,7 +3877,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				list($strKey, $strTable) = explode(':', $v);
 				list($strTable, $strField) = explode('.', $strTable);
 
-				$objRef = $this->Database->prepare("SELECT " . $strField . " FROM " . $strTable . " WHERE id=?")
+				$objRef = $this->Database->prepare("SELECT " . \Database::quoteColumnName($strField) . " FROM " . $strTable . " WHERE id=?")
 										 ->limit(1)
 										 ->execute($objRow->$strKey);
 
@@ -4189,7 +4189,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				{
 					$arrForeignKey = explode('.', $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey'], 2);
 
-					$objLabel = $this->Database->prepare("SELECT " . $arrForeignKey[1] . " AS value FROM " . $arrForeignKey[0] . " WHERE id=?")
+					$objLabel = $this->Database->prepare("SELECT " . \Database::quoteColumnName($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE id=?")
 											   ->limit(1)
 											   ->execute($_v);
 
@@ -4295,7 +4295,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey']))
 				{
 					$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey'], 2);
-					$query = "SELECT *, (SELECT ". $key[1] ." FROM ". $key[0] ." WHERE ". $this->strTable .".". $firstOrderBy ."=". $key[0] .".id) AS foreignKey FROM " . $this->strTable;
+					$query = "SELECT *, (SELECT ". \Database::quoteColumnName($key[1]) ." FROM ". $key[0] ." WHERE ". $this->strTable .".". \Database::quoteColumnName($firstOrderBy) ."=". $key[0] .".id) AS foreignKey FROM " . $this->strTable;
 					$orderBy[0] = 'foreignKey';
 				}
 			}
@@ -4672,7 +4672,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$firstOrderBy = 'pid';
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
-				$query .= " ORDER BY (SELECT " . $showFields[0] . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy);
+				$query .= " ORDER BY (SELECT " . \Database::quoteColumnName($showFields[0]) . " FROM " . $this->ptable . " WHERE " . $this->ptable . ".id=" . $this->strTable . ".pid), " . implode(', ', $orderBy);
 
 				// Set the foreignKey so that the label is translated
 				if ($GLOBALS['TL_DCA'][$table]['fields']['pid']['foreignKey'] == '')
@@ -4809,7 +4809,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						list($strKey, $strTable) = explode(':', $v);
 						list($strTable, $strField) = explode('.', $strTable);
 
-						$objRef = $this->Database->prepare("SELECT " . $strField . " FROM " . $strTable . " WHERE id=?")
+						$objRef = $this->Database->prepare("SELECT " . \Database::quoteColumnName($strField) . " FROM " . $strTable . " WHERE id=?")
 												 ->limit(1)
 												 ->execute($row[$strKey]);
 
@@ -5083,7 +5083,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			{
 				try
 				{
-					$this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . $strField . " REGEXP ?")
+					$this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . \Database::quoteColumnName($strField) . " REGEXP ?")
 								   ->limit(1)
 								   ->execute($strKeyword);
 				}
@@ -5114,12 +5114,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
-				$this->procedure[] = "(" . sprintf($strPattern, $fld) . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.$fld)") . ")";
+				$this->procedure[] = "(" . sprintf($strPattern, \Database::quoteColumnName($fld)) . " OR " . sprintf($strPattern, "(SELECT ".\Database::quoteColumnName($f)." FROM $t WHERE $t.id={$this->strTable}.".\Database::quoteColumnName($fld).")") . ")";
 				$this->values[] = $session['search'][$this->strTable]['value'];
 			}
 			else
 			{
-				$this->procedure[] = sprintf($strPattern, $fld);
+				$this->procedure[] = sprintf($strPattern, \Database::quoteColumnName($fld));
 			}
 
 			$this->values[] = $session['search'][$this->strTable]['value'];
@@ -5405,7 +5405,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if (\intval($v['filter']) == $intFilterPanel)
+			if ((int) $v['filter'] == $intFilterPanel)
 			{
 				$sortingFields[] = $k;
 			}
@@ -5722,7 +5722,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					{
 						$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
 
-						$objParent = $this->Database->prepare("SELECT " . $key[1] . " AS value FROM " . $key[0] . " WHERE id=?")
+						$objParent = $this->Database->prepare("SELECT " . \Database::quoteColumnName($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
 													->limit(1)
 													->execute($vv);
 
@@ -5749,7 +5749,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 							$showFields[0] = 'id';
 						}
 
-						$objShowFields = $this->Database->prepare("SELECT " . $showFields[0] . " FROM ". $this->ptable . " WHERE id=?")
+						$objShowFields = $this->Database->prepare("SELECT " . \Database::quoteColumnName($showFields[0]) . " FROM ". $this->ptable . " WHERE id=?")
 														->limit(1)
 														->execute($vv);
 
@@ -5832,7 +5832,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		// Set the limit filter based on the page number
 		if (isset($_GET['lp']))
 		{
-			$lp = \intval(\Input::get('lp')) - 1;
+			$lp = (int) \Input::get('lp') - 1;
 
 			if ($lp >= 0 && $lp < ceil($this->total / $limit))
 			{
@@ -5875,7 +5875,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
 
-			$objParent = $this->Database->prepare("SELECT " . $key[1] . " AS value FROM " . $key[0] . " WHERE id=?")
+			$objParent = $this->Database->prepare("SELECT " . \Database::quoteColumnName($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
 										->limit(1)
 										->execute($value);
 
@@ -5886,7 +5886,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 		elseif (\in_array($mode, array(1, 2)))
 		{
-			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value , 0, 1)) : '-';
+			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value, 0, 1)) : '-';
 		}
 		elseif (\in_array($mode, array(3, 4)))
 		{
@@ -5895,7 +5895,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'] = 2;
 			}
 
-			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value , 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
+			$remoteNew = ($value != '') ? ucfirst(Utf8::substr($value, 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
 		}
 		elseif (\in_array($mode, array(5, 6)))
 		{

@@ -253,7 +253,7 @@ class Config
 
 		// Write to a temp file first
 		$objFile = fopen(TL_ROOT . '/system/tmp/' . $strTemp, 'wb');
-		fputs($objFile, $strFile);
+		fwrite($objFile, $strFile);
 		fclose($objFile);
 
 		// Make sure the file has been written (see #4483)

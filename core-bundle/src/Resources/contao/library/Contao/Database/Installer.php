@@ -87,7 +87,7 @@ class Installer extends \Controller
 
 					$return .= '
     <tr>
-      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_'.$count.'" class="tl_checkbox ' . strtolower($command) . '" value="'.$key.'"'.((stristr($command, 'DROP') === false) ? ' checked="checked"' : '').'></td>
+      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_'.$count.'" class="tl_checkbox ' . strtolower($command) . '" value="'.$key.'"'.((stripos($command, 'DROP') === false) ? ' checked="checked"' : '').'></td>
       <td class="tl_col_2"><pre><label for="sql_'.$count++.'">'.$vv.'</label></pre></td>
     </tr>';
 				}
@@ -390,7 +390,7 @@ class Installer extends \Controller
 					}
 
 					// Default values
-					if (\in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stristr($field['extra'], 'auto_increment') || $field['default'] === null || strtolower($field['null']) == 'null')
+					if (\in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stripos($field['extra'], 'auto_increment') !== false || $field['default'] === null || strtolower($field['null']) == 'null')
 					{
 						unset($field['default']);
 					}

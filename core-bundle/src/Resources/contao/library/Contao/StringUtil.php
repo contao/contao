@@ -332,7 +332,7 @@ class StringUtil
 
 			foreach ($arrCharacters as $strCharacter)
 			{
-				$strEncoded .= sprintf((rand(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
+				$strEncoded .= sprintf((mt_rand(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -375,7 +375,7 @@ class StringUtil
 		// Encode opening arrow brackets (see #3998)
 		$strString = preg_replace_callback('@</?([^\s<>/]*)@', function ($matches) use ($strAllowedTags)
 		{
-			if ($matches[1] == '' || strpos(strtolower($strAllowedTags), '<' . strtolower($matches[1]) . '>') === false)
+			if ($matches[1] == '' || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
 			}
@@ -615,11 +615,11 @@ class StringUtil
 			{
 				if (strpos($strValue, '.') === false)
 				{
-					$varValue = \intval($strValue);
+					$varValue = (int) $strValue;
 				}
 				else
 				{
-					$varValue = \floatval($strValue);
+					$varValue = (float) $strValue;
 				}
 			}
 			elseif (strtolower($strValue) === 'true')
@@ -774,7 +774,7 @@ class StringUtil
 		$return = '';
 		$paths = preg_split('/((src|href)="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		for ($i=0, $c=\count($paths); $i<$c; $i=$i+4)
+		for ($i=0, $c=\count($paths); $i<$c; $i+=4)
 		{
 			$return .= $paths[$i];
 
@@ -811,7 +811,7 @@ class StringUtil
 		$return = '';
 		$paths = preg_split('/((src|href)="([^"]*)\{\{file::([^"\}]+)\}\}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		for ($i=0, $c=\count($paths); $i<$c; $i=$i+5)
+		for ($i=0, $c=\count($paths); $i<$c; $i+=5)
 		{
 			$return .= $paths[$i];
 
@@ -882,7 +882,7 @@ class StringUtil
 		// Remove the flags from the URL
 		$url = $chunks[0];
 
-		for ($i=1; $i<\count($chunks); $i++)
+		for ($i=1, $c=\count($chunks); $i<$c; $i++)
 		{
 			if (empty($chunks[$i]))
 			{

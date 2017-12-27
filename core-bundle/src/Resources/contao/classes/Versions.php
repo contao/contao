@@ -164,7 +164,7 @@ class Versions extends \Controller
 		}
 
 		// Delete old versions from the database
-		$tstamp = time() - \intval(\Config::get('versionPeriod'));
+		$tstamp = time() - (int) \Config::get('versionPeriod');
 		$this->Database->query("DELETE FROM tl_version WHERE tstamp<$tstamp");
 
 		// Get the new record

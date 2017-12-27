@@ -141,6 +141,11 @@ class MergeHttpHeadersListener
 
             $uniqueKey = $this->getUniqueKey($name);
 
+            // Never merge cache-control headers (see #1246)
+            if ('cache-control' === $uniqueKey) {
+                continue;
+            }
+
             if (\in_array($uniqueKey, $this->multiHeaders, true)) {
                 $response->headers->set($uniqueKey, trim($content), false);
             } elseif (isset($allowOverrides[$uniqueKey]) || !$response->headers->has($uniqueKey)) {

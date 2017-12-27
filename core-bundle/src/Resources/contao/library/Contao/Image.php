@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\Image\Image as NewImage;
-use Contao\Image\ImportantPart;
 use Contao\Image\ImageDimensions;
+use Contao\Image\ImportantPart;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
@@ -46,7 +46,7 @@ class Image
 	 *
 	 * @var File
 	 */
-	protected $fileObj = null;
+	protected $fileObj;
 
 	/**
 	 * The resized image path
@@ -778,7 +778,7 @@ class Image
 
 		if (\is_array($size))
 		{
-			$size = $size + array(0, 0, 'crop');
+			$size += array(0, 0, 'crop');
 
 			$imageObj
 				->setTargetWidth($size[0])

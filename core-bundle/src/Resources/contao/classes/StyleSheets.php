@@ -564,7 +564,7 @@ class StyleSheets extends \Backend
 					// Convert the angle for the legacy commands (see #4569)
 					if (strpos($row['gradientAngle'], 'deg') !== false)
 					{
-						$angle = (abs(\intval($row['gradientAngle']) - 450) % 360) . 'deg';
+						$angle = (abs((int) $row['gradientAngle'] - 450) % 360) . 'deg';
 					}
 					else
 					{
@@ -1445,7 +1445,7 @@ class StyleSheets extends \Backend
 
 		$chunks = explode('-', $strName);
 		$i = (\count($chunks) > 1) ? array_pop($chunks) : 0;
-		$strName = implode('-', $chunks) . '-' . (\intval($i) + 1);
+		$strName = implode('-', $chunks) . '-' . ((int) $i + 1);
 
 		return $this->checkStyleSheetName($strName);
 	}

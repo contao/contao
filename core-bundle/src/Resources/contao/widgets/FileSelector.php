@@ -332,7 +332,7 @@ class FileSelector extends \Widget
 					break;
 				}
 
-				$objField = $this->Database->prepare("SELECT " . $this->strField . " FROM " . $this->strTable . " WHERE id=?")
+				$objField = $this->Database->prepare("SELECT " . \Database::quoteColumnName($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
 										   ->limit(1)
 										   ->execute($this->strId);
 
@@ -494,7 +494,7 @@ class FileSelector extends \Widget
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && array_search('.public', $content) !== false)
+			if ($protected === true && \in_array('.public', $content))
 			{
 				$protected = false;
 			}

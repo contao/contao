@@ -56,7 +56,7 @@ abstract class Controller extends \System
 	public static function getTemplate($strTemplate, $strFormat='html5')
 	{
 		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
-		array_push($arrAllowed, 'html5'); // see #3398
+		$arrAllowed[] = 'html5'; // see #3398
 
 		if (!\in_array($strFormat, $arrAllowed))
 		{
@@ -154,7 +154,7 @@ abstract class Controller extends \System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, function($a) {
+			$v = array_filter($v, function ($a) {
 				return $a != 'root';
 			});
 
@@ -605,7 +605,7 @@ abstract class Controller extends \System
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
 		{
-			$sub += 1;
+			++$sub;
 		}
 
 		// Page hidden from menu
@@ -1144,7 +1144,7 @@ abstract class Controller extends \System
 		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
 
 		// Remove path from absolute URLs
-		if (0 === strpos($strUrl, '/'))
+		if (0 === strncmp($strUrl, '/', 1))
 		{
 			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 		}
@@ -1194,7 +1194,7 @@ abstract class Controller extends \System
 		$arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$strContent = '';
 
-		for ($i=0, $c=\count($arrUrls); $i<$c; $i=$i+4)
+		for ($i=0, $c=\count($arrUrls); $i<$c; $i+=4)
 		{
 			$strContent .= $arrUrls[$i];
 
@@ -1292,7 +1292,7 @@ abstract class Controller extends \System
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		if (($intPage = \intval($intPage)) <= 0)
+		if (($intPage = (int) $intPage) <= 0)
 		{
 			return '';
 		}
@@ -1499,7 +1499,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$intMaxWidth = $intMaxWidth - $intMargin;
+					$intMaxWidth -= $intMargin;
 				}
 			}
 

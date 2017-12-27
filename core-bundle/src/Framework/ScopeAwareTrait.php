@@ -101,7 +101,8 @@ trait ScopeAwareTrait
      */
     private function isScope(string $scope): bool
     {
-        if (null === $this->container
+        if (
+            null === $this->container
             || null === ($request = $this->container->get('request_stack')->getCurrentRequest())
         ) {
             return false;

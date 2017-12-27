@@ -89,9 +89,9 @@ class Folder extends \System
 			$arrChunks = explode('/', $this->strFolder);
 
 			// Create the folder
-			foreach ($arrChunks as $strFolder)
+			foreach ($arrChunks as $strChunk)
 			{
-				$strPath .= ($strPath ? '/' : '') . $strFolder;
+				$strPath .= ($strPath ? '/' : '') . $strChunk;
 				$this->Files->mkdir($strPath);
 			}
 

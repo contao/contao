@@ -10,16 +10,11 @@
 
 namespace Contao;
 
-if (version_compare(PHP_VERSION, '7.0', '>=')) {
-	throw new \RuntimeException(
-		'The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtil class instead.'
-	);
-} else {
-	@trigger_error(
-		'Using the String class has been deprecated and will no longer work in PHP 7. Use the StringUtil class instead.',
-		E_USER_DEPRECATED
-	);
+if (PHP_VERSION_ID >= 70000) {
+	throw new \RuntimeException('The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtil class instead.');
 }
+
+@trigger_error('Using the String class has been deprecated and will no longer work in PHP 7. Use the StringUtil class instead.', E_USER_DEPRECATED);
 
 
 /**

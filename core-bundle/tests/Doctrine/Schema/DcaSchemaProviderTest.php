@@ -459,6 +459,16 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
+    public function testAppliesTheSchemaFilter(): void
+    {
+        $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], '/^tl_/');
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertFalse($schema->hasTable('member'));
+        $this->assertTrue($schema->hasTable('tl_member'));
+    }
+
     public function testFailsIfThePrimaryKeyIsInvalid(): void
     {
         $provider = $this->getProvider(
