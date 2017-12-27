@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Tests;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
@@ -26,15 +27,29 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Returns a Doctrine registry with database connection.
      *
+     * @param null $filter
+     *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistry()
+    protected function mockDoctrineRegistry($filter = null)
     {
+        $config = $this->createMock(Configuration::class);
+
+        $config
+            ->method('getFilterSchemaAssetsExpression')
+            ->willReturn($filter)
+        ;
+
         $connection = $this->createMock(Connection::class);
 
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($config)
         ;
 
         $registry = $this->createMock(Registry::class);

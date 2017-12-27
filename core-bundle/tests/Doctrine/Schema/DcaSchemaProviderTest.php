@@ -377,6 +377,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
+     * Tests adding a schema filter.
+     */
+    public function testAppliesTheSchemaFilter()
+    {
+        $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], '/^tl_/');
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertFalse($schema->hasTable('member'));
+        $this->assertTrue($schema->hasTable('tl_member'));
+    }
+
+    /**
      * Tests parsing an invalid primary key.
      */
     public function testFailsIfThePrimaryKeyIsInvalid()
@@ -427,14 +440,15 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      *
      * @param array $dca
      * @param array $file
+     * @param null  $filter
      *
      * @return DcaSchemaProvider
      */
-    protected function getProvider(array $dca = [], array $file = [])
+    protected function getProvider(array $dca = [], array $file = [], $filter = null)
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry()
+            $this->mockDoctrineRegistry($filter)
         );
     }
 }
