@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.4.10 (2017-12-27)
 
  * Use the schema filter in the install tool (see #78).
 
