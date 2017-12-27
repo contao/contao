@@ -150,7 +150,7 @@ class SymlinksCommand extends AbstractLockedCommand
         foreach ($themes as $theme) {
             $path = $this->getRelativePath($theme->getPathname());
 
-            if (0 === strpos($path, 'system/modules/')) {
+            if (0 === strncmp($path, 'system/modules/', 15)) {
                 continue;
             }
 

@@ -1033,7 +1033,7 @@ class PageModel extends \Model
 		);
 
 		// Make the URL relative to the base path
-		if (0 === strpos($strUrl, '/'))
+		if (0 === strncmp($strUrl, '/', 1))
 		{
 			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 		}

@@ -1143,7 +1143,7 @@ abstract class Controller extends \System
 		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
 
 		// Remove path from absolute URLs
-		if (0 === strpos($strUrl, '/'))
+		if (0 === strncmp($strUrl, '/', 1))
 		{
 			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 		}

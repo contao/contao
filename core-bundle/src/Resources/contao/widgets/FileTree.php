@@ -457,7 +457,7 @@ class FileTree extends \Widget
 			$image = \Image::getPath('placeholder.svg');
 		}
 
-		if (strpos($image, 'data:') === 0)
+		if (strncmp($image, 'data:', 5) === 0)
 		{
 			return '<img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '">';
 		}
