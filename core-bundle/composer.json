@@ -46,7 +46,7 @@
         "twig/twig": "^1.26",
         "webmozart/path-util": "^2.0",
         "contao/image": "^0.3.1",
-        "contao/imagine-svg": "^0.1.2",
+        "contao/imagine-svg": "^0.1.2|^0.2",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.1.6",
         "contao-components/colorbox": "^1.6",
