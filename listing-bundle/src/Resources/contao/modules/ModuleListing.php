@@ -167,7 +167,7 @@ class ModuleListing extends \Module
 		}
 
 		// Get the selected records
-		$strQuery = "SELECT " . \Database::quoteColumnName($this->strPk) . "," . implode(',', \Database::quoteColumnNames(trimsplit(',', $this->list_fields)));
+		$strQuery = "SELECT " . \Database::quoteColumnName($this->strPk) . ", " . implode(', ', \Database::quoteColumnNames(trimsplit(',', $this->list_fields)));
 
 		if ($this->list_info_where)
 		{
@@ -382,7 +382,7 @@ class ModuleListing extends \Module
 		$this->list_info = \StringUtil::deserialize($this->list_info);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(',', \Database::quoteColumnNames(trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . $this->strPk . "=?")
+		$objRecord = $this->Database->prepare("SELECT " . implode(', ', \Database::quoteColumnNames(trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . $this->strPk . "=?")
 									->limit(1)
 									->execute($id);
 
