@@ -235,21 +235,7 @@ class Database
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		$strTable = null;
-
-		if (strpos($strKey, '.') !== false)
-		{
-			list($strTable, $strKey) = explode('.', $strKey, 2);
-		}
-
-		$strQuoted = static::quoteColumnName($strKey);
-
-		if ($strTable)
-		{
-			return "FIND_IN_SET(" . $strTable . "." . $strQuoted . ", " . $varSet . ")";
-		}
-
-		return "FIND_IN_SET(" . $strQuoted . ", " . $varSet . ")";
+		return "FIND_IN_SET(" . static::quoteColumnName($strKey) . ", " . $varSet . ")";
 	}
 
 
@@ -729,7 +715,7 @@ class Database
 	 */
 	public static function quoteColumnName($strName)
 	{
-		return \System::getContainer()->get('database_connection')->getDatabasePlatform()->quoteSingleIdentifier($strName);
+		return \System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 
 
