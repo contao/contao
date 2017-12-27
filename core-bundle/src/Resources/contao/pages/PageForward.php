@@ -54,7 +54,7 @@ class PageForward extends \Frontend
 	 *
 	 * @throws ForwardPageNotFoundException
 	 */
-	private function getForwardUrl($objPage)
+	protected function getForwardUrl($objPage)
 	{
 		if ($objPage->jumpTo)
 		{
