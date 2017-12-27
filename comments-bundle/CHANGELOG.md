@@ -1,6 +1,6 @@
 # Contao comments bundle change log
 
-### DEV
+### 4.4.10 (2017-12-27)
 
  * Add the missing options array in the CommentsModel class (see #9).
 
