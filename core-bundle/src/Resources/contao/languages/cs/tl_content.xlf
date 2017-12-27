@@ -686,8 +686,7 @@
         <target>Vlastní řazení</target>
       </trans-unit>
       <trans-unit id="tl_content.random">
-        <source>Random order</source>
-        <target>náhodného pořadí</target>
+        <source>Random order without pagination</source>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>

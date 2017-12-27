@@ -687,8 +687,8 @@
         <target>独自の順序</target>
       </trans-unit>
       <trans-unit id="tl_content.random">
-        <source>Random order</source>
-        <target>ランダムな順序</target>
+        <source>Random order without pagination</source>
+        <target>ページ分割なしで無作為</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
