@@ -235,7 +235,21 @@ class Database
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		return "FIND_IN_SET(" . static::quoteColumnName($strKey) . ", " . $varSet . ")";
+		$strTable = null;
+
+		if (strpos($strKey, '.') !== false)
+		{
+			list($strTable, $strKey) = explode('.', $strKey, 2);
+		}
+
+		$strQuoted = static::quoteColumnName($strKey);
+
+		if ($strTable)
+		{
+			return "FIND_IN_SET(" . $strTable . "." . $strQuoted . ", " . $varSet . ")";
+		}
+
+		return "FIND_IN_SET(" . $strQuoted . ", " . $varSet . ")";
 	}
 
 
