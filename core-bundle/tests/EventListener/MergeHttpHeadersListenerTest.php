@@ -274,4 +274,35 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('content=foobar; path=/', $allHeaders[0]);
         $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
     }
+
+    /**
+     * Tests that the headers are merged into the response object.
+     */
+    public function testDoesNotMergeCacheControlHeaders()
+    {
+        $responseEvent = new FilterResponseEvent(
+            $this->mockKernel(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new Response()
+        );
+
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $storage = new MemoryHeaderStorage(['Cache-Control: public, s-maxage=10800']);
+
+        $listener = new MergeHttpHeadersListener($framework, $storage);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertTrue($response->headers->has('Cache-Control'));
+        $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
+    }
 }

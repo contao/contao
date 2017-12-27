@@ -146,7 +146,7 @@ class MergeHttpHeadersListener
             list($name, $content) = explode(':', $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
-            
+
             // Never merge cache-control headers (see #1246)
             if ('cache-control' === $uniqueKey) {
                 continue;
