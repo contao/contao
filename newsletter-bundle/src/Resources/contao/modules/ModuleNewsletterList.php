@@ -87,7 +87,7 @@ class ModuleNewsletterList extends \Module
 					continue;
 				}
 
-				$jumpTo = \intval($objTarget->jumpTo);
+				$jumpTo = (int) $objTarget->jumpTo;
 
 				// A jumpTo page is not mandatory for newsletter channels (see #6521) but required for the list module
 				if ($jumpTo < 1)
