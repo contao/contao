@@ -72,7 +72,7 @@ class ModuleNewsList extends \ModuleNews
 	protected function compile()
 	{
 		$limit = null;
-		$offset = \intval($this->skipFirst);
+		$offset = (int) $this->skipFirst;
 
 		// Maximum number of items
 		if ($this->numberOfItems > 0)
@@ -129,7 +129,7 @@ class ModuleNewsList extends \ModuleNews
 			// Set limit and offset
 			$limit = $this->perPage;
 			$offset += (max($page, 1) - 1) * $this->perPage;
-			$skip = \intval($this->skipFirst);
+			$skip = (int) $this->skipFirst;
 
 			// Overall limit
 			if ($offset + $limit > $total + $skip)
