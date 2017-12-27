@@ -196,7 +196,8 @@ class ContaoKernel extends Kernel
         $container = new PluginContainerBuilder($this->getPluginLoader(), []);
         $container->getParameterBag()->add($this->getKernelParameters());
 
-        if (class_exists('ProxyManager\Configuration')
+        if (
+            class_exists('ProxyManager\Configuration')
             && class_exists('Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator')
         ) {
             $container->setProxyInstantiator(new RuntimeInstantiator());
