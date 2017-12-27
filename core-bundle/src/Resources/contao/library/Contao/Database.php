@@ -41,6 +41,12 @@ class Database
 	protected static $arrInstances = array();
 
 	/**
+	 * Quote character
+	 * @var string
+	 */
+	protected static $strQuoteCharacter;
+
+	/**
 	 * Connection ID
 	 * @var Connection
 	 */
@@ -715,6 +721,17 @@ class Database
 	 */
 	public static function quoteColumnName($strName)
 	{
+		if (static::$strQuoteCharacter === null)
+		{
+			static::$strQuoteCharacter = \System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
+		}
+
+		// The identifier is quoted already
+		if (strncmp($strName, static::$strQuoteCharacter, 1) === 0 && substr_compare($strName, static::$strQuoteCharacter, -1) === 0)
+		{
+			return $strName;
+		}
+
 		return \System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 
