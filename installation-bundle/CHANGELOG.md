@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### DEV
+
+ * Use the schema filter in the install tool (see #78).
+
 ### 4.4.9 (2017-12-14)
 
  * Use a simpler lock mechanism in the install tool (see #73).

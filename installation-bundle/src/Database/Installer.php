@@ -100,8 +100,19 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
-        $fromSchema = $this->dropNonContaoTables($this->connection->getSchemaManager()->createSchema());
-        $toSchema = $this->dropNonContaoTables($this->schemaProvider->createSchema());
+        $config = $this->connection->getConfiguration();
+
+        // Overwrite the schema filter (see #78)
+        $previousFilter = $config->getFilterSchemaAssetsExpression();
+        $config->setFilterSchemaAssetsExpression('/^tl_/');
+
+        // Create the from and to schema
+        $fromSchema = $this->connection->getSchemaManager()->createSchema();
+        $toSchema = $this->schemaProvider->createSchema();
+
+        // Reset the schema filter
+        $config->setFilterSchemaAssetsExpression($previousFilter);
+
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
@@ -169,25 +180,5 @@ class Installer
         }
 
         $this->commands = $return;
-    }
-
-    /**
-     * Removes tables from the schema that do not start with tl_.
-     *
-     * @param Schema $schema
-     *
-     * @return Schema
-     */
-    private function dropNonContaoTables(Schema $schema)
-    {
-        $needle = $schema->getName().'.tl_';
-
-        foreach ($schema->getTableNames() as $tableName) {
-            if (0 !== stripos($tableName, $needle)) {
-                $schema->dropTable($tableName);
-            }
-        }
-
-        return $schema;
     }
 }
