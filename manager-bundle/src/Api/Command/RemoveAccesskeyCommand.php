@@ -65,7 +65,7 @@ class RemoveAccesskeyCommand extends Command
         }
 
         foreach ($lines as $line) {
-            if (0 === strpos($line, 'APP_DEV_ACCESSKEY=')) {
+            if (0 === strncmp($line, 'APP_DEV_ACCESSKEY=', 18)) {
                 continue;
             }
 
