@@ -1,5 +1,9 @@
 # Contao comments bundle change log
 
+### DEV
+
+ * Add the missing options array in the CommentsModel class (see #9).
+
 ### 4.4.0-RC2 (2017-06-12)
 
  * Trigger all the callbacks in the toggleVisibility() methods (see contao/core-bundle#756).
