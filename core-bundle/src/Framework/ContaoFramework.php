@@ -385,7 +385,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function validateInstallation()
     {
-        if (null === $this->request
+        if (
+            null === $this->request
             || \in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
         ) {
             return;

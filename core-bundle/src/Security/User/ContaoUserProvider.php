@@ -100,7 +100,8 @@ class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterfa
      */
     private function isFrontendUsername($username)
     {
-        if (null === $this->container
+        if (
+            null === $this->container
             || null === ($request = $this->container->get('request_stack')->getCurrentRequest())
         ) {
             return false;
@@ -118,7 +119,8 @@ class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterfa
      */
     private function isBackendUsername($username)
     {
-        if (null === $this->container
+        if (
+            null === $this->container
             || null === ($request = $this->container->get('request_stack')->getCurrentRequest())
         ) {
             return false;
