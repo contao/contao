@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Quote reserved words in database queries (see #1262).
  * Only add _locale if prepend_locale is enabled (see #1257).
 
 ### 4.4.9 (2017-12-14)
