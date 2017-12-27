@@ -468,7 +468,7 @@ class tl_calendar_feed extends Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (array_search($varValue, $arrFeeds) !== false)
+		if (\in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}

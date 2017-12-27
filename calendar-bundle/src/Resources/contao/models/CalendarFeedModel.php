@@ -92,7 +92,7 @@ class CalendarFeedModel extends \Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.calendars LIKE '%\"" . \intval($intId) . "\"%'"), null, $arrOptions);
+		return static::findBy(array("$t.calendars LIKE '%\"" . (int) $intId . "\"%'"), null, $arrOptions);
 	}
 
 
