@@ -14,7 +14,6 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\Schema;
 
 class Installer
 {
