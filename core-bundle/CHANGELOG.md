@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.11 (2017-12-28)
 
  * Revert 'Quote reserved words in database queries (see #1262)'.
 
