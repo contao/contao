@@ -29,7 +29,8 @@ if (file_exists(__DIR__.'/../.env')) {
 
 $accessKey = @getenv('APP_DEV_ACCESSKEY', true);
 
-if (isset($_SERVER['HTTP_CLIENT_IP'])
+if (
+    isset($_SERVER['HTTP_CLIENT_IP'])
     || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
     || !(in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1']) || PHP_SAPI === 'cli-server')
 ) {
@@ -38,7 +39,8 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
         die(sprintf('You are not allowed to access this file. Check %s for more information.', basename(__FILE__)));
     }
 
-    if (!isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
+    if (
+        !isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
         || !password_verify($_SERVER['PHP_AUTH_USER'].':'.$_SERVER['PHP_AUTH_PW'], $accessKey)
     ) {
         header('WWW-Authenticate: Basic realm="Contao debug"');
