@@ -41,12 +41,6 @@ class Database
 	protected static $arrInstances = array();
 
 	/**
-	 * Quote character
-	 * @var string
-	 */
-	protected static $strQuoteCharacter;
-
-	/**
 	 * Connection ID
 	 * @var Connection
 	 */
@@ -241,7 +235,7 @@ class Database
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		return "FIND_IN_SET(" . static::quoteColumnName($strKey) . ", " . $varSet . ")";
+		return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
 	}
 
 
@@ -496,7 +490,7 @@ class Database
 	 */
 	public function isUniqueValue($strTable, $strField, $varValue, $intId=null)
 	{
-		$strQuery = "SELECT * FROM $strTable WHERE " . static::quoteColumnName($strField) . "=?";
+		$strQuery = "SELECT * FROM $strTable WHERE $strField=?";
 
 		if ($intId !== null)
 		{
@@ -709,43 +703,6 @@ class Database
 		}
 
 		return array_pop($ids);
-	}
-
-
-	/**
-	 * Quote the column name if it is a reserved word
-	 *
-	 * @param string $strName
-	 *
-	 * @return string
-	 */
-	public static function quoteColumnName($strName)
-	{
-		if (static::$strQuoteCharacter === null)
-		{
-			static::$strQuoteCharacter = \System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
-		}
-
-		// The identifier is quoted already
-		if (strncmp($strName, static::$strQuoteCharacter, 1) === 0 && substr_compare($strName, static::$strQuoteCharacter, -1) === 0)
-		{
-			return $strName;
-		}
-
-		return \System::getContainer()->get('database_connection')->quoteIdentifier($strName);
-	}
-
-
-	/**
-	 * Quote a list of column names
-	 *
-	 * @param string[] $arrNames
-	 *
-	 * @return string[]
-	 */
-	public static function quoteColumnNames(array $arrNames)
-	{
-		return array_map(array(static::class, 'quoteColumnName'), $arrNames);
 	}
 
 
