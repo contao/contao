@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.0 (2017-12-28)
 
  * Apply the schema filter in the DCA schema provider.
 
