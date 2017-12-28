@@ -25,14 +25,9 @@ class Version350Update extends AbstractVersionUpdate
             return false;
         }
 
-        $sql = $this->connection
-            ->getDatabasePlatform()
-            ->getListTableIndexesSQL('tl_member', $this->connection->getDatabase())
-        ;
+        $columns = $schemaManager->listTableColumns('tl_member');
 
-        $index = $this->connection->fetchAssoc($sql." AND INDEX_NAME = 'username'");
-
-        return '0' !== $index['Non_Unique'];
+        return isset($columns['username']) && true === $columns['username']->getNotnull();
     }
 
     /**
