@@ -25,12 +25,12 @@
                     <td colspan="2" class="tl_col_0">{{ category|trans }}</td>
                   </tr>
                   <tr>
-                    <td class="tl_col_1"><input type="checkbox" id="check_all_{{ loop.index }}" class="tl_checkbox" onclick="Backend.toggleCheckboxElements(this, '{{ category }}')"></td>
+                    <td class="tl_col_1"><input type="checkbox" id="check_all_{{ loop.index }}" class="tl_checkbox" onclick="Backend.toggleCheckboxElements(this, '{{ category }}')"{% if 'DROP' not in category or 'DROP INDEX' in category %} checked{% endif %}></td>
                     <td class="tl_col_2"><label for="check_all_{{ loop.index }}" style="color:#a6a6a6"><em>{{ 'select_all'|trans }}</em></label></td>
                   </tr>
                   {% for md5, command in commands %}
                     <tr>
-                      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_{{ loop.parent.loop.index }}_{{ loop.index }}" class="tl_checkbox {{ category }}" value="{{ md5 }}"{% if 'DROP' not in command or 'DROP INDEX' in command %} checked="checked"{% endif %}></td>
+                      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_{{ loop.parent.loop.index }}_{{ loop.index }}" class="tl_checkbox {{ category }}" value="{{ md5 }}"{% if 'DROP' not in command or 'DROP INDEX' in command %} checked{% endif %}></td>
                       <td class="tl_col_2"><pre><label for="sql_{{ loop.parent.loop.index }}_{{ loop.index }}">{% if 'CREATE' in command %}{{ command|doctrine_pretty_query }}{% else %}{{ command }}{% endif %}</label></pre></td>
                     </tr>
                   {% endfor %}
