@@ -122,7 +122,8 @@ class Form extends \Hybrid
 		{
 			while ($objFields->next())
 			{
-				if ($objFields->name != '')
+				// Ignore the name of form fields which do not use a name (see #1268)
+				if ($objFields->name != '' && !\in_array($objFields->type, array('explanation', 'fieldset', 'html', 'captcha', 'submit')))
 				{
 					$arrFields[$objFields->name] = $objFields->current();
 				}
