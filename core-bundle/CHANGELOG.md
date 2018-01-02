@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly handle authentication through the Symfony firewall entry point (see #1275).
  * Make services public that we need to access directly.
 
 ### 4.5.0 (2017-12-28)

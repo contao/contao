@@ -159,6 +159,7 @@ security:
                 failure_path: contao_root
                 failure_handler: contao.security.authentication_failure_handler
                 success_handler: contao.security.frontend_authentication_success_handler
+                use_forward: true
                 remember_me: true
 
             remember_me:

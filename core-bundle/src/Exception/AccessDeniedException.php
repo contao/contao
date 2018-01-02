@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-class AccessDeniedException extends \RuntimeException
+use Symfony\Component\Security\Core\Exception\AccessDeniedException as BaseAccessDeniedException;
+
+class AccessDeniedException extends BaseAccessDeniedException
 {
 }
