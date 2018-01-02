@@ -15,6 +15,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 
 class Installer
 {
@@ -196,6 +197,8 @@ class Installer
                 continue;
             }
 
+            $this->setLegacyOptions($table);
+
             $tableOptions = $this->connection
                 ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
                 ->fetch(\PDO::FETCH_OBJ)
@@ -213,7 +216,7 @@ class Installer
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
 
-            $collate = $table->getOption('collate') ?? 'utf8_general_ci'; // backwards compatibility
+            $collate = $table->getOption('collate');
 
             if ($tableOptions->Collation !== $collate) {
                 $charset = $table->getOption('charset');
@@ -221,6 +224,26 @@ class Installer
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
+        }
+    }
+
+    /**
+     * Adds the legacy table options to remain backwards compatibility with database.sql files.
+     *
+     * @param Table $table
+     */
+    private function setLegacyOptions(Table $table): void
+    {
+        if (!$table->hasOption('engine')) {
+            $table->addOption('engine', 'MyISAM');
+        }
+
+        if (!$table->hasOption('charset')) {
+            $table->addOption('charset', 'utf8');
+        }
+
+        if (!$table->hasOption('collate')) {
+            $table->addOption('collate', 'utf8_general_ci');
         }
     }
 }
