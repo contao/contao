@@ -14,6 +14,7 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 
 class Installer
 {
@@ -164,7 +165,7 @@ class Installer
             }
         }
 
-        $this->checkEngineAndCollation($return);
+        $this->checkEngineAndCollation($return, $toSchema);
 
         $return = array_filter($return);
 
@@ -182,37 +183,41 @@ class Installer
      * Checks engine and collation and adds the ALTER TABLE queries.
      *
      * @param array $sql
+     * @param Schema $toSchema
      */
-    private function checkEngineAndCollation(array &$sql): void
+    private function checkEngineAndCollation(array &$sql, Schema $toSchema): void
     {
-        $params = $this->connection->getParams();
-        $charset = $params['defaultTableOptions']['charset'];
-        $collate = $params['defaultTableOptions']['collate'];
-        $engine = $params['defaultTableOptions']['engine'];
-        $tables = $this->connection->getSchemaManager()->listTableNames();
+        $tables = $toSchema->getTables();
 
         foreach ($tables as $table) {
-            if (0 !== strncmp($table, 'tl_', 3)) {
+            $tableName = $table->getName();
+
+            if (0 !== strncmp($tableName, 'tl_', 3)) {
                 continue;
             }
 
             $tableOptions = $this->connection
-                ->query("SHOW TABLE STATUS LIKE '".$table."'")
+                ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
                 ->fetch(\PDO::FETCH_OBJ)
             ;
 
+            $engine = $table->getOption('engine');
+
             if ($tableOptions->Engine !== $engine) {
                 if ('InnoDB' === $engine) {
-                    $command = 'ALTER TABLE '.$table.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
                 } else {
-                    $command = 'ALTER TABLE '.$table.' ENGINE = '.$engine;
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
 
+            $collate = $table->getOption('collate') ?? 'utf8_general_ci'; // backwards compatibility
+
             if ($tableOptions->Collation !== $collate) {
-                $command = 'ALTER TABLE '.$table.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
+                $charset = $table->getOption('charset');
+                $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
