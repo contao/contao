@@ -276,16 +276,25 @@ class Search
 			$arrIndex[$strWord] = 1;
 		}
 
-		// Remove existing index
+		// Remove the existing index
 		$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
 					->execute($intInsertId);
 
-		// Create new index
+		$arrQuery = array();
+		$arrValues = array();
+
 		foreach ($arrIndex as $k=>$v)
 		{
-			$objDatabase->prepare("INSERT INTO tl_search_index (pid, word, relevance, language) VALUES (?, ?, ?, ?)")
-						->execute($intInsertId, $k, $v, $arrData['language']);
+			$arrQuery[] = '(?, ?, ?, ?)';
+			$arrValues[] = $intInsertId;
+			$arrValues[] = $k;
+			$arrValues[] = $v;
+			$arrValues[] = $arrData['language'];
 		}
+
+		// Create the new index
+		$objDatabase->prepare("INSERT INTO tl_search_index (pid, word, relevance, language) VALUES " . implode(', ', $arrQuery))
+					->execute($arrValues);
 
 		return true;
 	}
