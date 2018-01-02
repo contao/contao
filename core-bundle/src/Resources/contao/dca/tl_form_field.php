@@ -107,6 +107,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'__selector__'                => array('type', 'fsType', 'multiple', 'storeFile', 'imageSubmit'),
 		'default'                     => '{type_legend},type',
 		'explanation'                 => '{type_legend},type;{text_legend},text;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'fieldset'                    => '{type_legend},type;{fconfig_legend},fsType',
 		'fieldsetfsStart'             => '{type_legend},type;{fconfig_legend},fsType,label;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetfsStop'              => '{type_legend},type;{fconfig_legend},fsType;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
