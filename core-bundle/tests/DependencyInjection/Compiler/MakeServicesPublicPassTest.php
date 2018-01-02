@@ -23,7 +23,7 @@ class MakeServicesPublicPassTest extends TestCase
     {
         $pass = new MakeServicesPublicPass();
 
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPassTest', $pass);
+        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass', $pass);
     }
 
     public function testMakesTheServicesPublic(): void

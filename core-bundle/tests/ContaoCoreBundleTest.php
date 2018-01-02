@@ -19,6 +19,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
@@ -59,6 +60,7 @@ class ContaoCoreBundleTest extends TestCase
     public function testAddsTheCompilerPaths(): void
     {
         $passes = [
+            MakeServicesPublicPass::class,
             AddPackagesPass::class,
             AddAssetsPackagesPass::class,
             AddSessionBagsPass::class,
