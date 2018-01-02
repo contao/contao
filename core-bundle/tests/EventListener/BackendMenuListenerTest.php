@@ -122,10 +122,12 @@ class BackendMenuListenerTest extends TestCase
         $childNode = $categoryNode->getChild('node1');
         $this->assertNotNull($childNode);
         $this->assertTrue($childNode->isCurrent());
+        $this->assertSame('node1', $childNode->getAttribute('class'));
 
         $childNode = $categoryNode->getChild('node2');
         $this->assertNotNull($childNode);
         $this->assertFalse($childNode->isCurrent());
+        $this->assertSame('node2', $childNode->getAttribute('class'));
     }
 
     public function testDoesNotModifyTheTreeIfNoUserOrTokenIsGiven(): void

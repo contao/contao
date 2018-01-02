@@ -64,7 +64,7 @@ class BackendMenuListener
             foreach ($categoryData['modules'] as $moduleName => $moduleData) {
                 $moduleNode = $this->createNode($factory, $moduleName, $moduleData);
                 $moduleNode->setCurrent((bool) $moduleData['isActive']);
-                $moduleNode->setAttribute('class', $categoryName);
+                $moduleNode->setAttribute('class', $moduleName);
 
                 $categoryNode->addChild($moduleNode);
             }

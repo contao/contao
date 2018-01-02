@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Set the correct CSS classes in the back end navigation (see #1278).
  * Correctly handle authentication through the Symfony firewall entry point (see #1275).
  * Make services public that we need to access directly.
 
