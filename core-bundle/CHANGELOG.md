@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Do not resend activation mails for active members (see #1234).
  * Order the files by name when selecting folders in the file picker (see #1270).
  * Optimize inserting keywords into tl_search_index (see #1277).
 
