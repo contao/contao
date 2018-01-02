@@ -119,7 +119,7 @@ class ContentGallery extends \ContentElement
 			// Folders
 			else
 			{
-				$objSubfiles = \FilesModel::findByPid($objFiles->uuid);
+				$objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
 				if ($objSubfiles === null)
 				{

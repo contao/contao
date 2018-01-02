@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Order the files by name when selecting folders in the file picker (see #1270).
  * Optimize inserting keywords into tl_search_index (see #1277).
 
 ### 4.4.11 (2017-12-28)
