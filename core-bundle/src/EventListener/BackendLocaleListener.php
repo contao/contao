@@ -60,7 +60,7 @@ class BackendLocaleListener
         }
 
         $request = $event->getRequest();
-        $request->attributes->set('_locale', $user->language);
+        $request->setLocale($user->language);
 
         $this->translator->setLocale($user->language);
 

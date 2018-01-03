@@ -57,6 +57,14 @@ class BackendLocaleListenerTest extends TestCase
             ->willReturn($token)
         ;
 
+        $request = $this->createMock(Request::class);
+
+        $request
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with('de')
+        ;
+
         $translator = $this->createMock(TranslatorInterface::class);
 
         $translator
@@ -66,7 +74,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-        $request = new Request();
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -74,7 +81,6 @@ class BackendLocaleListenerTest extends TestCase
         $listener = new BackendLocaleListener($tokenStorage, $translator);
         $listener->onKernelRequest($event);
 
-        $this->assertSame('de', $request->attributes->get('_locale'));
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
 
         unset($GLOBALS['TL_LANGUAGE']);
@@ -90,15 +96,16 @@ class BackendLocaleListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $request = $this->createMock(Request::class);
 
-        $translator
+        $request
             ->expects($this->never())
             ->method('setLocale')
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $translator = $this->createMock(TranslatorInterface::class);
 
         $listener = new BackendLocaleListener($tokenStorage, $translator);
         $listener->onKernelRequest($event);
@@ -122,15 +129,16 @@ class BackendLocaleListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $request = $this->createMock(Request::class);
 
-        $translator
+        $request
             ->expects($this->never())
             ->method('setLocale')
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $translator = $this->createMock(TranslatorInterface::class);
 
         $listener = new BackendLocaleListener($tokenStorage, $translator);
         $listener->onKernelRequest($event);
@@ -157,15 +165,16 @@ class BackendLocaleListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $request = $this->createMock(Request::class);
 
-        $translator
+        $request
             ->expects($this->never())
             ->method('setLocale')
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $translator = $this->createMock(TranslatorInterface::class);
 
         $listener = new BackendLocaleListener($tokenStorage, $translator);
         $listener->onKernelRequest($event);
