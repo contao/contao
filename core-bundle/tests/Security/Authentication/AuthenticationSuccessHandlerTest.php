@@ -19,11 +19,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
@@ -94,73 +92,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $handler = $this->mockSuccessHandler($framework);
         $handler->onAuthenticationSuccess(new Request(), $token);
-    }
-
-    public function testSetsTheLocale(): void
-    {
-        $framework = $this->mockContaoFramework();
-
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->createPartialMock(BackendUser::class, ['save']);
-        $user->username = 'foobar';
-        $user->lastLogin = time() - 3600;
-        $user->currentLogin = time() - 1800;
-        $user->language = 'de';
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
-        $session = $this->createMock(SessionInterface::class);
-
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
-
-        $session
-            ->expects($this->once())
-            ->method('set')
-            ->with('_locale', 'de')
-        ;
-
-        $request = $this->createMock(Request::class);
-
-        $request
-            ->expects($this->once())
-            ->method('getSession')
-            ->willReturn($session)
-        ;
-
-        $request
-            ->expects($this->once())
-            ->method('setLocale')
-            ->with('de')
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $GLOBALS['TL_LANGUAGE'] = 'en';
-
-        $handler = $this->mockSuccessHandler($framework);
-        $handler->onAuthenticationSuccess($request, $token);
-
-        $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
-
-        unset($GLOBALS['TL_LANGUAGE']);
     }
 
     /**
@@ -249,12 +180,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
             $framework = $this->mockContaoFramework();
         }
 
-        $translator = $this->createMock(TranslatorInterface::class);
-
         if (null === $logger) {
             $logger = $this->createMock(LoggerInterface::class);
         }
 
-        return new AuthenticationSuccessHandler($utils, $framework, $translator, $logger);
+        return new AuthenticationSuccessHandler($utils, $framework, $logger);
     }
 }

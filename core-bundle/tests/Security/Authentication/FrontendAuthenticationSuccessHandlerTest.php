@@ -195,8 +195,6 @@ class FrontendAuthenticationSuccessHandlerTest extends TestCase
             $framework = $this->mockContaoFramework();
         }
 
-        $translator = $this->createMock(TranslatorInterface::class);
-
-        return new FrontendAuthenticationSuccessHandler(new HttpUtils(), $framework, $translator);
+        return new FrontendAuthenticationSuccessHandler(new HttpUtils(), $framework);
     }
 }

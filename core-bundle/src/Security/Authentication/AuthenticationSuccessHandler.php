@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
@@ -36,22 +35,15 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     protected $logger;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param HttpUtils                $httpUtils
      * @param ContaoFrameworkInterface $framework
-     * @param TranslatorInterface      $translator
      * @param LoggerInterface|null     $logger
      */
-    public function __construct(HttpUtils $httpUtils, ContaoFrameworkInterface $framework, TranslatorInterface $translator, LoggerInterface $logger = null)
+    public function __construct(HttpUtils $httpUtils, ContaoFrameworkInterface $framework, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);
 
         $this->framework = $framework;
-        $this->translator = $translator;
         $this->logger = $logger;
     }
 
@@ -76,10 +68,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $user->lastLogin = $user->currentLogin;
         $user->currentLogin = time();
         $user->save();
-
-        if ($user->language) {
-            $this->setLocale($request, $user->language);
-        }
 
         if (null !== $this->logger) {
             $this->logger->info(
@@ -109,24 +97,5 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
             $this->framework->createInstance($callback[0])->{$callback[1]}($user);
         }
-    }
-
-    /**
-     * Stores the locale after a user has logged in.
-     *
-     * @param Request $request
-     * @param string  $locale
-     */
-    private function setLocale(Request $request, string $locale): void
-    {
-        if (null !== ($session = $request->getSession()) && $session->isStarted()) {
-            $session->set('_locale', $locale);
-        }
-
-        $request->setLocale($locale);
-        $this->translator->setLocale($locale);
-
-        // Deprecated since Contao 4.0, to be removed in Contao 5.0
-        $GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $locale);
     }
 }

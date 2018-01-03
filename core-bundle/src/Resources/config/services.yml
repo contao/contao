@@ -359,7 +359,6 @@ services:
         arguments:
             - "@security.http_utils"
             - "@contao.framework"
-            - "@translator"
             - "@logger"
 
     contao.security.database_token_provider:
@@ -380,7 +379,6 @@ services:
         arguments:
             - "@security.http_utils"
             - "@contao.framework"
-            - "@translator"
             - "@logger"
 
     contao.security.frontend_logout_success_handler:
