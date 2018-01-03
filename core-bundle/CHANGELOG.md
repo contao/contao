@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.12 (2018-01-03)
 
  * Do not resend activation mails for active members (see #1234).
  * Order the files by name when selecting folders in the file picker (see #1270).
