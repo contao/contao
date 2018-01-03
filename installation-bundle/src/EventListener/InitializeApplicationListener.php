@@ -17,6 +17,7 @@ use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -53,9 +54,14 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
+        $application = new Application($this->container->get('kernel'));
+
+        $command = new AssetsInstallCommand();
+        $command->setApplication($application);
+
         $input = new ArgvInput(['assets:install', '--relative', $webDir]);
 
-        if (null === ($output = $this->runCommand(new AssetsInstallCommand(), $input))) {
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
