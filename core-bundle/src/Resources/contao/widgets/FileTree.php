@@ -264,7 +264,7 @@ class FileTree extends \Widget
 					{
 						if ($objFiles->type == 'folder')
 						{
-							$objSubfiles = \FilesModel::findByPid($objFiles->uuid);
+							$objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
 							if ($objSubfiles === null)
 							{

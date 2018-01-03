@@ -122,7 +122,8 @@ class Form extends \Hybrid
 		{
 			while ($objFields->next())
 			{
-				if ($objFields->name != '')
+				// Ignore the name of form fields which do not use a name (see #1268)
+				if ($objFields->name != '' && isset($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]) && preg_match('/[,;]name[,;]/', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]))
 				{
 					$arrFields[$objFields->name] = $objFields->current();
 				}
