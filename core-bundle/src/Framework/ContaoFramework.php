@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
@@ -362,11 +363,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private function initializeLegacySessionAccess(): void
     {
         if (!$this->session->isStarted()) {
-            return;
+            $_SESSION = new LazySessionAccess($this->session);
+        } else {
+            $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
+            $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
         }
-
-        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
-        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
     }
 
     /**
@@ -382,7 +383,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE'] = $language;
-        $_SESSION['TL_LANGUAGE'] = $language;
     }
 
     /**

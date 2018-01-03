@@ -514,16 +514,10 @@ abstract class Frontend extends \Controller
 
 		if ($strCookie == 'BE_USER_AUTH' && $objTokenChecker->hasBackendUser())
 		{
-			// Disable the cache if a back end user is logged in
-			if (TL_MODE == 'FE')
+			// Always return false if we are not in preview mode (show hidden elements)
+			if (TL_MODE == 'FE' && !$objTokenChecker->isPreviewMode())
 			{
-				$_SESSION['DISABLE_CACHE'] = true;
-
-				// Always return false if we are not in preview mode (show hidden elements)
-				if (!$objTokenChecker->isPreviewMode())
-				{
-					return false;
-				}
+				return false;
 			}
 
 			return true;
@@ -532,12 +526,6 @@ abstract class Frontend extends \Controller
 		if ($strCookie == 'FE_USER_AUTH' && $objTokenChecker->hasFrontendUser())
 		{
 			return true;
-		}
-
-		// Reset the cache settings
-		if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')
-		{
-			$_SESSION['DISABLE_CACHE'] = false;
 		}
 
 		return false;
