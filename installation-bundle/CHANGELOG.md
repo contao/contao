@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.4.12 (2018-01-03)
 
  * The assets:install command requires the application to be set in Symfony 3.4 (see #81).
 
