@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Replace the session data in the authentication success handler (see #1288).
+
 ### 4.5.1 (2018-01-04)
 
  * Set the correct CSS classes in the back end navigation (see #1278).

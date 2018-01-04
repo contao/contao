@@ -16,9 +16,13 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FrontendUser;
+use Contao\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -54,7 +58,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
-        $user->language = '';
+        $user->session = null;
 
         $user
             ->expects($this->once())
@@ -95,6 +99,123 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
+     * @param string      $class
+     * @param string|null $key
+     *
+     * @dataProvider getSessionData
+     */
+    public function testReplacesTheSessionData(string $class, ?string $key): void
+    {
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->createPartialMock($class, ['save']);
+        $user->lastLogin = time() - 3600;
+        $user->currentLogin = time() - 1800;
+        $user->session = ['tl_page' => [1]];
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $bag = $this->createMock(AttributeBagInterface::class);
+
+        $bag
+            ->expects($key ? $this->once() : $this->never())
+            ->method('replace')
+            ->with(['tl_page' => [1]])
+        ;
+
+        $session = $this->createMock(SessionInterface::class);
+
+        $session
+            ->expects($key ? $this->once() : $this->never())
+            ->method('getBag')
+            ->with($key)
+            ->willReturn($bag)
+        ;
+
+        $request = $this->createMock(Request::class);
+
+        $request
+            ->expects($this->once())
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $handler = $this->mockSuccessHandler($framework);
+
+        if (null === $key) {
+            $this->expectException('RuntimeException');
+            $this->expectExceptionMessage(sprintf('Unsupported user class "%s".', \get_class($user)));
+        }
+
+        $handler->onAuthenticationSuccess($request, $token);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSessionData(): array
+    {
+        return [
+            [BackendUser::class, 'contao_backend'],
+            [FrontendUser::class, 'contao_frontend'],
+            [User::class, null],
+        ];
+    }
+
+    public function testFailsToReplaceTheSessionDataIfThereIsNoSession(): void
+    {
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        /** @var BackendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->createPartialMock(BackendUser::class, ['save']);
+        $user->lastLogin = time() - 3600;
+        $user->currentLogin = time() - 1800;
+        $user->session = ['tl_page' => [1]];
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $handler = $this->mockSuccessHandler($framework);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request did not contain a session.');
+
+        $handler->onAuthenticationSuccess(new Request(), $token);
+    }
+
+    /**
      * @group legacy
      *
      * @expectedDeprecation Using the "postLogin" hook has been deprecated %s.
@@ -128,7 +249,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
-        $user->language = '';
 
         $user
             ->expects($this->once())

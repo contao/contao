@@ -12,12 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\FrontendUser;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -69,6 +73,10 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $user->currentLogin = time();
         $user->save();
 
+        if (\is_array($user->session)) {
+            $this->getSessionBag($request, $user)->replace($user->session);
+        }
+
         if (null !== $this->logger) {
             $this->logger->info(
                 sprintf('User "%s" has logged in', $user->username),
@@ -79,6 +87,35 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $this->triggerPostLoginHook($user);
 
         return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+    }
+
+    /**
+     * Returns the session bag.
+     *
+     * @param Request $request
+     * @param User    $user
+     *
+     * @throws \RuntimeException
+     *
+     * @return AttributeBagInterface|SessionBagInterface
+     */
+    private function getSessionBag(Request $request, User $user): AttributeBagInterface
+    {
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session.');
+        }
+
+        if ($user instanceof BackendUser) {
+            return $session->getBag('contao_backend');
+        }
+
+        if ($user instanceof FrontendUser) {
+            return $session->getBag('contao_frontend');
+        }
+
+        throw new \RuntimeException(sprintf('Unsupported user class "%s".', \get_class($user)));
     }
 
     /**
