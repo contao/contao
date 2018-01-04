@@ -1,0 +1,14 @@
+services:
+    contao_manager.listener.initialize_application:
+        class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
+        arguments:
+            - "%kernel.project_dir%"
+        tags:
+            - { name: kernel.event_listener, event: contao_installation.initialize_application, method: onInitializeApplication, priority: -128 }
+
+    contao_manager.listener.install_command:
+        class: Contao\ManagerBundle\EventListener\InstallCommandListener
+        arguments:
+            - "%kernel.project_dir%"
+        tags:
+            - { name: kernel.event_listener, event: console.terminate }
