@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.5.1 (2018-01-04)
 
  * Check all innodb_large_prefix requirements in the install tool (see #80).
  * Use the table options instead of the default table options to compare engine and collation.

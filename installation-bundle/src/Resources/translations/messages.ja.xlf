@@ -416,6 +416,14 @@
         <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt;オプションをサーバーで有効にしていません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
         
       </trans-unit>
+      <trans-unit id="84">
+        <source>innodb_additional</source>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_additional_explain</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

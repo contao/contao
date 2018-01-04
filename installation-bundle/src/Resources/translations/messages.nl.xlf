@@ -416,6 +416,16 @@
         <target>De &lt;code&gt;innodb_large_prefix&lt;/code&gt; optie is niet ingeschakeld op uw server. Schakel dit in (aanbevolen) of configureer een andere tekenset en sortering in het &lt;code&gt;app/config/config.yml&lt;/code&gt; bestand.</target>
         
       </trans-unit>
+      <trans-unit id="84">
+        <source>innodb_additional</source>
+        <target>InnoDB is niet correct geconfigureerd!</target>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_additional_explain</source>
+        <target>Gebruik van grote prefixen in MySQL-versies voorafgaand aan 5.7.7 en MariaDB-versies vóór 10.2 vereisen het Barracuda-bestandsformaat en de &lt;code&gt;innodb_file_per_table&lt;/code&gt; optie.</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
