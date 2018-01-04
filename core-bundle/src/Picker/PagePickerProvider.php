@@ -72,7 +72,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             }
 
             if ($value) {
-                $attributes['value'] = array_map('intval', explode(',', $value));
+                $attributes['value'] = array_map('\intval', explode(',', $value));
             }
 
             return $attributes;

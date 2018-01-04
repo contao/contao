@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class FrontendAuthenticationSuccessHandlerTest extends TestCase
 {
