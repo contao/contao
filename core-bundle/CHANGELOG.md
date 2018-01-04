@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.1 (2018-01-04)
 
  * Set the correct CSS classes in the back end navigation (see #1278).
  * Correctly handle authentication through the Symfony firewall entry point (see #1275).

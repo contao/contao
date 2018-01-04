@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Voor meer informatie, verwijzen wij u naar &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</target>
+        <target>Voor meer informatie, verwijzen wij u naar het &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.noForward">
         <source>Forward page not found</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="XPT.noLayoutExplain">
         <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Voor meer informatie, verwijzen wij u naar &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</target>
+        <target>Voor meer informatie, verwijzen wij u naar het &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.noActive">
         <source>No active pages found</source>
