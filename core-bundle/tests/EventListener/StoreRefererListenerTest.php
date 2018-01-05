@@ -56,7 +56,9 @@ class StoreRefererListenerTest extends TestCase
         $session = $this->mockSession();
         $session->set('referer', $currentReferer);
 
-        $listener = $this->mockListener($session, $tokenStorage);
+        $request->setSession($session);
+
+        $listener = $this->mockListener($tokenStorage);
         $listener->onKernelResponse($this->mockResponseEvent($request));
 
         $this->assertSame($expectedReferer, $session->get('referer'));
@@ -176,7 +178,7 @@ class StoreRefererListenerTest extends TestCase
             ->method('getToken')
         ;
 
-        $listener = $this->mockListener(null, $tokenStorage);
+        $listener = $this->mockListener($tokenStorage);
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -199,7 +201,7 @@ class StoreRefererListenerTest extends TestCase
             ->method('getToken')
         ;
 
-        $listener = $this->mockListener(null, $tokenStorage);
+        $listener = $this->mockListener($tokenStorage);
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -226,9 +228,10 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $request = new Request();
+        $request->setSession($session);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $listener = $this->mockListener($session, $tokenStorage);
+        $listener = $this->mockListener($tokenStorage);
         $listener->onKernelResponse($this->mockResponseEvent($request));
     }
 
@@ -254,8 +257,11 @@ class StoreRefererListenerTest extends TestCase
             ->method('set')
         ;
 
-        $listener = $this->mockListener($session);
-        $listener->onKernelResponse($this->mockResponseEvent());
+        $request = new Request();
+        $request->setSession($session);
+
+        $listener = $this->mockListener();
+        $listener->onKernelResponse($this->mockResponseEvent($request));
     }
 
     public function testDoesNotStoreTheRefererUponSubrequests(): void
@@ -268,12 +274,13 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $request = new Request();
+        $request->setSession($session);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
         $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
 
-        $listener = $this->mockListener($session);
+        $listener = $this->mockListener();
         $listener->onKernelResponse($event);
     }
 
@@ -294,39 +301,35 @@ class StoreRefererListenerTest extends TestCase
         ;
 
         $request = new Request();
+        $request->setSession($session);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $listener = $this->mockListener($session, $tokenStorage);
+        $listener = $this->mockListener($tokenStorage);
         $listener->onKernelResponse($this->mockResponseEvent($request));
     }
 
     /**
      * Mocks a session listener.
      *
-     * @param SessionInterface      $session
      * @param TokenStorageInterface $tokenStorage
      *
      * @return StoreRefererListener
      */
-    private function mockListener(SessionInterface $session = null, TokenStorageInterface $tokenStorage = null): StoreRefererListener
+    private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener
     {
-        if (null === $session) {
-            $session = $this->mockSession();
-        }
-
         if (null === $tokenStorage) {
             $tokenStorage = $this->createMock(TokenStorageInterface::class);
         }
 
         $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
 
-        return new StoreRefererListener($session, $tokenStorage, $trustResolver, $this->mockScopeMatcher());
+        return new StoreRefererListener($tokenStorage, $trustResolver, $this->mockScopeMatcher());
     }
 
     /**
      * Mocks a response event.
      *
-     * @param Request|null $request
+     * @param Request|null          $request
      *
      * @return FilterResponseEvent
      */

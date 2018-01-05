@@ -14,18 +14,12 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StoreRefererListener
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var TokenStorageInterface
      */
@@ -42,14 +36,12 @@ class StoreRefererListener
     private $scopeMatcher;
 
     /**
-     * @param SessionInterface                     $session
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      * @param ScopeMatcher                         $scopeMatcher
      */
-    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
     {
-        $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
         $this->scopeMatcher = $scopeMatcher;
@@ -95,6 +87,8 @@ class StoreRefererListener
      * Stores the back end referer.
      *
      * @param Request $request
+     *
+     * @throws \RuntimeException
      */
     private function storeBackendReferer(Request $request): void
     {
@@ -102,9 +96,15 @@ class StoreRefererListener
             return;
         }
 
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session');
+        }
+
         $key = $request->query->has('popup') ? 'popupReferer' : 'referer';
         $refererId = $request->attributes->get('_contao_referer_id');
-        $referers = $this->prepareBackendReferer($refererId, $this->session->get($key));
+        $referers = $this->prepareBackendReferer($refererId, $session->get($key));
         $ref = $request->query->get('ref', '');
 
         // Move current to last if the referer is in both the URL and the session
@@ -116,7 +116,7 @@ class StoreRefererListener
         // Set new current referer
         $referers[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
-        $this->session->set($key, $referers);
+        $session->set($key, $referers);
     }
 
     /**
@@ -168,10 +168,18 @@ class StoreRefererListener
      * Stores the front end referer.
      *
      * @param Request $request
+     *
+     * @throws \RuntimeException
      */
     private function storeFrontendReferer(Request $request): void
     {
-        $refererOld = $this->session->get('referer');
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session');
+        }
+
+        $refererOld = $session->get('referer');
 
         if (!$this->canModifyFrontendSession($request, $refererOld)) {
             return;
@@ -182,7 +190,7 @@ class StoreRefererListener
             'current' => $this->getRelativeRequestUri($request),
         ];
 
-        $this->session->set('referer', $refererNew);
+        $session->set('referer', $refererNew);
     }
 
     /**

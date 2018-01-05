@@ -18,7 +18,6 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -26,11 +25,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserSessionListener
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var Connection
      */
@@ -52,15 +46,13 @@ class UserSessionListener
     private $scopeMatcher;
 
     /**
-     * @param SessionInterface                     $session
      * @param Connection                           $connection
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      * @param ScopeMatcher                         $scopeMatcher
      */
-    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
+    public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
     {
-        $this->session = $session;
         $this->connection = $connection;
         $this->tokenStorage = $tokenStorage;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
@@ -132,16 +124,24 @@ class UserSessionListener
      *
      * @param Request $request
      *
+     * @throws \RuntimeException
+     *
      * @return AttributeBagInterface|SessionBagInterface
      */
     private function getSessionBag(Request $request): AttributeBagInterface
     {
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session');
+        }
+
         $name = 'contao_frontend';
 
         if ($this->scopeMatcher->isBackendRequest($request)) {
             $name = 'contao_backend';
         }
 
-        return $this->session->getBag($name);
+        return $session->getBag($name);
     }
 }
