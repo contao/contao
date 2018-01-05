@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
-class FrontendLogoutSuccessHandler extends DefaultLogoutSuccessHandler
+class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
     /**
      * {@inheritdoc}

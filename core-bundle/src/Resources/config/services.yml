@@ -374,11 +374,6 @@ services:
             - "Contao\\BackendUser"
             - "@logger"
 
-    contao.security.frontend_logout_success_handler:
-        class: Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler
-        arguments:
-            - "@security.http_utils"
-
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
         arguments:
@@ -394,6 +389,11 @@ services:
             - "@session"
             - "Contao\\FrontendUser"
             - "@logger"
+
+    contao.security.logout_success_handler:
+        class: Contao\CoreBundle\Security\Logout\LogoutSuccessHandler
+        arguments:
+            - "@security.http_utils"
 
     contao.security.sha1_password_encoder:
         class: Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder

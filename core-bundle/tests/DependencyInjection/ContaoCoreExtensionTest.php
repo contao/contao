@@ -80,8 +80,8 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder;
-use Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
+use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
@@ -1304,17 +1304,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('logger', (string) $definition->getArgument(3));
     }
 
-    public function testRegistersTheSecurityFrontendLogoutSuccessHandler(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.frontend_logout_success_handler'));
-
-        $definition = $this->container->getDefinition('contao.security.frontend_logout_success_handler');
-
-        $this->assertSame(FrontendLogoutSuccessHandler::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
-    }
-
     public function testRegistersTheSecurityFrontendPreviewAuthenticator(): void
     {
         $this->assertTrue($this->container->has('contao.security.frontend_preview_authenticator'));
@@ -1341,6 +1330,17 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('session', (string) $definition->getArgument(1));
         $this->assertSame(FrontendUser::class, (string) $definition->getArgument(2));
         $this->assertSame('logger', (string) $definition->getArgument(3));
+    }
+
+    public function testRegistersTheSecurityLogoutSuccessHandler(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.logout_success_handler'));
+
+        $definition = $this->container->getDefinition('contao.security.logout_success_handler');
+
+        $this->assertSame(LogoutSuccessHandler::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheSecuritySha1PasswordEncoder(): void

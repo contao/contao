@@ -12,19 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Test\Security\Logout;
 
-use Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler;
+use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\HttpUtils;
 
-class FrontendLogoutSuccessHandlerTest extends TestCase
+class LogoutSuccessHandlerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $handler = new FrontendLogoutSuccessHandler($this->createMock(HttpUtils::class));
+        $handler = new LogoutSuccessHandler($this->createMock(HttpUtils::class));
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler', $handler);
+        $this->assertInstanceOf('Contao\CoreBundle\Security\Logout\LogoutSuccessHandler', $handler);
     }
 
     public function testRedirectsToAGivenUrl(): void
@@ -41,7 +41,7 @@ class FrontendLogoutSuccessHandlerTest extends TestCase
             ->willReturn(new RedirectResponse('http://localhost/home'))
         ;
 
-        $handler = new FrontendLogoutSuccessHandler($httpUtils);
+        $handler = new LogoutSuccessHandler($httpUtils);
         $response = $handler->onLogoutSuccess($request);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
@@ -62,7 +62,7 @@ class FrontendLogoutSuccessHandlerTest extends TestCase
             ->willReturn(new RedirectResponse('http://localhost/home'))
         ;
 
-        $handler = new FrontendLogoutSuccessHandler($httpUtils);
+        $handler = new LogoutSuccessHandler($httpUtils);
         $response = $handler->onLogoutSuccess($request);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
@@ -81,7 +81,7 @@ class FrontendLogoutSuccessHandlerTest extends TestCase
             ->willReturn(new RedirectResponse('http://localhost'))
         ;
 
-        $handler = new FrontendLogoutSuccessHandler($httpUtils);
+        $handler = new LogoutSuccessHandler($httpUtils);
         $response = $handler->onLogoutSuccess($request);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
