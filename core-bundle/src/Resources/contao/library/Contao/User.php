@@ -66,7 +66,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property boolean $disable
  * @property string  $start
  * @property string  $stop
- * @property string  $session
+ * @property array   $session
  * @property integer $dateAdded
  * @property integer $lastLogin
  * @property integer $currentLogin

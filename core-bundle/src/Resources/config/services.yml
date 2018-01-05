@@ -374,13 +374,6 @@ services:
             - "Contao\\BackendUser"
             - "@logger"
 
-    contao.security.frontend_authentication_success_handler:
-        class: Contao\CoreBundle\Security\Authentication\FrontendAuthenticationSuccessHandler
-        arguments:
-            - "@security.http_utils"
-            - "@contao.framework"
-            - "@logger"
-
     contao.security.frontend_logout_success_handler:
         class: Contao\CoreBundle\Security\Logout\FrontendLogoutSuccessHandler
         arguments:

@@ -157,10 +157,10 @@ security:
                 check_path: contao_frontend_login
                 default_target_path: contao_root
                 failure_path: contao_root
+                success_handler: contao.security.authentication_success_handler
                 failure_handler: contao.security.authentication_failure_handler
-                success_handler: contao.security.frontend_authentication_success_handler
-                use_forward: true
                 remember_me: true
+                use_forward: true
 
             remember_me:
                 secret: '%secret%'

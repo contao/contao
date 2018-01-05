@@ -76,7 +76,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
-use Contao\CoreBundle\Security\Authentication\FrontendAuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -1303,19 +1302,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('session', (string) $definition->getArgument(1));
         $this->assertSame(BackendUser::class, (string) $definition->getArgument(2));
         $this->assertSame('logger', (string) $definition->getArgument(3));
-    }
-
-    public function testRegistersTheSecurityFrontendAuthenticationSuccessHandler(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.frontend_authentication_success_handler'));
-
-        $definition = $this->container->getDefinition('contao.security.frontend_authentication_success_handler');
-
-        $this->assertSame(FrontendAuthenticationSuccessHandler::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('logger', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityFrontendLogoutSuccessHandler(): void
