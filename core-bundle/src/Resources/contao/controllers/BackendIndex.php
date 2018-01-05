@@ -60,6 +60,13 @@ class BackendIndex extends \Backend
 			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 		}
 
+		$targetPath = '/contao';
+
+		if ($referer = \Input::get('referer', true))
+		{
+			$targetPath = base64_decode($referer);
+		}
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 
@@ -81,6 +88,8 @@ class BackendIndex extends \Backend
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
+		$objTemplate->targetPath = \Environment::get('base') . ltrim($targetPath, '/');
+		$objTemplate->failurePath = \Environment::get('base') . \Environment::get('request');
 
 		return $objTemplate->getResponse();
 	}

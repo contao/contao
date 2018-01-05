@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Redirect to the last page visited if a back end session expires.
  * Replace the session data in the authentication success handler (see #1288).
 
 ### 4.5.1 (2018-01-04)

@@ -374,6 +374,12 @@ services:
             - "Contao\\BackendUser"
             - "@logger"
 
+    contao.security.entry_point:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
+        arguments:
+            - "@security.http_utils"
+            - "@router"
+
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
         arguments:
@@ -395,14 +401,14 @@ services:
         arguments:
             - "@security.http_utils"
 
-    contao.security.sha1_password_encoder:
-        class: Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder
-
     contao.security.logout_handler:
         class: Contao\CoreBundle\Security\Logout\LogoutHandler
         arguments:
             - "@contao.framework"
             - "@logger"
+
+    contao.security.sha1_password_encoder:
+        class: Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker

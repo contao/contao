@@ -74,6 +74,7 @@ use Contao\CoreBundle\Referer\TokenGenerator;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
+use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
@@ -490,10 +491,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(StoreRefererListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('session', (string) $definition->getArgument(0));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
-        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(2));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(3));
+        $this->assertSame('security.token_storage', (string) $definition->getArgument(0));
+        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(1));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
 
         $tags = $definition->getTags();
 
@@ -566,11 +566,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(EventUserSessionListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('session', (string) $definition->getArgument(0));
-        $this->assertSame('database_connection', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
-        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(3));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(4));
+        $this->assertSame('database_connection', (string) $definition->getArgument(0));
+        $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
+        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(2));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
 
@@ -1304,6 +1303,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('logger', (string) $definition->getArgument(3));
     }
 
+    public function testRegistersTheSecurityEntryPoint(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.entry_point'));
+
+        $definition = $this->container->getDefinition('contao.security.entry_point');
+
+        $this->assertSame(AuthenticationEntryPoint::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+    }
+
     public function testRegistersTheSecurityFrontendPreviewAuthenticator(): void
     {
         $this->assertTrue($this->container->has('contao.security.frontend_preview_authenticator'));
@@ -1343,16 +1354,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
     }
 
-    public function testRegistersTheSecuritySha1PasswordEncoder(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.sha1_password_encoder'));
-
-        $definition = $this->container->getDefinition('contao.security.sha1_password_encoder');
-
-        $this->assertSame(Sha1PasswordEncoder::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-    }
-
     public function testRegistersTheSecurityLogoutHandler(): void
     {
         $this->assertTrue($this->container->has('contao.security.logout_handler'));
@@ -1363,6 +1364,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('logger', (string) $definition->getArgument(1));
+    }
+
+    public function testRegistersTheSecuritySha1PasswordEncoder(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.sha1_password_encoder'));
+
+        $definition = $this->container->getDefinition('contao.security.sha1_password_encoder');
+
+        $this->assertSame(Sha1PasswordEncoder::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
     }
 
     public function testRegistersTheSecurityTokenChecker(): void

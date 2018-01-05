@@ -122,6 +122,7 @@ security:
             security: false
 
         contao_backend:
+            entry_point: contao.security.entry_point
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
@@ -133,7 +134,6 @@ security:
                 login_path: contao_backend_login
                 check_path: contao_backend_login
                 default_target_path: contao_backend
-                always_use_default_target_path: true
                 success_handler: contao.security.authentication_success_handler
                 failure_handler: contao.security.authentication_failure_handler
                 remember_me: false

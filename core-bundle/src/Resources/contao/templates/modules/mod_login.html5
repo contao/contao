@@ -17,8 +17,8 @@
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
       <?php else: ?>
-        <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
         <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
+        <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
         <div class="widget widget-text">
           <label for="username"><?= $this->username ?></label>
           <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" required><br>
