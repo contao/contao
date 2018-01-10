@@ -15,11 +15,13 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -46,22 +48,24 @@ class UserSessionListener
     private $scopeMatcher;
 
     /**
-     * @var bool
+     * @var EventDispatcherInterface
      */
-    private $registered = false;
+    private $eventDispatcher;
 
     /**
      * @param Connection                           $connection
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      * @param ScopeMatcher                         $scopeMatcher
+     * @param EventDispatcherInterface             $eventDispatcher
      */
-    public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
+    public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
     {
         $this->connection = $connection;
         $this->tokenStorage = $tokenStorage;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
         $this->scopeMatcher = $scopeMatcher;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -93,7 +97,8 @@ class UserSessionListener
             $this->getSessionBag($event->getRequest())->replace($session);
         }
 
-        $this->registered = true;
+        // Dynamically register the kernel.response listener (see #1293)
+        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, array($this, 'onKernelResponse'));
     }
 
     /**
@@ -103,7 +108,7 @@ class UserSessionListener
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
-        if (!$this->registered || !$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
         }
 

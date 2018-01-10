@@ -570,14 +570,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
         $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(2));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(3));
+        $this->assertSame('event_dispatcher', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][1]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
     }
 
     public function testRegistersTheAssetPluginContext(): void
