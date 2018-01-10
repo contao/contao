@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -53,7 +55,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->startSession();
 
@@ -63,7 +65,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->startSession();
 
@@ -83,7 +85,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     /**
      * Starts the session.
      */
-    private function startSession()
+    private function startSession(): void
     {
         @trigger_error('Using $_SESSION has been deprecated and will no longer work in Contao 5.0. Use the Symfony session instead.', E_USER_DEPRECATED);
 

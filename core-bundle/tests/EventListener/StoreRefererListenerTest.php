@@ -329,7 +329,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * Mocks a response event.
      *
-     * @param Request|null          $request
+     * @param Request|null $request
      *
      * @return FilterResponseEvent
      */
