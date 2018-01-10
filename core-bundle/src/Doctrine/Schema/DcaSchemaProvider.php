@@ -119,6 +119,8 @@ class DcaSchemaProvider
     {
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
+
+        /** @var ClassMetadata[] $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
 
         // Apply the schema filter
