@@ -459,7 +459,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
-    public function testAppliesTheSchemaFilter(): void
+    public function testAppliesTheSchemaFilterToTheSqlDefinitions(): void
     {
         $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], null, '/^tl_/');
         $schema = $provider->createSchema();
@@ -522,6 +522,29 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $schema = $provider->createSchema();
 
         $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(1, $schema->getTables());
+        $this->assertTrue($schema->hasTable('tl_member'));
+    }
+
+    public function testAppliesTheSchemaFilterToTheOrmEntities(): void
+    {
+        $class1 = new ClassMetadata('tl_member');
+        $class1->setTableName('tl_member');
+
+        $class2 = new ClassMetadata('member');
+        $class2->setTableName('member');
+
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm([$class1, $class2], '/^tl_/')
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(1, $schema->getTables());
+        $this->assertTrue($schema->hasTable('tl_member'));
+        $this->assertFalse($schema->hasTable('member'));
     }
 
     public function testDoesNotCreateTheSchemaFromOrmIfThereIsNoMetadata(): void

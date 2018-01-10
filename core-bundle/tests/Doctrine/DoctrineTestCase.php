@@ -110,17 +110,18 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection and ORM.
      *
-     * @param array $metadata
+     * @param array  $metadata
+     * @param string $filter
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistryWithOrm(array $metadata = []): Registry
+    protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null): Registry
     {
         $config = $this->createMock(Configuration::class);
 
         $config
             ->method('getFilterSchemaAssetsExpression')
-            ->willReturn(null)
+            ->willReturn($filter)
         ;
 
         $connection = $this->createMock(Connection::class);

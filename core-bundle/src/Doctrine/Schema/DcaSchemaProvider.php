@@ -121,6 +121,15 @@ class DcaSchemaProvider
         $manager = $this->doctrine->getManager();
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
 
+        // Apply the schema filter
+        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+            foreach ($metadata as $key => $data) {
+                if (!preg_match($filter, $data->getTableName())) {
+                    unset($metadata[$key]);
+                }
+            }
+        }
+
         if (empty($metadata)) {
             return $this->createSchemaFromDca();
         }
