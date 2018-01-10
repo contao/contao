@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
@@ -22,8 +21,6 @@ use Contao\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
@@ -75,7 +72,9 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $this->getRedirectResponse($request);
         }
 
-        $this->updateUserAndSession($request);
+        $this->user->lastLogin = $this->user->currentLogin;
+        $this->user->currentLogin = time();
+        $this->user->save();
 
         if (null !== $this->logger) {
             $this->logger->info(
@@ -124,51 +123,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     private function getRedirectResponse(Request $request): RedirectResponse
     {
         return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
-    }
-
-    /**
-     * Updates the user and the session.
-     *
-     * @param Request $request
-     */
-    private function updateUserAndSession(Request $request): void
-    {
-        $this->user->lastLogin = $this->user->currentLogin;
-        $this->user->currentLogin = time();
-        $this->user->save();
-
-        if (\is_array($this->user->session)) {
-            $this->getSessionBag($request, $this->user)->replace($this->user->session);
-        }
-    }
-
-    /**
-     * Returns the session bag.
-     *
-     * @param Request $request
-     * @param User    $user
-     *
-     * @throws \RuntimeException
-     *
-     * @return AttributeBagInterface|SessionBagInterface
-     */
-    private function getSessionBag(Request $request, User $user): AttributeBagInterface
-    {
-        $session = $request->getSession();
-
-        if (null === $session) {
-            throw new \RuntimeException('The request did not contain a session.');
-        }
-
-        if ($user instanceof BackendUser) {
-            return $session->getBag('contao_backend');
-        }
-
-        if ($user instanceof FrontendUser) {
-            return $session->getBag('contao_frontend');
-        }
-
-        throw new \RuntimeException(sprintf('Unsupported user class "%s".', \get_class($user)));
     }
 
     /**

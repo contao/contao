@@ -46,6 +46,11 @@ class UserSessionListener
     private $scopeMatcher;
 
     /**
+     * @var bool
+     */
+    private $registered = false;
+
+    /**
      * @param Connection                           $connection
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
@@ -87,6 +92,8 @@ class UserSessionListener
         if (\is_array($session)) {
             $this->getSessionBag($event->getRequest())->replace($session);
         }
+
+        $this->registered = true;
     }
 
     /**
@@ -96,7 +103,7 @@ class UserSessionListener
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->registered || !$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
         }
 

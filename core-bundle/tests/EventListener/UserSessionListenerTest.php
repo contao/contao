@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\UserSessionListener;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
@@ -139,6 +140,12 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', $scope);
 
         $listener = $this->mockListener($connection, $tokenStorage);
+
+        $ref = new \ReflectionObject($listener);
+        $registered = $ref->getProperty('registered');
+        $registered->setAccessible(true);
+        $registered->setValue($listener, true);
+
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
@@ -217,6 +224,12 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $listener = $this->mockListener($connection, $tokenStorage);
+
+        $ref = new \ReflectionObject($listener);
+        $registered = $ref->getProperty('registered');
+        $registered->setAccessible(true);
+        $registered->setValue($listener, true);
+
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
@@ -369,6 +382,22 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
+    }
+
+    public function testDoesNotStoreTheSessionIfTheSessionBagHasNotBeenRegistered(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+
+        $scopeMatcher
+            ->expects($this->never())
+            ->method('isContaoMasterRequest')
+        ;
+
+        $listener = new UserSessionListener($connection, $tokenStorage, $trustResolver, $scopeMatcher);
+        $listener->onKernelResponse($this->mockFilterResponseEvent());
     }
 
     /**
