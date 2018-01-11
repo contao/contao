@@ -69,7 +69,7 @@ class InitializeController extends Controller
             $this->container->enterScope($scope);
         }
 
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         // Add the master request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.

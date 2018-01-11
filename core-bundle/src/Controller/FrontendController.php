@@ -33,7 +33,7 @@ class FrontendController extends Controller
      */
     public function indexAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new FrontendIndex();
 
@@ -47,7 +47,7 @@ class FrontendController extends Controller
      */
     public function cronAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new FrontendCron();
 
@@ -61,7 +61,7 @@ class FrontendController extends Controller
      */
     public function shareAction(): RedirectResponse
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new FrontendShare();
 
@@ -77,7 +77,7 @@ class FrontendController extends Controller
      */
     public function loginAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_403']) || !class_exists($GLOBALS['TL_PTY']['error_403'])) {
             return $this->redirectToRoute('contao_root');
