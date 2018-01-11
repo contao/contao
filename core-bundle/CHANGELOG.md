@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Use array_key_exists() when tracking modified model fields (see #1290).
  * Dynamically register the user session response listener (see #1293).
  * Redirect to the last page visited if a back end session expires.
 
