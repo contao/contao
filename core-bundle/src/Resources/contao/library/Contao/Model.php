@@ -1316,6 +1316,6 @@ abstract class Model
 			return false;
 		}
 
-		return \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN;
+		return \defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true;
 	}
 }

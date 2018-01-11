@@ -83,6 +83,11 @@ class FrontendController extends Controller
             return $this->redirectToRoute('contao_root');
         }
 
+        $tokenChecker = $this->get('contao.security.token_checker');
+
+        \define('FE_USER_LOGGED_IN', $tokenChecker->hasFrontendUser());
+        \define('BE_USER_LOGGED_IN', $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode());
+
         /** @var PageError403 $pageHandler */
         $pageHandler = new $GLOBALS['TL_PTY']['error_403']();
 
