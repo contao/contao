@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageError403;
 use Symfony\Component\Routing\RouterInterface;
@@ -71,7 +72,10 @@ class FrontendControllerTest extends TestCase
         $this->assertSame('/', $response->getTargetUrl());
     }
 
-    public function testRendersTheError304PageUponLogin(): void
+    /**
+     * @runInSeparateProcess
+     */
+    public function testRendersTheError403PageUponLogin(): void
     {
         $framework = $this->mockContaoFramework();
 
@@ -80,8 +84,29 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
+        $tokenChecker = $this->createMock(TokenChecker::class);
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasFrontendUser')
+            ->willReturn(true)
+        ;
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasBackendUser')
+            ->willReturn(true)
+        ;
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('isPreviewMode')
+            ->willReturn(false)
+        ;
+
         $container = $this->mockContainer();
         $container->set('contao.framework', $framework);
+        $container->set('contao.security.token_checker', $tokenChecker);
 
         $controller = new FrontendController();
         $controller->setContainer($container);
@@ -92,6 +117,10 @@ class FrontendControllerTest extends TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame(403, $response->getStatusCode());
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(FE_USER_LOGGED_IN);
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertFalse(BE_USER_LOGGED_IN);
 
         unset($GLOBALS['TL_PTY']);
     }
