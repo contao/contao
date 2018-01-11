@@ -144,7 +144,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'TABLE_FIELDS' => [
                             'id' => "`id` int(10) NOT NULL default '0'",
                             'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) COLLATE utf8mb4_bin NOT NULL default ''",
+                            'title' => "`title` varchar(128) BINARY NOT NULL default ''",
                             'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
@@ -166,7 +166,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'SCHEMA_FIELDS' => [
                             ['name' => 'id', 'type' => 'integer'],
                             ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'platformOptions' => ['collation' => 'utf8mb4_bin']],
+                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
                             ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => 'Foobar'],
                             ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
                             ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
@@ -189,7 +189,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'TABLE_FIELDS' => [
                             'id' => "`id` int(10) NOT NULL default '0'",
                             'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) COLLATE utf8mb4_bin NOT NULL default ''",
+                            'title' => "`title` varchar(128) BINARY NOT NULL default ''",
                             'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',

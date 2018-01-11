@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Use the `BINARY` flag instead of `COLLATE utf8mb4_bin` (see #1286).
  * Use a custom toggle parameter for content elements (see #1291).
  * Use array_key_exists() when tracking modified model fields (see #1290).
  * Dynamically register the user session response listener (see #1293).
