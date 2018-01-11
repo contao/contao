@@ -449,7 +449,7 @@ var AjaxRequest =
 			image = $(el).getFirst('img'),
 			published = (image.get('data-state') == 1),
 			div = el.getParent('div'),
-			index, next, icon, icond, pa;
+			index, next, icon, icond, pa, params;
 
 		// Backwards compatibility
 		if (image.get('data-state') === null) {
@@ -587,11 +587,19 @@ var AjaxRequest =
 		if (!published) {
 			image.src = AjaxRequest.themePath + 'icons/visible.svg';
 			image.set('data-state', 1);
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':1, 'rt':Contao.request_token});
+
+			params = {'state':1, 'rt':Contao.request_token};
+			params[$(el).get('data-tid') || 'tid'] = id;
+
+			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
 		} else {
 			image.src = AjaxRequest.themePath + 'icons/invisible.svg';
 			image.set('data-state', 0);
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':0, 'rt':Contao.request_token});
+
+			params = {'state':0, 'rt':Contao.request_token};
+			params[$(el).get('data-tid') || 'tid'] = id;
+
+			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
 		}
 
 		return false;
