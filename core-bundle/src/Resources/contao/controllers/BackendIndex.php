@@ -88,8 +88,8 @@ class BackendIndex extends \Backend
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
-		$objTemplate->targetPath = \Environment::get('base') . ltrim($targetPath, '/');
-		$objTemplate->failurePath = \Environment::get('base') . \Environment::get('request');
+		$objTemplate->targetPath = \StringUtil::specialchars(\Environment::get('base') . ltrim($targetPath, '/'));
+		$objTemplate->failurePath = \StringUtil::specialchars(\Environment::get('base') . \Environment::get('request'));
 
 		return $objTemplate->getResponse();
 	}

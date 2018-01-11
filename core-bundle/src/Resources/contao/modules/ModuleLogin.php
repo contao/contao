@@ -101,7 +101,7 @@ class ModuleLogin extends \Module
 			$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
 			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
 			$this->Template->action = \System::getContainer()->get('security.logout_url_generator')->getLogoutPath();
-			$this->Template->targetPath = $strRedirect;
+			$this->Template->targetPath = \StringUtil::specialchars($strRedirect);
 
 			if ($this->User->lastLogin > 0)
 			{
@@ -150,7 +150,7 @@ class ModuleLogin extends \Module
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
-		$this->Template->targetPath = $strRedirect;
-		$this->Template->failurePath = \Environment::get('base').\Environment::get('request');
+		$this->Template->targetPath = \StringUtil::specialchars($strRedirect);
+		$this->Template->failurePath = \StringUtil::specialchars(\Environment::get('base').\Environment::get('request'));
 	}
 }
