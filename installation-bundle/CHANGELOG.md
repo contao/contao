@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+### DEV
+
+ * Do not parse @@version to determine the database vendor (see #84).
+
 ### 4.5.1 (2018-01-04)
 
  * Check all innodb_large_prefix requirements in the install tool (see #80).

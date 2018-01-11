@@ -219,7 +219,7 @@ class InstallTool
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        [$version, $vendor] = explode('-', $row->Version);
+        [$version] = explode('-', $row->Version);
 
         // The database version is too old
         if (version_compare($version, '5.5.7', '<')) {
@@ -271,7 +271,10 @@ class InstallTool
                 return true;
             }
 
-            $vok = 'mariadb' === strtolower($vendor) ? '10.2' : '5.7.7';
+            // As there is no reliable way to get the vendor (see #84), we are
+            // guessing based on the version number. MySQL is currently at 8 so
+            // checking for 10 should be save for the next couple of years.
+            $vok = version_compare($version, '10', '>=') ? '10.2' : '5.7.7';
 
             // No additional requirements as of MySQL 5.7.7 and MariaDB 10.2
             if (version_compare($version, $vok, '>=')) {
