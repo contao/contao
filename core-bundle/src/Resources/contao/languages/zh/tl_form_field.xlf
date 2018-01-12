@@ -19,15 +19,19 @@
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.0">
         <source>Fieldset start</source>
+        <target>字段组开始</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.1">
         <source>The opening part of a fieldset with an optional legend.</source>
+        <target>带有可选标题的字段组开始部分。</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.0">
         <source>Fieldset stop</source>
+        <target>字段组结束</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.1">
         <source>The closing part of a fieldset.</source>
+        <target>字段组结束部分。</target>
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>
@@ -331,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
         <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>如果是认证成员，保存文件到主目录。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -534,6 +539,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
+        <target>从CSV文件导入选项</target>
       </trans-unit>
     </body>
   </file>

@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.2 (2018-01-12)
 
  * Use the `BINARY` flag instead of `COLLATE utf8mb4_bin` (see #1286).
  * Use a custom toggle parameter for content elements (see #1291).

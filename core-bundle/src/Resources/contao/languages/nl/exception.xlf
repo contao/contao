@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="XPT.incompleteInstallation">
         <source>The installation has not been completed, therefore Contao cannot work properly.</source>
-        <target>De installatie is niet voltooid, hierdoor zal Contao niet naar behoren werken.</target>
+        <target>De installatie is onvolledig, Contao zal niet naar behoren werken.</target>
       </trans-unit>
       <trans-unit id="XPT.incompleteFix">
         <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="XPT.insecureFix">
         <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
-        <target>Stel de hoofdmap van &lt;code&gt;web/&lt;/code&gt; submap in. Dit dient te gebeuren in het domein routing gedeelte van het serverbeheer paneel of in het vhosts bestand van uw webserver.</target>
+        <target>In de map waarin u Contao wilt installeren maakt u een map met de naam &lt;code&gt;web/&lt;/code&gt;stel deze in als document root. Dit wordt meestal gedaan in het domein routing gedeelte van serverbeheer of in het vhosts bestand van uw webserver.</target>
       </trans-unit>
       <trans-unit id="XPT.insecureExplain">
         <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>

@@ -223,6 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (recommended).</source>
+        <target>合并.css和.js文件 (推荐)。</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -274,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
         <source>Viewport tag</source>
+        <target>视口标签</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
         <source>Here you can set a custom viewport tag.</source>
+        <target>设置自定义视口标签。</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
@@ -284,6 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can overwrite the title tag.</source>
+        <target>覆盖标题标签。</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -375,9 +379,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.0">
         <source>External JavaScripts</source>
+        <target>外链JavaScripts</target>
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.1">
         <source>Here you can add external JS files from the file system.</source>
+        <target>从文件系统中添加外链JS文件。</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

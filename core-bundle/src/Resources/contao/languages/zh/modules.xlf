@@ -131,6 +131,7 @@
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
+        <target>用户资料</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
@@ -138,6 +139,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
+        <target>内容元素</target>
       </trans-unit>
       <trans-unit id="MOD.tl_form_field">
         <source>Fields</source>
@@ -149,6 +151,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
         <source>Media queries</source>
+        <target>媒体查询</target>
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
@@ -160,6 +163,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_style">
         <source>Format definitions</source>
+        <target>格式定义</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>

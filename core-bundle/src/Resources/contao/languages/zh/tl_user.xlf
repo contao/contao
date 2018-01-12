@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.0">
         <source>Fullscreen</source>
+        <target>全屏</target>
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
+        <target>请不要限制后台宽度。</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>这些组成员可以用来预览前台。</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>

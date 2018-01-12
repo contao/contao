@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
+        <target>有效的别名字符</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>在这里为自动生成的别名选择一个自定义的字符。</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -273,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
+        <target>需要一条记录</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>当页面URL没有包含一条记录别名触发404错误。</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -375,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias_legend">
         <source>Alias settings</source>
+        <target>别名设置</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>

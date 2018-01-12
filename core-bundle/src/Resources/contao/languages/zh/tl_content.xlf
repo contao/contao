@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
+        <target>覆盖元数据（meta data）</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the image meta data from the file manager.</source>
+        <target>在文件管理器中覆盖图片元数据。</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
+        <target>图片标题</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
@@ -332,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>如果是一名认证成员，使用主目录作为文件源。</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>
@@ -439,21 +443,27 @@
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.0">
         <source>Player options</source>
+        <target>播放器选项</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.1">
         <source>Here you can select the player options.</source>
+        <target>选择播放器选项。</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.0">
         <source>Start at</source>
+        <target>开始于</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>从设置的秒数开始播放视频。设置0禁用。</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.0">
         <source>Stop at</source>
+        <target>结束于</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>从设置的秒数停止播放视频。设置0禁用。</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -705,24 +715,31 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
+        <target>默认情况下显示标题</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_fs">
         <source>Hide the fullscreen button</source>
+        <target>隐藏全屏按钮</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
+        <target>使用Contao页面语言</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
+        <target>隐藏注释</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_modestbranding">
         <source>Hide the YouTube logo</source>
+        <target>隐藏YouTube标志</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Do not show related videos at the end</source>
+        <target>结束时不显示相关视频</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
+        <target>预览时隐藏顶部栏目</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>
