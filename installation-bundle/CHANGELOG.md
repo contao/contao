@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.5.2 (2018-01-12)
 
  * Do not parse @@version to determine the database vendor (see #84).
 
