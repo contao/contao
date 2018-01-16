@@ -11,22 +11,31 @@
     ],
     "require": {
         "php": "^5.6|^7.0",
-        "symfony/framework-bundle": "^3.3",
-        "contao/core-bundle": "4.4.* >=4.4.2"
+        "contao/core-bundle": "4.4.* >=4.4.2",
+        "symfony/framework-bundle": "^3.3"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
         "doctrine/doctrine-cache-bundle": "^1.3",
         "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^5.7.11",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
+        "phpunit/phpunit": "^5.7.11",
         "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.2"
     },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-plugin": "<2.0 || >=3.0"
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
@@ -47,19 +56,10 @@
             "Contao\\NewsBundle\\Tests\\": "tests/"
         }
     },
-    "config": {
-        "preferred-install": "dist"
-    },
     "support": {
-        "docs": "https://docs.contao.org",
-        "forum": "https://community.contao.org",
         "issues": "https://github.com/contao/news-bundle/issues",
-        "source": "https://github.com/contao/news-bundle"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-4.4": "4.4.x-dev"
-        },
-        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/news-bundle",
+        "docs": "https://docs.contao.org"
     }
 }
