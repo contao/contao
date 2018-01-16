@@ -12,25 +12,34 @@ sudo: false
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - SYMFONY_DEPRECATIONS_HELPER=weak
+    - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
 
 matrix:
   include:
+    # Latest dependencies with all PHP versions
     - php: 5.6
     - php: 7.0
     - php: 7.1
     - php: 7.2
+
+    # Generate the coverage with the latest PHP version
     - php: 7.2
+      env: COVERAGE='--exclude-group contao3 --coverage-clover build/logs/clover.xml'
+
+    # Lowest dependencies with the oldest and latest PHP versions
+    - php: 5.6
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
     - php: 7.2
-      env: COVERAGE='--coverage-clover build/logs/clover.xml'
+      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
   fast_finish: true
 
 before_install:
-  - composer selfupdate
+ - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
 
-before_script:
-  - travis_wait composer update $COMPOSER_FLAGS --no-interaction
+install:
+  # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
+  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --quiet; fi
+  - composer update $COMPOSER_FLAGS --no-interaction
 
 script:
   - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi

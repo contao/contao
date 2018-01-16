@@ -11,28 +11,19 @@
     ],
     "require": {
         "php": "^5.6|^7.0",
-        "symfony/symfony": "^3.3",
-        "symfony/monolog-bundle": "^2.8|^3.0",
-        "symfony/swiftmailer-bundle": "^2.3",
-        "sensio/framework-extra-bundle": "^3.0.2",
+        "contao/core-bundle": "4.4.*",
+        "contao/installation-bundle": "4.4.*",
+        "contao/manager-plugin": "^2.1",
         "doctrine/doctrine-bundle": "^1.6",
         "friendsofsymfony/http-cache": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
         "php-http/guzzle6-adapter": "^1.1",
-        "terminal42/header-replay-bundle": "^1.0",
-        "contao/manager-plugin": "^2.1",
-        "contao/core-bundle": "4.4.*",
-        "contao/installation-bundle": "4.4.*"
-    },
-    "require-dev": {
-        "composer/composer": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^5.7.11",
-        "php-http/message-factory": "^1.0.2",
-        "satooshi/php-coveralls": "^1.0",
-        "symfony/console": "^3.3.7",
-        "symfony/phpunit-bridge": "^3.2"
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "symfony/monolog-bundle": "^2.8|^3.0",
+        "symfony/swiftmailer-bundle": "^2.3",
+        "symfony/symfony": "^3.3",
+        "terminal42/header-replay-bundle": "^1.0"
     },
     "conflict": {
         "contao/calendar-bundle": "<4.3.4",
@@ -41,6 +32,21 @@
         "contao/listing-bundle": "<4.3.4",
         "contao/news-bundle": "<4.3.4",
         "contao/newsletter-bundle": "<4.3.4"
+    },
+    "require-dev": {
+        "composer/composer": "^1.0",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "php-http/message-factory": "^1.0.2",
+        "phpunit/phpunit": "^5.7.11",
+        "satooshi/php-coveralls": "^1.0",
+        "symfony/console": "^3.3.7",
+        "symfony/phpunit-bridge": "^3.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
@@ -56,15 +62,9 @@
         "bin/contao-console"
     ],
     "support": {
-        "docs": "https://docs.contao.org",
-        "forum": "https://community.contao.org",
         "issues": "https://github.com/contao/manager-bundle/issues",
-        "source": "https://github.com/contao/manager-bundle"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-4.4": "4.4.x-dev"
-        },
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/manager-bundle",
+        "docs": "https://docs.contao.org"
     }
 }
