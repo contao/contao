@@ -14,46 +14,7 @@
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-pcre": "*",
-        "symfony/framework-bundle": "^3.4",
-
-        "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/doctrine-cache-bundle": "^1.3",
-        "knplabs/knp-menu-bundle": "^2.1",
-        "knplabs/knp-time-bundle": "^1.5.2",
-        "symfony/security-bundle": "^3.4",
-        "symfony/swiftmailer-bundle": "^3.1.5",
-
         "ausi/slug-generator": "^1.0",
-        "contao/image": "^0.3.5",
-        "contao/imagine-svg": "^0.1.2|^0.2",
-        "doctrine/dbal": "^2.5",
-        "imagine/imagine": "^0.7",
-        "leafo/scssphp": "^0.7.1",
-        "league/uri": "^5.0",
-        "matthiasmullie/minify": "^1.3",
-        "michelf/php-markdown": "^1.4",
-        "nelmio/cors-bundle": "^1.5.3",
-        "ocramius/package-versions": "^1.2",
-        "oyejorge/less.php": "^1.7",
-        "patchwork/utf8": "^1.2",
-        "phpspec/php-diff": "^1.0",
-        "phpunit/php-token-stream": "^1.4",
-        "psr/log": "^1.0",
-        "sensio/framework-extra-bundle": "^5.0",
-        "simplepie/simplepie": "^1.3",
-        "symfony/asset": "^3.4",
-        "symfony/console": "^3.4",
-        "symfony/dependency-injection": "^3.4",
-        "symfony/filesystem": "^3.4",
-        "symfony/finder": "^3.4",
-        "symfony/http-foundation": "^3.4",
-        "symfony/lock": "^3.4",
-        "symfony/yaml": "^3.4",
-        "tecnickcom/tcpdf": "^6.0",
-        "terminal42/header-replay-bundle": "^1.4",
-        "true/punycode": "^2.1",
-        "twig/twig": "^1.26|^2.0",
-
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.1.6",
         "contao-components/colorbox": "^1.6",
@@ -74,7 +35,51 @@
         "contao-components/swipe": "^2.0.3",
         "contao-components/tablesort": "^3.4.5",
         "contao-components/tablesorter": "^2.0.5.3",
-        "contao-components/tinymce4": "^4.7"
+        "contao-components/tinymce4": "^4.7",
+        "contao/image": "^0.3.5",
+        "contao/imagine-svg": "^0.1.2|^0.2",
+        "doctrine/dbal": "^2.5",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-cache-bundle": "^1.3",
+        "imagine/imagine": "^0.7",
+        "knplabs/knp-menu-bundle": "^2.1",
+        "knplabs/knp-time-bundle": "^1.5.2",
+        "leafo/scssphp": "^0.7.1",
+        "league/uri": "^5.0",
+        "matthiasmullie/minify": "^1.3",
+        "michelf/php-markdown": "^1.4",
+        "nelmio/cors-bundle": "^1.5.3",
+        "ocramius/package-versions": "^1.2",
+        "oyejorge/less.php": "^1.7",
+        "patchwork/utf8": "^1.2",
+        "phpspec/php-diff": "^1.0",
+        "phpunit/php-token-stream": "^1.4",
+        "psr/log": "^1.0",
+        "sensio/framework-extra-bundle": "^5.0",
+        "simplepie/simplepie": "^1.3",
+        "symfony/asset": "^3.4",
+        "symfony/console": "^3.4",
+        "symfony/dependency-injection": "^3.4",
+        "symfony/filesystem": "^3.4",
+        "symfony/finder": "^3.4",
+        "symfony/framework-bundle": "^3.4",
+        "symfony/http-foundation": "^3.4",
+        "symfony/lock": "^3.4",
+        "symfony/security-bundle": "^3.4",
+        "symfony/swiftmailer-bundle": "^3.1.5",
+        "symfony/yaml": "^3.4",
+        "tecnickcom/tcpdf": "^6.0",
+        "terminal42/header-replay-bundle": "^1.4",
+        "true/punycode": "^2.1",
+        "twig/twig": "^1.26|^2.0"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-bundle": "4.5.* <4.5.2",
+        "contao/manager-plugin": "<2.0 || >=3.0",
+        "doctrine/doctrine-migrations-bundle": "<1.1",
+        "doctrine/orm": "<2.4",
+        "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
     },
     "require-dev": {
         "ext-fileinfo": "*",
@@ -86,22 +91,20 @@
         "friendsofphp/php-cs-fixer": "^2.6",
         "lexik/maintenance-bundle": "^2.0",
         "monolog/monolog": "^1.22",
-        "phpunit/phpunit": "^6.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
+        "phpunit/phpunit": "^6.1",
         "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-bundle": "4.5.* <4.5.2",
-        "contao/manager-plugin": "<2.0 || >=3.0",
-        "doctrine/orm": "<2.4",
-        "doctrine/doctrine-migrations-bundle": "<1.1",
-        "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
+    "extra": {
+        "branch-alias": {
+            "dev-4.5": "4.5.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
@@ -110,6 +113,9 @@
         "classmap": [
             "src/Resources/contao/"
         ],
+        "files": [
+            "src/Resources/functions/utf8_bootup.php"
+        ],
         "exclude-from-classmap": [
             "src/Resources/contao/config/",
             "src/Resources/contao/dca/",
@@ -117,9 +123,6 @@
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/",
             "src/Resources/contao/themes/"
-        ],
-        "files": [
-            "src/Resources/functions/utf8_bootup.php"
         ]
     },
     "autoload-dev": {
@@ -129,15 +132,9 @@
         }
     },
     "support": {
-        "docs": "https://docs.contao.org",
-        "forum": "https://community.contao.org",
         "issues": "https://github.com/contao/core-bundle/issues",
-        "source": "https://github.com/contao/core-bundle"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-4.5": "4.5.x-dev"
-        },
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/core-bundle",
+        "docs": "https://docs.contao.org"
     }
 }
