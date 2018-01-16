@@ -14,13 +14,19 @@
         "contao/core-bundle": "^4.5",
         "symfony/framework-bundle": "^3.4"
     },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.0"
     },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-plugin": "<2.0 || >=3.0"
+    "extra": {
+        "branch-alias": {
+            "dev-4.5": "4.5.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
@@ -37,15 +43,9 @@
         ]
     },
     "support": {
-        "docs": "https://docs.contao.org",
-        "forum": "https://community.contao.org",
         "issues": "https://github.com/contao/listing-bundle/issues",
-        "source": "https://github.com/contao/listing-bundle"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-4.5": "4.5.x-dev"
-        },
-        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/listing-bundle",
+        "docs": "https://docs.contao.org"
     }
 }
