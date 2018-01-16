@@ -33,7 +33,63 @@ class LazySessionAccessTest extends TestCase
      *
      * @expectedDeprecation Using $_SESSION has been deprecated %s.
      */
-    public function testStartsSessionOnAccess(): void
+    public function testStartsSessionOnOffsetExists(): void
+    {
+        $beBag = new AttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new AttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $SESSION = new LazySessionAccess($session);
+
+        $this->assertFalse($session->isStarted());
+
+        isset($SESSION['foobar']);
+
+        $this->assertTrue($session->isStarted());
+        $this->assertSame($beBag, $_SESSION['BE_DATA']);
+        $this->assertSame($feBag, $_SESSION['FE_DATA']);
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     */
+    public function testStartsSessionOnOffsetGet(): void
+    {
+        $beBag = new AttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new AttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $SESSION = new LazySessionAccess($session);
+
+        $this->assertFalse($session->isStarted());
+
+        $SESSION['foobar'];
+
+        $this->assertTrue($session->isStarted());
+        $this->assertSame($beBag, $_SESSION['BE_DATA']);
+        $this->assertSame($feBag, $_SESSION['FE_DATA']);
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     */
+    public function testStartsSessionOnOffsetSet(): void
     {
         $beBag = new AttributeBag();
         $beBag->setName('contao_backend');
@@ -55,5 +111,61 @@ class LazySessionAccessTest extends TestCase
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
         $this->assertSame('test', $session->get('foobar'));
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     */
+    public function testStartsSessionOnOffsetUnset(): void
+    {
+        $beBag = new AttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new AttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $SESSION = new LazySessionAccess($session);
+
+        $this->assertFalse($session->isStarted());
+
+        unset($SESSION['foobar']);
+
+        $this->assertTrue($session->isStarted());
+        $this->assertSame($beBag, $_SESSION['BE_DATA']);
+        $this->assertSame($feBag, $_SESSION['FE_DATA']);
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     */
+    public function testStartsSessionOnCount(): void
+    {
+        $beBag = new AttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new AttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $SESSION = new LazySessionAccess($session);
+
+        $this->assertFalse($session->isStarted());
+
+        \count($SESSION);
+
+        $this->assertTrue($session->isStarted());
+        $this->assertSame($beBag, $_SESSION['BE_DATA']);
+        $this->assertSame($feBag, $_SESSION['FE_DATA']);
     }
 }
