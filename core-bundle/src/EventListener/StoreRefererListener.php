@@ -99,7 +99,7 @@ class StoreRefererListener
         $session = $request->getSession();
 
         if (null === $session) {
-            throw new \RuntimeException('The request did not contain a session');
+            throw new \RuntimeException('The request did not contain a session.');
         }
 
         $key = $request->query->has('popup') ? 'popupReferer' : 'referer';
@@ -176,7 +176,7 @@ class StoreRefererListener
         $session = $request->getSession();
 
         if (null === $session) {
-            throw new \RuntimeException('The request did not contain a session');
+            throw new \RuntimeException('The request did not contain a session.');
         }
 
         $refererOld = $session->get('referer');

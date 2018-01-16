@@ -98,7 +98,7 @@ class UserSessionListener
         }
 
         // Dynamically register the kernel.response listener (see #1293)
-        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, array($this, 'onKernelResponse'));
+        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse']);
     }
 
     /**
@@ -124,11 +124,9 @@ class UserSessionListener
             return;
         }
 
-        $this->connection->update(
-            $user->getTable(),
-            ['session' => serialize($this->getSessionBag($event->getRequest())->all())],
-            ['id' => $user->id]
-        );
+        $data = $this->getSessionBag($event->getRequest())->all();
+
+        $this->connection->update($user->getTable(), ['session' => serialize($data)], ['id' => $user->id]);
     }
 
     /**
@@ -145,7 +143,7 @@ class UserSessionListener
         $session = $request->getSession();
 
         if (null === $session) {
-            throw new \RuntimeException('The request did not contain a session');
+            throw new \RuntimeException('The request did not contain a session.');
         }
 
         $name = 'contao_frontend';

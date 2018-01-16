@@ -381,6 +381,68 @@ class UserSessionListenerTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
+    public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['session' => []]);
+        $token = $this->createMock(UsernamePasswordToken::class);
+
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener = $this->mockListener(null, $tokenStorage);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request did not contain a session.');
+
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
+    }
+
+    public function testFailsToStoreTheSessionIfThereIsNoSession(): void
+    {
+        $user = $this->createPartialMock(BackendUser::class, ['getTable']);
+
+        $user
+            ->method('getTable')
+            ->willReturn('tl_user')
+        ;
+
+        $token = $this->createMock(UsernamePasswordToken::class);
+
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener = $this->mockListener(null, $tokenStorage);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request did not contain a session.');
+
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
+    }
+
     /**
      * Mocks a session listener.
      *

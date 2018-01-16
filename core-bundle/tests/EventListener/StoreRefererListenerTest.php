@@ -309,6 +309,44 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
+     * @param string $scope
+     *
+     * @dataProvider noSessionProvider
+     */
+    public function testFailsToStoreTheRefererIfThereIsNoSession(string $scope): void
+    {
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($this->createMock(UsernamePasswordToken::class))
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_route', 'contao_backend');
+        $request->attributes->set('_scope', $scope);
+
+        $listener = $this->mockListener($tokenStorage);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request did not contain a session.');
+
+        $listener->onKernelResponse($this->mockResponseEvent($request));
+    }
+
+    /**
+     * @return array
+     */
+    public function noSessionProvider(): array
+    {
+        return [
+            [ContaoCoreBundle::SCOPE_BACKEND],
+            [ContaoCoreBundle::SCOPE_FRONTEND],
+        ];
+    }
+
+    /**
      * Mocks a session listener.
      *
      * @param TokenStorageInterface $tokenStorage

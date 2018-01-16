@@ -259,6 +259,46 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
+    public function testUsesTheTargetPath(): void
+    {
+        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+
+        $adapter
+            ->expects($this->never())
+            ->method('findFirstActiveByMemberGroups')
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $request = new Request();
+        $request->request->set('_target_path', 'http://localhost/target');
+        $request->request->set('_always_use_target_path', '1');
+
+        /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->createPartialMock(FrontendUser::class, ['save']);
+        $user->lastLogin = time() - 3600;
+        $user->currentLogin = time() - 1800;
+        $user->groups = serialize([2, 3]);
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $token = $this->createMock(TokenInterface::class);
+
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $handler = $this->mockSuccessHandler($framework);
+        $response = $handler->onAuthenticationSuccess($request, $token);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertSame('http://localhost/target', $response->getTargetUrl());
+    }
+
     /**
      * Mocks an authentication success handler.
      *
