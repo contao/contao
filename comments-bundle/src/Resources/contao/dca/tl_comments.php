@@ -303,7 +303,7 @@ class tl_comments extends Backend
 
 				$session = $objSession->all();
 
-				if (!\is_array($session['CURRENT']['IDS']) || empty($session['CURRENT']['IDS']))
+				if (empty($session['CURRENT']['IDS']) || !\is_array($session['CURRENT']['IDS']))
 				{
 					break;
 				}
