@@ -75,7 +75,7 @@ class BackendSwitch extends \Backend
 			}
 		}
 
-		$blnCanSwitchUser = ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || !empty($this->User->amg) && \is_array($this->User->amg));
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');
@@ -169,7 +169,7 @@ class BackendSwitch extends \Backend
 		if (!$this->User->isAdmin)
 		{
 			// No allowed member groups
-			if (!\is_array($this->User->amg) || empty($this->User->amg))
+			if (empty($this->User->amg) || !\is_array($this->User->amg))
 			{
 				header('Content-type: application/json');
 				die(json_encode(array()));

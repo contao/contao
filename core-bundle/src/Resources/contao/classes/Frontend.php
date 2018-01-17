@@ -307,7 +307,7 @@ abstract class Frontend extends \Controller
 		$host = \Environment::get('host');
 
 		// The language is set in the URL
-		if (\Config::get('addLanguageToUrl') && !empty($_GET['language']))
+		if (!empty($_GET['language']) && \Config::get('addLanguageToUrl'))
 		{
 			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, \Input::get('language'));
 

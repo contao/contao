@@ -86,7 +86,7 @@ class TableWizard extends \Widget
 		$arrRowButtons = array('rcopy', 'rdelete', 'rdrag');
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || empty($this->varValue))
+		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			$this->varValue = array(array(''));
 		}

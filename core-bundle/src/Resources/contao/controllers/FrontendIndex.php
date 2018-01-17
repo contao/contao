@@ -244,7 +244,7 @@ class FrontendIndex extends \Frontend
 		{
 			$arrGroups = $objPage->groups; // required for empty()
 
-			if (!\is_array($arrGroups) || empty($arrGroups) || !\count(array_intersect($arrGroups, $this->User->groups)))
+			if (empty($arrGroups) || !\is_array($arrGroups) || !\count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
 				throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));

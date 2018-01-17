@@ -41,7 +41,7 @@ class ModuleRandomImage extends \Module
 	{
 		$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
 
-		if (!\is_array($this->multiSRC) || empty($this->multiSRC))
+		if (empty($this->multiSRC) || !\is_array($this->multiSRC))
 		{
 			return '';
 		}

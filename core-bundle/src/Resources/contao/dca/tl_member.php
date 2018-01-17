@@ -530,7 +530,7 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || !empty($this->User->amg) && \is_array($this->User->amg));
 
 		if (!$blnCanSwitchUser)
 		{

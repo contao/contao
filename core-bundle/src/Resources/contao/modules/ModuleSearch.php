@@ -131,7 +131,7 @@ class ModuleSearch extends \Module
 			}
 
 			// Return if there are no pages
-			if (!\is_array($arrPages) || empty($arrPages))
+			if (empty($arrPages) || !\is_array($arrPages))
 			{
 				return;
 			}
@@ -194,7 +194,7 @@ class ModuleSearch extends \Module
 						{
 							$groups = \StringUtil::deserialize($v['groups']);
 
-							if (!\is_array($groups) || empty($groups) || !\count(array_intersect($groups, $this->User->groups)))
+							if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
 							{
 								unset($arrResult[$k]);
 							}

@@ -46,7 +46,7 @@ class ContentMedia extends \ContentElement
 
 		$source = \StringUtil::deserialize($this->playerSRC);
 
-		if (!\is_array($source) || empty($source))
+		if (empty($source) || !\is_array($source))
 		{
 			return '';
 		}

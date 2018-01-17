@@ -3092,7 +3092,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						break;
 				}
 
-				if (!\is_array($varValue) || empty($varValue))
+				if (empty($varValue) || !\is_array($varValue))
 				{
 					$varValue = \Widget::getEmptyStringOrNullByFieldType($arrData['sql']);
 				}
@@ -3445,7 +3445,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->strTable.'_'.$table.'_tree' : $this->strTable.'_tree';
 
 			// Expand tree
-			if (!\is_array($session[$node]) || empty($session[$node]) || current($session[$node]) != 1)
+			if (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) != 1)
 			{
 				$session[$node] = array();
 				$objNodes = $this->Database->execute("SELECT DISTINCT pid FROM " . $table . " WHERE pid>0");

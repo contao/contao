@@ -755,17 +755,17 @@ abstract class Backend extends \Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (\Input::post('title') == '' && !empty($arrMeta[$strLanguage]['title']))
+			if (!empty($arrMeta[$strLanguage]['title']) && \Input::post('title') == '')
 			{
 				\Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (\Input::post('alt') == '' && !empty($arrMeta[$strLanguage]['alt']))
+			if (!empty($arrMeta[$strLanguage]['alt']) && \Input::post('alt') == '')
 			{
 				\Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (\Input::post('caption') == '' && !empty($arrMeta[$strLanguage]['caption']))
+			if (!empty($arrMeta[$strLanguage]['caption']) && \Input::post('caption') == '')
 			{
 				\Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}

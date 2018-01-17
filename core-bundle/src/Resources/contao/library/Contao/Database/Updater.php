@@ -152,7 +152,7 @@ class Updater extends \Controller
 		{
 			$modules = \StringUtil::deserialize($objUser->modules);
 
-			if (!\is_array($modules) || empty($modules))
+			if (empty($modules) || !\is_array($modules))
 			{
 				continue;
 			}

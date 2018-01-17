@@ -52,7 +52,7 @@ class ModuleRegistration extends \Module
 		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are no editable fields
-		if (!\is_array($this->editable) || empty($this->editable))
+		if (empty($this->editable) || !\is_array($this->editable))
 		{
 			return '';
 		}

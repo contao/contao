@@ -54,7 +54,7 @@ class ModulePersonalData extends \Module
 		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
-		if (!\is_array($this->editable) || empty($this->editable) || !FE_USER_LOGGED_IN)
+		if (empty($this->editable) || !\is_array($this->editable) || !FE_USER_LOGGED_IN)
 		{
 			return '';
 		}

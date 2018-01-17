@@ -280,7 +280,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		if (\Input::get('tg') == 'all')
 		{
 			// Expand tree
-			if (!\is_array($session['filetree']) || empty($session['filetree']) || current($session['filetree']) != 1)
+			if (empty($session['filetree']) || !\is_array($session['filetree']) || current($session['filetree']) != 1)
 			{
 				$session['filetree'] = $this->getMD5Folders(\Config::get('uploadPath'));
 			}
@@ -2269,7 +2269,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							break;
 					}
 
-					if (!\is_array($varValue) || empty($varValue))
+					if (empty($varValue) || !\is_array($varValue))
 					{
 						$varValue = '';
 					}

@@ -55,7 +55,7 @@ class ContentDownloads extends \ContentElement
 		}
 
 		// Return if there are no files
-		if (!\is_array($this->multiSRC) || empty($this->multiSRC))
+		if (empty($this->multiSRC) && !\is_array($this->multiSRC))
 		{
 			return '';
 		}

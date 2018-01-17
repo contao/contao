@@ -123,7 +123,7 @@ class MetaWizard extends \Widget
 		$languages = array_intersect_key($languages, array_flip($existing));
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || empty($this->varValue))
+		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			if (\count($languages) > 0)
 			{

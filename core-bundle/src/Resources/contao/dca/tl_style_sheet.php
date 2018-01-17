@@ -260,7 +260,7 @@ class tl_style_sheet extends Backend
 
 		$session = $objSession->get('style_sheet_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

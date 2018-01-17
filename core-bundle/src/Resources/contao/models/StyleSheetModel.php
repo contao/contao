@@ -91,7 +91,7 @@ class StyleSheetModel extends \Model
 	 */
 	public static function findByIds($arrIds)
 	{
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}
