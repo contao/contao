@@ -69,7 +69,7 @@ class ModuleCalendar extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
-		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
 			return '';
 		}

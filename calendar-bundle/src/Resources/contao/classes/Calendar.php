@@ -112,7 +112,7 @@ class Calendar extends \Frontend
 	{
 		$arrCalendars = \StringUtil::deserialize($arrFeed['calendars']);
 
-		if (!\is_array($arrCalendars) || empty($arrCalendars))
+		if (empty($arrCalendars) || !\is_array($arrCalendars))
 		{
 			return;
 		}

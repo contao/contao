@@ -241,7 +241,7 @@ class tl_calendar_feed extends Backend
 		}
 
 		// Set the root IDs
-		if (!\is_array($this->User->calendarfeeds) || empty($this->User->calendarfeeds))
+		if (empty($this->User->calendarfeeds) || !\is_array($this->User->calendarfeeds))
 		{
 			$root = array(0);
 		}
@@ -370,7 +370,7 @@ class tl_calendar_feed extends Backend
 
 		$session = $objSession->get('calendar_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

@@ -198,7 +198,7 @@ class CalendarEventsModel extends \Model
 	 */
 	public static function findPublishedByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}
@@ -289,7 +289,7 @@ class CalendarEventsModel extends \Model
 	 */
 	public static function findUpcomingByPids($arrIds, $intLimit=0, array $arrOptions=array())
 	{
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}

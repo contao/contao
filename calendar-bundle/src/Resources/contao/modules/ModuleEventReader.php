@@ -76,7 +76,7 @@ class ModuleEventReader extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
 
 		// Do not index or cache the page if there are no calendars
-		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
