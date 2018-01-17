@@ -58,7 +58,7 @@ class ModuleNewsArchive extends \ModuleNews
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// No news archives available
-		if (!\is_array($this->news_archives) || empty($this->news_archives))
+		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
 			return '';
 		}

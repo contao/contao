@@ -70,7 +70,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
-		if (!\is_array($this->news_archives) || empty($this->news_archives))
+		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
 			return '';
 		}

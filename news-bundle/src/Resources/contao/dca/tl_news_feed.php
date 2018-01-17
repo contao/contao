@@ -241,7 +241,7 @@ class tl_news_feed extends Backend
 		}
 
 		// Set the root IDs
-		if (!\is_array($this->User->newsfeeds) || empty($this->User->newsfeeds))
+		if (empty($this->User->newsfeeds) || !\is_array($this->User->newsfeeds))
 		{
 			$root = array(0);
 		}
@@ -370,7 +370,7 @@ class tl_news_feed extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

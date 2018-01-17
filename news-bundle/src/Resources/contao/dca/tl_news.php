@@ -521,7 +521,7 @@ class tl_news extends Backend
 		}
 
 		// Set the root IDs
-		if (!\is_array($this->User->news) || empty($this->User->news))
+		if (empty($this->User->news) || !\is_array($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -816,7 +816,7 @@ class tl_news extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

@@ -75,7 +75,7 @@ class ModuleNewsReader extends \ModuleNews
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Do not index or cache the page if there are no archives
-		if (!\is_array($this->news_archives) || empty($this->news_archives))
+		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;

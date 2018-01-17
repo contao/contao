@@ -112,7 +112,7 @@ class News extends \Frontend
 	{
 		$arrArchives = \StringUtil::deserialize($arrFeed['archives']);
 
-		if (!\is_array($arrArchives) || empty($arrArchives))
+		if (empty($arrArchives) || !\is_array($arrArchives))
 		{
 			return;
 		}
