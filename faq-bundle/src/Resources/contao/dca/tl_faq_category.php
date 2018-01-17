@@ -265,7 +265,7 @@ class tl_faq_category extends Backend
 		}
 
 		// Set root IDs
-		if (!\is_array($this->User->faqs) || empty($this->User->faqs))
+		if (empty($this->User->faqs) || !\is_array($this->User->faqs))
 		{
 			$root = array(0);
 		}

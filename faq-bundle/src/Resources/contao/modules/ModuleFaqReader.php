@@ -75,7 +75,7 @@ class ModuleFaqReader extends \Module
 		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Do not index or cache the page if there are no categories
-		if (!\is_array($this->faq_categories) || empty($this->faq_categories))
+		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
