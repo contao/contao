@@ -310,7 +310,7 @@ class ModuleSubscribe extends \Module
 	protected function addRecipient($strEmail, $arrNew)
 	{
 		// Remove old subscriptions that have not been activated yet
-		if (($objOld = \NewsletterRecipientsModel::findBy(array("email=? AND active=''"), $strEmail)) !== null)
+		if (($objOld = \NewsletterRecipientsModel::findOldSubscriptionsByEmailAndPids($strEmail, $arrNew)) !== null)
 		{
 			while ($objOld->next())
 			{

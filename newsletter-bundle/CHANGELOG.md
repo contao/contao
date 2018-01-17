@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+### DEV
+
+ * Do not remove old subscriptions not related to the selected channels (see contao/core#8824).
+
 ### 4.4.5 (2017-09-18)
 
  * Check if the session has been started before using the flash bag.
