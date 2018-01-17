@@ -227,7 +227,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Set root IDs
-		if (!\is_array($this->User->newsletters) || empty($this->User->newsletters))
+		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}

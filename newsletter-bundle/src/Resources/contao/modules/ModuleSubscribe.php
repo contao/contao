@@ -57,7 +57,7 @@ class ModuleSubscribe extends \Module
 		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
-		if (!\is_array($this->nl_channels) || empty($this->nl_channels))
+		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
 			return '';
 		}
@@ -258,7 +258,7 @@ class ModuleSubscribe extends \Module
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		if (!\is_array($arrChannels) || empty($arrChannels))
+		if (empty($arrChannels) || !\is_array($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
@@ -278,7 +278,7 @@ class ModuleSubscribe extends \Module
 
 		$arrNew = array_diff($arrChannels, $arrSubscriptions);
 
-		if (!\is_array($arrNew) || empty($arrNew))
+		if (empty($arrNew) || !\is_array($arrNew))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['subscribed'];

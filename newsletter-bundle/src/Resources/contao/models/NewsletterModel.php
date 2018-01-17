@@ -111,7 +111,7 @@ class NewsletterModel extends \Model
 	 */
 	public static function findSentByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}
@@ -166,7 +166,7 @@ class NewsletterModel extends \Model
 	 */
 	public static function findSentByPids($arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}

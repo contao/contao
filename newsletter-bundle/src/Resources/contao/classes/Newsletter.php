@@ -895,7 +895,7 @@ class Newsletter extends \Backend
 		{
 			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
 
-			if (!\is_array($newsletters) || empty($newsletters))
+			if (empty($newsletters) || !\is_array($newsletters))
 			{
 				return array();
 			}
