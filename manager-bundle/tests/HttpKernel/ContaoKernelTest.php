@@ -110,7 +110,7 @@ class ContaoKernelTest extends ContaoTestCase
                         $files[] = basename($resource);
                     } elseif (\is_callable($resource)) {
                         $container = new ContainerBuilder();
-                        $container->setParameter('kernel.environment', 'dev');
+                        $container->setParameter('mailer_transport', 'sendmail');
 
                         $resource($container);
                     }
@@ -173,6 +173,30 @@ class ContaoKernelTest extends ContaoTestCase
 
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
+    }
+
+    public function testUpdatesTheMailerTransport(): void
+    {
+        $container = new ContainerBuilder();
+        $loader = $this->createMock(LoaderInterface::class);
+
+        $loader
+            ->method('load')
+            ->willReturnCallback(
+                function ($resource) use ($container): void {
+                    if (\is_callable($resource)) {
+                        $container->setParameter('mailer_transport', 'mail');
+
+                        $resource($container);
+                    }
+                }
+            )
+        ;
+
+        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel->registerContainerConfiguration($loader);
+
+        $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
     /**
