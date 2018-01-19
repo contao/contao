@@ -39,17 +39,17 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     {
         $this->startSession();
 
-        return $this->session->has($offset);
+        return array_key_exists($offset, $_SESSION);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset)
+    public function &offsetGet($offset)
     {
         $this->startSession();
 
-        return $this->session->get($offset);
+        return $_SESSION[$offset];
     }
 
     /**
@@ -59,7 +59,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     {
         $this->startSession();
 
-        $this->session->set($offset, $value);
+        $_SESSION[$offset] = $value;
     }
 
     /**
@@ -69,7 +69,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     {
         $this->startSession();
 
-        $this->session->remove($offset);
+        unset($_SESSION[$offset]);
     }
 
     /**
@@ -79,7 +79,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     {
         $this->startSession();
 
-        return \count($this->session->all());
+        return \count($_SESSION);
     }
 
     /**
@@ -91,7 +91,16 @@ class LazySessionAccess implements \ArrayAccess, \Countable
 
         $this->session->start();
 
-        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
-        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
+        if ($_SESSION instanceof self) {
+            throw new \RuntimeException('Unable to start native session, $_SESSION was not replaced.');
+        }
+
+        // Accessing the session object may replace the global $_SESSION variable,
+        // so we store the bags in a local variable first before setting them on $_SESSION
+        $beBag = $this->session->getBag('contao_backend');
+        $feBag = $this->session->getBag('contao_frontend');
+
+        $_SESSION['BE_DATA'] = $beBag;
+        $_SESSION['FE_DATA'] = $feBag;
     }
 }

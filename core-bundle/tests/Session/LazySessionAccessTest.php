@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Session\Attribute;
 
 use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 class LazySessionAccessTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $session = new Session(new MockArraySessionStorage());
+        $session = new Session(new MockNativeSessionStorage());
         $accessor = new LazySessionAccess($session);
 
         $this->assertInstanceOf('Contao\CoreBundle\Session\LazySessionAccess', $accessor);
@@ -41,15 +41,15 @@ class LazySessionAccessTest extends TestCase
         $feBag = new AttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockArraySessionStorage());
+        $session = new Session(new MockNativeSessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($session);
 
         $this->assertFalse($session->isStarted());
 
-        isset($SESSION['foobar']);
+        $this->assertFalse(isset($_SESSION['foobar']['nested']));
 
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
@@ -69,15 +69,15 @@ class LazySessionAccessTest extends TestCase
         $feBag = new AttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockArraySessionStorage());
+        $session = new Session(new MockNativeSessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($session);
 
         $this->assertFalse($session->isStarted());
 
-        $SESSION['foobar'];
+        $this->assertNull($_SESSION['foobar']['nested']);
 
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
@@ -97,20 +97,20 @@ class LazySessionAccessTest extends TestCase
         $feBag = new AttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockArraySessionStorage());
+        $session = new Session(new MockNativeSessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($session);
 
         $this->assertFalse($session->isStarted());
 
-        $SESSION['foobar'] = 'test';
+        $_SESSION['foobar']['nested'] = 'test';
 
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
-        $this->assertSame('test', $session->get('foobar'));
+        $this->assertSame(['nested' => 'test'], $_SESSION['foobar']);
     }
 
     /**
@@ -126,15 +126,15 @@ class LazySessionAccessTest extends TestCase
         $feBag = new AttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockArraySessionStorage());
+        $session = new Session(new MockNativeSessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($session);
 
         $this->assertFalse($session->isStarted());
 
-        unset($SESSION['foobar']);
+        unset($_SESSION['foobar']['nested']);
 
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
@@ -154,15 +154,15 @@ class LazySessionAccessTest extends TestCase
         $feBag = new AttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockArraySessionStorage());
+        $session = new Session(new MockNativeSessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($session);
 
         $this->assertFalse($session->isStarted());
 
-        \count($SESSION);
+        \count($_SESSION);
 
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
