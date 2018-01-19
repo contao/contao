@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Quote reserved words in database queries (see #1262).
+
 ### 4.4.12 (2018-01-03)
 
  * Do not resend activation mails for active members (see #1234).
