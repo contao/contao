@@ -549,6 +549,9 @@ class ContaoFrameworkTest extends TestCase
     /**
      * @group legacy
      *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     *
      * @expectedDeprecation Using $_SESSION has been deprecated %s.
      */
     public function testRegistersTheLazySessionAccessObject(): void
