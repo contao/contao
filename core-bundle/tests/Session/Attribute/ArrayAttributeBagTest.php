@@ -31,8 +31,13 @@ class ArrayAttributeBagTest extends TestCase
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
         $bag['foo'] = 'bar';
+        $bag['bar']['baz'] = 'foo';
+        $bag['baz'] = [];
+        $bag['baz']['foo'] = 'bar';
 
         $this->assertSame('bar', $bag->get('foo'));
+        $this->assertSame(['baz' => 'foo'], $bag->get('bar'));
+        $this->assertSame(['foo' => 'bar'], $bag->get('baz'));
     }
 
     public function testChecksIfTheOffsetExists(): void
@@ -40,8 +45,11 @@ class ArrayAttributeBagTest extends TestCase
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
         $bag['foo'] = 'bar';
+        $bag['bar']['baz'] = 'foo';
 
         $this->assertTrue(isset($bag['foo']));
+        $this->assertTrue(isset($bag['bar']['baz']));
+        $this->assertFalse(isset($bag['baz']));
     }
 
     public function testCanReadTheOffset(): void
@@ -49,17 +57,61 @@ class ArrayAttributeBagTest extends TestCase
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
         $bag['foo'] = 'bar';
+        $bag['bar']['baz'] = 'foo';
 
         $this->assertSame('bar', $bag['foo']);
+        $this->assertSame(['baz' => 'foo'], $bag['bar']);
+        $this->assertSame('foo', $bag['bar']['baz']);
+    }
+
+    /**
+     * Tests the offsetGet() method.
+     */
+    public function testCanModifyTheOffset()
+    {
+        $bag = new ArrayAttributeBag('foobar_storageKey');
+
+        $bag['foo'] = 1;
+        $bag['bar']['baz'] = 'foo';
+
+        $bag['foo']++;
+        $bag['foo'] += 1;
+        $bag['bar']['baz'] .= 'bar';
+
+        $this->assertSame(3, $bag['foo']);
+        $this->assertSame(['baz' => 'foobar'], $bag['bar']);
     }
 
     public function testCanUnsetTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
         $bag->set('foo', 'bar');
+        $bag->set('bar', ['baz' => 'foo']);
 
         unset($bag['foo']);
+        unset($bag['bar']['baz']);
 
         $this->assertFalse($bag->has('foo'));
+        $this->assertSame([], $bag->get('bar'));
+    }
+
+    /**
+     * Tests that values are not referenced.
+     */
+    public function testDoesNotReferenceValues()
+    {
+        $bag = new ArrayAttributeBag('foobar_storageKey');
+        $bag->set('foo', 'bar');
+        $bag->set('bar', ['baz' => 'foo']);
+
+        $foo = $bag['foo'];
+        $foo = '';
+        $baz = $bag['bar']['baz'];
+        $baz = '';
+        $bar = $bag['bar'];
+        $bar = [];
+
+        $this->assertSame('bar', $bag['foo']);
+        $this->assertSame(['baz' => 'foo'], $bag['bar']);
     }
 }

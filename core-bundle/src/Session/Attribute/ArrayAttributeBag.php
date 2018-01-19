@@ -30,9 +30,9 @@ class ArrayAttributeBag extends AttributeBag implements \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($key)
+    public function &offsetGet($key)
     {
-        return $this->get($key);
+        return $this->attributes[$key];
     }
 
     /**
