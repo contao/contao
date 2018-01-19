@@ -2,7 +2,7 @@
     "name": "contao/listing-bundle",
     "type": "contao-bundle",
     "description": "Allows to list arbitrary data in the Contao 4 front end",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Leo Feyer",
