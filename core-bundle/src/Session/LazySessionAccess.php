@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Session;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -20,23 +21,39 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class LazySessionAccess implements \ArrayAccess, \Countable
 {
     /**
+     * @var Request
+     */
+    private $request;
+
+    /**
      * @var SessionInterface
      */
     private $session;
 
     /**
-     * @param SessionInterface $session
+     * @param Request $request
+     *
+     * @throws \RuntimeException
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(Request $request)
     {
-        $this->session = $session;
+        if (!$request->hasSession()) {
+            throw new \RuntimeException('The request did not contain a session.');
+        }
+
+        $this->request = $request;
+        $this->session = $request->getSession();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
+        if (!$this->request->hasPreviousSession()) {
+            return false;
+        }
+
         $this->startSession();
 
         return array_key_exists($offset, $_SESSION);
@@ -47,6 +64,10 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      */
     public function &offsetGet($offset)
     {
+        if (!$this->request->hasPreviousSession()) {
+            return null;
+        }
+
         $this->startSession();
 
         return $_SESSION[$offset];
@@ -67,6 +88,10 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      */
     public function offsetUnset($offset): void
     {
+        if (!$this->request->hasPreviousSession()) {
+            return;
+        }
+
         $this->startSession();
 
         unset($_SESSION[$offset]);
@@ -77,6 +102,10 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      */
     public function count()
     {
+        if (!$this->request->hasPreviousSession()) {
+            return 0;
+        }
+
         $this->startSession();
 
         return \count($_SESSION);

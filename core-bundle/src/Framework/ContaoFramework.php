@@ -362,8 +362,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function initializeLegacySessionAccess(): void
     {
+        if (null === $this->request || !$this->request->hasSession()) {
+            return;
+        }
+
         if (!$this->session->isStarted()) {
-            $_SESSION = new LazySessionAccess($this->session);
+            $_SESSION = new LazySessionAccess($this->request);
         } else {
             $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
             $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');

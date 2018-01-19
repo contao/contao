@@ -25,6 +25,8 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -47,6 +49,7 @@ class ContaoFrameworkTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
+        $request->setSession(new Session(new MockArraySessionStorage()));
 
         $requestStack = new RequestStack();
         $requestStack->push($request);

@@ -15,17 +15,19 @@ namespace Contao\CoreBundle\Tests\Session\Attribute;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class LazySessionAccessTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $session = new Session(new MockNativeSessionStorage());
-        $accessor = new LazySessionAccess($session);
+        $request = new Request();
+        $request->setSession(new Session(new MockNativeSessionStorage()));
 
-        $this->assertInstanceOf('Contao\CoreBundle\Session\LazySessionAccess', $accessor);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\LazySessionAccess', new LazySessionAccess($request));
     }
 
     /**
@@ -45,12 +47,10 @@ class LazySessionAccessTest extends TestCase
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $_SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($this->mockRequest($session));
 
         $this->assertFalse($session->isStarted());
-
         $this->assertFalse(isset($_SESSION['foobar']['nested']));
-
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
@@ -73,12 +73,10 @@ class LazySessionAccessTest extends TestCase
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $_SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($this->mockRequest($session));
 
         $this->assertFalse($session->isStarted());
-
         $this->assertNull($_SESSION['foobar']['nested']);
-
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
@@ -101,7 +99,7 @@ class LazySessionAccessTest extends TestCase
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $_SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($this->mockRequest($session));
 
         $this->assertFalse($session->isStarted());
 
@@ -130,7 +128,7 @@ class LazySessionAccessTest extends TestCase
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $_SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($this->mockRequest($session));
 
         $this->assertFalse($session->isStarted());
 
@@ -158,7 +156,7 @@ class LazySessionAccessTest extends TestCase
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
-        $_SESSION = new LazySessionAccess($session);
+        $_SESSION = new LazySessionAccess($this->mockRequest($session));
 
         $this->assertFalse($session->isStarted());
 
@@ -167,5 +165,80 @@ class LazySessionAccessTest extends TestCase
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
+    }
+
+    public function testDoesNotStartTheSessionOnOffsetExistsIfThereIsNoPreviousSession(): void
+    {
+        $session = new Session(new MockNativeSessionStorage());
+        $_SESSION = new LazySessionAccess($this->mockRequest($session, false));
+
+        $this->assertFalse($session->isStarted());
+        $this->assertFalse(isset($_SESSION['foobar']['nested']));
+        $this->assertFalse($session->isStarted());
+    }
+
+    public function testDoesNotStartTheSessionOnOffsetGetIfThereIsNoPreviousSession(): void
+    {
+        $session = new Session(new MockNativeSessionStorage());
+        $_SESSION = new LazySessionAccess($this->mockRequest($session, false));
+
+        $this->assertFalse($session->isStarted());
+        $this->assertNull($_SESSION['foobar']['nested']);
+        $this->assertFalse($session->isStarted());
+    }
+
+    public function testDoesNotStartTheSessionOnOffsetUnsetIfThereIsNoPreviousSession(): void
+    {
+        $session = new Session(new MockNativeSessionStorage());
+        $_SESSION = new LazySessionAccess($this->mockRequest($session, false));
+
+        $this->assertFalse($session->isStarted());
+
+        unset($_SESSION['foobar']['nested']);
+
+        $this->assertFalse($session->isStarted());
+    }
+
+    public function testDoesNotStartTheSessionOnCountIfThereIsNoPreviousSession(): void
+    {
+        $session = new Session(new MockNativeSessionStorage());
+        $_SESSION = new LazySessionAccess($this->mockRequest($session, false));
+
+        $this->assertFalse($session->isStarted());
+        $this->assertCount(0, $_SESSION);
+        $this->assertFalse($session->isStarted());
+    }
+
+    /**
+     * Mocks a request with session.
+     *
+     * @param SessionInterface $session
+     * @param bool             $hasPreviousSession
+     *
+     * @return Request|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockRequest(SessionInterface $session, bool $hasPreviousSession = true): Request
+    {
+        $request = $this->createMock(Request::class);
+
+        $request
+            ->expects($this->once())
+            ->method('hasSession')
+            ->willReturn(true)
+        ;
+
+        $request
+            ->expects($this->once())
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request
+            ->expects($this->once())
+            ->method('hasPreviousSession')
+            ->willReturn($hasPreviousSession)
+        ;
+
+        return $request;
     }
 }
