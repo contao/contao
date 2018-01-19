@@ -84,6 +84,8 @@ class LazySessionAccess implements \ArrayAccess, \Countable
 
     /**
      * Starts the session.
+     *
+     * @throws \RuntimeException
      */
     private function startSession(): void
     {
@@ -92,7 +94,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         $this->session->start();
 
         if ($_SESSION instanceof self) {
-            throw new \RuntimeException('Unable to start native session, $_SESSION was not replaced.');
+            throw new \RuntimeException('Unable to start the native session, $_SESSION was not replaced.');
         }
 
         // Accessing the session object may replace the global $_SESSION variable,

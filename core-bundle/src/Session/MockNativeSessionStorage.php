@@ -15,14 +15,14 @@ namespace Contao\CoreBundle\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * Mocks the native `$_SESSION` for unit tests.
+ * Mocks the native $_SESSION for unit tests.
  */
 class MockNativeSessionStorage extends MockArraySessionStorage
 {
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function start(): bool
     {
         parent::start();
 
