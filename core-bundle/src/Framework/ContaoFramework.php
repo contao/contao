@@ -52,11 +52,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $router;
 
     /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @var ScopeMatcher
      */
     private $scopeMatcher;
@@ -108,16 +103,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @param RequestStack     $requestStack
      * @param RouterInterface  $router
-     * @param SessionInterface $session
      * @param ScopeMatcher     $scopeMatcher
      * @param string           $rootDir
      * @param int              $errorLevel
      */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->router = $router;
-        $this->session = $session;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
@@ -366,11 +359,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
-        if (!$this->session->isStarted()) {
-            $_SESSION = new LazySessionAccess($this->request->getSession());
+        $session = $this->request->getSession();
+
+        if (!$session->isStarted()) {
+            $_SESSION = new LazySessionAccess($session);
         } else {
-            $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
-            $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
+            $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
+            $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
         }
     }
 

@@ -129,7 +129,6 @@ services:
         arguments:
             - "@request_stack"
             - "@router"
-            - "@session"
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
             - "%contao.error_level%"
