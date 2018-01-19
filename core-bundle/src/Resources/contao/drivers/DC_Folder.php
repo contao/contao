@@ -327,12 +327,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
 
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ")")
+					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . \Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
 											  ->execute($for, $for);
 				}
 				else
 				{
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE " . $strPattern)
+					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
 											  ->execute($for);
 				}
 
@@ -2824,7 +2824,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
-				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ")";
+				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . \Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
 				$this->values[] = $session['search'][$this->strTable]['value'];
 			}
 			else

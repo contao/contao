@@ -230,12 +230,16 @@ class Database
 			$varSet = implode(',', $varSet);
 		}
 
-		if (!$blnIsField)
+		if ($blnIsField)
+		{
+			$varSet = static::quoteIdentifier($varSet);
+		}
+		else
 		{
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
+		return "FIND_IN_SET(" . static::quoteIdentifier($strKey) . ", " . $varSet . ")";
 	}
 
 
@@ -490,7 +494,7 @@ class Database
 	 */
 	public function isUniqueValue($strTable, $strField, $varValue, $intId=null)
 	{
-		$strQuery = "SELECT * FROM $strTable WHERE $strField=?";
+		$strQuery = "SELECT * FROM $strTable WHERE " . static::quoteIdentifier($strField) . "=?";
 
 		if ($intId !== null)
 		{
@@ -703,6 +707,38 @@ class Database
 		}
 
 		return array_pop($ids);
+	}
+
+
+	/**
+	 * Quote the column name if it is a reserved word
+	 *
+	 * @param string $strName
+	 *
+	 * @return string
+	 */
+	public static function quoteIdentifier($strName)
+	{
+		static $strQuoteCharacter = null;
+
+		if ($strQuoteCharacter === null)
+		{
+			$strQuoteCharacter = \System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
+		}
+
+		// The identifier is quoted already
+		if (strncmp($strName, $strQuoteCharacter, 1) === 0)
+		{
+			return $strName;
+		}
+
+		// Not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+		if (!preg_match('/^[A-Za-z0-9_$.]+$/', $strName))
+		{
+			return $strName;
+		}
+
+		return \System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 
 
