@@ -64,10 +64,7 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame('foo', $bag['bar']['baz']);
     }
 
-    /**
-     * Tests the offsetGet() method.
-     */
-    public function testCanModifyTheOffset()
+    public function testCanModifyTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
 
@@ -95,10 +92,7 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame([], $bag->get('bar'));
     }
 
-    /**
-     * Tests that values are not referenced.
-     */
-    public function testDoesNotReferenceValues()
+    public function testDoesNotReferenceValues(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
         $bag->set('foo', 'bar');
