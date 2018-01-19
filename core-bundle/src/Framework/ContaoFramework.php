@@ -367,7 +367,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         if (!$this->session->isStarted()) {
-            $_SESSION = new LazySessionAccess($this->request);
+            $_SESSION = new LazySessionAccess($this->request->getSession());
         } else {
             $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
             $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
