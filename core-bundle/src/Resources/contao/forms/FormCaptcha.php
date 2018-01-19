@@ -151,7 +151,8 @@ class FormCaptcha extends \Widget
 	 */
 	protected function generateCaptcha()
 	{
-		if ($this->arrCaptcha) {
+		if ($this->arrCaptcha)
+		{
 			return;
 		}
 

@@ -118,7 +118,7 @@ class ModuleLogin extends \Module
 			$this->Template->hasError = true;
 			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes());
 		}
-		else if ($exception instanceof AuthenticationException)
+		elseif ($exception instanceof AuthenticationException)
 		{
 			$this->Template->hasError = true;
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];

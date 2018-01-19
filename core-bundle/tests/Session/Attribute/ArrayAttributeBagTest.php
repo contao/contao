@@ -71,7 +71,7 @@ class ArrayAttributeBagTest extends TestCase
         $bag['foo'] = 1;
         $bag['bar']['baz'] = 'foo';
 
-        $bag['foo']++;
+        ++$bag['foo'];
         $bag['foo'] += 1;
         $bag['bar']['baz'] .= 'bar';
 
