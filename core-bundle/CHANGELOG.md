@@ -2,7 +2,6 @@
 
 ### DEV
 
- * Set the front end response cache headers in an event listener (see #1283).
  * Quote reserved words in database queries (see #1262).
 
 ### 4.4.12 (2018-01-03)
