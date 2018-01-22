@@ -674,6 +674,44 @@ abstract class Frontend extends \Controller
 
 
 	/**
+	 * Add the cache headers to the response according to the page settings
+	 *
+	 * @param Response $response The response object
+	 *
+	 * @return Response The response object
+	 */
+	public static function addCacheHeadersToResponse(Response $response)
+	{
+		/** @var $objPage PageModel */
+		global $objPage;
+
+		if (($objPage->cache === false || $objPage->cache === 0) && ($objPage->clientCache === false || $objPage->clientCache === 0))
+		{
+			return $response->setPrivate();
+		}
+
+		// Do not cache the response if a user is logged in or the page is protected
+		// TODO: Add support for proxies so they can vary on member context
+		if ($objPage->protected || (\defined('FE_USER_LOGGED_IN') && FE_USER_LOGGED_IN === true) || (\defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true) || (isset($_COOKIE['BE_USER_AUTH']) && Input::cookie('BE_USER_AUTH') == static::getSessionHash('BE_USER_AUTH')))
+		{
+			return $response->setPrivate();
+		}
+
+		if ($objPage->clientCache > 0)
+		{
+			$response->setMaxAge($objPage->clientCache);
+		}
+
+		if ($objPage->cache > 0)
+		{
+			$response->setSharedMaxAge($objPage->cache);
+		}
+
+		return $response;
+	}
+
+
+	/**
 	 * Check whether there is a cached version of the page and return a response object
 	 *
 	 * @return Response|null
