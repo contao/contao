@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -52,7 +52,7 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_DROP', $commands);
-        $this->assertEquals('ALTER TABLE tl_foobar DROP bar', reset($commands['ALTER_DROP']));
+        $this->assertSame('ALTER TABLE tl_foobar DROP bar', reset($commands['ALTER_DROP']));
     }
 
     /**
@@ -74,7 +74,7 @@ class InstallerTest extends TestCase
 
         $commands = array_values($commands['ALTER_ADD']);
 
-        $this->assertEquals('ALTER TABLE tl_foobar ADD bar VARCHAR(255) NOT NULL', $commands[0]);
+        $this->assertSame('ALTER TABLE tl_foobar ADD bar VARCHAR(255) NOT NULL', $commands[0]);
     }
 
     /**
@@ -95,7 +95,7 @@ class InstallerTest extends TestCase
 
         $commands = array_values($commands['ALTER_ADD']);
 
-        $this->assertEquals('ALTER TABLE tl_foobar ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
+        $this->assertSame('ALTER TABLE tl_foobar ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
     }
 
     /**
@@ -116,7 +116,7 @@ class InstallerTest extends TestCase
 
         $commands = array_values($commands['ALTER_ADD']);
 
-        $this->assertEquals("ALTER TABLE tl_foobar ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
+        $this->assertSame("ALTER TABLE tl_foobar ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
     }
 
     /**
