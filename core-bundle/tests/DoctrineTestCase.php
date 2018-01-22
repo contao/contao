@@ -85,7 +85,7 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null)
+    protected function mockDoctrineRegistryWithOrm(array $metadata = [], $filter = null)
     {
         $config = $this->createMock(Configuration::class);
 

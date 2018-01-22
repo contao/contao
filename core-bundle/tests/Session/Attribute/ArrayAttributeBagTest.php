@@ -90,7 +90,7 @@ class ArrayAttributeBagTest extends TestCase
         $bag['foo'] = 1;
         $bag['bar']['baz'] = 'foo';
 
-        $bag['foo']++;
+        ++$bag['foo'];
         $bag['foo'] += 1;
         $bag['bar']['baz'] .= 'bar';
 
@@ -107,8 +107,7 @@ class ArrayAttributeBagTest extends TestCase
         $bag->set('foo', 'bar');
         $bag->set('bar', ['baz' => 'foo']);
 
-        unset($bag['foo']);
-        unset($bag['bar']['baz']);
+        unset($bag['foo'], $bag['bar']['baz']);
 
         $this->assertFalse($bag->has('foo'));
         $this->assertSame([], $bag->get('bar'));
