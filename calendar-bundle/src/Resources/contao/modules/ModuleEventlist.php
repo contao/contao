@@ -288,7 +288,7 @@ class ModuleEventlist extends \Events
 			}
 
 			// Show the teaser text of redirect events (see #6315)
-			if (\is_bool($event['details']))
+			if (\is_bool($event['details']) && $event['source'] == 'default')
 			{
 				$objTemplate->hasDetails = false;
 			}
