@@ -45,12 +45,12 @@ class GeneratePageListener
     /**
      * Adds the feeds to the page header.
      *
-     * @param PageModel          $objPage
-     * @param LayoutModel|object $objLayout
+     * @param PageModel          $pageModel
+     * @param LayoutModel|object $layoutModel
      */
-    public function onGeneratePage(PageModel $objPage, LayoutModel $objLayout)
+    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel)
     {
-        $newsfeeds = StringUtil::deserialize($objLayout->newsfeeds);
+        $newsfeeds = StringUtil::deserialize($layoutModel->newsfeeds);
 
         if (empty($newsfeeds) || !\is_array($newsfeeds)) {
             return;
