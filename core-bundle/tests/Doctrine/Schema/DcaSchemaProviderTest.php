@@ -15,6 +15,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\DoctrineTestCase;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Tests the DcaSchemaProvider class.
@@ -379,7 +380,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * Tests adding a schema filter.
      */
-    public function testAppliesTheSchemaFilter()
+    public function testAppliesTheSchemaFilterToTheSqlDefinitions()
     {
         $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], '/^tl_/');
         $schema = $provider->createSchema();
@@ -433,6 +434,65 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->expectException('RuntimeException');
 
         $provider->createSchema();
+    }
+
+    /**
+     * Tests creating the schema from ORM.
+     */
+    public function testCreatesSchemaFromOrm()
+    {
+        $metadata = new ClassMetadata('tl_member');
+        $metadata->setTableName('tl_member');
+
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm([$metadata])
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(1, $schema->getTables());
+        $this->assertTrue($schema->hasTable('tl_member'));
+    }
+
+    /**
+     * Tests adding a schema filter.
+     */
+    public function testAppliesTheSchemaFilterToTheOrmEntities()
+    {
+        $class1 = new ClassMetadata('tl_member');
+        $class1->setTableName('tl_member');
+
+        $class2 = new ClassMetadata('member');
+        $class2->setTableName('member');
+
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm([$class1, $class2], '/^tl_/')
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(1, $schema->getTables());
+        $this->assertTrue($schema->hasTable('tl_member'));
+        $this->assertFalse($schema->hasTable('member'));
+    }
+
+    /**
+     * Tests adding a schema from ORM if there is no metadata.
+     */
+    public function testDoesNotCreateTheSchemaFromOrmIfThereIsNoMetadata()
+    {
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm()
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
     }
 
     /**

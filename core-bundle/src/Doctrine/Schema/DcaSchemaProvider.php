@@ -17,6 +17,7 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 
 /**
@@ -113,7 +114,18 @@ class DcaSchemaProvider
     {
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
+
+        /** @var ClassMetadata[] $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
+
+        // Apply the schema filter
+        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+            foreach ($metadata as $key => $data) {
+                if (!preg_match($filter, $data->getTableName())) {
+                    unset($metadata[$key]);
+                }
+            }
+        }
 
         if (empty($metadata)) {
             return $this->createSchemaFromDca();
