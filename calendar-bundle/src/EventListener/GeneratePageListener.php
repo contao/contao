@@ -45,12 +45,12 @@ class GeneratePageListener
     /**
      * Adds the feeds to the page header.
      *
-     * @param PageModel          $objPage
-     * @param LayoutModel|object $objLayout
+     * @param PageModel          $pageModel
+     * @param LayoutModel|object $layoutModel
      */
-    public function onGeneratePage(PageModel $objPage, LayoutModel $objLayout)
+    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel)
     {
-        $calendarfeeds = StringUtil::deserialize($objLayout->calendarfeeds);
+        $calendarfeeds = StringUtil::deserialize($layoutModel->calendarfeeds);
 
         if (empty($calendarfeeds) || !\is_array($calendarfeeds)) {
             return;
