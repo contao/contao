@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -123,7 +123,7 @@ class MetaWizard extends \Widget
 		$languages = array_intersect_key($languages, array_flip($existing));
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || empty($this->varValue))
+		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			if (\count($languages) > 0)
 			{

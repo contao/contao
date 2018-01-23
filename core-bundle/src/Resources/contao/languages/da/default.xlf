@@ -1451,6 +1451,9 @@ Denne e-mail er automatisk genereret, og kan derfor ikke besvares direkte.
         <source>Logout</source>
         <target>Log ud</target>
       </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+      </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
         <target>Luk den igangværende session</target>

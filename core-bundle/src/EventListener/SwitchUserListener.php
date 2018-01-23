@@ -5,14 +5,13 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -52,18 +51,15 @@ class SwitchUserListener
         $token = $this->tokenStorage->getToken();
 
         if (null === $token) {
-            throw new \RuntimeException('The token storage did not contain a token');
+            throw new \RuntimeException('The token storage did not contain a token.');
         }
 
-        /** @var BackendUser $user */
-        $user = $token->getUser();
-
-        /** @var BackendUser $targetUser */
-        $targetUser = $event->getTargetUser();
+        $sourceUser = $token->getUser()->getUsername();
+        $targetUser = $event->getTargetUser()->getUsername();
 
         $this->logger->info(
-            sprintf('User "%s" has switched to user "%s"', $user->getUsername(), $targetUser->getUsername()),
-            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS)]
+            sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser),
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $sourceUser)]
         );
     }
 }

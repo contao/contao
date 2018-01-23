@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -122,10 +122,12 @@ class BackendMenuListenerTest extends TestCase
         $childNode = $categoryNode->getChild('node1');
         $this->assertNotNull($childNode);
         $this->assertTrue($childNode->isCurrent());
+        $this->assertSame('node1', $childNode->getAttribute('class'));
 
         $childNode = $categoryNode->getChild('node2');
         $this->assertNotNull($childNode);
         $this->assertFalse($childNode->isCurrent());
+        $this->assertSame('node2', $childNode->getAttribute('class'));
     }
 
     public function testDoesNotModifyTheTreeIfNoUserOrTokenIsGiven(): void

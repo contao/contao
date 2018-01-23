@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -140,6 +140,11 @@ class MergeHttpHeadersListener
             [$name, $content] = explode(':', $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
+
+            // Never merge cache-control headers (see #1246)
+            if ('cache-control' === $uniqueKey) {
+                continue;
+            }
 
             if (\in_array($uniqueKey, $this->multiHeaders, true)) {
                 $response->headers->set($uniqueKey, trim($content), false);

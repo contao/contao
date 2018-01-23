@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -144,7 +144,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'TABLE_FIELDS' => [
                             'id' => "`id` int(10) NOT NULL default '0'",
                             'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) COLLATE utf8mb4_bin NOT NULL default ''",
+                            'title' => "`title` varchar(128) BINARY NOT NULL default ''",
                             'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
@@ -166,7 +166,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'SCHEMA_FIELDS' => [
                             ['name' => 'id', 'type' => 'integer'],
                             ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'platformOptions' => ['collation' => 'utf8mb4_bin']],
+                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
                             ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => 'Foobar'],
                             ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
                             ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
@@ -189,7 +189,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'TABLE_FIELDS' => [
                             'id' => "`id` int(10) NOT NULL default '0'",
                             'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) COLLATE utf8mb4_bin NOT NULL default ''",
+                            'title' => "`title` varchar(128) BINARY NOT NULL default ''",
                             'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
@@ -459,6 +459,16 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
+    public function testAppliesTheSchemaFilterToTheSqlDefinitions(): void
+    {
+        $provider = $this->getProvider(['member' => [], 'tl_member' => []], [], null, '/^tl_/');
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertFalse($schema->hasTable('member'));
+        $this->assertTrue($schema->hasTable('tl_member'));
+    }
+
     public function testFailsIfThePrimaryKeyIsInvalid(): void
     {
         $provider = $this->getProvider(
@@ -512,6 +522,29 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $schema = $provider->createSchema();
 
         $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(1, $schema->getTables());
+        $this->assertTrue($schema->hasTable('tl_member'));
+    }
+
+    public function testAppliesTheSchemaFilterToTheOrmEntities(): void
+    {
+        $class1 = new ClassMetadata('tl_member');
+        $class1->setTableName('tl_member');
+
+        $class2 = new ClassMetadata('member');
+        $class2->setTableName('member');
+
+        $provider = new DcaSchemaProvider(
+            $this->mockContaoFrameworkWithInstaller(),
+            $this->mockDoctrineRegistryWithOrm([$class1, $class2], '/^tl_/')
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(1, $schema->getTables());
+        $this->assertTrue($schema->hasTable('tl_member'));
+        $this->assertFalse($schema->hasTable('member'));
     }
 
     public function testDoesNotCreateTheSchemaFromOrmIfThereIsNoMetadata(): void

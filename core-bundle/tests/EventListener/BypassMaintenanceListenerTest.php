@@ -5,16 +5,15 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
-use Contao\CoreBundle\Security\TokenChecker;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -38,8 +37,7 @@ class BypassMaintenanceListenerTest extends TestCase
 
         $tokenChecker
             ->expects($this->once())
-            ->method('hasAuthenticatedToken')
-            ->with(BackendUser::SECURITY_SESSION_KEY)
+            ->method('hasBackendUser')
             ->willReturn(true)
         ;
 
@@ -57,8 +55,7 @@ class BypassMaintenanceListenerTest extends TestCase
 
         $tokenChecker
             ->expects($this->once())
-            ->method('hasAuthenticatedToken')
-            ->with(BackendUser::SECURITY_SESSION_KEY)
+            ->method('hasBackendUser')
             ->willReturn(false)
         ;
 

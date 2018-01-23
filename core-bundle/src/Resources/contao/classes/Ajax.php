@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -83,14 +83,14 @@ class Ajax extends \Backend
 			// Toggle navigation menu
 			case 'toggleNavigation':
 				$bemod = $objSessionBag->get('backend_modules');
-				$bemod[\Input::post('id')] = \intval(\Input::post('state'));
+				$bemod[\Input::post('id')] = (int) \Input::post('state');
 				$objSessionBag->set('backend_modules', $bemod);
 				throw new NoContentResponseException();
 
 			// Load a navigation menu group
 			case 'loadNavigation':
 				$bemod = $objSessionBag->get('backend_modules');
-				$bemod[\Input::post('id')] = \intval(\Input::post('state'));
+				$bemod[\Input::post('id')] = (int) \Input::post('state');
 				$objSessionBag->set('backend_modules', $bemod);
 
 				$this->import('BackendUser', 'User');
@@ -116,7 +116,7 @@ class Ajax extends \Backend
 				}
 
 				$nodes = $objSessionBag->get($this->strAjaxKey);
-				$nodes[$this->strAjaxId] = \intval(\Input::post('state'));
+				$nodes[$this->strAjaxId] = (int) \Input::post('state');
 				$objSessionBag->set($this->strAjaxKey, $nodes);
 				throw new NoContentResponseException();
 
@@ -135,21 +135,21 @@ class Ajax extends \Backend
 				}
 
 				$nodes = $objSessionBag->get($this->strAjaxKey);
-				$nodes[$this->strAjaxId] = \intval(\Input::post('state'));
+				$nodes[$this->strAjaxId] = (int) \Input::post('state');
 				$objSessionBag->set($this->strAjaxKey, $nodes);
 				break;
 
 			// Toggle the visibility of a fieldset
 			case 'toggleFieldset':
 				$fs = $objSessionBag->get('fieldset_states');
-				$fs[\Input::post('table')][\Input::post('id')] = \intval(\Input::post('state'));
+				$fs[\Input::post('table')][\Input::post('id')] = (int) \Input::post('state');
 				$objSessionBag->set('fieldset_states', $fs);
 				throw new NoContentResponseException();
 
 			// Toggle checkbox groups
 			case 'toggleCheckboxGroup':
 				$state = $objSessionBag->get('checkbox_groups');
-				$state[\Input::post('id')] = \intval(\Input::post('state'));
+				$state[\Input::post('id')] = (int) \Input::post('state');
 				$objSessionBag->set('checkbox_groups', $state);
 				break;
 
@@ -192,11 +192,11 @@ class Ajax extends \Backend
 		{
 			// Load nodes of the page structure tree
 			case 'loadStructure':
-				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView($this->strAjaxId, \intval(\Input::post('level')))));
+				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView($this->strAjaxId, (int) \Input::post('level'))));
 
 			// Load nodes of the file manager tree
 			case 'loadFileManager':
-				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(\Input::post('folder', true), \intval(\Input::post('level')))));
+				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(\Input::post('folder', true), (int) \Input::post('level'))));
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
@@ -226,7 +226,7 @@ class Ajax extends \Backend
 				/** @var PageSelector $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
 
-				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), \intval(\Input::post('level')))));
+				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, \Input::post('field'), (int) \Input::post('level'))));
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
@@ -259,7 +259,7 @@ class Ajax extends \Backend
 				// Load a particular node
 				if (\Input::post('folder', true) != '')
 				{
-					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), \intval(\Input::post('level')))));
+					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(\Input::post('folder', true), \Input::post('field'), (int) \Input::post('level'))));
 				}
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
@@ -401,7 +401,7 @@ class Ajax extends \Backend
 					if (\Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', \Input::post('id'));
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . (\intval(\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . ((\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
 
 						if (\Input::post('load'))
 						{
@@ -410,7 +410,7 @@ class Ajax extends \Backend
 					}
 					else
 					{
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . (\intval(\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . \Input::post('field') . "='" . ((\Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
 
 						if (\Input::post('load'))
 						{
@@ -420,7 +420,7 @@ class Ajax extends \Backend
 				}
 				elseif ($dc instanceof DC_File)
 				{
-					$val = (\intval(\Input::post('state') == 1) ? true : false);
+					$val = ((\Input::post('state') == 1) ? true : false);
 					\Config::persist(\Input::post('field'), $val);
 
 					if (\Input::post('load'))

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -231,9 +231,9 @@ class DC_File extends \DataContainer implements \editable
 						}
 						else
 						{
-							foreach ($this->varValue as $k=>$v)
+							foreach ($this->varValue as $key=>$val)
 							{
-								$this->varValue[$k] = htmlspecialchars($v);
+								$this->varValue[$key] = htmlspecialchars($val);
 							}
 						}
 					}

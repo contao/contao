@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -152,7 +152,7 @@ class SymlinksCommand extends AbstractLockedCommand
         foreach ($themes as $theme) {
             $path = $this->getRelativePath($theme->getPathname());
 
-            if (0 === strpos($path, 'system/modules/')) {
+            if (0 === strncmp($path, 'system/modules/', 15)) {
                 continue;
             }
 

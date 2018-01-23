@@ -27,6 +27,11 @@ element as container and a `<strong>` element to mark the active item:
 ```
 
 
+### $_SESSION['TL_LANGUAGE']
+
+The `$_SESSION['TL_LANGUAGE']` flag has been removed.
+
+
 Version 4.* to 4.3
 ------------------
 
@@ -310,7 +315,7 @@ instead if you want to trigger the cron job manually.
 
 ### Disable aliases
 
-In Contao 3, it was possible to disable aliases and make Contao use numeric IDs
+In Contao 3 it was possible to disable aliases and make Contao use numeric IDs
 only. This was a workaround for an old IIS server, which has now been dropped.
 
 More information: https://github.com/contao/core-bundle/issues/118
@@ -403,7 +408,7 @@ any other hook.
 
 ### new File()
 
-In Contao 3, `new File('tmp.txt')` automatically created the file if it did not
+In Contao 3 `new File('tmp.txt')` automatically created the file if it did not
 exist and all write operations such as `$file->write()` or `$file->append()`
 were carried out directly on the target file.
 
@@ -412,13 +417,13 @@ argument; the file was then only created if there was a write operation at all
 and any operation was carried out on a temporary file first, which was then
 moved to its final destination.
 
-In Contao 4, this changed behavior has become the default and the second
+In Contao 4 this changed behavior has become the default and the second
 argument has been dropped.
 
 
 ### Protected folders
 
-In Contao 3, the user files in the `files/` directory were publicly available
+In Contao 3 the user files in the `files/` directory were publicly available
 via HTTP by default and it was possible to protect certain subfolders. Now, due
 to a technical change, the user files are protected by default and subfolders
 have to be published explicitly to be available via HTTP.
@@ -426,6 +431,13 @@ have to be published explicitly to be available via HTTP.
 
 ### Article CSS IDs
 
-In Contao 3, the alias of an article was automatically used as its CSS ID, if
+In Contao 3 the alias of an article was automatically used as its CSS ID, if
 no custom CSS ID was defined. In Contao 4 the default CSS ID will be generated
 from its numeric ID, e.g. `article-1`.
+
+
+### Database::listTables()
+
+In Contao 3 the table inspection methods of the `Database` class processed both
+tables and views. However, the Doctrine schema manager, which is used in Contao
+4, only processes tables.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -80,7 +80,6 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
-        $container->setParameter('contao.security.token_lifetime', $mergedConfig['security']['token_lifetime']);
 
         if (isset($mergedConfig['localconfig'])) {
             $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);

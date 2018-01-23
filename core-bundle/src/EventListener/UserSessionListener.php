@@ -5,34 +5,28 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserSessionListener
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var Connection
      */
@@ -54,19 +48,24 @@ class UserSessionListener
     private $scopeMatcher;
 
     /**
-     * @param SessionInterface                     $session
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param Connection                           $connection
      * @param TokenStorageInterface                $tokenStorage
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
      * @param ScopeMatcher                         $scopeMatcher
+     * @param EventDispatcherInterface             $eventDispatcher
      */
-    public function __construct(SessionInterface $session, Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
+    public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
     {
-        $this->session = $session;
         $this->connection = $connection;
         $this->tokenStorage = $tokenStorage;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
         $this->scopeMatcher = $scopeMatcher;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -86,7 +85,7 @@ class UserSessionListener
             return;
         }
 
-        $user = $this->getUserObject();
+        $user = $token->getUser();
 
         if (!$user instanceof User) {
             return;
@@ -97,6 +96,9 @@ class UserSessionListener
         if (\is_array($session)) {
             $this->getSessionBag($event->getRequest())->replace($session);
         }
+
+        // Dynamically register the kernel.response listener (see #1293)
+        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse']);
     }
 
     /**
@@ -116,35 +118,15 @@ class UserSessionListener
             return;
         }
 
-        $user = $this->getUserObject();
+        $user = $token->getUser();
 
         if (!$user instanceof User) {
             return;
         }
 
-        $this->connection->update(
-            $user->getTable(),
-            ['session' => serialize($this->getSessionBag($event->getRequest())->all())],
-            ['id' => $user->id]
-        );
-    }
+        $data = $this->getSessionBag($event->getRequest())->all();
 
-    /**
-     * Returns the user object depending on the container scope.
-     *
-     * @throws \RuntimeException
-     *
-     * @return FrontendUser|BackendUser|null
-     */
-    private function getUserObject()
-    {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            throw new \RuntimeException('The token storage did not contain a token');
-        }
-
-        return $token->getUser();
+        $this->connection->update($user->getTable(), ['session' => serialize($data)], ['id' => $user->id]);
     }
 
     /**
@@ -152,16 +134,24 @@ class UserSessionListener
      *
      * @param Request $request
      *
+     * @throws \RuntimeException
+     *
      * @return AttributeBagInterface|SessionBagInterface
      */
     private function getSessionBag(Request $request): AttributeBagInterface
     {
+        $session = $request->getSession();
+
+        if (null === $session) {
+            throw new \RuntimeException('The request did not contain a session.');
+        }
+
         $name = 'contao_frontend';
 
         if ($this->scopeMatcher->isBackendRequest($request)) {
             $name = 'contao_backend';
         }
 
-        return $this->session->getBag($name);
+        return $session->getBag($name);
     }
 }

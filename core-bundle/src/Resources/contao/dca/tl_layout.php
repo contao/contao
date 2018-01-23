@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -675,7 +675,7 @@ class tl_layout extends Backend
 			return $value;
 		}
 
-		if (($i = array_search('responsive.css', $array)) !== false && array_search('layout.css', $array) === false)
+		if (($i = array_search('responsive.css', $array)) !== false && !\in_array('layout.css', $array))
 		{
 			array_insert($array, $i, 'layout.css');
 		}

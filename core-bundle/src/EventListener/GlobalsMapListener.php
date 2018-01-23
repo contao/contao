@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -34,6 +34,12 @@ class GlobalsMapListener
      */
     public function onInitializeSystem(): void
     {
-        $GLOBALS = array_replace_recursive($GLOBALS, $this->globals);
+        foreach ($this->globals as $key => $value) {
+            if (\is_array($value) && isset($GLOBALS[$key]) && \is_array($GLOBALS[$key])) {
+                $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key], $value);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
     }
 }

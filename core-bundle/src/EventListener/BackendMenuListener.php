@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -64,7 +64,7 @@ class BackendMenuListener
             foreach ($categoryData['modules'] as $moduleName => $moduleData) {
                 $moduleNode = $this->createNode($factory, $moduleName, $moduleData);
                 $moduleNode->setCurrent((bool) $moduleData['isActive']);
-                $moduleNode->setAttribute('class', $categoryName);
+                $moduleNode->setAttribute('class', $moduleName);
 
                 $categoryNode->addChild($moduleNode);
             }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -42,7 +42,7 @@ class InitializeController extends Controller
         $masterRequest = $this->get('request_stack')->getMasterRequest();
 
         if (null === $masterRequest) {
-            throw new \RuntimeException('The request stack did not contain a master request');
+            throw new \RuntimeException('The request stack did not contain a master request.');
         }
 
         $realRequest = Request::createFromGlobals();
@@ -69,7 +69,7 @@ class InitializeController extends Controller
             $this->container->enterScope($scope);
         }
 
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         // Add the master request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.

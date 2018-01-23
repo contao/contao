@@ -125,8 +125,7 @@
         <target>نشانی‌های آی‌پی ناشناس</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>ناشناس کردن هر آی‌پی که در پایگاه داده ذخیره می شود، به غیر از جدول &lt;em&gt;tl_session&lt;/em&gt; (نشانی آی‌پی به دلایل امنیتی به نشست مربوط است).</target>
+        <source>Anonymize all IP addresses that are stored in the database.</source>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -175,14 +174,6 @@
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>توکن درخواستی را وقتی فرمی ارسال می‌شود بررسی نخواهد کرد (ناامن!)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>زمان قفل ماندن حساب کاربری</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>اگر کاربری بیش از سه بار پشت سر هم گذرواژه اشتباه وارد نمایید قفل خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -310,14 +301,6 @@
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>اینجا می‌توانید بیشترین زمان یک نشست  را به ثانیه وارد نمایید (۶۰ دقیقه = ۳۶۰۰ ثانیه).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>زمان ورود خودکار</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>اینجا می‌توانید دوره ورود خودکار بخش کاربری را تنظیم نمایید (۹۰ روز = ۷۷۷۶۰۰۰ ثانیه).</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

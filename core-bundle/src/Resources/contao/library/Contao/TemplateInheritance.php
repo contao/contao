@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -173,7 +173,7 @@ trait TemplateInheritance
 			// Combine the contents of the child blocks
 			elseif (\is_array($this->arrBlocks[$name]))
 			{
-				$callback = function($current, $parent) {
+				$callback = function ($current, $parent) {
 					return str_replace('[[TL_PARENT]]', $parent, $current);
 				};
 

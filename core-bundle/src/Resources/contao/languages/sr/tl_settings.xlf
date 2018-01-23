@@ -126,8 +126,7 @@
         <target>Учини IP адресе анонимним</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>Сакриј све IP адресе које су сачуване у бази података, изузев табеле &lt;em&gt;tl_session&lt;/em&gt; (IP адреса је повезана са сесијом из сигурносних разлога).</target>
+        <source>Anonymize all IP addresses that are stored in the database.</source>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -176,14 +175,6 @@
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>Не проверавај исправност токена приликом подношења формулара (није безбедно!).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>Време закључавања налога</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>Налог ће бити закључан ако се три пута узастопно унесе погрешна лозинка.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -312,14 +303,6 @@
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>Овде можете унети максимално време трајања сесије (60 минута = 3600 секунди).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>Период аутоматске пријаве</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>Овде можете подесити време аутоматске пријаве у ФронтЕнду (90 дана = 7776000 секунди).</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

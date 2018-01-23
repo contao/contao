@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -46,7 +46,7 @@ class ContentMedia extends \ContentElement
 
 		$source = \StringUtil::deserialize($this->playerSRC);
 
-		if (!\is_array($source) || empty($source))
+		if (empty($source) || !\is_array($source))
 		{
 			return '';
 		}
@@ -103,7 +103,7 @@ class ContentMedia extends \ContentElement
 		$objFirst = $objFiles->current();
 
 		// Pre-sort the array by preference
-		if (\in_array($objFirst->extension , array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv')))
+		if (\in_array($objFirst->extension, array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv')))
 		{
 			$this->Template->isVideo = true;
 			$arrFiles = array('mp4'=>null, 'm4v'=>null, 'mov'=>null, 'wmv'=>null, 'webm'=>null, 'ogv'=>null);

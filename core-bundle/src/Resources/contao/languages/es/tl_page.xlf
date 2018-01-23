@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
+        <target>Caracteres de alias válidos</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Aquí puede seleccionar un juego de caracteres personalizado para alias autogenerados.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -273,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
+        <target>Requiere un artículo</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Desencadenar un error 404 si la URL de la página no contiene un alias de elemento.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -375,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias_legend">
         <source>Alias settings</source>
+        <target>Configuración de alias</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>

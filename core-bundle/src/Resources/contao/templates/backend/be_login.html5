@@ -39,6 +39,9 @@
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="tl_login">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+          <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
+          <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
+          <input type="hidden" name="_always_use_target_path" value="1">
           <h1><?= $this->headline ?></h1>
           <div class="widget">
             <label for="username"><?= $this->username ?></label>

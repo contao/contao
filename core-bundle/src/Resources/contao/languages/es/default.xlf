@@ -655,45 +655,59 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>am</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>AM</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
+        <target>DD</target>
       </trans-unit>
       <trans-unit id="DATE.j">
         <source>D</source>
+        <target>D</target>
       </trans-unit>
       <trans-unit id="DATE.m">
         <source>MM</source>
+        <target>MM</target>
       </trans-unit>
       <trans-unit id="DATE.n">
         <source>M</source>
+        <target>M</target>
       </trans-unit>
       <trans-unit id="DATE.y">
         <source>YY</source>
+        <target>YY</target>
       </trans-unit>
       <trans-unit id="DATE.Y">
         <source>YYYY</source>
+        <target>YYYY</target>
       </trans-unit>
       <trans-unit id="DATE.h">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.H">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.g">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.G">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.i">
         <source>mm</source>
+        <target>mm</target>
       </trans-unit>
       <trans-unit id="DATE.s">
         <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1427,9 +1441,11 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.profile">
         <source>Profile</source>
+        <target>Perfil</target>
       </trans-unit>
       <trans-unit id="MSC.profileTitle">
         <source>User profile</source>
+        <target>Perfil del usuario</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
@@ -1474,6 +1490,10 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       <trans-unit id="MSC.logoutBT">
         <source>Logout</source>
         <target>Desconectar</target>
+      </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+        <target>Volver a %s</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1749,6 +1769,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Gestión de versiones</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -1860,9 +1881,11 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
+        <target>Alertas</target>
       </trans-unit>
       <trans-unit id="MSC.noSystemMessages">
         <source>Currently there are no alerts.</source>
+        <target>Actualmente no hay alertas.</target>
       </trans-unit>
       <trans-unit id="MSC.clearClipboard">
         <source>Clear clipboard</source>
@@ -1898,6 +1921,7 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
+        <target>Funciones de búsqueda y filtro</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2345,27 +2369,35 @@ Este e-mail ha sido generado por Contao. No puedes contestar directamente.
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
+        <target>Menú Breadcrumb</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>
+        <target>Navegación Principal</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
+        <target>Navegación de encabezado</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
+        <target>Menú de paginación</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>Números Unicode y letras minúsculas</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>Números y letras Unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
+        <target>Números ASCII y letras minúsculas</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+        <target>Números ASCII y letras</target>
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>

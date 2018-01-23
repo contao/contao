@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -55,58 +55,6 @@ class LocaleListenerTest extends TestCase
      * @return array
      */
     public function getLocaleRequestData(): array
-    {
-        return [
-            [null, 'en'], // see #264
-            ['en', 'en'],
-            ['de', 'de'],
-            ['de-CH', 'de_CH'],
-            ['de_CH', 'de_CH'],
-            ['zh-tw', 'zh_TW'],
-        ];
-    }
-
-    /**
-     * @param string $expected
-     *
-     * @dataProvider getLocaleSessionData
-     */
-    public function testReadsTheLocaleFromTheSession(string $expected): void
-    {
-        // The session values are already formatted, so we're passing in $expected here
-        $session = $this->mockSession();
-        $session->set('_locale', $expected);
-
-        $request = Request::create('/');
-        $request->setSession($session);
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $event = new GetResponseEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
-
-        $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
-        $listener->onKernelRequest($event);
-
-        $this->assertSame($expected, $request->attributes->get('_locale'));
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocaleSessionData(): array
-    {
-        return [
-            ['en'],
-            ['de'],
-            ['de_CH'],
-            ['de_CH'],
-            ['zh_TW'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function localeTestData(): array
     {
         return [
             [null, 'en'], // see #264

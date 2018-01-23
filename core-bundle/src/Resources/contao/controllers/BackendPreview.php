@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -68,7 +68,7 @@ class BackendPreview extends \Backend
 				$objAuthenticator->removeFrontendAuthentication();
 			}
 
-			$arrParameters = [];
+			$arrParameters = array();
 
 			if (\Input::get('url'))
 			{
@@ -92,7 +92,7 @@ class BackendPreview extends \Backend
 		$objTemplate->charset = \Config::get('characterSet');
 		$objTemplate->site = \Input::get('site', true);
 		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');
-		$objTemplate->user = \System::getContainer()->get('contao.security.token_checker')->getUsername(\FrontendUser::SECURITY_SESSION_KEY);
+		$objTemplate->user = \System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
 
 		$strUrl = null;
 

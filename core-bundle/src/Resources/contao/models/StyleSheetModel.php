@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -91,7 +91,7 @@ class StyleSheetModel extends \Model
 	 */
 	public static function findByIds($arrIds)
 	{
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}

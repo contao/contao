@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -459,7 +459,7 @@ class Environment
 	 */
 	protected static function relativeRequest()
 	{
-		return preg_replace('/^' . preg_quote(static::get('script'),  '/') . '\/?/', '', static::get('request'));
+		return preg_replace('/^' . preg_quote(static::get('script'), '/') . '\/?/', '', static::get('request'));
 	}
 
 
@@ -602,7 +602,7 @@ class Environment
 	 */
 	protected static function encodeRequestString($strRequest)
 	{
-		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', function($matches) { return rawurlencode($matches[0]); }, $strRequest);
+		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', function ($matches) { return rawurlencode($matches[0]); }, $strRequest);
 	}
 
 

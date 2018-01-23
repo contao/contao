@@ -1,5 +1,27 @@
 # Contao core bundle change log
 
+### 4.5.3 (2018-01-23)
+
+ * Correctly select folders as gallery source (see #1328).
+
+### 4.5.2 (2018-01-12)
+
+ * Use the `BINARY` flag instead of `COLLATE utf8mb4_bin` (see #1286).
+ * Use a custom toggle parameter for content elements (see #1291).
+ * Use array_key_exists() when tracking modified model fields (see #1290).
+ * Dynamically register the user session response listener (see #1293).
+ * Redirect to the last page visited if a back end session expires.
+
+### 4.5.1 (2018-01-04)
+
+ * Set the correct CSS classes in the back end navigation (see #1278).
+ * Correctly handle authentication through the Symfony firewall entry point (see #1275).
+ * Make services public that we need to access directly.
+
+### 4.5.0 (2017-12-28)
+
+ * Apply the schema filter in the DCA schema provider.
+
 ### 4.5.0-RC1 (2017-12-12)
 
  * Use the Symfony security component for authentication (see #685).

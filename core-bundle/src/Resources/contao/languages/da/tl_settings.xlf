@@ -125,8 +125,7 @@
         <target>Anonymiser IP adresser</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>Anonymiserer (skjuler) alle IP adresser der gemmes i databasen, pånær &lt;em&gt;tl_session&lt;/em&gt; (denne IP adresse er tilknyttet den aktive session af sikkerhedsmæssige årsager).</target>
+        <source>Anonymize all IP addresses that are stored in the database.</source>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -174,14 +173,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>Ventetid i tilfælde af låst konto</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>Angiv hvor lang tid, en bruger skal vente før han tillades at logge ind på en låst konto igen (standard: 5 minutter = 300 sekunder.) Denne funktion skal gøre &quot;brute force&quot;-angreb en lille smule sværere.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -309,14 +300,6 @@
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>Angiv den maksimale livstid for en session i sekunder (standard: 60 minutter = 3600 sekunder.) Hvis der ikke forekommer bruger-input i en længere periode end sessionsudløbstiden, vil den nuværende session blive slettet og brugeren bliver nødt til at logge på igen.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>Automatisk login periode</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>Her kan du indstille frontend'ens automatiske logind periode (90 dage = 7776000 sekunder).</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -164,7 +164,7 @@ class Versions extends \Controller
 		}
 
 		// Delete old versions from the database
-		$tstamp = time() - \intval(\Config::get('versionPeriod'));
+		$tstamp = time() - (int) \Config::get('versionPeriod');
 		$this->Database->query("DELETE FROM tl_version WHERE tstamp<$tstamp");
 
 		// Get the new record

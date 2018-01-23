@@ -98,20 +98,26 @@
                     <div class="inner">
                         <div class="text-error">
                             {% block main %}
-                                {% set _block = block('matter') %}
-                                {% if _block|trim is not empty %}
-                                    <h2>{{ 'XPT.matter'|trans }}</h2>
-                                    {{ _block|raw }}
+                                {% if block('matter') is defined %}
+                                    {% set _block = block('matter') %}
+                                    {% if _block|trim is not empty %}
+                                        <h2>{{ 'XPT.matter'|trans }}</h2>
+                                        {{ _block|raw }}
+                                    {% endif %}
                                 {% endif %}
-                                {% set _block = block('howToFix') %}
-                                {% if _block|trim is not empty %}
-                                    <h2>{{ 'XPT.howToFix'|trans }}</h2>
-                                    {{ _block|raw }}
+                                {% if block('howToFix') is defined %}
+                                    {% set _block = block('howToFix') %}
+                                    {% if _block|trim is not empty %}
+                                        <h2>{{ 'XPT.howToFix'|trans }}</h2>
+                                        {{ _block|raw }}
+                                    {% endif %}
                                 {% endif %}
-                                {% set _block = block('explain') %}
-                                {% if _block|trim is not empty %}
-                                    <h3>{{ 'XPT.more'|trans }}</h3>
-                                    {{ _block|raw }}
+                                {% if block('explain') is defined %}
+                                    {% set _block = block('explain') %}
+                                    {% if _block|trim is not empty %}
+                                        <h3>{{ 'XPT.more'|trans }}</h3>
+                                        {{ _block|raw }}
+                                    {% endif %}
                                 {% endif %}
                             {% endblock %}
                         </div>

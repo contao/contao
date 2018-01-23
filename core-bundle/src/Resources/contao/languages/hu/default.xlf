@@ -1464,6 +1464,9 @@ Ezt az e-mail a Contao rendszer generálta. Nem tud rá közvetlenül válaszoln
         <source>Logout</source>
         <target>Kijelentkezés</target>
       </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+      </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
         <target>Aktuális munkamenet bezárása</target>

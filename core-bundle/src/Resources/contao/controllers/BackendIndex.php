@@ -3,14 +3,16 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Exception\LockedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 
 /**
@@ -47,6 +49,24 @@ class BackendIndex extends \Backend
 	 */
 	public function run()
 	{
+		$exception = \System::getContainer()->get('security.authentication_utils')->getLastAuthenticationError();
+
+		if ($exception instanceof LockedException)
+		{
+			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
+		}
+		elseif ($exception instanceof AuthenticationException)
+		{
+			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
+		}
+
+		$targetPath = '/contao';
+
+		if ($referer = \Input::get('referer', true))
+		{
+			$targetPath = base64_decode($referer);
+		}
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 
@@ -68,6 +88,8 @@ class BackendIndex extends \Backend
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
+		$objTemplate->targetPath = \StringUtil::specialchars(\Environment::get('base') . ltrim($targetPath, '/'));
+		$objTemplate->failurePath = \StringUtil::specialchars(\Environment::get('base') . \Environment::get('request'));
 
 		return $objTemplate->getResponse();
 	}

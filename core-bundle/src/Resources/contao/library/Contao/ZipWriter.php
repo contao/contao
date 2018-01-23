@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -92,7 +92,7 @@ class ZipWriter
 		$this->strFile = $strFile;
 
 		// Create temporary file
-		if (!$this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER , 'zip'))
+		if (!$this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER, 'zip'))
 		{
 			throw new \Exception("Cannot create temporary file");
 		}
@@ -171,7 +171,7 @@ class ZipWriter
 
 		// Compress data
 		$strData = gzcompress($strData);
-		$strData = substr(substr($strData, 0, \strlen($strData) - 4), 2);
+		$strData = substr(substr($strData, 0, -4), 2);
 
 		$intCompressed = \strlen($strData);
 
@@ -187,8 +187,8 @@ class ZipWriter
 		$intOffset = @ftell($this->resFile);
 
 		// Add file to archive
-		fputs($this->resFile, implode('', $arrFile));
-		fputs($this->resFile, $strData);
+		fwrite($this->resFile, implode('', $arrFile));
+		fwrite($this->resFile, $strData);
 
 		// Start central directory
 		$arrHeader['header_signature']          = self::CENTRAL_DIR_START;
@@ -233,8 +233,8 @@ class ZipWriter
 		$arrArchive['zipfile_comment']        = '';
 
 		// Add central directory and archive header (do not change this order)
-		fputs($this->resFile, $this->strCentralDir);
-		fputs($this->resFile, implode('', $arrArchive));
+		fwrite($this->resFile, $this->strCentralDir);
+		fwrite($this->resFile, implode('', $arrArchive));
 
 		// Close the file before renaming it
 		fclose($this->resFile);

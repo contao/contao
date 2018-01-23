@@ -126,8 +126,8 @@
         <target>IP-Adressen anonymisieren</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>Alle IP-Adressen anonymisieren, die in der Datenbank gespeichert werden, außer die der Tabelle &lt;em&gt;tl_session&lt;/em&gt; (die IP-Adresse ist aus Sicherheitsgründen an die Session gebunden).</target>
+        <source>Anonymize all IP addresses that are stored in the database.</source>
+        <target>Alle IP-Adressen anonymisieren, die in der Datenbank gespeichert werden</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -176,14 +176,6 @@
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>Das Anfrage-Token beim Absenden eines Formulars nicht prüfen (unsicher!).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>Wartezeit bei gesperrtem Konto</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>Ein Konto wird gesperrt, wenn drei Mal hintereinander ein falsches Passwort eingegeben wird.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -312,14 +304,6 @@
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>Hier können Sie die Verfallszeit einer Session in Sekunden eingeben (60 Minuten = 3600 Sekunden).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>Autologin-Zeitraum</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>Hier können Sie den Autologin-Zeitraum für das Frontend festlegen (90 Tage = 7776000 Sekunden).</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

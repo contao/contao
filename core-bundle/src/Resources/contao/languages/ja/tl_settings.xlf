@@ -126,8 +126,8 @@
         <target>IPアドレスの匿名化</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>データベースに保存するIPアドレスを、&lt;em&gt;tl_session&lt;/em&gt;テーブルを除いて匿名化します。(セキュリティ上の理由でIPアドレスはセッションに結びつけられています。)</target>
+        <source>Anonymize all IP addresses that are stored in the database.</source>
+        <target>データベースに保存するすべてのIPアドレスを匿名化します。</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>
@@ -176,14 +176,6 @@
       <trans-unit id="tl_settings.disableRefererCheck.1">
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>提出したフォームのリクエストトークンを検査しません(安全でありません)。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>アカウントのロック時間</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>連続して3回誤ったパスワードを入力すると、アカウントをロックします。</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
@@ -312,14 +304,6 @@
       <trans-unit id="tl_settings.sessionTimeout.1">
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>セッションの最大の存続期間を秒数で入力します。(初期設定: 60分 = 3600秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>自動ログインの期間</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>フロントエンドの自動ログインの期間を秒数で入力します。(初期設定: 90日 = 7776000秒)</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>

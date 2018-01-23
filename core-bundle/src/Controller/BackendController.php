@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -43,7 +43,7 @@ class BackendController extends Controller
      */
     public function mainAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendMain();
 
@@ -57,11 +57,25 @@ class BackendController extends Controller
      */
     public function loginAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
+
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return new RedirectResponse($this->get('router')->generate('contao_backend'));
+        }
 
         $controller = new BackendIndex();
 
         return $controller->run();
+    }
+
+    /**
+     * Symfony will un-authenticate the user automatically by calling this route.
+     *
+     * @Route("/contao/logout", name="contao_backend_logout")
+     */
+    public function logoutAction(): RedirectResponse
+    {
+        return $this->redirectToRoute('contao_backend_login');
     }
 
     /**
@@ -71,7 +85,7 @@ class BackendController extends Controller
      */
     public function passwordAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendPassword();
 
@@ -85,7 +99,7 @@ class BackendController extends Controller
      */
     public function previewAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendPreview();
 
@@ -99,7 +113,7 @@ class BackendController extends Controller
      */
     public function confirmAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendConfirm();
 
@@ -113,7 +127,7 @@ class BackendController extends Controller
      */
     public function fileAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendFile();
 
@@ -127,7 +141,7 @@ class BackendController extends Controller
      */
     public function helpAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendHelp();
 
@@ -141,7 +155,7 @@ class BackendController extends Controller
      */
     public function pageAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendPage();
 
@@ -155,7 +169,7 @@ class BackendController extends Controller
      */
     public function popupAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendPopup();
 
@@ -169,7 +183,7 @@ class BackendController extends Controller
      */
     public function switchAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendSwitch();
 
@@ -183,7 +197,7 @@ class BackendController extends Controller
      */
     public function alertsAction(): Response
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         $controller = new BackendAlerts();
 
@@ -216,21 +230,12 @@ class BackendController extends Controller
         }
 
         $config = new PickerConfig($request->query->get('context'), $extras, $request->query->get('value'));
-        $picker = $this->container->get('contao.picker.builder')->create($config);
+        $picker = $this->get('contao.picker.builder')->create($config);
 
         if (null === $picker) {
             throw new BadRequestHttpException('Unsupported picker context');
         }
 
         return new RedirectResponse($picker->getCurrentUrl());
-    }
-
-    /**
-     * Symfony will un-authenticate the user automatically by calling this route.
-     *
-     * @Route("/contao/logout", name="contao_backend_logout")
-     */
-    public function logoutAction(): void
-    {
     }
 }

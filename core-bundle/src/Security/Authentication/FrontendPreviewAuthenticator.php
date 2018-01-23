@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
@@ -178,7 +179,7 @@ class FrontendPreviewAuthenticator
             if (null !== $this->logger) {
                 $this->logger->info(
                     sprintf('Could not find a front end user with the username "%s"', $username),
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS)]
+                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')]
                 );
             }
 

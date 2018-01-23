@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -357,7 +357,7 @@ class Email
 	 */
 	public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
 	{
-		$this->objMessage->attach(\Swift_Attachment::newInstance($strContent, $strFilename, $strMime));
+		$this->objMessage->attach(new \Swift_Attachment($strContent, $strFilename, $strMime));
 	}
 
 

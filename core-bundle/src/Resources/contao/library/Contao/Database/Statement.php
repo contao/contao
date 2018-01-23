@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -182,7 +182,7 @@ class Statement
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
 		{
 			$strQuery = sprintf('(%s) VALUES (%s)',
-								implode(', ', array_keys($arrParams)),
+								implode(', ', array_map('Database::quoteIdentifier', array_keys($arrParams))),
 								str_replace('%', '%%', implode(', ', array_values($arrParams))));
 		}
 
@@ -193,7 +193,7 @@ class Statement
 
 			foreach ($arrParams as $k=>$v)
 			{
-				$arrSet[] = $k . '=' . $v;
+				$arrSet[] = \Database::quoteIdentifier($k) . '=' . $v;
 			}
 
 			$strQuery = 'SET ' . str_replace('%', '%%', implode(', ', $arrSet));

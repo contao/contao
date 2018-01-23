@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -130,8 +130,6 @@ namespace {
 	class Session extends \Contao\Session {}
 	class SortedIterator extends \Contao\SortedIterator {}
 	class SqlFileParser extends \Contao\SqlFileParser {}
-	/** @deprecated Use the StringUtil class instead */
-	class String extends \Contao\String {}
 	class StringUtil extends \Contao\StringUtil {}
 	abstract class System extends \Contao\System {}
 	abstract class Template extends \Contao\Template {}
@@ -154,7 +152,6 @@ namespace {
 	class MemberModel extends \Contao\MemberModel {}
 	class ModuleModel extends \Contao\ModuleModel {}
 	class PageModel extends \Contao\PageModel {}
-	class SessionModel extends \Contao\SessionModel {}
 	class StyleModel extends \Contao\StyleModel {}
 	class StyleSheetModel extends \Contao\StyleSheetModel {}
 	class ThemeModel extends \Contao\ThemeModel {}

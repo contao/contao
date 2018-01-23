@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -64,10 +64,6 @@ class LocaleListener
     {
         if (null !== $request->attributes->get('_locale')) {
             return $this->formatLocaleId($request->attributes->get('_locale'));
-        }
-
-        if (null !== ($session = $request->getSession()) && $session->has('_locale')) {
-            return $session->get('_locale');
         }
 
         return $request->getPreferredLanguage($this->availableLocales);

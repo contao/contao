@@ -1,7 +1,7 @@
 /*!
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -84,7 +84,7 @@ label[for="password"],label[for="confirm"] {
 
 /* Error messages */
 .tl_message {
-	max-width:500px;
+	max-width:420px;
 	margin:36px auto 0;
 	text-align:center;
 }

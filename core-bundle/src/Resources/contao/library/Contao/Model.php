@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -320,7 +320,7 @@ abstract class Model
 
 		foreach ($row as $k=>$v)
 		{
-			$originalRow[$k] = isset($this->arrModified[$k]) ? $this->arrModified[$k] : $v;
+			$originalRow[$k] = array_key_exists($k, $this->arrModified) ? $this->arrModified[$k] : $v;
 		}
 
 		return $originalRow;
@@ -377,7 +377,7 @@ abstract class Model
 				continue;
 			}
 
-			if (!isset($this->arrModified[$k]))
+			if (!array_key_exists($k, $this->arrModified))
 			{
 				$this->arrData[$k] = $v;
 			}
@@ -394,7 +394,7 @@ abstract class Model
 	 */
 	public function markModified($strKey)
 	{
-		if (!isset($this->arrModified[$strKey]) && isset($this->arrData[$strKey]))
+		if (!array_key_exists($strKey, $this->arrModified) && array_key_exists($strKey, $this->arrData))
 		{
 			$this->arrModified[$strKey] = $this->arrData[$strKey];
 		}
@@ -470,7 +470,7 @@ abstract class Model
 			}
 
 			// Update the row
-			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . static::$strPk . "=?")
+			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
 						->set($arrSet)
 						->execute($intPk);
 
@@ -563,7 +563,7 @@ abstract class Model
 		}
 
 		// Delete the row
-		$intAffected = \Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . static::$strPk . "=?")
+		$intAffected = \Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
 											   ->execute($intPk)
 											   ->affectedRows;
 
@@ -624,7 +624,7 @@ abstract class Model
 		elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
 		{
 			$arrValues = \StringUtil::deserialize($this->$strKey, true);
-			$strField = $arrRelation['table'] . '.' . $arrRelation['field'];
+			$strField = $arrRelation['table'] . '.' . \Database::quoteIdentifier($arrRelation['field']);
 
 			// Handle UUIDs (see #6525)
 			if ($strField == 'tl_files.uuid')
@@ -668,7 +668,7 @@ abstract class Model
 		}
 
 		// Reload the database record
-		$res = \Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . static::$strPk . "=?")
+		$res = \Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
 									   ->execute($intPk);
 
 		$this->setRow($res->row());
@@ -997,7 +997,7 @@ abstract class Model
 	 * @param string $name The method name
 	 * @param array  $args The passed arguments
 	 *
-	 * @return static|Model\Collection|null A model or model collection
+	 * @return static|Model\Collection|integer|null A model or model collection
 	 *
 	 * @throws \Exception If the method name is invalid
 	 */
@@ -1007,19 +1007,21 @@ abstract class Model
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
-			return \call_user_func_array('static::findBy', $args);
+			return static::findBy(...$args);
 		}
-		elseif (strncmp($name, 'findOneBy', 9) === 0)
+
+		if (strncmp($name, 'findOneBy', 9) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
-			return \call_user_func_array('static::findOneBy', $args);
+			return static::findOneBy(...$args);
 		}
-		elseif (strncmp($name, 'countBy', 7) === 0)
+
+		if (strncmp($name, 'countBy', 7) === 0)
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 
-			return \call_user_func_array('static::countBy', $args);
+			return static::countBy(...$args);
 		}
 
 		throw new \Exception("Unknown method $name");
@@ -1115,7 +1117,7 @@ abstract class Model
 
 			return static::createModelFromDbResult($objResult);
 		}
-		else if ($arrOptions['return'] == 'Array')
+		elseif ($arrOptions['return'] == 'Array')
 		{
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
@@ -1314,6 +1316,6 @@ abstract class Model
 			return false;
 		}
 
-		return \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN;
+		return \defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true;
 	}
 }

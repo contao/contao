@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -164,13 +164,13 @@ class Idna
 		}
 
 		// Empty anchor (see #3555) or insert tag
-		if ($strUrl == '#' || strpos($strUrl, '{{') === 0)
+		if ($strUrl == '#' || strncmp($strUrl, '{{', 2) === 0)
 		{
 			return $strUrl;
 		}
 
 		// E-mail address
-		if (strpos($strUrl, 'mailto:') === 0)
+		if (strncmp($strUrl, 'mailto:', 7) === 0)
 		{
 			return static::encodeEmail($strUrl);
 		}
@@ -257,13 +257,13 @@ class Idna
 		}
 
 		// Empty anchor (see #3555) or insert tag
-		if ($strUrl == '#' || strpos($strUrl, '{{') === 0)
+		if ($strUrl == '#' || strncmp($strUrl, '{{', 2) === 0)
 		{
 			return $strUrl;
 		}
 
 		// E-mail address
-		if (strpos($strUrl, 'mailto:') === 0)
+		if (strncmp($strUrl, 'mailto:', 7) === 0)
 		{
 			return static::decodeEmail($strUrl);
 		}

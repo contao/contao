@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -52,7 +52,7 @@ class ModuleRegistration extends \Module
 		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are no editable fields
-		if (!\is_array($this->editable) || empty($this->editable))
+		if (empty($this->editable) || !\is_array($this->editable))
 		{
 			return '';
 		}
@@ -92,7 +92,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Activate account
-		if (\Input::get('token') != '')
+		if (strncmp(\Input::get('token'), 'RG', 2) === 0)
 		{
 			$this->activateAcount();
 
@@ -370,7 +370,7 @@ class ModuleRegistration extends \Module
 	{
 		$arrData['tstamp'] = time();
 		$arrData['login'] = $this->reg_allowLogin;
-		$arrData['activation'] = md5(uniqid(mt_rand(), true));
+		$arrData['activation'] = 'RG' . substr(md5(uniqid(mt_rand(), true)), 2);
 		$arrData['dateAdded'] = $arrData['tstamp'];
 
 		// Set default groups
@@ -575,7 +575,7 @@ class ModuleRegistration extends \Module
 	 */
 	protected function resendActivationMail(MemberModel $objMember)
 	{
-		if ($objMember->activation == '')
+		if ($objMember->disable == '')
 		{
 			return;
 		}

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 
 /**
@@ -62,8 +61,8 @@ class BackendSwitch extends \Backend
 
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
 		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
-		$strUser = $objTokenChecker->getUsername(FrontendUser::SECURITY_SESSION_KEY);
-		$blnShowUnpublished = $objTokenChecker->isPreviewMode(FrontendUser::SECURITY_SESSION_KEY);
+		$strUser = $objTokenChecker->getFrontendUsername();
+		$blnShowUnpublished = $objTokenChecker->isPreviewMode();
 		$blnUpdate = false;
 
 		// Switch
@@ -74,7 +73,7 @@ class BackendSwitch extends \Backend
 			$blnShowUnpublished = \Input::post('unpublished') != 'hide';
 
 			// Switch user accounts
-			if ($blnCanSwitchUser && \Input::post('user'))
+			if ($blnCanSwitchUser && isset($_POST['user']))
 			{
 				$strUser = \Input::post('user');
 			}
@@ -124,7 +123,7 @@ class BackendSwitch extends \Backend
 		if (!$this->User->isAdmin)
 		{
 			// No allowed member groups
-			if (!\is_array($this->User->amg) || empty($this->User->amg))
+			if (empty($this->User->amg) || !\is_array($this->User->amg))
 			{
 				header('Content-type: application/json');
 				die(json_encode(array()));

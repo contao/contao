@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -150,7 +150,7 @@ class FilesModel extends \Model
 			$intPid = \StringUtil::uuidToBin($intPid);
 		}
 
-		return static::findBy(array("$t.uuid=UNHEX(?)"), bin2hex($intPid), $arrOptions);
+		return static::findBy(array("$t.pid=UNHEX(?)"), bin2hex($intPid), $arrOptions);
 	}
 
 
@@ -164,7 +164,7 @@ class FilesModel extends \Model
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}
@@ -199,6 +199,7 @@ class FilesModel extends \Model
 		// Check the model registry (does not work by default due to UNHEX())
 		if (empty($arrOptions))
 		{
+			/** @var FilesModel $objModel */
 			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $strUuid, 'uuid');
 
 			if ($objModel !== null)
@@ -221,7 +222,7 @@ class FilesModel extends \Model
 	 */
 	public static function findMultipleByUuids($arrUuids, array $arrOptions=array())
 	{
-		if (!\is_array($arrUuids) || empty($arrUuids))
+		if (empty($arrUuids) || !\is_array($arrUuids))
 		{
 			return null;
 		}
@@ -277,7 +278,7 @@ class FilesModel extends \Model
 	 */
 	public static function findMultipleByPaths($arrPaths, array $arrOptions=array())
 	{
-		if (!\is_array($arrPaths) || empty($arrPaths))
+		if (empty($arrPaths) || !\is_array($arrPaths))
 		{
 			return null;
 		}
@@ -320,7 +321,7 @@ class FilesModel extends \Model
 	 */
 	public static function findMultipleByUuidsAndExtensions($arrUuids, $arrExtensions, array $arrOptions=array())
 	{
-		if (!\is_array($arrUuids) || empty($arrUuids) || !\is_array($arrExtensions) || empty($arrExtensions))
+		if (empty($arrUuids) || empty($arrExtensions) || !\is_array($arrUuids) || !\is_array($arrExtensions))
 		{
 			return null;
 		}

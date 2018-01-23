@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -100,7 +100,7 @@ class ModuleArticleList extends \Module
 		while ($objArticles->next())
 		{
 			// Skip first article
-			if (++$intCount <= \intval($this->skipFirst))
+			if (++$intCount <= (int) $this->skipFirst)
 			{
 				continue;
 			}

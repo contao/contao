@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -441,7 +441,7 @@ class tl_form_field extends Backend
 		}
 
 		// Set root IDs
-		if (!\is_array($this->User->forms) || empty($this->User->forms))
+		if (empty($this->User->forms) || !\is_array($this->User->forms))
 		{
 			$root = array(0);
 		}

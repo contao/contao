@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -41,7 +41,7 @@ class ModuleRandomImage extends \Module
 	{
 		$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
 
-		if (!\is_array($this->multiSRC) || empty($this->multiSRC))
+		if (empty($this->multiSRC) || !\is_array($this->multiSRC))
 		{
 			return '';
 		}
@@ -98,7 +98,7 @@ class ModuleRandomImage extends \Module
 			// Folders
 			else
 			{
-				$objSubfiles = \FilesModel::findByPid($objFiles->uuid);
+				$objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
 				if ($objSubfiles === null)
 				{

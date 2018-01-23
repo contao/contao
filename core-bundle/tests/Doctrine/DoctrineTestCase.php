@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -34,16 +34,24 @@ abstract class DoctrineTestCase extends TestCase
      * Mocks a Doctrine registry with database connection.
      *
      * @param Statement|null $statement
+     * @param string|null    $filter
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistry(Statement $statement = null): Registry
+    protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
 
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
+        ;
+
+        $config = $this->createMock(Configuration::class);
+
+        $config
+            ->method('getFilterSchemaAssetsExpression')
+            ->willReturn($filter)
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -68,10 +76,16 @@ abstract class DoctrineTestCase extends TestCase
             ->willReturn(
                 [
                     'defaultTableOptions' => [
+                        'charset' => 'utf8mb4',
                         'collate' => 'utf8mb4_unicode_ci',
                     ],
                 ]
             )
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($config)
         ;
 
         $registry = $this->createMock(Registry::class);
@@ -97,12 +111,20 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection and ORM.
      *
-     * @param array $metadata
+     * @param array  $metadata
+     * @param string $filter
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDoctrineRegistryWithOrm(array $metadata = []): Registry
+    protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null): Registry
     {
+        $config = $this->createMock(Configuration::class);
+
+        $config
+            ->method('getFilterSchemaAssetsExpression')
+            ->willReturn($filter)
+        ;
+
         $connection = $this->createMock(Connection::class);
 
         $connection
@@ -114,6 +136,11 @@ abstract class DoctrineTestCase extends TestCase
             ->expects(!empty($metadata) ? $this->once() : $this->never())
             ->method('getSchemaManager')
             ->willReturn(new MySqlSchemaManager($connection))
+        ;
+
+        $connection
+            ->method('getConfiguration')
+            ->willReturn($config)
         ;
 
         $factory = $this->createMock(ClassMetadataFactory::class);
@@ -220,14 +247,15 @@ abstract class DoctrineTestCase extends TestCase
      * @param array          $dca
      * @param array          $file
      * @param Statement|null $statement
+     * @param string|null    $filter
      *
      * @return DcaSchemaProvider
      */
-    protected function getProvider(array $dca = [], array $file = [], Statement $statement = null): DcaSchemaProvider
+    protected function getProvider(array $dca = [], array $file = [], Statement $statement = null, string $filter = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca, $file),
-            $this->mockDoctrineRegistry($statement)
+            $this->mockDoctrineRegistry($statement, $filter)
         );
     }
 }

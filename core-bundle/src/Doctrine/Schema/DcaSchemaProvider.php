@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -17,8 +17,10 @@ use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 
 class DcaSchemaProvider
@@ -35,9 +37,9 @@ class DcaSchemaProvider
 
     /**
      * @param ContaoFrameworkInterface $framework
-     * @param Registry|null            $doctrine
+     * @param Registry                 $doctrine
      */
-    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine = null)
+    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
@@ -73,6 +75,12 @@ class DcaSchemaProvider
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
                     $options = $config;
                     unset($options['name'], $options['type']);
+
+                    // Use the binary collation if the "case_sensitive" option is set
+                    if ($this->isCaseSensitive($config)) {
+                        $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
+                    }
+
                     $table->addColumn($config['name'], $config['type'], $options);
                 }
             }
@@ -96,6 +104,7 @@ class DcaSchemaProvider
 
                 if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('charset', $match[1]);
+                    $table->addOption('collate', $match[1].'_general_ci');
                 }
 
                 if (preg_match('/COLLATE ([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
@@ -119,7 +128,18 @@ class DcaSchemaProvider
     {
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
+
+        /** @var ClassMetadata[] $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
+
+        // Apply the schema filter
+        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+            foreach ($metadata as $key => $data) {
+                if (!preg_match($filter, $data->getTableName())) {
+                    unset($metadata[$key]);
+                }
+            }
+        }
 
         if (empty($metadata)) {
             return $this->createSchemaFromDca();
@@ -137,7 +157,14 @@ class DcaSchemaProvider
      */
     private function createSchemaFromDca(): Schema
     {
-        $schema = new Schema();
+        $config = new SchemaConfig();
+        $params = $this->doctrine->getConnection()->getParams();
+
+        if (isset($params['defaultTableOptions'])) {
+            $config->setDefaultTableOptions($params['defaultTableOptions']);
+        }
+
+        $schema = new Schema([], [], $config);
 
         $this->appendToSchema($schema);
 
@@ -165,7 +192,8 @@ class DcaSchemaProvider
 
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
-        $type = $this->doctrine->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping($type);
+        $connection = $this->doctrine->getConnection();
+        $type = $connection->getDatabasePlatform()->getDoctrineTypeMapping($type);
 
         if (0 === $length) {
             $length = null;
@@ -177,6 +205,11 @@ class DcaSchemaProvider
 
         if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
             $collation = $match[1];
+        }
+
+        // Use the binary collation if the BINARY flag is set (see #1286)
+        if (0 === strncasecmp($def, 'binary ', 7)) {
+            $collation = $this->getBinaryCollation($table);
         }
 
         $options = [
@@ -353,6 +386,15 @@ class DcaSchemaProvider
             }
         }
 
+        // Apply the schema filter (see contao/installation-bundle#78)
+        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+            foreach (array_keys($sqlTarget) as $key) {
+                if (!preg_match($filter, $key)) {
+                    unset($sqlTarget[$key]);
+                }
+            }
+        }
+
         return $sqlTarget;
     }
 
@@ -367,8 +409,8 @@ class DcaSchemaProvider
     private function getMaximumIndexLength(Table $table, string $column): int
     {
         $indexLength = $this->getDefaultIndexLength($table);
+        $collation = $table->getOption('collate');
         $connection = $this->doctrine->getConnection();
-        $collation = $connection->getParams()['defaultTableOptions']['collate'];
 
         // Read the table collation if the table exists
         if ($connection->getSchemaManager()->tablesExist([$table->getName()])) {
@@ -417,5 +459,37 @@ class DcaSchemaProvider
         }
 
         return 767;
+    }
+
+    /**
+     * Checks if a field has the case-sensitive flag.
+     *
+     * @param array $config
+     *
+     * @return bool
+     */
+    private function isCaseSensitive(array $config): bool
+    {
+        if (!isset($config['customSchemaOptions']['case_sensitive'])) {
+            return false;
+        }
+
+        return true === $config['customSchemaOptions']['case_sensitive'];
+    }
+
+    /**
+     * Returns the binary collation depending on the charset.
+     *
+     * @param Table $table
+     *
+     * @return string|null
+     */
+    private function getBinaryCollation(Table $table): ?string
+    {
+        if (!$table->hasOption('charset')) {
+            return null;
+        }
+
+        return $table->getOption('charset').'_bin';
     }
 }

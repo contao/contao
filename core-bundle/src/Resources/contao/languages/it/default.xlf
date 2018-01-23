@@ -1477,6 +1477,9 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <source>Logout</source>
         <target>Logout</target>
       </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+      </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
         <target>Terminare la sessione corrente</target>

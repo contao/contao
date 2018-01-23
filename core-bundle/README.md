@@ -110,7 +110,7 @@ security:
             algorithm: bcrypt
 
         legacy:
-            id: contao.security.legacy_password_encoder
+            id: contao.security.sha1_password_encoder
 
     firewalls:
         dev:
@@ -122,6 +122,7 @@ security:
             security: false
 
         contao_backend:
+            entry_point: contao.security.entry_point
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
@@ -129,19 +130,17 @@ security:
             switch_user: true
             logout_on_user_change: true
 
-            form_login:
+            contao_login:
                 login_path: contao_backend_login
                 check_path: contao_backend_login
                 default_target_path: contao_backend
                 success_handler: contao.security.authentication_success_handler
                 failure_handler: contao.security.authentication_failure_handler
-                username_parameter: username
-                password_parameter: password
+                remember_me: false
 
             logout:
                 path: contao_backend_logout
-                target: contao_backend
-                success_handler: contao.security.logout_success_handler
+                target: contao_backend_login
                 handlers:
                     - contao.security.logout_handler
 
@@ -153,25 +152,27 @@ security:
             switch_user: false
             logout_on_user_change: true
 
-            form_login:
+            contao_login:
                 login_path: contao_frontend_login
                 check_path: contao_frontend_login
-                default_target_path: contao_index
-                failure_handler: contao.security.authentication_failure_handler
+                default_target_path: contao_root
+                failure_path: contao_root
                 success_handler: contao.security.authentication_success_handler
-                username_parameter: username
-                password_parameter: password
+                failure_handler: contao.security.authentication_failure_handler
                 remember_me: true
+                use_forward: true
 
             remember_me:
                 secret: '%secret%'
                 remember_me_parameter: autologin
+                token_provider: contao.security.database_token_provider
 
             logout:
                 path: contao_frontend_logout
-                success_handler: contao.security.logout_success_handler
+                target: contao_root
                 handlers:
                     - contao.security.logout_handler
+                success_handler: contao.security.logout_success_handler
 
     access_control:
         - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -201,8 +202,6 @@ contao:
         imagine_options:
             jpeg_quality: 80
             interlace:    plane
-    security:
-        token_lifetime: 3600
 ```
 
 You can also overwrite any parameter stored in the `localconfig.php` file:

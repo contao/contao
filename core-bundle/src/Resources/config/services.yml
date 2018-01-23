@@ -129,7 +129,6 @@ services:
         arguments:
             - "@request_stack"
             - "@router"
-            - "@session"
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
             - "%contao.error_level%"
@@ -333,41 +332,52 @@ services:
         calls:
             - ["matchAttribute", ["_scope", "frontend"]]
 
-    security.authentication.provider.dao:
-        class: Contao\CoreBundle\Security\Authentication\Provider\ContaoAuthenticationProvider
+    contao.security.authentication_failure_handler:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
+        arguments:
+            - "@http_kernel"
+            - "@security.http_utils"
+            - []
+            - "@logger"
+
+    contao.security.authentication_provider:
+        class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
         abstract: true
         arguments:
             - ~ # User provider
             - ~ # User checker
             - ~ # Provider-shared key
             - "@security.encoder_factory"
-            - "%security.authentication.hide_user_not_found%"
-            - "@session"
-            - "@translator"
             - "@contao.framework"
-            - "@logger"
-
-    contao.security.authentication_failure_handler:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
-        arguments:
-            - "@http_kernel"
-            - "@security.http_utils"
-            - "@contao.routing.scope_matcher"
             - "@translator"
-            - []
-            - "@logger"
+            - "@request_stack"
+            - "@mailer"
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
             - "@security.http_utils"
             - "@contao.framework"
-            - "@router"
+            - "@logger"
+
+    contao.security.database_token_provider:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider
+        arguments:
+            - "@database_connection"
 
     contao.security.backend_user_provider:
-        class: Contao\CoreBundle\Security\User\BackendUserProvider
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - "@contao.framework"
+            - "@session"
+            - "Contao\\BackendUser"
+            - "@logger"
+
+    contao.security.entry_point:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
+        arguments:
+            - "@security.http_utils"
+            - "@router"
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
@@ -378,39 +388,37 @@ services:
             - "@logger"
 
     contao.security.frontend_user_provider:
-        class: Contao\CoreBundle\Security\User\FrontendUserProvider
+        class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - "@contao.framework"
+            - "@session"
+            - "Contao\\FrontendUser"
+            - "@logger"
 
-    contao.security.legacy_password_encoder:
-        class: Contao\CoreBundle\Security\Encoder\ContaoLegacyPasswordEncoder
+    contao.security.logout_success_handler:
+        class: Contao\CoreBundle\Security\Logout\LogoutSuccessHandler
+        arguments:
+            - "@security.http_utils"
 
     contao.security.logout_handler:
-        class: Contao\CoreBundle\Security\LogoutHandler
+        class: Contao\CoreBundle\Security\Logout\LogoutHandler
         arguments:
             - "@contao.framework"
             - "@logger"
 
-    contao.security.logout_success_handler:
-        class: Contao\CoreBundle\Security\LogoutSuccessHandler
-        arguments:
-            - "@router"
-            - "@contao.routing.scope_matcher"
+    contao.security.sha1_password_encoder:
+        class: Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder
 
     contao.security.token_checker:
-        class: Contao\CoreBundle\Security\TokenChecker
+        class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
         arguments:
             - "@session"
+            - "@security.authentication.trust_resolver"
         public: true
 
     contao.security.user_checker:
-        class: Contao\CoreBundle\Security\UserChecker
+        class: Contao\CoreBundle\Security\User\UserChecker
         arguments:
-            - "@translator"
-            - "@mailer"
-            - "@session"
-            - "@contao.routing.scope_matcher"
-            - "@request_stack"
             - "@contao.framework"
             - "@logger"
 

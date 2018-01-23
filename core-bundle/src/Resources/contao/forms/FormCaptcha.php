@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -151,12 +151,13 @@ class FormCaptcha extends \Widget
 	 */
 	protected function generateCaptcha()
 	{
-		if ($this->arrCaptcha) {
+		if ($this->arrCaptcha)
+		{
 			return;
 		}
 
-		$int1 = rand(1, 9);
-		$int2 = rand(1, 9);
+		$int1 = mt_rand(1, 9);
+		$int2 = mt_rand(1, 9);
 
 		$this->arrCaptcha = array
 		(
@@ -183,7 +184,7 @@ class FormCaptcha extends \Widget
 	{
 		$this->generateCaptcha();
 
-		$question = $GLOBALS['TL_LANG']['SEC']['question' . rand(1, 3)];
+		$question = $GLOBALS['TL_LANG']['SEC']['question' . mt_rand(1, 3)];
 		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';

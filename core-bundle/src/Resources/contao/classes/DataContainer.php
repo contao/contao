@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -834,11 +834,11 @@ abstract class DataContainer extends \Backend
 
 				if ($dir == 'up')
 				{
-					$return .= ((is_numeric($strPrevious) && (!\in_array($arrRow['id'], $arrRootIds) || empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='.\intval($strPrevious).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('up_.svg')).' ';
+					$return .= ((is_numeric($strPrevious) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='. (int) $strPrevious .'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('up_.svg')).' ';
 				}
 				else
 				{
-					$return .= ((is_numeric($strNext) && (!\in_array($arrRow['id'], $arrRootIds) || empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='.\intval($strNext).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('down_.svg')).' ';
+					$return .= ((is_numeric($strNext) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='. (int) $strNext .'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : \Image::getHtml('down_.svg')).' ';
 				}
 			}
 		}
@@ -982,7 +982,7 @@ abstract class DataContainer extends \Backend
 
 			if ($k == 'show')
 			{
-				$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1').'" title="'.\StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strTable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
+				$return .= '<a href="'.$this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1').'" title="'.\StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.\StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strPtable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.\Image::getHtml($v['icon'], $label).'</a> ';
 			}
 			else
 			{

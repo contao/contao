@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -95,6 +95,6 @@ class ImageSizeItemModel extends \Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.pid=? AND $t.invisible=''"), \intval($intPid), $arrOptions);
+		return static::findBy(array("$t.pid=? AND $t.invisible=''"), (int) $intPid, $arrOptions);
 	}
 }

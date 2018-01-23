@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
@@ -25,7 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -49,11 +49,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @var RouterInterface
      */
     private $router;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
 
     /**
      * @var ScopeMatcher
@@ -105,18 +100,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     ];
 
     /**
-     * @param RequestStack     $requestStack
-     * @param RouterInterface  $router
-     * @param SessionInterface $session
-     * @param ScopeMatcher     $scopeMatcher
-     * @param string           $rootDir
-     * @param int              $errorLevel
+     * @param RequestStack    $requestStack
+     * @param RouterInterface $router
+     * @param ScopeMatcher    $scopeMatcher
+     * @param string          $rootDir
+     * @param int             $errorLevel
      */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->router = $router;
-        $this->session = $session;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
@@ -361,12 +354,18 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function initializeLegacySessionAccess(): void
     {
-        if (!$this->session->isStarted()) {
+        if (null === $this->request || !$this->request->hasSession()) {
             return;
         }
 
-        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
-        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
+        $session = $this->request->getSession();
+
+        if (!$session->isStarted()) {
+            $_SESSION = new LazySessionAccess($session);
+        } else {
+            $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
+            $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
+        }
     }
 
     /**
@@ -382,7 +381,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE'] = $language;
-        $_SESSION['TL_LANGUAGE'] = $language;
     }
 
     /**
@@ -392,7 +390,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function validateInstallation(): void
     {
-        if (null === $this->request
+        if (
+            null === $this->request
             || \in_array($this->request->attributes->get('_route'), self::$installRoutes, true)
         ) {
             return;

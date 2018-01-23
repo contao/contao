@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -47,7 +47,6 @@ namespace Contao;
  * @property integer $loginCount
  * @property integer $locked
  * @property string  $session
- * @property string  $autologin
  * @property integer $createdOn
  * @property string  $activation
  * @property string  $newsletter
@@ -56,7 +55,6 @@ namespace Contao;
  * @method static MemberModel|null findByPk($id, array $opt=array())
  * @method static MemberModel|null findByIdOrAlias($val, array $opt=array())
  * @method static MemberModel|null findOneBy($col, $val, array $opt=array())
- * @method static MemberModel|null findByAutologin($val, array $opt=array())
  * @method static MemberModel|null findByUsername($val, array $opt=array())
  * @method static MemberModel|null findOneByTstamp($val, array $opt=array())
  * @method static MemberModel|null findOneByFirstname($val, array $opt=array())
@@ -164,7 +162,6 @@ namespace Contao;
  * @method static integer countByLoginCount($val, array $opt=array())
  * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countBySession($val, array $opt=array())
- * @method static integer countByAutologin($val, array $opt=array())
  * @method static integer countByCreatedOn($val, array $opt=array())
  * @method static integer countByActivation($val, array $opt=array())
  * @method static integer countByNewsletter($val, array $opt=array())
@@ -218,6 +215,6 @@ class MemberModel extends \Model
 	{
 		$t = static::$strTable;
 
-		return static::findOneBy(array("$t.email=? AND $t.activation!=''"), $strEmail, $arrOptions);
+		return static::findOneBy(array("$t.email=? AND $t.activation LIKE 'RG%'"), $strEmail, $arrOptions);
 	}
 }

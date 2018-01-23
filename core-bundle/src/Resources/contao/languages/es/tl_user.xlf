@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.0">
         <source>Fullscreen</source>
+        <target>Pantalla completa</target>
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
+        <target>No limite el ancho del back-end.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>

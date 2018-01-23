@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -17,6 +17,8 @@ use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Tests\TestCase;
@@ -25,6 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -44,9 +47,21 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializesTheFrameworkWithAFrontEndRequest(): void
     {
+        $beBag = new ArrayAttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new ArrayAttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockNativeSessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+        $session->start();
+
         $request = new Request();
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
+        $request->setSession($session);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -317,7 +332,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockRouter('/contao/login'),
-            $this->mockSession(),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
             error_reporting()
@@ -358,7 +372,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockRouter('/contao/login'),
-            $this->mockSession(),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
             error_reporting()
@@ -399,7 +412,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockRouter('/contao/login'),
-            $this->mockSession(),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
             error_reporting()
@@ -447,7 +459,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockRouter('/contao/login'),
-            $this->mockSession(),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
             error_reporting()
@@ -489,7 +500,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockRouter('/contao/login'),
-            $this->mockSession(),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
             error_reporting()
@@ -534,6 +544,43 @@ class ContaoFrameworkTest extends TestCase
         $this->expectException('LogicException');
 
         $framework->initialize();
+    }
+
+    /**
+     * @group legacy
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using $_SESSION has been deprecated %s.
+     */
+    public function testRegistersTheLazySessionAccessObject(): void
+    {
+        $beBag = new ArrayAttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new ArrayAttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockNativeSessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $request = new Request();
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', 'frontend');
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $framework = $this->mockFramework($requestStack, $this->mockRouter('/index.html'));
+        $framework->setContainer($this->mockContainer());
+        $framework->initialize();
+
+        $this->assertInstanceOf('Contao\CoreBundle\Session\LazySessionAccess', $_SESSION);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['BE_DATA']);
+        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['FE_DATA']);
     }
 
     public function testCreatesAnObjectInstance(): void
@@ -720,13 +767,9 @@ class ContaoFrameworkTest extends TestCase
      */
     private function mockFramework(RequestStack $requestStack, RouterInterface $router): ContaoFramework
     {
-        $session = $this->mockSession();
-        $session->start();
-
         $framework = new ContaoFramework(
             $requestStack,
             $router,
-            $session,
             $this->mockScopeMatcher(),
             $this->getTempDir(),
             error_reporting()

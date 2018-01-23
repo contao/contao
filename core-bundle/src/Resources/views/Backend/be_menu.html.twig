@@ -12,7 +12,7 @@
                     <ul class="tl_level_2">
                         {% for child in item.children %}
                             <li{% if child is knp_menu_current %} class="active"{% endif %}>
-                                <a href="{{ child.attributes.href ?: item.uri }}" title="{{ child.attributes.title }}" class="navigation {{ child.attributes.class }}">{{ child.label }}</a>
+                                <a href="{{ child.attributes.href ?: item.uri }}" title="{{ child.attributes.title }}" class="navigation {{ child.attributes.class }}">{{ child.label|raw }}</a>
                             </li>
                         {% endfor %}
                     </ul>

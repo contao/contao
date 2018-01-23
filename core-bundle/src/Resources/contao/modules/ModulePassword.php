@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -68,7 +68,7 @@ class ModulePassword extends \Module
 		$this->loadDataContainer('tl_member');
 
 		// Set new password
-		if (\strlen(\Input::get('token')))
+		if (strncmp(\Input::get('token'), 'PW', 2) === 0)
 		{
 			$this->setNewPassword();
 
@@ -296,17 +296,17 @@ class ModulePassword extends \Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$confirmationId = md5(uniqid(mt_rand(), true));
+		$strToken = 'PW' . substr(md5(uniqid(mt_rand(), true)), 2);
 
-		// Store the confirmation ID
+		// Store the token
 		$objMember = \MemberModel::findByPk($objMember->id);
-		$objMember->activation = $confirmationId;
+		$objMember->activation = $strToken;
 		$objMember->save();
 
 		// Prepare the simple token data
 		$arrData = $objMember->row();
 		$arrData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $confirmationId;
+		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $strToken;
 
 		// Send e-mail
 		$objEmail = new \Email();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -96,11 +96,11 @@ class FrontendLoader extends Loader
      */
     private function addLocaleToRoute(Route $route): void
     {
-        if ($this->prependLocale) {
-            $route->setPath('/{_locale}'.$route->getPath());
-            $route->addRequirements(['_locale' => '[a-z]{2}(\-[A-Z]{2})?']);
-        } else {
-            $route->addDefaults(['_locale' => null]);
+        if (!$this->prependLocale) {
+            return;
         }
+
+        $route->setPath('/{_locale}'.$route->getPath());
+        $route->addRequirements(['_locale' => '[a-z]{2}(\-[A-Z]{2})?']);
     }
 }

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -494,7 +494,7 @@ class ZipReader
 		$strSignature = @fread($this->resFile, 4);
 
 		// Build file list
-		while ($strSignature == self::CENTRAL_DIR_START )
+		while ($strSignature == self::CENTRAL_DIR_START)
 		{
 			$arrFile = array();
 

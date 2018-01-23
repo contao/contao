@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -16,8 +16,10 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
+use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 
 
 /**
@@ -213,24 +215,6 @@ class BackendMain extends \Backend
 			$this->Template->websiteTitle = \Config::get('websiteTitle');
 		}
 
-		/** @var AuthorizationCheckerInterface $authorizationChecker */
-		$authorizationChecker = $container->get('security.authorization_checker');
-
-		/** @var RouterInterface $router */
-		$router = $container->get('router');
-
-		// Generate the logout button
-		if ($authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
-		{
-			$logout = $GLOBALS['TL_LANG']['MSC']['backBT'];
-			$logoutLink = $router->generate('contao_backend', array('_switch_user' => '_exit'));
-		}
-		else
-		{
-			$logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
-			$logoutLink = $router->generate('contao_backend_logout');
-		}
-
 		$this->Template->theme = \Backend::getTheme();
 		$this->Template->base = \Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
@@ -242,8 +226,8 @@ class BackendMain extends \Backend
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
 		$this->Template->profileTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->pageOffset = \Input::cookie('BE_PAGE_OFFSET');
-		$this->Template->logout = $logout;
-		$this->Template->logoutLink = $logoutLink;
+		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
+		$this->Template->logoutLink = \System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$this->Template->logoutTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);
 		$this->Template->user = $this->User;
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['user'] . ' ' . $this->User->getUsername();
@@ -267,6 +251,8 @@ class BackendMain extends \Backend
 		$strSystemMessages = \Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
 		$this->Template->systemErrorMessagesCount = substr_count($strSystemMessages, 'class="tl_error"');
+
+		$this->setImpersonatedLogout();
 
 		// Front end preview links
 		if (\defined('CURRENT_ID') && CURRENT_ID != '')
@@ -292,5 +278,58 @@ class BackendMain extends \Backend
 		}
 
 		return $this->Template->getResponse();
+	}
+
+	/**
+	 * Adjusts the logout link if the current user is impersonated.
+	 *
+	 * @throws \RuntimeException
+	 */
+	private function setImpersonatedLogout()
+	{
+		$token = \System::getContainer()->get('security.token_storage')->getToken();
+
+		if (!$token instanceof TokenInterface)
+		{
+			return;
+		}
+
+		$impersonatorUser = null;
+
+		foreach ($token->getRoles() as $role)
+		{
+			if ($role instanceof SwitchUserRole)
+			{
+				$impersonatorUser = $role->getSource()->getUsername();
+				break;
+			}
+		}
+
+		if (!$impersonatorUser)
+		{
+			return;
+		}
+
+		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			throw new \RuntimeException('The request stack did not contain a request');
+		}
+
+		$firewallMap = \System::getContainer()->get('security.firewall.map');
+
+		// Generate the "exit impersonation" path from the current request
+		if (($firewallConfig = $firewallMap->getFirewallConfig($request)) === null || ($switchUserConfig = $firewallConfig->getSwitchUser()) === null)
+		{
+			return;
+		}
+
+		$exitPath = $request->getRequestUri();
+		$exitPath .= null === $request->getQueryString() ? '?' : '&';
+		$exitPath .= sprintf('%s=%s', urlencode($switchUserConfig['parameter']), SwitchUserListener::EXIT_VALUE);
+
+		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonatorUser);
+		$this->Template->logoutLink = $exitPath;
 	}
 }

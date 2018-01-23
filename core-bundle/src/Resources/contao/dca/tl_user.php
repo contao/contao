@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'flag'                    => 1,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) COLLATE utf8mb4_bin NULL"
+			'sql'                     => "varchar(64) BINARY NULL"
 		),
 		'name' => array
 		(

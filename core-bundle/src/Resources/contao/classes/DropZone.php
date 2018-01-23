@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -30,7 +30,7 @@ class DropZone extends \FileUpload
 		$intMaxSize = round($this->getMaximumUploadSize() / 1024 / 1024);
 
 		// String of accepted file extensions
-		$strAccepted = implode(',', array_map(function($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
+		$strAccepted = implode(',', array_map(function ($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
 
 		// Add the scripts
 		$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';

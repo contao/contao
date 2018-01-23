@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -219,6 +219,28 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertCount(2, $allHeaders);
         $this->assertSame('content=foobar; path=/', $allHeaders[0]);
         $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
+    }
+
+    public function testDoesNotMergeCacheControlHeaders(): void
+    {
+        $responseEvent = $this->mockResponseEvent();
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+
+        $framework
+            ->expects($this->once())
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $headerStorage = new MemoryHeaderStorage(['Cache-Control: public, s-maxage=10800']);
+
+        $listener = new MergeHttpHeadersListener($framework, $headerStorage);
+        $listener->onKernelResponse($responseEvent);
+
+        $response = $responseEvent->getResponse();
+
+        $this->assertTrue($response->headers->has('Cache-Control'));
+        $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
     /**

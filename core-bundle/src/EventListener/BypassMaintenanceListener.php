@@ -5,15 +5,14 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\BackendUser;
-use Contao\CoreBundle\Security\TokenChecker;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class BypassMaintenanceListener
@@ -45,7 +44,7 @@ class BypassMaintenanceListener
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
-        if (!$this->tokenChecker->hasAuthenticatedToken(BackendUser::SECURITY_SESSION_KEY)) {
+        if (!$this->tokenChecker->hasBackendUser()) {
             return;
         }
 

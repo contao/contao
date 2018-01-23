@@ -3,16 +3,16 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
 
 namespace Contao;
 
+use League\Uri\Components\Query;
+use League\Uri\Http;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\RouterInterface;
 
 
 /**
@@ -32,12 +32,19 @@ class PageLogout extends \Frontend
 	 */
 	public function getResponse($objPage)
 	{
+		// Set last page visited
+		if ($objPage->redirectBack)
+		{
+			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
+		}
+
+		$strLogoutUrl = \System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = \Environment::get('base');
 
-		// Set last page visited
-		if ($objPage->redirectBack && $this->getReferer())
+		// Redirect to last page visited
+		if ($objPage->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))
 		{
-			$strRedirect = $this->getReferer();
+			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
 		}
 
 		// Redirect to jumpTo page
@@ -47,13 +54,12 @@ class PageLogout extends \Frontend
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		/** @var Session $session */
-		$session = System::getContainer()->get('session');
-		$session->set('_contao_logout_target', $strRedirect);
+		$uri = Http::createFromString($strLogoutUrl);
 
-		/** @var RouterInterface $router */
-		$router = System::getContainer()->get('router');
+		// Add the redirect= parameter to the logout URL
+		$query = new Query($uri->getQuery());
+		$query = $query->merge('redirect=' . $strRedirect);
 
-		return new RedirectResponse($router->generate('contao_frontend_logout'));
+		return new RedirectResponse((string) $uri->withQuery((string) $query));
 	}
 }

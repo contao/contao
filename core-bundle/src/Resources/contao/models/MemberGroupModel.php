@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -120,7 +120,7 @@ class MemberGroupModel extends \Model
 	{
 		@trigger_error('Using MemberGroupModel::findFirstActiveWithJumpToByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findFirstActiveByMemberGroups() instead.', E_USER_DEPRECATED);
 
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}

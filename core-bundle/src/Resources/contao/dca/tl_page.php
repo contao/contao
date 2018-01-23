@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -222,7 +222,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				array('tl_page', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
 		),
 		'type' => array
 		(
@@ -558,7 +558,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'cuser' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['cuser'],
-			'default'                 => \intval(Config::get('defaultUser')),
+			'default'                 => (int) Config::get('defaultUser'),
 			'search'                  => true,
 			'exclude'                 => true,
 			'inputType'               => 'select',
@@ -570,7 +570,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'cgroup' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['cgroup'],
-			'default'                 => \intval(Config::get('defaultGroup')),
+			'default'                 => (int) Config::get('defaultGroup'),
 			'search'                  => true,
 			'exclude'                 => true,
 			'inputType'               => 'select',
@@ -601,7 +601,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['requireItem'],
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -731,8 +730,8 @@ class tl_page extends Backend
 		$session = $objSession->all();
 
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = \intval(Config::get('defaultUser') ?: $this->User->id);
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = \intval(Config::get('defaultGroup') ?: $this->User->groups[0]);
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $this->User->id;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $this->User->groups[0];
 
 		// Restrict the page tree
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $this->User->pagemounts;
@@ -1013,8 +1012,6 @@ class tl_page extends Backend
 	 *
 	 * @param DataContainer $dc
 	 *
-	 * @return mixed
-	 *
 	 * @throws Exception
 	 */
 	public function makeRedirectPageMandatory(DataContainer $dc)
@@ -1231,7 +1228,7 @@ class tl_page extends Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (array_search($varValue, $arrFeeds) !== false)
+		if (\in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}

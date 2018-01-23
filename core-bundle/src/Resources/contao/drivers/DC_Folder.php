@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -280,7 +280,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		if (\Input::get('tg') == 'all')
 		{
 			// Expand tree
-			if (!\is_array($session['filetree']) || empty($session['filetree']) || current($session['filetree']) != 1)
+			if (empty($session['filetree']) || !\is_array($session['filetree']) || current($session['filetree']) != 1)
 			{
 				$session['filetree'] = $this->getMD5Folders(\Config::get('uploadPath'));
 			}
@@ -327,12 +327,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
 
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ")")
+					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . \Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
 											  ->execute($for, $for);
 				}
 				else
 				{
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM {$this->strTable} WHERE " . $strPattern)
+					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
 											  ->execute($for);
 				}
 
@@ -1224,7 +1224,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		// Add the versioning routines
 		if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->intId))
 		{
-			if (stristr($this->intId, '__new__') === false)
+			if (stripos($this->intId, '__new__') === false)
 			{
 				$objModel = \FilesModel::findByPath($this->intId);
 
@@ -2168,7 +2168,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$this->Files->rename($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
 
 			// New folders
-			if (stristr($this->intId, '__new__') !== false)
+			if (stripos($this->intId, '__new__') !== false)
 			{
 				// Update the database
 				if ($this->blnIsDbAssisted && \Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
@@ -2269,7 +2269,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 							break;
 					}
 
-					if (!\is_array($varValue) || empty($varValue))
+					if (empty($varValue) || !\is_array($varValue))
 					{
 						$varValue = '';
 					}
@@ -2615,7 +2615,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && array_search('.public', $content) !== false)
+			if ($protected === true && \in_array('.public', $content))
 			{
 				$protected = false;
 			}
@@ -2824,7 +2824,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
-				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT $f FROM $t WHERE $t.id={$this->strTable}.name)") . ")";
+				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . \Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
 				$this->values[] = $session['search'][$this->strTable]['value'];
 			}
 			else

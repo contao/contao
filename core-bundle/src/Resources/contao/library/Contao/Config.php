@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -253,7 +253,7 @@ class Config
 
 		// Write to a temp file first
 		$objFile = fopen(TL_ROOT . '/system/tmp/' . $strTemp, 'wb');
-		fputs($objFile, $strFile);
+		fwrite($objFile, $strFile);
 		fclose($objFile);
 
 		// Make sure the file has been written (see #4483)

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -341,8 +341,8 @@ class File extends \System
 
 							$this->arrImageViewSize = array
 							(
-								\intval($dimensions->getSize()->getWidth()),
-								\intval($dimensions->getSize()->getHeight())
+								(int) $dimensions->getSize()->getWidth(),
+								(int) $dimensions->getSize()->getHeight()
 							);
 
 							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
@@ -829,7 +829,7 @@ class File extends \System
 			}
 		}
 
-		fputs($this->resFile, $varData);
+		fwrite($this->resFile, $varData);
 
 		return true;
 	}

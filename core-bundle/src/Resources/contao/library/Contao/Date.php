@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -231,7 +231,7 @@ class Date
 			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
 		}
 
-		return preg_replace_callback('/[a-zA-Z]/', function($matches)
+		return preg_replace_callback('/[a-zA-Z]/', function ($matches)
 			{
 				// Thanks to Christian Labuda
 				$arrRegexp = array
@@ -253,8 +253,7 @@ class Date
 				);
 
 				return isset($arrRegexp[$matches[0]]) ? $arrRegexp[$matches[0]] : $matches[0];
-			}
-		, preg_quote($strFormat));
+			}, preg_quote($strFormat));
 	}
 
 
@@ -427,7 +426,7 @@ class Date
 			throw new \OutOfBoundsException(sprintf('Invalid date "%s"', $this->strDate));
 		}
 
-		$this->strDate = mktime((int) $intHour, (int) $intMinute, (int) $intSecond, (int) $intMonth, (int) $intDay, (int) $intYear);
+		$this->strDate = mktime($intHour, (int) $intMinute, (int) $intSecond, (int) $intMonth, (int) $intDay, (int) $intYear);
 	}
 
 

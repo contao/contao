@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -11,10 +11,10 @@
 namespace Contao;
 
 use Contao\Image\ImportantPart;
-use Contao\Image\ResizeConfiguration;
-use Contao\Image\ResizeOptions;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
@@ -55,14 +55,14 @@ class Picture
 	 *
 	 * @var Image
 	 */
-	protected $image = null;
+	protected $image;
 
 	/**
 	 * The image size
 	 *
 	 * @var ImageSizeModel|object
 	 */
-	protected $imageSize = null;
+	protected $imageSize;
 
 	/**
 	 * The image size items collection
@@ -121,7 +121,7 @@ class Picture
 
 		if (\is_array($size))
 		{
-			$size = $size + array(0, 0, 'crop');
+			$size += array(0, 0, 'crop');
 
 			$imageSize = new \stdClass();
 			$imageSize->width = $size[0];

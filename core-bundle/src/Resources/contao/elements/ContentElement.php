@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -131,12 +131,6 @@ abstract class ContentElement extends \Frontend
 	 * @var array
 	 */
 	protected $arrData = array();
-
-	/**
-	 * Processed folders
-	 * @var array
-	 */
-	protected $arrProcessed = array();
 
 	/**
 	 * Style array

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -31,7 +31,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 				'id' => 'primary',
 				'username' => 'unique',
 				'email' => 'index',
-				'autologin' => 'unique',
 				'activation' => 'index'
 			)
 		)
@@ -323,7 +322,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'flag'                    => 1,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
-			'sql'                     => 'varchar(64) COLLATE utf8mb4_bin NULL'
+			'sql'                     => 'varchar(64) BINARY NULL'
 		),
 		'password' => array
 		(
@@ -415,12 +414,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "blob NULL"
-		),
-		'autologin' => array
-		(
-			'default'                 => null,
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(32) NULL"
 		),
 		'createdOn' => array
 		(
@@ -525,7 +518,7 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || !empty($this->User->amg) && \is_array($this->User->amg));
 
 		if (!$blnCanSwitchUser)
 		{
