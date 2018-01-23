@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-### DEV
+### 4.4.13 (2018-01-23)
 
  * Do not remove old subscriptions not related to the selected channels (see contao/core#8824).
 
