@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -158,29 +158,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo', '--password' => 'bar']);
-
-        $this->assertFileExists($this->getTempDir().'/.env');
-
-        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
-
-        $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
-        $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
-    }
-
-    public function testAccesskeyFromManagerConfig(): void
-    {
-        $config = $this->createMock(ManagerConfig::class);
-
-        $config
-            ->expects($this->atLeastOnce())
-            ->method('all')
-            ->willReturn(['contao_manager' => ['dev_accesskey' => password_hash('foo:bar', PASSWORD_DEFAULT)]])
-        ;
-
-        $this->command->setApplication($this->mockApplication($config));
-
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir()]);
 
         $this->assertFileExists($this->getTempDir().'/.env');
 

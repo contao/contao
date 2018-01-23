@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Command;
 
 use Contao\CoreBundle\Command\AbstractLockedCommand;
-use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -201,16 +200,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $password = $input->getOption('password');
 
         if (false === $password && false === $user) {
-            $kernel = $this->getContainer()->get('kernel');
-
-            if ($kernel instanceof ContaoKernel) {
-                $config = $kernel->getManagerConfig()->all();
-
-                if (isset($config['contao_manager']['dev_accesskey'])) {
-                    $this->addToDotEnv($projectDir, 'APP_DEV_ACCESSKEY', $config['contao_manager']['dev_accesskey']);
-                }
-            }
-
             return;
         }
 

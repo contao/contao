@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -24,6 +24,7 @@ use Contao\ManagerPlugin\PluginLoader;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel
@@ -109,14 +110,6 @@ class ContaoKernel extends Kernel
     {
         if (null === $this->pluginLoader) {
             $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
-
-            $config = $this->getManagerConfig()->all();
-
-            if (isset($config['contao_manager']['disabled_packages'])
-                && \is_array($config['contao_manager']['disabled_packages'])
-            ) {
-                $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
-            }
         }
 
         return $this->pluginLoader;
@@ -213,6 +206,15 @@ class ContaoKernel extends Kernel
         } elseif (file_exists($rootDir.'/config/config.yml')) {
             $loader->load($rootDir.'/config/config.yml');
         }
+
+        // The "mail" transport has been removed in SwiftMailer 6, so use "sendmail" instead
+        $loader->load(
+            function (ContainerBuilder $container): void {
+                if ('mail' === $container->getParameter('mailer_transport')) {
+                    $container->setParameter('mailer_transport', 'sendmail');
+                }
+            }
+        );
     }
 
     /**

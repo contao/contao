@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -20,7 +20,8 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
 
-if ($request->server->has('HTTP_CLIENT_IP')
+if (
+    $request->server->has('HTTP_CLIENT_IP')
     || $request->server->has('HTTP_X_FORWARDED_FOR')
     || !(IpUtils::checkIp($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) || PHP_SAPI === 'cli-server')
 ) {
@@ -42,7 +43,8 @@ if ($request->server->has('HTTP_CLIENT_IP')
         die(sprintf('You are not allowed to access this file. Check %s for more information.', basename(__FILE__)));
     }
 
-    if (null === $request->getUser()
+    if (
+        null === $request->getUser()
         || !password_verify($request->getUser().':'.$request->getPassword(), $accessKey)
     ) {
         header('WWW-Authenticate: Basic realm="Contao debug"');
