@@ -416,6 +416,16 @@
         <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt;オプションをサーバーで有効にしていません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
         
       </trans-unit>
+      <trans-unit id="84">
+        <source>innodb_additional</source>
+        <target>InnoDBが適切に構成されていません!</target>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_additional_explain</source>
+        <target>MySQLバージョン5.7.7とMariaDBバージョン10.2より前では、large prefixesを使用するにはBarracudaファイル形式と&lt;code&gt;innodb_file_per_table&lt;/code&gt;オプションが必要です。</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

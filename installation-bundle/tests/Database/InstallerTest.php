@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -14,6 +14,7 @@ namespace Contao\InstallationBundle\Test\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
@@ -33,10 +34,21 @@ class InstallerTest extends TestCase
     public function testReturnsTheAlterTableCommands(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $fromSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foobar']);
         $commands = $installer->getCommands();
@@ -59,11 +71,23 @@ class InstallerTest extends TestCase
     public function testReturnsTheDropColumnCommands(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
-        $fromSchema->getTable('tl_foobar')->addColumn('bar', 'string');
+
+        $fromSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foobar')
+            ->addColumn('bar', 'string')
+        ;
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -75,11 +99,23 @@ class InstallerTest extends TestCase
     public function testReturnsTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $fromSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
-        $toSchema->getTable('tl_foobar')->addColumn('bar', 'string');
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema
+            ->getTable('tl_foobar')
+            ->addColumn('bar', 'string')
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -97,7 +133,11 @@ class InstallerTest extends TestCase
         $fromSchema->createTable('tl_foobar');
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2]);
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2])
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -115,7 +155,11 @@ class InstallerTest extends TestCase
         $fromSchema->createTable('tl_foobar');
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string', ['default' => ',']);
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string', ['default' => ','])
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -133,10 +177,26 @@ class InstallerTest extends TestCase
         $fromSchema->createTable('tl_foobar');
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo1', 'string');
-        $toSchema->getTable('tl_foobar')->addColumn('foo2', 'integer');
-        $toSchema->getTable('tl_foobar')->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2]);
-        $toSchema->getTable('tl_foobar')->addColumn('foo4', 'string', ['default' => ',']);
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo1', 'string')
+        ;
+
+        $toSchema
+            ->getTable('tl_foobar')
+            ->addColumn('foo2', 'integer')
+        ;
+
+        $toSchema
+            ->getTable('tl_foobar')
+            ->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2])
+        ;
+
+        $toSchema
+            ->getTable('tl_foobar')
+            ->addColumn('foo4', 'string', ['default' => ','])
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -155,10 +215,21 @@ class InstallerTest extends TestCase
     public function testReturnsNoCommandsIfTheSchemasAreIdentical(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $fromSchema
+            ->createTable('tl_foobar')
+            ->addColumn('foo', 'string')
+        ;
 
         $toSchema = new Schema();
-        $toSchema->createTable('tl_foobar')->addColumn('foo', 'string');
+
+        $toSchema
+            ->createTable('tl_foobar')
+            ->addOption('engine', 'MyISAM')
+            ->addOption('charset', 'utf8')
+            ->addOption('collate', 'utf8_unicode_ci')
+            ->addColumn('foo', 'string')
+        ;
 
         $installer = $this->mockInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
@@ -214,16 +285,8 @@ class InstallerTest extends TestCase
         ;
 
         $connection
-            ->method('getParams')
-            ->willReturn(
-                [
-                    'defaultTableOptions' => [
-                        'charset' => 'utf8mb4',
-                        'collate' => 'utf8mb4_unicode_ci',
-                        'engine' => 'InnoDB',
-                    ],
-                ]
-            )
+            ->method('getConfiguration')
+            ->willReturn($this->createMock(Configuration::class))
         ;
 
         $schemaProvider = $this->createMock(DcaSchemaProvider::class);

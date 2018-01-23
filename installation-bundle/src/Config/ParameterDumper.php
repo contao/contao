@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -109,7 +109,7 @@ class ParameterDumper
 
         foreach ($this->parameters['parameters'] as $key => $value) {
             if (\is_string($value)) {
-                if (0 === strpos($value, '@')) {
+                if (0 === strncmp($value, '@', 1)) {
                     $value = '@'.$value;
                 }
 

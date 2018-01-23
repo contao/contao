@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -15,6 +15,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 
 class Installer
 {
@@ -95,27 +96,38 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
-        $fromSchema = $this->dropNonContaoTables($this->connection->getSchemaManager()->createSchema());
-        $toSchema = $this->dropNonContaoTables($this->schemaProvider->createSchema());
+        $config = $this->connection->getConfiguration();
+
+        // Overwrite the schema filter (see #78)
+        $previousFilter = $config->getFilterSchemaAssetsExpression();
+        $config->setFilterSchemaAssetsExpression('/^tl_/');
+
+        // Create the from and to schema
+        $fromSchema = $this->connection->getSchemaManager()->createSchema();
+        $toSchema = $this->schemaProvider->createSchema();
+
+        // Reset the schema filter
+        $config->setFilterSchemaAssetsExpression($previousFilter);
+
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
             switch (true) {
-                case 0 === strpos($sql, 'CREATE TABLE '):
+                case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
                     break;
 
-                case 0 === strpos($sql, 'DROP TABLE '):
+                case 0 === strncmp($sql, 'DROP TABLE ', 11):
                     $return['DROP'][md5($sql)] = $sql;
                     break;
 
-                case 0 === strpos($sql, 'CREATE INDEX '):
-                case 0 === strpos($sql, 'CREATE UNIQUE INDEX '):
-                case 0 === strpos($sql, 'CREATE FULLTEXT INDEX '):
+                case 0 === strncmp($sql, 'CREATE INDEX ', 13):
+                case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
+                case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
                     break;
 
-                case 0 === strpos($sql, 'DROP INDEX'):
+                case 0 === strncmp($sql, 'DROP INDEX', 10):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
                     break;
 
@@ -129,16 +141,16 @@ class Installer
                         $command = $prefix.' '.$part;
 
                         switch (true) {
-                            case 0 === strpos($part, 'DROP '):
+                            case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
                                 break;
 
-                            case 0 === strpos($part, 'ADD '):
+                            case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
                                 break;
 
-                            case 0 === strpos($part, 'CHANGE '):
-                            case 0 === strpos($part, 'RENAME '):
+                            case 0 === strncmp($part, 'CHANGE ', 7):
+                            case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
                                 break;
 
@@ -154,7 +166,7 @@ class Installer
             }
         }
 
-        $this->checkEngineAndCollation($return);
+        $this->checkEngineAndCollation($return, $toSchema);
 
         $return = array_filter($return);
 
@@ -169,63 +181,69 @@ class Installer
     }
 
     /**
-     * Removes tables from the schema that do not start with tl_.
-     *
-     * @param Schema $schema
-     *
-     * @return Schema
-     */
-    private function dropNonContaoTables(Schema $schema): Schema
-    {
-        $needle = $schema->getName().'.tl_';
-
-        foreach ($schema->getTableNames() as $tableName) {
-            if (0 !== stripos($tableName, $needle)) {
-                $schema->dropTable($tableName);
-            }
-        }
-
-        return $schema;
-    }
-
-    /**
      * Checks engine and collation and adds the ALTER TABLE queries.
      *
      * @param array $sql
+     * @param Schema $toSchema
      */
-    private function checkEngineAndCollation(array &$sql): void
+    private function checkEngineAndCollation(array &$sql, Schema $toSchema): void
     {
-        $params = $this->connection->getParams();
-        $charset = $params['defaultTableOptions']['charset'];
-        $collate = $params['defaultTableOptions']['collate'];
-        $engine = $params['defaultTableOptions']['engine'];
-        $tables = $this->connection->getSchemaManager()->listTableNames();
+        $tables = $toSchema->getTables();
 
         foreach ($tables as $table) {
-            if (0 !== strncmp($table, 'tl_', 3)) {
+            $tableName = $table->getName();
+
+            if (0 !== strncmp($tableName, 'tl_', 3)) {
                 continue;
             }
 
+            $this->setLegacyOptions($table);
+
             $tableOptions = $this->connection
-                ->query("SHOW TABLE STATUS LIKE '".$table."'")
+                ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
                 ->fetch(\PDO::FETCH_OBJ)
             ;
 
+            $engine = $table->getOption('engine');
+
             if ($tableOptions->Engine !== $engine) {
                 if ('InnoDB' === $engine) {
-                    $command = 'ALTER TABLE '.$table.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
                 } else {
-                    $command = 'ALTER TABLE '.$table.' ENGINE = '.$engine;
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
 
+            $collate = $table->getOption('collate');
+
             if ($tableOptions->Collation !== $collate) {
-                $command = 'ALTER TABLE '.$table.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
+                $charset = $table->getOption('charset');
+                $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
+        }
+    }
+
+    /**
+     * Adds the legacy table options to remain backwards compatibility with database.sql files.
+     *
+     * @param Table $table
+     */
+    private function setLegacyOptions(Table $table): void
+    {
+        if (!$table->hasOption('engine')) {
+            $table->addOption('engine', 'MyISAM');
+        }
+
+        if (!$table->hasOption('charset')) {
+            $table->addOption('charset', 'utf8');
+        }
+
+        if (!$table->hasOption('collate')) {
+            $table->addOption('collate', 'utf8_general_ci');
         }
     }
 }

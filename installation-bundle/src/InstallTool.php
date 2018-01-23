@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -221,6 +221,7 @@ class InstallTool
 
         [$version] = explode('-', $row->Version);
 
+        // The database version is too old
         if (version_compare($version, '5.5.7', '<')) {
             $context['errorCode'] = 1;
             $context['version'] = $version;
@@ -231,6 +232,7 @@ class InstallTool
         $options = $this->connection->getParams()['defaultTableOptions'];
         $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
 
+        // The configured collation is not installed
         if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
             $context['errorCode'] = 2;
             $context['collation'] = $options['collate'];
@@ -248,6 +250,7 @@ class InstallTool
             }
         }
 
+        // The configured engine is not available
         if (!$engineFound) {
             $context['errorCode'] = 3;
             $context['engine'] = $options['engine'];
@@ -255,14 +258,49 @@ class InstallTool
             return true;
         }
 
-        if ('InnoDB' === $options['engine'] && false !== strpos($options['collate'], 'utf8mb4')) {
+        if ('InnoDB' === $options['engine'] && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
             $row = $this->connection
                 ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
                 ->fetch(\PDO::FETCH_OBJ)
             ;
 
+            // The innodb_large_prefix option is not set
             if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
                 $context['errorCode'] = 4;
+
+                return true;
+            }
+
+            // As there is no reliable way to get the vendor (see #84), we are
+            // guessing based on the version number. MySQL is currently at 8 so
+            // checking for 10 should be save for the next couple of years.
+            $vok = version_compare($version, '10', '>=') ? '10.2' : '5.7.7';
+
+            // No additional requirements as of MySQL 5.7.7 and MariaDB 10.2
+            if (version_compare($version, $vok, '>=')) {
+                return false;
+            }
+
+            $row = $this->connection
+                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            // The InnoDB file format is not Barracuda
+            if ('barracuda' !== strtolower((string) $row->Value)) {
+                $context['errorCode'] = 5;
+
+                return true;
+            }
+
+            $row = $this->connection
+                ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            // The innodb_file_per_table option is not set
+            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+                $context['errorCode'] = 5;
 
                 return true;
             }

@@ -5,7 +5,7 @@
     <h3>{{ 'an_error_occurred'|trans }}</h3>
     {% if errorCode == 1 %}
       <p class="tl_error">{{ 'unsupported_version'|trans }}</p>
-      <p>{{ 'unsupported_version_explain'|trans|format(type, version) }}</p>
+      <p>{{ 'unsupported_version_explain'|trans|format(version) }}</p>
     {% elseif errorCode == 2 %}
       <p class="tl_error">{{ 'unsupported_collation'|trans }}</p>
       <p>{{ 'unsupported_collation_explain'|trans|format(collation)|raw }}</p>
@@ -40,6 +40,14 @@
                 default_table_options:
                     charset: utf8
                     collate: utf8_unicode_ci</pre>
+      </div>
+    {% elseif errorCode == 5 %}
+      <p class="tl_error">{{ 'innodb_additional'|trans }}</p>
+      <p>{{ 'innodb_additional_explain'|trans|raw }}</p>
+      <div id="sql_wrapper">
+        <pre>innodb_large_prefix = 1
+innodb_file_format = Barracuda
+innodb_file_per_table = 1</pre>
       </div>
     {% endif %}
   </fieldset>

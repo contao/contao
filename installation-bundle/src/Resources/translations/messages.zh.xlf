@@ -1,429 +1,429 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="zh">
     <body>
       <trans-unit id="1">
         <source>install_tool</source>
-        <target>Contao installatie programma</target>
+        <target>Contao安装工具</target>
         
       </trans-unit>
       <trans-unit id="2">
         <source>an_error_occurred</source>
-        <target>Er is een fout opgetreden</target>
+        <target>发生一个错误</target>
         
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>Het installatie programma is geblokkeerd</target>
+        <target>安装工具已经被锁定!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, start &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; op de opdrachtregel.</target>
+        <target>由于安全原因，连续输入超过3次错误密码安装工具会被锁定，请在命令行中运行&lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt;来解除锁定。</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>Het is PHP niet toegestaan om bestanden te beschrijven!</target>
+        <target>不允许PHP写文件!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>Uw server ondersteunt geen toegang tot bestanden via PHP; hoogstwaarschijnlijk draait PHP als Apache module onder een andere gebruiker. Neem contact op met uw serverbeheerder en vraag hem om dit probleem op te lossen.</target>
+        <target>您的服务器不支持通过PHP存取文件; 最有可能的情况是PHP作为Apache模块运行在不同用户下，请联系服务器管理员来修复问题。</target>
         
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;Ga dit niet oplossen door bestanden en mappen beschrijfbaar te maken voor iedereen!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;不要尝试将文件和文件夹写权限给所有人来修复!&lt;/strong&gt;</target>
         
       </trans-unit>
       <trans-unit id="8">
         <source>accept_license</source>
-        <target>Accepteer licentie</target>
+        <target>接受许可信息</target>
         
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>Installatie programma wachtwoord</target>
+        <target>安装工具密码</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Voer een wachtwoord in om onbevoegde toegang te voorkomen!</target>
+        <target>请输入密码来防止未授权访问.</target>
         
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
-        <target>Wachtwoord</target>
+        <target>密码</target>
         
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>Bevestiging</target>
+        <target>确认密码</target>
         
       </trans-unit>
       <trans-unit id="13">
         <source>save_password</source>
-        <target>Wachtwoord opslaan</target>
+        <target>保存密码</target>
         
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>Het wachtwoord komt niet overeen met de bevestiging!</target>
+        <target>密码不一致!</target>
         
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>Het wachtwoord dient minstens %d karakters lang te zijn!</target>
+        <target>密码至少%d个字符!</target>
         
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
-        <target>Installatie programma login</target>
+        <target>安装工具登录</target>
         
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>Geef het installatie programma wachtwoord op. Dit is niet hetzelfde als het Contao backend wachtwoord.</target>
+        <target>请输入安装工具登录密码。该密码和Contao后台登录密码是不一样的。</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>U dient cookies toe te staan om Contao te kunnen gebruiken.</target>
+        <target>您必须启用“Cookies”支持来使用Contao</target>
         
       </trans-unit>
       <trans-unit id="19">
         <source>login</source>
-        <target>Inloggen</target>
+        <target>登录</target>
         
       </trans-unit>
       <trans-unit id="20">
         <source>invalid_password</source>
-        <target>Ongeldig wachtwoord!</target>
+        <target>密码错误！</target>
         
       </trans-unit>
       <trans-unit id="21">
         <source>database_connection</source>
-        <target>Database verbinding</target>
+        <target>数据库连接</target>
         
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>Database verbinding tot stand gebracht.</target>
+        <target>数据库连接已创建。</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
-        <target>De databasenaam mag geen punten bevatten!</target>
+        <target>数据库名字中不能包含点！</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_could_not_connect</source>
-        <target>Geen verbinding met een database!</target>
+        <target>不能连接到数据库!</target>
         
       </trans-unit>
       <trans-unit id="25">
         <source>database_connection_explain</source>
-        <target>Controleer uw gegevens om met de database te verbinden.</target>
+        <target>请输入您的数据库连接参数。</target>
         
       </trans-unit>
       <trans-unit id="26">
         <source>database_host</source>
-        <target>Host</target>
+        <target>主机</target>
         
       </trans-unit>
       <trans-unit id="27">
         <source>database_port</source>
-        <target>Poortnummer</target>
+        <target>端口号</target>
         
       </trans-unit>
       <trans-unit id="28">
         <source>database_user</source>
-        <target>Gebruikersnaam</target>
+        <target>用户名</target>
         
       </trans-unit>
       <trans-unit id="29">
         <source>database_password</source>
-        <target>Wachtwoord</target>
+        <target>密码</target>
         
       </trans-unit>
       <trans-unit id="30">
         <source>database_name</source>
-        <target>Naam database</target>
+        <target>数据库名字</target>
         
       </trans-unit>
       <trans-unit id="31">
         <source>save_settings</source>
-        <target>Bewaar instellingen</target>
+        <target>保存设置</target>
         
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables</source>
-        <target>Update de database</target>
+        <target>更新数据库</target>
         
       </trans-unit>
       <trans-unit id="33">
         <source>update_tables_explain</source>
-        <target>Houd er rekening mee dat de update-assistent alleen tabellen afhandelt welke met &lt;code&gt; tl _ &lt;/ code&gt; beginnen.</target>
+        <target>请注意，更新助手仅处理以&lt;code&gt;tl_&lt;/code&gt;开头的数据表.</target>
         
       </trans-unit>
       <trans-unit id="34">
         <source>update_tables_confirm</source>
-        <target>De database is up-to-date!</target>
+        <target>数据库是最新的。</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>update_save</source>
-        <target>Update database</target>
+        <target>更新数据库</target>
         
       </trans-unit>
       <trans-unit id="36">
         <source>CREATE</source>
-        <target>Maak tabellen</target>
+        <target>创建数据表</target>
         
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_TABLE</source>
-        <target>Tabellen wijzigen</target>
+        <target>更改数据表</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_ADD</source>
-        <target>Voeg kolommen toe</target>
+        <target>添加列</target>
         
       </trans-unit>
       <trans-unit id="39">
         <source>ALTER_CHANGE</source>
-        <target>Wijzig kolommen</target>
+        <target>变更列</target>
         
       </trans-unit>
       <trans-unit id="40">
         <source>ALTER_DROP</source>
-        <target>Dump kolommen</target>
+        <target>删除列</target>
         
       </trans-unit>
       <trans-unit id="41">
         <source>DROP</source>
-        <target>Dump tabellen</target>
+        <target>删除数据表</target>
         
       </trans-unit>
       <trans-unit id="42">
         <source>select_all</source>
-        <target>Selecteer alles</target>
+        <target>全选</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>template_import</source>
-        <target>Importeer een template</target>
+        <target>导入一个模板</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>template_import_explain</source>
-        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren van de &lt;code&gt;templates&lt;/code&gt; directory. Bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruik dan de thema-manager in het Contao backend.</target>
+        <target>此处您可以从&lt;code&gt;templates&lt;/code &gt;目录中导入&lt;code &gt;.sql&lt;/code &gt;格式的文件。已有数据会被删除！如果您需要导入一个主题，请在Contao后台使用主题管理器来完成。</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_exception</source>
-        <target>Importeren is mislukt! Is de database up-to-date en is het template bestand compatibel met uw Contao versie?</target>
+        <target>导入失败！数据库结构是否是最新版本，并且模板文件是否与您的Contao版本兼容？</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>import_empty_source</source>
-        <target>Kies een template bestand!</target>
+        <target>请选择一个模板文件！</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
-        <target>Alle bestaande gegevens worden verwijderd!</target>
+        <target>所有的现有数据将会被删除！</target>
         
       </trans-unit>
       <trans-unit id="48">
         <source>imported_on</source>
-        <target>Template geïmporteerd bij %s</target>
+        <target>已导入模板 %s</target>
         
       </trans-unit>
       <trans-unit id="49">
         <source>templates</source>
-        <target>Templates</target>
+        <target>模板</target>
         
       </trans-unit>
       <trans-unit id="50">
         <source>do_not_truncate</source>
-        <target>Maak tabellen niet leeg</target>
+        <target>不清空数据表</target>
         
       </trans-unit>
       <trans-unit id="51">
         <source>import_confirm</source>
-        <target>Alle bestaande gegevens worden verwijderd! Wilt u werkelijk verder gaan?</target>
+        <target>所有的现有数据将会被删除！您真的要继续该操作？</target>
         
       </trans-unit>
       <trans-unit id="52">
         <source>template_save</source>
-        <target>Importeer template</target>
+        <target>导入模板</target>
         
       </trans-unit>
       <trans-unit id="53">
         <source>admin_create</source>
-        <target>Maak een admin gebruiker aan</target>
+        <target>创建一个管理员</target>
         
       </trans-unit>
       <trans-unit id="54">
         <source>admin_create_explain</source>
-        <target>Maak hier een admin gebruiker aan welke kan inloggen in het Contao backend.</target>
+        <target>您可以在这里创建管理员帐号用来登录Contao后台.</target>
         
       </trans-unit>
       <trans-unit id="55">
         <source>admin_confirm</source>
-        <target>Een admin gebruiker is aangemaakt.</target>
+        <target>已创建一位管理员</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_username</source>
-        <target>Gebruikersnaam</target>
+        <target>用户名</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_name</source>
-        <target>Naam</target>
+        <target>名称</target>
         
       </trans-unit>
       <trans-unit id="58">
         <source>admin_email</source>
-        <target>E-mail</target>
+        <target>电子邮件格式</target>
         
       </trans-unit>
       <trans-unit id="59">
         <source>admin_save</source>
-        <target>Maak een admin gebruiker aan</target>
+        <target>创建管理员</target>
         
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>Om veiligheidsredenen mag u de volgende karakters hier niet gebruiken: #()/&lt;=&gt;</target>
+        <target>由于安全原因，在这里您不能使用这些字符：#()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_no_space</source>
-        <target>De gebruikersnaam mag geen spaties bevatten!</target>
+        <target>用户名不能包含空白字符!</target>
         
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_email</source>
-        <target>Geef een geldig e-mail adres op!</target>
+        <target>请输入合法的电子邮件地址！</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error_password_match</source>
-        <target>De opgegeven wachtwoorden zijn niet gelijk!</target>
+        <target>您两次输入的密码不一致！</target>
         
       </trans-unit>
       <trans-unit id="64">
         <source>admin_error_password_user</source>
-        <target>Uw gebruikersnaam en wachtwoord mogen niet gelijk zijn!</target>
+        <target>您的用户名和密码不应该相同！</target>
         
       </trans-unit>
       <trans-unit id="65">
         <source>admin_error</source>
-        <target>Vul alle velden in om een admin gebruiker aan te maken!</target>
+        <target>请填写所有字段，以创建一位管理员！</target>
         
       </trans-unit>
       <trans-unit id="66">
         <source>congratulations</source>
-        <target>Gefeliciteerd!</target>
+        <target>恭喜！</target>
         
       </trans-unit>
       <trans-unit id="67">
         <source>congratulations_explain</source>
-        <target>Contao is met succes geïnstalleerd.</target>
+        <target>Contao安装成功。</target>
         
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete</source>
-        <target>Installatie compleet</target>
+        <target>安装完成</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>installation_complete_explain</source>
-        <target>Ga naar het Contao backend om de systeem instellingen te controleren.</target>
+        <target>现在请登录Contao后台并检查系统设置.</target>
         
       </trans-unit>
       <trans-unit id="70">
         <source>back_end</source>
-        <target>Contao backend</target>
+        <target>Contao后台</target>
         
       </trans-unit>
       <trans-unit id="71">
         <source>old_database</source>
-        <target>De database is te oud!</target>
+        <target>数据库太旧!</target>
         
       </trans-unit>
       <trans-unit id="72">
         <source>old_database_explanation</source>
-        <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
+        <target>至少需要升级Contao从版本3.2到版本4.</target>
         
       </trans-unit>
       <trans-unit id="73">
         <source>console_explanation</source>
-        <target>Een installatie opdracht kan niet worden voltooid!</target>
+        <target>无法完成安装任务!</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicate_subscriptions</source>
-        <target>Er werden dubbele inschrijvingen voor de nieuwsbrief gevonden:</target>
+        <target>发现重复的新闻订阅:</target>
         
       </trans-unit>
       <trans-unit id="75">
         <source>duplicates_purged</source>
-        <target>Dubbele invoeren zijn automatisch opgeschoond. Een back-up van de oorspronkelijke inschrijvingen zijn opgeslagen in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        <target>重复的条目已自动被删除。原始的订阅备份存储在数据表 &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="76">
         <source>unsupported_version</source>
-        <target>Database versie wordt niet ondersteund!</target>
+        <target>数据库版本不支持！</target>
         
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao vereist tenminste MySQL 5.5.7 maar u heeft versie %s. Werk uw database versie bij.</target>
+        <target>Contao至少需要MySQL 5.5.7，但是当前版本为 %s。请更新数据库版本。</target>
         
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
-        <target>De geconfigureerde sortering wordt niet ondersteund!</target>
+        <target>配置的collation不支持！</target>
         
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>De geconfigureerde vergelijking&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer dit (aanbevolen) of configureer een andere tekenset en sortering in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        <target>配置的collation &lt;code&gt;%s&lt;/code&gt;  在当前服务器中无效。 请安装collation或者在 &lt;code&gt;app/config/config.yml&lt;/code&gt; 文件中配置不同的字符集和collation。</target>
         
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
-        <target>De geconfigureerde database-engine wordt niet ondersteund!</target>
+        <target>配置的数据库引擎不支持！</target>
         
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>De database-engine&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer deze (aanbevolen) of configureer een andere database-engine in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        <target>配置的数据库引擎 &lt;code&gt;%s&lt;/code&gt; 在当前服务器中无效。请安装数据库引擎 (推荐) 或在文件&lt;code&gt;app/config/config.yml&lt;/code&gt; 中配置不同的数据库引擎.</target>
         
       </trans-unit>
       <trans-unit id="82">
         <source>innodb_large_prefix</source>
-        <target>De innodb_large_prefix option is niet ingeschakeld!</target>
+        <target>innodb_large_prefix选项没有启用！</target>
         
       </trans-unit>
       <trans-unit id="83">
         <source>innodb_large_prefix_explain</source>
-        <target>De &lt;code&gt;innodb_large_prefix&lt;/code&gt; optie is niet ingeschakeld op uw server. Schakel dit in (aanbevolen) of configureer een andere tekenset en sortering in het &lt;code&gt;app/config/config.yml&lt;/code&gt; bestand.</target>
+        <target>服务器中没有启用 &lt;code&gt;innodb_large_prefix&lt;/code&gt; 选项。请启用该设置 (推荐) 或者在 &lt;code&gt;app/config/config.yml&lt;/code&gt; 文件中配置不同的字符集和collation。</target>
         
       </trans-unit>
       <trans-unit id="84">
         <source>innodb_additional</source>
-        <target>InnoDB is niet correct geconfigureerd!</target>
+        <target>InnoDB配置不正确！</target>
         
       </trans-unit>
       <trans-unit id="85">
         <source>innodb_additional_explain</source>
-        <target>Gebruik van grote prefixen in MySQL-versies voorafgaand aan 5.7.7 en MariaDB-versies vóór 10.2 vereisen het Barracuda-bestandsformaat en de &lt;code&gt;innodb_file_per_table&lt;/code&gt; optie.</target>
+        <target>在MySQL 5.7.7 之前版本和MariaDB 10.2 之前版本中使用较大前缀需要Barracuda文件格式和 &lt;code&gt;innodb_file_per_table&lt;/code&gt; 选项。</target>
         
       </trans-unit>
     </body>
