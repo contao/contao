@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -136,12 +136,13 @@ class CommentsModel extends \Model
 	/**
 	 * Count published comments by their source table and parent ID
 	 *
-	 * @param string  $strSource The source element
-	 * @param integer $intParent The parent ID
+	 * @param string  $strSource  The source element
+	 * @param integer $intParent  The parent ID
+	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return integer The number of comments
 	 */
-	public static function countPublishedBySourceAndParent($strSource, $intParent)
+	public static function countPublishedBySourceAndParent($strSource, $intParent, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.source=? AND $t.parent=?");
