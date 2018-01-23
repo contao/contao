@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -895,7 +895,7 @@ class Newsletter extends \Backend
 		{
 			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
 
-			if (!\is_array($newsletters) || empty($newsletters))
+			if (empty($newsletters) || !\is_array($newsletters))
 			{
 				return array();
 			}
