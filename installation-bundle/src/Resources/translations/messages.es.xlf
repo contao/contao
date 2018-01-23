@@ -1,429 +1,429 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="es">
     <body>
       <trans-unit id="1">
         <source>install_tool</source>
-        <target>Contaoインストールツール</target>
+        <target>Herramienta de instalación Contao</target>
         
       </trans-unit>
       <trans-unit id="2">
         <source>an_error_occurred</source>
-        <target>エラーが発生しました</target>
+        <target>Ha ocurrido un error</target>
         
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>インストールツールはロックされています!</target>
+        <target>¡La herramienta de instalación ha sido bloqueada!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。ロックを解除するにはコマンド行で&lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;と実行してください。</target>
+        <target>Por razones de seguridad, la herramienta de instalación se ha bloqueado después de haber ingresado una contraseña incorrecta más de tres veces seguidas. Para desbloquearlo, ejecuta &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;en la línea de comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>PHPがファイルに書き込みをできません!</target>
+        <target>PHP no está permitido de escribir ficheros!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>サーバーがPHPによるファイルアクセスをサポートしていません、おそらく、PHPはApacheのモジュールで異なるユーザーで動作しているのでしょう。サーバーの管理者に連絡を取って、この問題を修正してください。</target>
+        <target>Su servidor no soporta el acceso a archivos a través de PHP; más probable es que PHP se ejecuta como módulo de Apache bajo un usuario diferente. Por favor, póngase en contacto con el administrador de su servidor y pídale de solucionar el problema.</target>
         
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;自分でファイルやフォルダーを誰にでも読み書き可能にするといった方法で問題を解決しようとしないでください!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;¡No intente repararlo usted mismo, haciendo que los archivos y carpetas sean modificables para todo el mundo!</target>
         
       </trans-unit>
       <trans-unit id="8">
         <source>accept_license</source>
-        <target>使用許諾の承認</target>
+        <target>Aceptar licencia</target>
         
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>インストールツールのパスワード</target>
+        <target>Contraseña de herramienta de instalación</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>不正なアクセスを防止するためパスワードを入力してください。</target>
+        <target>Por favor introduzca una contraseña para prevenir accesos no autorizados.</target>
         
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
-        <target>パスワード</target>
+        <target>Contraseña</target>
         
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>パスワードの再入力</target>
+        <target>Confirma la contraseña</target>
         
       </trans-unit>
       <trans-unit id="13">
         <source>save_password</source>
-        <target>パスワードを保存</target>
+        <target>Grabar contraseña</target>
         
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>パスワードとその再入力が一致しませんでした。</target>
+        <target>¡La contraseña no coincide con la confirmación!</target>
         
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>パスワードは少なくとも%d文字以上を入力してください。</target>
+        <target>¡La contraseña tiene que tener como mínimo %d carßacteres!</target>
         
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
-        <target>インストールツールにログイン</target>
+        <target>Inicio de sesión de herramienta de instalación</target>
         
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>インストールツールのパスワードを入力してください。インストールツールのパスワードは、Contaoのバックエンドのパスワードと別のものです。</target>
+        <target>Por favor introduzca la contraseña para la herramienta de instalación. La contraseña de la herramienta de instalación no es la misma que la contraseña del módulo de gestión de Contao.</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>Contaoを使用するにはクッキーを許可しなければなりません。</target>
+        <target>Debe permitir el uso de cookies para utilizar Contao.</target>
         
       </trans-unit>
       <trans-unit id="19">
         <source>login</source>
-        <target>ログイン</target>
+        <target>Login</target>
         
       </trans-unit>
       <trans-unit id="20">
         <source>invalid_password</source>
-        <target>パスワードが正しくありません。</target>
+        <target>¡Contraseña no válida!</target>
         
       </trans-unit>
       <trans-unit id="21">
         <source>database_connection</source>
-        <target>データベースの接続</target>
+        <target>Conexión base de datos</target>
         
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>データベースの接続を確立しました。</target>
+        <target>Conexión a base de datos exitosa.</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
-        <target>データベース名にドットを含めてはなりません!</target>
+        <target>¡El nombre de la base de datos no debe contener puntos!</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_could_not_connect</source>
-        <target>データベースに接続できませんでした!</target>
+        <target>¡No se pudo conectar a la base de datos!</target>
         
       </trans-unit>
       <trans-unit id="25">
         <source>database_connection_explain</source>
-        <target>データベースの接続の設定値を入力してください。</target>
+        <target>Introduzca los parámetros de conexión a su base de datos.</target>
         
       </trans-unit>
       <trans-unit id="26">
         <source>database_host</source>
-        <target>ホスト</target>
+        <target>Servidor</target>
         
       </trans-unit>
       <trans-unit id="27">
         <source>database_port</source>
-        <target>ポート番号</target>
+        <target>Número de puerto</target>
         
       </trans-unit>
       <trans-unit id="28">
         <source>database_user</source>
-        <target>ユーザー名</target>
+        <target>Usuario</target>
         
       </trans-unit>
       <trans-unit id="29">
         <source>database_password</source>
-        <target>パスワード</target>
+        <target>Contraseña</target>
         
       </trans-unit>
       <trans-unit id="30">
         <source>database_name</source>
-        <target>データベース名</target>
+        <target>Nombre de la base de datos</target>
         
       </trans-unit>
       <trans-unit id="31">
         <source>save_settings</source>
-        <target>設定を保存</target>
+        <target>Guardar ajustes</target>
         
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables</source>
-        <target>データベースを更新</target>
+        <target>Actualizar la base de datos</target>
         
       </trans-unit>
       <trans-unit id="33">
         <source>update_tables_explain</source>
-        <target>アップデートの支援は&lt;code&gt;tl_&lt;/code&gt;で始まる名前のテーブルだけを扱うことに注意してください。</target>
+        <target>Tenga en cuenta que el asistente de actualización sólo reconoce tablas que empiezan por &lt;code&gt; tl _ &lt;/ code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="34">
         <source>update_tables_confirm</source>
-        <target>データベースは最新です。</target>
+        <target>La base de datos está actualizada.</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>update_save</source>
-        <target>データベースを更新</target>
+        <target>Actualizar base de datos</target>
         
       </trans-unit>
       <trans-unit id="36">
         <source>CREATE</source>
-        <target>テーブルを作成</target>
+        <target>Crear tablas</target>
         
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_TABLE</source>
-        <target>テーブルを変更</target>
+        <target>Cambiar tablas</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_ADD</source>
-        <target>列を追加</target>
+        <target>Añadir columnas</target>
         
       </trans-unit>
       <trans-unit id="39">
         <source>ALTER_CHANGE</source>
-        <target>列を変更</target>
+        <target>Cambiar columnas</target>
         
       </trans-unit>
       <trans-unit id="40">
         <source>ALTER_DROP</source>
-        <target>列を削除</target>
+        <target>Soltar columnas</target>
         
       </trans-unit>
       <trans-unit id="41">
         <source>DROP</source>
-        <target>テーブルを削除</target>
+        <target>Soltar tablas</target>
         
       </trans-unit>
       <trans-unit id="42">
         <source>select_all</source>
-        <target>すべて選択</target>
+        <target>Seleccionar todos</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>template_import</source>
-        <target>テンプレートをインポート</target>
+        <target>Importar una plantilla</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>template_import_explain</source>
-        <target>&lt;em&gt;templates&lt;/em&gt;のディレクトリから&lt;em&gt;.sql&lt;/em&gt;のファイルをインポートできます。既存のデータを削除します。テーマをインポートしたいだけの場合は、代わりにContaoのバックエンドでテーマ管理を使用してください。</target>
+        <target>Aquí puede importar un fichero &lt;code&gt; .sql &lt;/ code&gt; del directorio de la carpeta &lt;code&gt;templates&lt;/ code&gt;. Se borrarán todos los datos existentes! Si sólo desea importar un tema, por favor, utilice el gestor de temas en el backend de Contao.</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_exception</source>
-        <target>インポートに失敗しました!  データベースは最新の状態で、サイトのテンプレートのファイルはContaoのバージョンと互換性がありますか?</target>
+        <target>La importación falló! Compruebe si la base de datos está actualizada y si la versión de Contao es compatible con la suya.</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>import_empty_source</source>
-        <target>テンプレートのファイルを選択してください。</target>
+        <target>Seleccione un archivo de plantilla</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
-        <target>現在のデータをすべて削除します。</target>
+        <target>¡Los datos existentes serán eliminados!</target>
         
       </trans-unit>
       <trans-unit id="48">
         <source>imported_on</source>
-        <target>%sにテンプレートをインポートしました。</target>
+        <target>Template importada en %s.</target>
         
       </trans-unit>
       <trans-unit id="49">
         <source>templates</source>
-        <target>テンプレート</target>
+        <target>Plantillas</target>
         
       </trans-unit>
       <trans-unit id="50">
         <source>do_not_truncate</source>
-        <target>テーブルを切り捨てない</target>
+        <target>No corte las tablas</target>
         
       </trans-unit>
       <trans-unit id="51">
         <source>import_confirm</source>
-        <target>現在のデータをすべて削除します。本当に続けますか?</target>
+        <target>¡Los datos existentes serán eliminados! ¿Desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="52">
         <source>template_save</source>
-        <target>テンプレートをインポート</target>
+        <target>Importar plantilla</target>
         
       </trans-unit>
       <trans-unit id="53">
         <source>admin_create</source>
-        <target>管理者ユーザーの作成</target>
+        <target>Crear usuario administrador</target>
         
       </trans-unit>
       <trans-unit id="54">
         <source>admin_create_explain</source>
-        <target>Contaoのバックエンドにログインする管理者ユーザーを作成できます。</target>
+        <target>Aquí puede crear un usuario administrador para acceder al backend de Contao.</target>
         
       </trans-unit>
       <trans-unit id="55">
         <source>admin_confirm</source>
-        <target>管理者ユーザーを作成しました。</target>
+        <target>Se ha creado un usuario administrador.</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_username</source>
-        <target>ユーザー名</target>
+        <target>Usuario</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_name</source>
-        <target>名前</target>
+        <target>Nombre</target>
         
       </trans-unit>
       <trans-unit id="58">
         <source>admin_email</source>
-        <target>電子メール</target>
+        <target>Formato e-mail</target>
         
       </trans-unit>
       <trans-unit id="59">
         <source>admin_save</source>
-        <target>管理者ユーザーの作成</target>
+        <target>Crear un usuario administrador</target>
         
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>セキュリティ上の理由のため、ここでは以下の文字は使用できせん:: #()/&lt;=&gt;</target>
+        <target>Por motivos de seguridad no puede utilizar ninguno de los caracteres siguientes: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_no_space</source>
-        <target>ユーザー名に空白文字を含めてはなりません。</target>
+        <target>¡El nombre de usuario no puede contener caracteres de espacios en blanco!</target>
         
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_email</source>
-        <target>正しい電子メールアドレスを入力してください。</target>
+        <target>¡Por favor, introduce un e-mail válido!</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error_password_match</source>
-        <target>パスワードが一致しませんでした。</target>
+        <target>¡Las contraseñas no coinciden!</target>
         
       </trans-unit>
       <trans-unit id="64">
         <source>admin_error_password_user</source>
-        <target>ユーザー名とパスワードは同一にはできません。</target>
+        <target>¡El usuario y la contraseña no pueden ser iguales!</target>
         
       </trans-unit>
       <trans-unit id="65">
         <source>admin_error</source>
-        <target>すべての欄に入力して管理者ユーザーを作成してください。</target>
+        <target>Indique todos los campos para crear un usuario administrador</target>
         
       </trans-unit>
       <trans-unit id="66">
         <source>congratulations</source>
-        <target>おめでとうございます!</target>
+        <target>¡Enhorabuena!</target>
         
       </trans-unit>
       <trans-unit id="67">
         <source>congratulations_explain</source>
-        <target>Contaoのインストールに成功しました。</target>
+        <target>Ha instalado Contao con éxito.</target>
         
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete</source>
-        <target>インストールを完了</target>
+        <target>Instalación completada</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>installation_complete_explain</source>
-        <target>さあ、Contaoのバックエンドに移動してシステム設定を確認してください。</target>
+        <target>Ahora por favor vaya al backend de Contao y compruebe la configuración del sistema.</target>
         
       </trans-unit>
       <trans-unit id="70">
         <source>back_end</source>
-        <target>Contaoのバックエンド</target>
+        <target>Backend de Contao</target>
         
       </trans-unit>
       <trans-unit id="71">
         <source>old_database</source>
-        <target>データベースが古すぎます!</target>
+        <target>¡La base de datos es demasiado vieja!</target>
         
       </trans-unit>
       <trans-unit id="72">
         <source>old_database_explanation</source>
-        <target>Contao 4にアップグレードするには少なくともContao 3.2が必要です。</target>
+        <target>Necesita al menos Contao 3.2 para actualizar a Contao 4.</target>
         
       </trans-unit>
       <trans-unit id="73">
         <source>console_explanation</source>
-        <target>インストールの後の処理を完了できませんでした!</target>
+        <target>¡No se pudo completar una tarea posterior a la instalación!</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicate_subscriptions</source>
-        <target>ニュースレターに登録した登録が見つかりました:</target>
+        <target>Se encontraron suscripciones a boletines duplicados:</target>
         
       </trans-unit>
       <trans-unit id="75">
         <source>duplicates_purged</source>
-        <target>重複した項目を自動的に除去しました。原本の登録は&lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;に保存しました。</target>
+        <target>Las entradas duplicadas se han purgado automáticamente. Se ha almacenado una copia de seguridad de las suscripciones originales en &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="76">
         <source>unsupported_version</source>
-        <target>サポートしていないバージョンのデータベースです!</target>
+        <target>¡Su versión de base de datos no es compatible!</target>
         
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contaoは少なくともMySQL 5.5.7を必要としますが、利用できるのはバージョン%sです。データベースのバージョンを更新ししてください。</target>
+        <target>Contao requiere al menos MySQL 5.5.7 pero tiene una versión %s. Por favor, actualice su versión de la base de datos.</target>
         
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
-        <target>構成した照合順序はサポートされていません!</target>
+        <target>¡La intercalación configurada no es compatible!</target>
         
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>構成した照合順序&lt;code&gt;%s&lt;/code&gt;をサーバーで利用できません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
+        <target>La intercalación configurada &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. La intercalación configurada no está disponible en su servidor. Instálelo (recomendado) o configure un conjunto de caracteres y una intercalación diferentes en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
-        <target>構成したデータベースエンジンはサポートされていません!</target>
+        <target>¡El motor de base de datos configurado no es compatible!</target>
         
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>構成したデータベースエンジン&lt;code&gt;%s&lt;/code&gt; をサーバーで利用できません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なるデータベースエンジンを設定してください。</target>
+        <target>El motor de base de datos configurado &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. Instálelo (recomendado) o configure un motor de base de datos diferente en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="82">
         <source>innodb_large_prefix</source>
-        <target>innodb_large_prefix optionが有効ではありません!</target>
+        <target>¡La opción innodb_large_prefix no está habilitada!</target>
         
       </trans-unit>
       <trans-unit id="83">
         <source>innodb_large_prefix_explain</source>
-        <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt;オプションをサーバーで有効にしていません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
+        <target>La opción &lt;code&gt;innodb_large_prefix&lt;/code&gt; no está habilitada en su servidor. Habilítelo (recomendado) o configure un juego de caracteres y una intercalación diferentes en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="84">
         <source>innodb_additional</source>
-        <target>InnoDBが適切に構成されていません!</target>
+        <target>¡InnoDB no está configurado correctamente!</target>
         
       </trans-unit>
       <trans-unit id="85">
         <source>innodb_additional_explain</source>
-        <target>MySQLバージョン5.7.7とMariaDBバージョン10.2より前では、large prefixesを使用するにはBarracudaファイル形式と&lt;code&gt;innodb_file_per_table&lt;/code&gt;オプションが必要です。</target>
+        <target>El uso de prefijos grandes en las versiones de MySQL anteriores a 5.7.7 y las versiones de MariaDB anteriores a la 10.2 requiere el formato de archivo Barracuda y la opción &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>
