@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -31,7 +31,7 @@ abstract class ModuleNews extends \Module
 	 */
 	protected function sortOutProtected($arrArchives)
 	{
-		if (!\is_array($arrArchives) || empty($arrArchives))
+		if (empty($arrArchives) || !\is_array($arrArchives))
 		{
 			return $arrArchives;
 		}
@@ -53,7 +53,7 @@ abstract class ModuleNews extends \Module
 
 					$groups = \StringUtil::deserialize($objArchive->groups);
 
-					if (!\is_array($groups) || empty($groups) || !\count(array_intersect($groups, $this->User->groups)))
+					if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
 					{
 						continue;
 					}

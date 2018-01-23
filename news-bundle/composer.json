@@ -2,7 +2,7 @@
     "name": "contao/news-bundle",
     "type": "contao-bundle",
     "description": "Adds news functionality to Contao 4",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.1",
-        "contao/core-bundle": "^4.5",
+        "contao/core-bundle": "self.version",
         "symfony/framework-bundle": "^3.4"
     },
     "conflict": {
@@ -53,8 +53,6 @@
             "Contao\\NewsBundle\\Tests\\": "tests/"
         }
     },
-    "minimum-stability": "RC",
-    "prefer-stable": true,
     "support": {
         "issues": "https://github.com/contao/news-bundle/issues",
         "forum": "https://community.contao.org",
