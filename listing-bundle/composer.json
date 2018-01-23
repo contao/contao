@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.1",
-        "contao/core-bundle": "^4.5",
+        "contao/core-bundle": "self.version",
         "symfony/framework-bundle": "^3.4"
     },
     "conflict": {
@@ -20,7 +20,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.0"
+        "friendsofphp/php-cs-fixer": "^2.6"
     },
     "extra": {
         "branch-alias": {
