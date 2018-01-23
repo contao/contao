@@ -139,7 +139,7 @@ class AddToSearchIndexListenerTest extends TestCase
     {
         $this->framework
             ->method('isInitialized')
-            ->willReturn(false)
+            ->willReturn(true)
         ;
 
         $this->scopeMatcher
