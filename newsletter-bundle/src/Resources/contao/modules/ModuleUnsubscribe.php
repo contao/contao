@@ -147,6 +147,7 @@ class ModuleUnsubscribe extends \Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
+		$this->Template->email = \Input::get('email');
 		$this->Template->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['unsubscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
