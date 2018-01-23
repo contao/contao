@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
+        <target>覆盖元数据（meta data）</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the image meta data from the file manager.</source>
+        <target>在文件管理器中覆盖图片元数据。</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
+        <target>图片标题</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
@@ -340,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>如果是认证成员，使用主目录作为文件源。</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>
@@ -683,6 +687,7 @@
       </trans-unit>
       <trans-unit id="tl_content.random">
         <source>Random order without pagination</source>
+        <target>没有分页的随机顺序</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>

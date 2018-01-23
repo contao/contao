@@ -687,6 +687,7 @@
       </trans-unit>
       <trans-unit id="tl_content.random">
         <source>Random order without pagination</source>
+        <target>Orden aleatorio sin paginación</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>

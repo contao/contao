@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file meta data.</source>
+        <target>在这里可以输入文件元数据。</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

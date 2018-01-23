@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.0">
         <source>Limit width</source>
+        <target>限制宽度</target>
       </trans-unit>
       <trans-unit id="tl_user.limitWidth.1">
         <source>Limit the maximum width of the back end to 1140px.</source>
+        <target>限制后台最大宽度为1140px。</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>这些组成员可以用来预览前台。</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>

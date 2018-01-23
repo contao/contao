@@ -283,9 +283,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
         <source>Viewport tag</source>
+        <target>视口标签</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
         <source>Here you can set the viewport tag.</source>
+        <target>设置视口标签</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
@@ -293,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can set a custom title tag.</source>
+        <target>设置自定义标题标签</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
