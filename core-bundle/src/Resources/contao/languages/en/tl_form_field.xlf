@@ -344,6 +344,9 @@
       <trans-unit id="tl_form_field.image_legend">
         <source>Image button</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.invisible_legend">
+        <source>Visibility</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New field</source>
       </trans-unit>
