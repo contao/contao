@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-### DEV
+### 4.4.13 (2018-01-23)
 
  * Correctly render external links in the `event_teaser` template (see #21).
 
