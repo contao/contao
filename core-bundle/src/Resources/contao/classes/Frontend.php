@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -307,7 +307,7 @@ abstract class Frontend extends \Controller
 		$host = \Environment::get('host');
 
 		// The language is set in the URL
-		if (\Config::get('addLanguageToUrl') && !empty($_GET['language']))
+		if (!empty($_GET['language']) && \Config::get('addLanguageToUrl'))
 		{
 			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, \Input::get('language'));
 
@@ -573,7 +573,7 @@ abstract class Frontend extends \Controller
 		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);
-		$strText = \StringUtil::substr($strText, 160);
+		$strText = \StringUtil::substr($strText, 320);
 
 		return trim($strText);
 	}

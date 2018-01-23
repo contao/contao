@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -1392,7 +1392,7 @@ abstract class Controller extends \System
 	{
 		$arrPaths = array_filter($arrPaths);
 
-		if (!\is_array($arrPaths) || empty($arrPaths))
+		if (empty($arrPaths) || !\is_array($arrPaths))
 		{
 			return array();
 		}
@@ -1419,7 +1419,7 @@ abstract class Controller extends \System
 	 */
 	protected function eliminateNestedPages($arrPages, $strTable=null, $blnSorting=false)
 	{
-		if (!\is_array($arrPages) || empty($arrPages))
+		if (empty($arrPages) || !\is_array($arrPages))
 		{
 			return array();
 		}
@@ -1700,7 +1700,7 @@ abstract class Controller extends \System
 	{
 		$arrEnclosures = \StringUtil::deserialize($arrItem[$strKey]);
 
-		if (!\is_array($arrEnclosures) || empty($arrEnclosures))
+		if (empty($arrEnclosures) || !\is_array($arrEnclosures))
 		{
 			return;
 		}

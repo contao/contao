@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -499,7 +499,7 @@ class PageModel extends \Model
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
-		if (!\is_array($arrAliases) || empty($arrAliases))
+		if (empty($arrAliases) || !\is_array($arrAliases))
 		{
 			return null;
 		}
@@ -590,7 +590,7 @@ class PageModel extends \Model
 	 */
 	public static function findPublishedRegularWithoutGuestsByIds($arrIds, array $arrOptions=array())
 	{
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}
@@ -742,7 +742,7 @@ class PageModel extends \Model
 	 */
 	public static function findFirstActiveByMemberGroups($arrIds)
 	{
-		if (!\is_array($arrIds) || empty($arrIds))
+		if (empty($arrIds) || !\is_array($arrIds))
 		{
 			return null;
 		}

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -126,12 +126,12 @@ class ModuleSearch extends \Module
 				foreach ($GLOBALS['TL_HOOKS']['customizeSearch'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy);
+					$this->{$callback[0]}->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this);
 				}
 			}
 
 			// Return if there are no pages
-			if (!\is_array($arrPages) || empty($arrPages))
+			if (empty($arrPages) || !\is_array($arrPages))
 			{
 				return;
 			}
@@ -194,7 +194,7 @@ class ModuleSearch extends \Module
 						{
 							$groups = \StringUtil::deserialize($v['groups']);
 
-							if (!\is_array($groups) || empty($groups) || !\count(array_intersect($groups, $this->User->groups)))
+							if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
 							{
 								unset($arrResult[$k]);
 							}

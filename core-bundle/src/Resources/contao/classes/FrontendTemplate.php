@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -95,7 +95,15 @@ class FrontendTemplate extends \Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		return $this->setCacheHeaders(parent::getResponse());
+		/** @var $objPage \PageModel */
+		global $objPage;
+
+		// Vary on the page layout
+		$response = parent::getResponse();
+		$response->setVary(array('Contao-Page-Layout'), false);
+		$response->headers->set('Contao-Page-Layout', $objPage->isMobile ? 'mobile' : 'desktop');
+
+		return $this->setCacheHeaders($response);
 	}
 
 
@@ -365,10 +373,6 @@ class FrontendTemplate extends \Template
 		{
 			return $response->setPrivate();
 		}
-
-		// Vary on page layout
-		$response->setVary(array('Contao-Page-Layout'), false);
-		$response->headers->set('Contao-Page-Layout', $objPage->isMobile ? 'mobile' : 'desktop');
 
 		// Do not cache the response if a user is logged in or the page is protected
 		// TODO: Add support for proxies so they can vary on member context

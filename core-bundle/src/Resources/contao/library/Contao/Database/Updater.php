@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -152,7 +152,7 @@ class Updater extends \Controller
 		{
 			$modules = \StringUtil::deserialize($objUser->modules);
 
-			if (!\is_array($modules) || empty($modules))
+			if (empty($modules) || !\is_array($modules))
 			{
 				continue;
 			}

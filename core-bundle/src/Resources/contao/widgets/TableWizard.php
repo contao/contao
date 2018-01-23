@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -86,7 +86,7 @@ class TableWizard extends \Widget
 		$arrRowButtons = array('rcopy', 'rdelete', 'rdrag');
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || empty($this->varValue))
+		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			$this->varValue = array(array(''));
 		}

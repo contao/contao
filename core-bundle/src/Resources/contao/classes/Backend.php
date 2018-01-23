@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -755,17 +755,17 @@ abstract class Backend extends \Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (\Input::post('title') == '' && !empty($arrMeta[$strLanguage]['title']))
+			if (!empty($arrMeta[$strLanguage]['title']) && \Input::post('title') == '')
 			{
 				\Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (\Input::post('alt') == '' && !empty($arrMeta[$strLanguage]['alt']))
+			if (!empty($arrMeta[$strLanguage]['alt']) && \Input::post('alt') == '')
 			{
 				\Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (\Input::post('caption') == '' && !empty($arrMeta[$strLanguage]['caption']))
+			if (!empty($arrMeta[$strLanguage]['caption']) && \Input::post('caption') == '')
 			{
 				\Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}

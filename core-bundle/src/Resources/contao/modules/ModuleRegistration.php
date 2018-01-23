@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -52,7 +52,7 @@ class ModuleRegistration extends \Module
 		$this->editable = \StringUtil::deserialize($this->editable);
 
 		// Return if there are no editable fields
-		if (!\is_array($this->editable) || empty($this->editable))
+		if (empty($this->editable) || !\is_array($this->editable))
 		{
 			return '';
 		}

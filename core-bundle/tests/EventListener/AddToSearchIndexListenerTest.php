@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Frontend;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,11 @@ class AddToSearchIndexListenerTest extends TestCase
     private $framework;
 
     /**
+     * @var ScopeMatcher|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $scopeMatcher;
+
+    /**
      * {@inheritdoc}
      */
     protected function setUp(): void
@@ -38,11 +44,12 @@ class AddToSearchIndexListenerTest extends TestCase
         $adapter = $this->mockAdapter(['indexPageIfApplicable']);
 
         $this->framework = $this->mockContaoFramework([Frontend::class => $adapter]);
+        $this->scopeMatcher = $this->createMock(ScopeMatcher::class);
     }
 
     public function testCanBeInstantiated(): void
     {
-        $listener = new AddToSearchIndexListener($this->framework);
+        $listener = new AddToSearchIndexListener($this->framework, $this->scopeMatcher);
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
     }
@@ -53,7 +60,11 @@ class AddToSearchIndexListenerTest extends TestCase
      */
     public function testIndexesTheResponse(): void
     {
-        $listener = new AddToSearchIndexListener($this->framework);
+        $this->scopeMatcher
+            ->method('isFrontendMasterRequest')
+            ->willReturn(true)
+        ;
+
         $event = $this->mockPostResponseEvent();
 
         $event
@@ -62,6 +73,7 @@ class AddToSearchIndexListenerTest extends TestCase
             ->willReturn(new Response())
         ;
 
+        $listener = new AddToSearchIndexListener($this->framework, $this->scopeMatcher);
         $listener->onKernelTerminate($event);
     }
 
@@ -74,7 +86,11 @@ class AddToSearchIndexListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new AddToSearchIndexListener($framework);
+        $this->scopeMatcher
+            ->expects($this->never())
+            ->method('isFrontendMasterRequest')
+        ;
+
         $event = $this->mockPostResponseEvent();
 
         $event
@@ -82,17 +98,35 @@ class AddToSearchIndexListenerTest extends TestCase
             ->method('getResponse')
         ;
 
+        $listener = new AddToSearchIndexListener($framework, $this->scopeMatcher);
+        $listener->onKernelTerminate($event);
+    }
+
+    public function testDoesNotIndexTheResponseIfNotAContaoFrontendMasterRequest(): void
+    {
+        $this->scopeMatcher
+            ->method('isFrontendMasterRequest')
+            ->willReturn(false)
+        ;
+
+        $event = $this->mockPostResponseEvent();
+
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
+
+        $listener = new AddToSearchIndexListener($this->framework, $this->scopeMatcher);
         $listener->onKernelTerminate($event);
     }
 
     public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet(): void
     {
-        $this->framework
-            ->method('isInitialized')
+        $this->scopeMatcher
+            ->method('isFrontendMasterRequest')
             ->willReturn(true)
         ;
 
-        $listener = new AddToSearchIndexListener($this->framework);
         $event = $this->mockPostResponseEvent(null, Request::METHOD_POST);
 
         $event
@@ -100,12 +134,17 @@ class AddToSearchIndexListenerTest extends TestCase
             ->method('getResponse')
         ;
 
+        $listener = new AddToSearchIndexListener($this->framework, $this->scopeMatcher);
         $listener->onKernelTerminate($event);
     }
 
     public function testDoesNotIndexTheResponseUponFragmentRequests(): void
     {
-        $listener = new AddToSearchIndexListener($this->framework);
+        $this->scopeMatcher
+            ->method('isFrontendMasterRequest')
+            ->willReturn(true)
+        ;
+
         $event = $this->mockPostResponseEvent('_fragment/foo/bar');
 
         $event
@@ -113,6 +152,7 @@ class AddToSearchIndexListenerTest extends TestCase
             ->method('getResponse')
         ;
 
+        $listener = new AddToSearchIndexListener($this->framework, $this->scopeMatcher);
         $listener->onKernelTerminate($event);
     }
 

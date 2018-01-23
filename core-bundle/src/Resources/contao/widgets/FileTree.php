@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -70,7 +70,7 @@ class FileTree extends \Widget
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
 			// Retrieve the order value
-			$objRow = $this->Database->prepare("SELECT {$this->orderField} FROM {$this->strTable} WHERE id=?")
+			$objRow = $this->Database->prepare("SELECT " . \Database::quoteIdentifier($this->orderField) . " FROM " . $this->strTable . " WHERE id=?")
 									 ->limit(1)
 									 ->execute($this->activeRecord->id);
 
@@ -109,7 +109,7 @@ class FileTree extends \Widget
 			// Only proceed if the value has changed
 			if ($arrNew !== $this->{$this->orderField})
 			{
-				$this->Database->prepare("UPDATE {$this->strTable} SET tstamp=?, {$this->orderField}=? WHERE id=?")
+				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=?, " . \Database::quoteIdentifier($this->orderField) . "=? WHERE id=?")
 							   ->execute(time(), serialize($arrNew), $this->activeRecord->id);
 
 				$this->objDca->createNewVersion = true; // see #6285

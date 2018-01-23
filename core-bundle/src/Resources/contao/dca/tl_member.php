@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -518,7 +518,7 @@ class tl_member extends Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = ($this->User->isAdmin || \is_array($this->User->amg) && !empty($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || !empty($this->User->amg) && \is_array($this->User->amg));
 
 		if (!$blnCanSwitchUser)
 		{

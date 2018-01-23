@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -46,7 +46,7 @@ class ContentMedia extends \ContentElement
 
 		$source = \StringUtil::deserialize($this->playerSRC);
 
-		if (!\is_array($source) || empty($source))
+		if (empty($source) || !\is_array($source))
 		{
 			return '';
 		}

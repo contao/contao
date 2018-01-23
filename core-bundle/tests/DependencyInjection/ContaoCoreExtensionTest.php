@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -203,7 +203,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(AddToSearchIndexListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+        $this->assertSame('%fragment.path%', (string) $definition->getArgument(2));
 
         $tags = $definition->getTags();
 
