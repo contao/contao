@@ -417,6 +417,14 @@
         <source>Please select an image from the files directory.</source>
         <target>ファイルディレクトリから画像を選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.invisible.0">
+        <source>Invisible</source>
+        <target>非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible.1">
+        <source>Hide the form field on the website.</source>
+        <target>フォームの項目をウェブサイトに表示しません。</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
         <target>項目の種類と名前</target>
@@ -456,6 +464,10 @@
       <trans-unit id="tl_form_field.image_legend">
         <source>Image button</source>
         <target>画像ボタン</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible_legend">
+        <source>Visibility</source>
+        <target>可視性</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New field</source>
