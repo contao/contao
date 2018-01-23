@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -69,7 +69,7 @@ class ModuleCalendar extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
-		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
 			return '';
 		}
