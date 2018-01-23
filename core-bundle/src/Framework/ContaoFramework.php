@@ -26,7 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -101,11 +100,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     ];
 
     /**
-     * @param RequestStack     $requestStack
-     * @param RouterInterface  $router
-     * @param ScopeMatcher     $scopeMatcher
-     * @param string           $rootDir
-     * @param int              $errorLevel
+     * @param RequestStack    $requestStack
+     * @param RouterInterface $router
+     * @param ScopeMatcher    $scopeMatcher
+     * @param string          $rootDir
+     * @param int             $errorLevel
      */
     public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
