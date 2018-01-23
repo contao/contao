@@ -150,7 +150,7 @@ class FilesModel extends \Model
 			$intPid = \StringUtil::uuidToBin($intPid);
 		}
 
-		return static::findBy(array("$t.uuid=UNHEX(?)"), bin2hex($intPid), $arrOptions);
+		return static::findBy(array("$t.pid=UNHEX(?)"), bin2hex($intPid), $arrOptions);
 	}
 
 
