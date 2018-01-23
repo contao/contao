@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -57,7 +57,7 @@ class ModuleUnsubscribe extends \Module
 		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
-		if (!\is_array($this->nl_channels) || empty($this->nl_channels))
+		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
 			return '';
 		}
@@ -147,6 +147,7 @@ class ModuleUnsubscribe extends \Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
+		$this->Template->email = \Input::get('email');
 		$this->Template->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['unsubscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
@@ -191,7 +192,7 @@ class ModuleUnsubscribe extends \Module
 
 		$arrChannels = array_intersect($arrChannels, $this->nl_channels); // see #3240
 
-		if (!\is_array($arrChannels) || empty($arrChannels))
+		if (empty($arrChannels) || !\is_array($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['noChannels'];
@@ -211,7 +212,7 @@ class ModuleUnsubscribe extends \Module
 
 		$arrRemove = array_intersect($arrChannels, $arrSubscriptions);
 
-		if (!\is_array($arrRemove) || empty($arrRemove))
+		if (empty($arrRemove) || !\is_array($arrRemove))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['unsubscribed'];

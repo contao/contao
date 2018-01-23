@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -73,7 +73,7 @@ class ModuleNewsletterReader extends \Module
 		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
 
 		// Do not index or cache the page if there are no channels
-		if (!\is_array($this->nl_channels) || empty($this->nl_channels))
+		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;

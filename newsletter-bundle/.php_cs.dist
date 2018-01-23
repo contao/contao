@@ -26,6 +26,7 @@ return PhpCsFixer\Config::create()
         'array_syntax' => ['syntax' => 'short'],
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
+        'compact_nullable_typehint' => true,
         'general_phpdoc_annotation_remove' => [
             'author',
             'expectedException',
@@ -35,6 +36,7 @@ return PhpCsFixer\Config::create()
         'heredoc_to_nowdoc' => true,
         'linebreak_after_opening_tag' => true,
         'list_syntax' => ['syntax' => 'short'],
+        'no_null_property_initialization' => true,
         'no_superfluous_elseif' => true,
         'no_unreachable_default_argument_value' => true,
         'no_useless_else' => true,

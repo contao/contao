@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -144,8 +144,8 @@ class Newsletter extends \Backend
 
 			// Get page and timeout
 			$intTimeout = (\Input::get('timeout') > 0) ? \Input::get('timeout') : 1;
-			$intStart = \Input::get('start') ? \Input::get('start') : 0;
-			$intPages = \Input::get('mpc') ? \Input::get('mpc') : 10;
+			$intStart = \Input::get('start') ?: 0;
+			$intPages = \Input::get('mpc') ?: 10;
 
 			// Get recipients
 			$objRecipients = $this->Database->prepare("SELECT *, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
@@ -613,7 +613,7 @@ class Newsletter extends \Backend
 		// Add recipients
 		foreach ($arrNewsletters as $intNewsletter)
 		{
-			$intNewsletter = \intval($intNewsletter);
+			$intNewsletter = (int) $intNewsletter;
 
 			if ($intNewsletter < 1)
 			{
@@ -650,7 +650,7 @@ class Newsletter extends \Backend
 		// Activate e-mail addresses
 		foreach ($arrNewsletters as $intNewsletter)
 		{
-			$intNewsletter = \intval($intNewsletter);
+			$intNewsletter = (int) $intNewsletter;
 
 			if ($intNewsletter < 1)
 			{
@@ -756,7 +756,7 @@ class Newsletter extends \Backend
 		// Add recipients
 		foreach ($varValue as $intId)
 		{
-			$intId = \intval($intId);
+			$intId = (int) $intId;
 
 			if ($intId < 1)
 			{
@@ -895,7 +895,7 @@ class Newsletter extends \Backend
 		{
 			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
 
-			if (!\is_array($newsletters) || empty($newsletters))
+			if (empty($newsletters) || !\is_array($newsletters))
 			{
 				return array();
 			}

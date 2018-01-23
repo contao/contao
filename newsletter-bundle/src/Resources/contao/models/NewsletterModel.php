@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -111,7 +111,7 @@ class NewsletterModel extends \Model
 	 */
 	public static function findSentByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}
@@ -166,7 +166,7 @@ class NewsletterModel extends \Model
 	 */
 	public static function findSentByPids($arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}

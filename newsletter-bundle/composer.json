@@ -2,7 +2,7 @@
     "name": "contao/newsletter-bundle",
     "type": "contao-bundle",
     "description": "Adds newsletter functionality to Contao 4",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -11,16 +11,22 @@
     ],
     "require": {
         "php": "^7.1",
-        "contao/core-bundle": "^4.4",
-        "symfony/framework-bundle": "^3.3"
+        "contao/core-bundle": "self.version",
+        "symfony/framework-bundle": "^3.4"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.0"
     },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-plugin": "<2.0 || >=3.0"
+    "extra": {
+        "branch-alias": {
+            "dev-4.6": "4.6.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
@@ -37,15 +43,9 @@
         ]
     },
     "support": {
-        "docs": "https://docs.contao.org",
-        "forum": "https://community.contao.org",
         "issues": "https://github.com/contao/newsletter-bundle/issues",
-        "source": "https://github.com/contao/newsletter-bundle"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.6.x-dev"
-        },
-        "contao-manager-plugin": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/newsletter-bundle",
+        "docs": "https://docs.contao.org"
     }
 }

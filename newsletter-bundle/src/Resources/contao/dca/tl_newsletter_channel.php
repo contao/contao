@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -210,7 +210,7 @@ class tl_newsletter_channel extends Backend
 		}
 
 		// Set root IDs
-		if (!\is_array($this->User->newsletters) || empty($this->User->newsletters))
+		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
