@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -112,7 +112,7 @@ class Calendar extends \Frontend
 	{
 		$arrCalendars = \StringUtil::deserialize($arrFeed['calendars']);
 
-		if (!\is_array($arrCalendars) || empty($arrCalendars))
+		if (empty($arrCalendars) || !\is_array($arrCalendars))
 		{
 			return;
 		}

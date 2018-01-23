@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			(
 				array('tl_calendar_feed', 'checkFeedAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
 		),
 		'language' => array
 		(
@@ -241,7 +241,7 @@ class tl_calendar_feed extends Backend
 		}
 
 		// Set the root IDs
-		if (!\is_array($this->User->calendarfeeds) || empty($this->User->calendarfeeds))
+		if (empty($this->User->calendarfeeds) || !\is_array($this->User->calendarfeeds))
 		{
 			$root = array(0);
 		}
@@ -370,7 +370,7 @@ class tl_calendar_feed extends Backend
 
 		$session = $objSession->get('calendar_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}
@@ -468,7 +468,7 @@ class tl_calendar_feed extends Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (array_search($varValue, $arrFeeds) !== false)
+		if (\in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}

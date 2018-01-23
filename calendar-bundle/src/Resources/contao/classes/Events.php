@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -61,7 +61,7 @@ abstract class Events extends \Module
 	 */
 	protected function sortOutProtected($arrCalendars)
 	{
-		if (!\is_array($arrCalendars) || empty($arrCalendars))
+		if (empty($arrCalendars) || !\is_array($arrCalendars))
 		{
 			return $arrCalendars;
 		}
@@ -83,7 +83,7 @@ abstract class Events extends \Module
 
 					$groups = \StringUtil::deserialize($objCalendar->groups);
 
-					if (!\is_array($groups) || empty($groups) || \count(array_intersect($groups, $this->User->groups)) < 1)
+					if (empty($groups) || !\is_array($groups) || \count(array_intersect($groups, $this->User->groups)) < 1)
 					{
 						continue;
 					}

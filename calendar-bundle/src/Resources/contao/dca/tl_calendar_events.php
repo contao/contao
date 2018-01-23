@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -188,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
 		),
 		'author' => array
 		(
@@ -582,7 +582,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Set root IDs
-		if (!\is_array($this->User->calendars) || empty($this->User->calendars))
+		if (empty($this->User->calendars) || !\is_array($this->User->calendars))
 		{
 			$root = array(0);
 		}
@@ -963,7 +963,7 @@ class tl_calendar_events extends Backend
 
 		$session = $objSession->get('calendar_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

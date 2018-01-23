@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -76,7 +76,7 @@ class ModuleEventReader extends \Events
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
 
 		// Do not index or cache the page if there are no calendars
-		if (!\is_array($this->cal_calendar) || empty($this->cal_calendar))
+		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -305,7 +305,7 @@ class ModuleEventReader extends \Events
 		}
 
 		// Adjust the comments headline level
-		$intHl = min(\intval(str_replace('h', '', $this->hl)), 5);
+		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
 		$this->import('Comments');
