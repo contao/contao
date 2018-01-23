@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -166,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			(
 				array('tl_faq', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
 		),
 		'author' => array
 		(

@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -75,7 +75,7 @@ class ModuleFaqReader extends \Module
 		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
 
 		// Do not index or cache the page if there are no categories
-		if (!\is_array($this->faq_categories) || empty($this->faq_categories))
+		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -177,7 +177,7 @@ class ModuleFaqReader extends \Module
 		}
 
 		// Adjust the comments headline level
-		$intHl = min(\intval(str_replace('h', '', $this->hl)), 5);
+		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
 		$this->import('Comments');
