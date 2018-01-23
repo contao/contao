@@ -2,7 +2,7 @@
     "name": "contao/installation-bundle",
     "type": "contao-bundle",
     "description": "Required to install and update Contao 4",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.1",
-        "contao/core-bundle": "^4.5",
+        "contao/core-bundle": "self.version",
         "sensio/distribution-bundle": "^5.0",
         "sensiolabs/ansi-to-html": "^1.1",
         "symfony/filesystem": "^3.4",
@@ -46,8 +46,6 @@
             "Contao\\InstallationBundle\\Test\\": "tests/"
         }
     },
-    "minimum-stability": "RC",
-    "prefer-stable": true,
     "support": {
         "issues": "https://github.com/contao/installation-bundle/issues",
         "forum": "https://community.contao.org",
