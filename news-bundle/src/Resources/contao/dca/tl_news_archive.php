@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -291,7 +291,7 @@ class tl_news_archive extends Backend
 		}
 
 		// Set root IDs
-		if (!\is_array($this->User->news) || empty($this->User->news))
+		if (empty($this->User->news) || !\is_array($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -420,7 +420,7 @@ class tl_news_archive extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

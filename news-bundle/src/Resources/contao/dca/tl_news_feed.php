@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			(
 				array('tl_news_feed', 'checkFeedAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
 		),
 		'language' => array
 		(
@@ -241,7 +241,7 @@ class tl_news_feed extends Backend
 		}
 
 		// Set the root IDs
-		if (!\is_array($this->User->newsfeeds) || empty($this->User->newsfeeds))
+		if (empty($this->User->newsfeeds) || !\is_array($this->User->newsfeeds))
 		{
 			$root = array(0);
 		}
@@ -370,7 +370,7 @@ class tl_news_feed extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}
@@ -469,7 +469,7 @@ class tl_news_feed extends Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (array_search($varValue, $arrFeeds) !== false)
+		if (\in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}

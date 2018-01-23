@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -194,7 +194,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8mb4_bin NOT NULL default ''"
+			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
 		),
 		'author' => array
 		(
@@ -527,7 +527,7 @@ class tl_news extends Backend
 		}
 
 		// Set the root IDs
-		if (!\is_array($this->User->news) || empty($this->User->news))
+		if (empty($this->User->news) || !\is_array($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -835,7 +835,7 @@ class tl_news extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (!\is_array($session) || empty($session))
+		if (empty($session) || !\is_array($session))
 		{
 			return;
 		}

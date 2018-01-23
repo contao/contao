@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -174,7 +174,7 @@ class NewsModel extends \Model
 	 */
 	public static function findPublishedByParentAndIdOrAlias($varId, $arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}
@@ -206,7 +206,7 @@ class NewsModel extends \Model
 	 */
 	public static function findPublishedByPids($arrPids, $blnFeatured=null, $intLimit=0, $intOffset=0, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}
@@ -253,7 +253,7 @@ class NewsModel extends \Model
 	 */
 	public static function countPublishedByPids($arrPids, $blnFeatured=null, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return 0;
 		}
@@ -356,7 +356,7 @@ class NewsModel extends \Model
 	 */
 	public static function findPublishedFromToByPids($intFrom, $intTo, $arrPids, $intLimit=0, $intOffset=0, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}
@@ -394,7 +394,7 @@ class NewsModel extends \Model
 	 */
 	public static function countPublishedFromToByPids($intFrom, $intTo, $arrPids, array $arrOptions=array())
 	{
-		if (!\is_array($arrPids) || empty($arrPids))
+		if (empty($arrPids) || !\is_array($arrPids))
 		{
 			return null;
 		}

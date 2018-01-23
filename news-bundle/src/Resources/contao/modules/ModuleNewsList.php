@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -57,7 +57,7 @@ class ModuleNewsList extends \ModuleNews
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Return if there are no archives
-		if (!\is_array($this->news_archives) || empty($this->news_archives))
+		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
 			return '';
 		}
@@ -72,7 +72,7 @@ class ModuleNewsList extends \ModuleNews
 	protected function compile()
 	{
 		$limit = null;
-		$offset = \intval($this->skipFirst);
+		$offset = (int) $this->skipFirst;
 
 		// Maximum number of items
 		if ($this->numberOfItems > 0)
@@ -129,7 +129,7 @@ class ModuleNewsList extends \ModuleNews
 			// Set limit and offset
 			$limit = $this->perPage;
 			$offset += (max($page, 1) - 1) * $this->perPage;
-			$skip = \intval($this->skipFirst);
+			$skip = (int) $this->skipFirst;
 
 			// Overall limit
 			if ($offset + $limit > $total + $skip)

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -39,12 +39,12 @@ class GeneratePageListener
     /**
      * Adds the feeds to the page header.
      *
-     * @param PageModel          $objPage
-     * @param LayoutModel|object $objLayout
+     * @param PageModel          $pageModel
+     * @param LayoutModel|object $layoutModel
      */
-    public function onGeneratePage(PageModel $objPage, LayoutModel $objLayout): void
+    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel): void
     {
-        $newsfeeds = StringUtil::deserialize($objLayout->newsfeeds);
+        $newsfeeds = StringUtil::deserialize($layoutModel->newsfeeds);
 
         if (empty($newsfeeds) || !\is_array($newsfeeds)) {
             return;

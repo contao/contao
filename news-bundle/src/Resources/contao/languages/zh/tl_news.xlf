@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
+        <target>自定义URL</target>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
+        <target>点击“更多...”按钮，防蚊纸会被重定向到自定义URL。</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>

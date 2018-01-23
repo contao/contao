@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -75,7 +75,7 @@ class ModuleNewsReader extends \ModuleNews
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
 		// Do not index or cache the page if there are no archives
-		if (!\is_array($this->news_archives) || empty($this->news_archives))
+		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -146,7 +146,7 @@ class ModuleNewsReader extends \ModuleNews
 		}
 
 		// Adjust the comments headline level
-		$intHl = min(\intval(str_replace('h', '', $this->hl)), 5);
+		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
 		$this->import('Comments');

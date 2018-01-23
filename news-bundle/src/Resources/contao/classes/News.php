@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -112,7 +112,7 @@ class News extends \Frontend
 	{
 		$arrArchives = \StringUtil::deserialize($arrFeed['archives']);
 
-		if (!\is_array($arrArchives) || empty($arrArchives))
+		if (empty($arrArchives) || !\is_array($arrArchives))
 		{
 			return;
 		}

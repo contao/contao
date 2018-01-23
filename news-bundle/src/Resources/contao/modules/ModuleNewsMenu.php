@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * Copyright (c) 2005-2018 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -70,7 +70,7 @@ class ModuleNewsMenu extends \ModuleNews
 
 		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
 
-		if (!\is_array($this->news_archives) || empty($this->news_archives))
+		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
 			return '';
 		}
@@ -191,7 +191,7 @@ class ModuleNewsMenu extends \ModuleNews
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;
-				$intMonth = (\intval($intMonth) - 1);
+				$intMonth = (int) $intMonth - 1;
 
 				$quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
 
