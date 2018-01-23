@@ -52,8 +52,6 @@
             "Contao\\ManagerBundle\\Tests\\": "tests/"
         }
     },
-    "minimum-stability": "RC",
-    "prefer-stable": true,
     "bin": [
         "bin/contao-api",
         "bin/contao-console"
