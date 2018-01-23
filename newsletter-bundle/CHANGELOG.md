@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-### DEV
+### 4.5.3 (2018-01-23)
 
  * Use a given e-mail address in the unsubscribe module (see #12).
 
