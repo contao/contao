@@ -47,7 +47,7 @@ class AddToSearchIndexListener
     }
 
     /**
-     * Forwards the request to the Frontend class if there is a page object.
+     * Checks if the request can be indexed and forwards it accordingly.
      *
      * @param PostResponseEvent $event
      */
