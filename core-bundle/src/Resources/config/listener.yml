@@ -12,7 +12,6 @@ services:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
             - "@contao.framework"
-            - "@contao.routing.scope_matcher"
             - "%fragment.path%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }

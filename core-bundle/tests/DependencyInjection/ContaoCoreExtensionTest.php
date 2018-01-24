@@ -203,8 +203,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(AddToSearchIndexListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('%fragment.path%', (string) $definition->getArgument(2));
+        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 

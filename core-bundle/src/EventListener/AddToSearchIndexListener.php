@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Frontend;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -26,24 +25,17 @@ class AddToSearchIndexListener
     private $framework;
 
     /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
      * @var string
      */
     private $fragmentPath;
 
     /**
      * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
      * @param string                   $fragmentPath
      */
-    public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher, string $fragmentPath = '_fragment')
+    public function __construct(ContaoFrameworkInterface $framework, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
         $this->fragmentPath = $fragmentPath;
     }
 
@@ -54,7 +46,7 @@ class AddToSearchIndexListener
      */
     public function onKernelTerminate(PostResponseEvent $event): void
     {
-        if (!$this->framework->isInitialized() || !$this->scopeMatcher->isFrontendMasterRequest($event)) {
+        if (!$this->framework->isInitialized()) {
             return;
         }
 
