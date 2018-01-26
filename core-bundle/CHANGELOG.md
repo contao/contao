@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Show redirect pages with unpublished targets in the front end preview.
+
 ### 4.4.13 (2018-01-23)
 
  * Quote reserved words in database queries (see #1262).

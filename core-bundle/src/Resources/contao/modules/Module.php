@@ -357,8 +357,10 @@ abstract class Module extends \Frontend
 							$objNext = \PageModel::findFirstPublishedRegularByPid($objSubpage->id);
 						}
 
+						$isInvisible = !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time());
+
 						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
+						if (!$objNext instanceof PageModel || ($isInvisible && !BE_USER_LOGGED_IN))
 						{
 							continue 2;
 						}
