@@ -89,6 +89,7 @@
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
         "friendsofphp/php-cs-fixer": "^2.6",
+        "leofeyer/optimize-native-functions-fixer": "^1.0",
         "lexik/maintenance-bundle": "^2.0",
         "monolog/monolog": "^1.22",
         "php-http/guzzle6-adapter": "^1.1",
