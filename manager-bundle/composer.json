@@ -29,6 +29,7 @@
         "composer/composer": "^1.0",
         "contao/test-case": "^1.1",
         "friendsofphp/php-cs-fixer": "^2.6",
+        "leofeyer/optimize-native-functions-fixer": "^1.0",
         "ocramius/proxy-manager": "^2.0",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^6.1",
