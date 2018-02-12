@@ -129,7 +129,7 @@ class PickerBuilder implements PickerBuilderInterface
 
         return $this->router->generate(
             'contao_backend_picker',
-            ['context' => $context, 'extras' => $extras, 'value' => $value]
+            compact('context', 'extras', 'value')
         );
     }
 }
