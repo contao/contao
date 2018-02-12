@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Do not log custom insert tags as "unknown" if they have been replaced (see #1295).
  * Show redirect pages with unpublished targets in the front end preview.
 
 ### 4.4.13 (2018-01-23)
