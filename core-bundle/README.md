@@ -65,7 +65,6 @@ class AppKernel extends Kernel
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
-            new Nelmio\SecurityBundle\NelmioSecurityBundle(),
             new Contao\CoreBundle\ContaoCoreBundle(),
         ];
     }
