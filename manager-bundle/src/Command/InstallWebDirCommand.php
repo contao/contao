@@ -106,7 +106,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         }
 
         // Return if both username and password are set or both are not set
-        if ($user && $password || false === $user && false === $password) {
+        if (($user && $password) || (false === $user && false === $password)) {
             return;
         }
 
