@@ -1,5 +1,9 @@
 # Contao manager bundle change log
 
+### DEV
+
+ * Remove "allow_reload" in favor of the "expect" header (see terminal42/header-replay-bundle#11).
+
 ### 4.4.5 (2017-09-18)
 
  * Catch the DriverException if the database connection fails (see contao/managed-edition#27).

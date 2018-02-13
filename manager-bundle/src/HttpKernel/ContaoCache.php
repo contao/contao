@@ -47,12 +47,4 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         return parent::fetch($request, $catch);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getOptions()
-    {
-        return ['allow_reload' => true];
-    }
 }
