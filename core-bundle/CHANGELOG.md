@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Correctly render the article list if there are no articles (see #1351).
  * Do not log custom insert tags as "unknown" if they have been replaced (see #1295).
  * Show redirect pages with unpublished targets in the front end preview.
 
