@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.5.4 (2018-02-14)
 
  * Preserve custom CSS classes in the back end navigation (see #1357).
 
