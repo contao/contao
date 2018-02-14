@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-### DEV
+### 4.4.14 (2018-02-14)
 
  * Log database connection errors (see contao/core-bundle#1324).
 
