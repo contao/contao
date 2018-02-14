@@ -64,7 +64,6 @@ class BackendMenuListener
             foreach ($categoryData['modules'] as $moduleName => $moduleData) {
                 $moduleNode = $this->createNode($factory, $moduleName, $moduleData);
                 $moduleNode->setCurrent((bool) $moduleData['isActive']);
-                $moduleNode->setAttribute('class', $moduleName);
 
                 $categoryNode->addChild($moduleNode);
             }
@@ -82,6 +81,14 @@ class BackendMenuListener
      */
     private function createNode(FactoryInterface $factory, string $name, array $attributes): ItemInterface
     {
+        $classes = [];
+
+        // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
+        if (isset($attributes['class'])) {
+            $classes = array_flip(array_filter(explode(' ', $attributes['class'])));
+            unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
+        }
+
         return $factory->createItem(
             $name,
             [
@@ -89,6 +96,7 @@ class BackendMenuListener
                 'attributes' => [
                     'title' => $attributes['title'],
                     'href' => $attributes['href'],
+                    'class' => implode(' ', array_keys($classes)),
                 ],
             ]
         );

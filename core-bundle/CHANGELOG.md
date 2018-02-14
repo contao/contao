@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Preserve custom CSS classes in the back end navigation (see #1357).
+
 ### 4.5.3 (2018-01-23)
 
  * Correctly select folders as gallery source (see #1328).

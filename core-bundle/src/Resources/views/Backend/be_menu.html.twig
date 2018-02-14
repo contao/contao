@@ -4,7 +4,7 @@
 
     <ul class="tl_level_1">
         {% for item in tree %}
-            <li class="tl_level_1_group {% if item.displayChildren %}node-expanded{% else %}node-collapsed{% endif %}{% if item is knp_menu_ancestor %} trail{% endif %}">
+            <li class="tl_level_1_group {% if item.displayChildren %}node-expanded{% else %}node-collapsed{% endif %}{% if item is knp_menu_ancestor %} trail{% endif %} {{ item.attributes.class }}">
                 <a href="{{ item.attributes.href ?: item.uri }}" title="{{ item.attributes.title }}" class="group-{{ item.name }}" onclick="return AjaxRequest.toggleNavigation(this, '{{ item.name }}', '{{ path('contao_backend') }}')">{{ item.label }}</a>
             </li>
             {% if item.hasChildren %}
@@ -12,7 +12,7 @@
                     <ul class="tl_level_2">
                         {% for child in item.children %}
                             <li{% if child is knp_menu_current %} class="active"{% endif %}>
-                                <a href="{{ child.attributes.href ?: item.uri }}" title="{{ child.attributes.title }}" class="navigation {{ child.attributes.class }}">{{ child.label|raw }}</a>
+                                <a href="{{ child.attributes.href ?: item.uri }}" title="{{ child.attributes.title }}" class="{{ child.attributes.class }}">{{ child.label|raw }}</a>
                             </li>
                         {% endfor %}
                     </ul>
