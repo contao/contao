@@ -1,391 +1,393 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar_events.php" source-language="en" target-language="pl">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar_events.php" source-language="en" target-language="pt">
     <body>
       <trans-unit id="tl_calendar_events.title.0">
         <source>Title</source>
-        <target>Nagłówek</target>
+        <target>Título</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.title.1">
         <source>Please enter the event title.</source>
-        <target>Wpisz tytuł wydarzenia.</target>
+        <target>Favor inserir o título do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.0">
         <source>Event alias</source>
-        <target>Alias wydarzenia</target>
+        <target>Apelido do evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.1">
         <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
-        <target>Alias wydarzenia jest unikalnym odwołaniem do wydarzenia, który może być używany zamiast jej ID.</target>
+        <target>O apelido do evento é uma referência única ao evento o qual pode ser chamado ao invés de ID do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.1">
         <source>Here you can change the author of the event.</source>
-        <target>Tutaj możesz zmienić autora wydarzenia.</target>
+        <target>Aqui você pode mudar o autor do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addTime.0">
         <source>Add time</source>
-        <target>Wprowadź czas</target>
+        <target>Adicionar horário</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addTime.1">
         <source>Add a start and end time to the event.</source>
-        <target>Wprowadź czas rozpoczęcia i zakończenia wydarzenia.</target>
+        <target>Adicionar os horários de início e de encerramento do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startTime.0">
         <source>Start time</source>
-        <target>Rozpoczęcie</target>
+        <target>Horário de início</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startTime.1">
         <source>Please enter the start time according to the global time format.</source>
-        <target>Wprowadź czas rozpoczęcia.</target>
+        <target>Por favor digite o horário de início de acordo com o formato global de tempo.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.0">
         <source>End time</source>
-        <target>Zakończenie</target>
+        <target>Horário de encerramento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Wprowadź czas zakończenia.</target>
+        <target>Por favor digite o horário de encerramento de acordo com o formato global de tempo.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
-        <target>Data rozpoczęcia</target>
+        <target>Data de início</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.1">
         <source>Please enter the start date according to the global date format.</source>
-        <target>Wprowadź dzień rozpoczęcia wydarzenia.</target>
+        <target>Favor inserir a data de início do evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endDate.0">
         <source>End date</source>
-        <target>Data zakończenia</target>
+        <target>Data de encerramento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endDate.1">
         <source>Leave blank to create a single day event.</source>
-        <target>Wprowadź dzień zakończenia wydarzenia lub pozostaw to pole puste dla wydarzenia całodziennego.</target>
+        <target>Favor inserir a data de encerramento do evento ou deixe vazio caso seja um evento de um único dia.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
-        <target>Nazwa lokalizacji</target>
+        <target>Localização</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
         <source>Here you can enter the name of the event location.</source>
-        <target>Tutaj możesz wprowadzić nazwę lokalizacji wydarzenia.</target>
+        <target>Aqui pode introduzir o nome da localização do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.0">
         <source>Location address</source>
-        <target>Adres lokalizacji</target>
+        <target>Endereço da localização</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.1">
         <source>Here you can enter the address of the event location.</source>
-        <target>Tutaj możesz wprowadzić adres lokalizacji wydarzenia.</target>
+        <target>Aqui pode escrever o endereço/morada do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
-        <target>Tekst zajawki</target>
+        <target>Texto de chamada</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.1">
         <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Tekst ten zazwyczaj jest używany zamiast głównego tekstu i kończy go link &quot;Czytaj dalej...&quot;.</target>
+        <target>O texto de chamada normalmente é mostrado, em vez do texto completo, seguido por um link &quot;leia mais...&quot;</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>
-        <target>Szczegóły wydarzenia</target>
+        <target>Detalhes do evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.1">
         <source>Here you can enter the event text.</source>
-        <target>Wpisz szczegóły wydarzenia.</target>
+        <target>Por favor digite os detalhes do evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.0">
         <source>Add an image</source>
-        <target>Dodaj obrazek</target>
+        <target>Adicionar imagem</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.1">
         <source>Add an image to the event.</source>
-        <target>Jeśli wybierzesz tą opcję, do wydarzenia zostanie dodany obrazek.</target>
+        <target>Se você escolher esta opção, uma imagem será adicionada ao evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.0">
         <source>Repeat event</source>
-        <target>Wydarzeni cykliczne</target>
+        <target>Evento recorrente</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.1">
         <source>Create a recurring event.</source>
-        <target>Powtórz aktualne wydarzenie.</target>
+        <target>Repete o evento atual.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEach.0">
         <source>Interval</source>
-        <target>Przerwa</target>
+        <target>Intervalo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEach.1">
         <source>Here you can set the recurrence interval.</source>
-        <target>Określ czas przerwy.</target>
+        <target>Por favor, configure o intervalo de tempo.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurrences.0">
         <source>Recurrences</source>
-        <target>Powtórzenia</target>
+        <target>Recorrências</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurrences.1">
         <source>Set to 0 for unlimited recurrences.</source>
-        <target>Określ liczbę powtórzeń (0 = nieograniczone)</target>
+        <target>Por favor, configure um número de recorrências (0 = ilimitado).</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEnd">
         <source>End of recurring event</source>
-        <target>Koniec powtarzanego wydarzenia</target>
+        <target>Fim de evento regular</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Dodaj załącznik</target>
+        <target>Adicionar anexo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.1">
         <source>Add one or more downloadable files to the event.</source>
-        <target>Dodaj do wydarzenia jeden lub więcej plików do pobrania.</target>
+        <target>Adicionar ao evento um ou mais arquivos para download.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.0">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Anexos</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.1">
         <source>Please choose the files you want to attach.</source>
-        <target>Wybierz plik, który chcesz załączyć do odpowiedzi.</target>
+        <target>Por favor escolha os arquivos para serem anexados.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source.0">
         <source>Redirect target</source>
-        <target>Strona źródłowa</target>
+        <target>Alvo de redirecionamento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source.1">
         <source>Here you can override the default redirect target.</source>
-        <target>Wybierz czy linki do treści aktualności mają prowadzić do wewnętrznej czy zewnętrznej strony.</target>
+        <target>Link para uma página externa ao invés da página padrão.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.default.0">
         <source>Use default</source>
-        <target>Użyj domyślnej</target>
+        <target>Usar padrão</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.default.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the calendar.</source>
-        <target>Po kliknięciu w odnośnik &quot;czytaj więcej...&quot; użytkownik będzie przekierowany na domyślną stronę kalendarza.</target>
+        <target>Ao clicar no botão &quot;Leia mais...&quot; os visitantes serão redirecionados para a página padrão do calendário.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.internal.0">
         <source>Page</source>
-        <target>Wewnętrzna strona</target>
+        <target>Página</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.internal.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an internal page.</source>
-        <target>Po kliknięciu w odnośnik &quot;czytaj więcej...&quot; użytkownik będzie przekierowany na inną stronę naszego serwisu.</target>
+        <target>Ao clicar no botão &quot;Leia mais...&quot; os visitantes serão redirecionados para uma página interna.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.0">
         <source>Article</source>
-        <target>ID artykułu</target>
+        <target>ID do artigo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
-        <target>Kliknięcie w przycisk &quot;czytaj więcej...&quot;, przekieruje do artykułu</target>
+        <target>Ao clicar no &quot;leia mais ...&quot; botão, o visitante será redirecionado para um artigo.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
         <source>Custom URL</source>
+        <target>URL personalizado</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>Ao clicar no botão &quot;ler mais ...&quot; , os visitantes serão redireccionados para o URL personalizado.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
-        <target>Skocz do strony</target>
+        <target>Pular para página</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
-        <target>Wybierz stronę, na którą użytkownik zostanie przekierowany.</target>
+        <target>Por favor selecione a página para a qual os visitantes serão redirecionados.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.0">
         <source>Article</source>
-        <target>ID artykułu</target>
+        <target>ID do artigo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
-        <target>Wybierz artykuł na który zostaną przeniesieni użytkownicy kiedy klikną w wydarzenie.</target>
+        <target>Por favor, escolha o artigo para que os visitantes será redirecionado ao clicar no evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.0">
         <source>CSS class</source>
-        <target>Klasa CSS</target>
+        <target>Classe CSS</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
-        <target>Tutaj możesz wprowadzić jedną lub więcej klas CSS.</target>
+        <target>Aqui você pode inserir uma ou mais classes CSS.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.0">
         <source>Disable comments</source>
-        <target>Wyłącz komentarze</target>
+        <target>Desativar comentários</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.1">
         <source>Do not allow comments for this particular event.</source>
-        <target>Nie zezwalaj komentowania tego wydarzenia.</target>
+        <target>Não permitir comentários para este evento particular.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
-        <target>Opublikuj</target>
+        <target>Publicado</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>
-        <target>Wydarzenie nie będzie widoczne dopóki nie zostanie opublikowane.</target>
+        <target>O evento não será visível no seu website até que ele seja publicado.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Ínicio do envelope</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>Do not show the event on the website before this day.</source>
-        <target>Jeśli wpiszesz tutaj datę, wydarzenie nie będzie widoczne na stronie przed tą datą.</target>
+        <target>Se você inserir uma data aqui o evento atual não será mostrado no site antes deste dia.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Fim do envelope</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>Do not show the event on the website on and after this day.</source>
-        <target>Jeśli wpiszesz tutaj datę, wydarzenie nie będzie widoczne na stronie po tej dacie.</target>
+        <target>Se você inserir uma data aqui o evento atual não será mostrado no site após este dia.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
-        <target>Data rewizji</target>
+        <target>Data da revisão</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data i czas ostatniej rewizji</target>
+        <target>Data e hora da última revisão</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.title_legend">
         <source>Title and author</source>
-        <target>Tytuł i autor</target>
+        <target>Título e autor</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
-        <target>Data i czas</target>
+        <target>Data e hora</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>
-        <target>Szczegóły wydarzenia</target>
+        <target>Detalhes do evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.text_legend">
         <source>Event text</source>
-        <target>Szczegóły wydarzenia</target>
+        <target>Detalhes do evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.image_legend">
         <source>Image settings</source>
-        <target>Ustawienia obrazka</target>
+        <target>Configurações de imagem</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring_legend">
         <source>Recurrence settings</source>
-        <target>Ustawienia powtórzeń</target>
+        <target>Configurações de recorrência</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure_legend">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Anexos</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
-        <target>Strona źródłowa</target>
+        <target>Alvo de redirecionamento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
-        <target>Zaawansowane ustawienia</target>
+        <target>Configurações avançadas</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Configurações de Publicação</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.days">
         <source>day(s)</source>
-        <target>dzień/dni</target>
+        <target>dia(s)</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.weeks">
         <source>week(s)</source>
-        <target>tydzień/tygodni</target>
+        <target>semana(s)</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.months">
         <source>month(s)</source>
-        <target>miesiąc/miesięcy</target>
+        <target>mês(es)</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.years">
         <source>year(s)</source>
-        <target>rok/lat</target>
+        <target>ano(s)</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New event</source>
-        <target>Nowe wydarzenie</target>
+        <target>Novo evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
-        <target>Utwórz nowe wydarzenie</target>
+        <target>Criar um novo evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.show.0">
         <source>Event details</source>
-        <target>Szczegóły wydarzenia</target>
+        <target>Detalhes do evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.show.1">
         <source>Show the details of event ID %s</source>
-        <target>Pokaż szczegóły wydarzenia ID %s</target>
+        <target>Mostrar detalhes do evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.edit.0">
         <source>Edit event</source>
-        <target>Edytuj wydarzenie</target>
+        <target>Editar evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
-        <target>Edytuj wydarzenie ID %s</target>
+        <target>Editar evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy.0">
         <source>Duplicate event</source>
-        <target>Kopiuj wydarzenie</target>
+        <target>Copiar evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy.1">
         <source>Duplicate event ID %s</source>
-        <target>Kopiuj wydarzenie ID %s</target>
+        <target>Copiar evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut.0">
         <source>Move event</source>
-        <target>Przenieś wydarzenie</target>
+        <target>Mover evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>
-        <target>Przenieś wydarzenie ID %s</target>
+        <target>Mover evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.delete.0">
         <source>Delete event</source>
-        <target>Skasuj wydarzenie</target>
+        <target>Remover evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.delete.1">
         <source>Delete event ID %s</source>
-        <target>Skasuj wydarzenie ID %s</target>
+        <target>Remover evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.0">
         <source>Publish/unpublish event</source>
-        <target>Publikuj/nie publikuj wydarzenia</target>
+        <target>Publicar/despublicar evento</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Publish/unpublish event ID %s</source>
-        <target>Publikuj/nie publikuj wydarzenia ID %s</target>
+        <target>Publicar/despublicar evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader.0">
         <source>Edit calendar</source>
-        <target>Edytuj kalendarz</target>
+        <target>Editar calendário</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader.1">
         <source>Edit the calendar settings</source>
-        <target>Edytuj aktualny kalendarz</target>
+        <target>Editar o calendário atual</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editmeta.0">
         <source>Edit event settings</source>
-        <target>Edytuj ustawienia wydarzenia</target>
+        <target>Editar configurações de eventos</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editmeta.1">
         <source>Edit the event settings</source>
-        <target>Edytuj ustawienia wydarzenia</target>
+        <target>Edite as configurações de eventos</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
-        <target>Wklej do tego kalendarza</target>
+        <target>Colar em este calendário</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.1">
         <source>Paste after event ID %s</source>
-        <target>Wklej po wydarzeniu o ID %s</target>
+        <target>Colar após %s do ID de evento</target>
       </trans-unit>
     </body>
   </file>
