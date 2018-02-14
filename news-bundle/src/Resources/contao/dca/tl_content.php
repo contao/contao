@@ -93,7 +93,7 @@ class tl_content_news extends Backend
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				$objSession->replace($session);
 				break;
 
