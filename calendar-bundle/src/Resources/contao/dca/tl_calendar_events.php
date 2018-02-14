@@ -642,7 +642,7 @@ class tl_calendar_events extends Backend
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCalendar->fetchEach('id'));
 				$objSession->replace($session);
 				break;
 
