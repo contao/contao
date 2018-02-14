@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Event location</source>
-        <target>Lokacja wydarzenia</target>
+        <target>Lokalizacja wydarzenia</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
         <source>Here you can enter the event location.</source>
-        <target>Tutaj możesz wprowadzić lokację wydarzenia.</target>
+        <target>Tutaj możesz wprowadzić lokalizację wydarzenia.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
