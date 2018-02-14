@@ -1,6 +1,6 @@
 # Contao manager bundle change log
 
-### DEV
+### 4.4.14 (2018-02-14)
 
  * Remove "allow_reload" in favor of the "expect" header (see terminal42/header-replay-bundle#11).
 
