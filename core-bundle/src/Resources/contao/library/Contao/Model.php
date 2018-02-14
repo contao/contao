@@ -626,8 +626,8 @@ abstract class Model
 			$arrValues = \StringUtil::deserialize($this->$strKey, true);
 			$strField = $arrRelation['table'] . '.' . \Database::quoteIdentifier($arrRelation['field']);
 
-			// Handle UUIDs (see #6525)
-			if ($strField == 'tl_files.uuid')
+			// Handle UUIDs (see #6525 and #8850)
+			if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 			{
 				/** @var FilesModel $strClass */
 				$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);

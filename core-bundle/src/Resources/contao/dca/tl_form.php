@@ -415,7 +415,7 @@ class tl_form extends Backend
 				}
 				else
 				{
-					$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $root);
+					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
 				}
 				$objSession->replace($session);
 				break;

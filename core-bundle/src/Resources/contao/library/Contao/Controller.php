@@ -1681,7 +1681,7 @@ abstract class Controller extends \System
 		// Do not urlEncode() here because getImage() already does (see #3817)
 		$objTemplate->src = static::addFilesUrlTo($src);
 		$objTemplate->singleSRC = $arrItem['singleSRC'];
-		$objTemplate->linkTitle = $arrItem['linkTitle'] ?: $arrItem['title'];
+		$objTemplate->linkTitle = \StringUtil::specialchars($arrItem['linkTitle'] ?: $arrItem['title']);
 		$objTemplate->fullsize = $arrItem['fullsize'] ? true : false;
 		$objTemplate->addBefore = ($arrItem['floating'] != 'below');
 		$objTemplate->margin = static::generateMargin($arrMargin);

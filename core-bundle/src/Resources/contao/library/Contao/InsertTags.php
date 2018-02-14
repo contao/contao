@@ -997,7 +997,7 @@ class InsertTags extends \Controller
 							if ($varValue !== false)
 							{
 								$arrCache[$strTag] = $varValue;
-								break;
+								break 2;
 							}
 						}
 					}

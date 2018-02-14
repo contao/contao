@@ -109,6 +109,7 @@ class MetaWizard extends \Widget
 		$taken = array();
 
 		$this->import('Database');
+		$this->import('BackendUser', 'User');
 
 		// Only show the root page languages (see #7112, #7667)
 		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
@@ -121,6 +122,32 @@ class MetaWizard extends \Widget
 		}
 
 		$languages = array_intersect_key($languages, array_flip($existing));
+
+		// Prefer languages matching the back end user's language (see #1358)
+		uksort($languages, function ($a, $b)
+		{
+			if ($a == $this->User->language)
+			{
+				return -1;
+			}
+
+			if ($b == $this->User->language)
+			{
+				return 1;
+			}
+
+			if (strncmp($a, $this->User->language, 2) === 0)
+			{
+				return -1;
+			}
+
+			if (strncmp($b, $this->User->language, 2) === 0)
+			{
+				return 1;
+			}
+
+			return 0;
+		});
 
 		// Make sure there is at least an empty array
 		if (empty($this->varValue) || !\is_array($this->varValue))

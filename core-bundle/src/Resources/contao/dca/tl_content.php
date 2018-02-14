@@ -948,7 +948,7 @@ class tl_content extends Backend
 										 ->execute(CURRENT_ID);
 
 				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objCes->fetchEach('id'));
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
 				$objSession->replace($session);
 				break;
 
