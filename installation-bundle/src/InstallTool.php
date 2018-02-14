@@ -16,6 +16,7 @@ use Contao\Backend;
 use Contao\Config;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -33,20 +34,20 @@ class InstallTool
     private $rootDir;
 
     /**
-     * @var string
+     * @var LoggerInterface
      */
-    private $logDir;
+    private $logger;
 
     /**
-     * @param Connection $connection
-     * @param string     $rootDir
-     * @param string     $logDir
+     * @param Connection      $connection
+     * @param string          $rootDir
+     * @param LoggerInterface $logger
      */
-    public function __construct(Connection $connection, string $rootDir, string $logDir)
+    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
-        $this->logDir = $logDir;
+        $this->logger = $logger;
     }
 
     /**
@@ -130,13 +131,15 @@ class InstallTool
      */
     public function canConnectToDatabase(?string $name): bool
     {
-        if (null === $this->connection) {
+        if (null === $name || null === $this->connection) {
             return false;
         }
 
         try {
             $this->connection->connect();
         } catch (\Exception $e) {
+            $this->logException($e);
+
             return false;
         }
 
@@ -145,6 +148,8 @@ class InstallTool
         try {
             $this->connection->query('use '.$quotedName);
         } catch (DBALException $e) {
+            $this->logException($e);
+
             return false;
         }
 
@@ -493,16 +498,6 @@ class InstallTool
      */
     public function logException(\Exception $e): void
     {
-        error_log(
-            sprintf(
-                "PHP Fatal error: %s in %s on line %s\n%s\n",
-                $e->getMessage(),
-                $e->getFile(),
-                $e->getLine(),
-                $e->getTraceAsString()
-            ),
-            3,
-            $this->logDir.'/prod-'.date('Y-m-d').'.log'
-        );
+        $this->logger->critical('An exception occurred.', ['exception' => $e]);
     }
 }

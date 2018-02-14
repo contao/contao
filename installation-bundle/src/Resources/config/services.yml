@@ -4,7 +4,7 @@ services:
         arguments:
             - "@database_connection"
             - "%kernel.project_dir%"
-            - "%kernel.logs_dir%"
+            - "@logger"
 
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
