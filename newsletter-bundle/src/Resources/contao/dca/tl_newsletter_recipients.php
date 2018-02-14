@@ -300,7 +300,7 @@ class tl_newsletter_recipients extends Backend
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objRecipient->fetchEach('id'));
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objRecipient->fetchEach('id'));
 				$objSession->replace($session);
 				break;
 
