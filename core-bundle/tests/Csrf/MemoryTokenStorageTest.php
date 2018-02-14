@@ -52,6 +52,13 @@ class MemoryTokenStorageTest extends TestCase
         $this->assertSame(['foo' => null, 'baz' => null], $memoryTokenStorage->getUsedTokens());
     }
 
+    public function testDoesNotReturnUsedTokensIfNotInitialized(): void
+    {
+        $memoryTokenStorage = new MemoryTokenStorage();
+
+        $this->assertSame([], $memoryTokenStorage->getUsedTokens());
+    }
+
     public function testFailsIfATokenDoesNotExist(): void
     {
         $memoryTokenStorage = new MemoryTokenStorage();

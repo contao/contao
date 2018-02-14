@@ -92,6 +92,10 @@ class MemoryTokenStorage implements TokenStorageInterface
      */
     public function getUsedTokens(): array
     {
+        if (null === $this->tokens) {
+            return [];
+        }
+
         return array_intersect_key($this->tokens, $this->usedTokens);
     }
 
