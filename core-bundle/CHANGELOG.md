@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-### DEV
+### 4.4.14 (2018-02-14)
 
  * Correctly render the article list if there are no articles (see #1351).
  * Do not log custom insert tags as "unknown" if they have been replaced (see #1295).
