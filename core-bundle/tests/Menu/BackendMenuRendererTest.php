@@ -52,7 +52,7 @@ class BackendMenuRendererTest extends TestCase
         $this->templating
             ->expects($this->once())
             ->method('render')
-            ->with('ContaoCoreBundle:Backend:be_menu.html.twig', ['tree' => $tree])
+            ->with('@ContaoCore/Backend/be_menu.html.twig', ['tree' => $tree])
             ->willReturn('')
         ;
 

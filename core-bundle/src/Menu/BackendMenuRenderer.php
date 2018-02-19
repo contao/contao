@@ -36,6 +36,6 @@ class BackendMenuRenderer implements RendererInterface
      */
     public function render(ItemInterface $tree, array $options = []): string
     {
-        return $this->twig->render('ContaoCoreBundle:Backend:be_menu.html.twig', ['tree' => $tree]);
+        return $this->twig->render('@ContaoCore/Backend/be_menu.html.twig', ['tree' => $tree]);
     }
 }
