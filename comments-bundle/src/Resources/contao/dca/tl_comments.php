@@ -286,7 +286,7 @@ class tl_comments extends Backend
 
 				if ($objComment->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Comment ID ' . Input::get('id') . ' does not exist.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid comment ID ' . Input::get('id') . '.');
 				}
 
 				if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source))
