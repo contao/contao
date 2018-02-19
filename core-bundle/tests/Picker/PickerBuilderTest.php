@@ -44,7 +44,7 @@ class PickerBuilderTest extends TestCase
 
         $router
             ->method('generate')
-            ->willReturn('/_contao/picker?context=page')
+            ->willReturn('/contao/picker?context=page')
         ;
 
         $this->builder = new PickerBuilder(new MenuFactory(), $router);
@@ -144,7 +144,7 @@ class PickerBuilderTest extends TestCase
 
         $this->builder->addProvider($provider);
 
-        $this->assertSame('/_contao/picker?context=page', $this->builder->getUrl('page', [], '{{link_url::5}}'));
+        $this->assertSame('/contao/picker?context=page', $this->builder->getUrl('page', [], '{{link_url::5}}'));
     }
 
     /**
