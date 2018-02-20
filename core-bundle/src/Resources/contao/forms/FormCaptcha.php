@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Patchwork\Utf8;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 /**
@@ -66,7 +65,7 @@ class FormCaptcha extends \Widget
 		parent::__construct($arrAttributes);
 
 		$this->arrAttributes['maxlength'] = 2;
-		$this->strCaptchaKey = 'c' . md5(uniqid(mt_rand(), true));
+		$this->strCaptchaKey = 'captcha_' . $this->strId;
 		$this->arrAttributes['required'] = true;
 		$this->arrConfiguration['mandatory'] = true;
 	}
@@ -131,23 +130,16 @@ class FormCaptcha extends \Widget
 	 */
 	public function validate()
 	{
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
-
-		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
-
-		if (!\is_array($arrCaptcha) || !\strlen($arrCaptcha['key']) || !\strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3) || \Input::post($arrCaptcha['key'].'_name'))
+		if (!isset($_POST[$this->strCaptchaKey]) || !\in_array(\Input::post($this->strCaptchaKey.'_hash'), $this->generateHashes((int) \Input::post($this->strCaptchaKey)), true) || (isset($_POST[$this->strCaptchaKey.'_name']) && \Input::post($this->strCaptchaKey.'_name')))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
 		}
-
-		$objSession->set('captcha_' . $this->strId, '');
 	}
 
 
 	/**
-	 * Generate the captcha values and store them in the session
+	 * Generate the captcha values
 	 */
 	protected function generateCaptcha()
 	{
@@ -165,13 +157,30 @@ class FormCaptcha extends \Widget
 			'int2' => $int2,
 			'sum' => $int1 + $int2,
 			'key' => $this->strCaptchaKey,
-			'time' => time()
+			'hashes' => $this->generateHashes($int1 + $int2)
 		);
+	}
 
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
 
-		$objSession->set('captcha_' . $this->strId, $this->arrCaptcha);
+	/**
+	 * Generate hashes for the current time and the specified sum
+	 *
+	 * @param integer $sum
+	 *
+	 * @return array
+	 */
+	protected function generateHashes($sum)
+	{
+		// Round the time to 30 minutes
+		$time = (int) round(time() / 60 / 30);
+
+		return array_map(
+			function($hashTime) use($sum)
+			{
+				return hash_hmac('sha256', $sum . "\0" . $hashTime, \System::getContainer()->getParameter('kernel.secret'));
+			},
+			array($time, $time - 1)
+		);
 	}
 
 
@@ -200,7 +209,7 @@ class FormCaptcha extends \Widget
 
 
 	/**
-	 * Get the correct sum for the current session
+	 * Get the correct sum for the current captcha
 	 *
 	 * @return int The sum
 	 */
@@ -209,6 +218,19 @@ class FormCaptcha extends \Widget
 		$this->generateCaptcha();
 
 		return $this->arrCaptcha['sum'];
+	}
+
+
+	/**
+	 * Get the correct hash for the current captcha
+	 *
+	 * @return string The hash
+	 */
+	protected function getHash()
+	{
+		$this->generateCaptcha();
+
+		return $this->arrCaptcha['hashes'][0];
 	}
 
 
