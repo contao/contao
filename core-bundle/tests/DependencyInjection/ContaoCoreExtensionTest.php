@@ -595,7 +595,7 @@ class ContaoCoreExtensionTest extends TestCase
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('data_collector', $tags);
-        $this->assertSame('ContaoCoreBundle:Collector:contao', $tags['data_collector'][0]['template']);
+        $this->assertSame('@ContaoCore/Collector/contao.html.twig', $tags['data_collector'][0]['template']);
         $this->assertSame('contao', $tags['data_collector'][0]['id']);
     }
 
