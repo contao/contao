@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Use the normalized package versions for the CDN scripts (see #1391).
+
 ### 4.5.4 (2018-02-14)
 
  * Preserve custom CSS classes in the back end navigation (see #1357).

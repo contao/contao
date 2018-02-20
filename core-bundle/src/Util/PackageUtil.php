@@ -31,6 +31,25 @@ class PackageUtil
     }
 
     /**
+     * Returns the version number as "major.minor.patch".
+     *
+     * @param string $packageName
+     *
+     * @return string
+     */
+    public static function getNormalizedVersion(string $packageName): string
+    {
+        $chunks = explode('.', static::getVersion($packageName));
+        $chunks += [0, 0, 0];
+
+        if (\count($chunks) > 3) {
+            $chunks = \array_slice($chunks, 0, 3);
+        }
+
+        return implode('.', $chunks);
+    }
+
+    /**
      * Parses a version number.
      *
      * The method either returns a version number such as 1.0.0 (a leading "v"
