@@ -14,7 +14,7 @@
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-pcre": "*",
-        "ausi/slug-generator": "^1.0",
+        "ausi/slug-generator": "^1.0.1",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.1.6",
         "contao-components/colorbox": "^1.6",
