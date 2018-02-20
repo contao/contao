@@ -123,7 +123,7 @@ class InsertTags extends \Controller
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
 					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction',
 						array('insertTag' => '{{' . $strTag . '}}'),
-						array('pageId' => $objPage->id, 'request' => \Environment::get('request'))
+						array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
 					), 'esi');
 					continue;
 				}

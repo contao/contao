@@ -14,6 +14,7 @@ use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the InsertTagsController class.
@@ -51,10 +52,22 @@ class InsertTagsControllerTest extends TestCase
         ;
 
         $controller = new InsertTagsController($this->mockFramework($insertTagAdapter));
-        $response = $controller->renderAction('{{request_token}}');
+        $response = $controller->renderAction(new Request(), '{{request_token}}');
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
+        $this->assertNull($response->getMaxAge());
+        $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
+
+        $request = new Request();
+        $request->query->set('clientCache', 300);
+
+        $controller = new InsertTagsController($this->mockFramework($insertTagAdapter));
+        $response = $controller->renderAction($request, '{{request_token}}');
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertTrue($response->headers->hasCacheControlDirective('private'));
+        $this->assertSame(300, $response->getMaxAge());
         $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
     }
 
@@ -70,7 +83,6 @@ class InsertTagsControllerTest extends TestCase
         $framework = $this->createMock(ContaoFramework::class);
 
         $framework
-            ->expects($this->once())
             ->method('initialize')
         ;
 
