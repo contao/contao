@@ -518,6 +518,29 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 </form>';
 		}
 
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] && \Input::get('act') != 'select')
+		{
+			$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';
+			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/js/dropzone.min.js';
+
+			$strAccepted = implode(',', array_map(function ($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
+			$intMaxSize = round(\FileUpload::getMaximumUploadSize() / 1024 / 1024);
+
+			$return .= '<script>'
+				.'Dropzone.autoDiscover = false;'
+				.'Backend.enableFileTreeUpload("tl_listing", '.json_encode(array(
+					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid='.urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? \Config::get('uploadPath')))),
+					'paramName' => 'files',
+					'maxFilesize' => $intMaxSize,
+					'acceptedFiles' => $strAccepted,
+					'params' => array(
+						'FORM_SUBMIT' => 'tl_upload',
+						'action' => 'fileupload',
+					),
+				)).')</script>'
+			;
+		}
+
 		return $return;
 	}
 

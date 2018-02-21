@@ -2515,6 +2515,100 @@ var Backend =
 		;
 
 		window.addEvent('domready', init);
+	},
+
+	/**
+	 * Enable drag and drop file upload for the file tree
+	 *
+	 * @param {object} wrap    The DOM element
+	 * @param {object} options An optional options object
+	 */
+	enableFileTreeUpload: function(wrap, options) {
+		wrap = $(wrap);
+
+		var fallbackUrl = options.url,
+			dzElement = new Element('div', {
+				'class': 'dropzone dropzone-filetree',
+				html: '<span class="dropzone-previews"></span>'
+			}).inject(wrap, 'top'),
+			currentHover, currentHoverTime;
+
+		options.previewsContainer = dzElement.getElement('.dropzone-previews');
+		options.clickable = false;
+
+		var dz = new Dropzone(wrap, options);
+
+		dz.on('queuecomplete', function() {
+			window.location.reload();
+		});
+
+		dz.on('dragover', function(event) {
+			if (!event.dataTransfer || !event.dataTransfer.types || event.dataTransfer.types.indexOf('Files') === -1) {
+				return;
+			}
+
+			wrap.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+			var target = event.target && $(event.target);
+
+			if (target) {
+				var folder = target.match('.tl_folder') ? target : target.getParent('.tl_folder');
+
+				if (!folder) {
+					folder = target.getParent('.parent');
+					folder = folder && folder.getPrevious('.tl_folder');
+				}
+
+				if (folder) {
+					var link = folder.getElement('img[src$="/icons/new.svg"]');
+					link = link && link.getParent('a');
+				}
+			}
+
+			if (link && link.href) {
+				dz.options.url = ''+link.href;
+				folder.addClass('tl_folder_dropping');
+
+				if (currentHover !== folder) {
+					currentHover = folder;
+					currentHoverTime = new Date().getTime();
+
+					var expandLink = folder.getElement('img[src$="/icons/folPlus.svg"]');
+					expandLink = expandLink && expandLink.getParent('a');
+
+					if (expandLink) {
+						// Expand the folder after one second hover time
+						setTimeout(function() {
+							if (currentHover === folder && currentHoverTime + 900 < new Date().getTime()) {
+								var event = document.createEvent('HTMLEvents');
+								event.initEvent('click', true, true);
+								expandLink.dispatchEvent(event);
+								currentHover = undefined;
+								currentHoverTime = undefined;
+							}
+						}, 1000);
+					}
+				}
+			} else {
+				dz.options.url = fallbackUrl;
+				currentHover = undefined;
+				currentHoverTime = undefined;
+			}
+		});
+
+		dz.on('drop', function (event) {
+			if (!event.dataTransfer || !event.dataTransfer.types || event.dataTransfer.types.indexOf('Files') === -1) {
+				return;
+			}
+
+			dzElement.addClass('dropzone-filetree-enabled');
+			Backend.getScrollOffset();
+		});
+
+		dz.on('dragleave', function() {
+			wrap.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+			currentHover = undefined;
+			currentHoverTime = undefined;
+		});
 	}
 };
 
