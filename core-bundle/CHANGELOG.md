@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+### DEV
+
+ * Improve the folder hashing performance (see contao/core#8856).
+
 ### 4.4.14 (2018-02-14)
 
  * Correctly render the article list if there are no articles (see #1351).
