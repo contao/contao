@@ -1,12 +1,16 @@
 # Contao installation bundle change log
 
+### DEV
+
+ * Support using InnoDB without the `innodb_large_prefix` option.
+
 ### 4.5.2 (2018-01-12)
 
  * Do not parse @@version to determine the database vendor (see #84).
 
 ### 4.5.1 (2018-01-04)
 
- * Check all innodb_large_prefix requirements in the install tool (see #80).
+ * Check all `innodb_large_prefix` requirements in the install tool (see #80).
  * Use the table options instead of the default table options to compare engine and collation.
 
 ### 4.5.0-RC1 (2017-12-12)

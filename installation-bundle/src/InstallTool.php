@@ -263,54 +263,6 @@ class InstallTool
             return true;
         }
 
-        if ('InnoDB' === $options['engine'] && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The innodb_large_prefix option is not set
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
-                $context['errorCode'] = 4;
-
-                return true;
-            }
-
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. MySQL is currently at 8 so
-            // checking for 10 should be save for the next couple of years.
-            $vok = version_compare($version, '10', '>=') ? '10.2' : '5.7.7';
-
-            // No additional requirements as of MySQL 5.7.7 and MariaDB 10.2
-            if (version_compare($version, $vok, '>=')) {
-                return false;
-            }
-
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The InnoDB file format is not Barracuda
-            if ('barracuda' !== strtolower((string) $row->Value)) {
-                $context['errorCode'] = 5;
-
-                return true;
-            }
-
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The innodb_file_per_table option is not set
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
-                $context['errorCode'] = 5;
-
-                return true;
-            }
-        }
-
         return false;
     }
 
