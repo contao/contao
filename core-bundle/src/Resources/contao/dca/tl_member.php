@@ -552,7 +552,7 @@ class tl_member extends Backend
 
 
 	/**
-	 * Call the "setNewPassword" callback
+	 * Reset the autologin hash
 	 *
 	 * @param string        $varValue
 	 * @param DataContainer $dc
