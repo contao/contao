@@ -889,7 +889,7 @@ table.tl_listing {
 	border-bottom:1px solid #e9e9e9;
 	background:#f6f6f8;
 }
-.tl_folder.tl_folder_dropping {
+.tl_folder.tl_folder_dropping,.tl_folder_top.tl_folder_dropping {
 	background-color:#ccc !important;
 }
 .tl_listing .tl_left {

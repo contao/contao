@@ -539,6 +539,12 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 					),
 				)).')</script>'
 			;
+
+			$return .= '<script>'
+				.'Backend.enableFileTreeDragAndDrop($("tl_listing").getChildren(".tl_file_manager")[0], '.json_encode(array(
+					'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid='.urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? \Config::get('uploadPath')))),
+				)).')</script>'
+			;
 		}
 
 		return $return;
@@ -2625,7 +2631,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + (($countFiles < 1) ? 20 : 0)).'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + (($countFiles < 1) ? 20 : 0)).'px">';
 
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
@@ -2712,7 +2718,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES) . '" class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
 			$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
