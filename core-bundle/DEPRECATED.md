@@ -1,12 +1,11 @@
-Deprecated features
-===================
+# Deprecated features
 
-### Image service
+## Image service
 
 The `Image` and `Picture` classes have been deprecated in favor of the image
 and picture services. Here are three examples of how to use the services:
 
-#### Image::get()
+### Image::get()
 
 ```php
 // Old syntax
@@ -23,7 +22,7 @@ $image = $container
 ;
 ```
 
-#### Image::create()
+### Image::create()
 
 ```php
 // Old syntax
@@ -49,7 +48,7 @@ $image = $container
 ;
 ```
 
-#### Picture::create()
+### Picture::create()
 
 ```php
 // Old syntax
@@ -72,8 +71,7 @@ $data = [
 
 For more information see: https://github.com/contao/image/blob/master/README.md
 
-
-### FORM_FIELDS
+## FORM_FIELDS
 
 Using the `FORM_FIELDS` mechanism to determine which form fields have been
 submitted has been deprecated in Contao 4.0 and will no longer work in Contao
@@ -87,14 +85,12 @@ submitted has been deprecated in Contao 4.0 and will no longer work in Contao
 <input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
 ```
 
-
-### Page handler without getResponse()
+## Page handler without getResponse()
 
 Using a custom page handler without a `getResponse()` method has been
 deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 
-
-### VERSION and BUILD
+## VERSION and BUILD
 
 The `VERSION` and `BUILD` constants have been deprecated in Contao 4.0 and will
 be removed in Contao 5.0. Use the `kernel.packages` parameter instead.
@@ -104,8 +100,7 @@ $packages = System::getContainer()->getParameter('kernel.packages');
 $coreVersion = $packages['contao/core-bundle'];
 ```
 
-
-### member_grouped.html5
+## member_grouped.html5
 
 Accessing the field groups via one of the following properties in the
 `member_grouped.html5` template has been deprecated in Contao 4.0 and will no
@@ -119,47 +114,40 @@ longer work in Contao 5.0:
 
 Use `$this->categories` instead.
 
-
-### "channel" token
+## "channel" token
 
 Using the simple token "channel" in newsletter subscription mails has been
 deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
 "channels" token instead.
 
-
-### $this->arrCache
+## $this->arrCache
 
 Using `$this->arrCache`, which is defined in the `System` class, has been
 deprecated in Contao 4.0 and will no longer work in Contao 5.0. If you are
 using it in your class, make sure to define it as property.
 
-
-### $this->items in pagination templates
+## $this->items in pagination templates
 
 Using `$this->items` in pagination templates has been deprecated in Contao 4.0
 and will no longer work in Contao 5.0. Use `$this->pages` instead.
 
-
-### TL_SCRIPT_URL and TL_PLUGINS_URL
+## TL_SCRIPT_URL and TL_PLUGINS_URL
 
 The constants `TL_SCRIPT_URL` and `TL_PLUGINS_URL` have been deprecated in
 Contao 4.0 and will be removed in Contao 5.0. Use `TL_ASSETS_URL` instead.
 
-
-### UnresolvableDependenciesException
+## UnresolvableDependenciesException
 
 The `UnresolvableDependenciesException` class has been deprecated in Contao 4.0
 and will be removed in Contao 5.0.
 
-
-### $this->language in TinyMCE config files
+## $this->language in TinyMCE config files
 
 Using `$this->language` in TinyMCE configuration files has been deprecated in
 Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 `Backend::getTinyMceLanguage()` instead.
 
-
-### $GLOBALS['TL_LANGUAGE'] and $_SESSION['TL_LANGUAGE']
+## $GLOBALS['TL_LANGUAGE'] and $_SESSION['TL_LANGUAGE']
 
 Using the globals `$GLOBALS['TL_LANGUAGE']` and `$_SESSION['TL_LANGUAGE']` has
 been deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
@@ -169,21 +157,18 @@ locale from the request object instead:
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```
 
-
-### Request.Mixed (JavaScript)
+## Request.Mixed (JavaScript)
 
 Using the old Request.Mixed class instead of Request.Contao has been deprecated
 in Contao 4.0 and will no longer work in Contao 5.0.
 
-
-### "subpalette" event (JavaScript)
+## "subpalette" event (JavaScript)
 
 The "subpalette" event, which is currently fired when a subpalette is toggled
 via Ajax, has been deprecated in Contao 4.0 and will be removed in Contao 5.0.
 Subscribe to the "ajax_change" event instead.
 
-
-### Session class
+## Session class
 
 The `Session` class has been deprecated in Contao 4.0 and will be removed in
 Contao 5.0. Use the session service instead:
@@ -192,14 +177,12 @@ Contao 5.0. Use the session service instead:
 $session = System::getContainer()->get('session');
 ```
 
-
-### Widget::addSubmit()
+## Widget::addSubmit()
 
 The `Widget::addSubmit()` method has been deprecated in Contao 4.0 and will be
 removed in Contao 5.0. It already does not add a submit button anymore.
 
-
-### Content elements
+## Content elements
 
 For reasons of backwards compatibility, it is currently not required to set the
 `tl_content.ptable` column; it will treat an empty column like it had been set
@@ -209,15 +192,13 @@ This behavior has been deprecated in Contao 4.0 and will no longer be supported
 in Contao 5.0. If you have developed an extension which creates content
 elements, make sure to always set the `ptable` column.
 
-
-### Contao class loader
+## Contao class loader
 
 Even though we are still using the Contao class loader, it has been deprecated
 in favor of the Composer class loader. You should no longer use it and you can
 no longer use it to override arbitrary core classes.
 
-
-### Using $this in configuration files
+## Using $this in configuration files
 
 Using `$this` in configuration files such as `config/config.php` or `dca/*.php`
 has been deprecated in Contao 4.0 and will no longer work in Contao 5.0.
@@ -225,8 +206,7 @@ has been deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 You can use the static helper methods such as `System::loadLanguageFile()` or
 `Controller::loadDataContainer()` instead.
 
-
-### Constants
+## Constants
 
 The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
 have been deprecated and will be removed in Contao 5.0.
@@ -284,8 +264,7 @@ Use the the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 ```
 
-
-### PHP entry points
+## PHP entry points
 
 Contao 4 only uses a single PHP entry point, namely the `app.php` or
 `app_dev.php` file. The previous PHP entry points have been removed and a route
@@ -293,8 +272,7 @@ has been set up for each one instead (see UPGRADE.md).
 
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 
-
-### ModuleLoader
+## ModuleLoader
 
 The `ModuleLoader` class is no longer used and only kept for reasons of
 backwards compatibility. It is deprecated and will be removed in Contao 5.0.
@@ -304,8 +282,7 @@ Use the container parameter `kernel.bundles` instead:
 $bundles = System::getContainer()->getParameter('kernel.bundles');
 ```
 
-
-### database.sql files
+## database.sql files
 
 Using `database.sql` files to set up tables is deprecated in Contao 4.0 and
 will no longer be supported in Contao 5.0. Use DCA files instead:
@@ -343,22 +320,19 @@ $GLOBALS['TL_DCA']['tl_example'] = array
 
 ```
 
-
-### dcaconfig.php
+## dcaconfig.php
 
 Using the `dcaconfig.php` file to adjust a data container is deprecated in
 Contao 4.0 and will no longer be supported in Contao 5.0. Add the DCA files
 with your modifications to the `app/Resources/contao/dca` folder instead.
 
-
-### initconfig.php
+## initconfig.php
 
 Using the `initconfig.php` file to customize the initialization process is
 deprecated in Contao 4.0 and will no longer be supported in Contao 5.0.
 Subscribe to one of the Symfony events instead (e.g. `kernel.request`).
 
-
-### langconfig.php
+## langconfig.php
 
 Using the `langconfig.php` file to adjust translations is deprecated in Contao
 4.0 and will no longer be supported in Contao 5.0. Add the language files with

@@ -1,23 +1,18 @@
-API changes
-===========
+# API changes
 
-Version 4.* to 4.3
-------------------
+## Version 4.* to 4.3
 
 ### Image upscaling
 
 The image service no longer supports upscaling images for reasons of bandwidth
 and storage consumption. Images should be upscaled via CSS if needed.
 
-
 ### Form template
 
 The form template `form.html5` has been renamed to `form_wrapper.html5`, so it
 can be overridden with a custom template in the form settings.
 
-
-Version 3.* to 4.0
-------------------
+## Version 3.* to 4.0
 
 ### StringUtil class
 
@@ -26,19 +21,16 @@ Since the `String` class is not compatible with PHP 7, we have renamed it to
 compatibility, however it has been deprecated and will be removed in a future
 version.
 
-
 ### Mime icons
 
 The mime icons have been removed from all front end templates. Instead, a new
 style sheet called `icons.css` has been added to the layout builder, which
 restores the mime icons for downloads and enclosures via CSS.
 
-
 ### article_raster_designer hook
 
 The "article_raster_designer" hook has been removed. Use the "getArticles" hook
 instead and return a string to override the default articles content.
-
 
 ### Add submit button
 
@@ -47,12 +39,10 @@ generate an inline form, add a text field and a submit button and assign the
 CSS class `inline-form` to the form element (requires the `form.css` style
 sheet to be enabled in the page layout).
 
-
 ### Space before/after
 
 The field "space before/after" has been removed. Use a CSS class instead and
 define the spacing in your style sheet.
-
 
 ### CSS classes of included elements
 
@@ -77,7 +67,6 @@ Here's how to select the elements separately:
 }
 ```
 
-
 ### Form option "tableless"
 
 The form option "tableless" has been removed, because all forms are now
@@ -90,11 +79,9 @@ horizontal layout, similar to the old table-based layout.
 
 If you add the CSS class `inline-form`, the widgets will be aligned vertically.
 
-
 ### Form field "headline"
 
 The form field "headline" has been removed in favor of the "explanation" field.
-
 
 ### FORM_SUBMIT
 
@@ -102,12 +89,10 @@ Every form now appends its numeric ID to the `FORM_SUBMIT` parameter, so custom
 forms used for triggering modules such as the login module have to be adjusted
 to pass the correct form ID (e.g. `tl_login_12` instead of `tl_login`).
 
-
 ### Store form data
 
 If a front end form is set up to store the submitted data in the database, date
 and time fields are now automatically converted to Unix timestamps.
-
 
 ### Meta keywords
 
@@ -123,7 +108,6 @@ template as follows:
   <meta name="keywords" content="<?= $this->keywords ?>">
 <?php $this->endblock(); ?>
 ```
-
 
 ### Template changes
 
@@ -172,7 +156,6 @@ into the following templates:
 </li>
 ```
 
-
 ### Template name changes
 
 The following templates have been renamed to match the content element or
@@ -207,7 +190,6 @@ template should be named `mod_taskList.html5`.
 Users can then create custom templates à la `mod_taskList_custom.html`, which
 will be shown in the "custom module template" list.
 
-
 ### Front end module keys
 
 The keys of the following front end modules have been changed:
@@ -215,19 +197,16 @@ The keys of the following front end modules have been changed:
  * `articleList` -> `articlelist`
  * `rss_reader`  -> `rssReader`
 
-
 ### Custom database drivers
 
 The database classes have been mapped to the Doctrine DBAL, therefore custom
 drivers are no longer supported. If you have been using a custom driver for a
 database other than MySQL, use the corresponding Doctrine driver instead.
 
-
 ### dump()
 
 The `dump()` function has been replaced by the Symfony debug bundle. Its output
 will be added to the web profiler.
-
 
 ### tinymce.css and tiny_templates
 
@@ -235,17 +214,14 @@ The style sheet `files/tinymce.css` and the folder `files/tiny_templates` have
 been removed. If you want to use the feature, please adjust the TinyMCE config
 file, which is now a template (e.g. `be_tinyMCE.html5`).
 
-
 ### Frontend::parseMetaFile()
 
 The `Frontend::parseMetaFile()` method was deprecated since Contao 3 and has
 been removed in Contao 4.0.
 
-
 ### $_SESSION['TL_USER_LOGGED_IN']
 
 The `$_SESSION['TL_USER_LOGGED_IN']` flag has been removed.
-
 
 ### PHP entry points
 
@@ -275,12 +251,10 @@ adjust your templates to use `$this->route()` instead:
 <form action="<?= $this->route('contao_backend') ?>">
 ```
 
-
 ### cron.php
 
 The `cron.php` entry point has been removed. Use the `/_contao/cron` route
 instead if you want to trigger the cron job manually.
-
 
 ### Disable aliases
 
@@ -289,24 +263,20 @@ only. This was a workaround for an old IIS server, which has now been dropped.
 
 More information: https://github.com/contao/core-bundle/issues/118
 
-
 ### system/runonce.php
 
 The `system/runonce.php` file is no longer supported. If you need to set up a
 `runonce.php` file, put it in the `src/Resources/contao/config/` directory.
-
 
 ### DcaExtractor
 
 The `DcaExtractor` class is no longer instantiable via `new DcaExtractor()`.
 Use the `DcaExtractor::getInstance($table)` method instead.
 
-
 ### MooTools slimbox
 
 The MooTools "slimbox" plugin has been removed. Use the MooTools "mediabox" or
 the jQuery "colorbox" plugin instead.
-
 
 ### Message::generate()
 
@@ -325,12 +295,10 @@ The scope defaults to `TL_MODE`. The previous arguments of the `generate()`
 method have been removed. If you want to output the messages without the
 wrapping element, use `Message::generateUnwrapped()` instead.
 
-
 ### prepareFormData hook
 
 The "prepareFormData" hook now passes `$this` as last argument, just like in
 any other hook.
-
 
 ### Markup changes
 
@@ -346,7 +314,6 @@ any other hook.
  * The main section of the `fe_page.html` template now uses the `<main>` tag.
 
  * Submit buttons now use `<button type="submit">` instead of `<input>`.
-
 
 ### CSS class changes
 
@@ -374,7 +341,6 @@ any other hook.
 </div>
 ```
 
-
 ### new File()
 
 In Contao 3 `new File('tmp.txt')` automatically created the file if it did not
@@ -389,7 +355,6 @@ moved to its final destination.
 In Contao 4 this changed behavior has become the default and the second
 argument has been dropped.
 
-
 ### Protected folders
 
 In Contao 3 the user files in the `files/` directory were publicly available
@@ -397,13 +362,11 @@ via HTTP by default and it was possible to protect certain subfolders. Now, due
 to a technical change, the user files are protected by default and subfolders
 have to be published explicitly to be available via HTTP.
 
-
 ### Article CSS IDs
 
 In Contao 3 the alias of an article was automatically used as its CSS ID, if
 no custom CSS ID was defined. In Contao 4 the default CSS ID will be generated
 from its numeric ID, e.g. `article-1`.
-
 
 ### Database::listTables()
 
