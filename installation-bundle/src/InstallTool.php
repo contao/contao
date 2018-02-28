@@ -180,7 +180,7 @@ class InstallTool
      */
     public function isFreshInstallation()
     {
-        if (!$this->hasTable('tl_module')) {
+        if (!$this->hasTable('tl_page')) {
             return true;
         }
 
