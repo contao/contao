@@ -329,18 +329,12 @@ class DcaSchemaProvider
         $flags = [];
 
         foreach (explode(',', $matches[3]) as $column) {
-            preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
+            preg_match('/`([^`]+)`/', $column, $cm);
 
             $column = $cm[1];
 
-            if (isset($cm[3])) {
-                $maxlen = $this->getMaximumIndexLength($table, $column);
-
-                if ($cm[3] > $maxlen) {
-                    $cm[3] = $maxlen;
-                }
-
-                $column .= '('.$cm[3].')';
+            if (null !== ($indexLength = $this->getIndexLength($table, $column))) {
+                $column .= '('.$indexLength.')';
             }
 
             $columns[$cm[1]] = $column;
@@ -399,34 +393,49 @@ class DcaSchemaProvider
     }
 
     /**
-     * Returns the maximum index length of a column depending on the collation.
+     * Returns the index length if the index needs to be shortened.
      *
      * @param Table  $table
      * @param string $column
      *
-     * @return int
+     * @return int|null
      */
-    private function getMaximumIndexLength(Table $table, string $column): int
+    private function getIndexLength(Table $table, string $column): ?int
     {
-        $indexLength = $this->getDefaultIndexLength($table);
-        $collation = $table->getOption('collate');
         $connection = $this->doctrine->getConnection();
 
-        // Read the table collation if the table exists
-        if ($connection->getSchemaManager()->tablesExist([$table->getName()])) {
-            $columnOptions = $connection
-                ->query(sprintf("SHOW FULL COLUMNS FROM %s LIKE '%s'", $table->getName(), $column))
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            $collation = $columnOptions->Collation;
+        if (!$connection->getSchemaManager()->tablesExist([$table->getName()])) {
+            return null;
         }
 
-        if (0 === strncmp($collation, 'utf8mb4', 7)) {
-            return (int) floor($indexLength / 4);
+        $columnOptions = $connection
+            ->query(sprintf("SHOW FULL COLUMNS FROM %s LIKE '%s'", $table->getName(), $column))
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        // Not a text field
+        if (null === $columnOptions->Collation) {
+            return null;
         }
 
-        return (int) floor($indexLength / 3);
+        [, $length] = explode('(', rtrim($columnOptions->Type, ')'));
+
+        // Return if the field is shorter than the shortest possible index
+        // length (utf8mb4 on InnoDB without large prefixes)
+        if ($length <= 191) {
+            return null;
+        }
+
+        $defaultLength = $this->getDefaultIndexLength($table);
+        $bytes = 0 === strncmp($columnOptions->Collation, 'utf8mb4', 7) ? 4 : 3;
+        $indexLength = (int) floor($defaultLength / $bytes);
+
+        // Return if the field is shorter than the index length
+        if ($length <= $indexLength) {
+            return null;
+        }
+
+        return $indexLength;
     }
 
     /**

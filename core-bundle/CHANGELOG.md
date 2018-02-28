@@ -2,6 +2,7 @@
 
 ### DEV
 
+ * Support using InnoDB without the `innodb_large_prefix` option.
  * Correctly track modified fields in the `Model` class (see #1290).
  * Use the normalized package versions for the CDN scripts (see #1391).
 

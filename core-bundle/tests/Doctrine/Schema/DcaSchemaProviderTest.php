@@ -274,6 +274,13 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testCreatesTheTableDefinitions(): void
     {
+        $statement = $this->createMock(Statement::class);
+
+        $statement
+            ->method('fetch')
+            ->willReturn((object) ['Collation' => null])
+        ;
+
         $provider = $this->getProvider(
             [
                 'tl_member' => [
@@ -291,7 +298,9 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'name' => 'KEY `name` (`firstname`, `lastname`)',
                     ],
                 ],
-            ]
+            ],
+            [],
+            $statement
         );
 
         $schema = $provider->createSchema();
@@ -319,13 +328,12 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @param int   $actual
-     * @param int   $expected
-     * @param array $calls
+     * @param int|null $expected
+     * @param array    $calls
      *
      * @dataProvider getIndexes
      */
-    public function testHandlesIndexesWithKeyLength(int $actual, int $expected, array $calls): void
+    public function testAddsTheIndexLength(?int $expected, array $calls): void
     {
         $statement = $this->createMock(Statement::class);
 
@@ -338,10 +346,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             [
                 'tl_files' => [
                     'TABLE_FIELDS' => [
-                        'path' => "`path` varchar(1022) NOT NULL default ''",
+                        'name' => "`name` varchar(255) NOT NULL default ''",
                     ],
                     'TABLE_CREATE_DEFINITIONS' => [
-                        'path' => 'KEY `path` (`path`('.$actual.'))',
+                        'name' => 'KEY `name` (`name`)',
                     ],
                 ],
             ],
@@ -356,13 +364,18 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $table = $schema->getTable('tl_files');
 
-        $this->assertTrue($table->hasColumn('path'));
-        $this->assertSame('string', $table->getColumn('path')->getType()->getName());
-        $this->assertSame(1022, $table->getColumn('path')->getLength());
+        $this->assertTrue($table->hasColumn('name'));
+        $this->assertSame('string', $table->getColumn('name')->getType()->getName());
+        $this->assertSame(255, $table->getColumn('name')->getLength());
 
-        $this->assertTrue($table->hasIndex('path'));
-        $this->assertFalse($table->getIndex('path')->isUnique());
-        $this->assertSame(['path('.$expected.')'], $table->getIndex('path')->getColumns());
+        $this->assertTrue($table->hasIndex('name'));
+        $this->assertFalse($table->getIndex('name')->isUnique());
+
+        if (null === $expected) {
+            $this->assertSame(['name'], $table->getIndex('name')->getColumns());
+        } else {
+            $this->assertSame(['name('.$expected.')'], $table->getIndex('name')->getColumns());
+        }
     }
 
     /**
@@ -372,55 +385,49 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     {
         return [
             [
-                333,
-                333,
+                null,
                 [
+                    (object) ['Collation' => 'utf8_unicode_ci', 'Type' => 'varchar(255)'],
                     (object) ['Engine' => 'MyISAM'],
-                    (object) ['Collation' => 'utf8_unicode_ci'],
                 ],
             ],
             [
-                333,
                 250,
                 [
+                    (object) ['Collation' => 'utf8mb4_unicode_ci', 'Type' => 'varchar(255)'],
                     (object) ['Engine' => 'MyISAM'],
-                    (object) ['Collation' => 'utf8mb4_unicode_ci'],
                 ],
             ],
             [
-                1022,
-                1022,
+                null,
                 [
+                    (object) ['Collation' => 'utf8_unicode_ci', 'Type' => 'varchar(255)'],
                     (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 1],
-                    (object) ['Collation' => 'utf8_unicode_ci'],
+                    (object) ['Value' => 'Off'],
                 ],
             ],
             [
-                1022,
-                768,
-                [
-                    (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 1],
-                    (object) ['Collation' => 'utf8mb4_unicode_ci'],
-                ],
-            ],
-            [
-                1022,
-                255,
-                [
-                    (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 0],
-                    (object) ['Collation' => 'utf8_unicode_ci'],
-                ],
-            ],
-            [
-                1022,
                 191,
                 [
+                    (object) ['Collation' => 'utf8mb4_unicode_ci', 'Type' => 'varchar(255)'],
                     (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 0],
-                    (object) ['Collation' => 'utf8mb4_unicode_ci'],
+                    (object) ['Value' => 'Off'],
+                ],
+            ],
+            [
+                null,
+                [
+                    (object) ['Collation' => 'utf8_unicode_ci', 'Type' => 'varchar(255)'],
+                    (object) ['Engine' => 'InnoDB'],
+                    (object) ['Value' => 'On'],
+                ],
+            ],
+            [
+                null,
+                [
+                    (object) ['Collation' => 'utf8mb4_unicode_ci', 'Type' => 'varchar(255)'],
+                    (object) ['Engine' => 'InnoDB'],
+                    (object) ['Value' => 'On'],
                 ],
             ],
         ];
@@ -428,6 +435,13 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     public function testHandlesFulltextIndexes(): void
     {
+        $statement = $this->createMock(Statement::class);
+
+        $statement
+            ->method('fetch')
+            ->willReturn((object) ['Collation' => null])
+        ;
+
         $provider = $this->getProvider(
             [
                 'tl_search' => [
@@ -438,7 +452,9 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         'text' => 'FULLTEXT KEY `text` (`text`)',
                     ],
                 ],
-            ]
+            ],
+            [],
+            $statement
         );
 
         $schema = $provider->createSchema();

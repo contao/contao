@@ -335,13 +335,6 @@ class DcaExtractor extends \Controller
 				$f = array($quote($k));
 			}
 
-			// Handle key lengths (see #221)
-			if (preg_match('/\([0-9]+\)/', $v))
-			{
-				list($v, $length) = explode('(', rtrim($v, ')'));
-				$f = array($quote($k) . '(' . $length . ')');
-			}
-
 			if ($v == 'primary')
 			{
 				$k = 'PRIMARY';

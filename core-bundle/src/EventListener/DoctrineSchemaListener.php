@@ -44,41 +44,48 @@ class DoctrineSchemaListener
     }
 
     /**
-     * Handles the Doctrine schema and overrides the indexes with a fixed length.
+     * Adds the index length on MySQL platforms.
      *
      * @param SchemaIndexDefinitionEventArgs $event
      */
     public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event): void
     {
         $connection = $event->getConnection();
-        $data = $event->getTableIndex();
 
-        if ('PRIMARY' === $data['name'] || !$connection->getDatabasePlatform() instanceof MySqlPlatform) {
+        if (!$connection->getDatabasePlatform() instanceof MySqlPlatform) {
             return;
         }
 
-        $index = $connection->fetchAssoc(
-            sprintf("SHOW INDEX FROM %s WHERE Key_name='%s'", $event->getTable(), $data['name'])
+        $data = $event->getTableIndex();
+
+        // Ignore primary keys
+        if ('PRIMARY' === $data['name']) {
+            return;
+        }
+
+        $columns = [];
+        $query = sprintf("SHOW INDEX FROM %s WHERE Key_name='%s'", $event->getTable(), $data['name']);
+        $result = $connection->executeQuery($query);
+
+        while ($row = $result->fetch()) {
+            if (null !== $row['Sub_part']) {
+                $columns[] = sprintf('%s(%s)', $row['Column_name'], $row['Sub_part']);
+            } else {
+                $columns[] = $row['Column_name'];
+            }
+        }
+
+        $event->setIndex(
+            new Index(
+                $data['name'],
+                $columns,
+                $data['unique'],
+                $data['primary'],
+                $data['flags'],
+                $data['options']
+            )
         );
 
-        if (null !== $index['Sub_part']) {
-            $columns = [];
-
-            foreach ($data['columns'] as $col) {
-                $columns[$col] = sprintf('%s(%s)', $col, $index['Sub_part']);
-            }
-
-            $event->setIndex(
-                new Index(
-                    $data['name'],
-                    $columns,
-                    $data['unique'],
-                    $data['primary'],
-                    $data['flags'],
-                    $data['options'])
-            );
-
-            $event->preventDefault();
-        }
+        $event->preventDefault();
     }
 }
