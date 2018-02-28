@@ -320,7 +320,7 @@ abstract class Model
 
 		foreach ($row as $k=>$v)
 		{
-			$originalRow[$k] = array_key_exists($k, $this->arrModified) ? $this->arrModified[$k] : $v;
+			$originalRow[$k] = isset($this->arrModified[$k]) ? $this->arrModified[$k] : $v;
 		}
 
 		return $originalRow;
@@ -377,7 +377,7 @@ abstract class Model
 				continue;
 			}
 
-			if (!array_key_exists($k, $this->arrModified))
+			if (!isset($this->arrModified[$k]))
 			{
 				$this->arrData[$k] = $v;
 			}
@@ -394,7 +394,7 @@ abstract class Model
 	 */
 	public function markModified($strKey)
 	{
-		if (!array_key_exists($strKey, $this->arrModified) && array_key_exists($strKey, $this->arrData))
+		if (!isset($this->arrModified[$strKey]) && isset($this->arrData[$strKey]))
 		{
 			$this->arrModified[$strKey] = $this->arrData[$strKey];
 		}
