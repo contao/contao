@@ -1091,5 +1091,8 @@ class tl_news extends Backend
 		}
 
 		$objVersions->create();
+
+		// The onsubmit_callback has triggered scheduleUpdate(), so run generateFeed() now
+		$this->generateFeed();
 	}
 }
