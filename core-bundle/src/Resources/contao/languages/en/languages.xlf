@@ -608,6 +608,9 @@
       <trans-unit id="LNG.nn">
         <source>Norwegian Nynorsk</source>
       </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+      </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
       </trans-unit>
