@@ -100,6 +100,9 @@ class ScriptHandler
             )
         );
 
+        // Increase the timeout according to terminal42/background-process (see #54)
+        $process->setTimeout(500);
+
         $process->run(
             function ($type, $buffer) use ($event) {
                 $event->getIO()->write($buffer, false);
