@@ -463,11 +463,12 @@ class DcaSchemaProvider
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        if (\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
+        // The variable no longer exists (as of MySQL 8 and MariaDB 10.3)
+        if (false === $largePrefix) {
             return 3072;
         }
 
-        return 767;
+        return \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true) ? 3072 : 767;
     }
 
     /**
