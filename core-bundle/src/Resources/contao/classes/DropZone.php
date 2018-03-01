@@ -55,6 +55,7 @@ class DropZone extends \FileUpload
         paramName: "' . $this->strName . '",
         maxFilesize: ' . $intMaxSize . ',
         acceptedFiles: "' . $strAccepted . '",
+        timeout: 0,
         previewsContainer: ".dropzone-previews",
         clickable: ".dropzone"
       }).on("addedfile", function() {
