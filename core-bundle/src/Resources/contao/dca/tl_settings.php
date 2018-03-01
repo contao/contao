@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedTags'],
 			'inputType'               => 'text',
-			'eval'                    => array('preserveTags'=>true, 'tl_class'=>'long')
+			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
 		),
 		'allowedDownload' => array
 		(
