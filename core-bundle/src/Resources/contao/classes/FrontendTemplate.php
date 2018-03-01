@@ -374,8 +374,11 @@ class FrontendTemplate extends \Template
 		/** @var $objPage \PageModel */
 		global $objPage;
 
-		if (($objPage->cache === false || $objPage->cache === 0) && ($objPage->clientCache === false || $objPage->clientCache === 0))
+		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))
 		{
+			$response->headers->addCacheControlDirective('no-cache');
+			$response->headers->addCacheControlDirective('no-store');
+
 			return $response->setPrivate();
 		}
 
@@ -383,6 +386,9 @@ class FrontendTemplate extends \Template
 		// TODO: Add support for proxies so they can vary on member context
 		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->protected || $this->hasAuthenticatedBackendUser())
 		{
+			$response->headers->addCacheControlDirective('no-cache');
+			$response->headers->addCacheControlDirective('no-store');
+
 			return $response->setPrivate();
 		}
 
