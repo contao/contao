@@ -4,8 +4,6 @@ platform: x86
 clone_folder: C:\projects\contao
 
 cache:
-  - C:\tools\php56 -> appveyor.yml
-  - C:\projects\contao\vendor -> composer.lock
   - '%LOCALAPPDATA%\Composer\files'
 
 init:
