@@ -123,6 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
+        <target>URL personnalisée</target>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>

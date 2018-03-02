@@ -1,40 +1,43 @@
 build: false
 shallow_clone: true
 platform: x86
-clone_folder: c:\projects\contao
+clone_folder: C:\projects\contao
 
 cache:
   - '%LOCALAPPDATA%\Composer\files'
 
 init:
-  - SET PATH=c:\php;%PATH%
+  - SET PATH=C:\tools\php71;%PATH%
+  - SET PHP=1
+  - SET ANSICON=121x90 (121x90)
+  - SET SYMFONY_DEPRECATIONS_HELPER=weak
 
 install:
-  - mkdir c:\php && cd c:\php
-  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.1.10-Win32-VC14-x86.zip
-  - 7z x php-7.1.10-Win32-VC14-x86.zip -y >nul
-  - del *.zip
-  - copy php.ini-production php.ini
-  - echo date.timezone="UTC" >> php.ini
-  - echo extension_dir=ext >> php.ini
-  - echo extension=php_bz2.dll >> php.ini
-  - echo extension=php_curl.dll >> php.ini
-  - echo extension=php_fileinfo.dll >> php.ini
-  - echo extension=php_exif.dll >> php.ini
-  - echo extension=php_gd2.dll >> php.ini
-  - echo extension=php_intl.dll >> php.ini
-  - echo extension=php_mbstring.dll >> php.ini
-  - echo extension=php_mysqli.dll >> php.ini
-  - echo extension=php_openssl.dll >> php.ini
-  - echo extension=php_pdo_mysql.dll >> php.ini
-  - echo extension=php_soap.dll >> php.ini
-  - echo extension=php_sockets.dll >> php.ini
-  - echo extension=php_xmlrpc.dll >> php.ini
-  - echo extension=php_xsl.dll >> php.ini
-  - cd c:\projects\contao
+  - IF EXIST C:\tools\php71 (SET PHP=0)
+  - IF %PHP%==1 appveyor-retry cinst -y OpenSSL.Light
+  - IF %PHP%==1 appveyor-retry cinst -y php --version 7.1.14
+  - IF %PHP%==1 cd C:\tools\php71
+  - IF %PHP%==1 copy php.ini-production php.ini
+  - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
+  - IF %PHP%==1 echo extension_dir=ext >> php.ini
+  - IF %PHP%==1 echo extension=php_bz2.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_curl.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_fileinfo.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_exif.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_gd2.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_intl.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_mbstring.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_mysqli.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_pdo_mysql.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_soap.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_sockets.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_xmlrpc.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_xsl.dll >> php.ini
+  - cd C:\projects\contao
   - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar update --no-progress --no-interaction --ansi
+  - php composer.phar update --no-progress --no-suggest --no-interaction --ansi
 
 test_script:
-  - cd c:\projects\contao
+  - cd C:\projects\contao
   - vendor\bin\phpunit.bat
