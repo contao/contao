@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 
@@ -381,7 +381,7 @@ class tl_newsletter extends Backend
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objChannel->fetchEach('id'));
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objChannel->fetchEach('id'));
 				$objSession->replace($session);
 				break;
 
