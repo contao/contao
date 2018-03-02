@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\InstallationBundle;
@@ -16,6 +16,7 @@ use Contao\Backend;
 use Contao\Config;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -33,20 +34,20 @@ class InstallTool
     private $rootDir;
 
     /**
-     * @var string
+     * @var LoggerInterface
      */
-    private $logDir;
+    private $logger;
 
     /**
-     * @param Connection $connection
-     * @param string     $rootDir
-     * @param string     $logDir
+     * @param Connection      $connection
+     * @param string          $rootDir
+     * @param LoggerInterface $logger
      */
-    public function __construct(Connection $connection, string $rootDir, string $logDir)
+    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
-        $this->logDir = $logDir;
+        $this->logger = $logger;
     }
 
     /**
@@ -130,13 +131,15 @@ class InstallTool
      */
     public function canConnectToDatabase(?string $name): bool
     {
-        if (null === $this->connection) {
+        if (null === $name || null === $this->connection) {
             return false;
         }
 
         try {
             $this->connection->connect();
         } catch (\Exception $e) {
+            $this->logException($e);
+
             return false;
         }
 
@@ -145,6 +148,8 @@ class InstallTool
         try {
             $this->connection->query('use '.$quotedName);
         } catch (DBALException $e) {
+            $this->logException($e);
+
             return false;
         }
 
@@ -170,7 +175,7 @@ class InstallTool
      */
     public function isFreshInstallation(): bool
     {
-        if (!$this->hasTable('tl_module')) {
+        if (!$this->hasTable('tl_page')) {
             return true;
         }
 
@@ -256,54 +261,6 @@ class InstallTool
             $context['engine'] = $options['engine'];
 
             return true;
-        }
-
-        if ('InnoDB' === $options['engine'] && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The innodb_large_prefix option is not set
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
-                $context['errorCode'] = 4;
-
-                return true;
-            }
-
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. MySQL is currently at 8 so
-            // checking for 10 should be save for the next couple of years.
-            $vok = version_compare($version, '10', '>=') ? '10.2' : '5.7.7';
-
-            // No additional requirements as of MySQL 5.7.7 and MariaDB 10.2
-            if (version_compare($version, $vok, '>=')) {
-                return false;
-            }
-
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The InnoDB file format is not Barracuda
-            if ('barracuda' !== strtolower((string) $row->Value)) {
-                $context['errorCode'] = 5;
-
-                return true;
-            }
-
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The innodb_file_per_table option is not set
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
-                $context['errorCode'] = 5;
-
-                return true;
-            }
         }
 
         return false;
@@ -493,16 +450,6 @@ class InstallTool
      */
     public function logException(\Exception $e): void
     {
-        error_log(
-            sprintf(
-                "PHP Fatal error: %s in %s on line %s\n%s\n",
-                $e->getMessage(),
-                $e->getFile(),
-                $e->getLine(),
-                $e->getTraceAsString()
-            ),
-            3,
-            $this->logDir.'/prod-'.date('Y-m-d').'.log'
-        );
+        $this->logger->critical('An exception occurred.', ['exception' => $e]);
     }
 }

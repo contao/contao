@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\InstallationBundle\Command;
@@ -17,8 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Unlocks the install tool.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class UnlockCommand extends ContainerAwareCommand
 {
