@@ -183,7 +183,7 @@ class Installer
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
      *
-     * @param array $sql
+     * @param array  $sql
      * @param Schema $toSchema
      */
     private function checkEngineAndCollation(array &$sql, Schema $toSchema): void

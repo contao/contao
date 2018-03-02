@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Locks the install tool.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class LockCommand extends ContainerAwareCommand
 {
