@@ -9,6 +9,8 @@ services:
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
+        arguments:
+            - "@contao.framework"
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand

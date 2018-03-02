@@ -13,8 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,26 +23,26 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 /**
  * Runs Contao automator tasks on the command line.
  */
-class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareInterface
+class AutomatorCommand extends AbstractLockedCommand
 {
-    use FrameworkAwareTrait;
-
     /**
      * @var array
      */
     private $commands = [];
 
     /**
-     * Returns the help text.
-     *
-     * By using the __toString() method, we ensure that the help text is lazy loaded at
-     * a time where the autoloader is available (required by $this->getCommands()).
-     *
-     * @return string
+     * @var ContaoFrameworkInterface
      */
-    public function __toString(): string
+    private $framework;
+
+    /**
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
     {
-        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
+        $this->framework = $framework;
+
+        parent::__construct();
     }
 
     /**
@@ -54,7 +53,11 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
         $this
             ->setName('contao:automator')
             ->setDefinition([
-                new InputArgument('task', InputArgument::OPTIONAL, $this),
+                new InputArgument(
+                    'task',
+                    InputArgument::OPTIONAL,
+                    sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()))
+                ),
             ])
             ->setDescription('Runs automator tasks on the command line.')
         ;

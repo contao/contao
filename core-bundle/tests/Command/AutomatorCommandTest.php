@@ -21,7 +21,7 @@ class AutomatorCommandTest extends CommandTestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $command = new AutomatorCommand('contao:automator');
+        $command = new AutomatorCommand($this->mockContaoFramework());
 
         $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $command);
         $this->assertSame('contao:automator', $command->getName());
@@ -29,9 +29,8 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testGeneratesTheTaskList(): void
     {
-        $command = new AutomatorCommand('contao:automator');
+        $command = new AutomatorCommand($this->mockContaoFramework());
         $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
         $tester->setInputs(["\n"]);
@@ -43,15 +42,7 @@ class AutomatorCommandTest extends CommandTestCase
         $this->assertContains('Please select a task:', $output);
         $this->assertContains('[10]', $output);
     }
-
-    public function testCanBeConvertedToString(): void
-    {
-        $command = new AutomatorCommand('contao:automator');
-        $command->setFramework($this->mockContaoFramework());
-
-        $this->assertContains('The name of the task:', $command->__toString());
-    }
-
+    
     public function testIsLockedWhileRunning(): void
     {
         $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5($this->getFixturesDir())));
@@ -59,9 +50,8 @@ class AutomatorCommandTest extends CommandTestCase
         $lock = $factory->createLock('contao:automator');
         $lock->acquire();
 
-        $command = new AutomatorCommand('contao:automator');
+        $command = new AutomatorCommand($this->mockContaoFramework());
         $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
         $tester->setInputs(["\n"]);
@@ -76,9 +66,8 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testTakesTheTaskNameAsArgument(): void
     {
-        $command = new AutomatorCommand('contao:automator');
+        $command = new AutomatorCommand($this->mockContaoFramework());
         $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
 
         $input = [
             'command' => $command->getName(),
@@ -93,9 +82,8 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testHandlesAnInvalidSelection(): void
     {
-        $command = new AutomatorCommand('contao:automator');
+        $command = new AutomatorCommand($this->mockContaoFramework());
         $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
 
         $tester = new CommandTester($command);
         $tester->setInputs(["4800\n"]);
@@ -108,9 +96,8 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testHandlesAnInvalidTaskName(): void
     {
-        $command = new AutomatorCommand('contao:automator');
+        $command = new AutomatorCommand($this->mockContaoFramework());
         $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
 
         $input = [
             'command' => $command->getName(),
