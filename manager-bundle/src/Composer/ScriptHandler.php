@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\ManagerBundle\Composer;
@@ -80,6 +80,9 @@ class ScriptHandler
                 getenv('SYMFONY_ENV') ?: 'prod'
             )
         );
+
+        // Increase the timeout according to terminal42/background-process (see #54)
+        $process->setTimeout(500);
 
         $process->run(
             function (string $type, string $buffer) use ($event): void {
