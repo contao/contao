@@ -182,6 +182,7 @@ namespace {
 	class ModuleSearch extends \Contao\ModuleSearch {}
 	class ModuleSitemap extends \Contao\ModuleSitemap {}
 	class ModuleUser extends \Contao\ModuleUser {}
+	class PageError401 extends \Contao\PageError401 {}
 	class PageError403 extends \Contao\PageError403 {}
 	class PageError404 extends \Contao\PageError404 {}
 	class PageForward extends \Contao\PageForward {}

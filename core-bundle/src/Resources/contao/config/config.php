@@ -264,6 +264,7 @@ $GLOBALS['TL_PTY'] = array
 	'redirect'  => 'PageRedirect',
 	'root'      => 'PageRoot',
 	'logout'    => 'PageLogout',
+	'error_401' => 'PageError401',
 	'error_403' => 'PageError403',
 	'error_404' => 'PageError404'
 );

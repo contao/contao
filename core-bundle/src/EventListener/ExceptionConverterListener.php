@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ExceptionConverterListener
 {
@@ -40,6 +42,7 @@ class ExceptionConverterListener
         ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
         IncompleteInstallationException::class => 'InternalServerErrorHttpException',
         InsecureInstallationException::class => 'InternalServerErrorHttpException',
+        InsufficientAuthenticationException::class => 'UnauthorizedHttpException',
         InternalServerErrorException::class => 'InternalServerErrorHttpException',
         InvalidRequestTokenException::class => 'InternalServerErrorHttpException',
         NoActivePageFoundException::class => 'InternalServerErrorHttpException',
@@ -110,6 +113,9 @@ class ExceptionConverterListener
 
             case 'ServiceUnavailableHttpException':
                 return new ServiceUnavailableHttpException(null, $exception->getMessage(), $exception);
+
+            case 'UnauthorizedHttpException':
+                return new UnauthorizedHttpException('', $exception->getMessage(), $exception);
         }
 
         return null;

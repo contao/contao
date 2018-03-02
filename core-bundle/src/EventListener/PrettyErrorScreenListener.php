@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PrettyErrorScreenListener
@@ -130,6 +131,10 @@ class PrettyErrorScreenListener
         switch (true) {
             case $this->isBackendUser():
                 $this->renderBackendException($event);
+                break;
+
+            case $exception instanceof UnauthorizedHttpException:
+                $this->renderErrorScreenByType(401, $event);
                 break;
 
             case $exception instanceof AccessDeniedHttpException:

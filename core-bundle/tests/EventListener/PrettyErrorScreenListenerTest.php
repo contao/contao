@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -165,6 +167,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function getErrorTypes(): array
     {
         return [
+            [401, new UnauthorizedHttpException('', new InsufficientAuthenticationException())],
             [403, new AccessDeniedHttpException('', new AccessDeniedException())],
             [404, new NotFoundHttpException('', new PageNotFoundException())],
         ];

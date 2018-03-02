@@ -166,6 +166,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,language,fallback;{global_legend:hide},dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{alias_legend:hide},validAliasCharacters;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},hide;;{publish_legend},published,start,stop',
+		'error_401'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_404'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
 	),
@@ -1139,7 +1140,7 @@ class tl_page extends Backend
 		}
 
 		// No title or not a regular page
-		if ($dc->activeRecord->title == '' || !\in_array($dc->activeRecord->type, array('regular', 'error_403', 'error_404')))
+		if ($dc->activeRecord->title == '' || !\in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
 		{
 			return;
 		}
@@ -1599,7 +1600,7 @@ class tl_page extends Backend
 			return '';
 		}
 
-		return ($row['type'] == 'regular' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;pn='.$row['id']) . '" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;pn='.$row['id']) . '" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 

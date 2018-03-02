@@ -15,8 +15,9 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\PageError403;
-use Symfony\Component\Routing\RouterInterface;
+use Contao\PageError401;
+use Contao\PageError401Exception;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
 class FrontendControllerTest extends TestCase
@@ -41,7 +42,7 @@ class FrontendControllerTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $controller->shareAction());
     }
 
-    public function testRedirectsToTheRootPageUponLogin(): void
+    public function testThrowsAnExceptionUponLoginIfThereIsNoError401Page(): void
     {
         $framework = $this->mockContaoFramework();
 
@@ -50,32 +51,21 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $router = $this->createMock(RouterInterface::class);
-
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_root')
-            ->willReturn('/')
-        ;
-
         $container = $this->mockContainer();
         $container->set('contao.framework', $framework);
-        $container->set('router', $router);
 
         $controller = new FrontendController();
         $controller->setContainer($container);
 
-        $response = $controller->loginAction();
+        $this->expectException(UnauthorizedHttpException::class);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame('/', $response->getTargetUrl());
+        $controller->loginAction();
     }
 
     /**
      * @runInSeparateProcess
      */
-    public function testRendersTheError403PageUponLogin(): void
+    public function testRendersTheError401PageUponLogin(): void
     {
         $framework = $this->mockContaoFramework();
 
@@ -111,16 +101,64 @@ class FrontendControllerTest extends TestCase
         $controller = new FrontendController();
         $controller->setContainer($container);
 
-        $GLOBALS['TL_PTY']['error_403'] = PageError403::class;
+        $GLOBALS['TL_PTY']['error_401'] = PageError401::class;
 
         $response = $controller->loginAction();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(403, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(FE_USER_LOGGED_IN);
         $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
         $this->assertFalse(BE_USER_LOGGED_IN);
+
+        unset($GLOBALS['TL_PTY']);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testThrowsAnExceptionUponLoginIfTheError401PageThrowsAnException(): void
+    {
+        $framework = $this->mockContaoFramework();
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasFrontendUser')
+            ->willReturn(true)
+        ;
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasBackendUser')
+            ->willReturn(true)
+        ;
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('isPreviewMode')
+            ->willReturn(false)
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $framework);
+        $container->set('contao.security.token_checker', $tokenChecker);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
+
+        $GLOBALS['TL_PTY']['error_401'] = PageError401Exception::class;
+
+        $this->expectException(UnauthorizedHttpException::class);
+
+        $controller->loginAction();
 
         unset($GLOBALS['TL_PTY']);
     }

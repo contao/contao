@@ -609,13 +609,13 @@ abstract class Controller extends \System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !\in_array($objPage->type, array('root', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !\in_array($objPage->type, array('root', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($objPage->type, array('root', 'error_401', 'error_403', 'error_404')))
 		{
 			$sub += 4;
 		}

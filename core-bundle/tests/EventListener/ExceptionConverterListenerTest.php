@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
@@ -89,6 +90,23 @@ class ExceptionConverterListenerTest extends TestCase
 
         $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
         $this->assertInstanceOf('Contao\CoreBundle\Exception\InsecureInstallationException', $exception->getPrevious());
+    }
+
+    public function testConvertsInsufficientAuthenticationExceptions(): void
+    {
+        $event = $this->mockResponseEvent(new InsufficientAuthenticationException());
+
+        $listener = new ExceptionConverterListener();
+        $listener->onKernelException($event);
+
+        $exception = $event->getException();
+
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException', $exception);
+
+        $this->assertInstanceOf(
+            'Contao\CoreBundle\Exception\InsufficientAuthenticationException',
+            $exception->getPrevious()
+        );
     }
 
     public function testConvertsInvalidRequestTokenExceptions(): void

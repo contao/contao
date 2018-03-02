@@ -388,7 +388,7 @@ class PageModel extends \Model
 	public static function findFirstPublishedByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -417,6 +417,34 @@ class PageModel extends \Model
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='regular'");
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = \Date::floorToMinute();
+			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+	}
+
+
+	/**
+	 * Find an error 401 page by its parent ID
+	 *
+	 * @param integer $intPid     The parent page's ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return PageModel|null The model or null if there is no 401 page
+	 */
+	public static function find401ByPid($intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=? AND $t.type='error_401'");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -568,7 +596,7 @@ class PageModel extends \Model
 	{
 		$time = \Date::floorToMinute();
 
-		$objSubpages = \Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'" . ($time + 60) . "') AND p2.published='1'" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'" . ($time + 60) . "') AND p1.published='1'" : "") . " ORDER BY p1.sorting")
+		$objSubpages = \Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'" . ($time + 60) . "') AND p2.published='1'" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'" . ($time + 60) . "') AND p1.published='1'" : "") . " ORDER BY p1.sorting")
 											   ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -596,7 +624,7 @@ class PageModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ") AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ") AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
 
 		if (FE_USER_LOGGED_IN)
 		{
@@ -629,7 +657,7 @@ class PageModel extends \Model
 	public static function findPublishedRegularWithoutGuestsByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
 
 		if (FE_USER_LOGGED_IN)
 		{

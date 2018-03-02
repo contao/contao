@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -260,17 +261,25 @@ class FrontendIndex extends \Frontend
 			}
 		}
 
-		// Authenticate the user
-		if ($objPage->protected && !\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_MEMBER'))
-		{
-			throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
-		}
-
-		// Check the user groups if the page is protected
+		// Authenticate the user if the page is protected
 		if ($objPage->protected)
 		{
+			$container = \System::getContainer();
+			$token = $container->get('security.token_storage')->getToken();
+
+			if ($container->get('security.authentication.trust_resolver')->isAnonymous($token))
+			{
+				throw new InsufficientAuthenticationException('Not authenticated: ' . \Environment::get('uri'));
+			}
+
+			if (!$container->get('security.authorization_checker')->isGranted('ROLE_MEMBER'))
+			{
+				throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
+			}
+
 			$arrGroups = $objPage->groups; // required for empty()
 
+			// Check the user groups
 			if (empty($arrGroups) || !\is_array($arrGroups) || !\count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
@@ -289,11 +298,11 @@ class FrontendIndex extends \Frontend
 			// Generate the page
 			switch ($objPage->type)
 			{
-				case 'error_404':
-					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+				case 'error_401':
+					$objHandler = new $GLOBALS['TL_PTY']['error_401']();
 
-					/** @var PageError404 $objHandler */
-					return $objHandler->getResponse();
+					/** @var PageError401 $objHandler */
+					return $objHandler->getResponse($objPage->rootId);
 					break;
 
 				case 'error_403':
@@ -301,6 +310,13 @@ class FrontendIndex extends \Frontend
 
 					/** @var PageError403 $objHandler */
 					return $objHandler->getResponse($objPage->rootId);
+					break;
+
+				case 'error_404':
+					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
+
+					/** @var PageError404 $objHandler */
+					return $objHandler->getResponse();
 					break;
 
 				default:
