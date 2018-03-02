@@ -5,17 +5,17 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\ManagerBundle\Api;
 
 use Contao\ManagerBundle\Api\Command\GetAccesskeyCommand;
+use Contao\ManagerBundle\Api\Command\GetConfigCommand;
 use Contao\ManagerBundle\Api\Command\RemoveAccesskeyCommand;
 use Contao\ManagerBundle\Api\Command\SetAccesskeyCommand;
-use Contao\ManagerBundle\Api\Command\GetConfigCommand;
 use Contao\ManagerBundle\Api\Command\SetConfigCommand;
 use Contao\ManagerBundle\Api\Command\VersionCommand;
 use Symfony\Component\Console\Application as BaseApplication;
