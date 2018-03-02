@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 
@@ -286,7 +286,7 @@ class tl_comments extends Backend
 
 				if ($objComment->numRows < 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Comment ID ' . Input::get('id') . ' does not exist.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid comment ID ' . Input::get('id') . '.');
 				}
 
 				if (!$this->isAllowedToEditComment($objComment->parent, $objComment->source))
