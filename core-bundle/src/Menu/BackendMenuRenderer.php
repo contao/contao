@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Menu;
@@ -36,6 +36,6 @@ class BackendMenuRenderer implements RendererInterface
      */
     public function render(ItemInterface $tree, array $options = []): string
     {
-        return $this->twig->render('ContaoCoreBundle:Backend:be_menu.html.twig', ['tree' => $tree]);
+        return $this->twig->render('@ContaoCore/Backend/be_menu.html.twig', ['tree' => $tree]);
     }
 }

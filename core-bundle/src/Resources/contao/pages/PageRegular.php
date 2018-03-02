@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -400,7 +400,7 @@ class PageRegular extends \Frontend
 			{
 				try
 				{
-					$version = PackageUtil::getVersion('contao-components/jquery');
+					$version = PackageUtil::getNormalizedVersion('contao-components/jquery');
 
 					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $version . '.min.js') . "\n";
 
@@ -428,7 +428,7 @@ class PageRegular extends \Frontend
 			{
 				try
 				{
-					$version = PackageUtil::getVersion('contao-components/jquery');
+					$version = PackageUtil::getNormalizedVersion('contao-components/mootools');
 
 					if (version_compare($version, '1.5.1', '>'))
 					{

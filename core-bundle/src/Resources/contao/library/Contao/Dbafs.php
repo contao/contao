@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -193,7 +193,6 @@ class Dbafs
 				$objModel->type      = 'folder';
 				$objModel->path      = $objFolder->path;
 				$objModel->extension = '';
-				$objModel->hash      = $objFolder->hash;
 				$objModel->uuid      = $objDatabase->getUuid();
 				$objModel->save();
 
@@ -204,6 +203,17 @@ class Dbafs
 			if ($objModel->path == $strResource)
 			{
 				$objReturn = $objModel;
+			}
+		}
+
+		// Update the folder hashes from bottom up after all file hashes are set
+		foreach (array_reverse($arrPaths) as $strPath)
+		{
+			if (is_dir(TL_ROOT . '/' . $strPath))
+			{
+				$objModel = \FilesModel::findByPath($strPath);
+				$objModel->hash = static::getFolderHash($strPath);
+				$objModel->save();
 			}
 		}
 
@@ -455,7 +465,7 @@ class Dbafs
 				$objModel = static::addResource($strPath, false);
 			}
 
-			$objModel->hash = $objFolder->hash;
+			$objModel->hash = static::getFolderHash($strPath);
 			$objModel->save();
 		}
 	}
@@ -510,6 +520,8 @@ class Dbafs
 		$objLog->truncate();
 
 		$arrModels = array();
+		$arrFoldersToHash = array();
+		$arrFoldersToCompare = array();
 
 		// Create or update the database entries
 		foreach ($objFiles as $objFile)
@@ -594,25 +606,57 @@ class Dbafs
 					$objModel->path      = $objFolder->path;
 					$objModel->extension = '';
 					$objModel->found     = 2;
-					$objModel->hash      = $objFolder->hash;
 					$objModel->uuid      = $objDatabase->getUuid();
 					$objModel->save();
+
+					$arrFoldersToHash[] = $strRelpath;
 				}
 			}
 			else
 			{
-				// Check whether the MD5 hash has changed
-				$objResource = $objFile->isDir() ? new \Folder($strRelpath) : new \File($strRelpath);
-				$strType = ($objModel->hash != $objResource->hash) ? 'Changed' : 'Unchanged';
+				if ($objFile->isDir())
+				{
+					$arrFoldersToCompare[] = $objModel;
+				}
+				else
+				{
+					// Check whether the MD5 hash has changed
+					$strHash = (new \File($strRelpath))->hash;
+					$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
 
-				// Add a log entry
-				$objLog->append("[$strType] $strRelpath");
+					// Add a log entry
+					$objLog->append("[$strType] $strRelpath");
 
-				// Update the record
-				$objModel->found = 1;
-				$objModel->hash  = $objResource->hash;
-				$objModel->save();
+					// Update the record
+					$objModel->found = 1;
+					$objModel->hash  = $strHash;
+					$objModel->save();
+				}
 			}
+		}
+
+		// Update the folder hashes from bottom up after all file hashes are set
+		foreach (array_reverse($arrFoldersToHash) as $strPath)
+		{
+			$objModel = \FilesModel::findByPath($strPath);
+			$objModel->hash = static::getFolderHash($strPath);
+			$objModel->save();
+		}
+
+		// Compare the folders after all hashes are set
+		foreach (array_reverse($arrFoldersToCompare) as $objModel)
+		{
+			// Check whether the MD5 hash has changed
+			$strHash = static::getFolderHash($objModel->path);
+			$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
+
+			// Add a log entry
+			$objLog->append("[$strType] {$objModel->path}");
+
+			// Update the record
+			$objModel->found = 1;
+			$objModel->hash  = $strHash;
+			$objModel->save();
 		}
 
 		// Check for left-over entries in the DB
@@ -716,6 +760,35 @@ class Dbafs
 
 		// Return the path to the log file
 		return $strLog;
+	}
+
+
+	/**
+	 * Get the folder hash from the databse by combining the hashes of all children
+	 *
+	 * @param string $strPath The relative path
+	 *
+	 * @return string MD5 hash
+	 */
+	public static function getFolderHash($strPath)
+	{
+		$strPath = str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $strPath);
+		$arrHash = array();
+
+		$objChildren = \Database::getInstance()
+			->prepare("SELECT hash, name FROM tl_files WHERE path LIKE ? AND path NOT LIKE ? ORDER BY name")
+			->execute($strPath.'/%', $strPath.'/%/%')
+		;
+
+		if ($objChildren !== null)
+		{
+			while ($objChildren->next())
+			{
+				$arrHash[] = $objChildren->hash . $objChildren->name;
+			}
+		}
+
+		return md5(implode("\0", $arrHash));
 	}
 
 

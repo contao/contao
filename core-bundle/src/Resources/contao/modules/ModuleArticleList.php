@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -68,8 +68,6 @@ class ModuleArticleList extends \Module
 			$this->inColumn = 'main';
 		}
 
-		$intCount = 0;
-		$articles = array();
 		$id = $objPage->id;
 		$objTarget = null;
 
@@ -92,9 +90,13 @@ class ModuleArticleList extends \Module
 
 		if ($objArticles === null)
 		{
+			$this->Template->articles = array();
+
 			return;
 		}
 
+		$intCount = 0;
+		$articles = array();
 		$objHelper = $objTarget ?: $objPage; // PHP 5.6 compatibility (see #939)
 
 		while ($objArticles->next())

@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Csrf;
@@ -92,6 +92,10 @@ class MemoryTokenStorage implements TokenStorageInterface
      */
     public function getUsedTokens(): array
     {
+        if (null === $this->tokens) {
+            return [];
+        }
+
         return array_intersect_key($this->tokens, $this->usedTokens);
     }
 

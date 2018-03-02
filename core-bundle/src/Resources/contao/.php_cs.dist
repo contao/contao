@@ -78,6 +78,11 @@ return PhpCsFixer\Config::create()
         'unary_operator_spaces' => true,
         'whitespace_after_comma_in_array' => true,
         'yoda_style' => false,
+        // Remove when https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/3222 has been merged
+        'LeoFeyer/optimize_native_functions' => true,
+    ])
+    ->registerCustomFixers([
+        new LeoFeyer\PhpCsFixer\OptimizeNativeFunctionsFixer()
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

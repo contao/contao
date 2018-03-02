@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 $languages = array
@@ -212,6 +212,7 @@ $languages = array
 	'nl_BE' => 'Dutch (Belgium)',
 	'nl_NL' => 'Dutch (Netherlands)',
 	'nn'    => 'Norwegian Nynorsk',
+	'no'    => 'Norwegian',
 	'nr'    => 'South Ndebele',
 	'nv'    => 'Navajo',
 	'ny'    => 'Nyanja',
@@ -412,6 +413,7 @@ $langsNative = array
 	'nl'    => 'Nederlands',
 	'nl_BE' => 'Nederlands (België)',
 	'nl_NL' => 'Nederlands (Nederland)',
+	'no'    => 'Norsk',
 	'nn'    => 'Norsk nynorsk',
 	'os'    => 'Ирон',
 	'pa'    => 'ਪੰਜਾਬੀ',

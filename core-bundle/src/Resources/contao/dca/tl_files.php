@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 
@@ -34,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'id' => 'primary',
 				'pid' => 'index',
 				'uuid' => 'unique',
-				'path' => 'index(768)', // not unique (see #7725)
+				'path' => 'index', // not unique (see #7725)
 				'extension' => 'index'
 			)
 		)

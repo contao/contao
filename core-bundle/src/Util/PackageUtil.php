@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Util;
@@ -28,6 +28,25 @@ class PackageUtil
         $version = Versions::getVersion($packageName);
 
         return static::parseVersion($version);
+    }
+
+    /**
+     * Returns the version number as "major.minor.patch".
+     *
+     * @param string $packageName
+     *
+     * @return string
+     */
+    public static function getNormalizedVersion(string $packageName): string
+    {
+        $chunks = explode('.', static::getVersion($packageName));
+        $chunks += [0, 0, 0];
+
+        if (\count($chunks) > 3) {
+            $chunks = \array_slice($chunks, 0, 3);
+        }
+
+        return implode('.', $chunks);
     }
 
     /**

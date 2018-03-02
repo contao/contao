@@ -1,16 +1,16 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 // Core version
 \define('VERSION', '4.5');
-\define('BUILD', '3');
+\define('BUILD', '4');
 \define('LONG_TERM_SUPPORT', false);
 
 // Link constants

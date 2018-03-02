@@ -1,9 +1,9 @@
 /*!
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 /* HTML */
@@ -228,9 +228,10 @@ fieldset.checkbox_container,fieldset.radio_container {
 .tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
 	margin:2px 0;
 	box-sizing:border-box;
-	border:1px solid #aaa;
 	padding:5px 6px 6px;
+	border:1px solid #aaa;
 	border-radius:2px;
+	background-color:#fff;
 	-moz-appearance:none;
 	-webkit-appearance:none;
 }

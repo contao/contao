@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Tests\EventListener;
@@ -39,6 +39,7 @@ class CsrfTokenCookieListenerTest extends TestCase
         $request->cookies = new ParameterBag([
             'csrf_foo' => 'bar',
             'not_csrf' => 'baz',
+            'csrf_bar' => '"<>!&', // ignore invalid characters
         ]);
 
         $requestEvent = $this->createMock(GetResponseEvent::class);

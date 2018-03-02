@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 
@@ -874,5 +874,8 @@ class tl_style extends Backend
 		}
 
 		$objVersions->create();
+
+		// The onsubmit_callback has triggered scheduleUpdate(), so run updateStyleSheet() now (see #1052)
+		$this->updateStyleSheet();
 	}
 }

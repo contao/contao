@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Tests\EventListener;
@@ -45,18 +45,20 @@ class BackendMenuListenerTest extends TestCase
                     'label' => 'Category 1',
                     'title' => 'Category 1 Title',
                     'href' => '/',
-                    'class' => 'node-expanded',
+                    'class' => 'node-expanded trail custom-class',
                     'modules' => [
                         'node1' => [
                             'label' => 'Node 1',
                             'title' => 'Node 1 Title',
                             'href' => '/node1',
+                            'class' => 'node1',
                             'isActive' => true,
                         ],
                         'node2' => [
                             'label' => 'Node 2',
                             'title' => 'Node 2 Title',
                             'href' => '/node2',
+                            'class' => 'node2',
                             'isActive' => false,
                         ],
                     ],
@@ -102,6 +104,7 @@ class BackendMenuListenerTest extends TestCase
         $this->assertNotNull($categoryNode);
         $this->assertInstanceOf('Knp\Menu\ItemInterface', $categoryNode);
         $this->assertCount(2, $categoryNode->getChildren());
+        $this->assertSame('custom-class', $categoryNode->getAttribute('class'));
 
         // Test module node
         $moduleNode = $categoryNode->getChild('node1');

@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 
@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedTags'],
 			'inputType'               => 'text',
-			'eval'                    => array('preserveTags'=>true, 'tl_class'=>'long')
+			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
 		),
 		'allowedDownload' => array
 		(

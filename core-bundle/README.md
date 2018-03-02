@@ -1,5 +1,4 @@
-Contao 4 core bundle
-====================
+# Contao 4 core bundle
 
 [![](https://img.shields.io/travis/contao/core-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/core-bundle/)
 [![](https://img.shields.io/coveralls/contao/core-bundle/master.svg?style=flat-square)](https://coveralls.io/github/contao/core-bundle)
@@ -13,17 +12,17 @@ for more information.
 Contao 4 has been designed as a [Symfony][2] bundle, which can be used to add
 CMS functionality to any Symfony application. If you do not have an existing
 Symfony application yet, we recommend using the [Contao managed edition][3] as
-basis for your application.
+basis for your application.``
 
-
-Installation
-------------
+## Installation
 
 Edit your `composer.json` file and add the following:
 
 ```json
 "require": {
-    "contao/core-bundle": "^4.5"
+    "contao/core-bundle": "4.5.*",
+    "contao/installation-bundle": "^4.5",
+    "php-http/guzzle6-adapter": "^1.1"
 },
 "config": {
     "component-dir": "assets"
@@ -40,9 +39,9 @@ Edit your `composer.json` file and add the following:
 
 Then run `php composer.phar update` to install the vendor files.
 
+Note that you can exchange the `php-http/guzzle6-adapter` package with any other [HTTP client implementation][4]. If you already have an HTTP client implementation, you can omit the package entirely.
 
-Activation
-----------
+## Activation
 
 Remove the `parameters.yml` import from your `app/config/config.yml` file:
 
@@ -65,8 +64,8 @@ class AppKernel extends Kernel
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
-            new Nelmio\SecurityBundle\NelmioSecurityBundle(),
             new Contao\CoreBundle\ContaoCoreBundle(),
+            new Contao\InstallationBundle\ContaoInstallationBundle(),
         ];
     }
 
@@ -83,13 +82,14 @@ class AppKernel extends Kernel
 }
 ```
 
-
-Configuration
--------------
+## Configuration
 
 Add the Contao routes to your `app/config/routing.yml` file:
 
 ```yml
+ContaoInstallationBundle:
+    resource: "@ContaoInstallationBundle/Resources/config/routing.yml"
+
 ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
@@ -214,20 +214,16 @@ contao:
         dateFormat: Y-m-d
 ```
 
-
-License
--------
+## License
 
 Contao is licensed under the terms of the LGPLv3.
 
+## Getting support
 
-Getting support
----------------
-
-Visit the [support page][4] to learn about the available support options.
-
+Visit the [support page][5] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://symfony.com
 [3]: https://github.com/contao/managed-edition
-[4]: https://contao.org/en/support.html
+[4]: https://packagist.org/providers/php-http/client-implementation
+[5]: https://contao.org/en/support.html

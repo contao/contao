@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -320,7 +320,7 @@ abstract class Model
 
 		foreach ($row as $k=>$v)
 		{
-			$originalRow[$k] = array_key_exists($k, $this->arrModified) ? $this->arrModified[$k] : $v;
+			$originalRow[$k] = isset($this->arrModified[$k]) ? $this->arrModified[$k] : $v;
 		}
 
 		return $originalRow;
@@ -377,7 +377,7 @@ abstract class Model
 				continue;
 			}
 
-			if (!array_key_exists($k, $this->arrModified))
+			if (!isset($this->arrModified[$k]))
 			{
 				$this->arrData[$k] = $v;
 			}
@@ -394,9 +394,9 @@ abstract class Model
 	 */
 	public function markModified($strKey)
 	{
-		if (!array_key_exists($strKey, $this->arrModified) && array_key_exists($strKey, $this->arrData))
+		if (!isset($this->arrModified[$strKey]))
 		{
-			$this->arrModified[$strKey] = $this->arrData[$strKey];
+			$this->arrModified[$strKey] = $this->arrData[$strKey] ?? null;
 		}
 	}
 
@@ -626,8 +626,8 @@ abstract class Model
 			$arrValues = \StringUtil::deserialize($this->$strKey, true);
 			$strField = $arrRelation['table'] . '.' . \Database::quoteIdentifier($arrRelation['field']);
 
-			// Handle UUIDs (see #6525)
-			if ($strField == 'tl_files.uuid')
+			// Handle UUIDs (see #6525 and #8850)
+			if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 			{
 				/** @var FilesModel $strClass */
 				$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);

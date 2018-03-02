@@ -12,7 +12,6 @@ services:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
             - "@contao.framework"
-            - "@contao.routing.scope_matcher"
             - "%fragment.path%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
@@ -136,6 +135,14 @@ services:
         class: Contao\CoreBundle\EventListener\ResponseExceptionListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
+
+    contao.listener.session_listener:
+        class: Contao\CoreBundle\EventListener\SessionListener
+        decorates: session_listener
+        arguments:
+            - "@contao.listener.session_listener.inner"
+            - "@contao.framework"
+            - "@contao.routing.scope_matcher"
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
