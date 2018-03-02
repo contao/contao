@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Controller;
@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\InsertTags;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -42,18 +43,25 @@ class InsertTagsController extends Controller
     /**
      * Renders an insert tag.
      *
-     * @param string $insertTag
+     * @param Request $request
+     * @param string  $insertTag
      *
      * @return Response
      */
-    public function renderAction(string $insertTag): Response
+    public function renderAction(Request $request, string $insertTag): Response
     {
         $this->framework->initialize();
 
         /** @var InsertTags $it */
         $it = $this->framework->createInstance(InsertTags::class);
 
-        // Never cache these responses
-        return (new Response($it->replace($insertTag, false)))->setPrivate();
+        $response = Response::create($it->replace($insertTag, false));
+        $response->setPrivate(); // always private
+
+        if ($clientCache = $request->query->getInt('clientCache')) {
+            $response->setMaxAge($clientCache);
+        }
+
+        return $response;
     }
 }

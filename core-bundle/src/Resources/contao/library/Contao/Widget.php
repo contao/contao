@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -1309,7 +1309,7 @@ abstract class Widget extends \Controller
 	 */
 	public static function getAttributesFromDca($arrData, $strName, $varValue=null, $strField='', $strTable='', $objDca=null)
 	{
-		$arrAttributes = $arrData['eval'];
+		$arrAttributes = $arrData['eval'] ?? array();
 
 		$arrAttributes['id'] = $strName;
 		$arrAttributes['name'] = $strName;

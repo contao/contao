@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -373,9 +373,13 @@ class Folder extends \System
 	 * Return the MD5 hash of the folder
 	 *
 	 * @return string The MD5 has
+	 *
+	 * @deprecated Use Dbafs::getFolderHash() instead
 	 */
 	protected function getHash()
 	{
+		@trigger_error('Using Folder::getHash() has been deprecated and will no longer work in Contao 5.0. Use Dbafs::getFolderHash() instead.', E_USER_DEPRECATED);
+
 		$arrFiles = array();
 
 		/** @var \SplFileInfo[] $it */

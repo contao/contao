@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -127,7 +127,7 @@ class InsertTags extends \Controller
 						new ControllerReference(
 							'contao.controller.insert_tags:renderAction',
 							array('insertTag' => '{{' . $strTag . '}}'),
-							array('pageId' => $objPage->id, 'request' => \Environment::get('request'))
+							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
 						),
 						'esi'
 					);

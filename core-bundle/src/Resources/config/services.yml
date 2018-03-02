@@ -95,7 +95,7 @@ services:
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         tags:
-            - { name: data_collector, template: "ContaoCoreBundle:Collector:contao", id: "contao" }
+            - { name: data_collector, template: "@ContaoCore/Collector/contao.html.twig", id: "contao" }
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
