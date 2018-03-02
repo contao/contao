@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CalendarBundle\EventListener;
@@ -44,7 +44,7 @@ class PreviewUrlCreateListener
      * Adds a query to the front end preview URL.
      *
      * @param PreviewUrlCreateEvent $event
-     * 
+     *
      * @throws \RuntimeException
      */
     public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void

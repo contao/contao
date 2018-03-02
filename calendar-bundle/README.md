@@ -1,5 +1,4 @@
-Contao 4 calendar bundle
-========================
+# Contao 4 calendar bundle
 
 [![](https://img.shields.io/travis/contao/calendar-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/calendar-bundle/)
 [![](https://img.shields.io/coveralls/contao/calendar-bundle/master.svg?style=flat-square)](https://coveralls.io/github/contao/calendar-bundle)
@@ -12,9 +11,7 @@ for more information.
 
 The calendar bundle adds calendar functionality to Contao 4.
 
-
-Installation
-------------
+## Installation
 
 Run the following command in your project directory:
 
@@ -22,9 +19,7 @@ Run the following command in your project directory:
 php composer.phar require contao/calendar-bundle "^4.4"
 ```
 
-
-Activation
--------------
+## Activation
 
 Adjust to your `app/AppKernel.php` file:
 
@@ -42,18 +37,13 @@ class AppKernel extends Kernel
 }
 ```
 
-
-License
--------
+## License
 
 Contao is licensed under the terms of the LGPLv3.
 
-
-Getting support
----------------
+## Getting support
 
 Visit the [support page][2] to learn about the available support options.
-
 
 [1]: https://contao.org
 [2]: https://contao.org/en/support.html
