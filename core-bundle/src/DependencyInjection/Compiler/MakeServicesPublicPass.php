@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * Makes services public that we need to retrieve directly.
@@ -21,12 +22,33 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class MakeServicesPublicPass implements CompilerPassInterface
 {
     /**
+     * @var array
+     */
+    private static $services = [
+        'assets.packages',
+        'database_connection',
+        'fragment.handler',
+        'lexik_maintenance.driver.factory',
+        'monolog.logger.contao',
+        'security.authentication.trust_resolver',
+        'security.firewall.map',
+        'security.logout_url_generator',
+        'swiftmailer.mailer',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        if ($container->hasDefinition('security.firewall.map')) {
-            $container->getDefinition('security.firewall.map')->setPublic(true);
+        foreach (self::$services as $service) {
+            try {
+                // Use findDefinition() to also check aliased services
+                $definition = $container->findDefinition($service);
+                $definition->setPublic(true);
+            } catch (ServiceNotFoundException $exception) {
+                continue;
+            }
         }
     }
 }
