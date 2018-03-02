@@ -1,11 +1,11 @@
 <?php
 
-/**
- * Contao Open Source CMS
+/*
+ * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao;
@@ -272,7 +272,13 @@ class ModuleListing extends \Module
 
 			$class = '';
 			$sort = 'asc';
-			$strField = \strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'][0]) ? $label : $arrFields[$i];
+			$strField = $arrFields[$i];
+
+			// Field label
+			if (isset($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label']))
+			{
+				$strField = is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label']) ? $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'][0] : $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'];
+			}
 
 			// Add a CSS class to the order_by column
 			if ($order_by == $arrFields[$i])
@@ -286,7 +292,7 @@ class ModuleListing extends \Module
 				'link' => $strField,
 				'href' => (ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
 				'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
-				'class' => $class . (($i == 0) ? ' col_first' : '') //. ((($i + 1) == count($arrFields)) ? ' col_last' : '')
+				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == count($arrFields)) ? ' col_last' : '')
 			);
 		}
 
