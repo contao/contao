@@ -42,7 +42,7 @@ class AutomatorCommandTest extends CommandTestCase
         $this->assertContains('Please select a task:', $output);
         $this->assertContains('[10]', $output);
     }
-    
+
     public function testIsLockedWhileRunning(): void
     {
         $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5($this->getFixturesDir())));
