@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
@@ -80,7 +80,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $context = new Reference('contao.assets.assets_context');
 
         foreach (Versions::VERSIONS as $name => $version) {
-            if (strncmp('contao-components/', $name, 18) !== 0) {
+            if (0 !== strncmp('contao-components/', $name, 18)) {
                 continue;
             }
 

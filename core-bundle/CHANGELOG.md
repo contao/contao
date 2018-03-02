@@ -1,41 +1,41 @@
 # Contao core bundle change log
 
-### DEV
+## DEV
 
  * Support using InnoDB without the `innodb_large_prefix` option.
  * Correctly track modified fields in the `Model` class (see #1290).
  * Use the normalized package versions for the CDN scripts (see #1391).
 
-### 4.5.4 (2018-02-14)
+## 4.5.4 (2018-02-14)
 
  * Preserve custom CSS classes in the back end navigation (see #1357).
 
-### 4.5.3 (2018-01-23)
+## 4.5.3 (2018-01-23)
 
  * Correctly select folders as gallery source (see #1328).
 
-### 4.5.2 (2018-01-12)
+## 4.5.2 (2018-01-12)
 
  * Use the `BINARY` flag instead of `COLLATE utf8mb4_bin` (see #1286).
  * Use a custom toggle parameter for content elements (see #1291).
  * Dynamically register the user session response listener (see #1293).
  * Redirect to the last page visited if a back end session expires.
 
-### 4.5.1 (2018-01-04)
+## 4.5.1 (2018-01-04)
 
  * Set the correct CSS classes in the back end navigation (see #1278).
  * Correctly handle authentication through the Symfony firewall entry point (see #1275).
  * Make services public that we need to access directly.
 
-### 4.5.0 (2017-12-28)
+## 4.5.0 (2017-12-28)
 
  * Apply the schema filter in the DCA schema provider.
 
-### 4.5.0-RC1 (2017-12-12)
+## 4.5.0-RC1 (2017-12-12)
 
  * Use the Symfony security component for authentication (see #685).
 
-### 4.5.0-beta3 (2017-12-04)
+## 4.5.0-beta3 (2017-12-04)
 
  * Use InnoDB as default storage engine (see #188).
  * Use "utf8mb4" as default charset for MySQL (see #113).
@@ -44,7 +44,7 @@
  * Add the toggle icon of the parent record in parent view (see contao/core#2266).
  * Decrease the number of DB queries by reusing the page model (see #1090).
 
-### 4.5.0-beta2 (2017-11-24)
+## 4.5.0-beta2 (2017-11-24)
 
  * Display form fieldsets as wrappers in the back end view (see #1102).
  * Replace the back end "limit width" option with a "fullscreen" option (see #1082).
@@ -60,7 +60,7 @@
  * Use the Symfony assets component for the Contao assets (see #1165).
  * Do not log known exceptions with a pretty error screen (see #1139).
 
-### 4.5.0-beta1 (2017-11-06)
+## 4.5.0-beta1 (2017-11-06)
 
  * Use ausi/slug-generator to auto-generate aliases (see #1016).
  * Allow to register hooks listeners as tagged services (see #1094).

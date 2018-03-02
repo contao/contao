@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\Tests\EventListener;
@@ -23,15 +25,13 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
 
 /**
  * Tests the SessionListener class.
- *
- * @author Leo Feyer <https:/github.com/leofeyer>
  */
 class SessionListenerTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $this->getListener());
     }
@@ -39,7 +39,7 @@ class SessionListenerTest extends TestCase
     /**
      * Tests that the onKernelRequest call is forwarded.
      */
-    public function testForwardsTheOnKernelRequestCall()
+    public function testForwardsTheOnKernelRequestCall(): void
     {
         $event = $this->createMock(GetResponseEvent::class);
         $inner = $this->createMock(BaseSessionListener::class);
@@ -57,7 +57,7 @@ class SessionListenerTest extends TestCase
     /**
      * Tests that the session is saved upon kernel response.
      */
-    public function testSavesTheSessionUponKernelResponse()
+    public function testSavesTheSessionUponKernelResponse(): void
     {
         $session = $this->createMock(SessionInterface::class);
 
@@ -112,7 +112,7 @@ class SessionListenerTest extends TestCase
     /**
      * Tests that the session is not saved upon kernel response if the Contao framework is not initialized.
      */
-    public function testDoesNotSaveTheSessionUponKernelRequestIfTheFrameworkIsNotInitialized()
+    public function testDoesNotSaveTheSessionUponKernelRequestIfTheFrameworkIsNotInitialized(): void
     {
         $event = $this->createMock(FilterResponseEvent::class);
 
@@ -150,7 +150,7 @@ class SessionListenerTest extends TestCase
     /**
      * Tests that the session is not saved upon kernel response if not a front end master request.
      */
-    public function testDoesNotSaveTheSessionUponKernelRequestIfNotAFrontendMasterRequest()
+    public function testDoesNotSaveTheSessionUponKernelRequestIfNotAFrontendMasterRequest(): void
     {
         $event = $this->createMock(FilterResponseEvent::class);
 
@@ -189,7 +189,7 @@ class SessionListenerTest extends TestCase
     /**
      * Tests that the subscribed events are returned.
      */
-    public function testReturnsTheSubscribedEvents()
+    public function testReturnsTheSubscribedEvents(): void
     {
         $this->assertSame(
             AbstractSessionListener::getSubscribedEvents(),
@@ -206,7 +206,7 @@ class SessionListenerTest extends TestCase
      *
      * @return SessionListener
      */
-    private function getListener(BaseSessionListener $inner = null, ContaoFrameworkInterface $framework = null, ScopeMatcher $scopeMatcher = null)
+    private function getListener(BaseSessionListener $inner = null, ContaoFrameworkInterface $framework = null, ScopeMatcher $scopeMatcher = null): SessionListener
     {
         if (null === $inner) {
             $inner = $this->createMock(BaseSessionListener::class);

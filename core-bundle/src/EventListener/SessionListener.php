@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2018 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\CoreBundle\EventListener;
@@ -27,8 +29,6 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
  * session (e.g. to store the user's language). This listener circumvents
  * Symfony's changes by not making the response private if the request is a
  * Contao front end request.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SessionListener implements EventSubscriberInterface
 {
@@ -64,15 +64,15 @@ class SessionListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
-        return $this->inner->onKernelRequest($event);
+        $this->inner->onKernelRequest($event);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(FilterResponseEvent $event): void
     {
         if (!$this->framework->isInitialized() || !$this->scopeMatcher->isFrontendMasterRequest($event)) {
             $this->inner->onKernelResponse($event);
@@ -91,7 +91,7 @@ class SessionListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return AbstractSessionListener::getSubscribedEvents();
     }
