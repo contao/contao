@@ -26,13 +26,15 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event): void
     {
+        $webDir = self::getWebDir($event);
+
         static::purgeCacheFolder();
         static::addAppDirectory();
         static::executeCommand('contao:install-web-dir', $event);
         static::executeCommand('cache:clear', $event);
-        static::executeCommand('assets:install --symlink --relative', $event);
-        static::executeCommand('contao:install', $event);
-        static::executeCommand('contao:symlinks', $event);
+        static::executeCommand(sprintf('assets:install %s --symlink --relative', $webDir), $event);
+        static::executeCommand(sprintf('contao:install %s', $webDir), $event);
+        static::executeCommand(sprintf('contao:symlinks %s', $webDir), $event);
     }
 
     /**
@@ -92,6 +94,20 @@ class ScriptHandler
                 sprintf('An error occurred while executing the "%s" command: %s', $cmd, $process->getErrorOutput())
             );
         }
+    }
+
+    /**
+     * Returns the web directory.
+     *
+     * @param Event $event
+     *
+     * @return string
+     */
+    private static function getWebDir(Event $event): string
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        return $extra['symfony-web-dir'] ?? 'web';
     }
 
     /**
