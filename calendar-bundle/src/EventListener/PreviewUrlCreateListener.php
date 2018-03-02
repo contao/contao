@@ -44,7 +44,7 @@ class PreviewUrlCreateListener
      * Adds a query to the front end preview URL.
      *
      * @param PreviewUrlCreateEvent $event
-     * 
+     *
      * @throws \RuntimeException
      */
     public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void
