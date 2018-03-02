@@ -1,8 +1,6 @@
-API changes
-===========
+# API changes
 
-Version 3.* to 4.0
-------------------
+## Version 3.* to 4.0
 
 ### Template name changes
 
@@ -11,7 +9,6 @@ module key:
 
  * `mod_newsletter_list`   -> `mod_newsletterlist`
  * `mod_newsletter_reader` -> `mod_newsletterreader`
-
 
 ### Front end module keys
 
