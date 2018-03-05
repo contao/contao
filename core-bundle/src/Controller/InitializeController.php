@@ -10,11 +10,9 @@
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,11 +37,6 @@ class InitializeController extends Controller
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $realRequest = Request::createFromGlobals();
-        $scope = ContaoCoreBundle::SCOPE_FRONTEND;
-
-        if (\defined('TL_MODE') && 'BE' === TL_MODE) {
-            $scope = ContaoCoreBundle::SCOPE_BACKEND;
-        }
 
         // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
@@ -57,12 +50,7 @@ class InitializeController extends Controller
 
         // Initialize the framework with the real request
         $this->get('request_stack')->push($realRequest);
-
-        if (method_exists(Container::class, 'enterScope')) {
-            $this->container->enterScope($scope);
-        }
-
-        $this->container->get('contao.framework')->initialize();
+        $this->get('contao.framework')->initialize();
 
         // Add the master request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.
