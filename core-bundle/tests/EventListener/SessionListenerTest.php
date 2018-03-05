@@ -59,6 +59,10 @@ class SessionListenerTest extends TestCase
      */
     public function testSavesTheSessionUponKernelResponse()
     {
+        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
+            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.');
+        }
+
         $session = $this->createMock(SessionInterface::class);
 
         $session
@@ -114,6 +118,10 @@ class SessionListenerTest extends TestCase
      */
     public function testDoesNotSaveTheSessionUponKernelRequestIfTheFrameworkIsNotInitialized()
     {
+        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
+            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.');
+        }
+
         $event = $this->createMock(FilterResponseEvent::class);
 
         $event
@@ -152,6 +160,10 @@ class SessionListenerTest extends TestCase
      */
     public function testDoesNotSaveTheSessionUponKernelRequestIfNotAFrontendMasterRequest()
     {
+        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
+            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.');
+        }
+
         $event = $this->createMock(FilterResponseEvent::class);
 
         $event
