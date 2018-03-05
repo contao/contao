@@ -277,7 +277,7 @@ class ModuleListing extends \Module
 			// Field label
 			if (isset($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label']))
 			{
-				$strField = is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label']) ? $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'][0] : $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'];
+				$strField = \is_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label']) ? $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'][0] : $GLOBALS['TL_DCA'][$this->list_table]['fields'][$arrFields[$i]]['label'];
 			}
 
 			// Add a CSS class to the order_by column
@@ -292,7 +292,7 @@ class ModuleListing extends \Module
 				'link' => $strField,
 				'href' => (ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
 				'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
-				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == count($arrFields)) ? ' col_last' : '')
+				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == \count($arrFields)) ? ' col_last' : '')
 			);
 		}
 
