@@ -806,6 +806,9 @@
       <trans-unit id="LNG.tk">
         <source>Turkmen</source>
       </trans-unit>
+      <trans-unit id="LNG.tl">
+        <source>Tagalog</source>
+      </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>
       </trans-unit>
