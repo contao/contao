@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+## DEV
+
+ * Use the DCA information to determine the index length (see contao/installation-bundle#88).
+
 ## 4.5.5 (2018-03-06)
 
  * Support using InnoDB without the `innodb_large_prefix` option.

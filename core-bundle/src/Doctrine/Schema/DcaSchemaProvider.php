@@ -71,6 +71,27 @@ class DcaSchemaProvider
         foreach ($config as $tableName => $definitions) {
             $table = $schema->createTable($tableName);
 
+            // Parse the table options first
+            if (isset($definitions['TABLE_OPTIONS'])) {
+                if (preg_match('/ENGINE=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('engine', $match[1]);
+                }
+
+                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('charset', $match[1]);
+                    $table->addOption('collate', $match[1].'_general_ci');
+                }
+
+                if (preg_match('/COLLATE ([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('collate', $match[1]);
+                }
+            }
+
+            // The default InnoDB row format before MySQL 5.7.9 is "Compact" but innodb_large_prefix requires "DYNAMIC"
+            if ($table->hasOption('engine') && 'InnoDB' === $table->getOption('engine')) {
+                $table->addOption('row_format', 'DYNAMIC');
+            }
+
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
                     $options = $config;
@@ -95,26 +116,6 @@ class DcaSchemaProvider
                 foreach ($definitions['TABLE_CREATE_DEFINITIONS'] as $keyName => $sql) {
                     $this->parseIndexSql($table, $keyName, strtolower($sql));
                 }
-            }
-
-            if (isset($definitions['TABLE_OPTIONS'])) {
-                if (preg_match('/ENGINE=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
-                    $table->addOption('engine', $match[1]);
-                }
-
-                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
-                    $table->addOption('charset', $match[1]);
-                    $table->addOption('collate', $match[1].'_general_ci');
-                }
-
-                if (preg_match('/COLLATE ([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
-                    $table->addOption('collate', $match[1]);
-                }
-            }
-
-            // The default InnoDB row format before MySQL 5.7.9 is "Compact" but innodb_large_prefix requires "DYNAMIC"
-            if ($table->hasOption('engine') && 'InnoDB' === $table->getOption('engine')) {
-                $table->addOption('row_format', 'DYNAMIC');
             }
         }
     }
@@ -402,23 +403,12 @@ class DcaSchemaProvider
      */
     private function getIndexLength(Table $table, string $column): ?int
     {
-        $connection = $this->doctrine->getConnection();
-
-        if (!$connection->getSchemaManager()->tablesExist([$table->getName()])) {
-            return null;
-        }
-
-        $columnOptions = $connection
-            ->query(sprintf("SHOW FULL COLUMNS FROM %s LIKE '%s'", $table->getName(), $column))
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
+        $col = $table->getColumn($column);
 
         // Not a text field
-        if (null === $columnOptions->Collation) {
+        if (null === ($length = $col->getLength())) {
             return null;
         }
-
-        [, $length] = explode('(', rtrim($columnOptions->Type, ')'));
 
         // Return if the field is shorter than the shortest possible index
         // length (utf8mb4 on InnoDB without large prefixes)
@@ -426,8 +416,14 @@ class DcaSchemaProvider
             return null;
         }
 
+        if ($col->hasPlatformOption('collation')) {
+            $collation = $col->getPlatformOption('collation');
+        } else {
+            $collation = $table->getOption('collate');
+        }
+
         $defaultLength = $this->getDefaultIndexLength($table);
-        $bytes = 0 === strncmp($columnOptions->Collation, 'utf8mb4', 7) ? 4 : 3;
+        $bytes = 0 === strncmp($collation, 'utf8mb4', 7) ? 4 : 3;
         $indexLength = (int) floor($defaultLength / $bytes);
 
         // Return if the field is shorter than the index length
@@ -447,18 +443,14 @@ class DcaSchemaProvider
      */
     private function getDefaultIndexLength(Table $table): int
     {
-        $connection = $this->doctrine->getConnection();
+        $engine = $table->getOption('engine');
 
-        $tableOptions = $connection
-            ->query(sprintf("SHOW TABLE STATUS LIKE '%s'", $table->getName()))
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
-
-        if ('InnoDB' !== $tableOptions->Engine) {
+        if ('innodb' !== strtolower($engine)) {
             return 1000;
         }
 
-        $largePrefix = $connection
+        $largePrefix = $this->doctrine
+            ->getConnection()
             ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
             ->fetch(\PDO::FETCH_OBJ)
         ;
