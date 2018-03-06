@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Z bezpečnostních důvodů byl instalační nástroj zablokován, protože bylo zadáno více než třikrát špatné heslo. Pro odblokování spustěte na příkazovém řádku tento příkaz &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt;.</target>
+        <target>Z bezpečnostních důvodů byl instalační nástroj zablokován, protože bylo zadáno více než třikrát špatné heslo. Pro odblokování spustěte na příkazovém řádku tento příkaz &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -363,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Byly nalezeny následující duplikáty objednávek zpravodaje:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Duplikované položky byly automaticky odstraněné. Původní stav byl uložen jako záloha do &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>
