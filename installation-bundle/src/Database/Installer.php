@@ -204,6 +204,11 @@ class Installer
                 ->fetch(\PDO::FETCH_OBJ)
             ;
 
+            // The table does not yet exist
+            if (false === $tableOptions) {
+                continue;
+            }
+
             $engine = $table->getOption('engine');
 
             if ($tableOptions->Engine !== $engine) {
