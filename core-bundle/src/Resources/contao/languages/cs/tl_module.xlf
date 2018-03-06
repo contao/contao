@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
-        <target>Titulek</target>
+        <target>Název</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_module.headline.0">
         <source>Headline</source>
-        <target>Hlavička</target>
+        <target>Nadpis</target>
       </trans-unit>
       <trans-unit id="tl_module.headline.1">
         <source>Here you can add a headline to the module.</source>
-        <target>Pokud zadáte hlavičku, bude zobrazena nahoře modulu</target>
+        <target>Pokud zadáte nadpis, bude zobrazena nahoře modulu</target>
       </trans-unit>
       <trans-unit id="tl_module.type.0">
         <source>Module type</source>

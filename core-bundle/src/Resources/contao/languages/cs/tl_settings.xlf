@@ -127,6 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeIp.1">
         <source>Anonymize all IP addresses that are stored in the database.</source>
+        <target>Anonymizovat všechny adresy IP, které se ukládají do databáze.</target>
       </trans-unit>
       <trans-unit id="tl_settings.privacyAnonymizeGA.0">
         <source>Anonymize Google Analytics</source>

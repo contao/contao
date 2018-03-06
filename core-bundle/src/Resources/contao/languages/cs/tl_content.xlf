@@ -3,15 +3,15 @@
     <body>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
-        <target>Typ elementu</target>
+        <target>Druh elementu</target>
       </trans-unit>
       <trans-unit id="tl_content.type.1">
         <source>Please choose the type of content element.</source>
-        <target>Zvolte typ obsahového elementu.</target>
+        <target>Zvolte druh obsahového elementu.</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
-        <target>Hlavička</target>
+        <target>Nadpis</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
@@ -443,21 +443,27 @@
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.0">
         <source>Player options</source>
+        <target>Možnosti přehrávače</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.1">
         <source>Here you can select the player options.</source>
+        <target>Zde můžete vybrat možnosti přehrávače.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.0">
         <source>Start at</source>
+        <target>Začít od</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Začít přehrávat video od zadaného času. Zadáním 0 se video přehraje od úplného začátku</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.0">
         <source>Stop at</source>
+        <target>Zastavit</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Zastavit přehrávání videa v daném čase. Zadáním 0 se video zastaví na úplného konci</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -709,24 +715,31 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
+        <target>Zobrazit popisek</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_fs">
         <source>Hide the fullscreen button</source>
+        <target>Skrýt funkci celoobrazového režimu</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
+        <target>Použít jazyk stránky Contaa</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
+        <target>Skrýt poznámky</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_modestbranding">
         <source>Hide the YouTube logo</source>
+        <target>Skrýt logo YouTube</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Do not show related videos at the end</source>
+        <target>Nezobrazovat příslušející videa po přehrání videa</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
+        <target>Skrýt horní lištu v náhledu</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

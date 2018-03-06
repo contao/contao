@@ -19,19 +19,19 @@
       </trans-unit>
       <trans-unit id="tl_theme.folders.0">
         <source>Folders</source>
-        <target>Adresáře</target>
+        <target>Složky</target>
       </trans-unit>
       <trans-unit id="tl_theme.folders.1">
         <source>Please select the folders that belong to the theme from the files directory.</source>
-        <target>Vyberte prosím adresáře, které patří k tomuto vzhledu.</target>
+        <target>Vyberte prosím složky, které patří k tomuto vzhledu.</target>
       </trans-unit>
       <trans-unit id="tl_theme.templates.0">
         <source>Templates folder</source>
-        <target>Adresář předlohy</target>
+        <target>Složka předlohy</target>
       </trans-unit>
       <trans-unit id="tl_theme.templates.1">
         <source>Here you can select a templates folder that will be exported with the theme.</source>
-        <target>Zde můžete vybrat adresář předlohy, který bude exportovaný s daným vzhledem.</target>
+        <target>Zde můžete vybrat složku předlohy, která bude exportovaná s daným vzhledem.</target>
       </trans-unit>
       <trans-unit id="tl_theme.screenshot.0">
         <source>Screenshot</source>

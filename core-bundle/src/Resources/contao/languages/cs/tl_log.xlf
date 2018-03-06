@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_log.text.0">
         <source>Details</source>
-        <target>Detaily</target>
+        <target>Podrobnosti</target>
       </trans-unit>
       <trans-unit id="tl_log.text.1">
         <source>Details of the log entry</source>

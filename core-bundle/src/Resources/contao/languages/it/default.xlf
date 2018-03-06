@@ -655,45 +655,59 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>am</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>AM</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
+        <target>DD</target>
       </trans-unit>
       <trans-unit id="DATE.j">
         <source>D</source>
+        <target>D</target>
       </trans-unit>
       <trans-unit id="DATE.m">
         <source>MM</source>
+        <target>MM</target>
       </trans-unit>
       <trans-unit id="DATE.n">
         <source>M</source>
+        <target>M</target>
       </trans-unit>
       <trans-unit id="DATE.y">
         <source>YY</source>
+        <target>YY</target>
       </trans-unit>
       <trans-unit id="DATE.Y">
         <source>YYYY</source>
+        <target>YYYY</target>
       </trans-unit>
       <trans-unit id="DATE.h">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.H">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.g">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.G">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.i">
         <source>mm</source>
+        <target>mm</target>
       </trans-unit>
       <trans-unit id="DATE.s">
         <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1479,6 +1493,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.switchBT">
         <source>Back to %s</source>
+        <target>Torna a %s</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1754,6 +1769,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Gestione della versione</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -2352,9 +2368,11 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
+        <target>Breadcrumb menu</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>
+        <target>Navigazione principale</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
@@ -2365,9 +2383,11 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>Lettere minuscole e numero unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>Lettere e numeri unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
