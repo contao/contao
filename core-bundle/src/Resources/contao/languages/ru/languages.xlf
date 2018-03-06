@@ -809,6 +809,10 @@
         <source>Norwegian Nynorsk</source>
         <target>Нюношк (Норвегия)</target>
       </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+        <target>Норвежский</target>
+      </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
         <target>Южный ндебеле</target>
@@ -1068,6 +1072,10 @@
       <trans-unit id="LNG.tk">
         <source>Turkmen</source>
         <target>Туркменский</target>
+      </trans-unit>
+      <trans-unit id="LNG.tl">
+        <source>Tagalog</source>
+        <target>Тагальский</target>
       </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>

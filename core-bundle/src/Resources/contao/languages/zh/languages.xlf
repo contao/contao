@@ -810,6 +810,10 @@
         <source>Norwegian Nynorsk</source>
         <target>挪威尼诺斯克文</target>
       </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+        <target>挪威语</target>
+      </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
         <target>南恩德贝勒</target>
@@ -1069,6 +1073,10 @@
       <trans-unit id="LNG.tk">
         <source>Turkmen</source>
         <target>土库曼语</target>
+      </trans-unit>
+      <trans-unit id="LNG.tl">
+        <source>Tagalog</source>
+        <target>塔加路族语</target>
       </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>
