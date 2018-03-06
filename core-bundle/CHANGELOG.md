@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.5.6 (2018-03-06)
 
  * Use the DCA information to determine the index length (see contao/installation-bundle#88).
 
