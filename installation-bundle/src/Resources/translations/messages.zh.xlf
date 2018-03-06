@@ -406,26 +406,6 @@
         <target>配置的数据库引擎 &lt;code&gt;%s&lt;/code&gt; 在当前服务器中无效。请安装数据库引擎 (推荐) 或在文件&lt;code&gt;app/config/config.yml&lt;/code&gt; 中配置不同的数据库引擎.</target>
         
       </trans-unit>
-      <trans-unit id="82">
-        <source>innodb_large_prefix</source>
-        <target>innodb_large_prefix选项没有启用！</target>
-        
-      </trans-unit>
-      <trans-unit id="83">
-        <source>innodb_large_prefix_explain</source>
-        <target>服务器中没有启用 &lt;code&gt;innodb_large_prefix&lt;/code&gt; 选项。请启用该设置 (推荐) 或者在 &lt;code&gt;app/config/config.yml&lt;/code&gt; 文件中配置不同的字符集和collation。</target>
-        
-      </trans-unit>
-      <trans-unit id="84">
-        <source>innodb_additional</source>
-        <target>InnoDB配置不正确！</target>
-        
-      </trans-unit>
-      <trans-unit id="85">
-        <source>innodb_additional_explain</source>
-        <target>在MySQL 5.7.7 之前版本和MariaDB 10.2 之前版本中使用较大前缀需要Barracuda文件格式和 &lt;code&gt;innodb_file_per_table&lt;/code&gt; 选项。</target>
-        
-      </trans-unit>
     </body>
   </file>
 </xliff>

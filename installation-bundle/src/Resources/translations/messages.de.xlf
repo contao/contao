@@ -406,26 +406,6 @@
         <target>Die konfigurierte Datenbank-Engine &lt;code&gt;%s&lt;/code&gt; ist auf Ihrem Server nicht verfügbar. Bitte installieren Sie sie (empfohlen) oder konfigurieren Sie eine andere Datenbank-Engine in der Datei &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
-      <trans-unit id="82">
-        <source>innodb_large_prefix</source>
-        <target>Die innodb_large_prefix-Option ist nicht aktiv!</target>
-        
-      </trans-unit>
-      <trans-unit id="83">
-        <source>innodb_large_prefix_explain</source>
-        <target>Die &lt;code&gt;innodb_large_prefix&lt;/code&gt;-Option ist auf Ihrem Server nicht aktiv. Bitte aktivieren Sie sie (empfohlen) oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
-        
-      </trans-unit>
-      <trans-unit id="84">
-        <source>innodb_additional</source>
-        <target>InnoDB ist nicht richtig konfiguriert!</target>
-        
-      </trans-unit>
-      <trans-unit id="85">
-        <source>innodb_additional_explain</source>
-        <target>Die Verwendung von &quot;Large Prefixes&quot; in MySQL-Versionen vor 5.7.7 bzw. MariaDB-Versionen vor 10.2 erfordert das Barracuda-Dateiformat und die Option &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
-        
-      </trans-unit>
     </body>
   </file>
 </xliff>
