@@ -1,0 +1,19 @@
+services:
+    contao_manager.cache.clear_bundle:
+        class: Contao\ManagerBundle\Cache\BundleCacheClearer
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_clearer }
+
+    contao_manager.plugin_loader:
+        synthetic: true
+        public: true
+
+    contao_manager.routing_loader:
+        class: Contao\ManagerBundle\Routing\RouteLoader
+        arguments:
+            - "@routing.loader"
+            - "@contao_manager.plugin_loader"
+            - "@kernel"
+        public: true

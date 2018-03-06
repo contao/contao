@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+use Contao\ManagerBundle\Api\Application;
+
+set_time_limit(0);
+ini_set('error_reporting', '-1');
+ini_set('display_startup_errors', '1');
+ini_set('display_errors', '1');
+
+if (file_exists(__DIR__.'/../autoload.php')) {
+    $projectDir = \dirname(__DIR__, 2);
+} else {
+    $projectDir = \dirname(__DIR__, 4);
+}
+
+/** @var Composer\Autoload\ClassLoader $loader */
+$loader = require $projectDir.'/vendor/autoload.php';
+
+$application = new Application($projectDir);
+$application->run();

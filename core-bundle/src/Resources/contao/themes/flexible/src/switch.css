@@ -1,0 +1,88 @@
+/*!
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+/* Body */
+html,body {
+	background:#f2f2f2;
+}
+
+/* Container */
+#container {
+	padding:3px 6px;
+	overflow:hidden;
+	text-align:right;
+}
+
+#container:after {
+	content:"";
+	display:block;
+	position:absolute;
+	top:40px;
+	left:0;
+	height:1px;
+	width:100%;
+	background:#d3d3d3;
+}
+
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	#container:after {
+		background:linear-gradient(transparent 0%, transparent 50%, #d3d3d3 50%, #d3d3d3 100%);
+	}
+}
+
+/* Headline */
+h1 {
+	float:left;
+	margin:10px 0 0 3px;
+	font-size:.875rem;
+	font-weight:normal;
+}
+
+/* Close */
+.close {
+	font-size:1rem;
+	color:#999;
+	font-weight:bold;
+	padding:0 3px;
+	vertical-align:middle;
+}
+.close:hover {
+	color:#666;
+}
+
+/* Form elements */
+.tl_select {
+	width:24%;
+	max-width:100px;
+}
+.tl_text.user {
+	width:24%;
+	max-width:180px;
+}
+label {
+	margin-left:9px;
+}
+
+/* Paragraphs */
+p {
+	margin-bottom:0;
+}
+
+/* Tablet */
+@media (max-width:991px) {
+	h1 {
+		display:none;
+	}
+}
+
+/* Handheld */
+@media (max-width:767px) {
+	label {
+		display:none;
+	}
+}
