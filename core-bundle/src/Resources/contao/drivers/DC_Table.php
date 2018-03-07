@@ -3545,9 +3545,12 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		}
 
 		// Call a recursive function that builds the tree
-		for ($i=0, $c=\count($this->root); $i<$c; $i++)
+		if (\is_array($this->root))
 		{
-			$tree .= $this->generateTree($table, $this->root[$i], array('p'=>$this->root[($i-1)], 'n'=>$this->root[($i+1)]), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, false, $arrFound);
+			for ($i=0, $c=\count($this->root); $i<$c; $i++)
+			{
+				$tree .= $this->generateTree($table, $this->root[$i], array('p'=>$this->root[($i-1)], 'n'=>$this->root[($i+1)]), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, false, $arrFound);
+			}
 		}
 
 		// Return if there are no records
