@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly link to the picker from the TinyMCE link menu (see #1415).
+
 ## 4.4.15 (2018-03-06)
 
  * Do not make the response private when saving the session (see #1388).
