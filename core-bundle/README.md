@@ -12,7 +12,7 @@ for more information.
 Contao 4 has been designed as a [Symfony][2] bundle, which can be used to add
 CMS functionality to any Symfony application. If you do not have an existing
 Symfony application yet, we recommend using the [Contao managed edition][3] as
-basis for your application.``
+basis for your application.
 
 ## Installation
 
