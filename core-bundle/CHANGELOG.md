@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.16 (2018-03-08)
 
  * Correctly link to the picker from the TinyMCE link menu (see #1415).
 
