@@ -328,18 +328,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @param int|null $expected
-     * @param array    $calls
+     * @param int|null    $expected
+     * @param string      $tableOptions
+     * @param string|null $largePrefixes
      *
      * @dataProvider getIndexes
      */
-    public function testAddsTheIndexLength(?int $expected, array $calls): void
+    public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = ''): void
     {
         $statement = $this->createMock(Statement::class);
 
         $statement
             ->method('fetch')
-            ->willReturnOnConsecutiveCalls(...$calls)
+            ->willReturn((object) ['Value' => $largePrefixes])
         ;
 
         $provider = $this->getProvider(
@@ -351,6 +352,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                     'TABLE_CREATE_DEFINITIONS' => [
                         'name' => 'KEY `name` (`name`)',
                     ],
+                    'TABLE_OPTIONS' => $tableOptions,
                 ],
             ],
             [],
@@ -384,52 +386,12 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function getIndexes(): array
     {
         return [
-            [
-                null,
-                [
-                    (object) ['Collation' => 'utf8_unicode_ci', 'Type' => 'varchar(255)'],
-                    (object) ['Engine' => 'MyISAM'],
-                ],
-            ],
-            [
-                250,
-                [
-                    (object) ['Collation' => 'utf8mb4_unicode_ci', 'Type' => 'varchar(255)'],
-                    (object) ['Engine' => 'MyISAM'],
-                ],
-            ],
-            [
-                null,
-                [
-                    (object) ['Collation' => 'utf8_unicode_ci', 'Type' => 'varchar(255)'],
-                    (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 'Off'],
-                ],
-            ],
-            [
-                191,
-                [
-                    (object) ['Collation' => 'utf8mb4_unicode_ci', 'Type' => 'varchar(255)'],
-                    (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 'Off'],
-                ],
-            ],
-            [
-                null,
-                [
-                    (object) ['Collation' => 'utf8_unicode_ci', 'Type' => 'varchar(255)'],
-                    (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 'On'],
-                ],
-            ],
-            [
-                null,
-                [
-                    (object) ['Collation' => 'utf8mb4_unicode_ci', 'Type' => 'varchar(255)'],
-                    (object) ['Engine' => 'InnoDB'],
-                    (object) ['Value' => 'On'],
-                ],
-            ],
+            [null, 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci'],
+            [250, 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci'],
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'Off'],
+            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '0'],
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On'],
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1'],
         ];
     }
 
@@ -439,7 +401,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $statement
             ->method('fetch')
-            ->willReturn((object) ['Collation' => null])
+            ->willReturn((object) ['Value' => 'On'])
         ;
 
         $provider = $this->getProvider(
@@ -451,6 +413,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                     'TABLE_CREATE_DEFINITIONS' => [
                         'text' => 'FULLTEXT KEY `text` (`text`)',
                     ],
+                    'TABLE_OPTIONS' => 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
                 ],
             ],
             [],
