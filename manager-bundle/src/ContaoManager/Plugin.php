@@ -17,6 +17,8 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -160,6 +162,24 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         foreach ($params as $key => $value) {
             $params[$key] = $parameterBag->resolveValue($value);
+        }
+
+        // If there are no DB credentials yet (install tool), we have to set
+        // the server version to prevent a DBAL exception (see #1422)
+        try {
+            $connection = DriverManager::getConnection($params);
+            $connection->connect();
+            $connection->close();
+        } catch (DriverException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.1',
+                        ],
+                    ],
+                ],
+            ];
         }
 
         return $extensionConfigs;
