@@ -29,7 +29,8 @@ class ScriptHandler
         static::purgeCacheFolder();
         static::addAppDirectory();
         static::executeCommand('contao:install-web-dir', $event);
-        static::executeCommand('cache:clear', $event);
+        static::executeCommand('cache:clear --no-warmup', $event);
+        static::executeCommand('cache:warmup', $event);
         static::executeCommand('assets:install --symlink --relative', $event);
         static::executeCommand('contao:install', $event);
         static::executeCommand('contao:symlinks', $event);
