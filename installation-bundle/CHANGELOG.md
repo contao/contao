@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+## DEV
+
+ * Preserve the container directory when purging the cache.
+
 ## 4.4.14 (2018-02-14)
 
  * Log database connection errors (see contao/core-bundle#1324).
