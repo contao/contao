@@ -23,6 +23,8 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\DriverException;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
@@ -201,6 +203,24 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         foreach ($params as $key => $value) {
             $params[$key] = $parameterBag->resolveValue($value);
+        }
+
+        // If there are no DB credentials yet (install tool), we have to set
+        // the server version to prevent a DBAL exception (see #1422)
+        try {
+            $connection = DriverManager::getConnection($params);
+            $connection->connect();
+            $connection->close();
+        } catch (DriverException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ];
         }
 
         return $extensionConfigs;
