@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,7 +16,7 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 // Suppress error messages (see #1422)
-@ini_set('display_errors', 0);
+@ini_set('display_errors', '0');
 
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
