@@ -20,9 +20,11 @@ return PhpCsFixer\Config::create()
         '@Symfony:risky' => true,
         '@PHPUnit60Migration:risky' => true,
         'align_multiline_comment' => true,
+        'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
+        'comment_to_phpdoc' => true,
         'compact_nullable_typehint' => true,
         'general_phpdoc_annotation_remove' => [
             'expectedException',
@@ -47,6 +49,11 @@ return PhpCsFixer\Config::create()
         ],
         'strict_comparison' => true,
         'strict_param' => true,
+        // Remove when https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/3222 has been merged
+        'LeoFeyer/optimize_native_functions' => true,
+    ])
+    ->registerCustomFixers([
+        new LeoFeyer\PhpCsFixer\OptimizeNativeFunctionsFixer()
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

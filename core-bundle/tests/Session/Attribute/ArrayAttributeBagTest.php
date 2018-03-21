@@ -91,10 +91,9 @@ class ArrayAttributeBagTest extends TestCase
         $bag['bar']['baz'] = 'foo';
 
         ++$bag['foo'];
-        $bag['foo'] += 1;
         $bag['bar']['baz'] .= 'bar';
 
-        $this->assertSame(3, $bag['foo']);
+        $this->assertSame(2, $bag['foo']);
         $this->assertSame(['baz' => 'foobar'], $bag['bar']);
     }
 

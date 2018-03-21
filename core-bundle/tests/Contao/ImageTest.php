@@ -402,7 +402,7 @@ class ImageTest extends TestCase
             ],
             'Mode box portrait 1' => [
                 [100, 100, 50, 100, 'box'],
-                    [
+                [
                     'width' => 50,
                     'height' => 100,
                     'target_x' => 0,
