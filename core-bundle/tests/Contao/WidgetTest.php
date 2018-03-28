@@ -114,7 +114,7 @@ class WidgetTest extends TestCase
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validator', 'getPost'])
+            ->setMethods(['validator'])
             ->getMockForAbstractClass()
         ;
 
@@ -123,11 +123,6 @@ class WidgetTest extends TestCase
             ->method('validator')
             ->withAnyParameters()
             ->willReturnArgument(0)
-        ;
-
-        $widget
-            ->expects($this->once())
-            ->method('getPost')
         ;
 
         $widget
