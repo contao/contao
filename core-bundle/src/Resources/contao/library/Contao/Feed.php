@@ -147,7 +147,7 @@ class Feed
 		foreach ($this->arrItems as $objItem)
 		{
 			$xml .= '<item>';
-			$xml .= '<title>' . \StringUtil::specialchars(strip_tags($objItem->title)) . '</title>';
+			$xml .= '<title>' . \StringUtil::specialchars(strip_tags(\StringUtil::stripInsertTags($objItem->title))) . '</title>';
 			$xml .= '<description><![CDATA[' . preg_replace('/[\n\r]+/', ' ', $objItem->description) . ']]></description>';
 			$xml .= '<link>' . \StringUtil::specialchars($objItem->link) . '</link>';
 			$xml .= '<pubDate>' . date('r', $objItem->published) . '</pubDate>';
@@ -211,7 +211,7 @@ class Feed
 		foreach ($this->arrItems as $objItem)
 		{
 			$xml .= '<entry>';
-			$xml .= '<title>' . \StringUtil::specialchars($objItem->title) . '</title>';
+			$xml .= '<title>' . \StringUtil::specialchars(strip_tags(\StringUtil::stripInsertTags($objItem->title))) . '</title>';
 			$xml .= '<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">' . preg_replace('/[\n\r]+/', ' ', \StringUtil::toXhtml($objItem->description)) . '</div></content>';
 			$xml .= '<link rel="alternate" href="' . \StringUtil::specialchars($objItem->link) . '" />';
 			$xml .= '<updated>' . preg_replace('/00$/', ':00', date('Y-m-d\TH:i:sO', $objItem->published)) . '</updated>';
