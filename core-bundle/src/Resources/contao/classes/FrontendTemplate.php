@@ -218,11 +218,17 @@ class FrontendTemplate extends \Template
 
 		foreach ($this->positions[$key] as $id=>$section)
 		{
-			if (isset($this->sections[$id]))
+			if (!empty($this->sections[$id]))
 			{
 				$section['content'] = $this->sections[$id];
 				$matches[$id] = $section;
 			}
+		}
+
+		// Return if the section is empty (see #1115)
+		if (empty($matches))
+		{
+			return;
 		}
 
 		$this->matches = $matches;

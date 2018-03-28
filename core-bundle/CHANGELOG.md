@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly hide empty custom layout sections (see #1115).
+
 ## 4.4.16 (2018-03-08)
 
  * Correctly link to the picker from the TinyMCE link menu (see #1415).
