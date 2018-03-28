@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 
@@ -60,12 +61,16 @@ class BackendIndex extends \Backend
 			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 		}
 
-		$targetPath = '/contao';
+		$queryString = '';
+		$arrParams = array();
 
 		if ($referer = \Input::get('referer', true))
 		{
-			$targetPath = base64_decode($referer);
+			$queryString = '?' . base64_decode($referer);
+			$arrParams['referer'] = $referer;
 		}
+
+		$router = \System::getContainer()->get('router');
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
@@ -88,8 +93,8 @@ class BackendIndex extends \Backend
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
-		$objTemplate->targetPath = \StringUtil::specialchars(\Environment::get('base') . ltrim($targetPath, '/'));
-		$objTemplate->failurePath = \StringUtil::specialchars(\Environment::get('base') . \Environment::get('request'));
+		$objTemplate->targetPath = \StringUtil::specialchars($router->generate('contao_backend', array(), Router::ABSOLUTE_URL) . $queryString);
+		$objTemplate->failurePath = \StringUtil::specialchars($router->generate('contao_backend_login', $arrParams, Router::ABSOLUTE_URL));
 
 		return $objTemplate->getResponse();
 	}
