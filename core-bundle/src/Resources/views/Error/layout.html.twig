@@ -7,7 +7,7 @@
         <title>{% block title %}{{ statusCode }} Error{% endblock %}</title>
         <meta name="generator" content="Contao Open Source CMS">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
-        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300">
+        <link rel="stylesheet" href="{{ asset('system/themes/flexible/fonts.css') }}">
         {% block style %}
             <style>
                 html {
@@ -16,9 +16,14 @@
                 body {
                     margin: 0;
                     padding: 0;
-                    font: 16px "Open Sans", Helvetica, sans-serif;
+                    font: 1rem/1.25 Lato,sans-serif;
                     font-weight: 300;
-                    color: #333;
+                    color: #222;
+                }
+                @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+                    body {
+                        font-family: "Lato Retina", Lato, sans-serif;
+                    }
                 }
                 a, a:visited {
                     text-decoration: none;
@@ -38,6 +43,9 @@
                 h2, h3 {
                     font-size: 1.5em;
                 }
+                pre, code {
+                    font: 300 .75rem/1.25 "Roboto Mono", monospace;
+                }
                 #header {
                     padding: 12px 0 10px;
                 }
@@ -49,7 +57,7 @@
                     font-size: 0.75em;
                     text-align: center;
                     padding: .5em 0;
-                    color: #999;
+                    color: #808080;
                 }
                 .wrap {
                     width: 60%;
