@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
 class CsrfTokenCookieListenerTest extends TestCase
 {
@@ -35,9 +36,11 @@ class CsrfTokenCookieListenerTest extends TestCase
     public function testInitializesTheStorage(): void
     {
         $request = $this->createMock(Request::class);
+        $generatedToken = (new UriSafeTokenGenerator())->generateToken();
 
         $request->cookies = new ParameterBag([
             'csrf_foo' => 'bar',
+            'csrf_generated' => $generatedToken,
             'not_csrf' => 'baz',
             'csrf_bar' => '"<>!&', // ignore invalid characters
         ]);
@@ -59,7 +62,10 @@ class CsrfTokenCookieListenerTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('initialize')
-            ->with(['foo' => 'bar'])
+            ->with([
+                'foo' => 'bar',
+                'generated' => $generatedToken,
+            ])
         ;
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
