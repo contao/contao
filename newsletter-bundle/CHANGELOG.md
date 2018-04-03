@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+## DEV
+
+ * Correctly duplicate recipients if a channel is duplicated (see #15).
+
 ## 4.4.13 (2018-01-23)
 
  * Do not remove old subscriptions not related to the selected channels (see contao/core#8824).
