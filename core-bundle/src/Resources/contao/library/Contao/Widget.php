@@ -1313,7 +1313,7 @@ abstract class Widget extends \Controller
 	 */
 	public static function getAttributesFromDca($arrData, $strName, $varValue=null, $strField='', $strTable='', $objDca=null)
 	{
-		$arrAttributes = isset($arrData['eval']) ? $arrData['eval'] : array();
+		$arrAttributes = $arrData['eval'];
 
 		$arrAttributes['id'] = $strName;
 		$arrAttributes['name'] = $strName;
