@@ -464,22 +464,6 @@ class DcaExtractor extends \Controller
 
 			$arrTable = static::$arrSql[$this->strTable];
 
-			if (\is_array($arrTable['TABLE_OPTIONS']))
-			{
-				$arrTable['TABLE_OPTIONS'] = $arrTable['TABLE_OPTIONS'][0]; // see #324
-			}
-
-			list($engine, , $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
-
-			if ($engine != '')
-			{
-				$sql['engine'] = str_replace('ENGINE=', '', $engine);
-			}
-			if ($charset != '')
-			{
-				$sql['charset'] = str_replace('CHARSET=', '', $charset);
-			}
-
 			// Fields
 			if (isset($arrTable['TABLE_FIELDS']))
 			{

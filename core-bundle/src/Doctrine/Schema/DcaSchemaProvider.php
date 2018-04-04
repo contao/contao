@@ -369,6 +369,11 @@ class DcaSchemaProvider
         // Manually merge the legacy definitions (see #4766)
         if (!empty($sqlLegacy)) {
             foreach ($sqlLegacy as $table => $categories) {
+                // Ignore the legacy table options if not a new table
+                if (isset($sqlTarget[$table]['TABLE_OPTIONS'])) {
+                    unset($categories['TABLE_OPTIONS']);
+                }
+
                 foreach ($categories as $category => $fields) {
                     if (\is_array($fields)) {
                         foreach ($fields as $name => $sql) {
