@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-## DEV
+## 4.4.17 (2018-04-04)
 
  * Correctly duplicate recipients if a channel is duplicated (see #15).
 
