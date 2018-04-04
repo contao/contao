@@ -87,6 +87,15 @@ class SqlFileParser
 			}
 		}
 
+		// Ignore the table options if there is no primary key
+		foreach (array_keys($return) as $table)
+		{
+			if (!isset($return[$table]['TABLE_CREATE_DEFINITIONS']['PRIMARY']))
+			{
+				unset($return[$table]['TABLE_OPTIONS']);
+			}
+		}
+
 		return $return;
 	}
 }
