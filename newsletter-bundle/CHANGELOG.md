@@ -1,5 +1,9 @@
 # Contao newsletter bundle change log
 
+## DEV
+
+ * Correctly duplicate recipients if a channel is duplicated (see #15).
+
 ## 4.5.3 (2018-01-23)
 
  * Use a given e-mail address in the unsubscribe module (see #12).
