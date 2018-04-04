@@ -1,6 +1,6 @@
 # Contao manager bundle change log
 
-## DEV
+## 4.5.7 (2018-04-04)
 
  * Warm up the cache in the Composer script handler (see #59).
 
