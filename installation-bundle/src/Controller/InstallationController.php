@@ -242,28 +242,28 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Purges the Symfony cache.
+     *
+     * The method preserves the container directory inside the cache folder,
+     * because Symfony will throw a "compile error" exception if it is deleted
+     * in the middle of a request.
      */
     private function purgeSymfonyCache(): void
     {
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
+        $ref = new \ReflectionObject($this->container);
+        $containerDir = basename(\dirname($ref->getFileName()));
 
-        // the old cache dir name must not be longer than the real one to avoid exceeding
-        // the maximum length of a directory or file path within it (esp. Windows MAX_PATH)
-        $oldCacheDir = substr($cacheDir, 0, -1).('~' === substr($cacheDir, -1) ? '+' : '~');
+        /** @var SplFileInfo[] $finder */
+        $finder = Finder::create()
+            ->depth(0)
+            ->exclude($containerDir)
+            ->in($cacheDir)
+        ;
 
-        if (!is_writable($cacheDir)) {
-            throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $cacheDir));
+        foreach ($finder as $file) {
+            $filesystem->remove($file->getPathname());
         }
-
-        if ($filesystem->exists($oldCacheDir)) {
-            $filesystem->remove($oldCacheDir);
-        }
-
-        $this->container->get('cache_clearer')->clear($cacheDir);
-
-        $filesystem->rename($cacheDir, $oldCacheDir);
-        $filesystem->remove($oldCacheDir);
 
         if (\function_exists('opcache_reset')) {
             opcache_reset();
@@ -277,11 +277,8 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Warms up the Symfony cache.
      *
-     * Since we cannot use a separate process to clear and warm up the cache, which would be the
-     * right thing to do, we can only warm up the existing cache to add the optional stuff. Hopefully,
-     * this can be improved with Symfony 3.4.
-     *
-     * @see https://github.com/symfony/symfony/pull/23792
+     * The method runs the optional cache warmers, because the cache will only
+     * have the non-optional stuff at this time.
      */
     private function warmUpSymfonyCache(): void
     {
