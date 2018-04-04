@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.17 (2018-04-04)
 
  * Correctly hide empty custom layout sections (see #1115).
 
