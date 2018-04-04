@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
-use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -56,7 +55,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getUrl(PickerConfig $config): ?string
+    public function getUrl(PickerConfig $config)
     {
         return $this->generateUrl($config, false);
     }
@@ -64,7 +63,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function createMenuItem(PickerConfig $config): ItemInterface
+    public function createMenuItem(PickerConfig $config)
     {
         $name = $this->getName();
 
@@ -91,7 +90,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @param TokenStorageInterface $tokenStorage
      */
-    public function setTokenStorage(TokenStorageInterface $tokenStorage): void
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
@@ -99,7 +98,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function isCurrent(PickerConfig $config): bool
+    public function isCurrent(PickerConfig $config)
     {
         return $config->getCurrent() === $this->getName();
     }
@@ -111,7 +110,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return BackendUser
      */
-    protected function getUser(): BackendUser
+    protected function getUser()
     {
         if (null === $this->tokenStorage) {
             throw new \RuntimeException('No token storage provided');

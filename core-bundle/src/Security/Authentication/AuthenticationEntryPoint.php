@@ -52,7 +52,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 
         $url = $this->router->generate(
             'contao_backend_login',
-            ['referer' => base64_encode($request->getRequestUri())],
+            ['referer' => base64_encode($request->getQueryString())],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 

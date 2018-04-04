@@ -325,11 +325,10 @@ class BackendMain extends \Backend
 			return;
 		}
 
-		$exitPath = $request->getRequestUri();
-		$exitPath .= null === $request->getQueryString() ? '?' : '&';
-		$exitPath .= sprintf('%s=%s', urlencode($switchUserConfig['parameter']), SwitchUserListener::EXIT_VALUE);
+		// Take the use back to the "users" module
+		$arrParams = array('do' => 'user', urlencode($switchUserConfig['parameter']) => SwitchUserListener::EXIT_VALUE);
 
 		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonatorUser);
-		$this->Template->logoutLink = $exitPath;
+		$this->Template->logoutLink = \System::getContainer()->get('router')->generate('contao_backend', $arrParams);
 	}
 }

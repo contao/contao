@@ -34,7 +34,7 @@ class AuthenticationEntryPointTest extends TestCase
     public function testAddsTheRefererToTheRedirectUrl(): void
     {
         $request = new Request();
-        $request->server->set('REQUEST_URI', '/contao?do=page');
+        $request->server->set('QUERY_STRING', 'do=page');
         $request->query->add(['do' => 'page']);
 
         $httpUtils = $this->createMock(HttpUtils::class);
@@ -49,14 +49,14 @@ class AuthenticationEntryPointTest extends TestCase
             )
         ;
 
-        $url = 'http://localhost/contao/login?referer='.base64_encode('/contao?do=page');
+        $url = 'http://localhost/contao/login?referer='.base64_encode('do=page');
 
         $router = $this->createMock(RouterInterface::class);
 
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with('contao_backend_login', ['referer' => base64_encode('/contao?do=page')])
+            ->with('contao_backend_login', ['referer' => base64_encode('do=page')])
             ->willReturn($url)
         ;
 

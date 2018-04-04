@@ -226,7 +226,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return null;
         }
 
-        /* @var PageModel $objPage */
+        /** @var PageModel $objPage */
         $objPage = $GLOBALS['objPage'];
 
         /** @var LayoutModel $layout */

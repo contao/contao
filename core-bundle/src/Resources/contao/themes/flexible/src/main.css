@@ -751,7 +751,7 @@ table.tl_listing {
 	position:relative;
 	background-color:#fff;
 }
-.parent_view ul {
+.parent_view > ul {
 	background:#f3f3f5;
 }
 .tl_content.wrapper_stop {
