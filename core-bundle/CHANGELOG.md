@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly hide empty custom layout sections (see #1115).
  * Correctly generate the login target URLs in the back end (see #1432).
 
 ## 4.5.6 (2018-03-06)

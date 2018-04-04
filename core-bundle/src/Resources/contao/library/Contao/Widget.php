@@ -776,8 +776,7 @@ abstract class Widget extends \Controller
 	 */
 	public function validate()
 	{
-		$varValue = (\is_callable($this->inputCallback) ? \call_user_func($this->inputCallback) : $this->getPost($this->strName));
-		$varValue = $this->validator($varValue);
+		$varValue = $this->validator($this->getPost($this->strName));
 
 		if ($this->hasErrors())
 		{
@@ -797,6 +796,11 @@ abstract class Widget extends \Controller
 	 */
 	protected function getPost($strKey)
 	{
+		if (\is_callable($this->inputCallback))
+		{
+			return \call_user_func($this->inputCallback);
+		}
+
 		if ($this->useRawRequestData === true)
 		{
 			/** @var Request $request */
@@ -1309,7 +1313,7 @@ abstract class Widget extends \Controller
 	 */
 	public static function getAttributesFromDca($arrData, $strName, $varValue=null, $strField='', $strTable='', $objDca=null)
 	{
-		$arrAttributes = $arrData['eval'] ?? array();
+		$arrAttributes = $arrData['eval'];
 
 		$arrAttributes['id'] = $strName;
 		$arrAttributes['name'] = $strName;
