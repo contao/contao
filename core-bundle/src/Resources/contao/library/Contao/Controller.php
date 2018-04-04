@@ -1608,7 +1608,7 @@ abstract class Controller extends \System
 		$picture['alt'] = \StringUtil::specialchars($arrItem['alt']);
 
 		// Move the title to the link tag so it is shown in the lightbox
-		if ($arrItem['fullsize'] && $arrItem['imageTitle'] && !$arrItem['linkTitle'])
+		if (($arrItem['fullsize'] || $arrItem['imageUrl']) && $arrItem['imageTitle'] && !$arrItem['linkTitle'])
 		{
 			$arrItem['linkTitle'] = $arrItem['imageTitle'];
 			unset($arrItem['imageTitle']);
