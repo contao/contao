@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.5.7 (2018-04-04)
 
  * Correctly hide empty custom layout sections (see #1115).
  * Correctly generate the login target URLs in the back end (see #1432).
