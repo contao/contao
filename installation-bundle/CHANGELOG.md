@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-## DEV
+## 4.4.17 (2018-04-04)
 
  * Preserve the container directory when purging the cache.
 
