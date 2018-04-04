@@ -111,14 +111,5 @@ class Version447Update extends AbstractVersionUpdate
             $this->prependMessage(sprintf('<p>%s</p><ul>', $translator->trans('duplicate_subscriptions')));
             $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('duplicates_purged')));
         }
-
-        $this->connection->query('
-            ALTER TABLE
-                tl_newsletter_recipients
-            DROP INDEX
-                pid,
-            ADD UNIQUE KEY
-                pid_email (pid, email)
-        ');
     }
 }
