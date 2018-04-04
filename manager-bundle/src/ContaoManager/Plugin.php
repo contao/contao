@@ -205,6 +205,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $params[$key] = $parameterBag->resolveValue($value);
         }
 
+        // If there are no DB credentials yet (install tool), we have to set
+        // the server version to prevent a DBAL exception (see #1422)
         try {
             $connection = DriverManager::getConnection($params);
             $connection->connect();

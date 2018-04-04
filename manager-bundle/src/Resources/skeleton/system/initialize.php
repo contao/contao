@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
