@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
+        <target>Esconder eventos rodando</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>
