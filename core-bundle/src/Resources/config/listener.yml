@@ -92,6 +92,13 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
+    contao.listener.insert_tags.translation:
+        class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
+        arguments:
+            - "@translator"
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleListener
         arguments:
