@@ -573,12 +573,12 @@ class PageRegular extends \Frontend
 
 							if ($objFile !== null)
 							{
-								$strStyleSheet = \Template::generateStyleTag(\Controller::addFilesUrlTo($objFile->path), $media);
+								$strStyleSheet = \Template::generateStyleTag(\Controller::addFilesUrlTo($objFile->path), $media, $objFile->tstamp);
 							}
 						}
 						else
 						{
-							$strStyleSheet = \Template::generateStyleTag(\Controller::addAssetsUrlTo('assets/css/' . $objStylesheets->name . '.css'), $media);
+							$strStyleSheet = \Template::generateStyleTag(\Controller::addAssetsUrlTo('assets/css/' . $objStylesheets->name . '.css'), $media, max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3));
 						}
 
 						if ($objStylesheets->cc)
@@ -819,7 +819,7 @@ class PageRegular extends \Frontend
 			{
 				if (file_exists(TL_ROOT . '/' . $objFiles->path))
 				{
-					$strScripts .= \Template::generateScriptTag($objFiles->path);
+					$strScripts .= \Template::generateScriptTag($objFiles->path, false, $objFiles->tstamp);
 				}
 			}
 		}

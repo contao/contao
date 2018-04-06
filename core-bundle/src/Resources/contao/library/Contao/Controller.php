@@ -827,9 +827,8 @@ abstract class Controller extends \System
 			{
 				foreach ($objCombiner->getFileUrls() as $strUrl)
 				{
-					list($url, $media) = explode('|', $strUrl);
-
-					$strScripts .= \Template::generateStyleTag($url, $media);
+					$options = \StringUtil::resolveFlaggedUrl($strUrl);
+					$strScripts .= \Template::generateStyleTag($strUrl, $options->media, $options->mtime);
 				}
 			}
 		}
@@ -853,7 +852,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async);
+					$strScripts .= \Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async, $options->mtime);
 				}
 			}
 
@@ -870,7 +869,8 @@ abstract class Controller extends \System
 
 					foreach ($arrReversed as $strUrl)
 					{
-						$strScripts = \Template::generateScriptTag($strUrl) . $strScripts;
+						$options = \StringUtil::resolveFlaggedUrl($strUrl);
+						$strScripts = \Template::generateScriptTag($strUrl, false, $options->mtime) . $strScripts;
 					}
 				}
 			}
@@ -887,7 +887,8 @@ abstract class Controller extends \System
 
 					foreach ($arrReversed as $strUrl)
 					{
-						$strScripts = \Template::generateScriptTag($strUrl, true) . $strScripts;
+						$options = \StringUtil::resolveFlaggedUrl($strUrl);
+						$strScripts = \Template::generateScriptTag($strUrl, true, $options->mtime) . $strScripts;
 					}
 				}
 			}

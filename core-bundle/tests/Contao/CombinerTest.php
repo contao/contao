@@ -83,15 +83,17 @@ class CombinerTest extends ContaoTestCase
         file_put_contents($this->getTempDir().'/file3.css', 'file3');
         file_put_contents($this->getTempDir().'/web/file3.css', 'web/file3');
 
+        $mtime = filemtime($this->getTempDir().'/file1.css');
+
         $combiner = new Combiner();
         $combiner->add('file1.css');
         $combiner->addMultiple(['file2.css', 'file3.css']);
 
         $this->assertSame(
             [
-                'file1.css',
-                'file2.css|screen',
-                'file3.css|screen',
+                'file1.css|'.$mtime,
+                'file2.css|screen|'.$mtime,
+                'file3.css|screen|'.$mtime,
             ],
             $combiner->getFileUrls()
         );
@@ -106,10 +108,11 @@ class CombinerTest extends ContaoTestCase
         );
 
         Config::set('debugMode', true);
-        $mtime = substr(md5((string) filemtime($this->getTempDir().'/file1.css')), 0, 8);
+
+        $hash = substr(md5((string) $mtime), 0, 8);
 
         $this->assertSame(
-            'file1.css?v='.$mtime.'"><link rel="stylesheet" href="file2.css" media="screen"><link rel="stylesheet" href="file3.css" media="screen',
+            'file1.css?v='.$hash.'"><link rel="stylesheet" href="file2.css?v='.$hash.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash.'" media="screen',
             $combiner->getCombinedFile()
         );
     }
@@ -207,14 +210,17 @@ EOF;
         file_put_contents($this->getTempDir().'/file1_sub.scss', 'body { color: $color }');
         file_put_contents($this->getTempDir().'/file2.scss', 'body { color: green }');
 
+        $mtime1 = filemtime($this->getTempDir().'/file1.scss');
+        $mtime2 = filemtime($this->getTempDir().'/file2.scss');
+
         $combiner = new Combiner();
         $combiner->add('file1.scss');
         $combiner->add('file2.scss');
 
         $this->assertSame(
             [
-                'assets/css/file1.scss.css',
-                'assets/css/file2.scss.css',
+                'assets/css/file1.scss.css|'.$mtime1,
+                'assets/css/file2.scss.css|'.$mtime2,
             ],
             $combiner->getFileUrls()
         );
@@ -225,11 +231,12 @@ EOF;
         );
 
         Config::set('debugMode', true);
-        $mtime1 = substr(md5((string) filemtime($this->getTempDir().'/file1.scss')), 0, 8);
-        $mtime2 = substr(md5((string) filemtime($this->getTempDir().'/file2.scss')), 0, 8);
+
+        $hash1 = substr(md5((string) $mtime1), 0, 8);
+        $hash2 = substr(md5((string) $mtime2), 0, 8);
 
         $this->assertSame(
-            'assets/css/file1.scss.css?v='.$mtime1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$mtime2,
+            'assets/css/file1.scss.css?v='.$hash1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$hash2,
             $combiner->getCombinedFile()
         );
     }
@@ -239,14 +246,17 @@ EOF;
         file_put_contents($this->getTempDir().'/file1.js', 'file1();');
         file_put_contents($this->getTempDir().'/web/file2.js', 'file2();');
 
+        $mtime1 = filemtime($this->getTempDir().'/file1.js');
+        $mtime2 = filemtime($this->getTempDir().'/web/file2.js');
+
         $combiner = new Combiner();
         $combiner->add('file1.js');
         $combiner->add('file2.js');
 
         $this->assertSame(
             [
-                'file1.js',
-                'file2.js',
+                'file1.js|'.$mtime1,
+                'file2.js|'.$mtime2,
             ],
             $combiner->getFileUrls()
         );
@@ -257,9 +267,10 @@ EOF;
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         Config::set('debugMode', true);
-        $mtime1 = substr(md5((string) filemtime($this->getTempDir().'/file1.js')), 0, 8);
-        $mtime2 = substr(md5((string) filemtime($this->getTempDir().'/web/file2.js')), 0, 8);
 
-        $this->assertSame('file1.js?v='.$mtime1.'"></script><script src="file2.js?v='.$mtime2, $combiner->getCombinedFile());
+        $hash1 = substr(md5((string) $mtime1), 0, 8);
+        $hash2 = substr(md5((string) $mtime2), 0, 8);
+
+        $this->assertSame('file1.js?v='.$hash1.'"></script><script src="file2.js?v='.$hash2, $combiner->getCombinedFile());
     }
 }

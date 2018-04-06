@@ -216,7 +216,7 @@ class Combiner extends \System
 					$objFile->close();
 				}
 
-				$return[] = $strPath;
+				$return[] = $strPath . '|' . $arrFile['version'];
 			}
 			else
 			{
@@ -234,7 +234,7 @@ class Combiner extends \System
 					$name .= '|' . $arrFile['media'];
 				}
 
-				$return[] = $name;
+				$return[] = $name . '|' . $arrFile['version'];
 			}
 		}
 
@@ -271,15 +271,17 @@ class Combiner extends \System
 
 		foreach ($return as $k=>$v)
 		{
-			$return[$k] = str_replace('|', '" media="', $v);
+			$options = \StringUtil::resolveFlaggedUrl($v);
+			$return[$k] = $v;
 
-			if (file_exists(TL_ROOT . '/' . $v))
+			if ($options->mtime)
 			{
-				$return[$k] .= '?v=' . substr(md5(filemtime(TL_ROOT . '/' . $v)), 0, 8);
+				$return[$k] .= '?v=' . substr(md5($options->mtime), 0, 8);
 			}
-			elseif (file_exists(TL_ROOT . '/' . $this->strWebDir . '/' . $v))
+
+			if ($options->media)
 			{
-				$return[$k] .= '?v=' . substr(md5(filemtime(TL_ROOT . '/' . $this->strWebDir . '/' . $v)), 0, 8);
+				$return[$k] .= '" media="' . $options->media;
 			}
 		}
 
