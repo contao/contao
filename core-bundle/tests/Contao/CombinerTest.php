@@ -106,9 +106,10 @@ class CombinerTest extends ContaoTestCase
         );
 
         Config::set('debugMode', true);
+        $mtime = substr(md5((string) filemtime($this->getTempDir().'/file1.css')), 0, 8);
 
         $this->assertSame(
-            'file1.css"><link rel="stylesheet" href="file2.css" media="screen"><link rel="stylesheet" href="file3.css" media="screen',
+            'file1.css?v='.$mtime.'"><link rel="stylesheet" href="file2.css" media="screen"><link rel="stylesheet" href="file3.css" media="screen',
             $combiner->getCombinedFile()
         );
     }
@@ -224,9 +225,11 @@ EOF;
         );
 
         Config::set('debugMode', true);
+        $mtime1 = substr(md5((string) filemtime($this->getTempDir().'/file1.scss')), 0, 8);
+        $mtime2 = substr(md5((string) filemtime($this->getTempDir().'/file2.scss')), 0, 8);
 
         $this->assertSame(
-            'assets/css/file1.scss.css"><link rel="stylesheet" href="assets/css/file2.scss.css',
+            'assets/css/file1.scss.css?v='.$mtime1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$mtime2,
             $combiner->getCombinedFile()
         );
     }
@@ -254,7 +257,9 @@ EOF;
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         Config::set('debugMode', true);
+        $mtime1 = substr(md5((string) filemtime($this->getTempDir().'/file1.js')), 0, 8);
+        $mtime2 = substr(md5((string) filemtime($this->getTempDir().'/web/file2.js')), 0, 8);
 
-        $this->assertSame('file1.js"></script><script src="file2.js', $combiner->getCombinedFile());
+        $this->assertSame('file1.js?v='.$mtime1.'"></script><script src="file2.js?v='.$mtime2, $combiner->getCombinedFile());
     }
 }
