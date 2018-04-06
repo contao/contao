@@ -84,7 +84,7 @@ class BackendTemplate extends \Template
 
 			if ($objCombiner->hasEntries())
 			{
-				$strStyleSheets = \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all', false) . $strStyleSheets;
+				$strStyleSheets = \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
 			}
 
 			$this->stylesheets .= $strStyleSheets;

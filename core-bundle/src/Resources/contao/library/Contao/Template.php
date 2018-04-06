@@ -506,11 +506,11 @@ abstract class Template extends \Controller
 	 *
 	 * @param string $href  The script path
 	 * @param string $media The media type string
-	 * @param integer $mtime The file mtime
+	 * @param mixed  $mtime The file mtime
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateStyleTag($href, $media=null, $mtime=null)
+	public static function generateStyleTag($href, $media=null, $mtime=false)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $href))
@@ -558,11 +558,11 @@ abstract class Template extends \Controller
 	 *
 	 * @param string  $src   The script path
 	 * @param boolean $async True to add the async attribute
-	 * @param integer $mtime The file mtime
+	 * @param mixed   $mtime The file mtime
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=null)
+	public static function generateScriptTag($src, $async=false, $mtime=false)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))

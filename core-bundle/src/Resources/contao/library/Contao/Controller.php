@@ -821,7 +821,7 @@ abstract class Controller extends \System
 		{
 			if ($blnCombineScripts)
 			{
-				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all', false);
+				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all');
 			}
 			else
 			{
@@ -829,7 +829,7 @@ abstract class Controller extends \System
 				{
 					list($url, $media) = explode('|', $strUrl);
 
-					$strScripts .= \Template::generateStyleTag($url, $media, false);
+					$strScripts .= \Template::generateStyleTag($url, $media);
 				}
 			}
 		}
