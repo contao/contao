@@ -129,6 +129,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     {
         $def = new ChildDefinition('assets.static_version_strategy');
         $def->replaceArgument(0, PackageUtil::parseVersion($version));
+        $def->replaceArgument(1, '%%s?v=%%s');
 
         $container->setDefinition('assets._version_'.$name, $def);
 

@@ -506,11 +506,36 @@ abstract class Template extends \Controller
 	 *
 	 * @param string $href  The script path
 	 * @param string $media The media type string
+	 * @param integer $mtime The file mtime
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateStyleTag($href, $media=null)
+	public static function generateStyleTag($href, $media=null, $mtime=null)
 	{
+		// Add the filemtime if not given and not an external file
+		if ($mtime === null && !preg_match('@^https?://@', $href))
+		{
+			if (file_exists(TL_ROOT . '/' . $href))
+			{
+				$mtime = filemtime(TL_ROOT . '/' . $href);
+			}
+			else
+			{
+				$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+
+				// Handle public bundle resources in web/
+				if (file_exists(TL_ROOT . '/' . $webDir . '/' . $href))
+				{
+					$mtime = filemtime(TL_ROOT . '/' . $webDir . '/' . $href);
+				}
+			}
+		}
+
+		if ($mtime)
+		{
+			$href .= '?v=' . substr(md5($mtime), 0, 8);
+		}
+
 		return '<link rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . '>';
 	}
 
@@ -533,11 +558,36 @@ abstract class Template extends \Controller
 	 *
 	 * @param string  $src   The script path
 	 * @param boolean $async True to add the async attribute
+	 * @param integer $mtime The file mtime
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false)
+	public static function generateScriptTag($src, $async=false, $mtime=null)
 	{
+		// Add the filemtime if not given and not an external file
+		if ($mtime === null && !preg_match('@^https?://@', $src))
+		{
+			if (file_exists(TL_ROOT . '/' . $src))
+			{
+				$mtime = filemtime(TL_ROOT . '/' . $src);
+			}
+			else
+			{
+				$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+
+				// Handle public bundle resources in web/
+				if (file_exists(TL_ROOT . '/' . $webDir . '/' . $src))
+				{
+					$mtime = filemtime(TL_ROOT . '/' . $webDir . '/' . $src);
+				}
+			}
+		}
+
+		if ($mtime)
+		{
+			$src .= '?v=' . substr(md5($mtime), 0, 8);
+		}
+
 		return '<script src="' . $src . '"' . ($async ? ' async' : '') . '></script>';
 	}
 

@@ -793,7 +793,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media);
+					$strScripts .= \Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media, $options->mtime);
 				}
 			}
 		}
@@ -811,7 +811,7 @@ abstract class Controller extends \System
 				}
 				else
 				{
-					$strScripts .= \Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media);
+					$strScripts .= \Template::generateStyleTag(static::addAssetsUrlTo($stylesheet), $options->media, $options->mtime);
 				}
 			}
 		}
@@ -821,7 +821,7 @@ abstract class Controller extends \System
 		{
 			if ($blnCombineScripts)
 			{
-				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all');
+				$strScripts .= \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all', false);
 			}
 			else
 			{
@@ -829,7 +829,7 @@ abstract class Controller extends \System
 				{
 					list($url, $media) = explode('|', $strUrl);
 
-					$strScripts .= \Template::generateStyleTag($url, $media);
+					$strScripts .= \Template::generateStyleTag($url, $media, false);
 				}
 			}
 		}

@@ -269,14 +269,23 @@ class Combiner extends \System
 	{
 		$return = $this->getFileUrls();
 
-		if ($this->strMode == self::JS)
-		{
-			return implode('"></script><script src="', $return);
-		}
-
 		foreach ($return as $k=>$v)
 		{
 			$return[$k] = str_replace('|', '" media="', $v);
+
+			if (file_exists(TL_ROOT . '/' . $v))
+			{
+				$return[$k] .= '?v=' . substr(md5(filemtime(TL_ROOT . '/' . $v)), 0, 8);
+			}
+			elseif (file_exists(TL_ROOT . '/' . $this->strWebDir . '/' . $v))
+			{
+				$return[$k] .= '?v=' . substr(md5(filemtime(TL_ROOT . '/' . $this->strWebDir . '/' . $v)), 0, 8);
+			}
+		}
+
+		if ($this->strMode == self::JS)
+		{
+			return implode('"></script><script src="', $return);
 		}
 
 		return implode('"><link rel="stylesheet" href="', $return);

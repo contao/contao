@@ -78,13 +78,13 @@ class BackendTemplate extends \Template
 				}
 				else
 				{
-					$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media);
+					$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
 				}
 			}
 
 			if ($objCombiner->hasEntries())
 			{
-				$strStyleSheets = \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
+				$strStyleSheets = \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all', false) . $strStyleSheets;
 			}
 
 			$this->stylesheets .= $strStyleSheets;
@@ -107,7 +107,7 @@ class BackendTemplate extends \Template
 				}
 				else
 				{
-					$strJavaScripts .= \Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async);
+					$strJavaScripts .= \Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
 				}
 			}
 
