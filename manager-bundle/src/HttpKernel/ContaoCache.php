@@ -14,11 +14,14 @@ namespace Contao\ManagerBundle\HttpKernel;
 
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
+use FOS\HttpCache\SymfonyCache\PurgeListener;
+use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
+use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
 {
@@ -32,6 +35,8 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
+        $this->addSubscriber(new PurgeListener());
+        $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new HeaderReplaySubscriber(['ignore_cookies' => ['/^csrf_./']]));
     }
 
@@ -41,5 +46,16 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     public function fetch(Request $request, $catch = false): Response
     {
         return parent::fetch($request, $catch);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function createStore()
+    {
+        return new Psr6Store([
+            'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
+            'cache_tags_header' => 'X-Cache-Tags',
+        ]);
     }
 }
