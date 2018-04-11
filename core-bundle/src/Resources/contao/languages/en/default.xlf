@@ -1626,7 +1626,7 @@
         <source>Up</source>
       </trans-unit>
       <trans-unit id="MSC.first">
-        <source>&amp;#171; First</source>
+        <source>First</source>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -1635,7 +1635,7 @@
         <source>Next</source>
       </trans-unit>
       <trans-unit id="MSC.last">
-        <source>Last &amp;#187;</source>
+        <source>Last</source>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
