@@ -349,9 +349,6 @@ services:
             - ~ # Provider-shared key
             - "@security.encoder_factory"
             - "@contao.framework"
-            - "@translator"
-            - "@request_stack"
-            - "@mailer"
 
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler

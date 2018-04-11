@@ -1283,9 +1283,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertNull($definition->getArgument(2));
         $this->assertSame('security.encoder_factory', (string) $definition->getArgument(3));
         $this->assertSame('contao.framework', (string) $definition->getArgument(4));
-        $this->assertSame('translator', (string) $definition->getArgument(5));
-        $this->assertSame('request_stack', (string) $definition->getArgument(6));
-        $this->assertSame('mailer', (string) $definition->getArgument(7));
     }
 
     public function testRegistersTheSecurityAuthenticationSuccessHandler(): void

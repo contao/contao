@@ -12,14 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Test\Security\Authentication\Provider;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -27,7 +24,6 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class AuthenticationProviderTest extends TestCase
 {
@@ -150,108 +146,7 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($currentUser)
         ;
 
-        $adapter = $this->mockAdapter(['get']);
-
-        $adapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('adminEmail')
-            ->willReturn('admin@example.com')
-        ;
-
-        $framework = $this->mockContaoFramework([Config::class => $adapter]);
-
-        $framework
-            ->expects($this->atLeastOnce())
-            ->method('initialize')
-        ;
-
-        $translator = $this->createMock(TranslatorInterface::class);
-
-        $translator
-            ->method('trans')
-            ->willReturnCallback(
-                function (string $key, array $args): ?string {
-                    if ('MSC.lockedAccount.0' === $key) {
-                        return 'Account locked';
-                    }
-
-                    if ('MSC.lockedAccount.1' === $key) {
-                        $this->assertSame('foo', $args[0]);
-                        $this->assertSame('Foo Bar', $args[1]);
-                        $this->assertSame(5, $args[3]);
-
-                        return 'The account has been locked';
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
-        $mailer = $this->createMock(\Swift_Mailer::class);
-
-        $mailer
-            ->expects($this->once())
-            ->method('send')
-        ;
-
-        $provider = $this->mockProvider($framework, $translator, $requestStack, $mailer);
-
-        $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foo" has been locked for 5 minutes');
-
-        $provider->checkAuthentication($user, $token);
-    }
-
-    public function testFailsToSendTheLockedEmailIfThereIsNoRequest(): void
-    {
-        /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
-        $user->username = 'foo';
-        $user->locked = 0;
-        $user->loginCount = 1;
-
-        $user
-            ->expects($this->once())
-            ->method('getPassword')
-            ->willReturn('foobar')
-        ;
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
-        $currentUser = $this->createMock(UserInterface::class);
-
-        $currentUser
-            ->expects($this->once())
-            ->method('getPassword')
-            ->willReturn('barfoo')
-        ;
-
-        $token = $this->createMock(UsernamePasswordToken::class);
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($currentUser)
-        ;
-
-        $adapter = $this->mockAdapter(['get']);
-
-        $adapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('adminEmail')
-            ->willReturn('admin@example.com')
-        ;
-
-        $framework = $this->mockContaoFramework([Config::class => $adapter]);
+        $framework = $this->mockContaoFramework();
 
         $framework
             ->expects($this->atLeastOnce())
@@ -260,8 +155,8 @@ class AuthenticationProviderTest extends TestCase
 
         $provider = $this->mockProvider($framework);
 
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('The request stack did not contain a request');
+        $this->expectException(LockedException::class);
+        $this->expectExceptionMessage('User "foo" has been locked for 5 minutes');
 
         $provider->checkAuthentication($user, $token);
     }
@@ -414,13 +309,10 @@ class AuthenticationProviderTest extends TestCase
      * Mocks an authentication provider.
      *
      * @param ContaoFrameworkInterface|null $framework
-     * @param TranslatorInterface|null      $translator
-     * @param RequestStack|null             $requestStack
-     * @param \Swift_Mailer|null            $mailer
      *
      * @return AuthenticationProvider
      */
-    private function mockProvider(ContaoFrameworkInterface $framework = null, TranslatorInterface $translator = null, RequestStack $requestStack = null, \Swift_Mailer $mailer = null): AuthenticationProvider
+    private function mockProvider(ContaoFrameworkInterface $framework = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userChecker = $this->createMock(UserCheckerInterface::class);
@@ -431,27 +323,6 @@ class AuthenticationProviderTest extends TestCase
             $framework = $this->createMock(ContaoFrameworkInterface::class);
         }
 
-        if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
-        }
-
-        if (null === $requestStack) {
-            $requestStack = new RequestStack();
-        }
-
-        if (null === $mailer) {
-            $mailer = $this->createMock(\Swift_Mailer::class);
-        }
-
-        return new AuthenticationProvider(
-            $userProvider,
-            $userChecker,
-            $providerKey,
-            $encoderFactory,
-            $framework,
-            $translator,
-            $requestStack,
-            $mailer
-        );
+        return new AuthenticationProvider($userProvider, $userChecker, $providerKey, $encoderFactory, $framework);
     }
 }
