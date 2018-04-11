@@ -453,15 +453,10 @@ class tl_form extends Backend
 			// Read the slug options from the associated page
 			if (($objPage = PageModel::findWithDetails($dc->activeRecord->jumpTo)) !== null)
 			{
-				$slugOptions['locale'] = $objPage->language;
-
-				if ($objPage->validAliasCharacters)
-				{
-					$slugOptions['validChars'] = $objPage->validAliasCharacters;
-				}
+				$slugOptions = $objPage->getSlugOptions();
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_form WHERE id=? OR alias=?")

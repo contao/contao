@@ -1107,6 +1107,24 @@ class PageModel extends \Model
 
 
 	/**
+	 * Return the slug options
+	 *
+	 * @return array The slug options
+	 */
+	public function getSlugOptions()
+	{
+		$slugOptions = array('locale'=>$this->language);
+
+		if ($this->validAliasCharacters)
+		{
+			$slugOptions['validChars'] = $this->validAliasCharacters;
+		}
+
+		return $slugOptions;
+	}
+
+
+	/**
 	 * Modifies a URL from the URL generator.
 	 *
 	 * @param string $strUrl

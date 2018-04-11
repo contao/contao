@@ -596,15 +596,10 @@ class tl_article extends Backend
 			// Read the slug options from the associated page
 			if (($objPage = PageModel::findWithDetails($dc->activeRecord->pid)) !== null)
 			{
-				$slugOptions['locale'] = $objPage->language;
-
-				if ($objPage->validAliasCharacters)
-				{
-					$slugOptions['validChars'] = $objPage->validAliasCharacters;
-				}
+				$slugOptions = $objPage->getSlugOptions();
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
 		}
 
 		// Add a prefix to reserved names (see #6066)

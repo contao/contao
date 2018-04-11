@@ -290,6 +290,23 @@ class StringUtil
 
 
 	/**
+	 * Prepare a slug
+	 *
+	 * @param $strSlug The slug
+	 *
+	 * @return string
+	 */
+	public static function prepareSlug($strSlug)
+	{
+		$strSlug = static::stripInsertTags($strSlug);
+		$strSlug = static::restoreBasicEntities($strSlug);
+		$strSlug = static::decodeEntities($strSlug);
+
+		return $strSlug;
+	}
+
+
+	/**
 	 * Censor a single word or an array of words within a string
 	 *
 	 * @param string $strString  The string to censor
