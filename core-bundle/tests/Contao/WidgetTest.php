@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Input;
+use Contao\System;
 use Contao\Widget;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @group contao3
@@ -44,6 +47,11 @@ class WidgetTest extends TestCase
         parent::setUp();
 
         \define('TL_MODE', 'FE');
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
     }
 
     /**
