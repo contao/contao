@@ -483,15 +483,10 @@ class tl_newsletter extends Backend
 			// Read the slug options from the associated page
 			if (($objChannel = NewsletterChannelModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objChannel->jumpTo)) !== null)
 			{
-				$slugOptions['locale'] = $objPage->language;
-
-				if ($objPage->validAliasCharacters)
-				{
-					$slugOptions['validChars'] = $objPage->validAliasCharacters;
-				}
+				$slugOptions = $objPage->getSlugOptions();
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->subject), $slugOptions);
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->subject), $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")
