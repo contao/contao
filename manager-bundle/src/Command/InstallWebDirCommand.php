@@ -44,6 +44,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $optionalFiles = [
         '.htaccess',
         'favicon.ico',
+        'robots.txt',
     ];
 
     /**
