@@ -106,7 +106,8 @@ class ModuleEventReader extends \Events
 		// Get the current event
 		$objEvent = \CalendarEventsModel::findPublishedByParentAndIdOrAlias(\Input::get('events'), $this->cal_calendar);
 
-		if (null === $objEvent)
+		// The event does not exist or has an external target (see #33)
+		if (null === $objEvent || $objEvent->source != 'default')
 		{
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
