@@ -98,7 +98,7 @@ class CombinerTest extends ContaoTestCase
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/file1\.css\+file2\.css\+file3\.css-[a-z0-9]+\.css$/', $combinedFile);
+        $this->assertRegExp('/^assets\/css\/file1\.css\,file2\.css\,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combinedFile,
@@ -250,7 +250,7 @@ EOF;
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/js\/file1\.js\+file2\.js-[a-z0-9]+\.js$/', $combinedFile);
+        $this->assertRegExp('/^assets\/js\/file1\.js\,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         Config::set('debugMode', true);
