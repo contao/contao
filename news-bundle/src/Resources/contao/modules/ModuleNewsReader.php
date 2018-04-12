@@ -105,7 +105,8 @@ class ModuleNewsReader extends \ModuleNews
 		// Get the news item
 		$objArticle = \NewsModel::findPublishedByParentAndIdOrAlias(\Input::get('items'), $this->news_archives);
 
-		if (null === $objArticle)
+		// The news item does not exist or has an external target (see #33)
+		if (null === $objArticle || $objArticle->source != 'default')
 		{
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
