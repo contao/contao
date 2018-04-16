@@ -29,7 +29,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleListing extends \Module
+class ModuleListing extends Module
 {
 
 	/**
@@ -508,3 +508,5 @@ class ModuleListing extends \Module
 		return $value;
 	}
 }
+
+class_alias(ModuleListing::class, 'ModuleListing');
