@@ -25,7 +25,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsMenu extends \ModuleNews
+class ModuleNewsMenu extends ModuleNews
 {
 
 	/**
@@ -370,3 +370,5 @@ class ModuleNewsMenu extends \ModuleNews
 		return $arrDays;
 	}
 }
+
+class_alias(ModuleNewsMenu::class, 'ModuleNewsMenu');

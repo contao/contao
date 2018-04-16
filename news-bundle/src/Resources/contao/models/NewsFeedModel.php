@@ -70,7 +70,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsFeedModel extends \Model
+class NewsFeedModel extends Model
 {
 
 	/**
@@ -116,3 +116,5 @@ class NewsFeedModel extends \Model
 		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }
+
+class_alias(NewsFeedModel::class, 'NewsFeedModel');

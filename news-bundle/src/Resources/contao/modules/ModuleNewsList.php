@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsList extends \ModuleNews
+class ModuleNewsList extends ModuleNews
 {
 
 	/**
@@ -243,3 +243,5 @@ class ModuleNewsList extends \ModuleNews
 		return \NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, $arrOptions);
 	}
 }
+
+class_alias(ModuleNewsList::class, 'ModuleNewsList');

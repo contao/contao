@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class ModuleNews extends \Module
+abstract class ModuleNews extends Module
 {
 
 	/**
@@ -355,3 +355,5 @@ abstract class ModuleNews extends \Module
 						$strLink);
 	}
 }
+
+class_alias(ModuleNews::class, 'ModuleNews');

@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsReader extends \ModuleNews
+class ModuleNewsReader extends ModuleNews
 {
 
 	/**
@@ -182,3 +182,5 @@ class ModuleNewsReader extends \ModuleNews
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 }
+
+class_alias(ModuleNewsReader::class, 'ModuleNewsReader');

@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class News extends \Frontend
+class News extends Frontend
 {
 
 	/**
@@ -504,3 +504,5 @@ class News extends \Frontend
 		return $arrFeeds;
 	}
 }
+
+class_alias(News::class, 'News');
