@@ -301,7 +301,7 @@ class tl_faq_category extends Backend
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
 						{
-							$objGroup = $this->Database->execute("SELECT id, faqs, faqp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
+							$objGroup = $this->Database->execute("SELECT id, faqs, faqp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
 
 							while ($objGroup->next())
 							{
