@@ -26,7 +26,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleComments extends \Module
+class ModuleComments extends Module
 {
 
 	/**
@@ -83,3 +83,5 @@ class ModuleComments extends \Module
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_page', $objPage->id, $GLOBALS['TL_ADMIN_EMAIL']);
 	}
 }
+
+class_alias(ModuleComments::class, 'ModuleComments');

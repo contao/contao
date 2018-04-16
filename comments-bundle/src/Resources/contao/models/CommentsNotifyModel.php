@@ -69,7 +69,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CommentsNotifyModel extends \Model
+class CommentsNotifyModel extends Model
 {
 
 	/**
@@ -129,3 +129,5 @@ class CommentsNotifyModel extends \Model
 		return static::findBy(array("$t.source=? AND $t.parent=? AND tokenConfirm=''"), array($strSource, $intParent), $arrOptions);
 	}
 }
+
+class_alias(CommentsNotifyModel::class, 'CommentsNotifyModel');

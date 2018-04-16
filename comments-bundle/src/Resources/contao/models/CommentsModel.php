@@ -89,7 +89,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CommentsModel extends \Model
+class CommentsModel extends Model
 {
 
 	/**
@@ -155,3 +155,5 @@ class CommentsModel extends \Model
 		return static::countBy($arrColumns, array($strSource, (int) $intParent));
 	}
 }
+
+class_alias(CommentsModel::class, 'CommentsModel');

@@ -20,7 +20,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentComments extends \ContentElement
+class ContentComments extends ContentElement
 {
 
 	/**
@@ -71,3 +71,5 @@ class ContentComments extends \ContentElement
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_content', $this->id, $GLOBALS['TL_ADMIN_EMAIL']);
 	}
 }
+
+class_alias(ContentComments::class, 'ContentComments');

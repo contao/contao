@@ -18,7 +18,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Comments extends \Frontend
+class Comments extends Frontend
 {
 
 	/**
@@ -628,3 +628,5 @@ class Comments extends \Frontend
 		$objComment->save();
 	}
 }
+
+class_alias(Comments::class, 'Comments');
