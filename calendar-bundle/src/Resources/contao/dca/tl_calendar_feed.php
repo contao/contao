@@ -277,7 +277,7 @@ class tl_calendar_feed extends Backend
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
 						{
-							$objGroup = $this->Database->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
+							$objGroup = $this->Database->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
 
 							while ($objGroup->next())
 							{
