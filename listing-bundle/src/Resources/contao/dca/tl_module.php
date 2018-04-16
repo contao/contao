@@ -8,16 +8,10 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Add palettes to tl_module
- */
+// Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['listing'] = '{title_legend},name,headline,type;{config_legend},list_table,list_fields,list_where,list_search,list_sort,perPage,list_info,list_info_where;{template_legend:hide},list_layout,list_info_layout;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
-
-/**
- * Add fields to tl_module
- */
+// Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['list_table'],
@@ -104,7 +98,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -123,7 +116,6 @@ class tl_module_listing extends Backend
 		return $this->Database->listTables();
 	}
 
-
 	/**
 	 * Return all list templates as array
 	 *
@@ -133,7 +125,6 @@ class tl_module_listing extends Backend
 	{
 		return $this->getTemplateGroup('list_');
 	}
-
 
 	/**
 	 * Return all info templates as array
