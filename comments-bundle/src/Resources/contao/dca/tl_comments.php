@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_comments
- */
 $GLOBALS['TL_DCA']['tl_comments'] = array
 (
 
@@ -244,7 +240,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -261,7 +256,6 @@ class tl_comments extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_comments
@@ -308,7 +302,7 @@ class tl_comments extends Backend
 					break;
 				}
 
-				$objComment = $this->Database->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('intval', $session['CURRENT']['IDS'])) . ")");
+				$objComment = $this->Database->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
 
 				while ($objComment->next())
 				{
@@ -330,7 +324,6 @@ class tl_comments extends Backend
 				break;
 		}
 	}
-
 
 	/**
 	 * Notify subscribers of a reply
@@ -365,7 +358,6 @@ class tl_comments extends Backend
 
 		$this->Database->prepare("UPDATE tl_comments SET notifiedReply='1' WHERE id=?")->execute($dc->id);
 	}
-
 
 	/**
 	 * Check whether the user is allowed to edit a comment
@@ -469,7 +461,6 @@ class tl_comments extends Backend
 		return Cache::get($strKey);
 	}
 
-
 	/**
 	 * Send out the new comment notifications
 	 *
@@ -486,7 +477,6 @@ class tl_comments extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * List a particular record
@@ -580,7 +570,6 @@ class tl_comments extends Backend
 </div>' . "\n    ";
 	}
 
-
 	/**
 	 * Return the edit comment button
 	 *
@@ -598,7 +587,6 @@ class tl_comments extends Backend
 		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the delete comment button
 	 *
@@ -615,7 +603,6 @@ class tl_comments extends Backend
 	{
 		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -657,7 +644,6 @@ class tl_comments extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group
