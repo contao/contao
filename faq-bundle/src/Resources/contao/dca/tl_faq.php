@@ -8,16 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Load tl_content language file
- */
 System::loadLanguageFile('tl_content');
 
-
-/**
- * Table tl_faq
- */
 $GLOBALS['TL_DCA']['tl_faq'] = array
 (
 
@@ -333,7 +325,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -351,7 +342,6 @@ class tl_faq extends Backend
 		$this->import('BackendUser', 'User');
 	}
 
-
 	/**
 	 * Check permissions to edit table tl_faq
 	 */
@@ -366,7 +356,6 @@ class tl_faq extends Backend
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key]);
 		}
 	}
-
 
 	/**
 	 * Auto-generate the FAQ alias if it has not been set yet
@@ -406,7 +395,6 @@ class tl_faq extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Add the type of input field
 	 *
@@ -426,7 +414,6 @@ class tl_faq extends Backend
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '
 </div>' . "\n";
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -463,7 +450,6 @@ class tl_faq extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

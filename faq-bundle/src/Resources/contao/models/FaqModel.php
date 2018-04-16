@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes FAQs
  *
@@ -118,7 +117,6 @@ class FaqModel extends \Model
 	 */
 	protected static $strTable = 'tl_faq';
 
-
 	/**
 	 * Find a published FAQ from one or more categories by its ID or alias
 	 *
@@ -137,7 +135,7 @@ class FaqModel extends \Model
 
 		$t = static::$strTable;
 		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
-		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")";
+		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -146,7 +144,6 @@ class FaqModel extends \Model
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
-
 
 	/**
 	 * Find all published FAQs by their parent ID
@@ -174,7 +171,6 @@ class FaqModel extends \Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find all published FAQs by their parent IDs
 	 *
@@ -191,7 +187,7 @@ class FaqModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
