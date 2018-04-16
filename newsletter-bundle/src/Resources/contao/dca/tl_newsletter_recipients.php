@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_newsletter_recipients
- */
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
 
@@ -195,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -212,7 +207,6 @@ class tl_newsletter_recipients extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_newsletter_recipients
@@ -317,7 +311,6 @@ class tl_newsletter_recipients extends Backend
 		}
 	}
 
-
 	/**
 	 * Reset the double opt-in data if a recipient is moved manually
 	 *
@@ -328,7 +321,6 @@ class tl_newsletter_recipients extends Backend
 		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='', confirmed='', ip='', token='' WHERE id=?")
 					   ->execute($dc->id);
 	}
-
 
 	/**
 	 * Check if recipients are unique per channel
@@ -353,7 +345,6 @@ class tl_newsletter_recipients extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Check if a recipient is blacklisted for a channel
 	 *
@@ -377,7 +368,6 @@ class tl_newsletter_recipients extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * List a recipient
 	 *
@@ -400,7 +390,6 @@ class tl_newsletter_recipients extends Backend
 
 		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', TL_ASSETS_URL, Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -437,7 +426,6 @@ class tl_newsletter_recipients extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

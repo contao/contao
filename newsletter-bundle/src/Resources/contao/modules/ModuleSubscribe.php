@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "newsletter subscribe".
  *
@@ -31,7 +30,6 @@ class ModuleSubscribe extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'nl_default';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -64,7 +62,6 @@ class ModuleSubscribe extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -163,7 +160,6 @@ class ModuleSubscribe extends \Module
 		$this->Template->id = $this->id;
 	}
 
-
 	/**
 	 * Activate a recipient
 	 */
@@ -221,7 +217,6 @@ class ModuleSubscribe extends \Module
 		$this->Template->mclass = 'confirm';
 		$this->Template->message = $GLOBALS['TL_LANG']['MSC']['nl_activate'];
 	}
-
 
 	/**
 	 * Validate the subscription form
@@ -299,7 +294,6 @@ class ModuleSubscribe extends \Module
 
 		return array($varInput, $arrNew);
 	}
-
 
 	/**
 	 * Add a new recipient

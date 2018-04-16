@@ -8,20 +8,14 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Add palettes to tl_module
- */
+// Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']     = str_replace(',editable', ',editable,newsletters', $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']);
 $GLOBALS['TL_DCA']['tl_module']['palettes']['subscribe']        = '{title_legend},name,headline,type;{config_legend},nl_channels,nl_hideChannels,disableCaptcha;{redirect_legend},jumpTo;{email_legend:hide},nl_subscribe;{template_legend:hide},nl_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['unsubscribe']      = '{title_legend},name,headline,type;{config_legend},nl_channels,nl_hideChannels,disableCaptcha;{redirect_legend},jumpTo;{email_legend:hide},nl_unsubscribe;{template_legend:hide},nl_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsletterlist']   = '{title_legend},name,headline,type;{config_legend},nl_channels;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsletterreader'] = '{title_legend},name,headline,type;{config_legend},nl_channels;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
-
-/**
- * Add fields to tl_module
- */
+// Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['newsletters'],
@@ -87,7 +81,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -104,7 +97,6 @@ class tl_module_newsletter extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Load the default subscribe text
@@ -123,7 +115,6 @@ class tl_module_newsletter extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Load the default unsubscribe text
 	 *
@@ -140,7 +131,6 @@ class tl_module_newsletter extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Get all channels and return them as array
@@ -167,7 +157,6 @@ class tl_module_newsletter extends Backend
 
 		return $arrChannels;
 	}
-
 
 	/**
 	 * Return all newsletter templates as array

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_newsletter_channel
- */
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
 
@@ -178,7 +174,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -195,7 +190,6 @@ class tl_newsletter_channel extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_newsletter_channel
@@ -252,7 +246,7 @@ class tl_newsletter_channel extends Backend
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
 						{
-							$objGroup = $this->Database->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
+							$objGroup = $this->Database->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
 
 							while ($objGroup->next())
 							{
@@ -328,7 +322,6 @@ class tl_newsletter_channel extends Backend
 		}
 	}
 
-
 	/**
 	 * Return the edit header button
 	 *
@@ -346,7 +339,6 @@ class tl_newsletter_channel extends Backend
 		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the copy channel button
 	 *
@@ -363,7 +355,6 @@ class tl_newsletter_channel extends Backend
 	{
 		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the delete channel button

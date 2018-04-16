@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Provide methods to handle newsletters.
  *
@@ -300,7 +299,6 @@ class Newsletter extends \Backend
 		return $return;
 	}
 
-
 	/**
 	 * Generate the e-mail object and return it
 	 *
@@ -336,7 +334,6 @@ class Newsletter extends \Backend
 
 		return $objEmail;
 	}
-
 
 	/**
 	 * Compile the newsletter and send it
@@ -404,7 +401,6 @@ class Newsletter extends \Backend
 			}
 		}
 	}
-
 
 	/**
 	 * Return a form to choose a CSV file and import it
@@ -564,7 +560,6 @@ class Newsletter extends \Backend
 </form>';
 	}
 
-
 	/**
 	 * Remove the newsletter subscriptions of members who close their account
 	 *
@@ -590,7 +585,6 @@ class Newsletter extends \Backend
 						   ->execute($intUser);
 		}
 	}
-
 
 	/**
 	 * Synchronize newsletter subscription of new users
@@ -630,7 +624,6 @@ class Newsletter extends \Backend
 			}
 		}
 	}
-
 
 	/**
 	 * Activate newsletter subscription of new users
@@ -690,7 +683,6 @@ class Newsletter extends \Backend
 		return $blnDisabled;
 	}
 
-
 	/**
 	 * Synchronize newsletter subscription of existing users
 	 *
@@ -749,7 +741,7 @@ class Newsletter extends \Backend
 		// Delete existing recipients
 		if (!empty($arrDelete) && \is_array($arrDelete))
 		{
-			$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('intval', $arrDelete)) . ") AND email=?")
+			$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")
 						   ->execute($objUser->email);
 		}
 
@@ -775,7 +767,6 @@ class Newsletter extends \Backend
 
 		return serialize($varValue);
 	}
-
 
 	/**
 	 * Update a particular member account
@@ -864,7 +855,6 @@ class Newsletter extends \Backend
 		}
 	}
 
-
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
@@ -913,7 +903,6 @@ class Newsletter extends \Backend
 
 		return $arrNewsletters;
 	}
-
 
 	/**
 	 * Add newsletters to the indexer

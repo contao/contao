@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes newsletters
  *
@@ -99,7 +98,6 @@ class NewsletterModel extends \Model
 	 */
 	protected static $strTable = 'tl_newsletter';
 
-
 	/**
 	 * Find a sent newsletter by its parent IDs and its ID or alias
 	 *
@@ -118,7 +116,7 @@ class NewsletterModel extends \Model
 
 		$t = static::$strTable;
 		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
-		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")";
+		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -127,7 +125,6 @@ class NewsletterModel extends \Model
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
-
 
 	/**
 	 * Find sent newsletters by their parent ID
@@ -155,7 +152,6 @@ class NewsletterModel extends \Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find sent newsletters by multiple parent IDs
 	 *
@@ -172,7 +168,7 @@ class NewsletterModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")");
 
 		if (!static::isPreviewMode($arrOptions))
 		{

@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "newsletter reader".
  *
@@ -29,7 +28,6 @@ class ModuleNewsletterReader extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_newsletterreader';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -86,7 +84,6 @@ class ModuleNewsletterReader extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
