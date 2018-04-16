@@ -302,7 +302,7 @@ class tl_comments extends Backend
 					break;
 				}
 
-				$objComment = $this->Database->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('intval', $session['CURRENT']['IDS'])) . ")");
+				$objComment = $this->Database->execute("SELECT id, parent, source FROM tl_comments WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
 
 				while ($objComment->next())
 				{
