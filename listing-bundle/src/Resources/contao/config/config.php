@@ -8,8 +8,5 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Front end module
- */
+// Front end module
 $GLOBALS['FE_MOD']['application']['listing'] = 'ModuleListing';
