@@ -83,7 +83,7 @@ class NewsletterChannelModel extends Model
 			$arrOptions['order'] = "$t.title";
 		}
 
-		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
+		return static::findBy(array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }
 
