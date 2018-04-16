@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Class ModuleFaqReader
  *
@@ -31,7 +30,6 @@ class ModuleFaqReader extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_faqreader';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -88,7 +86,6 @@ class ModuleFaqReader extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

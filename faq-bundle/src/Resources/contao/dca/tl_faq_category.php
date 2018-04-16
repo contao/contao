@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_faq_category
- */
 $GLOBALS['TL_DCA']['tl_faq_category'] = array
 (
 
@@ -225,7 +221,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -242,7 +237,6 @@ class tl_faq_category extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_news_archive
@@ -383,7 +377,6 @@ class tl_faq_category extends Backend
 		}
 	}
 
-
 	/**
 	 * Return the edit header button
 	 *
@@ -401,7 +394,6 @@ class tl_faq_category extends Backend
 		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the copy category button
 	 *
@@ -418,7 +410,6 @@ class tl_faq_category extends Backend
 	{
 		return $this->User->hasAccess('create', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the delete category button

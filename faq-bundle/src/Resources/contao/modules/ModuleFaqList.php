@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class ModuleFaqList
  *
@@ -35,7 +34,6 @@ class ModuleFaqList extends Module
 	 * @var array
 	 */
 	protected $arrTargets = array();
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -74,7 +72,6 @@ class ModuleFaqList extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -128,7 +125,6 @@ class ModuleFaqList extends Module
 
 		$this->Template->faq = $arrFaq;
 	}
-
 
 	/**
 	 * Create links and remember pages that have been processed

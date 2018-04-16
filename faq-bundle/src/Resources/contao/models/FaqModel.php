@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes FAQs
  *
@@ -118,7 +117,6 @@ class FaqModel extends Model
 	 */
 	protected static $strTable = 'tl_faq';
 
-
 	/**
 	 * Find a published FAQ from one or more categories by its ID or alias
 	 *
@@ -147,7 +145,6 @@ class FaqModel extends Model
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
 
-
 	/**
 	 * Find all published FAQs by their parent ID
 	 *
@@ -173,7 +170,6 @@ class FaqModel extends Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find all published FAQs by their parent IDs

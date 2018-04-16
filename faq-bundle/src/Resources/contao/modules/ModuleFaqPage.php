@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class ModuleFaqPage
  *
@@ -28,7 +27,6 @@ class ModuleFaqPage extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_faqpage';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -61,7 +59,6 @@ class ModuleFaqPage extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
