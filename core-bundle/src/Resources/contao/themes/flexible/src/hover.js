@@ -103,13 +103,15 @@ var Theme = {
 			} else {
 				el.addEvent('click', function(e) {
 					var key = Browser.Platform.mac ? e.event.metaKey : e.event.ctrlKey;
-					if (key && e.event.shiftKey) {
+					if (!key) return;
+
+					if (e.event.shiftKey) {
 						el.getElements('a').each(function(a) {
 							if (a.hasClass('editheader')) {
 								document.location.href = a.href;
 							}
 						});
-					} else if (key) {
+					} else {
 						el.getElements('a').each(function(a) {
 							if (a.hasClass('edit')) {
 								document.location.href = a.href;
@@ -182,7 +184,7 @@ var Theme = {
 			})
 			.addEvent('keydown', function(e) {
 				if (e.event.keyCode == 27) {
-					document.body.toggleClass('show-navigation');
+					document.body.removeClass('show-navigation');
 				}
 			})
 		;
