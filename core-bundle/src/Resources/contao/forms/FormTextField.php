@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormTextField
  *
@@ -57,7 +56,6 @@ class FormTextField extends Widget
 	 */
 	protected $strPrefix = 'widget widget-text';
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -99,7 +97,6 @@ class FormTextField extends Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Return a parameter
@@ -178,7 +175,6 @@ class FormTextField extends Widget
 		}
 	}
 
-
 	/**
 	 * Trim the values
 	 *
@@ -209,7 +205,6 @@ class FormTextField extends Widget
 
 		return parent::validator($varInput);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

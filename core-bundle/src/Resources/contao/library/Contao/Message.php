@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Stores and outputs messages
  *
@@ -40,7 +39,6 @@ class Message
 		static::add($strMessage, 'TL_ERROR', $strScope);
 	}
 
-
 	/**
 	 * Add a confirmation message
 	 *
@@ -51,7 +49,6 @@ class Message
 	{
 		static::add($strMessage, 'TL_CONFIRM', $strScope);
 	}
-
 
 	/**
 	 * Add a new message
@@ -64,7 +61,6 @@ class Message
 		static::add($strMessage, 'TL_NEW', $strScope);
 	}
 
-
 	/**
 	 * Add an info message
 	 *
@@ -76,7 +72,6 @@ class Message
 		static::add($strMessage, 'TL_INFO', $strScope);
 	}
 
-
 	/**
 	 * Add a preformatted message
 	 *
@@ -87,7 +82,6 @@ class Message
 	{
 		static::add($strMessage, 'TL_RAW', $strScope);
 	}
-
 
 	/**
 	 * Add a message
@@ -113,7 +107,6 @@ class Message
 		\System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope), $strMessage);
 	}
 
-
 	/**
 	 * Return the messages with a wrapping container as HTML
 	 *
@@ -132,7 +125,6 @@ class Message
 
 		return $strMessages;
 	}
-
 
 	/**
 	 * Return the messages as HTML
@@ -174,7 +166,6 @@ class Message
 		return trim($strMessages);
 	}
 
-
 	/**
 	 * Reset the message system
 	 */
@@ -190,7 +181,6 @@ class Message
 		$session->getFlashBag()->clear();
 	}
 
-
 	/**
 	 * Return all available message types
 	 *
@@ -200,7 +190,6 @@ class Message
 	{
 		return array('TL_ERROR', 'TL_CONFIRM', 'TL_NEW', 'TL_INFO', 'TL_RAW');
 	}
-
 
 	/**
 	 * Check if there are error messages
@@ -221,7 +210,6 @@ class Message
 		return $session->getFlashBag()->has(static::getFlashBagKey('error', $strScope));
 	}
 
-
 	/**
 	 * Check if there are confirmation messages
 	 *
@@ -240,7 +228,6 @@ class Message
 
 		return $session->getFlashBag()->has(static::getFlashBagKey('confirm', $strScope));
 	}
-
 
 	/**
 	 * Check if there are new messages
@@ -261,7 +248,6 @@ class Message
 		return $session->getFlashBag()->has(static::getFlashBagKey('new', $strScope));
 	}
 
-
 	/**
 	 * Check if there are info messages
 	 *
@@ -280,7 +266,6 @@ class Message
 
 		return $session->getFlashBag()->has(static::getFlashBagKey('info', $strScope));
 	}
-
 
 	/**
 	 * Check if there are raw messages
@@ -301,7 +286,6 @@ class Message
 		return $session->getFlashBag()->has(static::getFlashBagKey('raw', $strScope));
 	}
 
-
 	/**
 	 * Check if there are any messages
 	 *
@@ -313,7 +297,6 @@ class Message
 	{
 		return static::hasError($strScope) || static::hasConfirmation($strScope) || static::hasNew($strScope) || static::hasInfo($strScope) || static::hasRaw($strScope);
 	}
-
 
 	/**
 	 * Return the flash bag key

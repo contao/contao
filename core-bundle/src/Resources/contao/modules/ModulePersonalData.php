@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "personal data".
  *
@@ -28,7 +27,6 @@ class ModulePersonalData extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'member_default';
-
 
 	/**
 	 * Return a wildcard in the back end
@@ -66,7 +64,6 @@ class ModulePersonalData extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

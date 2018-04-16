@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "breadcrumb".
  *
@@ -26,7 +25,6 @@ class ModuleBreadcrumb extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_breadcrumb';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -51,7 +49,6 @@ class ModuleBreadcrumb extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

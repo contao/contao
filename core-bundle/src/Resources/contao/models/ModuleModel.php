@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes front end modules
  *

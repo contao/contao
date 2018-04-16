@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormHidden
  *
@@ -32,7 +31,6 @@ class FormHidden extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'form_hidden';
-
 
 	/**
 	 * Generate the widget and return it as string

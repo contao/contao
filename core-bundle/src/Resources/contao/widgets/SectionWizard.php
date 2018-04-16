@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle sections of a page layout.
  *
@@ -31,7 +30,6 @@ class SectionWizard extends Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
-
 	/**
 	 * Standardize the ID
 	 *
@@ -48,7 +46,6 @@ class SectionWizard extends Widget
 
 		return parent::validator($varInput);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

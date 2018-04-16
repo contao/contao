@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_version
- */
 $GLOBALS['TL_DCA']['tl_version'] = array
 (
 

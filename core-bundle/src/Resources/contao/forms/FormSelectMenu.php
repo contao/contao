@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormSelectMenu
  *
@@ -52,7 +51,6 @@ class FormSelectMenu extends Widget
 	 * @var string
 	 */
 	protected $strPrefix = 'widget widget-select';
-
 
 	/**
 	 * Add specific attributes
@@ -106,7 +104,6 @@ class FormSelectMenu extends Widget
 		}
 	}
 
-
 	/**
 	 * Check options if the field is mandatory
 	 */
@@ -153,7 +150,6 @@ class FormSelectMenu extends Widget
 		}
 	}
 
-
 	/**
 	 * Return a parameter
 	 *
@@ -170,7 +166,6 @@ class FormSelectMenu extends Widget
 
 		return parent::__get($strKey);
 	}
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -211,7 +206,6 @@ class FormSelectMenu extends Widget
 
 		return parent::parse($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the options
@@ -276,7 +270,6 @@ class FormSelectMenu extends Widget
 
 		return $arrOptions;
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

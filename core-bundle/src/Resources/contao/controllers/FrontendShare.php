@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * Share a page via a social network.
  *

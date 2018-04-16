@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormFieldsetSTop
  *
@@ -26,14 +25,12 @@ class FormFieldsetStop extends Widget
 	 */
 	protected $strTemplate = 'form_fieldsetStop';
 
-
 	/**
 	 * Do not validate
 	 */
 	public function validate()
 	{
 	}
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -55,7 +52,6 @@ class FormFieldsetStop extends Widget
 
 		return parent::parse($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

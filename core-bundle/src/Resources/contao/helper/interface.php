@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Interface listable
  *
@@ -21,7 +20,6 @@ interface listable
 	public function showAll();
 	public function undo();
 }
-
 
 /**
  * Interface editable
@@ -37,7 +35,6 @@ interface editable
 	public function edit();
 }
 
-
 /**
  * Interface executable
  *
@@ -48,7 +45,6 @@ interface executable
 	public function run();
 	public function isActive();
 }
-
 
 /**
  * Interface uploadable

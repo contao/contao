@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "hyperlink".
  *
@@ -24,7 +23,6 @@ class ContentHyperlink extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_hyperlink';
-
 
 	/**
 	 * Generate the content element

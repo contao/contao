@@ -13,7 +13,6 @@ namespace Contao;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Front end module "lost password".
  *
@@ -27,7 +26,6 @@ class ModulePassword extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_lostPassword';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -52,7 +50,6 @@ class ModulePassword extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -172,7 +169,6 @@ class ModulePassword extends Module
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 
-
 	/**
 	 * Set the new password
 	 */
@@ -287,7 +283,6 @@ class ModulePassword extends Module
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
 	}
-
 
 	/**
 	 * Create a new user and redirect

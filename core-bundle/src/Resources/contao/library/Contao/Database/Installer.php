@@ -13,7 +13,6 @@ namespace Contao\Database;
 use Contao\Controller;
 use Symfony\Component\Finder\SplFileInfo;
 
-
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.
@@ -30,7 +29,6 @@ class Installer extends Controller
 	{
 		parent::__construct();
 	}
-
 
 	/**
 	 * Generate a HTML form with queries and return it as string
@@ -101,7 +99,6 @@ class Installer extends Controller
   </table>
 </div>';
 	}
-
 
 	/**
 	 * Compile a command array for each database modification
@@ -258,7 +255,6 @@ class Installer extends Controller
 		return $return;
 	}
 
-
 	/**
 	 * Get the DCA table settings from the DCA cache
 	 *
@@ -305,7 +301,6 @@ class Installer extends Controller
 		return $return;
 	}
 
-
 	/**
 	 * Get the DCA table settings from the database.sql files
 	 *
@@ -337,7 +332,6 @@ class Installer extends Controller
 
 		return $return;
 	}
-
 
 	/**
 	 * Get the current database structure

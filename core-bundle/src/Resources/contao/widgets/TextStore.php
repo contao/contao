@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * A TextStore field is used to enter data only. It will not show the
  * currently stored value (useful e.g. to store passwords).
@@ -33,7 +32,6 @@ class TextStore extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
 
 	/**
 	 * Add specific attributes
@@ -58,7 +56,6 @@ class TextStore extends Widget
 		}
 	}
 
-
 	/**
 	 * Ignore the field if nothing has been entered
 	 *
@@ -77,7 +74,6 @@ class TextStore extends Widget
 
 		return parent::validator($varInput);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

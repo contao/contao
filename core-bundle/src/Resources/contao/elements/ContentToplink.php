@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "toplink".
  *
@@ -24,7 +23,6 @@ class ContentToplink extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_toplink';
-
 
 	/**
 	 * Generate the content element

@@ -14,7 +14,6 @@ use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
-
 /**
  * Provide methods to run automated jobs.
  *
@@ -30,7 +29,6 @@ class Automator extends System
 	{
 		parent::__construct();
 	}
-
 
 	/**
 	 * Purge the search tables
@@ -53,7 +51,6 @@ class Automator extends System
 		$this->log('Purged the search tables', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Purge the undo table
 	 */
@@ -67,7 +64,6 @@ class Automator extends System
 		// Add a log entry
 		$this->log('Purged the undo table', __METHOD__, TL_CRON);
 	}
-
 
 	/**
 	 * Purge the version table
@@ -83,7 +79,6 @@ class Automator extends System
 		$this->log('Purged the version table', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Purge the system log
 	 */
@@ -97,7 +92,6 @@ class Automator extends System
 		// Add a log entry
 		$this->log('Purged the system log', __METHOD__, TL_CRON);
 	}
-
 
 	/**
 	 * Purge the image cache
@@ -123,7 +117,6 @@ class Automator extends System
 		$this->log('Purged the image cache', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Purge the script cache
 	 */
@@ -148,7 +141,6 @@ class Automator extends System
 		$this->log('Purged the script cache', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Purge the page cache
 	 *
@@ -165,7 +157,6 @@ class Automator extends System
 		$this->log('Purged the page cache', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Purge the search cache
 	 */
@@ -179,7 +170,6 @@ class Automator extends System
 		// Add a log entry
 		$this->log('Purged the search cache', __METHOD__, TL_CRON);
 	}
-
 
 	/**
 	 * Purge the internal cache
@@ -195,7 +185,6 @@ class Automator extends System
 		$this->log('Purged the internal cache', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Purge the temp folder
 	 */
@@ -208,7 +197,6 @@ class Automator extends System
 		// Add a log entry
 		$this->log('Purged the temp folder', __METHOD__, TL_CRON);
 	}
-
 
 	/**
 	 * Remove old XML files from the share directory
@@ -263,7 +251,6 @@ class Automator extends System
 
 		return $arrFeeds;
 	}
-
 
 	/**
 	 * Generate the Google XML sitemaps
@@ -372,7 +359,6 @@ class Automator extends System
 		}
 	}
 
-
 	/**
 	 * Regenerate the XML files
 	 */
@@ -398,7 +384,6 @@ class Automator extends System
 		$this->log('Regenerated the XML files', __METHOD__, TL_CRON);
 	}
 
-
 	/**
 	 * Generate the symlinks in the web/ folder
 	 */
@@ -419,7 +404,6 @@ class Automator extends System
 		}
 	}
 
-
 	/**
 	 * Generate the internal cache
 	 */
@@ -433,7 +417,6 @@ class Automator extends System
 		// Add a log entry
 		$this->log('Generated the internal cache', __METHOD__, TL_CRON);
 	}
-
 
 	/**
 	 * Rotate the log files

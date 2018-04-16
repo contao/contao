@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes style sheets
  *
@@ -80,7 +79,6 @@ class StyleSheetModel extends Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_style_sheet';
-
 
 	/**
 	 * Find multiple style sheets by their IDs

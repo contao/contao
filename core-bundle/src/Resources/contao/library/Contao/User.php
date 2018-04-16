@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
-
 /**
  * Authenticates and initializes user objects
  *
@@ -162,7 +161,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	 */
 	protected $encoder = false;
 
-
 	/**
 	 * Import the database object
 	 */
@@ -172,12 +170,10 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		$this->import('Database');
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Set an object property
@@ -189,7 +185,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		$this->arrData[$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Return an object property
@@ -208,7 +203,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -220,7 +214,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return isset($this->arrData[$strKey]);
 	}
-
 
 	/**
 	 * Get a string representation of the user
@@ -237,7 +230,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $this->username ?: ($this->getTable() . '.' . $this->intId);
 	}
 
-
 	/**
 	 * Instantiate a new user object (Factory)
 	 *
@@ -253,7 +245,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return static::$objInstance;
 	}
 
-
 	/**
 	 * Return the table name
 	 *
@@ -264,7 +255,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $this->strTable;
 	}
 
-
 	/**
 	 * Return the current record as associative array
 	 *
@@ -274,7 +264,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return $this->arrData;
 	}
-
 
 	/**
 	 * Authenticate a user
@@ -291,7 +280,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return false;
 	}
 
-
 	/**
 	 * Try to login the current user
 	 *
@@ -306,7 +294,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 
 		return false;
 	}
-
 
 	/**
 	 * Check the account status and return true if it is active
@@ -334,7 +321,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return true;
 	}
 
-
 	/**
 	 * Find a user in the database
 	 *
@@ -359,7 +345,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return false;
 	}
 
-
 	/**
 	 * Update the current record
 	 */
@@ -372,7 +357,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 					   ->set($arrSet)
 					   ->execute($this->id);
 	}
-
 
 	/**
 	 * Regenerate the session ID
@@ -417,7 +401,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		@trigger_error('Using User::generateSession() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 	}
 
-
 	/**
 	 * Remove the authentication cookie and destroy the current session
 	 *
@@ -432,7 +415,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 
 		throw new RedirectResponseException(\System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
-
 
 	/**
 	 * Return true if the user is member of a particular group
@@ -466,12 +448,10 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return false;
 	}
 
-
 	/**
 	 * Set all user properties from a database record
 	 */
 	abstract protected function setUserFromDb();
-
 
 	/**
 	 * {@inheritdoc}
@@ -480,7 +460,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return array();
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -550,7 +529,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $user;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -558,7 +536,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return $this->arrData['username'];
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -570,7 +547,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $this;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -578,7 +554,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return $this->arrData['password'];
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -590,7 +565,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $this;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -598,7 +572,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return $this->salt;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -609,7 +582,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 
 		return $this;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -624,7 +596,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $this->encoder;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -635,7 +606,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return $this;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -643,7 +613,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	{
 		return serialize(array($this->id, $this->username, $this->disable, $this->admin, $this->groups));
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -653,12 +622,10 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		list($this->id, $this->username, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
 	public function eraseCredentials() {}
-
 
 	/**
 	 * {@inheritdoc}
@@ -693,7 +660,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return true;
 	}
 
-
 	/**
 	 * Select a matching encoder based on the password
 	 */
@@ -717,7 +683,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 			$this->setEncoder('default');
 		}
 	}
-
 
 	/**
 	 * Trigger the importUser hook

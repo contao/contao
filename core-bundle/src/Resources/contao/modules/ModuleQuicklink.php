@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "quick link".
  *
@@ -26,7 +25,6 @@ class ModuleQuicklink extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_quicklink';
-
 
 	/**
 	 * Redirect to the selected page
@@ -65,7 +63,6 @@ class ModuleQuicklink extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

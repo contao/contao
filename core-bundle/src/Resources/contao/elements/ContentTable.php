@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "table".
  *
@@ -24,7 +23,6 @@ class ContentTable extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_table';
-
 
 	/**
 	 * Generate the content element

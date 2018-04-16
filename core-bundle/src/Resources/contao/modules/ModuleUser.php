@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Back end module "edit account".
  *
@@ -24,7 +23,6 @@ class ModuleUser extends BackendModule
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_user';
-
 
 	/**
 	 * Change the palette of the current table and switch to edit mode
@@ -53,7 +51,6 @@ class ModuleUser extends BackendModule
 
 		return $this->objDc->edit($this->User->id);
 	}
-
 
 	/**
 	 * Generate the module

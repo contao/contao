@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "change password".
  *
@@ -26,7 +25,6 @@ class ModuleChangePassword extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_changePassword';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -57,7 +55,6 @@ class ModuleChangePassword extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

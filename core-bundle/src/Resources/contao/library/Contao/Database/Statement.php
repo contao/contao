@@ -13,7 +13,6 @@ namespace Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
 
-
 /**
  * Create and execute queries
  *
@@ -67,7 +66,6 @@ class Statement
 	 */
 	protected static $arrCache = array();
 
-
 	/**
 	 * Validate the connection resource and store the query string
 	 *
@@ -79,7 +77,6 @@ class Statement
 		$this->resConnection = $resConnection;
 		$this->blnDisableAutocommit = $blnDisableAutocommit;
 	}
-
 
 	/**
 	 * Return an object property
@@ -113,7 +110,6 @@ class Statement
 
 		return null;
 	}
-
 
 	/**
 	 * Prepare a query string so the following functions can handle it
@@ -156,7 +152,6 @@ class Statement
 
 		return $this;
 	}
-
 
 	/**
 	 * Autogenerate the SET/VALUES subpart of a query from an associative array
@@ -204,7 +199,6 @@ class Statement
 		return $this;
 	}
 
-
 	/**
 	 * Handle limit and offset
 	 *
@@ -237,7 +231,6 @@ class Statement
 		return $this;
 	}
 
-
 	/**
 	 * Execute the query and return the result object
 	 *
@@ -256,7 +249,6 @@ class Statement
 
 		return $this->query();
 	}
-
 
 	/**
 	 * Directly send a query string to the database
@@ -293,7 +285,6 @@ class Statement
 		return new Result($this->statement, $this->strQuery);
 	}
 
-
 	/**
 	 * Replace the wildcards in the query string
 	 *
@@ -312,7 +303,6 @@ class Statement
 			throw new \Exception('Too few arguments to build the query string');
 		}
 	}
-
 
 	/**
 	 * Escape the values and serialize objects and arrays
@@ -352,7 +342,6 @@ class Statement
 		return $arrValues;
 	}
 
-
 	/**
 	 * Explain the current query
 	 *
@@ -362,7 +351,6 @@ class Statement
 	{
 		return $this->resConnection->executeQuery('EXPLAIN ' . $this->strQuery)->fetch();
 	}
-
 
 	/**
 	 * Bypass the cache and always execute the query
@@ -378,7 +366,6 @@ class Statement
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
-
 
 	/**
 	 * Always execute the query and add or replace an existing cache entry

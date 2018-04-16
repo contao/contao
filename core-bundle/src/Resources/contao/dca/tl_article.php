@@ -8,16 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Load class tl_page
- */
 $this->loadDataContainer('tl_page');
 
-
-/**
- * Table tl_article
- */
 $GLOBALS['TL_DCA']['tl_article'] = array
 (
 
@@ -346,7 +338,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -363,7 +354,6 @@ class tl_article extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_page
@@ -548,7 +538,6 @@ class tl_article extends Backend
 		}
 	}
 
-
 	/**
 	 * Add an image to each page in the tree
 	 *
@@ -571,7 +560,6 @@ class tl_article extends Backend
 
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['pid'].'&amp;article='.($row['alias'] ?: $row['id']).'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'" target="_blank">'.Image::getHtml($image.'.svg', '', 'data-icon="'.($unpublished ? $image : rtrim($image, '_')).'.svg" data-icon-disabled="'.rtrim($image, '_').'_.svg"').'</a> '.$label;
 	}
-
 
 	/**
 	 * Auto-generate an article alias if it has not been set yet
@@ -624,7 +612,6 @@ class tl_article extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Return all active layout sections as array
@@ -701,7 +688,6 @@ class tl_article extends Backend
 		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
-
 	/**
 	 * Return all module templates as array
 	 *
@@ -711,7 +697,6 @@ class tl_article extends Backend
 	{
 		return $this->getTemplateGroup('mod_article');
 	}
-
 
 	/**
 	 * Return the edit article button
@@ -731,7 +716,6 @@ class tl_article extends Backend
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the edit header button
@@ -756,7 +740,6 @@ class tl_article extends Backend
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the copy article button
@@ -783,7 +766,6 @@ class tl_article extends Backend
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the cut article button
 	 *
@@ -802,7 +784,6 @@ class tl_article extends Backend
 
 		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the paste article button
@@ -830,7 +811,6 @@ class tl_article extends Backend
 		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && \in_array($row['id'], $arrClipboard['id'])) || !$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) || $cr) ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
 	}
 
-
 	/**
 	 * Return the delete article button
 	 *
@@ -849,7 +829,6 @@ class tl_article extends Backend
 
 		return $this->User->isAllowed(BackendUser::CAN_DELETE_ARTICLES, $objPage->row()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Automatically generate the folder URL aliases
@@ -921,7 +900,6 @@ class tl_article extends Backend
 		return $arrButtons;
 	}
 
-
 	/**
 	 * Return the "toggle visibility" button
 	 *
@@ -969,7 +947,6 @@ class tl_article extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

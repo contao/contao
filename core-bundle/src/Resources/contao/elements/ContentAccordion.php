@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "accordion".
  *
@@ -24,7 +23,6 @@ class ContentAccordion extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_accordionSingle';
-
 
 	/**
 	 * Generate the content element

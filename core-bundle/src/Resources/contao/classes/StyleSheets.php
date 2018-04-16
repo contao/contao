@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle style sheets.
  *
@@ -27,7 +26,6 @@ class StyleSheets extends Backend
 		parent::__construct();
 		$this->import('Files');
 	}
-
 
 	/**
 	 * Update a particular style sheet
@@ -59,7 +57,6 @@ class StyleSheets extends Backend
 			$this->log('Generated style sheet "' . $objStyleSheet->name . '.css"', __METHOD__, TL_CRON);
 		}
 	}
-
 
 	/**
 	 * Update all style sheets in the scripts folder
@@ -115,7 +112,6 @@ class StyleSheets extends Backend
 			$this->log('Generated style sheet "' . $objStyleSheets->name . '.css"', __METHOD__, TL_CRON);
 		}
 	}
-
 
 	/**
 	 * Write a style sheet to a file
@@ -187,7 +183,6 @@ class StyleSheets extends Backend
 
 		$objFile->close();
 	}
-
 
 	/**
 	 * Compile format definitions and return them as string
@@ -971,7 +966,6 @@ class StyleSheets extends Backend
 		return $this->replaceInsertTags($return, false);
 	}
 
-
 	/**
 	 * Compile a color value and return a hex or rgba color
 	 *
@@ -997,7 +991,6 @@ class StyleSheets extends Backend
 		}
 	}
 
-
 	/**
 	 * Try to shorten a hex color
 	 *
@@ -1014,7 +1007,6 @@ class StyleSheets extends Backend
 
 		return $color;
 	}
-
 
 	/**
 	 * Convert hex colors to rgb
@@ -1063,7 +1055,6 @@ class StyleSheets extends Backend
 
 		return $rgb;
 	}
-
 
 	/**
 	 * Return a form to choose an existing style sheet and import it
@@ -1342,7 +1333,6 @@ class StyleSheets extends Backend
 </form>';
 	}
 
-
 	/**
 	 * Export a style sheet
 	 *
@@ -1424,7 +1414,6 @@ class StyleSheets extends Backend
 		$objFile->delete();
 	}
 
-
 	/**
 	 * Check the name of an imported file
 	 *
@@ -1449,7 +1438,6 @@ class StyleSheets extends Backend
 
 		return $this->checkStyleSheetName($strName);
 	}
-
 
 	/**
 	 * Create a format definition and insert it into the database
@@ -2238,7 +2226,6 @@ class StyleSheets extends Backend
 
 		$this->Database->prepare("INSERT INTO tl_style %s")->set($arrSet)->execute();
 	}
-
 
 	/**
 	 * Return an image as data: string

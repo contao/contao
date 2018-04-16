@@ -12,7 +12,6 @@ namespace Contao\Database;
 
 use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
 
-
 /**
  * Lazy load the result set rows
  *
@@ -79,7 +78,6 @@ class Result
 	 */
 	protected $arrCache = array();
 
-
 	/**
 	 * Validate the connection resource and store the query string
 	 *
@@ -95,7 +93,6 @@ class Result
 		$this->resultSet = $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
-
 	/**
 	 * Automatically free the result
 	 */
@@ -104,7 +101,6 @@ class Result
 		$this->resultSet = null;
 		$this->resResult->closeCursor();
 	}
-
 
 	/**
 	 * Set a particular field of the current row
@@ -123,7 +119,6 @@ class Result
 		$this->arrCache[$strKey] = $varValue;
 	}
 
-
 	/**
 	 * Check whether a field exists
 	 *
@@ -140,7 +135,6 @@ class Result
 
 		return isset($this->arrCache[$strKey]);
 	}
-
 
 	/**
 	 * Return an object property or a field of the current row
@@ -184,7 +178,6 @@ class Result
 		return null;
 	}
 
-
 	/**
 	 * Fetch the current row as enumerated array
 	 *
@@ -202,7 +195,6 @@ class Result
 		return $this->arrCache;
 	}
 
-
 	/**
 	 * Fetch the current row as associative array
 	 *
@@ -219,7 +211,6 @@ class Result
 
 		return $this->arrCache;
 	}
-
 
 	/**
 	 * Fetch a particular field of each row of the result
@@ -248,7 +239,6 @@ class Result
 		return $arrReturn;
 	}
 
-
 	/**
 	 * Fetch all rows as associative array
 	 *
@@ -267,7 +257,6 @@ class Result
 		return $arrReturn;
 	}
 
-
 	/**
 	 * Get the column information and return it as array
 	 *
@@ -281,7 +270,6 @@ class Result
 
 		return $arrFields[$intOffset];
 	}
-
 
 	/**
 	 * Go to the first row of the current result
@@ -297,7 +285,6 @@ class Result
 
 		return $this;
 	}
-
 
 	/**
 	 * Go to the previous row of the current result
@@ -316,7 +303,6 @@ class Result
 
 		return $this;
 	}
-
 
 	/**
 	 * Go to the next row of the current result
@@ -340,7 +326,6 @@ class Result
 		return false;
 	}
 
-
 	/**
 	 * Go to the last row of the current result
 	 *
@@ -356,7 +341,6 @@ class Result
 		return $this;
 	}
 
-
 	/**
 	 * Return the number of rows in the result set
 	 *
@@ -366,7 +350,6 @@ class Result
 	{
 		return \count($this->resultSet);
 	}
-
 
 	/**
 	 * Return the current row as associative array
@@ -384,7 +367,6 @@ class Result
 
 		return $blnEnumerated ? array_values($this->arrCache) : $this->arrCache;
 	}
-
 
 	/**
 	 * Reset the current result

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes forms
  *
@@ -104,7 +103,6 @@ class FormModel extends Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_form';
-
 
 	/**
 	 * Get the maximum file size that is allowed for file uploads

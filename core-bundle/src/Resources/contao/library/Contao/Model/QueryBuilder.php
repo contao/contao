@@ -10,7 +10,6 @@
 
 namespace Contao\Model;
 
-
 /**
  * The class reads the relation meta data from the DCA and creates the necessary
  * JOIN queries to retrieve an object from the database.
@@ -91,7 +90,6 @@ class QueryBuilder
 
 		return $strQuery;
 	}
-
 
 	/**
 	 * Build a query based on the given options to count the number of records

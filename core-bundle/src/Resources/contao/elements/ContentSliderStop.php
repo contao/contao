@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "slider" (wrapper stop).
  *
@@ -24,7 +23,6 @@ class ContentSliderStop extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_sliderStop';
-
 
 	/**
 	 * Generate the content element

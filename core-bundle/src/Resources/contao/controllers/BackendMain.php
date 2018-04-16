@@ -21,7 +21,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 
-
 /**
  * Main back end controller.
  *
@@ -40,7 +39,6 @@ class BackendMain extends Backend
 	 * @var BackendTemplate|object
 	 */
 	protected $Template;
-
 
 	/**
 	 * Initialize the controller
@@ -79,7 +77,6 @@ class BackendMain extends Backend
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('modules');
 	}
-
 
 	/**
 	 * Run the controller and parse the login template
@@ -138,7 +135,6 @@ class BackendMain extends Backend
 		return $this->output();
 	}
 
-
 	/**
 	 * Add the welcome screen
 	 *
@@ -178,7 +174,6 @@ class BackendMain extends Backend
 
 		return $objTemplate->parse();
 	}
-
 
 	/**
 	 * Output the template file

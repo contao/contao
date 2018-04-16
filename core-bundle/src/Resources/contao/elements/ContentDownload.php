@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "download".
  *
@@ -24,7 +23,6 @@ class ContentDownload extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_download';
-
 
 	/**
 	 * Return if the file does not exist
@@ -66,7 +64,6 @@ class ContentDownload extends ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the content element

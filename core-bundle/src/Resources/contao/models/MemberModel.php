@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes members
  *
@@ -177,7 +176,6 @@ class MemberModel extends Model
 	 */
 	protected static $strTable = 'tl_member';
 
-
 	/**
 	 * Find an active member by their e-mail-address and username
 	 *
@@ -201,7 +199,6 @@ class MemberModel extends Model
 
 		return static::findOneBy($arrColumns, array($strEmail, $strUsername), $arrOptions);
 	}
-
 
 	/**
 	 * Find an unactivated member by their e-mail-address

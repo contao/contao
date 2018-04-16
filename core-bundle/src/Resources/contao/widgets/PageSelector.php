@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
-
 /**
  * Provide methods to handle input field "page tree".
  *
@@ -42,7 +41,6 @@ class PageSelector extends Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
-
 	/**
 	 * Load the database object
 	 *
@@ -53,7 +51,6 @@ class PageSelector extends Widget
 		$this->import('Database');
 		parent::__construct($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -256,7 +253,6 @@ class PageSelector extends Widget
   </ul></li></ul>';
 	}
 
-
 	/**
 	 * Generate a particular subpart of the page tree and return it as HTML string
 	 *
@@ -319,7 +315,6 @@ class PageSelector extends Widget
 
 		return $tree;
 	}
-
 
 	/**
 	 * Recursively render the pagetree
@@ -437,7 +432,6 @@ class PageSelector extends Widget
 
 		return $return;
 	}
-
 
 	/**
 	 * Get the IDs of all parent pages of the selected pages, so they are expanded automatically

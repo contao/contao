@@ -12,7 +12,6 @@ namespace Contao\Model;
 
 use Contao\Model;
 
-
 /**
  * Handle a set of models
  *
@@ -48,18 +47,15 @@ class Registry implements \Countable
 	 */
 	protected $arrIdentities = array();
 
-
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
 	protected function __construct() {}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the current object instance (Singleton)
@@ -76,7 +72,6 @@ class Registry implements \Countable
 		return static::$objInstance;
 	}
 
-
 	/**
 	 * Count the elements
 	 *
@@ -86,7 +81,6 @@ class Registry implements \Countable
 	{
 		return \count($this->arrIdentities);
 	}
-
 
 	/**
 	 * Fetch a model by table name and primary key
@@ -118,7 +112,6 @@ class Registry implements \Countable
 		return $this->fetchByAlias($strTable, $strAlias, $varKey);
 	}
 
-
 	/**
 	 * Fetch a model by one of its aliases
 	 *
@@ -142,7 +135,6 @@ class Registry implements \Countable
 
 		return null;
 	}
-
 
 	/**
 	 * Register a model in the registry
@@ -189,7 +181,6 @@ class Registry implements \Countable
 		$objModel->onRegister($this);
 	}
 
-
 	/**
 	 * Unregister a model from the registry
 	 *
@@ -216,7 +207,6 @@ class Registry implements \Countable
 		$objModel->onUnregister($this);
 	}
 
-
 	/**
 	 * Check if a model is registered
 	 *
@@ -230,7 +220,6 @@ class Registry implements \Countable
 
 		return isset($this->arrIdentities[$intObjectId]);
 	}
-
 
 	/**
 	 * Register an alias for a model
@@ -255,7 +244,6 @@ class Registry implements \Countable
 		$this->arrAliases[$strTable][$strAlias][$varValue] = $varPk;
 	}
 
-
 	/**
 	 * Unregister an alias
 	 *
@@ -279,7 +267,6 @@ class Registry implements \Countable
 
 		unset($this->arrAliases[$strTable][$strAlias][$varValue]);
 	}
-
 
 	/**
 	 * Check if an alias is registered

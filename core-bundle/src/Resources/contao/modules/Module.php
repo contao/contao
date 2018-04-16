@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Parent class for front end modules.
  *
@@ -121,7 +120,6 @@ abstract class Module extends Frontend
 	 */
 	protected $arrStyle = array();
 
-
 	/**
 	 * Initialize the object
 	 *
@@ -159,7 +157,6 @@ abstract class Module extends Frontend
 		$this->strColumn = $strColumn;
 	}
 
-
 	/**
 	 * Set an object property
 	 *
@@ -170,7 +167,6 @@ abstract class Module extends Frontend
 	{
 		$this->arrData[$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Return an object property
@@ -189,7 +185,6 @@ abstract class Module extends Frontend
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -202,7 +197,6 @@ abstract class Module extends Frontend
 		return isset($this->arrData[$strKey]);
 	}
 
-
 	/**
 	 * Return the model
 	 *
@@ -212,7 +206,6 @@ abstract class Module extends Frontend
 	{
 		return $this->objModel;
 	}
-
 
 	/**
 	 * Parse the template
@@ -251,12 +244,10 @@ abstract class Module extends Frontend
 		return $this->Template->parse();
 	}
 
-
 	/**
 	 * Compile the current element
 	 */
 	abstract protected function compile();
-
 
 	/**
 	 * Recursively compile the navigation menu and return it as HTML string
@@ -434,7 +425,6 @@ abstract class Module extends Frontend
 
 		return !empty($items) ? $objTemplate->parse() : '';
 	}
-
 
 	/**
 	 * Find a front end module in the FE_MOD array and return the class name

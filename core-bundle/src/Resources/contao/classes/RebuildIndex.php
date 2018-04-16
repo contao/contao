@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Maintenance module "rebuild index".
  *
@@ -30,7 +29,6 @@ class RebuildIndex extends Backend implements \executable
 	{
 		return \Config::get('enableSearch') && \Input::get('act') == 'index';
 	}
-
 
 	/**
 	 * Generate the module

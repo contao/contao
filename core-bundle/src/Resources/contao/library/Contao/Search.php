@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\Database\Result;
 use Patchwork\Utf8;
 
-
 /**
  * Creates and queries the search index
  *
@@ -41,7 +40,6 @@ class Search
 	 * @var Search
 	 */
 	protected static $objInstance;
-
 
 	/**
 	 * Index a page
@@ -300,7 +298,6 @@ class Search
 		return true;
 	}
 
-
 	/**
 	 * Search the index and return the result object
 	 *
@@ -519,7 +516,6 @@ class Search
 		return $objResultStmt->execute($arrValues);
 	}
 
-
 	/**
 	 * Remove an entry from the search index
 	 *
@@ -542,7 +538,6 @@ class Search
 		}
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
@@ -550,7 +545,6 @@ class Search
 	 *             The Search class is now static.
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the object instance (Singleton)

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes member groups
  *
@@ -66,7 +65,6 @@ class MemberGroupModel extends Model
 	 */
 	protected static $strTable = 'tl_member_group';
 
-
 	/**
 	 * Find a published group by its ID
 	 *
@@ -89,7 +87,6 @@ class MemberGroupModel extends Model
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
 	}
 
-
 	/**
 	 * Find all active groups
 	 *
@@ -104,7 +101,6 @@ class MemberGroupModel extends Model
 
 		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "')"), null, $arrOptions);
 	}
-
 
 	/**
 	 * Find the first active group with a published jumpTo page

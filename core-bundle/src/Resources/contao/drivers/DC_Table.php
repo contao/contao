@@ -18,7 +18,6 @@ use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Provide methods to modify the database.
  *
@@ -98,7 +97,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 * @var int
 	 */
 	protected $intPreserveRecord;
-
 
 	/**
 	 * Initialize the object
@@ -256,7 +254,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Return an object property
 	 *
@@ -283,7 +280,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return parent::__get($strKey);
 	}
-
 
 	/**
 	 * List all records of a particular table
@@ -363,7 +359,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $return;
 	}
-
 
 	/**
 	 * Return all non-excluded fields of a record as HTML table
@@ -618,7 +613,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 </table>';
 	}
 
-
 	/**
 	 * Insert a new row into a database table
 	 *
@@ -720,7 +714,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$this->redirect($this->getReferer());
 	}
 
-
 	/**
 	 * Assign a new position to an existing record
 	 *
@@ -817,7 +810,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Move all selected records
 	 *
@@ -848,7 +840,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Duplicate a particular record of the current table
@@ -1046,7 +1037,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return false;
 	}
 
-
 	/**
 	 * Duplicate all child records of a duplicated record
 	 *
@@ -1174,7 +1164,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Move all selected records
 	 *
@@ -1205,7 +1194,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Calculate the new position of a moved or inserted record
@@ -1456,7 +1444,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Delete a record of the current table table and save it to tl_undo
 	 *
@@ -1586,7 +1573,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Delete all selected records
 	 *
@@ -1616,7 +1602,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Recursively get all related table names and records
@@ -1670,7 +1655,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 	}
-
 
 	/**
 	 * Restore one or more deleted records
@@ -1757,7 +1741,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$this->redirect($this->getReferer());
 	}
 
-
 	/**
 	 * Change the order of two neighbour database records
 	 */
@@ -1784,7 +1767,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Auto-generate a form to edit the current database record
@@ -2299,7 +2281,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * Auto-generate a form to edit all records that are currently shown
 	 *
@@ -2703,7 +2684,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>'.$return;
 	}
 
-
 	/**
 	 * Auto-generate a form to override all records that are currently shown
 	 *
@@ -3022,7 +3002,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>'.$return;
 	}
 
-
 	/**
 	 * Save the current value
 	 *
@@ -3172,7 +3151,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Return the name of the current palette
 	 *
@@ -3280,7 +3258,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $strPalette;
 	}
-
 
 	/**
 	 * Delete all incomplete and unrelated records
@@ -3410,7 +3387,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->reload();
 		}
 	}
-
 
 	/**
 	 * List all records of the current table as tree and return them as HTML string
@@ -3687,7 +3663,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * Generate a particular subpart of the tree and return it as HTML string
 	 *
@@ -3760,7 +3735,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $return;
 	}
-
 
 	/**
 	 * Recursively generate the tree and return it as HTML string
@@ -4044,7 +4018,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $return;
 	}
-
 
 	/**
 	 * Show header of the parent table and list all records of the current table
@@ -4602,7 +4575,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * List all records of the current table and return them as HTML string
 	 *
@@ -5039,7 +5011,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * Return a search form that allows to search results using regular expressions
 	 *
@@ -5151,7 +5122,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>';
 	}
 
-
 	/**
 	 * Return a select menu that allows to sort results by a particular field
 	 *
@@ -5245,7 +5215,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 </select>
 </div>';
 	}
-
 
 	/**
 	 * Return a select menu to limit results
@@ -5386,7 +5355,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 <strong>' . $GLOBALS['TL_LANG']['MSC']['showOnly'] . ':</strong> '.$fields.'
 </div>';
 	}
-
 
 	/**
 	 * Generate the filter panel and return it as HTML string
@@ -5816,7 +5784,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>';
 	}
 
-
 	/**
 	 * Return a pagination menu to browse results
 	 *
@@ -5855,7 +5822,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $objPagination->generate();
 	}
-
 
 	/**
 	 * Return the formatted group header as string
@@ -5950,7 +5916,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		return $remoteNew;
 	}
-
 
 	/**
 	 * Return the formatted group header as string

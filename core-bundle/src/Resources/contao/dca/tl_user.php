@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_user
- */
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
 
@@ -470,7 +466,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -487,7 +482,6 @@ class tl_user extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_user
@@ -545,7 +539,6 @@ class tl_user extends Backend
 		}
 	}
 
-
 	/**
 	 * Add an image to each record
 	 *
@@ -573,7 +566,6 @@ class tl_user extends Backend
 		return $args;
 	}
 
-
 	/**
 	 * Return the edit user button
 	 *
@@ -590,7 +582,6 @@ class tl_user extends Backend
 	{
 		return ($this->User->isAdmin || !$row['admin']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the copy page button
@@ -615,7 +606,6 @@ class tl_user extends Backend
 		return ($this->User->isAdmin || !$row['admin']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the delete page button
 	 *
@@ -632,7 +622,6 @@ class tl_user extends Backend
 	{
 		return ($this->User->isAdmin || !$row['admin']) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Generate a "switch account" button and return it as string
@@ -666,7 +655,6 @@ class tl_user extends Backend
 
 		return '<a href="'.$url.'" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
-
 
 	/**
 	 * Return a checkbox to delete session data
@@ -719,7 +707,6 @@ class tl_user extends Backend
 </div>';
 	}
 
-
 	/**
 	 * Return all modules except profile modules
 	 *
@@ -741,7 +728,6 @@ class tl_user extends Backend
 		return $arrModules;
 	}
 
-
 	/**
 	 * Prevent administrators from downgrading their own account
 	 *
@@ -760,7 +746,6 @@ class tl_user extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Prevent administrators from disabling their own account
 	 *
@@ -778,7 +763,6 @@ class tl_user extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Store the date when the account has been added
@@ -806,7 +790,6 @@ class tl_user extends Backend
 		$this->Database->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
 					   ->execute($time, $dc->id);
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -849,7 +832,6 @@ class tl_user extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

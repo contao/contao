@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_remember_me
- */
 $GLOBALS['TL_DCA']['tl_remember_me'] = array
 (
 

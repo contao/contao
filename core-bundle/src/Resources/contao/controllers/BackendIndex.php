@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-
 /**
  * Handle back end logins and logouts.
  *
@@ -41,7 +40,6 @@ class BackendIndex extends Backend
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('tl_user');
 	}
-
 
 	/**
 	 * Run the controller and parse the login template

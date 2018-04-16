@@ -15,7 +15,6 @@ use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
-
 /**
  * Handle the database communication
  *
@@ -60,7 +59,6 @@ class Database
 	 */
 	protected $arrCache = array();
 
-
 	/**
 	 * Establish the database connection
 	 *
@@ -99,7 +97,6 @@ class Database
 		}
 	}
 
-
 	/**
 	 * Close the database connection
 	 */
@@ -108,12 +105,10 @@ class Database
 		unset($this->resConnection);
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return an object property
@@ -133,7 +128,6 @@ class Database
 
 		return null;
 	}
-
 
 	/**
 	 * Instantiate the Database object (Factory)
@@ -172,7 +166,6 @@ class Database
 		return static::$arrInstances[$strKey];
 	}
 
-
 	/**
 	 * Prepare a query and return a Statement object
 	 *
@@ -187,7 +180,6 @@ class Database
 		return $objStatement->prepare($strQuery);
 	}
 
-
 	/**
 	 * Execute a query and return a Result object
 	 *
@@ -199,7 +191,6 @@ class Database
 	{
 		return $this->prepare($strQuery)->execute();
 	}
-
 
 	/**
 	 * Execute a raw query and return a Result object
@@ -214,7 +205,6 @@ class Database
 
 		return $objStatement->query($strQuery);
 	}
-
 
 	/**
 	 * Auto-generate a FIND_IN_SET() statement
@@ -243,7 +233,6 @@ class Database
 
 		return "FIND_IN_SET(" . static::quoteIdentifier($strKey) . ", " . $varSet . ")";
 	}
-
 
 	/**
 	 * Return all tables as array
@@ -277,7 +266,6 @@ class Database
 		return $this->arrCache[$strDatabase];
 	}
 
-
 	/**
 	 * Determine if a particular database table exists
 	 *
@@ -296,7 +284,6 @@ class Database
 
 		return \in_array($strTable, $this->listTables($strDatabase, $blnNoCache));
 	}
-
 
 	/**
 	 * Return all columns of a particular table as array
@@ -402,7 +389,6 @@ class Database
 		return $this->arrCache[$strTable];
 	}
 
-
 	/**
 	 * Determine if a particular column exists
 	 *
@@ -429,7 +415,6 @@ class Database
 
 		return false;
 	}
-
 
 	/**
 	 * Determine if a particular index exists
@@ -458,7 +443,6 @@ class Database
 		return false;
 	}
 
-
 	/**
 	 * Return the field names of a particular table as array
 	 *
@@ -482,7 +466,6 @@ class Database
 
 		return $arrNames;
 	}
-
 
 	/**
 	 * Check whether a field value in the database is unique
@@ -509,7 +492,6 @@ class Database
 
 		return $objUnique->numRows ? false : true;
 	}
-
 
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
@@ -570,7 +552,6 @@ class Database
 		return $arrReturn;
 	}
 
-
 	/**
 	 * Return the IDs of all parent records of a particular record
 	 *
@@ -595,7 +576,6 @@ class Database
 		return $arrReturn;
 	}
 
-
 	/**
 	 * Change the current database
 	 *
@@ -606,7 +586,6 @@ class Database
 		$this->resConnection->exec("USE $strDatabase");
 	}
 
-
 	/**
 	 * Begin a transaction
 	 */
@@ -614,7 +593,6 @@ class Database
 	{
 		$this->resConnection->beginTransaction();
 	}
-
 
 	/**
 	 * Commit a transaction
@@ -624,7 +602,6 @@ class Database
 		$this->resConnection->commit();
 	}
 
-
 	/**
 	 * Rollback a transaction
 	 */
@@ -632,7 +609,6 @@ class Database
 	{
 		$this->resConnection->rollBack();
 	}
-
 
 	/**
 	 * Lock one or more tables
@@ -651,7 +627,6 @@ class Database
 		$this->resConnection->exec('LOCK TABLES ' . implode(', ', $arrLocks) . ';');
 	}
 
-
 	/**
 	 * Unlock all tables
 	 */
@@ -659,7 +634,6 @@ class Database
 	{
 		$this->resConnection->exec('UNLOCK TABLES;');
 	}
-
 
 	/**
 	 * Return the table size in bytes
@@ -676,7 +650,6 @@ class Database
 		return $status['Data_length'] + $status['Index_length'];
 	}
 
-
 	/**
 	 * Return the next autoincrement ID of a table
 	 *
@@ -691,7 +664,6 @@ class Database
 
 		return $status['Auto_increment'];
 	}
-
 
 	/**
 	 * Return a universal unique identifier
@@ -710,7 +682,6 @@ class Database
 
 		return array_pop($ids);
 	}
-
 
 	/**
 	 * Quote the column name if it is a reserved word
@@ -743,7 +714,6 @@ class Database
 		return \System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 
-
 	/**
 	 * Execute a query and do not cache the result
 	 *
@@ -760,7 +730,6 @@ class Database
 
 		return $this->execute($strQuery);
 	}
-
 
 	/**
 	 * Always execute the query and add or replace an existing cache entry

@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "rss reader".
  *
@@ -33,7 +32,6 @@ class ModuleRssReader extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'rss_default';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -89,7 +87,6 @@ class ModuleRssReader extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

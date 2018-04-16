@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class FormCaptcha
  *
@@ -54,7 +53,6 @@ class FormCaptcha extends Widget
 	 */
 	protected $strPrefix = 'widget widget-captcha mandatory';
 
-
 	/**
 	 * Initialize the object
 	 *
@@ -69,7 +67,6 @@ class FormCaptcha extends Widget
 		$this->arrAttributes['required'] = true;
 		$this->arrConfiguration['mandatory'] = true;
 	}
-
 
 	/**
 	 * Add specific attributes
@@ -98,7 +95,6 @@ class FormCaptcha extends Widget
 		}
 	}
 
-
 	/**
 	 * Return a parameter
 	 *
@@ -124,7 +120,6 @@ class FormCaptcha extends Widget
 		}
 	}
 
-
 	/**
 	 * Validate the input and set the value
 	 */
@@ -136,7 +131,6 @@ class FormCaptcha extends Widget
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
 		}
 	}
-
 
 	/**
 	 * Generate the captcha values
@@ -161,7 +155,6 @@ class FormCaptcha extends Widget
 		);
 	}
 
-
 	/**
 	 * Generate hashes for the current time and the specified sum
 	 *
@@ -182,7 +175,6 @@ class FormCaptcha extends Widget
 			array($time, $time - 1)
 		);
 	}
-
 
 	/**
 	 * Generate the captcha question
@@ -207,7 +199,6 @@ class FormCaptcha extends Widget
 		return $strEncoded;
 	}
 
-
 	/**
 	 * Get the correct sum for the current captcha
 	 *
@@ -220,7 +211,6 @@ class FormCaptcha extends Widget
 		return $this->arrCaptcha['sum'];
 	}
 
-
 	/**
 	 * Get the correct hash for the current captcha
 	 *
@@ -232,7 +222,6 @@ class FormCaptcha extends Widget
 
 		return $this->arrCaptcha['hashes'][0];
 	}
-
 
 	/**
 	 * Generate the label and return it as string
@@ -254,7 +243,6 @@ class FormCaptcha extends Widget
 						$this->getQuestion());
 	}
 
-
 	/**
 	 * Generate the widget and return it as string
 	 *
@@ -270,7 +258,6 @@ class FormCaptcha extends Widget
 						$this->getAttributes(),
 						$this->strTagEnding);
 	}
-
 
 	/**
 	 * Return the captcha question as string

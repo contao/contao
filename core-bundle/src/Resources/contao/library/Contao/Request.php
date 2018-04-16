@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Sends HTTP requests and reads the response
  *
@@ -108,20 +107,17 @@ class Request
 	 */
 	protected $blnFollowRedirects = false;
 
-
 	/**
 	 * Number of redirects
 	 * @var integer
 	 */
 	protected $intRedirects = 0;
 
-
 	/**
 	 * Maximum number of redirects
 	 * @var integer
 	 */
 	protected $intRedirectLimit = 3;
-
 
 	/**
 	 * Set the default values
@@ -131,7 +127,6 @@ class Request
 		$this->strData = '';
 		$this->strMethod = 'get';
 	}
-
 
 	/**
 	 * Set an object property
@@ -174,7 +169,6 @@ class Request
 				break;
 		}
 	}
-
 
 	/**
 	 * Return an object property
@@ -223,7 +217,6 @@ class Request
 		return null;
 	}
 
-
 	/**
 	 * Add request headers
 	 *
@@ -235,7 +228,6 @@ class Request
 		$this->arrHeaders[$strKey] = $varValue;
 	}
 
-
 	/**
 	 * Return true if there was an error
 	 *
@@ -245,7 +237,6 @@ class Request
 	{
 		return $this->strError != '';
 	}
-
 
 	/**
 	 * Send the HTTP request

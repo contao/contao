@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * A class to access the file system
  *
@@ -39,18 +38,15 @@ class Files
 	 */
 	protected static $objInstance;
 
-
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
 	protected function __construct() {}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Instantiate the object (Factory)
@@ -66,7 +62,6 @@ class Files
 
 		return self::$objInstance;
 	}
-
 
 	/**
 	 * Create a directory
@@ -87,7 +82,6 @@ class Files
 		return mkdir(TL_ROOT . '/' . $strDirectory);
 	}
 
-
 	/**
 	 * Remove a directory
 	 *
@@ -106,7 +100,6 @@ class Files
 
 		return rmdir(TL_ROOT. '/' . $strDirectory);
 	}
-
 
 	/**
 	 * Recursively remove a directory
@@ -141,7 +134,6 @@ class Files
 		}
 	}
 
-
 	/**
 	 * Open a file and return the handle
 	 *
@@ -157,7 +149,6 @@ class Files
 		return fopen(TL_ROOT . '/' . $strFile, $strMode);
 	}
 
-
 	/**
 	 * Write content to a file
 	 *
@@ -168,7 +159,6 @@ class Files
 	{
 		fwrite($resFile, $strContent);
 	}
-
 
 	/**
 	 * Close a file handle
@@ -181,7 +171,6 @@ class Files
 	{
 		return fclose($resFile);
 	}
-
 
 	/**
 	 * Rename a file or folder
@@ -217,7 +206,6 @@ class Files
 		return rename(TL_ROOT . '/' . $strOldName, TL_ROOT . '/' . $strNewName);
 	}
 
-
 	/**
 	 * Copy a file or folder
 	 *
@@ -232,7 +220,6 @@ class Files
 
 		return copy(TL_ROOT . '/' . $strSource, TL_ROOT . '/' . $strDestination);
 	}
-
 
 	/**
 	 * Recursively copy a directory
@@ -260,7 +247,6 @@ class Files
 		}
 	}
 
-
 	/**
 	 * Delete a file
 	 *
@@ -274,7 +260,6 @@ class Files
 
 		return unlink(TL_ROOT . '/' . $strFile);
 	}
-
 
 	/**
 	 * Change the file mode
@@ -291,7 +276,6 @@ class Files
 		return chmod(TL_ROOT . '/' . $strFile, $varMode);
 	}
 
-
 	/**
 	 * Check whether a file is writeable
 	 *
@@ -305,7 +289,6 @@ class Files
 
 		return is_writable(TL_ROOT . '/' . $strFile);
 	}
-
 
 	/**
 	 * Move an uploaded file to a folder
@@ -321,7 +304,6 @@ class Files
 
 		return move_uploaded_file($strSource, TL_ROOT . '/' . $strDestination);
 	}
-
 
 	/**
 	 * Validate a path

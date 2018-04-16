@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Content element "mediaelement".
  *
@@ -30,7 +29,6 @@ class ContentMedia extends ContentElement
 	 * @var Model\Collection|FilesModel
 	 */
 	protected $objFiles;
-
 
 	/**
 	 * Return if there are no files
@@ -76,7 +74,6 @@ class ContentMedia extends ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

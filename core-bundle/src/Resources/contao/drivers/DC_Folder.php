@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Provide methods to modify the file system.
  *
@@ -89,7 +88,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 * @var boolean
 	 */
 	protected $blnFilesOnly = false;
-
 
 	/**
 	 * Initialize the object
@@ -210,7 +208,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Return an object property
 	 *
@@ -237,7 +234,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		return parent::__get($strKey);
 	}
-
 
 	/**
 	 * List all files and folders of the file system
@@ -550,7 +546,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * Automatically switch to showAll
 	 *
@@ -560,7 +555,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		return $this->showAll();
 	}
-
 
 	/**
 	 * Create a new folder
@@ -594,7 +588,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->Files->mkdir($strFolder . '/__new__');
 		$this->redirect(html_entity_decode($this->switchToEdit($strFolder . '/__new__')));
 	}
-
 
 	/**
 	 * Move an existing file or folder
@@ -707,7 +700,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Move all selected files and folders
 	 *
@@ -741,7 +733,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Recursively duplicate files and folders
@@ -883,7 +874,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Move all selected files and folders
 	 *
@@ -917,7 +907,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Recursively delete files and folders
@@ -1000,7 +989,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Delete all files and folders that are currently shown
 	 *
@@ -1032,7 +1020,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->redirect($this->getReferer());
 	}
 
-
 	/**
 	 * Automatically switch to showAll
 	 *
@@ -1042,7 +1029,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		return $this->showAll();
 	}
-
 
 	/**
 	 * Move one or more local files to the server
@@ -1227,7 +1213,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 </div>
 </form>';
 	}
-
 
 	/**
 	 * Auto-generate a form to rename a file or folder
@@ -1548,7 +1533,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		return $return;
 	}
-
 
 	/**
 	 * Auto-generate a form to edit all records that are currently shown
@@ -1876,7 +1860,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 </div>'.$return;
 	}
 
-
 	/**
 	 * Load the source editor
 	 *
@@ -2094,7 +2077,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 </form>' . "\n\n" . $codeEditor;
 	}
 
-
 	/**
 	 * Protect a folder
 	 *
@@ -2131,7 +2113,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		$this->redirect($this->getReferer());
 	}
-
 
 	/**
 	 * Save the current value
@@ -2360,7 +2341,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 	}
 
-
 	/**
 	 * Synchronize the file system with the database
 	 *
@@ -2460,7 +2440,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * Return the name of the current palette
 	 *
@@ -2470,7 +2449,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		return $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'];
 	}
-
 
 	/**
 	 * Generate a particular subpart of the tree and return it as HTML string
@@ -2505,7 +2483,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
 	}
-
 
 	/**
 	 * Render the file tree and return it as HTML string
@@ -2800,7 +2777,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		return $return;
 	}
 
-
 	/**
 	 * Return a search form that allows to search results using regular expressions
 	 *
@@ -2877,7 +2853,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
     </div>';
 	}
 
-
 	/**
 	 * Return true if the current folder is mounted
 	 *
@@ -2911,7 +2886,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		return false;
 	}
-
 
 	/**
 	 * Check a file operation
@@ -2973,7 +2947,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		return true;
 	}
 
-
 	/**
 	 * Return an array of encrypted folder names
 	 *
@@ -3004,7 +2977,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		return $arrFiles;
 	}
 
-
 	/**
 	 * Check if a path is protected (see #287)
 	 *
@@ -3027,7 +2999,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		return true;
 	}
-
 
 	/**
 	 * {@inheritdoc}

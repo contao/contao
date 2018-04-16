@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Renders an inline diff view using definition list markup
  *

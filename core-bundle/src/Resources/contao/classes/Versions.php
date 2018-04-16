@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Database\Result;
 
-
 /**
  * Provide methods to handle versioning.
  *
@@ -52,7 +51,6 @@ class Versions extends Controller
 	 */
 	protected $intUserId;
 
-
 	/**
 	 * Initialize the object
 	 *
@@ -76,7 +74,6 @@ class Versions extends Controller
 		$this->intPid = (int) $intPid;
 	}
 
-
 	/**
 	 * Set the edit URL
 	 *
@@ -86,7 +83,6 @@ class Versions extends Controller
 	{
 		$this->strEditUrl = $strEditUrl;
 	}
-
 
 	/**
 	 * Set the username
@@ -98,7 +94,6 @@ class Versions extends Controller
 		$this->strUsername = $strUsername;
 	}
 
-
 	/**
 	 * Set the user ID
 	 *
@@ -108,7 +103,6 @@ class Versions extends Controller
 	{
 		$this->intUserId = $intUserId;
 	}
-
 
 	/**
 	 * Returns the latest version
@@ -128,7 +122,6 @@ class Versions extends Controller
 
 		return (int) $objVersion->version;
 	}
-
 
 	/**
 	 * Create the initial version of a record
@@ -151,7 +144,6 @@ class Versions extends Controller
 
 		$this->create();
 	}
-
 
 	/**
 	 * Create a new version of a record
@@ -269,7 +261,6 @@ class Versions extends Controller
 		$this->log('Version '.$intVersion.' of record "'.$this->strTable.'.id='.$this->intPid.'" has been created'.$this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
 	}
 
-
 	/**
 	 * Restore a version
 	 *
@@ -380,7 +371,6 @@ class Versions extends Controller
 
 		$this->log('Version '.$intVersion.' of record "'.$this->strTable.'.id='.$this->intPid.'" has been restored'.$this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
 	}
-
 
 	/**
 	 * Compare versions
@@ -576,7 +566,6 @@ class Versions extends Controller
 		throw new ResponseException($objTemplate->getResponse());
 	}
 
-
 	/**
 	 * Render the versions dropdown menu
 	 *
@@ -617,7 +606,6 @@ class Versions extends Controller
 </div>
 ';
 	}
-
 
 	/**
 	 * Add a list of versions to a template
@@ -713,7 +701,6 @@ class Versions extends Controller
 		$objTemplate->versions = $arrVersions;
 	}
 
-
 	/**
 	 * Return the edit URL
 	 *
@@ -751,7 +738,6 @@ class Versions extends Controller
 		return $strUrl;
 	}
 
-
 	/**
 	 * Return the username
 	 *
@@ -769,7 +755,6 @@ class Versions extends Controller
 		return $this->User->username;
 	}
 
-
 	/**
 	 * Return the user ID
 	 *
@@ -786,7 +771,6 @@ class Versions extends Controller
 
 		return $this->User->id;
 	}
-
 
 	/**
 	 * Implode a multi-dimensional array recursively

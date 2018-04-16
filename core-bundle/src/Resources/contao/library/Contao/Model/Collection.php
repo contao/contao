@@ -13,7 +13,6 @@ namespace Contao\Model;
 use Contao\Database\Result;
 use Contao\Model;
 
-
 /**
  * The class handles traversing a set of models and lazy loads the database
  * result rows upon their first usage.
@@ -41,7 +40,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 */
 	protected $arrModels = array();
 
-
 	/**
 	 * Create a new collection
 	 *
@@ -66,7 +64,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		$this->strTable  = $strTable;
 	}
 
-
 	/**
 	 * Set an object property
 	 *
@@ -82,7 +79,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		$this->arrModels[$this->intIndex]->$strKey = $varValue;
 	}
-
 
 	/**
 	 * Return an object property
@@ -106,7 +102,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return null;
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -123,7 +118,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		return isset($this->arrModels[$this->intIndex]->$strKey);
 	}
-
 
 	/**
 	 * Create a new collection from a database result
@@ -157,7 +151,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return new static($arrModels, $strTable);
 	}
 
-
 	/**
 	 * Return the current row as associative array
 	 *
@@ -172,7 +165,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		return $this->arrModels[$this->intIndex]->row();
 	}
-
 
 	/**
 	 * Set the current row from an array
@@ -193,7 +185,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this;
 	}
 
-
 	/**
 	 * Save the current model
 	 *
@@ -211,7 +202,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this;
 	}
 
-
 	/**
 	 * Delete the current model and return the number of affected rows
 	 *
@@ -227,7 +217,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this->arrModels[$this->intIndex]->delete();
 	}
 
-
 	/**
 	 * Return the models as array
 	 *
@@ -237,7 +226,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	{
 		return $this->arrModels;
 	}
-
 
 	/**
 	 * Lazy load related records
@@ -256,7 +244,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this->arrModels[$this->intIndex]->getRelated($strKey);
 	}
 
-
 	/**
 	 * Return the number of rows in the result set
 	 *
@@ -266,7 +253,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	{
 		return \count($this->arrModels);
 	}
-
 
 	/**
 	 * Go to the first row
@@ -279,7 +265,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		return $this;
 	}
-
 
 	/**
 	 * Go to the previous row
@@ -298,7 +283,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this;
 	}
 
-
 	/**
 	 * Return the current model
 	 *
@@ -313,7 +297,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		return $this->arrModels[$this->intIndex];
 	}
-
 
 	/**
 	 * Go to the next row
@@ -332,7 +315,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this;
 	}
 
-
 	/**
 	 * Go to the last row
 	 *
@@ -345,7 +327,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $this;
 	}
 
-
 	/**
 	 * Reset the model
 	 *
@@ -357,7 +338,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 		return $this;
 	}
-
 
 	/**
 	 * Fetch a column of each row
@@ -388,7 +368,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $return;
 	}
 
-
 	/**
 	 * Fetch all columns of every row
 	 *
@@ -407,7 +386,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return $return;
 	}
 
-
 	/**
 	 * Check whether an offset exists
 	 *
@@ -420,7 +398,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return isset($this->arrModels[$offset]);
 	}
 
-
 	/**
 	 * Retrieve a particular offset
 	 *
@@ -432,7 +409,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	{
 		return $this->arrModels[$offset];
 	}
-
 
 	/**
 	 * Set a particular offset
@@ -447,7 +423,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		throw new \RuntimeException('This collection is immutable');
 	}
 
-
 	/**
 	 * Unset a particular offset
 	 *
@@ -459,7 +434,6 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	{
 		throw new \RuntimeException('This collection is immutable');
 	}
-
 
 	/**
 	 * Retrieve the iterator object

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_image_size
- */
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
 
@@ -200,7 +196,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -217,7 +212,6 @@ class tl_image_size extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the table
@@ -236,7 +230,6 @@ class tl_image_size extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
 	}
-
 
 	/**
 	 * List an image size
@@ -265,7 +258,6 @@ class tl_image_size extends Backend
 		return $html;
 	}
 
-
 	/**
 	 * Show a hint if a JavaScript library needs to be included in the page layout
 	 */
@@ -285,7 +277,6 @@ class tl_image_size extends Backend
 		System::loadLanguageFile('tl_layout');
 		Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
 	}
-
 
 	/**
 	 * Return the edit header button

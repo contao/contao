@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_module
- */
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
 
@@ -762,7 +758,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -779,7 +774,6 @@ class tl_module extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the table
@@ -798,7 +792,6 @@ class tl_module extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the front end modules module.');
 		}
 	}
-
 
 	/**
 	 * Return all front end modules as array
@@ -819,7 +812,6 @@ class tl_module extends Backend
 
 		return $groups;
 	}
-
 
 	/**
 	 * Return all editable fields of table tl_member
@@ -843,7 +835,6 @@ class tl_module extends Backend
 
 		return $return;
 	}
-
 
 	/**
 	 * Get all forms and return them as array
@@ -870,7 +861,6 @@ class tl_module extends Backend
 
 		return $arrForms;
 	}
-
 
 	/**
 	 * Return all layout sections as array
@@ -904,7 +894,6 @@ class tl_module extends Backend
 		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
-
 	/**
 	 * Return all navigation templates as array
 	 *
@@ -914,7 +903,6 @@ class tl_module extends Backend
 	{
 		return $this->getTemplateGroup('nav_');
 	}
-
 
 	/**
 	 * Return all module templates as array
@@ -928,7 +916,6 @@ class tl_module extends Backend
 		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type);
 	}
 
-
 	/**
 	 * Return all member templates as array
 	 *
@@ -938,7 +925,6 @@ class tl_module extends Backend
 	{
 		return $this->getTemplateGroup('member_');
 	}
-
 
 	/**
 	 * Return all search templates as array
@@ -950,7 +936,6 @@ class tl_module extends Backend
 		return $this->getTemplateGroup('search_');
 	}
 
-
 	/**
 	 * Return all navigation templates as array
 	 *
@@ -960,7 +945,6 @@ class tl_module extends Backend
 	{
 		return $this->getTemplateGroup('rss_');
 	}
-
 
 	/**
 	 * Use the module type as group header if sorted by type (see #8402)
@@ -982,7 +966,6 @@ class tl_module extends Backend
 		return $group;
 	}
 
-
 	/**
 	 * Load the default activation text
 	 *
@@ -999,7 +982,6 @@ class tl_module extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Load the default password text
@@ -1018,7 +1000,6 @@ class tl_module extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * List a front end module
 	 *
@@ -1030,7 +1011,6 @@ class tl_module extends Backend
 	{
 		return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">['. (isset($GLOBALS['TL_LANG']['FMD'][$row['type']][0]) ? $GLOBALS['TL_LANG']['FMD'][$row['type']][0] : $row['type']) .']</span></div>';
 	}
-
 
 	/**
 	 * Dynamically add flags to the "multiSRC" field

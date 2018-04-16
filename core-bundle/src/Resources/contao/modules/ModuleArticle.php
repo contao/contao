@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provides methodes to handle articles.
  *
@@ -46,7 +45,6 @@ class ModuleArticle extends Module
 	 */
 	protected $blnNoMarkup = false;
 
-
 	/**
 	 * Check whether the article is published
 	 *
@@ -66,7 +64,6 @@ class ModuleArticle extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -249,7 +246,6 @@ class ModuleArticle extends Module
 			}
 		}
 	}
-
 
 	/**
 	 * Print an article as PDF and stream it to the browser

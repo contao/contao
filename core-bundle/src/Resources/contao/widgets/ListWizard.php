@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * Provide methods to handle list items.
  *
@@ -35,7 +34,6 @@ class ListWizard extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
 
 	/**
 	 * Add specific attributes
@@ -59,7 +57,6 @@ class ListWizard extends Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -110,7 +107,6 @@ class ListWizard extends Widget
   </ul>
   <script>Backend.listWizard("ctrl_'.$this->strId.'")</script>';
 	}
-
 
 	/**
 	 * Return a form to choose a CSV file and import it

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "code".
  *
@@ -24,7 +23,6 @@ class ContentCode extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_code';
-
 
 	/**
 	 * Show the raw code in the back end
@@ -47,7 +45,6 @@ class ContentCode extends ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the content element

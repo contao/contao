@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormFileUpload
  *
@@ -39,7 +38,6 @@ class FormFileUpload extends Widget implements \uploadable
 	 * @var string
 	 */
 	protected $strPrefix = 'widget widget-upload';
-
 
 	/**
 	 * Add specific attributes
@@ -80,7 +78,6 @@ class FormFileUpload extends Widget implements \uploadable
 				break;
 		}
 	}
-
 
 	/**
 	 * Validate the input and set the value
@@ -297,7 +294,6 @@ class FormFileUpload extends Widget implements \uploadable
 		unset($_FILES[$this->strName]);
 	}
 
-
 	/**
 	 * Generate the widget and return it as string
 	 *
@@ -312,7 +308,6 @@ class FormFileUpload extends Widget implements \uploadable
 						$this->getAttributes(),
 						$this->strTagEnding);
 	}
-
 
 	/**
 	 * Return the maximum upload file size in bytes

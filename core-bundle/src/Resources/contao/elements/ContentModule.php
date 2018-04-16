@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "module".
  *
@@ -68,7 +67,6 @@ class ContentModule extends ContentElement
 
 		return $objModule->generate();
 	}
-
 
 	/**
 	 * Generate the content element

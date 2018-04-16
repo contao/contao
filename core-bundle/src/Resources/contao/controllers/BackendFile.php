@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Back end file picker.
  *
@@ -29,7 +28,6 @@ class BackendFile extends Backend
 	 * @var Ajax
 	 */
 	protected $objAjax;
-
 
 	/**
 	 * Initialize the controller
@@ -52,7 +50,6 @@ class BackendFile extends Backend
 
 		\System::loadLanguageFile('default');
 	}
-
 
 	/**
 	 * Run the controller and parse the template

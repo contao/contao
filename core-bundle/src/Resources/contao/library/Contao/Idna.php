@@ -13,7 +13,6 @@ namespace Contao;
 use TrueBV\Exception\LabelOutOfBoundsException;
 use TrueBV\Punycode;
 
-
 /**
  * An idna_encode adapter class
  *
@@ -57,7 +56,6 @@ class Idna
 		}
 	}
 
-
 	/**
 	 * Decode an internationalized domain name
 	 *
@@ -83,7 +81,6 @@ class Idna
 			return '';
 		}
 	}
-
 
 	/**
 	 * Encode the domain in an e-mail address
@@ -115,7 +112,6 @@ class Idna
 		return implode('@', $arrChunks) . '@' . $strHost;
 	}
 
-
 	/**
 	 * Decode the domain in an e-mail address
 	 *
@@ -145,7 +141,6 @@ class Idna
 
 		return implode('@', $arrChunks) . '@' . $strHost;
 	}
-
 
 	/**
 	 * Encode the domain in an URL
@@ -238,7 +233,6 @@ class Idna
 
 		return $strReturn;
 	}
-
 
 	/**
 	 * Decode the domain in an URL

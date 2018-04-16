@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Safely read the user input
  *
@@ -57,7 +56,6 @@ class Input
 	 */
 	protected static $blnMagicQuotes = false;
 
-
 	/**
 	 * Clean the global GPC arrays
 	 */
@@ -67,7 +65,6 @@ class Input
 		$_POST   = static::cleanKey($_POST);
 		$_COOKIE = static::cleanKey($_COOKIE);
 	}
-
 
 	/**
 	 * Return a $_GET variable
@@ -114,7 +111,6 @@ class Input
 		return static::$arrCache[$strCacheKey][$strKey];
 	}
 
-
 	/**
 	 * Return a $_POST variable
 	 *
@@ -155,7 +151,6 @@ class Input
 
 		return static::$arrCache[$strCacheKey][$strKey];
 	}
-
 
 	/**
 	 * Return a $_POST variable preserving allowed HTML tags
@@ -198,7 +193,6 @@ class Input
 		return static::$arrCache[$strCacheKey][$strKey];
 	}
 
-
 	/**
 	 * Return a raw, unsafe $_POST variable
 	 *
@@ -233,7 +227,6 @@ class Input
 		return static::$arrCache[$strCacheKey][$strKey];
 	}
 
-
 	/**
 	 * Return a raw, unsafe and unfiltered $_POST variable
 	 *
@@ -259,7 +252,6 @@ class Input
 
 		return static::$arrCache[$strCacheKey][$strKey];
 	}
-
 
 	/**
 	 * Return a $_COOKIE variable
@@ -299,7 +291,6 @@ class Input
 		return static::$arrCache[$strCacheKey][$strKey];
 	}
 
-
 	/**
 	 * Set a $_GET variable
 	 *
@@ -332,7 +323,6 @@ class Input
 		}
 	}
 
-
 	/**
 	 * Set a $_POST variable
 	 *
@@ -360,7 +350,6 @@ class Input
 		}
 	}
 
-
 	/**
 	 * Set a $_COOKIE variable
 	 *
@@ -384,7 +373,6 @@ class Input
 		}
 	}
 
-
 	/**
 	 * Reset the internal cache
 	 */
@@ -392,7 +380,6 @@ class Input
 	{
 		static::$arrCache = array();
 	}
-
 
 	/**
 	 * Return whether there are unused GET parameters
@@ -404,7 +391,6 @@ class Input
 		return \count(static::$arrUnusedGet) > 0;
 	}
 
-
 	/**
 	 * Return the unused GET parameters as array
 	 *
@@ -414,7 +400,6 @@ class Input
 	{
 		return array_keys(static::$arrUnusedGet);
 	}
-
 
 	/**
 	 * Set an unused GET parameter
@@ -426,7 +411,6 @@ class Input
 	{
 		static::$arrUnusedGet[$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Sanitize the variable names (thanks to Andreas Schempp)
@@ -464,7 +448,6 @@ class Input
 		return $varValue;
 	}
 
-
 	/**
 	 * Strip slashes
 	 *
@@ -479,7 +462,6 @@ class Input
 	{
 		return $varValue;
 	}
-
 
 	/**
 	 * Strip HTML and PHP tags preserving HTML comments
@@ -530,7 +512,6 @@ class Input
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Clean a value and try to prevent XSS attacks
@@ -662,7 +643,6 @@ class Input
 		return $varValue;
 	}
 
-
 	/**
 	 * Decode HTML entities
 	 *
@@ -694,7 +674,6 @@ class Input
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Preserve basic entities by replacing them with square brackets (e.g. &amp; becomes [amp])
@@ -731,7 +710,6 @@ class Input
 		return $varValue;
 	}
 
-
 	/**
 	 * Encode special characters which are potentially dangerous
 	 *
@@ -763,7 +741,6 @@ class Input
 		return str_replace($arrSearch, $arrReplace, $varValue);
 	}
 
-
 	/**
 	 * Encode the opening and closing delimiters of insert tags
 	 *
@@ -775,7 +752,6 @@ class Input
 	{
 		return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $varValue);
 	}
-
 
 	/**
 	 * Fallback to the session form data if there is no post data
@@ -807,7 +783,6 @@ class Input
 		return null;
 	}
 
-
 	/**
 	 * Clean the keys of the request arrays
 	 *
@@ -819,7 +794,6 @@ class Input
 		static::initialize();
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
@@ -827,7 +801,6 @@ class Input
 	 *             The Input class is now static.
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the object instance (Singleton)

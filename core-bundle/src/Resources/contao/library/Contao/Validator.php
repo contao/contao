@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Validates arbitrary data
  *
@@ -40,7 +39,6 @@ class Validator
 		return preg_match('/^-?\d+(\.\d+)?$/', $varValue);
 	}
 
-
 	/**
 	 * Natural numbers (nonnegative integers)
 	 *
@@ -52,7 +50,6 @@ class Validator
 	{
 		return preg_match('/^\d+$/', $varValue);
 	}
-
 
 	/**
 	 * Alphabetic characters (including full stop [.] minus [-] and space [ ])
@@ -66,7 +63,6 @@ class Validator
 		return preg_match('/^[\pL .-]+$/u', $varValue);
 	}
 
-
 	/**
 	 * Alphanumeric characters (including full stop [.] minus [-], underscore [_] and space [ ])
 	 *
@@ -78,7 +74,6 @@ class Validator
 	{
 		return preg_match('/^[\w .-]+$/u', $varValue);
 	}
-
 
 	/**
 	 * Characters that are usually encoded by the Input class: #<>()\=
@@ -92,7 +87,6 @@ class Validator
 		return !preg_match('/[#<>()\\\\=]/', $varValue);
 	}
 
-
 	/**
 	 * Valid date formats
 	 *
@@ -104,7 +98,6 @@ class Validator
 	{
 		return preg_match('~^'. \Date::getRegexp(\Date::getNumericDateFormat()) .'$~i', $varValue);
 	}
-
 
 	/**
 	 * Valid time formats
@@ -118,7 +111,6 @@ class Validator
 		return preg_match('~^'. \Date::getRegexp(\Date::getNumericTimeFormat()) .'$~i', $varValue);
 	}
 
-
 	/**
 	 * Valid date and time formats
 	 *
@@ -130,7 +122,6 @@ class Validator
 	{
 		return preg_match('~^'. \Date::getRegexp(\Date::getNumericDatimFormat()) .'$~i', $varValue);
 	}
-
 
 	/**
 	 * Valid e-mail address
@@ -157,7 +148,6 @@ class Validator
 		return preg_match('/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iDu', \Idna::encodeEmail($varValue));
 	}
 
-
 	/**
 	 * Valid URL with special characters allowed (see #6402)
 	 *
@@ -176,7 +166,6 @@ class Validator
 		return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~|-]+$/u', $varValue);
 	}
 
-
 	/**
 	 * Valid alias name
 	 *
@@ -188,7 +177,6 @@ class Validator
 	{
 		return preg_match('/^[\w.-]+$/u', $varValue);
 	}
-
 
 	/**
 	 * Valid folder alias name
@@ -202,7 +190,6 @@ class Validator
 		return preg_match('/^[\w\/.-]+$/u', $varValue);
 	}
 
-
 	/**
 	 * Valid phone number
 	 *
@@ -214,7 +201,6 @@ class Validator
 	{
 		return preg_match('/^(\+|\()?(\d+[ \+\(\)\/-]*)+$/', $varValue);
 	}
-
 
 	/**
 	 * Valid percentage
@@ -228,7 +214,6 @@ class Validator
 		return is_numeric($varValue) && $varValue >= 0 && $varValue <= 100;
 	}
 
-
 	/**
 	 * Valid locale
 	 *
@@ -240,7 +225,6 @@ class Validator
 	{
 		return preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $varValue);
 	}
-
 
 	/**
 	 * Valid language code
@@ -254,7 +238,6 @@ class Validator
 		return preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', $varValue);
 	}
 
-
 	/**
 	 * Valid UUID (version 1)
 	 *
@@ -266,7 +249,6 @@ class Validator
 	{
 		return static::isBinaryUuid($varValue) || static::isStringUuid($varValue);
 	}
-
 
 	/**
 	 * Valid binary UUID (version 1)
@@ -288,7 +270,6 @@ class Validator
 		return false;
 	}
 
-
 	/**
 	 * Valid string UUID (version 1)
 	 *
@@ -309,7 +290,6 @@ class Validator
 		return false;
 	}
 
-
 	/**
 	 * Valid Google+ ID or vanity name
 	 *
@@ -321,7 +301,6 @@ class Validator
 	{
 		return preg_match('/^([0-9]{21}|\+[\w-]+)$/u', $varValue);
 	}
-
 
 	/**
 	 * Insecure path potentially containing directory traversal
@@ -375,7 +354,6 @@ class Validator
 		return false;
 	}
 
-
 	/**
 	 * Valid file name
 	 *
@@ -410,7 +388,6 @@ class Validator
 
 		return true;
 	}
-
 
 	/**
 	 * Valid form field name

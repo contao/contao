@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle text fields.
  *
@@ -44,7 +43,6 @@ class TextField extends Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
-
 	/**
 	 * Disable the for attribute if the "multiple" option is set
 	 *
@@ -59,7 +57,6 @@ class TextField extends Widget
 			$this->blnForAttribute = false;
 		}
 	}
-
 
 	/**
 	 * Add specific attributes
@@ -100,7 +97,6 @@ class TextField extends Widget
 		}
 	}
 
-
 	/**
 	 * Trim values
 	 *
@@ -134,7 +130,6 @@ class TextField extends Widget
 
 		return parent::validator($varInput);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

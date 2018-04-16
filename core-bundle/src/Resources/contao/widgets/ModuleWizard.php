@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle modules of a page layout.
  *
@@ -30,7 +29,6 @@ class ModuleWizard extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
 
 	/**
 	 * Generate the widget and return it as string

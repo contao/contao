@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates .zip files and stores them on the disk
  *
@@ -79,7 +78,6 @@ class ZipWriter
 	 */
 	protected $intCount = 0;
 
-
 	/**
 	 * Create a new zip archive
 	 *
@@ -104,7 +102,6 @@ class ZipWriter
 		}
 	}
 
-
 	/**
 	 * Close the file handle if it has not been done yet
 	 */
@@ -120,7 +117,6 @@ class ZipWriter
 			unlink($this->strTemp);
 		}
 	}
-
 
 	/**
 	 * Add a file to the archive
@@ -145,7 +141,6 @@ class ZipWriter
 
 		$this->addString(file_get_contents(TL_ROOT . '/' . $strFile), $strName ?: $strFile, filemtime(TL_ROOT . '/' . $strFile));
 	}
-
 
 	/**
 	 * Add a file from a string to the archive
@@ -215,7 +210,6 @@ class ZipWriter
 		$this->strCentralDir .= implode('', $arrHeader);
 	}
 
-
 	/**
 	 * Write the central directory and close the file handle
 	 */
@@ -258,7 +252,6 @@ class ZipWriter
 		// Rename file
 		\Files::getInstance()->rename(self::TEMPORARY_FOLDER . '/' . basename($this->strTemp), $this->strFile);
 	}
-
 
 	/**
 	 * Convert a Unix timestamp to a hexadecimal value

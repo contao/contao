@@ -17,7 +17,6 @@ use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-
 /**
  * Creates, reads, writes and deletes files
  *
@@ -118,7 +117,6 @@ class File extends System
 	 */
 	protected $arrImageViewSize = array();
 
-
 	/**
 	 * Instantiate a new file object
 	 *
@@ -147,7 +145,6 @@ class File extends System
 		$this->strFile = $strFile;
 	}
 
-
 	/**
 	 * Close the file handle if it has not been done yet
 	 */
@@ -158,7 +155,6 @@ class File extends System
 			$this->Files->fclose($this->resFile);
 		}
 	}
-
 
 	/**
 	 * Return an object property
@@ -411,7 +407,6 @@ class File extends System
 		}
 	}
 
-
 	/**
 	 * Create the file if it does not yet exist
 	 *
@@ -444,7 +439,6 @@ class File extends System
 		}
 	}
 
-
 	/**
 	 * Check whether the file exists
 	 *
@@ -454,7 +448,6 @@ class File extends System
 	{
 		return file_exists(TL_ROOT . '/' . $this->strFile);
 	}
-
 
 	/**
 	 * Truncate the file and reset the file pointer
@@ -472,7 +465,6 @@ class File extends System
 		return $this->write('');
 	}
 
-
 	/**
 	 * Write data to the file
 	 *
@@ -484,7 +476,6 @@ class File extends System
 	{
 		return $this->fputs($varData, 'wb');
 	}
-
 
 	/**
 	 * Append data to the file
@@ -499,7 +490,6 @@ class File extends System
 		return $this->fputs($varData . $strLine, 'ab');
 	}
 
-
 	/**
 	 * Prepend data to the file
 	 *
@@ -512,7 +502,6 @@ class File extends System
 	{
 		return $this->fputs($varData . $strLine . $this->getContent(), 'wb');
 	}
-
 
 	/**
 	 * Delete the file
@@ -532,7 +521,6 @@ class File extends System
 		return $return;
 	}
 
-
 	/**
 	 * Set the file permissions
 	 *
@@ -544,7 +532,6 @@ class File extends System
 	{
 		return $this->Files->chmod($this->strFile, $intChmod);
 	}
-
 
 	/**
 	 * Close the file handle
@@ -587,7 +574,6 @@ class File extends System
 		return $return;
 	}
 
-
 	/**
 	 * Return the files model
 	 *
@@ -602,7 +588,6 @@ class File extends System
 
 		return $this->objModel;
 	}
-
 
 	/**
 	 * Return the file content as string
@@ -630,7 +615,6 @@ class File extends System
 		return $strContent;
 	}
 
-
 	/**
 	 * Write to a file
 	 *
@@ -644,7 +628,6 @@ class File extends System
 		$objFile->close();
 	}
 
-
 	/**
 	 * Return the file content as array
 	 *
@@ -654,7 +637,6 @@ class File extends System
 	{
 		return array_map('rtrim', file(TL_ROOT . '/' . $this->strFile));
 	}
-
 
 	/**
 	 * Rename the file
@@ -704,7 +686,6 @@ class File extends System
 		return $return;
 	}
 
-
 	/**
 	 * Copy the file
 	 *
@@ -741,7 +722,6 @@ class File extends System
 		return true;
 	}
 
-
 	/**
 	 * Resize the file if it is an image
 	 *
@@ -773,7 +753,6 @@ class File extends System
 		return $return;
 	}
 
-
 	/**
 	 * Send the file to the browser
 	 *
@@ -800,7 +779,6 @@ class File extends System
 
 		throw new ResponseException($response);
 	}
-
 
 	/**
 	 * Write data to a file
@@ -834,7 +812,6 @@ class File extends System
 		return true;
 	}
 
-
 	/**
 	 * Return the mime type and icon of the file based on its extension
 	 *
@@ -850,7 +827,6 @@ class File extends System
 		return array('application/octet-stream', 'iconPLAIN.svg');
 	}
 
-
 	/**
 	 * Get the mime type of the file based on its extension
 	 *
@@ -863,7 +839,6 @@ class File extends System
 		return $arrMime[0];
 	}
 
-
 	/**
 	 * Return the file icon depending on the file type
 	 *
@@ -875,7 +850,6 @@ class File extends System
 
 		return $arrMime[1];
 	}
-
 
 	/**
 	 * Return the MD5 hash of the file
@@ -894,7 +868,6 @@ class File extends System
 			return md5_file(TL_ROOT . '/' . $this->strFile);
 		}
 	}
-
 
 	/**
 	 * Return the path info (binary-safe)

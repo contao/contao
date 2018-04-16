@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "navigation".
  *
@@ -26,7 +25,6 @@ class ModuleNavigation extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_navigation';
-
 
 	/**
 	 * Do not display the module if there are no menu items
@@ -53,7 +51,6 @@ class ModuleNavigation extends Module
 
 		return ($this->Template->items != '') ? $strBuffer : '';
 	}
-
 
 	/**
 	 * Generate the module

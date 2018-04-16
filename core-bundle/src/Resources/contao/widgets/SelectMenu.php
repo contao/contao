@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle select menus.
  *
@@ -36,7 +35,6 @@ class SelectMenu extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
 
 	/**
 	 * Add specific attributes
@@ -84,7 +82,6 @@ class SelectMenu extends Widget
 		}
 	}
 
-
 	/**
 	 * Check for a valid option (see #4383)
 	 */
@@ -99,7 +96,6 @@ class SelectMenu extends Widget
 
 		parent::validate();
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

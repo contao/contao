@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "quick navigation".
  *
@@ -26,7 +25,6 @@ class ModuleQuicknav extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_quicknav';
-
 
 	/**
 	 * Redirect to the selected page
@@ -56,7 +54,6 @@ class ModuleQuicknav extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -94,7 +91,6 @@ class ModuleQuicknav extends Module
 		$this->Template->request = ampersand(\Environment::get('request'), true);
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
 	}
-
 
 	/**
 	 * Recursively get all quicknav pages and return them as array

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Content element "YouTube".
  *
@@ -24,7 +23,6 @@ class ContentYouTube extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_youtube';
-
 
 	/**
 	 * Show the YouTube link in the back end
@@ -45,7 +43,6 @@ class ContentYouTube extends ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

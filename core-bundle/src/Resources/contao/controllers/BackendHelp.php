@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Back end help wizard.
  *
@@ -44,7 +43,6 @@ class BackendHelp extends Backend
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('modules');
 	}
-
 
 	/**
 	 * Run the controller and parse the template

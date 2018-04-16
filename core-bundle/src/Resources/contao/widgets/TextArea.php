@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle textareas.
  *
@@ -55,7 +54,6 @@ class TextArea extends Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -98,7 +96,6 @@ class TextArea extends Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
