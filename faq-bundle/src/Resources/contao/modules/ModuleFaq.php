@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods regarding FAQs.
  *
