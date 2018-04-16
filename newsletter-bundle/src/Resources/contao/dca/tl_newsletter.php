@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_newsletter
- */
 $GLOBALS['TL_DCA']['tl_newsletter'] = array
 (
 
@@ -275,7 +271,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -292,7 +287,6 @@ class tl_newsletter extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_newsletter
@@ -415,7 +409,6 @@ class tl_newsletter extends Backend
 		}
 	}
 
-
 	/**
 	 * List records
 	 *
@@ -433,7 +426,6 @@ class tl_newsletter extends Backend
 </div>' . "\n";
 	}
 
-
 	/**
 	 * Convert absolute URLs from TinyMCE to relative URLs
 	 *
@@ -446,7 +438,6 @@ class tl_newsletter extends Backend
 		return str_replace('src="' .Environment::get('base'), 'src="', $strContent);
 	}
 
-
 	/**
 	 * Convert relative URLs from TinyMCE to absolute URLs
 	 *
@@ -458,7 +449,6 @@ class tl_newsletter extends Backend
 	{
 		return $this->convertRelativeUrls($strContent);
 	}
-
 
 	/**
 	 * Auto-generate the newsletter alias if it has not been set yet
@@ -510,7 +500,6 @@ class tl_newsletter extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Add the sender address as placeholder

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes newsletter channels
  *
@@ -62,7 +61,6 @@ class NewsletterChannelModel extends \Model
 	 */
 	protected static $strTable = 'tl_newsletter_channel';
 
-
 	/**
 	 * Find multiple newsletter channels by their IDs
 	 *
@@ -85,6 +83,6 @@ class NewsletterChannelModel extends \Model
 			$arrOptions['order'] = "$t.title";
 		}
 
-		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
+		return static::findBy(array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }

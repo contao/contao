@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "newsletter unsubscribe".
  *
@@ -31,7 +30,6 @@ class ModuleUnsubscribe extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'nl_default';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -64,7 +62,6 @@ class ModuleUnsubscribe extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -156,7 +153,6 @@ class ModuleUnsubscribe extends \Module
 		$this->Template->id = $this->id;
 	}
 
-
 	/**
 	 * Validate the subscription form
 	 *
@@ -233,7 +229,6 @@ class ModuleUnsubscribe extends \Module
 
 		return array($varInput, $arrRemove);
 	}
-
 
 	/**
 	 * Remove the recipient
