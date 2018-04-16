@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "news archive".
  *
@@ -32,7 +31,6 @@ class ModuleNewsArchive extends \ModuleNews
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_newsarchive';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -77,7 +75,6 @@ class ModuleNewsArchive extends \ModuleNews
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

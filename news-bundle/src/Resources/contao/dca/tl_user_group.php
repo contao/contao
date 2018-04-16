@@ -8,20 +8,14 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Extend the default palette
- */
+// Extend the default palette
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('news_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
     ->addField(array('news', 'newp', 'newsfeeds', 'newsfeedp'), 'news_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_user_group')
 ;
 
-
-/**
- * Add fields to tl_user_group
- */
+// Add fields to tl_user_group
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['news'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['news'],

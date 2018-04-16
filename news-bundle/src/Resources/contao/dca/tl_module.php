@@ -8,19 +8,13 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Add palettes to tl_module
- */
+// Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']    = '{title_legend},name,headline,type;{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']  = '{title_legend},name,headline,type;{config_legend},news_archives;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsarchive'] = '{title_legend},name,headline,type;{config_legend},news_archives,news_jumpToCurrent,news_readerModule,perPage,news_format;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenu']    = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_startDay,news_order;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
-
-/**
- * Add fields to tl_module
- */
+// Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_archives'],
@@ -136,7 +130,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-
 $bundles = System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
@@ -144,7 +137,6 @@ if (isset($bundles['ContaoCommentsBundle']))
 {
 	$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader'] = str_replace('{protected_legend:hide}', '{comment_legend:hide},com_template;{protected_legend:hide}', $GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']);
 }
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
@@ -162,7 +154,6 @@ class tl_module_news extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Get all news archives and return them as array
@@ -190,7 +181,6 @@ class tl_module_news extends Backend
 		return $arrArchives;
 	}
 
-
 	/**
 	 * Get all news reader modules and return them as array
 	 *
@@ -208,7 +198,6 @@ class tl_module_news extends Backend
 
 		return $arrModules;
 	}
-
 
 	/**
 	 * Hide the start day drop-down if not applicable
@@ -238,7 +227,6 @@ class tl_module_news extends Backend
     });
   </script>';
 	}
-
 
 	/**
 	 * Return all news templates as array

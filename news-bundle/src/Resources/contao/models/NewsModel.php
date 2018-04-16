@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes news
  *
@@ -162,7 +161,6 @@ class NewsModel extends \Model
 	 */
 	protected static $strTable = 'tl_news';
 
-
 	/**
 	 * Find a published news item from one or more news archives by its ID or alias
 	 *
@@ -181,7 +179,7 @@ class NewsModel extends \Model
 
 		$t = static::$strTable;
 		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
-		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")";
+		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -191,7 +189,6 @@ class NewsModel extends \Model
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
-
 
 	/**
 	 * Find published news items by their parent ID
@@ -212,7 +209,7 @@ class NewsModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")");
 
 		if ($blnFeatured === true)
 		{
@@ -241,7 +238,6 @@ class NewsModel extends \Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 
-
 	/**
 	 * Count published news items by their parent ID
 	 *
@@ -259,7 +255,7 @@ class NewsModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")");
 
 		if ($blnFeatured === true)
 		{
@@ -278,7 +274,6 @@ class NewsModel extends \Model
 
 		return static::countBy($arrColumns, null, $arrOptions);
 	}
-
 
 	/**
 	 * Find published news items with the default redirect target by their parent ID
@@ -306,7 +301,6 @@ class NewsModel extends \Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find published news items by their parent ID
@@ -341,7 +335,6 @@ class NewsModel extends \Model
 		return static::findBy($arrColumns, $intId, $arrOptions);
 	}
 
-
 	/**
 	 * Find all published news items of a certain period of time by their parent ID
 	 *
@@ -362,7 +355,7 @@ class NewsModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.date>=? AND $t.date<=? AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("$t.date>=? AND $t.date<=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -380,7 +373,6 @@ class NewsModel extends \Model
 
 		return static::findBy($arrColumns, array($intFrom, $intTo), $arrOptions);
 	}
-
 
 	/**
 	 * Count all published news items of a certain period of time by their parent ID
@@ -400,7 +392,7 @@ class NewsModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.date>=? AND $t.date<=? AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")");
+		$arrColumns = array("$t.date>=? AND $t.date<=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")");
 
 		if (!static::isPreviewMode($arrOptions))
 		{

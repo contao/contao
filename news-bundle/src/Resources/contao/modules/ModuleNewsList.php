@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "news list".
  *
@@ -30,7 +29,6 @@ class ModuleNewsList extends \ModuleNews
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_newslist';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -63,7 +61,6 @@ class ModuleNewsList extends \ModuleNews
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -152,7 +149,6 @@ class ModuleNewsList extends \ModuleNews
 		$this->Template->archives = $this->news_archives;
 	}
 
-
 	/**
 	 * Count the total matching items
 	 *
@@ -182,7 +178,6 @@ class ModuleNewsList extends \ModuleNews
 
 		return \NewsModel::countPublishedByPids($newsArchives, $blnFeatured);
 	}
-
 
 	/**
 	 * Fetch the matching items

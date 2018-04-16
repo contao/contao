@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods regarding news archives.
  *
@@ -24,7 +23,6 @@ class News extends \Frontend
 	 * @var array
 	 */
 	private static $arrUrlCache = array();
-
 
 	/**
 	 * Update a particular RSS feed
@@ -57,7 +55,6 @@ class News extends \Frontend
 		}
 	}
 
-
 	/**
 	 * Delete old files and generate all feeds
 	 */
@@ -78,7 +75,6 @@ class News extends \Frontend
 			}
 		}
 	}
-
 
 	/**
 	 * Generate all feeds including a certain archive
@@ -101,7 +97,6 @@ class News extends \Frontend
 			}
 		}
 	}
-
 
 	/**
 	 * Generate an XML files and save them to the root directory
@@ -254,7 +249,6 @@ class News extends \Frontend
 		\File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
-
 	/**
 	 * Add news items to the indexer
 	 *
@@ -350,7 +344,6 @@ class News extends \Frontend
 		return $arrPages;
 	}
 
-
 	/**
 	 * Generate a URL and return it as string
 	 *
@@ -429,7 +422,6 @@ class News extends \Frontend
 		return self::$arrUrlCache[$strCacheKey];
 	}
 
-
 	/**
 	 * Return the link of a news article
 	 *
@@ -476,7 +468,6 @@ class News extends \Frontend
 		// Link to the default page
 		return sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));
 	}
-
 
 	/**
 	 * Return the names of the existing feeds so they are not removed
