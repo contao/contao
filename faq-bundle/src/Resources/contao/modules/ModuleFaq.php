@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleFaq extends \Frontend
+class ModuleFaq extends Frontend
 {
 
 	/**
@@ -114,3 +114,5 @@ class ModuleFaq extends \Frontend
 		return $arrPages;
 	}
 }
+
+class_alias(ModuleFaq::class, 'ModuleFaq');

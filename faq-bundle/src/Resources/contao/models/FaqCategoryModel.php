@@ -77,7 +77,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FaqCategoryModel extends \Model
+class FaqCategoryModel extends Model
 {
 
 	/**
@@ -87,3 +87,5 @@ class FaqCategoryModel extends \Model
 	protected static $strTable = 'tl_faq_category';
 
 }
+
+class_alias(FaqCategoryModel::class, 'FaqCategoryModel');

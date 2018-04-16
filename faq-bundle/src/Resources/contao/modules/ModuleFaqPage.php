@@ -20,7 +20,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleFaqPage extends \Module
+class ModuleFaqPage extends Module
 {
 
 	/**
@@ -153,3 +153,5 @@ class ModuleFaqPage extends \Module
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 	}
 }
+
+class_alias(ModuleFaqPage::class, 'ModuleFaqPage');

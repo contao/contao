@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleFaqReader extends \Module
+class ModuleFaqReader extends Module
 {
 
 	/**
@@ -212,3 +212,5 @@ class ModuleFaqReader extends \Module
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
 	}
 }
+
+class_alias(ModuleFaqReader::class, 'ModuleFaqReader');

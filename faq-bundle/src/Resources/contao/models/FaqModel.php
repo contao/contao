@@ -109,7 +109,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FaqModel extends \Model
+class FaqModel extends Model
 {
 
 	/**
@@ -206,3 +206,5 @@ class FaqModel extends \Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
+
+class_alias(FaqModel::class, 'FaqModel');
