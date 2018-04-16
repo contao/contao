@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_news_archive
- */
 $GLOBALS['TL_DCA']['tl_news_archive'] = array
 (
 
@@ -249,7 +245,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -268,7 +263,6 @@ class tl_news_archive extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_news_archive
@@ -409,7 +403,6 @@ class tl_news_archive extends Backend
 		}
 	}
 
-
 	/**
 	 * Check for modified news feeds and update the XML files if necessary
 	 */
@@ -438,7 +431,6 @@ class tl_news_archive extends Backend
 		$objSession->set('news_feed_updater', null);
 	}
 
-
 	/**
 	 * Schedule a news feed update
 	 *
@@ -464,7 +456,6 @@ class tl_news_archive extends Backend
 		$objSession->set('news_feed_updater', array_unique($session));
 	}
 
-
 	/**
 	 * Return the manage feeds button
 	 *
@@ -480,7 +471,6 @@ class tl_news_archive extends Backend
 	{
 		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || $this->User->hasAccess('create', 'newsfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
-
 
 	/**
 	 * Return the edit header button
@@ -499,7 +489,6 @@ class tl_news_archive extends Backend
 		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the copy archive button
 	 *
@@ -516,7 +505,6 @@ class tl_news_archive extends Backend
 	{
 		return $this->User->hasAccess('create', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the delete archive button

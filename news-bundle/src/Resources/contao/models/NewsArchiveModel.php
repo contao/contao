@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes news archives
  *

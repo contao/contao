@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "news archive".
  *
@@ -45,7 +44,6 @@ class ModuleNewsMenu extends ModuleNews
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_newsmenu';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -86,7 +84,6 @@ class ModuleNewsMenu extends ModuleNews
 		return parent::generate();
 	}
 
-
 	/**
 	 * Generate the module
 	 */
@@ -110,7 +107,6 @@ class ModuleNewsMenu extends ModuleNews
 
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['emptyList'];
 	}
-
 
 	/**
 	 * Generate the yearly menu
@@ -154,7 +150,6 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->news_showQuantity != '');
 	}
-
 
 	/**
 	 * Generate the monthly menu
@@ -210,7 +205,6 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->url = $this->strUrl . '?';
 		$this->Template->activeYear = \Input::get('year');
 	}
-
 
 	/**
 	 * Generate the dayil menu
@@ -282,7 +276,6 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->showQuantity = ($this->news_showQuantity != '') ? true : false;
 	}
 
-
 	/**
 	 * Return the week days and labels as array
 	 *
@@ -300,7 +293,6 @@ class ModuleNewsMenu extends ModuleNews
 
 		return array_values($arrDays);
 	}
-
 
 	/**
 	 * Return all weeks of the current month as array

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Parent class for news modules.
  *
@@ -65,7 +64,6 @@ abstract class ModuleNews extends Module
 
 		return $arrArchives;
 	}
-
 
 	/**
 	 * Parse an item and return it as string
@@ -208,7 +206,6 @@ abstract class ModuleNews extends Module
 		return $objTemplate->parse();
 	}
 
-
 	/**
 	 * Parse one or more items and return them as array
 	 *
@@ -239,7 +236,6 @@ abstract class ModuleNews extends Module
 
 		return $arrArticles;
 	}
-
 
 	/**
 	 * Return the meta fields of a news article as array
@@ -293,7 +289,6 @@ abstract class ModuleNews extends Module
 		return $return;
 	}
 
-
 	/**
 	 * Generate a URL and return it as string
 	 *
@@ -311,7 +306,6 @@ abstract class ModuleNews extends Module
 
 		return \News::generateNewsUrl($objItem, $blnAddArchive);
 	}
-
 
 	/**
 	 * Generate a link and return it as string
