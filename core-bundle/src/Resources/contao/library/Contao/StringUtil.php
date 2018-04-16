@@ -13,7 +13,6 @@ namespace Contao;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 
-
 /**
  * Provides string manipulation methods
  *
@@ -33,7 +32,6 @@ class StringUtil
 	 * @var array
 	 */
 	protected static $arrSplitCache = array();
-
 
 	/**
 	 * Shorten a string to a given number of characters
@@ -97,7 +95,6 @@ class StringUtil
 
 		return implode(' ', $arrWords) . ($blnAddEllipsis ? $strEllipsis : '');
 	}
-
 
 	/**
 	 * Shorten a HTML string to a given number of characters
@@ -224,7 +221,6 @@ class StringUtil
 		return trim($strReturn);
 	}
 
-
 	/**
 	 * Decode all entities
 	 *
@@ -252,7 +248,6 @@ class StringUtil
 		return html_entity_decode($strString, $strQuoteStyle, $strCharset);
 	}
 
-
 	/**
 	 * Restore basic entities
 	 *
@@ -264,7 +259,6 @@ class StringUtil
 	{
 		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), $strBuffer);
 	}
-
 
 	/**
 	 * Generate an alias from a string
@@ -288,7 +282,6 @@ class StringUtil
 		return $strString;
 	}
 
-
 	/**
 	 * Censor a single word or an array of words within a string
 	 *
@@ -307,7 +300,6 @@ class StringUtil
 
 		return $strString;
 	}
-
 
 	/**
 	 * Encode all e-mail addresses within a string
@@ -332,7 +324,7 @@ class StringUtil
 
 			foreach ($arrCharacters as $strCharacter)
 			{
-				$strEncoded .= sprintf((mt_rand(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
+				$strEncoded .= sprintf((random_int(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -340,7 +332,6 @@ class StringUtil
 
 		return str_replace('mailto:', '&#109;&#97;&#105;&#108;&#116;&#111;&#58;', $strString);
 	}
-
 
 	/**
 	 * Extract all e-mail addresses from a string
@@ -399,7 +390,6 @@ class StringUtil
 		return array_unique($arrEmails);
 	}
 
-
 	/**
 	 * Split a friendly-name e-address and return name and e-mail as array
 	 *
@@ -423,7 +413,6 @@ class StringUtil
 		}
 	}
 
-
 	/**
 	 * Wrap words after a particular number of characers
 	 *
@@ -437,7 +426,6 @@ class StringUtil
 	{
 		return wordwrap($strString, $strLength, $strBreak);
 	}
-
 
 	/**
 	 * Highlight a phrase within a string
@@ -459,7 +447,6 @@ class StringUtil
 		return preg_replace('/(' . preg_quote($strPhrase, '/') . ')/i', $strOpeningTag . '\\1' . $strClosingTag, $strString);
 	}
 
-
 	/**
 	 * Split a string of comma separated values
 	 *
@@ -479,7 +466,6 @@ class StringUtil
 
 		return $arrValues;
 	}
-
 
 	/**
 	 * Convert a string to XHTML
@@ -515,7 +501,6 @@ class StringUtil
 		return $strString;
 	}
 
-
 	/**
 	 * Convert a string to HTML5
 	 *
@@ -547,7 +532,6 @@ class StringUtil
 
 		return $strString;
 	}
-
 
 	/**
 	 * Parse simple tokens
@@ -735,7 +719,6 @@ class StringUtil
 		return $strReturn;
 	}
 
-
 	/**
 	 * Convert a UUID string to binary data
 	 *
@@ -748,7 +731,6 @@ class StringUtil
 		return hex2bin(str_replace('-', '', $uuid));
 	}
 
-
 	/**
 	 * Get a UUID string from binary data
 	 *
@@ -760,7 +742,6 @@ class StringUtil
 	{
 		return implode('-', unpack('H8time_low/H4time_mid/H4time_high/H4clock_seq/H12node', $data));
 	}
-
 
 	/**
 	 * Convert file paths inside "src" attributes to insert tags
@@ -798,7 +779,6 @@ class StringUtil
 		return $return;
 	}
 
-
 	/**
 	 * Convert insert tags inside "src" attributes to file paths
 	 *
@@ -835,7 +815,6 @@ class StringUtil
 		return $return;
 	}
 
-
 	/**
 	 * Sanitize a file name
 	 *
@@ -858,7 +837,6 @@ class StringUtil
 
 		return $strName;
 	}
-
 
 	/**
 	 * Resolve a flagged URL such as assets/js/core.js|static|10184084
@@ -912,7 +890,6 @@ class StringUtil
 		return $options;
 	}
 
-
 	/**
 	 * Convert the character encoding
 	 *
@@ -952,7 +929,6 @@ class StringUtil
 		return mb_convert_encoding($str, $to, $from);
 	}
 
-
 	/**
 	 * Convert special characters to HTML entities preventing double conversions
 	 *
@@ -973,7 +949,6 @@ class StringUtil
 		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), $blnDoubleEncode);
 	}
 
-
 	/**
 	 * Remove Contao insert tags from a string
 	 *
@@ -993,7 +968,6 @@ class StringUtil
 
 		return $strString;
 	}
-
 
 	/**
 	 * Standardize a parameter (strip special characters and convert spaces)
@@ -1024,7 +998,6 @@ class StringUtil
 
 		return trim($strString, '-');
 	}
-
 
 	/**
 	 * Return an unserialized array or the argument
@@ -1081,7 +1054,6 @@ class StringUtil
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Split a string into fragments, remove whitespace and return fragments as array

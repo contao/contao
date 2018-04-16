@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Content element "Vimeo".
  *
@@ -24,7 +23,6 @@ class ContentVimeo extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_vimeo';
-
 
 	/**
 	 * Show the Vimeo link in the back end
@@ -45,7 +43,6 @@ class ContentVimeo extends \ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

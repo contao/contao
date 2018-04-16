@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle sortable checkboxes.
  *
@@ -35,7 +34,6 @@ class CheckBoxWizard extends \Widget
 	 */
 	protected $strTemplate = 'be_widget_chk';
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -56,7 +54,6 @@ class CheckBoxWizard extends \Widget
 		}
 	}
 
-
 	/**
 	 * Check for a valid option (see #4383)
 	 */
@@ -71,7 +68,6 @@ class CheckBoxWizard extends \Widget
 
 		parent::validate();
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -134,7 +130,6 @@ class CheckBoxWizard extends \Widget
 						$this->wizard,
 						$this->strId);
 	}
-
 
 	/**
 	 * Generate a checkbox and return it as string

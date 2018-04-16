@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Creates and queries the search index
  *
@@ -40,7 +39,6 @@ class Search
 	 * @var Search
 	 */
 	protected static $objInstance;
-
 
 	/**
 	 * Index a page
@@ -299,7 +297,6 @@ class Search
 		return true;
 	}
 
-
 	/**
 	 * Search the index and return the result object
 	 *
@@ -486,7 +483,7 @@ class Search
 		// Limit results to a particular set of pages
 		if (!empty($arrPid) && \is_array($arrPid))
 		{
-			$strQuery .= " AND tl_search_index.pid IN(SELECT id FROM tl_search WHERE pid IN(" . implode(',', array_map('intval', $arrPid)) . "))";
+			$strQuery .= " AND tl_search_index.pid IN(SELECT id FROM tl_search WHERE pid IN(" . implode(',', array_map('\intval', $arrPid)) . "))";
 		}
 
 		$strQuery .= " GROUP BY tl_search_index.pid";
@@ -518,7 +515,6 @@ class Search
 		return $objResultStmt->execute($arrValues);
 	}
 
-
 	/**
 	 * Remove an entry from the search index
 	 *
@@ -541,7 +537,6 @@ class Search
 		}
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
@@ -549,7 +544,6 @@ class Search
 	 *             The Search class is now static.
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the object instance (Singleton)

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Maintenance module "maintenance mode".
  *
@@ -28,7 +27,6 @@ class Maintenance extends \Backend implements \executable
 	{
 		return false;
 	}
-
 
 	/**
 	 * Generate the module

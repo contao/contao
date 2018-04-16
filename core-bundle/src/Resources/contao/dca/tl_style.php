@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_style
- */
 $GLOBALS['TL_DCA']['tl_style'] = array
 (
 
@@ -598,7 +594,6 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -615,7 +610,6 @@ class tl_style extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the table
@@ -634,7 +628,6 @@ class tl_style extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}
 	}
-
 
 	/**
 	 * Automatically set the category if not set
@@ -666,7 +659,6 @@ class tl_style extends Backend
 		return '';
 	}
 
-
 	/**
 	 * Check for modified style sheets and update them if necessary
 	 */
@@ -692,7 +684,6 @@ class tl_style extends Backend
 		$objSession->set('style_sheet_updater', null);
 	}
 
-
 	/**
 	 * Schedule a style sheet update
 	 *
@@ -717,7 +708,6 @@ class tl_style extends Backend
 		$objSession->set('style_sheet_updater', array_unique($session));
 	}
 
-
 	/**
 	 * Update a style sheet after a version has been restored
 	 *
@@ -740,7 +730,6 @@ class tl_style extends Backend
 		$this->import('StyleSheets');
 		$this->StyleSheets->updateStyleSheet($data['pid']);
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -771,7 +760,6 @@ class tl_style extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Toggle the visibility of a format definition

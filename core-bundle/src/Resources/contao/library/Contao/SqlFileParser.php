@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Parses a database.sql file.
  *

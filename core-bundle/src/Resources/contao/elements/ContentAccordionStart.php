@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "accordion" (wrapper start).
  *
@@ -24,7 +23,6 @@ class ContentAccordionStart extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_accordionStart';
-
 
 	/**
 	 * Generate the content element

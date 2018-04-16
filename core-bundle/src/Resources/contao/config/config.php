@@ -8,10 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Back end modules
- */
+// Back end modules
 $GLOBALS['BE_MOD'] = array
 (
 	// Content modules
@@ -100,10 +97,7 @@ $GLOBALS['BE_MOD'] = array
 	)
 );
 
-
-/**
- * Front end modules
- */
+// Front end modules
 $GLOBALS['FE_MOD'] = array
 (
 	'navigationMenu' => array
@@ -142,10 +136,7 @@ $GLOBALS['FE_MOD'] = array
 	)
 );
 
-
-/**
- * Content elements
- */
+// Content elements
 $GLOBALS['TL_CTE'] = array
 (
 	'texts' => array
@@ -197,10 +188,7 @@ $GLOBALS['TL_CTE'] = array
 	)
 );
 
-
-/**
- * Back end form fields
- */
+// Back end form fields
 $GLOBALS['BE_FFL'] = array
 (
 	'text'           => 'TextField',
@@ -231,10 +219,7 @@ $GLOBALS['BE_FFL'] = array
 	'sectionWizard'  => 'SectionWizard'
 );
 
-
-/**
- * Front end form fields
- */
+// Front end form fields
 $GLOBALS['TL_FFL'] = array
 (
     'explanation'   => 'FormExplanation',
@@ -253,10 +238,7 @@ $GLOBALS['TL_FFL'] = array
     'submit'        => 'FormSubmit',
 );
 
-
-/**
- * Page types
- */
+// Page types
 $GLOBALS['TL_PTY'] = array
 (
 	'regular'   => 'PageRegular',
@@ -268,10 +250,7 @@ $GLOBALS['TL_PTY'] = array
 	'error_404' => 'PageError404'
 );
 
-
-/**
- * Maintenance
- */
+// Maintenance
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	'Maintenance',
@@ -279,10 +258,7 @@ $GLOBALS['TL_MAINTENANCE'] = array
 	'PurgeData'
 );
 
-
-/**
- * Purge jobs
- */
+// Purge jobs
 $GLOBALS['TL_PURGE'] = array
 (
 	'tables' => array
@@ -349,10 +325,7 @@ $GLOBALS['TL_PURGE'] = array
 	)
 );
 
-
-/**
- * Image crop modes
- */
+// Image crop modes
 $GLOBALS['TL_CROP'] = array
 (
 	'image_sizes' => array
@@ -372,10 +345,7 @@ $GLOBALS['TL_CROP'] = array
 	)
 );
 
-
-/**
- * Cron jobs
- */
+// Cron jobs
 $GLOBALS['TL_CRON'] = array
 (
 	'monthly' => array(),
@@ -390,10 +360,7 @@ $GLOBALS['TL_CRON'] = array
 	'minutely' => array()
 );
 
-
-/**
- * Hooks
- */
+// Hooks
 $GLOBALS['TL_HOOKS'] = array
 (
 	'getSystemMessages' => array
@@ -404,28 +371,16 @@ $GLOBALS['TL_HOOKS'] = array
 	)
 );
 
-
-/**
- * Register the auto_item keywords
- */
+// Register the auto_item keywords
 $GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
 
-
-/**
- * Do not index a page if one of the following parameters is set
- */
+// Do not index a page if one of the following parameters is set
 $GLOBALS['TL_NOINDEX_KEYS'] = array('id', 'file', 'token', 'day', 'month', 'year', 'page', 'PHPSESSID');
 
-
-/**
- * Register the supported CSS units
- */
+// Register the supported CSS units
 $GLOBALS['TL_CSS_UNITS'] = array('px', '%', 'em', 'rem', 'vw', 'vh', 'vmin', 'vmax', 'ex', 'pt', 'pc', 'in', 'cm', 'mm');
 
-
-/**
- * Wrapper elements
- */
+// Wrapper elements
 $GLOBALS['TL_WRAPPERS'] = array
 (
 	'start' => array
@@ -447,9 +402,6 @@ $GLOBALS['TL_WRAPPERS'] = array
 	'separator' => array()
 );
 
-
-/**
- * Other global arrays
- */
+// Other global arrays
 $GLOBALS['TL_MODELS'] = array();
 $GLOBALS['TL_PERMISSIONS'] = array();

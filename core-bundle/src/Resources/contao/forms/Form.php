@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Provide methods to handle front end forms.
  *
@@ -62,7 +61,6 @@ class Form extends \Hybrid
 	 */
 	protected $strTemplate = 'form_wrapper';
 
-
 	/**
 	 * Remove name attributes in the back end so the form is not validated
 	 *
@@ -90,7 +88,6 @@ class Form extends \Hybrid
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the form
@@ -302,7 +299,6 @@ class Form extends \Hybrid
 
 		return $this->Template->parse();
 	}
-
 
 	/**
 	 * Process form data, store it in the session and redirect to the jumpTo page
@@ -571,7 +567,6 @@ class Form extends \Hybrid
 		$this->reload();
 	}
 
-
 	/**
 	 * Get the maximum file size that is allowed for file uploads
 	 *
@@ -586,7 +581,6 @@ class Form extends \Hybrid
 
 		return $this->objModel->getMaxUploadFileSize();
 	}
-
 
 	/**
 	 * Initialize the form in the current session

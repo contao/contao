@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Provide methods to manage back end controllers.
  *
@@ -40,7 +39,6 @@ abstract class Backend extends \Controller
 		$this->setStaticUrls();
 	}
 
-
 	/**
 	 * Return the current theme as string
 	 *
@@ -57,7 +55,6 @@ abstract class Backend extends \Controller
 
 		return 'flexible';
 	}
-
 
 	/**
 	 * Return the back end themes as array
@@ -81,7 +78,6 @@ abstract class Backend extends \Controller
 
 		return $arrReturn;
 	}
-
 
 	/**
 	 * Return the TinyMCE language
@@ -125,7 +121,6 @@ abstract class Backend extends \Controller
 		// Fallback to English
 		return 'en';
 	}
-
 
 	/**
 	 * Get the Ace code editor type from a file extension
@@ -199,7 +194,6 @@ abstract class Backend extends \Controller
 		}
 	}
 
-
 	/**
 	 * Return a list of TinyMCE templates as JSON string
 	 *
@@ -228,7 +222,6 @@ abstract class Backend extends \Controller
 		return implode(",\n", $arrFiles) . "\n";
 	}
 
-
 	/**
 	 * Add the request token to the URL
 	 *
@@ -245,7 +238,6 @@ abstract class Backend extends \Controller
 
 		return parent::addToUrl($strRequest . (($strRequest != '') ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
 	}
-
 
 	/**
 	 * Handle "runonce" files
@@ -281,7 +273,6 @@ abstract class Backend extends \Controller
 			\System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
 		}
 	}
-
 
 	/**
 	 * Open a back end module and return it as HTML
@@ -632,7 +623,6 @@ abstract class Backend extends \Controller
 		return null;
 	}
 
-
 	/**
 	 * Get all searchable pages and return them as array
 	 *
@@ -683,7 +673,6 @@ abstract class Backend extends \Controller
 
 		return $arrPages;
 	}
-
 
 	/**
 	 * Add the file meta information to the request
@@ -771,7 +760,6 @@ abstract class Backend extends \Controller
 			}
 		}
 	}
-
 
 	/**
 	 * Add a breadcrumb menu to the page tree
@@ -888,7 +876,6 @@ abstract class Backend extends \Controller
 </nav>';
 	}
 
-
 	/**
 	 * Add an image to each page in the tree
 	 *
@@ -930,7 +917,6 @@ abstract class Backend extends \Controller
 		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
 	}
 
-
 	/**
 	 * Return the system messages as HTML
 	 *
@@ -963,7 +949,6 @@ abstract class Backend extends \Controller
 
 		return $strMessages;
 	}
-
 
 	/**
 	 * Add a breadcrumb menu to the file tree
@@ -1062,7 +1047,6 @@ abstract class Backend extends \Controller
 </nav>';
 	}
 
-
 	/**
 	 * Convert an array of layout section IDs to an associative array with IDs and labels
 	 *
@@ -1083,7 +1067,6 @@ abstract class Backend extends \Controller
 
 		return $arrSections;
 	}
-
 
 	/**
 	 * Generate the DCA picker wizard
@@ -1130,7 +1113,6 @@ abstract class Backend extends \Controller
   </script>';
 	}
 
-
 	/**
 	 * Add the custom layout section references
 	 */
@@ -1155,7 +1137,6 @@ abstract class Backend extends \Controller
 			}
 		}
 	}
-
 
 	/**
 	 * Get all allowed pages and return them as string
@@ -1211,7 +1192,6 @@ abstract class Backend extends \Controller
 		return $return;
 	}
 
-
 	/**
 	 * Recursively get all allowed pages and return them as string
 	 *
@@ -1256,7 +1236,6 @@ abstract class Backend extends \Controller
 
 		return $strOptions;
 	}
-
 
 	/**
 	 * Get all allowed files and return them as string
@@ -1306,7 +1285,6 @@ abstract class Backend extends \Controller
 
 		return $return;
 	}
-
 
 	/**
 	 * Recursively get all allowed files and return them as string

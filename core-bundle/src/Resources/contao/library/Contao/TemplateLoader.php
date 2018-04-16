@@ -13,7 +13,6 @@ namespace Contao;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\SplFileInfo;
 
-
 /**
  * Automatically loads template files based on a mapper array
  *
@@ -36,7 +35,6 @@ class TemplateLoader
 	 */
 	protected static $files = array();
 
-
 	/**
 	 * Add a new template with its file path
 	 *
@@ -47,7 +45,6 @@ class TemplateLoader
 	{
 		self::$files[$name] = $file;
 	}
-
 
 	/**
 	 * Add multiple new templates with their file paths
@@ -62,7 +59,6 @@ class TemplateLoader
 		}
 	}
 
-
 	/**
 	 * Return the template files as array
 	 *
@@ -72,7 +68,6 @@ class TemplateLoader
 	{
 		return self::$files;
 	}
-
 
 	/**
 	 * Return the files matching a prefix as array
@@ -85,7 +80,6 @@ class TemplateLoader
 	{
 		return array_values(preg_grep('/^' . rtrim($prefix, '_') . '($|_)/', array_keys(self::$files)));
 	}
-
 
 	/**
 	 * Return a template path
@@ -117,7 +111,6 @@ class TemplateLoader
 
 		return static::getDefaultPath($template, $format);
 	}
-
 
 	/**
 	 * Return the path to the default template
@@ -158,7 +151,6 @@ class TemplateLoader
 
 		throw new \Exception('Could not find template "' . $template . '"');
 	}
-
 
 	/**
 	 * Find the templates in the Contao resource folders.

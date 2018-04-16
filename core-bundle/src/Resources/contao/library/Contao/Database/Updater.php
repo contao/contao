@@ -14,7 +14,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 @trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-
 /**
  * Adjust the database if the system is updated.
  *
@@ -33,7 +32,6 @@ class Updater extends \Controller
 		parent::__construct();
 		$this->import('Database');
 	}
-
 
 	/**
 	 * Version 2.8.0 update
@@ -108,7 +106,6 @@ class Updater extends \Controller
 		$this->import('Files');
 		$this->Files->delete('system/modules/news/Comments.php');
 	}
-
 
 	/**
 	 * Version 2.9.0 update
@@ -201,7 +198,6 @@ class Updater extends \Controller
 		$this->Database->query("UPDATE tl_user SET useCE=1");
 	}
 
-
 	/**
 	 * Version 2.9.2 update
 	 */
@@ -214,7 +210,6 @@ class Updater extends \Controller
 		$this->Database->query("UPDATE tl_calendar_events SET endDate=null WHERE endDate=0");
 	}
 
-
 	/**
 	 * Version 2.10.0 update
 	 */
@@ -225,7 +220,6 @@ class Updater extends \Controller
 		$this->Database->query("UPDATE `tl_module` SET `guests`=1 WHERE `type`='lostPassword' OR `type`='registration'");
 		$this->Database->query("UPDATE `tl_news` SET `teaser`=CONCAT('<p>', teaser, '</p>') WHERE `teaser`!='' AND `teaser` NOT LIKE '<p>%'");
 	}
-
 
 	/**
 	 * Version 3.0.0 update
@@ -344,7 +338,6 @@ class Updater extends \Controller
 		// Make unlimited recurrences end on 2038-01-01 00:00:00 (see #4862)
 		$this->Database->query("UPDATE `tl_calendar_events` SET `repeatEnd`=2145913200 WHERE `recurring`=1 AND `recurrences`=0");
 	}
-
 
 	/**
 	 * Version 3.1.0 update
@@ -467,7 +460,6 @@ class Updater extends \Controller
 		$this->Database->query("ALTER TABLE `tl_content` DROP `mooType`");
 	}
 
-
 	/**
 	 * Version 3.2.0 update
 	 */
@@ -539,7 +531,6 @@ class Updater extends \Controller
 		$this->updateFileTreeFields();
 	}
 
-
 	/**
 	 * Version 3.3.0 update
 	 */
@@ -570,7 +561,6 @@ class Updater extends \Controller
 		$this->Database->query("ALTER TABLE `tl_layout` ADD `viewport` varchar(64) NOT NULL default ''");
 	}
 
-
 	/**
 	 * Version 3.5.0 update
 	 */
@@ -580,7 +570,6 @@ class Updater extends \Controller
 		$this->Database->query("UPDATE `tl_member` SET username=NULL WHERE username=''");
 		$this->Database->query("ALTER TABLE `tl_member` DROP INDEX `username`, ADD UNIQUE KEY `username` (`username`)");
 	}
-
 
 	/**
 	 * Version 4.0.0 update
@@ -639,7 +628,6 @@ class Updater extends \Controller
 			}
 		}
 	}
-
 
 	/**
 	 * Scan the upload folder and create the database entries
@@ -729,7 +717,6 @@ class Updater extends \Controller
 			}
 		}
 	}
-
 
 	/**
 	 * Update all FileTree fields
@@ -835,7 +822,6 @@ class Updater extends \Controller
 		}
 	}
 
-
 	/**
 	 * Convert a single source field to UUIDs
 	 *
@@ -888,7 +874,6 @@ class Updater extends \Controller
 			}
 		}
 	}
-
 
 	/**
 	 * Convert a multi source field to UUIDs
@@ -952,7 +937,6 @@ class Updater extends \Controller
 		}
 	}
 
-
 	/**
 	 * Convert an order source field to UUIDs
 	 *
@@ -975,7 +959,6 @@ class Updater extends \Controller
 
 		static::convertMultiField($table, $field);
 	}
-
 
 	/**
 	 * Generate a helper object based on a field value
@@ -1003,7 +986,6 @@ class Updater extends \Controller
 
 		return $return;
 	}
-
 
 	/**
 	 * Create a content element

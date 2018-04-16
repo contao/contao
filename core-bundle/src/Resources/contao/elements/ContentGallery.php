@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 
-
 /**
  * Front end content element "gallery".
  *
@@ -32,7 +31,6 @@ class ContentGallery extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_gallery';
-
 
 	/**
 	 * Return if there are no files
@@ -72,7 +70,6 @@ class ContentGallery extends \ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the content element

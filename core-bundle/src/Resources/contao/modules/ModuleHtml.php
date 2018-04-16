@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end module "HTML".
  *
@@ -24,7 +23,6 @@ class ModuleHtml extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_html';
-
 
 	/**
 	 * Generate the module

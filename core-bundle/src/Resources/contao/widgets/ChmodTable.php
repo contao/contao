@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle CHMOD tables.
  *
@@ -30,7 +29,6 @@ class ChmodTable extends \Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
 
 	/**
 	 * Generate the widget and return it as string

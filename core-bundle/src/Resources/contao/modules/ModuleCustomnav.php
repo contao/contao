@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "custom navigation".
  *
@@ -26,7 +25,6 @@ class ModuleCustomnav extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_customnav';
-
 
 	/**
 	 * Redirect to the selected page
@@ -61,7 +59,6 @@ class ModuleCustomnav extends \Module
 
 		return ($this->Template->items != '') ? $strBuffer : '';
 	}
-
 
 	/**
 	 * Generate the module

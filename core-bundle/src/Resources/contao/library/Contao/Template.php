@@ -14,7 +14,6 @@ use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
-
 /**
  * Parses and outputs template files
  *
@@ -41,7 +40,6 @@ abstract class Template extends \Controller
 {
 	use \TemplateInheritance;
 
-
 	/**
 	 * Output buffer
 	 * @var string
@@ -59,7 +57,6 @@ abstract class Template extends \Controller
 	 * @var array
 	 */
 	protected $arrData = array();
-
 
 	/**
 	 * Valid JavaScipt types
@@ -86,7 +83,6 @@ abstract class Template extends \Controller
 		'text/x-javascript',
 	);
 
-
 	/**
 	 * Create a new template object
 	 *
@@ -101,7 +97,6 @@ abstract class Template extends \Controller
 		$this->strContentType = $strContentType;
 	}
 
-
 	/**
 	 * Set an object property
 	 *
@@ -112,7 +107,6 @@ abstract class Template extends \Controller
 	{
 		$this->arrData[$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Return an object property
@@ -136,7 +130,6 @@ abstract class Template extends \Controller
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Execute a callable and return the result
 	 *
@@ -157,7 +150,6 @@ abstract class Template extends \Controller
 		return \call_user_func_array($this->arrData[$strKey], $arrParams);
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -170,7 +162,6 @@ abstract class Template extends \Controller
 		return isset($this->arrData[$strKey]);
 	}
 
-
 	/**
 	 * Set the template data from an array
 	 *
@@ -180,7 +171,6 @@ abstract class Template extends \Controller
 	{
 		$this->arrData = $arrData;
 	}
-
 
 	/**
 	 * Return the template data as array
@@ -192,7 +182,6 @@ abstract class Template extends \Controller
 		return $this->arrData;
 	}
 
-
 	/**
 	 * Set the template name
 	 *
@@ -202,7 +191,6 @@ abstract class Template extends \Controller
 	{
 		$this->strTemplate = $strTemplate;
 	}
-
 
 	/**
 	 * Return the template name
@@ -214,7 +202,6 @@ abstract class Template extends \Controller
 		return $this->strTemplate;
 	}
 
-
 	/**
 	 * Set the output format
 	 *
@@ -225,7 +212,6 @@ abstract class Template extends \Controller
 		$this->strFormat = $strFormat;
 	}
 
-
 	/**
 	 * Return the output format
 	 *
@@ -235,7 +221,6 @@ abstract class Template extends \Controller
 	{
 		return $this->strFormat;
 	}
-
 
 	/**
 	 * Print all template variables to the screen using print_r
@@ -250,7 +235,6 @@ abstract class Template extends \Controller
 		$this->dumpTemplateVars();
 	}
 
-
 	/**
 	 * Print all template variables to the screen using the Symfony VarDumper component
 	 */
@@ -258,7 +242,6 @@ abstract class Template extends \Controller
 	{
 		VarDumper::dump($this->arrData);
 	}
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -285,7 +268,6 @@ abstract class Template extends \Controller
 		return $this->inherit();
 	}
 
-
 	/**
 	 * Parse the template file and print it to the screen
 	 *
@@ -306,7 +288,6 @@ abstract class Template extends \Controller
 		$this->flushAllData();
 	}
 
-
 	/**
 	 * Return a response object
 	 *
@@ -321,7 +302,6 @@ abstract class Template extends \Controller
 
 		return $response;
 	}
-
 
 	/**
 	 * Return a route relative to the base URL
@@ -339,7 +319,6 @@ abstract class Template extends \Controller
 		return ampersand($strUrl);
 	}
 
-
 	/**
 	 * Returns a translated message
 	 *
@@ -353,7 +332,6 @@ abstract class Template extends \Controller
 	{
 		return \System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
 	}
-
 
 	/**
 	 * Returns an asset path
@@ -371,7 +349,6 @@ abstract class Template extends \Controller
 		return ltrim($url, '/');
 	}
 
-
 	/**
 	 * Compile the template
 	 *
@@ -388,7 +365,6 @@ abstract class Template extends \Controller
 		$this->strBuffer = $this->minifyHtml($this->strBuffer);
 	}
 
-
 	/**
 	 * Return the debug bar string
 	 *
@@ -398,7 +374,6 @@ abstract class Template extends \Controller
 	{
 		@trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 	}
-
 
 	/**
 	 * Minify the HTML markup preserving pre, script, style and textarea tags
@@ -500,7 +475,6 @@ abstract class Template extends \Controller
 		return trim($strHtml);
 	}
 
-
 	/**
 	 * Generate the markup for a style sheet tag
 	 *
@@ -514,7 +488,6 @@ abstract class Template extends \Controller
 		return '<link rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . '>';
 	}
 
-
 	/**
 	 * Generate the markup for inline CSS code
 	 *
@@ -526,7 +499,6 @@ abstract class Template extends \Controller
 	{
 		return '<style>' . $script . '</style>';
 	}
-
 
 	/**
 	 * Generate the markup for a JavaScript tag
@@ -541,7 +513,6 @@ abstract class Template extends \Controller
 		return '<script src="' . $src . '"' . ($async ? ' async' : '') . '></script>';
 	}
 
-
 	/**
 	 * Generate the markup for an inline JavaScript
 	 *
@@ -553,7 +524,6 @@ abstract class Template extends \Controller
 	{
 		return '<script>' . $script . '</script>';
 	}
-
 
 	/**
 	 * Generate the markup for an RSS feed tag
@@ -568,7 +538,6 @@ abstract class Template extends \Controller
 	{
 		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . \StringUtil::specialchars($title) . '">';
 	}
-
 
 	/**
 	 * Flush the output buffers

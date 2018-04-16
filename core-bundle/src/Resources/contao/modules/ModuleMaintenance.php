@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Back end module "maintenance".
  *
@@ -24,7 +23,6 @@ class ModuleMaintenance extends \BackendModule
 	 * @var string
 	 */
 	protected $strTemplate = 'be_maintenance';
-
 
 	/**
 	 * Generate the module

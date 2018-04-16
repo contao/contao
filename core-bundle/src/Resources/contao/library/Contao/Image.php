@@ -18,7 +18,6 @@ use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
-
 /**
  * Resizes images
  *
@@ -104,7 +103,6 @@ class Image
 	 */
 	protected $importantPart = array();
 
-
 	/**
 	 * Create a new object to handle an image
 	 *
@@ -145,7 +143,6 @@ class Image
 		}
 	}
 
-
 	/**
 	 * Override the target image
 	 *
@@ -160,7 +157,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get force override setting
 	 *
@@ -170,7 +166,6 @@ class Image
 	{
 		return $this->forceOverride;
 	}
-
 
 	/**
 	 * Set the important part settings
@@ -208,7 +203,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get the important part settings
 	 *
@@ -224,7 +218,6 @@ class Image
 		return array('x'=>0, 'y'=>0, 'width'=>$this->fileObj->viewWidth, 'height'=>$this->fileObj->viewHeight);
 	}
 
-
 	/**
 	 * Set the target height
 	 *
@@ -239,7 +232,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get the target height
 	 *
@@ -249,7 +241,6 @@ class Image
 	{
 		return $this->targetHeight;
 	}
-
 
 	/**
 	 * Set the target width
@@ -265,7 +256,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get the target width
 	 *
@@ -275,7 +265,6 @@ class Image
 	{
 		return $this->targetWidth;
 	}
-
 
 	/**
 	 * Set the target path
@@ -291,7 +280,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get the target path
 	 *
@@ -301,7 +289,6 @@ class Image
 	{
 		return $this->targetPath;
 	}
-
 
 	/**
 	 * Set the zoom level
@@ -326,7 +313,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get the zoom level
 	 *
@@ -336,7 +322,6 @@ class Image
 	{
 		return $this->zoomLevel;
 	}
-
 
 	/**
 	 * Set the resize mode
@@ -352,7 +337,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Get the resize mode
 	 *
@@ -363,7 +347,6 @@ class Image
 		return $this->resizeMode;
 	}
 
-
 	/**
 	 * Get the path of the original image
 	 *
@@ -373,7 +356,6 @@ class Image
 	{
 		return $this->fileObj->path;
 	}
-
 
 	/**
 	 * Get the path of the resized image
@@ -393,7 +375,6 @@ class Image
 
 		return $path;
 	}
-
 
 	/**
 	 * Get the cache name
@@ -420,7 +401,6 @@ class Image
 
 		return \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir')) . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
 	}
-
 
 	/**
 	 * Resize the image
@@ -476,7 +456,6 @@ class Image
 		return $this;
 	}
 
-
 	/**
 	 * Prepare image object.
 	 *
@@ -498,7 +477,6 @@ class Image
 
 		return $image;
 	}
-
 
 	/**
 	 * Prepare important part object.
@@ -553,7 +531,6 @@ class Image
 		);
 	}
 
-
 	/**
 	 * Prepare resize configuration object.
 	 *
@@ -586,7 +563,6 @@ class Image
 		return $resizeConfig;
 	}
 
-
 	/**
 	 * Calculate the resize coordinates
 	 *
@@ -616,7 +592,6 @@ class Image
 			'target_height' => $resizeCoordinates->getSize()->getHeight(),
 		);
 	}
-
 
 	/**
 	 * Get the relative path to an image
@@ -677,7 +652,6 @@ class Image
 		}
 	}
 
-
 	/**
 	 * Generate an image tag and return it as string
 	 *
@@ -725,7 +699,6 @@ class Image
 		return '<img src="' . \Controller::addStaticUrlTo(\System::urlEncode($src), $container->get('contao.assets.'.$context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . \StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
 
-
 	/**
 	 * Resize or crop an image and replace the original with the resized version
 	 *
@@ -745,7 +718,6 @@ class Image
 
 		return static::get($image, $width, $height, $mode, $image, true) ? true : false;
 	}
-
 
 	/**
 	 * Create an image instance from the given image path and size
@@ -815,7 +787,6 @@ class Image
 		return $imageObj;
 	}
 
-
 	/**
 	 * Resize an image and store the resized version in the image target folder
 	 *
@@ -858,7 +829,6 @@ class Image
 
 		return null;
 	}
-
 
 	/**
 	 * Convert sizes like 2em, 10cm or 12pt to pixels

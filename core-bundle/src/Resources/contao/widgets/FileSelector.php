@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
-
 /**
  * Provide methods to handle input field "file tree".
  *
@@ -53,7 +52,6 @@ class FileSelector extends \Widget
 	 */
 	protected $arrValidFileTypes = array();
 
-
 	/**
 	 * Load the database object
 	 *
@@ -64,7 +62,6 @@ class FileSelector extends \Widget
 		$this->import('Database');
 		parent::__construct($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -293,7 +290,6 @@ class FileSelector extends \Widget
   </ul></li></ul>';
 	}
 
-
 	/**
 	 * Generate a particular subpart of the file tree and return it as HTML string
 	 *
@@ -352,7 +348,6 @@ class FileSelector extends \Widget
 
 		return $this->renderFiletree(TL_ROOT . '/' . $strFolder, ($level * 20), $mount, $this->isProtectedPath($strFolder));
 	}
-
 
 	/**
 	 * Recursively render the filetree
@@ -598,7 +593,6 @@ class FileSelector extends \Widget
 		return $return;
 	}
 
-
 	/**
 	 * Translate the file IDs to file paths
 	 */
@@ -648,7 +642,6 @@ class FileSelector extends \Widget
 			$this->varValue = array_values($objFiles->fetchEach('path'));
 		}
 	}
-
 
 	/**
 	 * Check if a path is protected (see #287)

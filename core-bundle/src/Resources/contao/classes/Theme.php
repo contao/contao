@@ -13,7 +13,6 @@ namespace Contao;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Provide methods to handle themes.
  *
@@ -137,7 +136,6 @@ class Theme extends \Backend
 </div>
 </form>';
 	}
-
 
 	/**
 	 * Compare the theme tables with the local database and check whether there are custom layout sections
@@ -289,7 +287,6 @@ class Theme extends \Backend
 </div>
 </form>';
 	}
-
 
 	/**
 	 * Extract the theme files and write the data to the database
@@ -694,7 +691,6 @@ class Theme extends \Backend
 		$this->redirect(str_replace('&key=importTheme', '', \Environment::get('request')));
 	}
 
-
 	/**
 	 * Export a theme
 	 *
@@ -763,7 +759,6 @@ class Theme extends \Backend
 		$objFile->sendToBrowser($strName . '.cto');
 	}
 
-
 	/**
 	 * Add the table tl_theme
 	 *
@@ -788,7 +783,6 @@ class Theme extends \Backend
 		// Add the row
 		$this->addDataRow($xml, $table, $objTheme->row(), $arrOrder);
 	}
-
 
 	/**
 	 * Add the table tl_style_sheet
@@ -850,7 +844,6 @@ class Theme extends \Backend
 		}
 	}
 
-
 	/**
 	 * Add the table tl_module
 	 *
@@ -883,7 +876,6 @@ class Theme extends \Backend
 		}
 	}
 
-
 	/**
 	 * Add the table tl_layout
 	 *
@@ -915,7 +907,6 @@ class Theme extends \Backend
 			$this->addDataRow($xml, $table, $objLayout->row(), $arrOrder);
 		}
 	}
-
 
 	/**
 	 * Add the table tl_image_size
@@ -956,7 +947,6 @@ class Theme extends \Backend
 		}
 	}
 
-
 	/**
 	 * Add the table tl_files to the XML and the files to the archive
 	 * @param \DOMDocument           $xml
@@ -994,7 +984,6 @@ class Theme extends \Backend
 			}
 		}
 	}
-
 
 	/**
 	 * Add a data row to the XML document
@@ -1071,7 +1060,6 @@ class Theme extends \Backend
 			$field->appendChild($value);
 		}
 	}
-
 
 	/**
 	 * Recursively add a folder to the archive
@@ -1154,7 +1142,6 @@ class Theme extends \Backend
 		}
 	}
 
-
 	/**
 	 * Add templates to the archive
 	 *
@@ -1200,7 +1187,6 @@ class Theme extends \Backend
 		}
 	}
 
-
 	/**
 	 * Replace files/ with the custom upload folder name
 	 *
@@ -1217,7 +1203,6 @@ class Theme extends \Backend
 
 		return preg_replace('@^(tl_)?files/@', \Config::get('uploadPath') . '/', $strPath);
 	}
-
 
 	/**
 	 * Replace a custom upload folder name with files/

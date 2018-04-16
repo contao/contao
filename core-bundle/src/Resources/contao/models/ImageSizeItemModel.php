@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes image size items
  *
@@ -81,7 +80,6 @@ class ImageSizeItemModel extends \Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_image_size_item';
-
 
 	/**
 	 * Find visible image size items by their parent ID

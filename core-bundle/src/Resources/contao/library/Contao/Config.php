@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Loads and writes the local configuration file
  *
@@ -70,12 +69,10 @@ class Config
 	 */
 	protected $arrCache = array();
 
-
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
 	protected function __construct() {}
-
 
 	/**
 	 * Automatically save the local configuration
@@ -88,12 +85,10 @@ class Config
 		}
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the current object instance (Singleton)
@@ -110,7 +105,6 @@ class Config
 
 		return static::$objInstance;
 	}
-
 
 	/**
 	 * Load all configuration files
@@ -153,7 +147,6 @@ class Config
 
 		static::loadParameters();
 	}
-
 
 	/**
 	 * Mark the object as modified
@@ -222,7 +215,6 @@ class Config
 		}
 	}
 
-
 	/**
 	 * Save the local configuration file
 	 */
@@ -285,7 +277,6 @@ class Config
 		$this->blnIsModified = false;
 	}
 
-
 	/**
 	 * Return true if the installation is complete
 	 *
@@ -295,7 +286,6 @@ class Config
 	{
 		return static::$blnHasLcf !== null && static::has('licenseAccepted');
 	}
-
 
 	/**
 	 * Return all active modules as array
@@ -312,7 +302,6 @@ class Config
 		return \ModuleLoader::getActive();
 	}
 
-
 	/**
 	 * Add a configuration variable to the local configuration file
 	 *
@@ -325,7 +314,6 @@ class Config
 		$this->arrData[$strKey] = $this->escape($varValue) . ';';
 	}
 
-
 	/**
 	 * Alias for Config::add()
 	 *
@@ -336,7 +324,6 @@ class Config
 	{
 		$this->add($strKey, $varValue);
 	}
-
 
 	/**
 	 * Remove a configuration variable
@@ -349,7 +336,6 @@ class Config
 		unset($this->arrData[$strKey]);
 	}
 
-
 	/**
 	 * Check whether a configuration value exists
 	 *
@@ -361,7 +347,6 @@ class Config
 	{
 		return array_key_exists($strKey, $GLOBALS['TL_CONFIG']);
 	}
-
 
 	/**
 	 * Return a configuration value
@@ -380,7 +365,6 @@ class Config
 		return null;
 	}
 
-
 	/**
 	 * Temporarily set a configuration value
 	 *
@@ -391,7 +375,6 @@ class Config
 	{
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Permanently set a configuration value
@@ -411,7 +394,6 @@ class Config
 		$objConfig->add($strKey, $varValue);
 	}
 
-
 	/**
 	 * Permanently remove a configuration value
 	 *
@@ -428,7 +410,6 @@ class Config
 
 		$objConfig->delete($strKey);
 	}
-
 
 	/**
 	 * Preload the default and local configuration
@@ -450,7 +431,6 @@ class Config
 
 		static::$blnHasLcf = $blnHasLcf;
 	}
-
 
 	/**
 	 * Override the database and SMTP parameters
@@ -509,7 +489,6 @@ class Config
 			$GLOBALS['TL_CONFIG']['jpgQuality'] = $container->getParameter('contao.image.imagine_options')['jpeg_quality'];
 		}
 	}
-
 
 	/**
 	 * Escape a value depending on its type

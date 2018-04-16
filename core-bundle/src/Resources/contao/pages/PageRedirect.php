@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * Provide methods to handle a redirect page.
  *

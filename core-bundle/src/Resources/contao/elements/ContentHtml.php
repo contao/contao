@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "HTML".
  *
@@ -24,7 +23,6 @@ class ContentHtml extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_html';
-
 
 	/**
 	 * Generate the content element

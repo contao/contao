@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Provide methods to handle a regular front end page.
  *
@@ -36,7 +35,6 @@ class PageRegular extends \Frontend
 		$this->Template->output($blnCheckRequest);
 	}
 
-
 	/**
 	 * Return a response object
 	 *
@@ -51,7 +49,6 @@ class PageRegular extends \Frontend
 
 		return $this->Template->getResponse($blnCheckRequest);
 	}
-
 
 	/**
 	 * Generate a regular page
@@ -232,7 +229,6 @@ class PageRegular extends \Frontend
 		$this->createHeaderScripts($objPage, $objLayout);
 	}
 
-
 	/**
 	 * Get a page layout and return it as database result object
 	 *
@@ -270,7 +266,6 @@ class PageRegular extends \Frontend
 
 		return $objLayout;
 	}
-
 
 	/**
 	 * Create a new template
@@ -506,7 +501,6 @@ class PageRegular extends \Frontend
 		$this->Template->isRTL = false;
 	}
 
-
 	/**
 	 * Create all header scripts
 	 *
@@ -706,7 +700,6 @@ class PageRegular extends \Frontend
 		$this->Template->stylesheets = $strStyleSheets;
 		$this->Template->head = $strHeadTags;
 	}
-
 
 	/**
 	 * Create all footer scripts

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to manage front end users.
  *
@@ -65,7 +64,6 @@ class FrontendUser extends User
 	 */
 	protected $roles = array('ROLE_MEMBER');
 
-
 	/**
 	 * Initialize the object
 	 */
@@ -76,7 +74,6 @@ class FrontendUser extends User
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
 	}
-
 
 	/**
 	 * Instantiate a new user object
@@ -109,7 +106,6 @@ class FrontendUser extends User
 		return parent::getInstance();
 	}
 
-
 	/**
 	 * Extend parent setter class and modify some parameters
 	 *
@@ -129,7 +125,6 @@ class FrontendUser extends User
 				break;
 		}
 	}
-
 
 	/**
 	 * Extend parent getter class and modify some parameters
@@ -154,7 +149,6 @@ class FrontendUser extends User
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Authenticate a user
 	 *
@@ -170,7 +164,6 @@ class FrontendUser extends User
 		return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
-
 	/**
 	 * Try to login the current user
 	 *
@@ -185,7 +178,6 @@ class FrontendUser extends User
 
 		return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
-
 
 	/**
 	 * Save the original group membership
@@ -207,7 +199,6 @@ class FrontendUser extends User
 		return true;
 	}
 
-
 	/**
 	 * Restore the original group membership
 	 */
@@ -218,7 +209,6 @@ class FrontendUser extends User
 		parent::save();
 		$this->groups = $groups;
 	}
-
 
 	/**
 	 * Set all user properties from a database record
@@ -261,7 +251,6 @@ class FrontendUser extends User
 			}
 		}
 	}
-
 
 	/**
 	 * {@inheritdoc}

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_cron
- */
 $GLOBALS['TL_DCA']['tl_cron'] = array
 (
 

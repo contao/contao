@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_form_field
- */
 $GLOBALS['TL_DCA']['tl_form_field'] = array
 (
 
@@ -409,7 +405,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -426,7 +421,6 @@ class tl_form_field extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_form_field
@@ -550,7 +544,6 @@ class tl_form_field extends Backend
 		}
 	}
 
-
 	/**
 	 * Add the type of input field
 	 *
@@ -590,7 +583,6 @@ class tl_form_field extends Backend
 </div>' . "\n";
 	}
 
-
 	/**
 	 * Add a link to the option items import wizard
 	 *
@@ -600,7 +592,6 @@ class tl_form_field extends Backend
 	{
 		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.gif', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
 	}
-
 
 	/**
 	 * Return a list of form fields
@@ -620,7 +611,6 @@ class tl_form_field extends Backend
 		return $arrFields;
 	}
 
-
 	/**
 	 * Return all form field templates as array
 	 *
@@ -630,7 +620,6 @@ class tl_form_field extends Backend
 	{
 		return $this->getTemplateGroup('form_');
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -661,7 +650,6 @@ class tl_form_field extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Toggle the visibility of a form field

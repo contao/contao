@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * A static class to store non-persistent data
  *
@@ -46,7 +45,6 @@ class Cache
 	 */
 	protected static $arrData = array();
 
-
 	/**
 	 * Check whether a key is set
 	 *
@@ -58,7 +56,6 @@ class Cache
 	{
 		return isset(static::$arrData[$strKey]);
 	}
-
 
 	/**
 	 * Return a cache entry
@@ -72,7 +69,6 @@ class Cache
 		return static::$arrData[$strKey];
 	}
 
-
 	/**
 	 * Add a cache entry
 	 *
@@ -84,7 +80,6 @@ class Cache
 		static::$arrData[$strKey] = $varValue;
 	}
 
-
 	/**
 	 * Remove a cache entry
 	 *
@@ -95,7 +90,6 @@ class Cache
 		unset(static::$arrData[$strKey]);
 	}
 
-
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 *
@@ -104,7 +98,6 @@ class Cache
 	 */
 	protected function __construct() {}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
@@ -112,7 +105,6 @@ class Cache
 	 *             The Cache class is now static.
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Check whether a key is set
@@ -128,7 +120,6 @@ class Cache
 	{
 		return static::has($strKey);
 	}
-
 
 	/**
 	 * Return a cache entry
@@ -150,7 +141,6 @@ class Cache
 		return null;
 	}
 
-
 	/**
 	 * Add a cache entry
 	 *
@@ -165,7 +155,6 @@ class Cache
 		static::set($strKey, $varValue);
 	}
 
-
 	/**
 	 * Remove a cache entry
 	 *
@@ -178,7 +167,6 @@ class Cache
 	{
 		static::remove($strKey);
 	}
-
 
 	/**
 	 * Instantiate the cache object (Factory)

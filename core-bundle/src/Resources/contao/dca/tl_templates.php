@@ -8,26 +8,15 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Load default language file
- */
 System::loadLanguageFile('tl_files');
 
-
-/**
- * Overwrite some settings
- */
+// Overwrite some settings in the template editor
 if (Input::get('do') == 'tpl_editor')
 {
 	Config::set('uploadPath', 'templates');
 	Config::set('editableFiles', Config::get('templateFiles'));
 }
 
-
-/**
- * Template editor
- */
 $GLOBALS['TL_DCA']['tl_templates'] = array
 (
 
@@ -143,7 +132,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -231,7 +219,6 @@ class tl_templates extends Backend
   </ul>
 </nav>';
 	}
-
 
 	/**
 	 * Create a new template
@@ -365,7 +352,6 @@ class tl_templates extends Backend
 </form>';
 	}
 
-
 	/**
 	 * Compares the current to the original template
 	 *
@@ -492,7 +478,6 @@ class tl_templates extends Backend
 		throw new Contao\CoreBundle\Exception\ResponseException($objTemplate->getResponse());
 	}
 
-
 	/**
 	 * Return the "compare template" button
 	 *
@@ -509,7 +494,6 @@ class tl_templates extends Backend
 	{
 		return is_file(TL_ROOT . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Recursively scan the templates directory and return all folders as array
@@ -539,7 +523,6 @@ class tl_templates extends Backend
 		return $strFolders;
 	}
 
-
 	/**
 	 * Return the edit file source button
 	 *
@@ -556,7 +539,6 @@ class tl_templates extends Backend
 	{
 		return is_file(TL_ROOT . '/' . rawurldecode($row['id'])) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Add the file location instead of the help text (see #6503)

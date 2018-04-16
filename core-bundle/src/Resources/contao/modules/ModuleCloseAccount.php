@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "close account".
  *
@@ -26,7 +25,6 @@ class ModuleCloseAccount extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_closeAccount';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -57,7 +55,6 @@ class ModuleCloseAccount extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

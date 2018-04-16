@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "book navigation".
  *
@@ -32,7 +31,6 @@ class ModuleBooknav extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_booknav';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -65,7 +63,6 @@ class ModuleBooknav extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -180,7 +177,6 @@ class ModuleBooknav extends \Module
 			}
 		}
 	}
-
 
 	/**
 	 * Recursively get all book pages

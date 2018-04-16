@@ -34,7 +34,6 @@ class BackendCustom extends BackendMain
 		$this->Template = new \BackendTemplate('be_main');
 	}
 
-
 	/**
 	 * Return the template object
 	 *
@@ -44,7 +43,6 @@ class BackendCustom extends BackendMain
 	{
 		return $this->Template;
 	}
-
 
 	/**
 	 * Run the controller and parse the template

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_style_sheet
- */
 $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 (
 
@@ -212,7 +208,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -229,7 +224,6 @@ class tl_style_sheet extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the table
@@ -248,7 +242,6 @@ class tl_style_sheet extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}
 	}
-
 
 	/**
 	 * Check for modified style sheets and update them if necessary
@@ -274,7 +267,6 @@ class tl_style_sheet extends Backend
 
 		$objSession->set('style_sheet_updater', null);
 	}
-
 
 	/**
 	 * Schedule a style sheet update
@@ -307,7 +299,6 @@ class tl_style_sheet extends Backend
 		$objSession->set('style_sheet_updater', array_unique($session));
 	}
 
-
 	/**
 	 * List a style sheet
 	 *
@@ -339,7 +330,6 @@ class tl_style_sheet extends Backend
 		}
 	}
 
-
 	/**
 	 * Romanize the file name (see #7526)
 	 *
@@ -351,7 +341,6 @@ class tl_style_sheet extends Backend
 	{
 		return Patchwork\Utf8::toAscii($varValue);
 	}
-
 
 	/**
 	 * Sanitize the conditional comments field
@@ -369,7 +358,6 @@ class tl_style_sheet extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Return the edit header button

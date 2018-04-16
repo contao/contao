@@ -52,7 +52,6 @@ class FileTree extends \Widget
 	 */
 	protected $strOrderName;
 
-
 	/**
 	 * Load the database object
 	 *
@@ -78,7 +77,6 @@ class FileTree extends \Widget
 			$this->{$this->orderField} = (!empty($tmp) && \is_array($tmp)) ? array_filter($tmp) : array();
 		}
 	}
-
 
 	/**
 	 * Return an array if the "multiple" attribute is set
@@ -139,7 +137,6 @@ class FileTree extends \Widget
 			return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : \StringUtil::uuidToBin($arrValue[0]);
 		}
 	}
-
 
 	/**
 	 * Check the selected value
@@ -206,7 +203,6 @@ class FileTree extends \Widget
 			}
 		}
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -427,7 +423,6 @@ class FileTree extends \Widget
 
 		return $return;
 	}
-
 
 	/**
 	 * Return the preview image

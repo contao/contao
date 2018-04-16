@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "teaser".
  *
@@ -36,7 +35,6 @@ class ContentTeaser extends \ContentElement
 	 * @var PageModel
 	 */
 	protected $objParent;
-
 
 	/**
 	 * Check whether the target page and the article are published
@@ -65,7 +63,6 @@ class ContentTeaser extends \ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the content element

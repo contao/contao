@@ -10,7 +10,6 @@
 
 namespace Contao\Filter;
 
-
 /**
  * Filters a directory listing
  *
@@ -28,7 +27,6 @@ class SyncExclude extends \RecursiveFilterIterator
 	 */
 	protected $arrExempt = array();
 
-
 	/**
 	 * Exempt folders from the synchronisation (see #4522)
 	 *
@@ -43,7 +41,6 @@ class SyncExclude extends \RecursiveFilterIterator
 
 		parent::__construct($iterator);
 	}
-
 
 	/**
 	 * Check whether the current element of the iterator is acceptable

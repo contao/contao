@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Converts dates and date format string
  *
@@ -62,7 +61,6 @@ class Date
 	 */
 	protected $arrRange = array();
 
-
 	/**
 	 * Set the object properties
 	 *
@@ -79,7 +77,6 @@ class Date
 			$this->dateToUnix();
 		}
 	}
-
 
 	/**
 	 * Return an object property
@@ -153,7 +150,6 @@ class Date
 		return null;
 	}
 
-
 	/**
 	 * Create the date ranges
 	 */
@@ -176,7 +172,6 @@ class Date
 		$this->arrRange['year']['end'] = mktime(23, 59, 59, 12, 31, $intYear);
 	}
 
-
 	/**
 	 * Return the begin of the week as timestamp
 	 *
@@ -196,7 +191,6 @@ class Date
 		return strtotime('-' . $intOffset . ' days', $this->strDate);
 	}
 
-
 	/**
 	 * Return the end of the week as timestamp
 	 *
@@ -208,7 +202,6 @@ class Date
 	{
 		return strtotime('+1 week', $this->getWeekBegin($intStartDay)) - 1;
 	}
-
 
 	/**
 	 * Return a regular expression to check a date
@@ -256,7 +249,6 @@ class Date
 			}, preg_quote($strFormat));
 	}
 
-
 	/**
 	 * Return an input format string for a particular date (e.g. YYYY-MM-DD)
 	 *
@@ -302,7 +294,6 @@ class Date
 
 		return $arrInputFormat[$strFormat];
 	}
-
 
 	/**
 	 * Convert a date string into a Unix timestamp using the format string
@@ -429,7 +420,6 @@ class Date
 		$this->strDate = mktime($intHour, (int) $intMinute, (int) $intSecond, (int) $intMonth, (int) $intDay, (int) $intYear);
 	}
 
-
 	/**
 	 * Convert a PHP format string into a JavaScript format string
 	 *
@@ -465,7 +455,6 @@ class Date
 		return preg_replace('/([a-zA-Z])/', '%$1', implode('', $chunks));
 	}
 
-
 	/**
 	 * Check for a numeric date format
 	 *
@@ -477,7 +466,6 @@ class Date
 	{
 		return !preg_match('/[BbCcDEeFfIJKkLlMNOoPpQqRrSTtUuVvWwXxZz]+/', $strFormat);
 	}
-
 
 	/**
 	 * Return the numeric date format string
@@ -500,7 +488,6 @@ class Date
 		return \Config::get('dateFormat');
 	}
 
-
 	/**
 	 * Return the numeric time format string
 	 *
@@ -522,7 +509,6 @@ class Date
 		return \Config::get('timeFormat');
 	}
 
-
 	/**
 	 * Return the numeric datim format string
 	 *
@@ -543,7 +529,6 @@ class Date
 
 		return \Config::get('datimFormat');
 	}
-
 
 	/**
 	 * Return a numeric format string depending on the regular expression name
@@ -571,7 +556,6 @@ class Date
 
 		return null;
 	}
-
 
 	/**
 	 * Parse a date format string and translate textual representations
@@ -617,7 +601,6 @@ class Date
 		return $strReturn;
 	}
 
-
 	/**
 	 * Round a UNIX timestamp to the full minute
 	 *
@@ -634,7 +617,6 @@ class Date
 
 		return $intTime - ($intTime % 60);
 	}
-
 
 	/**
 	 * Resolve the custom modifiers

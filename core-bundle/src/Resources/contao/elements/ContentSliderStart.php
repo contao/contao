@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "slider" (wrapper start).
  *
@@ -24,7 +23,6 @@ class ContentSliderStart extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_sliderStart';
-
 
 	/**
 	 * Generate the content element

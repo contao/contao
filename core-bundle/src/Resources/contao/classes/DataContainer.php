@@ -18,7 +18,6 @@ use Contao\Image\ResizeConfiguration;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
-
 /**
  * Provide methods to handle data container arrays.
  *
@@ -144,7 +143,6 @@ abstract class DataContainer extends \Backend
 	 */
 	protected $blnCreateNewVersion = false;
 
-
 	/**
 	 * Set an object property
 	 *
@@ -168,7 +166,6 @@ abstract class DataContainer extends \Backend
 				break;
 		}
 	}
-
 
 	/**
 	 * Return an object property
@@ -216,7 +213,6 @@ abstract class DataContainer extends \Backend
 
 		return parent::__get($strKey);
 	}
-
 
 	/**
 	 * Render a row of a box and return it as HTML string
@@ -675,7 +671,6 @@ abstract class DataContainer extends \Backend
 </div>';
 	}
 
-
 	/**
 	 * Return the field explanation as HTML string
 	 *
@@ -695,7 +690,6 @@ abstract class DataContainer extends \Backend
 		return '
   <p class="tl_help tl_tip' . $strClass . '">'.$return.'</p>';
 	}
-
 
 	/**
 	 * Generate possible palette names from an array by taking the first value and either adding or not adding the following values
@@ -725,7 +719,6 @@ abstract class DataContainer extends \Backend
 		return array_filter($return);
 	}
 
-
 	/**
 	 * Return a query string that switches into edit mode
 	 *
@@ -750,7 +743,6 @@ abstract class DataContainer extends \Backend
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (\Input::get('table') ? 'table='.\Input::get('table').'&amp;' : '').'act=edit&amp;id='.rawurlencode($id);
 	}
-
 
 	/**
 	 * Compile buttons from the table configuration array and return them as HTML
@@ -846,7 +838,6 @@ abstract class DataContainer extends \Backend
 		return trim($return);
 	}
 
-
 	/**
 	 * Compile global buttons from the table configuration array and return them as HTML
 	 *
@@ -914,7 +905,6 @@ abstract class DataContainer extends \Backend
 
 		return $return;
 	}
-
 
 	/**
 	 * Compile header buttons from the table configuration array and return them as HTML
@@ -993,7 +983,6 @@ abstract class DataContainer extends \Backend
 		return $return;
 	}
 
-
 	/**
 	 * Initialize the picker
 	 *
@@ -1033,7 +1022,6 @@ abstract class DataContainer extends \Backend
 		return $attributes;
 	}
 
-
 	/**
 	 * Return the picker input field markup
 	 *
@@ -1057,7 +1045,6 @@ abstract class DataContainer extends \Backend
 
 		return '';
 	}
-
 
 	/**
 	 * Build the sort panel and return it as string
@@ -1189,14 +1176,12 @@ abstract class DataContainer extends \Backend
 		return $return;
 	}
 
-
 	/**
 	 * Return the name of the current palette
 	 *
 	 * @return string
 	 */
 	abstract public function getPalette();
-
 
 	/**
 	 * Save the current value

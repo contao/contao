@@ -13,7 +13,6 @@ namespace Contao;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Class FormCaptcha
  *
@@ -55,7 +54,6 @@ class FormCaptcha extends \Widget
 	 */
 	protected $strPrefix = 'widget widget-captcha mandatory';
 
-
 	/**
 	 * Initialize the object
 	 *
@@ -70,7 +68,6 @@ class FormCaptcha extends \Widget
 		$this->arrAttributes['required'] = true;
 		$this->arrConfiguration['mandatory'] = true;
 	}
-
 
 	/**
 	 * Add specific attributes
@@ -99,7 +96,6 @@ class FormCaptcha extends \Widget
 		}
 	}
 
-
 	/**
 	 * Return a parameter
 	 *
@@ -125,7 +121,6 @@ class FormCaptcha extends \Widget
 		}
 	}
 
-
 	/**
 	 * Validate the input and set the value
 	 */
@@ -145,7 +140,6 @@ class FormCaptcha extends \Widget
 		$objSession->set('captcha_' . $this->strId, '');
 	}
 
-
 	/**
 	 * Generate the captcha values and store them in the session
 	 */
@@ -156,8 +150,8 @@ class FormCaptcha extends \Widget
 			return;
 		}
 
-		$int1 = mt_rand(1, 9);
-		$int2 = mt_rand(1, 9);
+		$int1 = random_int(1, 9);
+		$int2 = random_int(1, 9);
 
 		$this->arrCaptcha = array
 		(
@@ -174,7 +168,6 @@ class FormCaptcha extends \Widget
 		$objSession->set('captcha_' . $this->strId, $this->arrCaptcha);
 	}
 
-
 	/**
 	 * Generate the captcha question
 	 *
@@ -184,7 +177,7 @@ class FormCaptcha extends \Widget
 	{
 		$this->generateCaptcha();
 
-		$question = $GLOBALS['TL_LANG']['SEC']['question' . mt_rand(1, 3)];
+		$question = $GLOBALS['TL_LANG']['SEC']['question' . random_int(1, 3)];
 		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';
@@ -198,7 +191,6 @@ class FormCaptcha extends \Widget
 		return $strEncoded;
 	}
 
-
 	/**
 	 * Get the correct sum for the current session
 	 *
@@ -210,7 +202,6 @@ class FormCaptcha extends \Widget
 
 		return $this->arrCaptcha['sum'];
 	}
-
 
 	/**
 	 * Generate the label and return it as string
@@ -232,7 +223,6 @@ class FormCaptcha extends \Widget
 						$this->getQuestion());
 	}
 
-
 	/**
 	 * Generate the widget and return it as string
 	 *
@@ -248,7 +238,6 @@ class FormCaptcha extends \Widget
 						$this->getAttributes(),
 						$this->strTagEnding);
 	}
-
 
 	/**
 	 * Return the captcha question as string

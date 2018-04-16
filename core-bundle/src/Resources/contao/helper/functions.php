@@ -10,7 +10,6 @@
 
 use Patchwork\Utf8;
 
-
 /**
  * Add a log entry
  *
@@ -43,7 +42,6 @@ function log_message($strMessage, $strLog=null)
 
 	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, $strLogsDir . '/' . $strLog);
 }
-
 
 /**
  * Scan a directory and return its files and folders as array
@@ -91,7 +89,6 @@ function scan($strFolder, $blnUncached=false)
 	return $arrReturn;
 }
 
-
 /**
  * Convert special characters to HTML entities and make sure that
  * entities are never double converted.
@@ -113,7 +110,6 @@ function specialchars($strString, $blnStripInsertTags=false)
 	// Use ENT_COMPAT here (see #4889)
 	return htmlspecialchars($strString, ENT_COMPAT, $GLOBALS['TL_CONFIG']['characterSet'], false);
 }
-
 
 /**
  * Standardize a parameter (strip special characters and convert spaces)
@@ -147,7 +143,6 @@ function standardize($strString, $blnPreserveUppercase=false)
 	return trim($strString, '-');
 }
 
-
 /**
  * Remove Contao insert tags from a string
  *
@@ -169,7 +164,6 @@ function strip_insert_tags($strString)
 
 	return $strString;
 }
-
 
 /**
  * Return an unserialized array or the argument
@@ -229,7 +223,6 @@ function deserialize($varValue, $blnForceArray=false)
 	return $varValue;
 }
 
-
 /**
  * Split a string into fragments, remove whitespace and return fragments as array
  *
@@ -273,7 +266,6 @@ function trimsplit($strPattern, $strString)
 	return $arrFragments;
 }
 
-
 /**
  * Convert all ampersands into their HTML entity (default) or unencoded value
  *
@@ -286,7 +278,6 @@ function ampersand($strString, $blnEncode=true)
 {
 	return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
 }
-
 
 /**
  * Replace line breaks with HTML5-style <br> tags
@@ -301,7 +292,6 @@ function nl2br_html5($str, $xhtml=false)
 	return nl2br($str, $xhtml);
 }
 
-
 /**
  * Replace line breaks with XHTML-style <br /> tags
  *
@@ -313,7 +303,6 @@ function nl2br_xhtml($str)
 {
 	return nl2br($str);
 }
-
 
 /**
  * Replace line breaks with <br> tags preserving preformatted text
@@ -343,7 +332,6 @@ function nl2br_pre($str, $xhtml=false)
 	return $str;
 }
 
-
 /**
  * Compare two file names using a case insensitive "natural order" algorithm
  *
@@ -357,7 +345,6 @@ function basename_natcasecmp($a, $b)
 	return strnatcasecmp(basename($a), basename($b));
 }
 
-
 /**
  * Compare two file names using a case insensitive, reverse "natural order" algorithm
  *
@@ -370,7 +357,6 @@ function basename_natcasercmp($a, $b)
 {
 	return -strnatcasecmp(basename($a), basename($b));
 }
-
 
 /**
  * Sort an array by keys using a case insensitive "natural order" algorithm
@@ -388,7 +374,6 @@ function natcaseksort($arrArray)
 	return $arrBuffer;
 }
 
-
 /**
  * Compare two values based on their length (ascending)
  *
@@ -402,7 +387,6 @@ function length_sort_asc($a, $b)
 	return \strlen($a) - \strlen($b);
 }
 
-
 /**
  * Compare two values based on their length (descending)
  *
@@ -415,7 +399,6 @@ function length_sort_desc($a, $b)
 {
 	return \strlen($b) - \strlen($a);
 }
-
 
 /**
  * Insert a parameter or array into an existing array at a particular index
@@ -443,7 +426,6 @@ function array_insert(&$arrCurrent, $intIndex, $arrNew)
 
 	array_splice($arrCurrent, $intIndex, 0, $arrNew);
 }
-
 
 /**
  * Duplicate a particular element of an array
@@ -475,7 +457,6 @@ function array_duplicate($arrStack, $intIndex)
 	return $arrStack;
 }
 
-
 /**
  * Move an array element one position up
  *
@@ -504,7 +485,6 @@ function array_move_up($arrStack, $intIndex)
 
 	return $arrStack;
 }
-
 
 /**
  * Move an array element one position down
@@ -535,7 +515,6 @@ function array_move_down($arrStack, $intIndex)
 	return $arrStack;
 }
 
-
 /**
  * Delete a particular element of an array
  *
@@ -555,7 +534,6 @@ function array_delete($arrStack, $intIndex)
 	return array_values($arrStack);
 }
 
-
 /**
  * Return true if an array is associative
  *
@@ -567,7 +545,6 @@ function array_is_assoc($arrArray)
 {
 	return \is_array($arrArray) && array_keys($arrArray) !== range(0, \count($arrArray) - 1);
 }
-
 
 /**
  * Return a specific character
@@ -588,7 +565,6 @@ function utf8_chr($dec)
 	return Utf8::chr($dec);
 }
 
-
 /**
  * Return the ASCII value of a character
  *
@@ -607,7 +583,6 @@ function utf8_ord($str)
 
 	return Utf8::ord($str);
 }
-
 
 /**
  * Convert character encoding
@@ -653,7 +628,6 @@ function utf8_convert_encoding($str, $to, $from=null)
 	return mb_convert_encoding($str, $to, $from);
 }
 
-
 /**
  * Convert all unicode entities to their applicable characters
  *
@@ -682,7 +656,6 @@ function utf8_decode_entities($str)
 	return $str;
 }
 
-
 /**
  * Callback function for utf8_decode_entities
  *
@@ -699,7 +672,6 @@ function utf8_chr_callback($matches)
 	return Utf8::chr($matches[1]);
 }
 
-
 /**
  * Callback function for utf8_decode_entities
  *
@@ -715,7 +687,6 @@ function utf8_hexchr_callback($matches)
 
 	return Utf8::chr(hexdec($matches[1]));
 }
-
 
 /**
  * Detect the encoding of a string
@@ -734,7 +705,6 @@ function utf8_detect_encoding($str)
 	return mb_detect_encoding($str, array('ASCII', 'ISO-2022-JP', 'UTF-8', 'EUC-JP', 'ISO-8859-1'));
 }
 
-
 /**
  * Romanize a string
  *
@@ -752,7 +722,6 @@ function utf8_romanize($str)
 	return Utf8::toAscii($str);
 }
 
-
 /**
  * Determine the number of characters of a string
  *
@@ -769,7 +738,6 @@ function utf8_strlen($str)
 
 	return Utf8::strlen($str);
 }
-
 
 /**
  * Find the position of the first occurence of a string in another string
@@ -790,7 +758,6 @@ function utf8_strpos($haystack, $needle, $offset=0)
 	return Utf8::strpos($haystack, $needle, $offset);
 }
 
-
 /**
  * Find the last occurrence of a character in a string
  *
@@ -808,7 +775,6 @@ function utf8_strrchr($haystack, $needle)
 
 	return Utf8::strrchr($haystack, $needle);
 }
-
 
 /**
  * Find the position of the last occurrence of a string in another string
@@ -828,7 +794,6 @@ function utf8_strrpos($haystack, $needle)
 	return Utf8::strrpos($haystack, $needle);
 }
 
-
 /**
  * Find the first occurrence of a string in another string
  *
@@ -847,7 +812,6 @@ function utf8_strstr($haystack, $needle)
 	return Utf8::strstr($haystack, $needle);
 }
 
-
 /**
  * Make a string lowercase
  *
@@ -865,7 +829,6 @@ function utf8_strtolower($str)
 	return Utf8::strtolower($str);
 }
 
-
 /**
  * Make a string uppercase
  *
@@ -882,7 +845,6 @@ function utf8_strtoupper($str)
 
 	return Utf8::strtoupper($str);
 }
-
 
 /**
  * Return substring of a string
@@ -903,7 +865,6 @@ function utf8_substr($str, $start, $length=null)
 	return Utf8::substr($str, $start, $length);
 }
 
-
 /**
  * Make sure the first letter is uppercase
  *
@@ -921,7 +882,6 @@ function utf8_ucfirst($str)
 	return Utf8::ucfirst($str);
 }
 
-
 /**
  * Convert a string to an array
  *
@@ -938,7 +898,6 @@ function utf8_str_split($str)
 
 	return Utf8::str_split($str);
 }
-
 
 /**
  * Replace line breaks with <br> tags (to be used with preg_replace_callback)

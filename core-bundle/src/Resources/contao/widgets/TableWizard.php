@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * Provide methods to handle table fields.
  *
@@ -49,7 +48,6 @@ class TableWizard extends \Widget
 	 */
 	protected $strTemplate = 'be_widget';
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -73,7 +71,6 @@ class TableWizard extends \Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -159,7 +156,6 @@ class TableWizard extends \Widget
 
 		return $return;
 	}
-
 
 	/**
 	 * Return a form to choose a CSV file and import it

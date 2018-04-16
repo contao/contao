@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "sitemap".
  *
@@ -26,7 +25,6 @@ class ModuleSitemap extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_sitemap';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -51,7 +49,6 @@ class ModuleSitemap extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

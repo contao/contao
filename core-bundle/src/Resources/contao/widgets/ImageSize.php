@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle image size fields.
  *
@@ -40,7 +39,6 @@ class ImageSize extends \Widget
 	 */
 	protected $arrAvailableOptions = array();
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -67,7 +65,6 @@ class ImageSize extends \Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Trim values
@@ -121,7 +118,6 @@ class ImageSize extends \Widget
 
 		return $varInput;
 	}
-
 
 	/**
 	 * Check whether an input is one of the given options

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provides the template inheritance logic
  *
@@ -66,7 +65,6 @@ trait TemplateInheritance
 	 * @var int
 	 */
 	protected $intBufferLevel = 0;
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -129,7 +127,6 @@ trait TemplateInheritance
 		return $strBuffer;
 	}
 
-
 	/**
 	 * Extend another template
 	 *
@@ -140,7 +137,6 @@ trait TemplateInheritance
 		$this->strParent = $name;
 	}
 
-
 	/**
 	 * Insert the content of the parent block
 	 */
@@ -148,7 +144,6 @@ trait TemplateInheritance
 	{
 		echo '[[TL_PARENT]]';
 	}
-
 
 	/**
 	 * Start a new block
@@ -214,7 +209,6 @@ trait TemplateInheritance
 		}
 	}
 
-
 	/**
 	 * End a block
 	 *
@@ -264,7 +258,6 @@ trait TemplateInheritance
 		}
 	}
 
-
 	/**
 	 * Insert a template
 	 *
@@ -294,7 +287,6 @@ trait TemplateInheritance
 
 		echo $tpl->parse();
 	}
-
 
 	/**
 	 * Find a particular template file and return its path

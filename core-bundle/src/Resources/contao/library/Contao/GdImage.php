@@ -12,7 +12,6 @@ namespace Contao;
 
 @trigger_error('Using the Contao\GdImage class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.', E_USER_DEPRECATED);
 
-
 /**
  * GD image class
  *
@@ -42,7 +41,6 @@ class GdImage
 	 */
 	protected $gdResource;
 
-
 	/**
 	 * Create a new object to handle a GD image
 	 *
@@ -52,7 +50,6 @@ class GdImage
 	{
 		$this->setResource($gdResource);
 	}
-
 
 	/**
 	 * Get the GD image object from an image file
@@ -94,7 +91,6 @@ class GdImage
 		return new static($image);
 	}
 
-
 	/**
 	 * Get the GD image object for the specified dimensions
 	 *
@@ -121,7 +117,6 @@ class GdImage
 		return new static($image);
 	}
 
-
 	/**
 	 * Get the GD resource handle
 	 *
@@ -131,7 +126,6 @@ class GdImage
 	{
 		return $this->gdResource;
 	}
-
 
 	/**
 	 * Set the GD resource handle
@@ -153,7 +147,6 @@ class GdImage
 
 		return $this;
 	}
-
 
 	/**
 	 * Save the GD image to a file
@@ -214,7 +207,6 @@ class GdImage
 		return $this;
 	}
 
-
 	/**
 	 * Save the GD image to a file
 	 *
@@ -232,7 +224,6 @@ class GdImage
 
 		return $this;
 	}
-
 
 	/**
 	 * Convert a true color image to a palette image with 256 colors and preserve transparency
@@ -325,7 +316,6 @@ class GdImage
 		return $this;
 	}
 
-
 	/**
 	 * Count the number of colors in the image
 	 *
@@ -360,7 +350,6 @@ class GdImage
 		return \count($colors);
 	}
 
-
 	/**
 	 * Detect if the image contains semitransparent pixels
 	 *
@@ -392,7 +381,6 @@ class GdImage
 
 		return false;
 	}
-
 
 	/**
 	 * Destroy the GD resource to free memory

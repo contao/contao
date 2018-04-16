@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "search".
  *
@@ -27,7 +26,6 @@ class ModuleSearch extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_search';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -52,7 +50,6 @@ class ModuleSearch extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

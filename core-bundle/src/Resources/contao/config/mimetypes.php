@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-// Mime types
 $GLOBALS['TL_MIME'] = array
 (
 	// Application files

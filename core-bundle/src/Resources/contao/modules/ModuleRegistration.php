@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "registration".
  *
@@ -26,7 +25,6 @@ class ModuleRegistration extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'member_default';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -59,7 +57,6 @@ class ModuleRegistration extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -360,7 +357,6 @@ class ModuleRegistration extends \Module
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
 	}
 
-
 	/**
 	 * Create a new user and redirect
 	 *
@@ -459,7 +455,6 @@ class ModuleRegistration extends \Module
 		$this->reload();
 	}
 
-
 	/**
 	 * Send the activation mail
 	 *
@@ -514,7 +509,6 @@ class ModuleRegistration extends \Module
 		$objEmail->sendTo($arrData['email']);
 	}
 
-
 	/**
 	 * Activate an account
 	 */
@@ -567,7 +561,6 @@ class ModuleRegistration extends \Module
 		$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountActivated'];
 	}
 
-
 	/**
 	 * Re-send the activation mail
 	 *
@@ -593,7 +586,6 @@ class ModuleRegistration extends \Module
 		$this->Template->type = 'confirm';
 		$this->Template->message = $GLOBALS['TL_LANG']['MSC']['resendActivation'];
 	}
-
 
 	/**
 	 * Send an admin notification e-mail

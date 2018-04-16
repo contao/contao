@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes articles
  *
@@ -122,7 +121,6 @@ class ArticleModel extends \Model
 	 */
 	protected static $strTable = 'tl_article';
 
-
 	/**
 	 * Find an article by its ID or alias and its page
 	 *
@@ -146,7 +144,6 @@ class ArticleModel extends \Model
 
 		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
 	}
-
 
 	/**
 	 * Find a published article by its ID or alias and its page
@@ -178,7 +175,6 @@ class ArticleModel extends \Model
 		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
 	}
 
-
 	/**
 	 * Find a published article by its ID
 	 *
@@ -200,7 +196,6 @@ class ArticleModel extends \Model
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
 	}
-
 
 	/**
 	 * Find all published articles by their parent ID and column
@@ -231,7 +226,6 @@ class ArticleModel extends \Model
 		return static::findBy($arrColumns, $arrValues, $arrOptions);
 	}
 
-
 	/**
 	 * Find all published articles with teaser by their parent ID
 	 *
@@ -258,7 +252,6 @@ class ArticleModel extends \Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find all published articles with teaser by their parent ID and column

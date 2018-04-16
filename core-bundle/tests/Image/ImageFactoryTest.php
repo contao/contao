@@ -687,9 +687,8 @@ class ImageFactoryTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    public static function emptyHookCallback()
+    public static function emptyHookCallback(): void
     {
-        return null;
     }
 
     /**
