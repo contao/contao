@@ -452,7 +452,6 @@ class Dbafs
 		// Store the hash of each folder
 		foreach (array_reverse($arrPaths) as $strPath)
 		{
-			$objFolder = new \Folder($strPath);
 			$objModel  = \FilesModel::findByPath($strPath);
 
 			// The DB entry does not yet exist
@@ -540,6 +539,7 @@ class Dbafs
 			// Get the model
 			if (isset($arrModels[$strRelpath]))
 			{
+				/** @var Model $objModel */
 				$objModel = $arrModels[$strRelpath];
 			}
 			else

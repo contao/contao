@@ -855,7 +855,7 @@ abstract class Model
 			(
 				array
 				(
-					'column' => array("$t.id IN(" . implode(',', array_map('intval', $arrUnregistered)) . ")"),
+					'column' => array("$t.id IN(" . implode(',', array_map('\intval', $arrUnregistered)) . ")"),
 					'value'  => null,
 					'order'  => \Database::getInstance()->findInSet("$t.id", $arrIds),
 					'return' => 'Collection'

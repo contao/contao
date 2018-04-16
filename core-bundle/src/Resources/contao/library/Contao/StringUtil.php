@@ -285,7 +285,7 @@ class StringUtil
 	/**
 	 * Prepare a slug
 	 *
-	 * @param $strSlug The slug
+	 * @param string $strSlug The slug
 	 *
 	 * @return string
 	 */
@@ -340,7 +340,7 @@ class StringUtil
 
 			foreach ($arrCharacters as $strCharacter)
 			{
-				$strEncoded .= sprintf((mt_rand(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
+				$strEncoded .= sprintf((random_int(0, 1) ? '&#x%X;' : '&#%s;'), Utf8::ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);

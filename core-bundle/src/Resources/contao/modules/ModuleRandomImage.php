@@ -137,7 +137,7 @@ class ModuleRandomImage extends Module
 			return;
 		}
 
-		$i = mt_rand(0, (\count($images)-1));
+		$i = random_int(0, \count($images)-1);
 
 		$arrImage = $images[$i];
 

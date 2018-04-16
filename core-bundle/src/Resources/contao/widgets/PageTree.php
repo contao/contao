@@ -125,7 +125,7 @@ class PageTree extends Widget
 		}
 		else
 		{
-			$arrValue = array_map('intval', array_filter(explode(',', $varInput)));
+			$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
 
 			return $this->multiple ? $arrValue : $arrValue[0];
 		}
@@ -149,7 +149,7 @@ class PageTree extends Widget
 		}
 		else
 		{
-			$arrIds = array_map('intval', array_filter(explode(',', $varInput)));
+			$arrIds = array_map('\intval', array_filter(explode(',', $varInput)));
 		}
 
 		if (\count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)

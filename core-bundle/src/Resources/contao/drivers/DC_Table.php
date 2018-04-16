@@ -3312,7 +3312,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Remove the entries from the database
 			if (!empty($new_records[$this->strTable]))
 			{
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('intval', $new_records[$this->strTable])) . ") AND tstamp=0");
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('\intval', $new_records[$this->strTable])) . ") AND tstamp=0");
 
 				if ($objStmt->affectedRows > 0)
 				{
@@ -3797,7 +3797,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $this->strTable != $table)
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
+				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
 											->execute($id);
 
 				if ($objChilds->numRows)
@@ -4298,7 +4298,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			if (!empty($this->root) && \is_array($this->root))
 			{
-				$query .= (!empty($arrProcedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('intval', $this->root)) . ")";
+				$query .= (!empty($arrProcedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('\intval', $this->root)) . ")";
 			}
 
 			// ORDER BY
@@ -4601,7 +4601,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		if (!empty($this->root) && \is_array($this->root))
 		{
-			$query .= (!empty($this->procedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('intval', $this->root)) . ")";
+			$query .= (!empty($this->procedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('\intval', $this->root)) . ")";
 		}
 
 		if (\is_array($orderBy) && $orderBy[0] != '')
@@ -5501,7 +5501,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (!$this->treeView && !empty($this->root) && \is_array($this->root))
 			{
-				$arrProcedure[] = "id IN(" . implode(',', array_map('intval', $this->root)) . ")";
+				$arrProcedure[] = "id IN(" . implode(',', array_map('\intval', $this->root)) . ")";
 			}
 
 			// Check for a static filter (see #4719)

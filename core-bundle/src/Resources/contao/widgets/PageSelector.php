@@ -365,7 +365,7 @@ class PageSelector extends Widget
 		// Check whether there are child records
 		if (!$blnNoRecursion)
 		{
-			$objNodes = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('intval', $arrFound)) . ")" : '') . " ORDER BY sorting")
+			$objNodes = $this->Database->prepare("SELECT id FROM tl_page WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . " ORDER BY sorting")
 									   ->execute($id);
 
 			if ($objNodes->numRows)

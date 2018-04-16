@@ -1211,7 +1211,7 @@ abstract class Controller extends System
 	public static function sendFileToBrowser($strFile)
 	{
 		// Make sure there are no attempts to hack the file system
-		if (preg_match('@^\.+@i', $strFile) || preg_match('@\.+/@i', $strFile) || preg_match('@(://)+@i', $strFile))
+		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
 		{
 			throw new PageNotFoundException('Invalid file name');
 		}

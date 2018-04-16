@@ -50,7 +50,7 @@ class BackendPopup extends Backend
 
 		$strFile = \Input::get('src', true);
 		$strFile = base64_decode($strFile);
-		$strFile = preg_replace('@^/+@', '', rawurldecode($strFile));
+		$strFile = ltrim(rawurldecode($strFile), '/');
 
 		$this->strFile = $strFile;
 	}
@@ -68,7 +68,7 @@ class BackendPopup extends Backend
 		}
 
 		// Make sure there are no attempts to hack the file system
-		if (preg_match('@^\.+@i', $this->strFile) || preg_match('@\.+/@i', $this->strFile) || preg_match('@(://)+@i', $this->strFile))
+		if (preg_match('@^\.+@', $this->strFile) || preg_match('@\.+/@', $this->strFile) || preg_match('@(://)+@', $this->strFile))
 		{
 			die('Invalid file name');
 		}

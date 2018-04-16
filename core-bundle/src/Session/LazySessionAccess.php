@@ -75,7 +75,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         $this->startSession();
 
