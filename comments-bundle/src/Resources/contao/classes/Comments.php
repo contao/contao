@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 
-
 /**
  * Class Comments
  *
@@ -150,7 +149,6 @@ class Comments extends \Frontend
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
 	}
-
 
 	/**
 	 * Add a form to create new comments
@@ -407,7 +405,6 @@ class Comments extends \Frontend
 		}
 	}
 
-
 	/**
 	 * Replace bbcode and return the HTML string
 	 *
@@ -477,7 +474,6 @@ class Comments extends \Frontend
 		return $strComment;
 	}
 
-
 	/**
 	 * Convert line feeds to <br /> tags
 	 *
@@ -505,7 +501,6 @@ class Comments extends \Frontend
 
 		return preg_replace(array_keys($arrReplace), array_values($arrReplace), $strComment);
 	}
-
 
 	/**
 	 * Add the subscription and send the activation mail (double opt-in)
@@ -555,7 +550,6 @@ class Comments extends \Frontend
 		$objEmail->sendTo($objComment->email);
 	}
 
-
 	/**
 	 * Change the subscription status
 	 *
@@ -584,7 +578,6 @@ class Comments extends \Frontend
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
 		}
 	}
-
 
 	/**
 	 * Notify the subscribers of new comments

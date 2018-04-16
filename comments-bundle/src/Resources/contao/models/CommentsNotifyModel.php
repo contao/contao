@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes comments subscriptions
  *
@@ -78,7 +77,6 @@ class CommentsNotifyModel extends \Model
 	 */
 	protected static $strTable = 'tl_comments_notify';
 
-
 	/**
 	 * Find a subscription by its tokens
 	 *
@@ -93,7 +91,6 @@ class CommentsNotifyModel extends \Model
 
 		return static::findOneBy(array("($t.tokenConfirm=? OR $t.tokenRemove=?)"), array($strToken, $strToken), $arrOptions);
 	}
-
 
 	/**
 	 * Find a subscription by its source table, parent ID and e-mail address
@@ -111,7 +108,6 @@ class CommentsNotifyModel extends \Model
 
 		return static::findOneBy(array("$t.source=? AND $t.parent=? AND $t.email=?"), array($strSource, $intParent, $strEmail), $arrOptions);
 	}
-
 
 	/**
 	 * Find active subscriptions by their source table and parent ID

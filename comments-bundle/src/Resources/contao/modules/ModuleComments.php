@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class ModuleComments
  *
@@ -34,7 +33,6 @@ class ModuleComments extends \Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_comments';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -59,7 +57,6 @@ class ModuleComments extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

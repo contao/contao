@@ -8,16 +8,10 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Add palette to tl_content
- */
+// Add palette to tl_content
 $GLOBALS['TL_DCA']['tl_content']['palettes']['comments'] = '{type_legend},type,headline;{comment_legend},com_order,com_perPage,com_moderate,com_bbcode,com_requireLogin,com_disableCaptcha;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
 
-
-/**
- * Add fields to tl_content
- */
+// Add fields to tl_content
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_order'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_order'],
@@ -85,7 +79,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"
 );
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
