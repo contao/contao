@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes news feeds
  *
@@ -79,7 +78,6 @@ class NewsFeedModel extends \Model
 	 */
 	protected static $strTable = 'tl_news_feed';
 
-
 	/**
 	 * Find all feeds which include a certain news archive
 	 *
@@ -94,7 +92,6 @@ class NewsFeedModel extends \Model
 
 		return static::findBy(array("$t.archives LIKE '%\"" . (int) $intId . "\"%'"), null, $arrOptions);
 	}
-
 
 	/**
 	 * Find news feeds by their IDs
@@ -113,6 +110,6 @@ class NewsFeedModel extends \Model
 
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
+		return static::findBy(array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }

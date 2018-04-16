@@ -8,16 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Load tl_content language file
- */
 System::loadLanguageFile('tl_content');
 
-
-/**
- * Table tl_news
- */
 $GLOBALS['TL_DCA']['tl_news'] = array
 (
 
@@ -484,7 +476,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -503,7 +494,6 @@ class tl_news extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_news
@@ -620,7 +610,6 @@ class tl_news extends Backend
 		}
 	}
 
-
 	/**
 	 * Auto-generate the news alias if it has not been set yet
 	 *
@@ -672,7 +661,6 @@ class tl_news extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Set the timestamp to 00:00:00 (see #26)
 	 *
@@ -684,7 +672,6 @@ class tl_news extends Backend
 	{
 		return strtotime(date('Y-m-d', $value) . ' 00:00:00');
 	}
-
 
 	/**
 	 * Set the timestamp to 1970-01-01 (see #26)
@@ -698,7 +685,6 @@ class tl_news extends Backend
 		return strtotime('1970-01-01 ' . date('H:i:s', $value));
 	}
 
-
 	/**
 	 * List a news article
 	 *
@@ -710,7 +696,6 @@ class tl_news extends Backend
 	{
 		return '<div class="tl_content_left">' . $arrRow['headline'] . ' <span style="color:#999;padding-left:3px">[' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ']</span></div>';
 	}
-
 
 	/**
 	 * Get all articles and return them as array
@@ -737,7 +722,7 @@ class tl_news extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting")
+			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting")
 									   ->execute($dc->id);
 		}
 		else
@@ -758,7 +743,6 @@ class tl_news extends Backend
 
 		return $arrAlias;
 	}
-
 
 	/**
 	 * Add the source options depending on the allowed fields (see #5498)
@@ -804,7 +788,6 @@ class tl_news extends Backend
 		return $arrOptions;
 	}
 
-
 	/**
 	 * Adjust start end end time of the event based on date, span, startTime and endTime
 	 *
@@ -823,7 +806,6 @@ class tl_news extends Backend
 
 		$this->Database->prepare("UPDATE tl_news %s WHERE id=?")->set($arrSet)->execute($dc->id);
 	}
-
 
 	/**
 	 * Check for modified news feeds and update the XML files if necessary
@@ -853,7 +835,6 @@ class tl_news extends Backend
 		$objSession->set('news_feed_updater', null);
 	}
 
-
 	/**
 	 * Schedule a news feed update
 	 *
@@ -880,7 +861,6 @@ class tl_news extends Backend
 		$session[] = $dc->activeRecord->pid;
 		$objSession->set('news_feed_updater', array_unique($session));
 	}
-
 
 	/**
 	 * Return the "feature/unfeature element" button
@@ -917,7 +897,6 @@ class tl_news extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['featured'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Feature/unfeature a news item
@@ -968,7 +947,6 @@ class tl_news extends Backend
 		$objVersions->create();
 	}
 
-
 	/**
 	 * Return the "toggle visibility" button
 	 *
@@ -1004,7 +982,6 @@ class tl_news extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group
