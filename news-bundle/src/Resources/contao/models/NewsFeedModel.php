@@ -110,7 +110,7 @@ class NewsFeedModel extends Model
 
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
+		return static::findBy(array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }
 
