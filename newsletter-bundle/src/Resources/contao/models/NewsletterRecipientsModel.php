@@ -65,7 +65,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsletterRecipientsModel extends \Model
+class NewsletterRecipientsModel extends Model
 {
 
 	/**
@@ -118,3 +118,5 @@ class NewsletterRecipientsModel extends \Model
 		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ") AND $t.active=''"), $strEmail, $arrOptions);
 	}
 }
+
+class_alias(NewsletterRecipientsModel::class, 'NewsletterRecipientsModel');

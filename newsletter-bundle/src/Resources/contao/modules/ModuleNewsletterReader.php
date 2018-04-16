@@ -21,7 +21,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsletterReader extends \Module
+class ModuleNewsletterReader extends Module
 {
 
 	/**
@@ -140,3 +140,5 @@ class ModuleNewsletterReader extends \Module
 		$this->Template->subject = $objNewsletter->subject;
 	}
 }
+
+class_alias(ModuleNewsletterReader::class, 'ModuleNewsletterReader');

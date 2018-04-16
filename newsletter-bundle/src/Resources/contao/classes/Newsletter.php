@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Newsletter extends \Backend
+class Newsletter extends Backend
 {
 
 	/**
@@ -1009,3 +1009,5 @@ class Newsletter extends \Backend
 		return $arrPages;
 	}
 }
+
+class_alias(Newsletter::class, 'Newsletter');

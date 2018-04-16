@@ -53,7 +53,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsletterChannelModel extends \Model
+class NewsletterChannelModel extends Model
 {
 
 	/**
@@ -88,3 +88,5 @@ class NewsletterChannelModel extends \Model
 		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }
+
+class_alias(NewsletterChannelModel::class, 'NewsletterChannelModel');

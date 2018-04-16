@@ -20,7 +20,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsletterList extends \Module
+class ModuleNewsletterList extends Module
 {
 
 	/**
@@ -129,3 +129,5 @@ class ModuleNewsletterList extends \Module
 		$this->Template->newsletters = $arrNewsletter;
 	}
 }
+
+class_alias(ModuleNewsletterList::class, 'ModuleNewsletterList');

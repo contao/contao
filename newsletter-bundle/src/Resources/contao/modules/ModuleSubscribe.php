@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleSubscribe extends \Module
+class ModuleSubscribe extends Module
 {
 
 	/**
@@ -372,3 +372,5 @@ class ModuleSubscribe extends \Module
 		$this->reload();
 	}
 }
+
+class_alias(ModuleSubscribe::class, 'ModuleSubscribe');

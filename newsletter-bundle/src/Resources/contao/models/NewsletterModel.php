@@ -90,7 +90,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsletterModel extends \Model
+class NewsletterModel extends Model
 {
 
 	/**
@@ -187,3 +187,5 @@ class NewsletterModel extends \Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
+
+class_alias(NewsletterModel::class, 'NewsletterModel');

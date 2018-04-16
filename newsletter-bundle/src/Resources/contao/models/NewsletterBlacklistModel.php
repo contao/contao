@@ -36,7 +36,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsletterBlacklistModel extends \Model
+class NewsletterBlacklistModel extends Model
 {
 
 	/**
@@ -61,3 +61,5 @@ class NewsletterBlacklistModel extends \Model
 		return static::findOneBy(array("($t.hash=? AND $t.pid=?)"), array($strHash, $intPid), $arrOptions);
 	}
 }
+
+class_alias(NewsletterBlacklistModel::class, 'NewsletterBlacklistModel');
