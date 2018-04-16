@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "calendar".
  *
@@ -43,7 +42,6 @@ class ModuleCalendar extends Events
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_calendar';
-
 
 	/**
 	 * Do not show the module if no calendar has been selected
@@ -85,7 +83,6 @@ class ModuleCalendar extends Events
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -173,7 +170,6 @@ class ModuleCalendar extends Events
 		$this->Template->calendar = $objTemplate->parse();
 	}
 
-
 	/**
 	 * Return the week days and labels as array
 	 *
@@ -211,7 +207,6 @@ class ModuleCalendar extends Events
 
 		return $arrDays;
 	}
-
 
 	/**
 	 * Return all weeks of the current month as array

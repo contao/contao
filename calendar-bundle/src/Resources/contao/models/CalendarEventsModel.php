@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes events
  *
@@ -190,7 +189,6 @@ class CalendarEventsModel extends Model
 	 */
 	protected static $strTable = 'tl_calendar_events';
 
-
 	/**
 	 * Find a published event from one or more calendars by its ID or alias
 	 *
@@ -219,7 +217,6 @@ class CalendarEventsModel extends Model
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
-
 
 	/**
 	 * Find events of the current period by their parent ID
@@ -253,7 +250,6 @@ class CalendarEventsModel extends Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find published events with the default redirect target by their parent ID
 	 *
@@ -280,7 +276,6 @@ class CalendarEventsModel extends Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find upcoming events by their parent IDs

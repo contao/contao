@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "event menu".
  *
@@ -30,7 +29,6 @@ class ModuleEventMenu extends ModuleCalendar
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_eventmenu';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -62,7 +60,6 @@ class ModuleEventMenu extends ModuleCalendar
 		return parent::generate();
 	}
 
-
 	/**
 	 * Generate the module
 	 */
@@ -84,7 +81,6 @@ class ModuleEventMenu extends ModuleCalendar
 				break;
 		}
 	}
-
 
 	/**
 	 * Generate the yearly menu
@@ -128,7 +124,6 @@ class ModuleEventMenu extends ModuleCalendar
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->cal_showQuantity != '') ? true : false;
 	}
-
 
 	/**
 	 * Generate the monthly menu
