@@ -29,7 +29,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DcaExtractor extends \Controller
+class DcaExtractor extends Controller
 {
 
 	/**
@@ -596,3 +596,5 @@ class DcaExtractor extends \Controller
 		$this->blnIsDbTable = true;
 	}
 }
+
+class_alias(DcaExtractor::class, 'DcaExtractor');

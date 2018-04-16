@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNavigation extends \Module
+class ModuleNavigation extends Module
 {
 
 	/**
@@ -102,3 +102,5 @@ class ModuleNavigation extends \Module
 		$this->Template->items = $this->renderNavigation($trail[$level], 1, $host, $lang);
 	}
 }
+
+class_alias(ModuleNavigation::class, 'ModuleNavigation');

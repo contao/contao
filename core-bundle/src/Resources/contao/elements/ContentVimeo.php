@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentVimeo extends \ContentElement
+class ContentVimeo extends ContentElement
 {
 
 	/**
@@ -73,3 +73,5 @@ class ContentVimeo extends \ContentElement
 		$this->Template->src = $url;
 	}
 }
+
+class_alias(ContentVimeo::class, 'ContentVimeo');

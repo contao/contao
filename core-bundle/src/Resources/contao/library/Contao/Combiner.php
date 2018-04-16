@@ -30,7 +30,7 @@ use Leafo\ScssPhp\Formatter\Expanded;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Combiner extends \System
+class Combiner extends System
 {
 
 	/**
@@ -550,3 +550,5 @@ class Combiner extends \System
 		return $return;
 	}
 }
+
+class_alias(Combiner::class, 'Combiner');

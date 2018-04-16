@@ -19,7 +19,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleSearch extends \Module
+class ModuleSearch extends Module
 {
 
 	/**
@@ -297,3 +297,5 @@ class ModuleSearch extends \Module
 		}
 	}
 }
+
+class_alias(ModuleSearch::class, 'ModuleSearch');

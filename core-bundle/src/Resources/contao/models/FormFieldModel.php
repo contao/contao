@@ -164,7 +164,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormFieldModel extends \Model
+class FormFieldModel extends Model
 {
 
 	/**
@@ -200,3 +200,5 @@ class FormFieldModel extends \Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 }
+
+class_alias(FormFieldModel::class, 'FormFieldModel');

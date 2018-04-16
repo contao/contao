@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DC_Folder extends \DataContainer implements \listable, \editable
+class DC_Folder extends DataContainer implements \listable, \editable
 {
 
 	/**
@@ -3084,3 +3084,5 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		return $attributes;
 	}
 }
+
+class_alias(DC_Folder::class, 'DC_Folder');

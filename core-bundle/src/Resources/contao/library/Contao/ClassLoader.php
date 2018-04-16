@@ -200,7 +200,10 @@ class ClassLoader
 					$GLOBALS['TL_DEBUG']['classes_composerized'][$class] = $namespaced;
 				}
 
-				class_alias($namespaced, $class);
+				if (!class_exists($class, false) && !interface_exists($class, false) && !trait_exists($class, false))
+				{
+					class_alias($namespaced, $class);
+				}
 			}
 		}
 
@@ -271,3 +274,5 @@ class ClassLoader
 		self::register();
 	}
 }
+
+class_alias(ClassLoader::class, 'ClassLoader');

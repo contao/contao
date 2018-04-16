@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleCloseAccount extends \Module
+class ModuleCloseAccount extends Module
 {
 
 	/**
@@ -156,3 +156,5 @@ class ModuleCloseAccount extends \Module
 		$this->Template->rowLast = 'row_1 row_last odd';
 	}
 }
+
+class_alias(ModuleCloseAccount::class, 'ModuleCloseAccount');

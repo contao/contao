@@ -24,7 +24,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DcaLoader extends \Controller
+class DcaLoader extends Controller
 {
 
 	/**
@@ -116,3 +116,5 @@ class DcaLoader extends \Controller
 		}
 	}
 }
+
+class_alias(DcaLoader::class, 'DcaLoader');

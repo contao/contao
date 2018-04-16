@@ -89,7 +89,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class UserGroupModel extends \Model
+class UserGroupModel extends Model
 {
 
 	/**
@@ -99,3 +99,5 @@ class UserGroupModel extends \Model
 	protected static $strTable = 'tl_user_group';
 
 }
+
+class_alias(UserGroupModel::class, 'UserGroupModel');

@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileUpload extends \Backend
+class FileUpload extends Backend
 {
 
 	/**
@@ -347,3 +347,5 @@ class FileUpload extends \Backend
 		return false;
 	}
 }
+
+class_alias(FileUpload::class, 'FileUpload');

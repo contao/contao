@@ -21,7 +21,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageTree extends \Widget
+class PageTree extends Widget
 {
 
 	/**
@@ -274,3 +274,5 @@ class PageTree extends \Widget
 		return $return;
 	}
 }
+
+class_alias(PageTree::class, 'PageTree');

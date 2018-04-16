@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleQuicknav extends \Module
+class ModuleQuicknav extends Module
 {
 
 	/**
@@ -174,3 +174,5 @@ class ModuleQuicknav extends \Module
 		return $arrPages;
 	}
 }
+
+class_alias(ModuleQuicknav::class, 'ModuleQuicknav');

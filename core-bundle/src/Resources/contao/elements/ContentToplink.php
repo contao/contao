@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentToplink extends \ContentElement
+class ContentToplink extends ContentElement
 {
 
 	/**
@@ -41,3 +41,5 @@ class ContentToplink extends \ContentElement
 		$this->Template->request = ampersand(\Environment::get('request'), true);
 	}
 }
+
+class_alias(ContentToplink::class, 'ContentToplink');

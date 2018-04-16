@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentTable extends \ContentElement
+class ContentTable extends ContentElement
 {
 
 	/**
@@ -132,3 +132,5 @@ class ContentTable extends \ContentElement
 		$this->Template->footer = $arrFooter;
 	}
 }
+
+class_alias(ContentTable::class, 'ContentTable');

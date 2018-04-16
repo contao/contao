@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ListWizard extends \Widget
+class ListWizard extends Widget
 {
 
 	/**
@@ -137,3 +137,5 @@ class ListWizard extends \Widget
 		return $response->getContent();
     }
 }
+
+class_alias(ListWizard::class, 'ListWizard');

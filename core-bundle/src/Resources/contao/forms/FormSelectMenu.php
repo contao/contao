@@ -22,7 +22,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormSelectMenu extends \Widget
+class FormSelectMenu extends Widget
 {
 
 	/**
@@ -340,3 +340,5 @@ class FormSelectMenu extends \Widget
 						$strOptions);
 	}
 }
+
+class_alias(FormSelectMenu::class, 'FormSelectMenu');

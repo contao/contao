@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class DataContainer extends \Backend
+abstract class DataContainer extends Backend
 {
 
 	/**
@@ -1207,3 +1207,5 @@ abstract class DataContainer extends \Backend
 	 */
 	abstract protected function save($varValue);
 }
+
+class_alias(DataContainer::class, 'DataContainer');

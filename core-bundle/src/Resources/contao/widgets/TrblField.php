@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class TrblField extends \Widget
+class TrblField extends Widget
 {
 
 	/**
@@ -158,3 +158,5 @@ class TrblField extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(TrblField::class, 'TrblField');

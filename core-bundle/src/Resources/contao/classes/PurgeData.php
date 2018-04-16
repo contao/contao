@@ -18,7 +18,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PurgeData extends \Backend implements \executable
+class PurgeData extends Backend implements \executable
 {
 
 	/**
@@ -142,3 +142,5 @@ class PurgeData extends \Backend implements \executable
 		return $objTemplate->parse();
 	}
 }
+
+class_alias(PurgeData::class, 'PurgeData');

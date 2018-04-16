@@ -94,3 +94,5 @@ class RequestToken
 		return $container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken));
 	}
 }
+
+class_alias(RequestToken::class, 'RequestToken');

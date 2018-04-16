@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormRadioButton extends \Widget
+class FormRadioButton extends Widget
 {
 
 	/**
@@ -248,3 +248,5 @@ class FormRadioButton extends \Widget
 		}
 	}
 }
+
+class_alias(FormRadioButton::class, 'FormRadioButton');

@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendIndex extends \Backend
+class BackendIndex extends Backend
 {
 
 	/**
@@ -99,3 +99,5 @@ class BackendIndex extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendIndex::class, 'BackendIndex');

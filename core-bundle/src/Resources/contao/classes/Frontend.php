@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Frontend extends \Controller
+abstract class Frontend extends Controller
 {
 
 	/**
@@ -667,3 +667,5 @@ abstract class Frontend extends \Controller
 		return null;
 	}
 }
+
+class_alias(Frontend::class, 'Frontend');

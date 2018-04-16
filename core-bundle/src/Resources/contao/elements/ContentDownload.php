@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentDownload extends \ContentElement
+class ContentDownload extends ContentElement
 {
 
 	/**
@@ -100,3 +100,5 @@ class ContentDownload extends \ContentElement
 		$this->Template->path = $objFile->dirname;
 	}
 }
+
+class_alias(ContentDownload::class, 'ContentDownload');

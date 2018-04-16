@@ -88,7 +88,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Module extends \Frontend
+abstract class Module extends Frontend
 {
 
 	/**
@@ -459,3 +459,5 @@ abstract class Module extends \Frontend
 		return '';
 	}
 }
+
+class_alias(Module::class, 'Module');

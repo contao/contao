@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageError403 extends \Frontend
+class PageError403 extends Frontend
 {
 
 	/**
@@ -115,3 +115,5 @@ class PageError403 extends \Frontend
 		return $obj403;
 	}
 }
+
+class_alias(PageError403::class, 'PageError403');

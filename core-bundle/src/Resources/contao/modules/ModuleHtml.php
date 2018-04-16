@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleHtml extends \Module
+class ModuleHtml extends Module
 {
 
 	/**
@@ -34,3 +34,5 @@ class ModuleHtml extends \Module
 		$this->Template->html = (TL_MODE == 'FE') ? $this->html : htmlspecialchars($this->html);
 	}
 }
+
+class_alias(ModuleHtml::class, 'ModuleHtml');

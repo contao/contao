@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormExplanation extends \Widget
+class FormExplanation extends Widget
 {
 
 	/**
@@ -63,3 +63,5 @@ class FormExplanation extends \Widget
 		return \StringUtil::encodeEmail($this->text);
 	}
 }
+
+class_alias(FormExplanation::class, 'FormExplanation');

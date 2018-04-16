@@ -26,7 +26,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormTextField extends \Widget
+class FormTextField extends Widget
 {
 
 	/**
@@ -229,3 +229,5 @@ class FormTextField extends \Widget
 						$this->strTagEnding);
 	}
 }
+
+class_alias(FormTextField::class, 'FormTextField');

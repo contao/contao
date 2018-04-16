@@ -10,6 +10,12 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
+use Contao\Database\Statement;
+use Contao\Model\Collection;
+use Contao\Model\QueryBuilder;
+use Contao\Model\Registry;
+
 
 /**
  * Reads objects from and writes them to to the database
@@ -105,9 +111,9 @@ abstract class Model
 	/**
 	 * Load the relations and optionally process a result set
 	 *
-	 * @param Database\Result $objResult An optional database result
+	 * @param Result $objResult An optional database result
 	 */
-	public function __construct(Database\Result $objResult=null)
+	public function __construct(Result $objResult=null)
 	{
 		$this->arrModified = array();
 
@@ -136,7 +142,7 @@ abstract class Model
 				}
 			}
 
-			$objRegistry = \Model\Registry::getInstance();
+			$objRegistry = Registry::getInstance();
 
 			$this->setRow($arrData); // see #5439
 			$objRegistry->register($this);
@@ -682,7 +688,7 @@ abstract class Model
 	 */
 	public function detach($blnKeepClone=true)
 	{
-		$registry = \Model\Registry::getInstance();
+		$registry = Registry::getInstance();
 
 		if (!$registry->isRegistered($this))
 		{
@@ -772,7 +778,7 @@ abstract class Model
 		// Try to load from the registry
 		if (empty($arrOptions))
 		{
-			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varValue);
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $varValue);
 
 			if ($objModel !== null)
 			{
@@ -812,7 +818,7 @@ abstract class Model
 		// Try to load from the registry
 		if (!$isAlias && empty($arrOptions))
 		{
-			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varId);
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $varId);
 
 			if ($objModel !== null)
 			{
@@ -862,7 +868,7 @@ abstract class Model
 		{
 			if (empty($arrOptions))
 			{
-				$arrRegistered[$intId] = \Model\Registry::getInstance()->fetch(static::$strTable, $intId);
+				$arrRegistered[$intId] = Registry::getInstance()->fetch(static::$strTable, $intId);
 			}
 
 			if (!isset($arrRegistered[$intId]))
@@ -1064,7 +1070,7 @@ abstract class Model
 				if ($arrColumn[0] == static::$strPk || \in_array($arrColumn[0], static::getUniqueFields()))
 				{
 					$varKey = \is_array($arrOptions['value']) ? $arrOptions['value'][0] : $arrOptions['value'];
-					$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varKey, $arrColumn[0]);
+					$objModel = Registry::getInstance()->fetch(static::$strTable, $varKey, $arrColumn[0]);
 
 					if ($objModel !== null)
 					{
@@ -1108,7 +1114,7 @@ abstract class Model
 		// Try to load from the registry
 		if ($arrOptions['return'] == 'Model')
 		{
-			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $objResult->{static::$strPk});
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $objResult->{static::$strPk});
 
 			if ($objModel !== null)
 			{
@@ -1131,11 +1137,11 @@ abstract class Model
 	/**
 	 * Modify the database statement before it is executed
 	 *
-	 * @param Database\Statement $objStatement The database statement object
+	 * @param Statement $objStatement The database statement object
 	 *
-	 * @return Database\Statement The database statement object
+	 * @return Statement The database statement object
 	 */
-	protected static function preFind(Database\Statement $objStatement)
+	protected static function preFind(Statement $objStatement)
 	{
 		return $objStatement;
 	}
@@ -1144,11 +1150,11 @@ abstract class Model
 	/**
 	 * Modify the database result before the model is created
 	 *
-	 * @param Database\Result $objResult The database result object
+	 * @param Result $objResult The database result object
 	 *
-	 * @return Database\Result The database result object
+	 * @return Result The database result object
 	 */
-	protected static function postFind(Database\Result $objResult)
+	protected static function postFind(Result $objResult)
 	{
 		return $objResult;
 	}
@@ -1244,7 +1250,7 @@ abstract class Model
 	 */
 	protected static function buildFindQuery(array $arrOptions)
 	{
-		return \Model\QueryBuilder::find($arrOptions);
+		return QueryBuilder::find($arrOptions);
 	}
 
 
@@ -1257,18 +1263,18 @@ abstract class Model
 	 */
 	protected static function buildCountQuery(array $arrOptions)
 	{
-		return \Model\QueryBuilder::count($arrOptions);
+		return QueryBuilder::count($arrOptions);
 	}
 
 
 	/**
 	 * Create a model from a database result
 	 *
-	 * @param Database\Result $objResult The database result object
+	 * @param Result $objResult The database result object
 	 *
 	 * @return static The model
 	 */
-	protected static function createModelFromDbResult(Database\Result $objResult)
+	protected static function createModelFromDbResult(Result $objResult)
 	{
 		return new static($objResult);
 	}
@@ -1280,25 +1286,25 @@ abstract class Model
 	 * @param array  $arrModels An array of models
 	 * @param string $strTable  The table name
 	 *
-	 * @return Model\Collection The Model\Collection object
+	 * @return Collection The Collection object
 	 */
 	protected static function createCollection(array $arrModels, $strTable)
 	{
-		return new \Model\Collection($arrModels, $strTable);
+		return new Collection($arrModels, $strTable);
 	}
 
 
 	/**
 	 * Create a new collection from a database result
 	 *
-	 * @param Database\Result $objResult The database result object
-	 * @param string          $strTable  The table name
+	 * @param Result $objResult The database result object
+	 * @param string $strTable  The table name
 	 *
-	 * @return Model\Collection The model collection
+	 * @return Collection The model collection
 	 */
-	protected static function createCollectionFromDbResult(Database\Result $objResult, $strTable)
+	protected static function createCollectionFromDbResult(Result $objResult, $strTable)
 	{
-		return \Model\Collection::createFromDbResult($objResult, $strTable);
+		return Collection::createFromDbResult($objResult, $strTable);
 	}
 
 
@@ -1319,3 +1325,5 @@ abstract class Model
 		return \defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true;
 	}
 }
+
+class_alias(Model::class, 'Model');

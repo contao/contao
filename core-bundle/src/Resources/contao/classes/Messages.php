@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Messages extends \Backend
+class Messages extends Backend
 {
 
 	/**
@@ -128,3 +128,5 @@ class Messages extends \Backend
 		return implode("\n", $arrReturn);
 	}
 }
+
+class_alias(Messages::class, 'Messages');

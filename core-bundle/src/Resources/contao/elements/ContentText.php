@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentText extends \ContentElement
+class ContentText extends ContentElement
 {
 
 	/**
@@ -56,3 +56,5 @@ class ContentText extends \ContentElement
 		}
 	}
 }
+
+class_alias(ContentText::class, 'ContentText');

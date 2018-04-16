@@ -18,7 +18,7 @@ use Michelf\MarkdownExtra;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentMarkdown extends \ContentElement
+class ContentMarkdown extends ContentElement
 {
 
 	/**
@@ -60,3 +60,5 @@ class ContentMarkdown extends \ContentElement
 		$this->Template->content = strip_tags($this->code, \Config::get('allowedTags'));
 	}
 }
+
+class_alias(ContentMarkdown::class, 'ContentMarkdown');

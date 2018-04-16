@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleUser extends \BackendModule
+class ModuleUser extends BackendModule
 {
 
 	/**
@@ -65,3 +65,5 @@ class ModuleUser extends \BackendModule
 		return '';
 	}
 }
+
+class_alias(ModuleUser::class, 'ModuleUser');

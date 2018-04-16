@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageLogout extends \Frontend
+class PageLogout extends Frontend
 {
 
 	/**
@@ -63,3 +63,5 @@ class PageLogout extends \Frontend
 		return new RedirectResponse((string) $uri->withQuery((string) $query));
 	}
 }
+
+class_alias(PageLogout::class, 'PageLogout');

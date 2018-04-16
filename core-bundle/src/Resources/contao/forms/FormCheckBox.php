@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormCheckBox extends \Widget
+class FormCheckBox extends Widget
 {
 
 	/**
@@ -291,3 +291,5 @@ class FormCheckBox extends \Widget
 		}
 	}
 }
+
+class_alias(FormCheckBox::class, 'FormCheckBox');

@@ -27,7 +27,7 @@ use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendMain extends \Backend
+class BackendMain extends Backend
 {
 
 	/**
@@ -332,3 +332,5 @@ class BackendMain extends \Backend
 		$this->Template->logoutLink = \System::getContainer()->get('router')->generate('contao_backend', $arrParams);
 	}
 }
+
+class_alias(BackendMain::class, 'BackendMain');

@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleArticlenav extends \Module
+class ModuleArticlenav extends Module
 {
 
 	/**
@@ -184,3 +184,5 @@ class ModuleArticlenav extends \Module
 		}
 	}
 }
+
+class_alias(ModuleArticlenav::class, 'ModuleArticlenav');

@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleLogin extends \Module
+class ModuleLogin extends Module
 {
 
 	/**
@@ -154,3 +154,5 @@ class ModuleLogin extends \Module
 		$this->Template->failurePath = \StringUtil::specialchars(\Environment::get('base').\Environment::get('request'));
 	}
 }
+
+class_alias(ModuleLogin::class, 'ModuleLogin');

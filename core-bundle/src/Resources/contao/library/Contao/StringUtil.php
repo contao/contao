@@ -1165,3 +1165,5 @@ class StringUtil
 		return (string) substr($path, $length + 1);
 	}
 }
+
+class_alias(StringUtil::class, 'StringUtil');

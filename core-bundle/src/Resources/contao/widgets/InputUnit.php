@@ -21,7 +21,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InputUnit extends \Widget
+class InputUnit extends Widget
 {
 
 	/**
@@ -165,3 +165,5 @@ class InputUnit extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(InputUnit::class, 'InputUnit');

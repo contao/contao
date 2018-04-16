@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
 use Patchwork\Utf8;
 
 
@@ -310,7 +311,7 @@ class Search
 	 * @param integer $intOffset   An optional result offset
 	 * @param boolean $blnFuzzy    If true, the search will be fuzzy
 	 *
-	 * @return Database\Result The database result object
+	 * @return Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
 	 */
@@ -571,3 +572,5 @@ class Search
 		return static::$objInstance;
 	}
 }
+
+class_alias(Search::class, 'Search');

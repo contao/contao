@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleRandomImage extends \Module
+class ModuleRandomImage extends Module
 {
 
 	/**
@@ -159,3 +159,5 @@ class ModuleRandomImage extends \Module
 		$this->addImageToTemplate($this->Template, $arrImage, null, null, $arrImage['filesModel']);
 	}
 }
+
+class_alias(ModuleRandomImage::class, 'ModuleRandomImage');

@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleBreadcrumb extends \Module
+class ModuleBreadcrumb extends Module
 {
 
 	/**
@@ -219,3 +219,5 @@ class ModuleBreadcrumb extends \Module
 		$this->Template->items = $items;
 	}
 }
+
+class_alias(ModuleBreadcrumb::class, 'ModuleBreadcrumb');

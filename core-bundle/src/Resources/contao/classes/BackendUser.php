@@ -588,3 +588,5 @@ class BackendUser extends User
 		return $this->roles;
 	}
 }
+
+class_alias(BackendUser::class, 'BackendUser');

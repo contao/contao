@@ -85,3 +85,5 @@ class ModuleLoader
 		return array();
 	}
 }
+
+class_alias(ModuleLoader::class, 'ModuleLoader');

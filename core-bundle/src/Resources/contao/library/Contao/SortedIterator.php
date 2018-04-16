@@ -46,3 +46,5 @@ class SortedIterator extends \SplHeap
 		return strcmp($b->getRealpath(), $a->getRealpath());
 	}
 }
+
+class_alias(SortedIterator::class, 'SortedIterator');

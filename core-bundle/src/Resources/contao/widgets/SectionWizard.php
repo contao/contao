@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class SectionWizard extends \Widget
+class SectionWizard extends Widget
 {
 
 	/**
@@ -132,3 +132,5 @@ class SectionWizard extends \Widget
   <script>Backend.sectionWizard("ctrl_'.$this->strId.'")</script>';
 	}
 }
+
+class_alias(SectionWizard::class, 'SectionWizard');

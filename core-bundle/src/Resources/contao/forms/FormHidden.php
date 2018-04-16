@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormHidden extends \Widget
+class FormHidden extends Widget
 {
 
 	/**
@@ -47,3 +47,5 @@ class FormHidden extends \Widget
 						$this->strTagEnding);
 	}
 }
+
+class_alias(FormHidden::class, 'FormHidden');

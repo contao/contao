@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class StyleSheets extends \Backend
+class StyleSheets extends Backend
 {
 
 	/**
@@ -2275,3 +2275,5 @@ class StyleSheets extends \Backend
 		return false;
 	}
 }
+
+class_alias(StyleSheets::class, 'StyleSheets');

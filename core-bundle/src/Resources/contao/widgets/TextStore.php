@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class TextStore extends \Widget
+class TextStore extends Widget
 {
 
 	/**
@@ -95,3 +95,5 @@ class TextStore extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(TextStore::class, 'TextStore');

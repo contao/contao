@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormPassword extends \Widget
+class FormPassword extends Widget
 {
 
 	/**
@@ -212,3 +212,5 @@ class FormPassword extends \Widget
 						$this->strTagEnding);
 	}
 }
+
+class_alias(FormPassword::class, 'FormPassword');

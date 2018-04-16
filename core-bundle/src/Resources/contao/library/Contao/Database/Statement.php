@@ -290,7 +290,7 @@ class Statement
 		}
 
 		// Instantiate a result object
-		return new \Database\Result($this->statement, $this->strQuery);
+		return new Result($this->statement, $this->strQuery);
 	}
 
 
@@ -370,11 +370,11 @@ class Statement
 	 * @return Result The result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database\Statement::execute() instead.
+	 *             Use Statement::execute() instead.
 	 */
 	public function executeUncached()
 	{
-		@trigger_error('Using Database\Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database\Statement::execute() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
@@ -386,12 +386,14 @@ class Statement
 	 * @return Result The result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database\Statement::execute() instead.
+	 *             Use Statement::execute() instead.
 	 */
 	public function executeCached()
 	{
-		@trigger_error('Using Database\Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database\Statement::execute() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 }
+
+class_alias(Statement::class, 'Database\Statement');

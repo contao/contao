@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendCron extends \Frontend
+class FrontendCron extends Frontend
 {
 
 	/**
@@ -166,3 +166,5 @@ class FrontendCron extends \Frontend
 		return $return;
 	}
 }
+
+class_alias(FrontendCron::class, 'FrontendCron');

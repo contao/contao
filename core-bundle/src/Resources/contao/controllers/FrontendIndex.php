@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendIndex extends \Frontend
+class FrontendIndex extends Frontend
 {
 
 	/**
@@ -375,3 +375,5 @@ class FrontendIndex extends \Frontend
 		@trigger_error('Using FrontendIndex::outputFromCache() has been deprecated and will no longer work in Contao 5.0. Use the kernel.request event instead.', E_USER_DEPRECATED);
 	}
 }
+
+class_alias(FrontendIndex::class, 'FrontendIndex');

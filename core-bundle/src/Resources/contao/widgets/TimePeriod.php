@@ -20,7 +20,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class TimePeriod extends \Widget
+class TimePeriod extends Widget
 {
 
 	/**
@@ -166,3 +166,5 @@ class TimePeriod extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(TimePeriod::class, 'TimePeriod');

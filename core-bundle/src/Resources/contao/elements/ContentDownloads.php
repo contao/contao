@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentDownloads extends \ContentElement
+class ContentDownloads extends ContentElement
 {
 
 	/**
@@ -316,3 +316,5 @@ class ContentDownloads extends \ContentElement
 		$this->Template->files = array_values($files);
 	}
 }
+
+class_alias(ContentDownloads::class, 'ContentDownloads');

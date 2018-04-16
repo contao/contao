@@ -65,3 +65,5 @@ class BackendCustom extends BackendMain
 		return $this->output();
 	}
 }
+
+class_alias(BackendCustom::class, 'BackendCustom');

@@ -543,3 +543,5 @@ class Config
 		return "'" . str_replace('\\"', '"', preg_replace('/[\n\r\t ]+/', ' ', addslashes($varValue))) . "'";
 	}
 }
+
+class_alias(Config::class, 'Config');

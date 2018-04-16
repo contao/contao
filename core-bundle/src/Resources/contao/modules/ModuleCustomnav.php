@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleCustomnav extends \Module
+class ModuleCustomnav extends Module
 {
 
 	/**
@@ -222,3 +222,5 @@ class ModuleCustomnav extends \Module
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
 	}
 }
+
+class_alias(ModuleCustomnav::class, 'ModuleCustomnav');

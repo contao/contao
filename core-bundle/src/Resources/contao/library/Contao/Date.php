@@ -696,3 +696,5 @@ class Date
 		return $strReturn;
 	}
 }
+
+class_alias(Date::class, 'Date');

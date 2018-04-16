@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\Database\Result;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -39,7 +40,7 @@ use Symfony\Component\Finder\Glob;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Controller extends \System
+abstract class Controller extends System
 {
 
 	/**
@@ -593,7 +594,7 @@ abstract class Controller extends \System
 	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
-	 * @param PageModel|Database\Result|object $objPage The page object
+	 * @param PageModel|Result|object $objPage The page object
 	 *
 	 * @return string The status icon name
 	 */
@@ -2425,3 +2426,5 @@ abstract class Controller extends \System
 		return array_keys($files);
 	}
 }
+
+class_alias(Controller::class, 'Controller');

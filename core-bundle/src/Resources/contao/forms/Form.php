@@ -35,7 +35,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Form extends \Hybrid
+class Form extends Hybrid
 {
 
 	/**
@@ -625,3 +625,5 @@ class Form extends \Hybrid
 		}
 	}
 }
+
+class_alias(Form::class, 'Form');

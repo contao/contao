@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageRegular extends \Frontend
+class PageRegular extends Frontend
 {
 
 	/**
@@ -833,3 +833,5 @@ class PageRegular extends \Frontend
 		$this->Template->mootools = $strScripts;
 	}
 }
+
+class_alias(PageRegular::class, 'PageRegular');

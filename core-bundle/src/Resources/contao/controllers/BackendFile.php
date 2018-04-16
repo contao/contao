@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendFile extends \Backend
+class BackendFile extends Backend
 {
 
 	/**
@@ -176,3 +176,5 @@ class BackendFile extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendFile::class, 'BackendFile');

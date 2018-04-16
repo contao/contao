@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\Database\Installer;
+use Contao\Database\Updater;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
@@ -30,7 +32,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * Usage:
  *
- *     class MyClass extends \System
+ *     class MyClass extends System
  *     {
  *         public function __construct()
  *         {
@@ -38,19 +40,19 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *         }
  *     }
  *
- * @property \Automator                                $Automator   The automator object
- * @property \Config                                   $Config      The config object
- * @property \Database                                 $Database    The database object
- * @property \Environment                              $Environment The environment object
- * @property \Files                                    $Files       The files object
- * @property \Input                                    $Input       The input object
- * @property \Database\Installer                       $Installer   The database installer object
- * @property \Database\Updater                         $Updater     The database updater object
- * @property \Messages                                 $Messages    The messages object
- * @property \Session                                  $Session     The session object
- * @property \StyleSheets                              $StyleSheets The style sheets object
- * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
- * @property \BackendUser|\FrontendUser|object         $User        The user object
+ * @property Automator                               $Automator   The automator object
+ * @property Config                                  $Config      The config object
+ * @property Database                                $Database    The database object
+ * @property Environment                             $Environment The environment object
+ * @property Files                                   $Files       The files object
+ * @property Input                                   $Input       The input object
+ * @property Installer                               $Installer   The database installer object
+ * @property Updater                                 $Updater     The database updater object
+ * @property Messages                                $Messages    The messages object
+ * @property Session                                 $Session     The session object
+ * @property StyleSheets                             $StyleSheets The style sheets object
+ * @property BackendTemplate|FrontendTemplate|object $Template    The template object
+ * @property BackendUser|FrontendUser|object         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -1203,3 +1205,5 @@ abstract class System
 		@trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
 	}
 }
+
+class_alias(System::class, 'System');

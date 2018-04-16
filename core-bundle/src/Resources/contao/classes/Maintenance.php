@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Maintenance extends \Backend implements \executable
+class Maintenance extends Backend implements \executable
 {
 
 	/**
@@ -83,3 +83,5 @@ class Maintenance extends \Backend implements \executable
 		return $objTemplate->parse();
 	}
 }
+
+class_alias(Maintenance::class, 'Maintenance');

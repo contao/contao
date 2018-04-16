@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class PageRedirect extends \Frontend
+class PageRedirect extends Frontend
 {
 
 	/**
@@ -56,3 +56,5 @@ class PageRedirect extends \Frontend
 		return ($objPage->redirect == 'temporary') ? 302 : 301;
 	}
 }
+
+class_alias(PageRedirect::class, 'PageRedirect');

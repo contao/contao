@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentImage extends \ContentElement
+class ContentImage extends ContentElement
 {
 
 	/**
@@ -68,3 +68,5 @@ class ContentImage extends \ContentElement
 		$this->addImageToTemplate($this->Template, $this->arrData, null, null, $this->objFilesModel);
 	}
 }
+
+class_alias(ContentImage::class, 'ContentImage');

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Registry;
+
 
 /**
  * Reads and writes file entries
@@ -84,7 +86,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FilesModel extends \Model
+class FilesModel extends Model
 {
 
 	/**
@@ -200,7 +202,7 @@ class FilesModel extends \Model
 		if (empty($arrOptions))
 		{
 			/** @var FilesModel $objModel */
-			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $strUuid, 'uuid');
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $strUuid, 'uuid');
 
 			if ($objModel !== null)
 			{
@@ -397,3 +399,5 @@ class FilesModel extends \Model
 	 */
 	protected function postSave($intType) {}
 }
+
+class_alias(FilesModel::class, 'FilesModel');

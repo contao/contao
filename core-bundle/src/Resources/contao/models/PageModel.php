@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -254,7 +255,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageModel extends \Model
+class PageModel extends Model
 {
 
 	/**
@@ -692,7 +693,7 @@ class PageModel extends \Model
 		// Try to load from the registry (see #8544)
 		if (empty($arrOptions))
 		{
-			$objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $strHost, 'contao.dns-fallback');
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $strHost, 'contao.dns-fallback');
 
 			if ($objModel !== null)
 			{
@@ -788,7 +789,7 @@ class PageModel extends \Model
 			return null;
 		}
 
-		$objRegistry = \Model\Registry::getInstance();
+		$objRegistry = Registry::getInstance();
 
 		/** @var PageModel|Model $objPage */
 		if ($objPage = $objRegistry->fetch('tl_page', $objResult->id))
@@ -1164,3 +1165,5 @@ class PageModel extends \Model
 		return $strUrl;
 	}
 }
+
+class_alias(PageModel::class, 'PageModel');

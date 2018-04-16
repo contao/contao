@@ -21,7 +21,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendTemplate extends \Template
+class BackendTemplate extends Template
 {
 
 	/**
@@ -210,3 +210,5 @@ class BackendTemplate extends \Template
 			. '});';
 	}
 }
+
+class_alias(BackendTemplate::class, 'BackendTemplate');

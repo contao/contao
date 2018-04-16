@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\NullOutput;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Automator extends \System
+class Automator extends System
 {
 
 	/**
@@ -475,3 +475,5 @@ class Automator extends \System
 		}
 	}
 }
+
+class_alias(Automator::class, 'Automator');

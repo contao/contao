@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendSwitch extends \Backend
+class BackendSwitch extends Backend
 {
 
 	/**
@@ -170,3 +170,5 @@ class BackendSwitch extends \Backend
 		}
 	}
 }
+
+class_alias(BackendSwitch::class, 'BackendSwitch');

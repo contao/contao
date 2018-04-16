@@ -187,3 +187,5 @@ class TemplateLoader
 		}
 	}
 }
+
+class_alias(TemplateLoader::class, 'TemplateLoader');

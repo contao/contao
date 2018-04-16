@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageSelector extends \Widget
+class PageSelector extends Widget
 {
 
 	/**
@@ -462,3 +462,5 @@ class PageSelector extends \Widget
 		}
 	}
 }
+
+class_alias(PageSelector::class, 'PageSelector');

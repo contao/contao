@@ -113,7 +113,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ArticleModel extends \Model
+class ArticleModel extends Model
 {
 
 	/**
@@ -289,3 +289,5 @@ class ArticleModel extends \Model
 		return static::findBy($arrColumns, $arrValues, $arrOptions);
 	}
 }
+
+class_alias(ArticleModel::class, 'ArticleModel');

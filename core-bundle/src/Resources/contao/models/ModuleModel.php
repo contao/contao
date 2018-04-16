@@ -313,7 +313,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleModel extends \Model
+class ModuleModel extends Model
 {
 
 	/**
@@ -323,3 +323,5 @@ class ModuleModel extends \Model
 	protected static $strTable = 'tl_module';
 
 }
+
+class_alias(ModuleModel::class, 'ModuleModel');

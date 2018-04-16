@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentHyperlink extends \ContentElement
+class ContentHyperlink extends ContentElement
 {
 
 	/**
@@ -97,3 +97,5 @@ class ContentHyperlink extends \ContentElement
 		}
 	}
 }
+
+class_alias(ContentHyperlink::class, 'ContentHyperlink');

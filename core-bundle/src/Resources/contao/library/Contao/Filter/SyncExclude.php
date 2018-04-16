@@ -70,3 +70,5 @@ class SyncExclude extends \RecursiveFilterIterator
 		return true;
 	}
 }
+
+class_alias(SyncExclude::class, 'Filter\SyncExclude');

@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentAccordionStart extends \ContentElement
+class ContentAccordionStart extends ContentElement
 {
 
 	/**
@@ -50,3 +50,5 @@ class ContentAccordionStart extends \ContentElement
 		$this->Template->headline = $this->mooHeadline;
 	}
 }
+
+class_alias(ContentAccordionStart::class, 'ContentAccordionStart');

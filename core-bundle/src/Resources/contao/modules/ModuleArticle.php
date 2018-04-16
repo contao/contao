@@ -31,7 +31,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleArticle extends \Module
+class ModuleArticle extends Module
 {
 
 	/**
@@ -371,3 +371,5 @@ class ModuleArticle extends \Module
 		exit;
 	}
 }
+
+class_alias(ModuleArticle::class, 'ModuleArticle');

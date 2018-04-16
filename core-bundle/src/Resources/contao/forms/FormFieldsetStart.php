@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormFieldsetStart extends \Widget
+class FormFieldsetStart extends Widget
 {
 
 	/**
@@ -70,3 +70,5 @@ class FormFieldsetStart extends \Widget
 						($this->label ? '<legend>' . $this->label . '</legend>' : ''));
 	}
 }
+
+class_alias(FormFieldsetStart::class, 'FormFieldsetStart');

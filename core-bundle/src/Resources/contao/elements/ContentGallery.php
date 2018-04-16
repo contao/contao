@@ -18,7 +18,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentGallery extends \ContentElement
+class ContentGallery extends ContentElement
 {
 
 	/**
@@ -339,3 +339,5 @@ class ContentGallery extends \ContentElement
 		$this->Template->images = $objTemplate->parse();
 	}
 }
+
+class_alias(ContentGallery::class, 'ContentGallery');

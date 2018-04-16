@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class RebuildIndex extends \Backend implements \executable
+class RebuildIndex extends Backend implements \executable
 {
 
 	/**
@@ -167,3 +167,5 @@ class RebuildIndex extends \Backend implements \executable
 		return $objTemplate->parse();
 	}
 }
+
+class_alias(RebuildIndex::class, 'RebuildIndex');

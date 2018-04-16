@@ -24,7 +24,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormTextArea extends \Widget
+class FormTextArea extends Widget
 {
 
 	/**
@@ -171,3 +171,5 @@ class FormTextArea extends \Widget
 						$this->value);
 	}
 }
+
+class_alias(FormTextArea::class, 'FormTextArea');

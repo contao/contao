@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class RadioButton extends \Widget
+class RadioButton extends Widget
 {
 
 	/**
@@ -122,3 +122,5 @@ class RadioButton extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(RadioButton::class, 'RadioButton');

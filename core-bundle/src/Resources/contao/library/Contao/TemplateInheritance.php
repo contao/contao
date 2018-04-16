@@ -315,3 +315,5 @@ trait TemplateInheritance
 		return \Controller::getTemplate($strTemplate, $strFormat);
 	}
 }
+
+class_alias(TemplateInheritance::class, 'TemplateInheritance');

@@ -20,7 +20,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Upload extends \Widget implements \uploadable
+class Upload extends Widget implements \uploadable
 {
 
 	/**
@@ -87,3 +87,5 @@ class Upload extends \Widget implements \uploadable
 		return ltrim($this->objUploader->generateMarkup());
 	}
 }
+
+class_alias(Upload::class, 'Upload');

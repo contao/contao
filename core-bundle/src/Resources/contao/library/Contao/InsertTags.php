@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InsertTags extends \Controller
+class InsertTags extends Controller
 {
 
 	/**
@@ -728,7 +728,7 @@ class InsertTags extends \Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					// Do not use \StringUtil::specialchars() here (see #4687)
+					// Do not use StringUtil::specialchars() here (see #4687)
 					$arrCache[$strTag] = $objPage->{$elements[1]};
 					break;
 
@@ -1111,3 +1111,5 @@ class InsertTags extends \Controller
 		return \StringUtil::restoreBasicEntities($strBuffer);
 	}
 }
+
+class_alias(InsertTags::class, 'InsertTags');

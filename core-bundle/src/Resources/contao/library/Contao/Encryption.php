@@ -253,3 +253,5 @@ class Encryption
 		return static::$objInstance;
 	}
 }
+
+class_alias(Encryption::class, 'Encryption');

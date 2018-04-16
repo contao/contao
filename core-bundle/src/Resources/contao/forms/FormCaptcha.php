@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormCaptcha extends \Widget
+class FormCaptcha extends Widget
 {
 
 	/**
@@ -285,3 +285,5 @@ class FormCaptcha extends \Widget
 						$this->getQuestion());
 	}
 }
+
+class_alias(FormCaptcha::class, 'FormCaptcha');

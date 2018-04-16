@@ -99,3 +99,5 @@ class SqlFileParser
 		return $return;
 	}
 }
+
+class_alias(SqlFileParser::class, 'SqlFileParser');

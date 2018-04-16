@@ -849,3 +849,5 @@ class Input
 		return static::$objInstance;
 	}
 }
+
+class_alias(Input::class, 'Input');

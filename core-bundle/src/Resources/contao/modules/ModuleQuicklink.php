@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleQuicklink extends \Module
+class ModuleQuicklink extends Module
 {
 
 	/**
@@ -149,3 +149,5 @@ class ModuleQuicklink extends \Module
 		$this->Template->button = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 	}
 }
+
+class_alias(ModuleQuicklink::class, 'ModuleQuicklink');

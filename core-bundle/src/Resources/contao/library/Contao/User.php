@@ -754,3 +754,5 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		return false;
 	}
 }
+
+class_alias(User::class, 'User');

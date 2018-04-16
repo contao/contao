@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendPopup extends \Backend
+class BackendPopup extends Backend
 {
 
 	/**
@@ -173,3 +173,5 @@ class BackendPopup extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendPopup::class, 'BackendPopup');

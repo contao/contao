@@ -19,7 +19,7 @@ use Contao\Database\Result;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Versions extends \Controller
+class Versions extends Controller
 {
 
 	/**
@@ -824,3 +824,5 @@ class Versions extends \Controller
 		}
 	}
 }
+
+class_alias(Versions::class, 'Versions');

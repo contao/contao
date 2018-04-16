@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendHelp extends \Backend
+class BackendHelp extends Backend
 {
 
 	/**
@@ -157,3 +157,5 @@ class BackendHelp extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendHelp::class, 'BackendHelp');

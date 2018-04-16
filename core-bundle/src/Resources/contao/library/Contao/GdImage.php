@@ -405,3 +405,5 @@ class GdImage
 		}
 	}
 }
+
+class_alias(GdImage::class, 'GdImage');

@@ -168,7 +168,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class MemberModel extends \Model
+class MemberModel extends Model
 {
 
 	/**
@@ -218,3 +218,5 @@ class MemberModel extends \Model
 		return static::findOneBy(array("$t.email=? AND $t.activation LIKE 'RG%'"), $strEmail, $arrOptions);
 	}
 }
+
+class_alias(MemberModel::class, 'MemberModel');

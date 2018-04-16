@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleArticleList extends \Module
+class ModuleArticleList extends Module
 {
 
 	/**
@@ -122,3 +122,5 @@ class ModuleArticleList extends \Module
 		$this->Template->articles = $articles;
 	}
 }
+
+class_alias(ModuleArticleList::class, 'ModuleArticleList');

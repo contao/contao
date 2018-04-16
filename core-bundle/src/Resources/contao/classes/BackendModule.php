@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class BackendModule extends \Backend
+abstract class BackendModule extends Backend
 {
 
 	/**
@@ -106,3 +106,5 @@ abstract class BackendModule extends \Backend
 	 */
 	abstract protected function compile();
 }
+
+class_alias(BackendModule::class, 'BackendModule');

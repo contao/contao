@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendAlerts extends \Backend
+class BackendAlerts extends Backend
 {
 
 	/**
@@ -65,3 +65,5 @@ class BackendAlerts extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendAlerts::class, 'BackendAlerts');

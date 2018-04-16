@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentMedia extends \ContentElement
+class ContentMedia extends ContentElement
 {
 
 	/**
@@ -161,3 +161,5 @@ class ContentMedia extends \ContentElement
 		$this->Template->autoplay = $this->autoplay;
 	}
 }
+
+class_alias(ContentMedia::class, 'ContentMedia');

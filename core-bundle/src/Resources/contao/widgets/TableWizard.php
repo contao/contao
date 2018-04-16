@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class TableWizard extends \Widget
+class TableWizard extends Widget
 {
 
 	/**
@@ -186,3 +186,5 @@ class TableWizard extends \Widget
 		return $response->getContent();
 	}
 }
+
+class_alias(TableWizard::class, 'TableWizard');

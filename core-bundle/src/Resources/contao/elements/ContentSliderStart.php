@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentSliderStart extends \ContentElement
+class ContentSliderStart extends ContentElement
 {
 
 	/**
@@ -46,3 +46,5 @@ class ContentSliderStart extends \ContentElement
 		$this->Template->config = $this->sliderDelay . ',' . $this->sliderSpeed . ',' . $this->sliderStartSlide . ',' . $this->sliderContinuous;
 	}
 }
+
+class_alias(ContentSliderStart::class, 'ContentSliderStart');

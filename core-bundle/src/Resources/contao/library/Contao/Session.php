@@ -266,3 +266,5 @@ class Session
 		}
 	}
 }
+
+class_alias(Session::class, 'Session');

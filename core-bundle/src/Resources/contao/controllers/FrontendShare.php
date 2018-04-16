@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendShare extends \Frontend
+class FrontendShare extends Frontend
 {
 
 	/**
@@ -53,3 +53,5 @@ class FrontendShare extends \Frontend
 		return new RedirectResponse('../');
 	}
 }
+
+class_alias(FrontendShare::class, 'FrontendShare');

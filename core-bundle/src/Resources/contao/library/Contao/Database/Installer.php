@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Contao\Controller;
 use Symfony\Component\Finder\SplFileInfo;
 
 
@@ -19,7 +20,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Installer extends \Controller
+class Installer extends Controller
 {
 
 	/**
@@ -40,7 +41,7 @@ class Installer extends \Controller
 	 */
 	public function generateSqlForm()
 	{
-		@trigger_error('Using the Contao\Database\Installer::generateSqlForm() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		@trigger_error('Using the Installer::generateSqlForm() method has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		$count = 0;
 		$return = '';
@@ -467,3 +468,5 @@ class Installer extends \Controller
 		return $return;
 	}
 }
+
+class_alias(Installer::class, 'Database\Installer');

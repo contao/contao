@@ -57,7 +57,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class MemberGroupModel extends \Model
+class MemberGroupModel extends Model
 {
 
 	/**
@@ -141,3 +141,5 @@ class MemberGroupModel extends \Model
 		return new static($objResult);
 	}
 }
+
+class_alias(MemberGroupModel::class, 'MemberGroupModel');

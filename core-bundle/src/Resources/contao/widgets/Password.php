@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Password extends \Widget
+class Password extends Widget
 {
 
 	/**
@@ -196,3 +196,5 @@ class Password extends \Widget
 						((\strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && \Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['confirm'][1].'</p>' : ''));
 	}
 }
+
+class_alias(Password::class, 'Password');

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
+use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
@@ -19,7 +21,7 @@ use Doctrine\DBAL\DriverManager;
  *
  * The class is responsible for connecting to the database, listing tables and
  * fields, handling transactions and locking tables. It also creates the related
- * Database\Statement and Database\Result objects.
+ * Statement and Result objects.
  *
  * Usage:
  *
@@ -172,26 +174,26 @@ class Database
 
 
 	/**
-	 * Prepare a query and return a Database\Statement object
+	 * Prepare a query and return a Statement object
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Database\Statement The Database\Statement object
+	 * @return Statement The Statement object
 	 */
 	public function prepare($strQuery)
 	{
-		$objStatement = new \Database\Statement($this->resConnection, $this->blnDisableAutocommit);
+		$objStatement = new Statement($this->resConnection, $this->blnDisableAutocommit);
 
 		return $objStatement->prepare($strQuery);
 	}
 
 
 	/**
-	 * Execute a query and return a Database\Result object
+	 * Execute a query and return a Result object
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Database\Result|object The Database\Result object
+	 * @return Result|object The Result object
 	 */
 	public function execute($strQuery)
 	{
@@ -200,15 +202,15 @@ class Database
 
 
 	/**
-	 * Execute a raw query and return a Database\Result object
+	 * Execute a raw query and return a Result object
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Database\Result|object The Database\Result object
+	 * @return Result|object The Result object
 	 */
 	public function query($strQuery)
 	{
-		$objStatement = new \Database\Statement($this->resConnection, $this->blnDisableAutocommit);
+		$objStatement = new Statement($this->resConnection, $this->blnDisableAutocommit);
 
 		return $objStatement->query($strQuery);
 	}
@@ -747,7 +749,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Database\Result|object The Database\Result object
+	 * @return Result|object The Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.
@@ -765,7 +767,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Database\Result|object The Database\Result object
+	 * @return Result|object The Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.
@@ -777,3 +779,5 @@ class Database
 		return $this->execute($strQuery);
 	}
 }
+
+class_alias(Database::class, 'Database');

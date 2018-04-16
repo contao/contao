@@ -20,7 +20,7 @@ namespace Contao;
  * @author John Brand <http://www.thyon.com>
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CheckBoxWizard extends \Widget
+class CheckBoxWizard extends Widget
 {
 
 	/**
@@ -158,3 +158,5 @@ class CheckBoxWizard extends \Widget
 						$arrOption['label']);
 	}
 }
+
+class_alias(CheckBoxWizard::class, 'CheckBoxWizard');

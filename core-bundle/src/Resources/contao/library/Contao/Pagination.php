@@ -415,3 +415,5 @@ class Pagination
 		}
 	}
 }
+
+class_alias(Pagination::class, 'Pagination');

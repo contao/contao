@@ -261,7 +261,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class StyleModel extends \Model
+class StyleModel extends Model
 {
 
 	/**
@@ -271,3 +271,5 @@ class StyleModel extends \Model
 	protected static $strTable = 'tl_style';
 
 }
+
+class_alias(StyleModel::class, 'StyleModel');

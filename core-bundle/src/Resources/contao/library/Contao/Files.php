@@ -343,3 +343,5 @@ class Files
 		}
 	}
 }
+
+class_alias(Files::class, 'Files');

@@ -675,3 +675,5 @@ class Environment
 		return static::$objInstance;
 	}
 }
+
+class_alias(Environment::class, 'Environment');

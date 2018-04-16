@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class OptionWizard extends \Widget
+class OptionWizard extends Widget
 {
 
 	/**
@@ -148,3 +148,5 @@ class OptionWizard extends \Widget
   <script>Backend.optionsWizard("ctrl_'.$this->strId.'")</script>';
 	}
 }
+
+class_alias(OptionWizard::class, 'OptionWizard');

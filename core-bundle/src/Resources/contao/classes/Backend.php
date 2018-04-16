@@ -23,11 +23,11 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Provide methods to manage back end controllers.
  *
- * @property \Ajax $objAjax
+ * @property Ajax $objAjax
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Backend extends \Controller
+abstract class Backend extends Controller
 {
 
 	/**
@@ -1380,3 +1380,5 @@ abstract class Backend extends \Controller
 		return $strFiles . $strFolders;
 	}
 }
+
+class_alias(Backend::class, 'Backend');

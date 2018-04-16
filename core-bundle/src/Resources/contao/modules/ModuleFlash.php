@@ -22,7 +22,7 @@ namespace Contao;
  *
  * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
  */
-class ModuleFlash extends \Module
+class ModuleFlash extends Module
 {
 
 	/**
@@ -101,3 +101,5 @@ class ModuleFlash extends \Module
 		}
 	}
 }
+
+class_alias(ModuleFlash::class, 'ModuleFlash');

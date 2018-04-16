@@ -96,7 +96,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormModel extends \Model
+class FormModel extends Model
 {
 
 	/**
@@ -126,3 +126,5 @@ class FormModel extends \Model
 		}
 	}
 }
+
+class_alias(FormModel::class, 'FormModel');

@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleChangePassword extends \Module
+class ModuleChangePassword extends Module
 {
 
 	/**
@@ -227,3 +227,5 @@ class ModuleChangePassword extends \Module
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 }
+
+class_alias(ModuleChangePassword::class, 'ModuleChangePassword');

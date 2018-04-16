@@ -328,3 +328,5 @@ class Message
 		return 'contao.' . $strScope . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
 }
+
+class_alias(Message::class, 'Message');

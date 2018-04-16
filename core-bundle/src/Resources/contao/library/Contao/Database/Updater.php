@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Contao\Controller;
 use Symfony\Component\Finder\SplFileInfo;
 
 @trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
@@ -22,7 +23,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  */
-class Updater extends \Controller
+class Updater extends Controller
 {
 
 	/**
@@ -1036,3 +1037,5 @@ class Updater extends \Controller
 		$this->Database->prepare("INSERT INTO tl_content %s")->set($set)->execute();
 	}
 }
+
+class_alias(Updater::class, 'Database\Updater');

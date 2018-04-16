@@ -19,7 +19,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleRssReader extends \Module
+class ModuleRssReader extends Module
 {
 
 	/**
@@ -188,3 +188,5 @@ class ModuleRssReader extends \Module
 		$this->Template->items = array_values($items);
 	}
 }
+
+class_alias(ModuleRssReader::class, 'ModuleRssReader');

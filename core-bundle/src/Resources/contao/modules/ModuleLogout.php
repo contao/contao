@@ -25,7 +25,7 @@ use Patchwork\Utf8;
  * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
  *             Use the logout page instead.
  */
-class ModuleLogout extends \Module
+class ModuleLogout extends Module
 {
 
 	/**
@@ -98,3 +98,5 @@ class ModuleLogout extends \Module
 		return;
 	}
 }
+
+class_alias(ModuleLogout::class, 'ModuleLogout');

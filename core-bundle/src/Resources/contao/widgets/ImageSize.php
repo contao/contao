@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ImageSize extends \Widget
+class ImageSize extends Widget
 {
 
 	/**
@@ -219,3 +219,5 @@ class ImageSize extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(ImageSize::class, 'ImageSize');

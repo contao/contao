@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendPreview extends \Backend
+class BackendPreview extends Backend
 {
 
 	/**
@@ -121,3 +121,5 @@ class BackendPreview extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendPreview::class, 'BackendPreview');

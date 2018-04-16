@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Ajax extends \Backend
+class Ajax extends Backend
 {
 
 	/**
@@ -476,3 +476,5 @@ class Ajax extends \Backend
 		return new Response(\Controller::replaceOldBePaths($str));
 	}
 }
+
+class_alias(Ajax::class, 'Ajax');

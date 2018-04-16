@@ -67,7 +67,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class File extends \System
+class File extends System
 {
 
 	/**
@@ -933,3 +933,5 @@ class File extends \System
 		return $return;
 	}
 }
+
+class_alias(File::class, 'File');

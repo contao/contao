@@ -25,7 +25,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileTree extends \Widget
+class FileTree extends Widget
 {
 
 	/**
@@ -465,3 +465,5 @@ class FileTree extends \Widget
 		return \Image::getHtml($image, '', 'class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '"');
 	}
 }
+
+class_alias(FileTree::class, 'FileTree');

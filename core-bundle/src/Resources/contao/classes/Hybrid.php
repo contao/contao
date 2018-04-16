@@ -23,7 +23,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Hybrid extends \Frontend
+abstract class Hybrid extends Frontend
 {
 
 	/**
@@ -273,3 +273,5 @@ abstract class Hybrid extends \Frontend
 	 */
 	abstract protected function compile();
 }
+
+class_alias(Hybrid::class, 'Hybrid');

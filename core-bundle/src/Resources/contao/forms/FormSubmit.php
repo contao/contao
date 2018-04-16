@@ -26,7 +26,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormSubmit extends \Widget
+class FormSubmit extends Widget
 {
 
 	/**
@@ -142,3 +142,5 @@ class FormSubmit extends \Widget
 						$this->slabel);
 	}
 }
+
+class_alias(FormSubmit::class, 'FormSubmit');

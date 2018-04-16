@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DC_Table extends \DataContainer implements \listable, \editable
+class DC_Table extends DataContainer implements \listable, \editable
 {
 
 	/**
@@ -6064,3 +6064,5 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		return $attributes;
 	}
 }
+
+class_alias(DC_Table::class, 'DC_Table');

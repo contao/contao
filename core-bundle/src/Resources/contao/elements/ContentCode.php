@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentCode extends \ContentElement
+class ContentCode extends ContentElement
 {
 
 	/**
@@ -67,3 +67,5 @@ class ContentCode extends \ContentElement
 		$this->Template->cssClass = strtolower($this->highlight) ?: 'nohighlight';
 	}
 }
+
+class_alias(ContentCode::class, 'ContentCode');

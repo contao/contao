@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModulePassword extends \Module
+class ModulePassword extends Module
 {
 
 	/**
@@ -328,3 +328,5 @@ class ModulePassword extends \Module
 		$this->reload();
 	}
 }
+
+class_alias(ModulePassword::class, 'ModulePassword');

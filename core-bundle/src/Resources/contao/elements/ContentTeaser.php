@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentTeaser extends \ContentElement
+class ContentTeaser extends ContentElement
 {
 
 	/**
@@ -91,3 +91,5 @@ class ContentTeaser extends \ContentElement
 		$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 	}
 }
+
+class_alias(ContentTeaser::class, 'ContentTeaser');

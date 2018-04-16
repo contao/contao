@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FileSelector extends \Widget
+class FileSelector extends Widget
 {
 
 	/**
@@ -673,3 +673,5 @@ class FileSelector extends \Widget
 		return true;
 	}
 }
+
+class_alias(FileSelector::class, 'FileSelector');

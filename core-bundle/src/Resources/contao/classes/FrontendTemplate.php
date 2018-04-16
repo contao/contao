@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendTemplate extends \Template
+class FrontendTemplate extends Template
 {
 
 	/**
@@ -406,3 +406,5 @@ class FrontendTemplate extends \Template
 		return $response;
 	}
 }
+
+class_alias(FrontendTemplate::class, 'FrontendTemplate');

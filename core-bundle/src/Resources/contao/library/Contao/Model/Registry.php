@@ -297,3 +297,5 @@ class Registry implements \Countable
 		return isset($this->arrAliases[$strTable][$strAlias][$varValue]);
 	}
 }
+
+class_alias(Registry::class, 'Model\Registry');

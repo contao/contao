@@ -20,7 +20,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModulePersonalData extends \Module
+class ModulePersonalData extends Module
 {
 
 	/**
@@ -400,3 +400,5 @@ class ModulePersonalData extends \Module
 		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 }
+
+class_alias(ModulePersonalData::class, 'ModulePersonalData');

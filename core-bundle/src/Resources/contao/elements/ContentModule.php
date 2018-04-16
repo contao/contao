@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentModule extends \ContentElement
+class ContentModule extends ContentElement
 {
 
 	/**
@@ -78,3 +78,5 @@ class ContentModule extends \ContentElement
 		return;
 	}
 }
+
+class_alias(ContentModule::class, 'ContentModule');

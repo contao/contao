@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendConfirm extends \Backend
+class BackendConfirm extends Backend
 {
 
 	/**
@@ -161,3 +161,5 @@ class BackendConfirm extends \Backend
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendConfirm::class, 'BackendConfirm');

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CheckBox extends \Widget
+class CheckBox extends Widget
 {
 
 	/**
@@ -198,3 +198,5 @@ class CheckBox extends \Widget
 						($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : ''));
 	}
 }
+
+class_alias(CheckBox::class, 'CheckBox');

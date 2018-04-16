@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class MetaWizard extends \Widget
+class MetaWizard extends Widget
 {
 
 	/**
@@ -209,3 +209,5 @@ class MetaWizard extends \Widget
 		return $return;
 	}
 }
+
+class_alias(MetaWizard::class, 'MetaWizard');

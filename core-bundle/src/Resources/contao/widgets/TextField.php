@@ -23,7 +23,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class TextField extends \Widget
+class TextField extends Widget
 {
 
 	/**
@@ -202,3 +202,5 @@ class TextField extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(TextField::class, 'TextField');

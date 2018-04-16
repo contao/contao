@@ -18,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleRegistration extends \Module
+class ModuleRegistration extends Module
 {
 
 	/**
@@ -635,3 +635,5 @@ class ModuleRegistration extends \Module
 		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, TL_ACCESS);
 	}
 }
+
+class_alias(ModuleRegistration::class, 'ModuleRegistration');

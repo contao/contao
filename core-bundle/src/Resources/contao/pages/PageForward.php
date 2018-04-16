@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class PageForward extends \Frontend
+class PageForward extends Frontend
 {
 
 	/**
@@ -138,3 +138,5 @@ class PageForward extends \Frontend
 		return ($objPage->redirect == 'temporary') ? 302 : 301;
 	}
 }
+
+class_alias(PageForward::class, 'PageForward');

@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormHtml extends \Widget
+class FormHtml extends Widget
 {
 
 	/**
@@ -65,3 +65,5 @@ class FormHtml extends \Widget
 		return (TL_MODE == 'FE') ? $this->html : htmlspecialchars($this->html);
 	}
 }
+
+class_alias(FormHtml::class, 'FormHtml');

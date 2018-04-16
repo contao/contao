@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentYouTube extends \ContentElement
+class ContentYouTube extends ContentElement
 {
 
 	/**
@@ -118,3 +118,5 @@ class ContentYouTube extends \ContentElement
 		$this->Template->src = $url;
 	}
 }
+
+class_alias(ContentYouTube::class, 'ContentYouTube');

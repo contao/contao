@@ -72,7 +72,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class StyleSheetModel extends \Model
+class StyleSheetModel extends Model
 {
 
 	/**
@@ -104,3 +104,5 @@ class StyleSheetModel extends \Model
 		return static::createCollectionFromDbResult($objResult, 'tl_style_sheet');
 	}
 }
+
+class_alias(StyleSheetModel::class, 'StyleSheetModel');

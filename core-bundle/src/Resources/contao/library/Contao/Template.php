@@ -37,9 +37,9 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Template extends \Controller
+abstract class Template extends Controller
 {
-	use \TemplateInheritance;
+	use TemplateInheritance;
 
 
 	/**
@@ -647,3 +647,5 @@ abstract class Template extends \Controller
 		}
 	}
 }
+
+class_alias(Template::class, 'Template');

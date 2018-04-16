@@ -23,7 +23,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormFileUpload extends \Widget implements \uploadable
+class FormFileUpload extends Widget implements \uploadable
 {
 
 	/**
@@ -346,3 +346,5 @@ class FormFileUpload extends \Widget implements \uploadable
 		return min($upload_max_filesize, \Config::get('maxFileSize'));
 	}
 }
+
+class_alias(FormFileUpload::class, 'FormFileUpload');

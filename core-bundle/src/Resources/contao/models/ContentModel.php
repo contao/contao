@@ -351,7 +351,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentModel extends \Model
+class ContentModel extends Model
 {
 
 	/**
@@ -436,3 +436,5 @@ class ContentModel extends \Model
 		return static::countBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
 	}
 }
+
+class_alias(ContentModel::class, 'ContentModel');

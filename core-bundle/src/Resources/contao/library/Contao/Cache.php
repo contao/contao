@@ -200,3 +200,5 @@ class Cache
 		return static::$objInstance;
 	}
 }
+
+class_alias(Cache::class, 'Cache');

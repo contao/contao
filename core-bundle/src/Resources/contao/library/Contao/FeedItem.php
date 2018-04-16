@@ -136,3 +136,5 @@ class FeedItem
 		);
 	}
 }
+
+class_alias(FeedItem::class, 'FeedItem');
