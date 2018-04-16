@@ -36,7 +36,7 @@ class BundleCacheClearerTest extends TestCase
      */
     public function testClear()
     {
-        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_');
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', true);
 
         $fs = new Filesystem();
         $fs->mkdir($tmpdir);

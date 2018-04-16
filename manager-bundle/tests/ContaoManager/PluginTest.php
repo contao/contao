@@ -57,7 +57,7 @@ class PluginTest extends TestCase
     {
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $this->plugin);
 
-        $tmpdir = sys_get_temp_dir().'/'.uniqid('PluginTest_');
+        $tmpdir = sys_get_temp_dir().'/'.uniqid('PluginTest_', true);
 
         $fs = new Filesystem();
         $fs->mkdir([$tmpdir.'/foo1', $tmpdir.'/foo2', $tmpdir.'/foo3']);

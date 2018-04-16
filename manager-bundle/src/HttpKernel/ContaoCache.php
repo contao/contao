@@ -14,7 +14,7 @@ use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 
 /**
@@ -28,12 +28,12 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * Constructor.
      *
-     * @param HttpKernelInterface $kernel
-     * @param null                $cacheDir
+     * @param KernelInterface $kernel
+     * @param null            $cacheDir
      *
      * @todo Maybe provide a contao manager plugin?
      */
-    public function __construct(HttpKernelInterface $kernel, $cacheDir = null)
+    public function __construct(KernelInterface $kernel, $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
