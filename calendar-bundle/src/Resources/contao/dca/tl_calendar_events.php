@@ -8,14 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * Load tl_content language file
- */
 System::loadLanguageFile('tl_content');
 
-/**
- * Table tl_calendar_events
- */
 $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 (
 

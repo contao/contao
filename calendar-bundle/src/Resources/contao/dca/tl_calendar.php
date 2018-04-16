@@ -8,9 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * Table tl_calendar
- */
 $GLOBALS['TL_DCA']['tl_calendar'] = array
 (
 

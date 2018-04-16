@@ -8,9 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * Extend the default palettes
- */
+// Extend the default palettes
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('calendars_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
     ->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
@@ -18,9 +16,7 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->applyToPalette('custom', 'tl_user')
 ;
 
-/**
- * Add fields to tl_user
- */
+// Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendars'],

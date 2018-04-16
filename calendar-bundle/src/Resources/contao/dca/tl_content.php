@@ -8,9 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * Dynamically add the permission check and parent table
- */
+// Dynamically add the permission check and parent table
 if (Input::get('do') == 'calendar')
 {
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_calendar_events';
