@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Add system messages to the welcome screen.
  *
@@ -52,7 +51,6 @@ class Messages extends \Backend
 		return '';
 	}
 
-
 	/**
 	 * Check for maintenance mode
 	 *
@@ -81,7 +79,6 @@ class Messages extends \Backend
 
 		return '';
 	}
-
 
 	/**
 	 * Show a warning if there is no language fallback page

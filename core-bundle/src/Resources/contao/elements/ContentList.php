@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "list".
  *
@@ -24,7 +23,6 @@ class ContentList extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_list';
-
 
 	/**
 	 * Generate the content element

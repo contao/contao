@@ -14,7 +14,6 @@ use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
-
 /**
  * A static class to replace insert tags
  *
@@ -36,7 +35,6 @@ class InsertTags extends \Controller
 		parent::__construct();
 	}
 
-
 	/**
 	 * Recursively replace insert tags with their values
 	 *
@@ -57,7 +55,6 @@ class InsertTags extends \Controller
 
 		return $strBuffer;
 	}
-
 
 	/**
 	 * Replace insert tags with their values
@@ -688,7 +685,7 @@ class InsertTags extends \Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					// Do not use \StringUtil::specialchars() here (see #4687)
+					// Do not use StringUtil::specialchars() here (see #4687)
 					$arrCache[$strTag] = $objPage->{$elements[1]};
 					break;
 

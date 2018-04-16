@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Provide methods to handle an error 403 page.
  *
@@ -43,7 +42,6 @@ class PageError403 extends \Frontend
 		$objHandler->generate($objPage);
 	}
 
-
 	/**
 	 * Return a response object
 	 *
@@ -64,7 +62,6 @@ class PageError403 extends \Frontend
 
 		return $objHandler->getResponse($objPage)->setStatusCode(403);
 	}
-
 
 	/**
 	 * Prepare the output

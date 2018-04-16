@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "image".
  *
@@ -30,7 +29,6 @@ class ContentImage extends \ContentElement
 	 * @var FilesModel
 	 */
 	protected $objFilesModel;
-
 
 	/**
 	 * Return if the image does not exist
@@ -56,7 +54,6 @@ class ContentImage extends \ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the content element

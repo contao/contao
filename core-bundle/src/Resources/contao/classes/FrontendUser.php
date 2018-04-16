@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to manage front end users.
  *
@@ -53,7 +52,6 @@ class FrontendUser extends \User
 	 */
 	protected $arrGroups;
 
-
 	/**
 	 * Initialize the object
 	 */
@@ -64,7 +62,6 @@ class FrontendUser extends \User
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
 	}
-
 
 	/**
 	 * Extend parent setter class and modify some parameters
@@ -85,7 +82,6 @@ class FrontendUser extends \User
 				break;
 		}
 	}
-
 
 	/**
 	 * Extend parent getter class and modify some parameters
@@ -109,7 +105,6 @@ class FrontendUser extends \User
 
 		return parent::__get($strKey);
 	}
-
 
 	/**
 	 * Authenticate a user
@@ -162,7 +157,6 @@ class FrontendUser extends \User
 		return false;
 	}
 
-
 	/**
 	 * Add the auto login resources
 	 *
@@ -192,7 +186,6 @@ class FrontendUser extends \User
 		return true;
 	}
 
-
 	/**
 	 * Remove the auto login resources
 	 *
@@ -220,7 +213,6 @@ class FrontendUser extends \User
 		return true;
 	}
 
-
 	/**
 	 * Save the original group membership
 	 *
@@ -241,7 +233,6 @@ class FrontendUser extends \User
 		return true;
 	}
 
-
 	/**
 	 * Restore the original group membership
 	 */
@@ -252,7 +243,6 @@ class FrontendUser extends \User
 		parent::save();
 		$this->groups = $groups;
 	}
-
 
 	/**
 	 * Set all user properties from a database record

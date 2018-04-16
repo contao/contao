@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Sort iterator items ascending
  *
@@ -31,7 +30,6 @@ class SortedIterator extends \SplHeap
 			$this->insert($item);
 		}
 	}
-
 
 	/**
 	 * Sort items ascending

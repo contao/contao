@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle input field "page tree".
  *
@@ -48,7 +47,6 @@ class PageTree extends \Widget
 	 */
 	protected $strOrderName;
 
-
 	/**
 	 * Load the database object
 	 *
@@ -74,7 +72,6 @@ class PageTree extends \Widget
 			$this->{$this->orderField} = (!empty($tmp) && \is_array($tmp)) ? array_filter($tmp) : array();
 		}
 	}
-
 
 	/**
 	 * Return an array if the "multiple" attribute is set
@@ -128,12 +125,11 @@ class PageTree extends \Widget
 		}
 		else
 		{
-			$arrValue = array_map('intval', array_filter(explode(',', $varInput)));
+			$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
 
 			return $this->multiple ? $arrValue : $arrValue[0];
 		}
 	}
-
 
 	/**
 	 * Check the selected value
@@ -153,7 +149,7 @@ class PageTree extends \Widget
 		}
 		else
 		{
-			$arrIds = array_map('intval', array_filter(explode(',', $varInput)));
+			$arrIds = array_map('\intval', array_filter(explode(',', $varInput)));
 		}
 
 		if (\count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
@@ -161,7 +157,6 @@ class PageTree extends \Widget
 			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

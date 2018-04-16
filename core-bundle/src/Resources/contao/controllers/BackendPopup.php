@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Pop-up file preview (file manager).
  *
@@ -27,7 +26,6 @@ class BackendPopup extends \Backend
 	 * @var string
 	 */
 	protected $strFile;
-
 
 	/**
 	 * Initialize the controller
@@ -52,11 +50,10 @@ class BackendPopup extends \Backend
 
 		$strFile = \Input::get('src', true);
 		$strFile = base64_decode($strFile);
-		$strFile = preg_replace('@^/+@', '', rawurldecode($strFile));
+		$strFile = ltrim(rawurldecode($strFile), '/');
 
 		$this->strFile = $strFile;
 	}
-
 
 	/**
 	 * Run the controller and parse the template

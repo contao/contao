@@ -16,7 +16,6 @@ if (PHP_VERSION_ID >= 70000) {
 
 @trigger_error('Using the String class has been deprecated and will no longer work in PHP 7. Use the StringUtil class instead.', E_USER_DEPRECATED);
 
-
 /**
  * Provides a String class for backwards compatibility.
  *
@@ -34,7 +33,6 @@ class String extends \StringUtil
 	 */
 	protected static $objInstance;
 
-
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 *
@@ -43,7 +41,6 @@ class String extends \StringUtil
 	 */
 	protected function __construct() {}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
@@ -51,7 +48,6 @@ class String extends \StringUtil
 	 *             The String class is now static.
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the object instance (Singleton)

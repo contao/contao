@@ -13,7 +13,6 @@ namespace Contao;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
-
 /**
  * Authenticates and initializes user objects
  *
@@ -140,7 +139,6 @@ abstract class User extends \System
 	 */
 	protected $arrData = array();
 
-
 	/**
 	 * Import the database object
 	 */
@@ -150,12 +148,10 @@ abstract class User extends \System
 		$this->import('Database');
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Set an object property
@@ -167,7 +163,6 @@ abstract class User extends \System
 	{
 		$this->arrData[$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Return an object property
@@ -186,7 +181,6 @@ abstract class User extends \System
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -198,7 +192,6 @@ abstract class User extends \System
 	{
 		return isset($this->arrData[$strKey]);
 	}
-
 
 	/**
 	 * Get a string representation of the user
@@ -215,7 +208,6 @@ abstract class User extends \System
 		return $this->username ?: ($this->getTable() . '.' . $this->intId);
 	}
 
-
 	/**
 	 * Instantiate a new user object (Factory)
 	 *
@@ -231,7 +223,6 @@ abstract class User extends \System
 		return static::$objInstance;
 	}
 
-
 	/**
 	 * Return the table name
 	 *
@@ -242,7 +233,6 @@ abstract class User extends \System
 		return $this->strTable;
 	}
 
-
 	/**
 	 * Return the current record as associative array
 	 *
@@ -252,7 +242,6 @@ abstract class User extends \System
 	{
 		return $this->arrData;
 	}
-
 
 	/**
 	 * Authenticate a user
@@ -320,7 +309,6 @@ abstract class User extends \System
 
 		return true;
 	}
-
 
 	/**
 	 * Try to login the current user
@@ -483,7 +471,6 @@ abstract class User extends \System
 		return true;
 	}
 
-
 	/**
 	 * Check the account status and return true if it is active
 	 *
@@ -544,7 +531,6 @@ abstract class User extends \System
 		return true;
 	}
 
-
 	/**
 	 * Find a user in the database
 	 *
@@ -569,7 +555,6 @@ abstract class User extends \System
 		return false;
 	}
 
-
 	/**
 	 * Update the current record
 	 */
@@ -582,7 +567,6 @@ abstract class User extends \System
 					   ->set($arrSet)
 					   ->execute($this->id);
 	}
-
 
 	/**
 	 * Regenerate the session ID
@@ -613,7 +597,6 @@ abstract class User extends \System
 		}
 	}
 
-
 	/**
 	 * Generate a session
 	 */
@@ -635,7 +618,6 @@ abstract class User extends \System
 		// Set the authentication cookie
 		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
 	}
-
 
 	/**
 	 * Remove the authentication cookie and destroy the current session
@@ -697,7 +679,6 @@ abstract class User extends \System
 		return true;
 	}
 
-
 	/**
 	 * Return true if the user is member of a particular group
 	 *
@@ -729,7 +710,6 @@ abstract class User extends \System
 
 		return false;
 	}
-
 
 	/**
 	 * Set all user properties from a database record

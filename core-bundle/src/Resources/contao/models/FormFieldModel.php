@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes form fields
  *
@@ -172,7 +171,6 @@ class FormFieldModel extends \Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_form_field';
-
 
 	/**
 	 * Find published form fields by their parent ID

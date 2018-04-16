@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_member
- */
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
 
@@ -125,7 +121,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'login'                       => 'username,password',
 		'assignDir'                   => 'homeDir'
 	),
-
 
 	// Fields
 	'fields' => array
@@ -445,15 +440,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	)
 );
 
-
-/**
- * Filter disabled groups in the front end (see #6757)
- */
+// Filter disabled groups in the front end (see #6757)
 if (TL_MODE == 'FE')
 {
 	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
 }
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
@@ -471,7 +462,6 @@ class tl_member extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Filter disabled groups
@@ -493,7 +483,6 @@ class tl_member extends Backend
 
 		return $arrGroups;
 	}
-
 
 	/**
 	 * Add an image to each record
@@ -520,7 +509,6 @@ class tl_member extends Backend
 
 		return $args;
 	}
-
 
 	/**
 	 * Generate a "switch account" button and return it as string
@@ -549,7 +537,6 @@ class tl_member extends Backend
 
 		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
 	}
-
 
 	/**
 	 * Reset the autologin hash
@@ -587,7 +574,6 @@ class tl_member extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Call the "setNewPassword" callback
 	 *
@@ -624,7 +610,6 @@ class tl_member extends Backend
 		return $strPassword;
 	}
 
-
 	/**
 	 * Store the date when the account has been added
 	 *
@@ -658,7 +643,6 @@ class tl_member extends Backend
 					   ->execute($time, $dc->id);
 	}
 
-
 	/**
 	 * Check whether the user session should be removed
 	 *
@@ -677,7 +661,6 @@ class tl_member extends Backend
 		}
 	}
 
-
 	/**
 	 * Remove the session if a user is deleted (see #5353)
 	 *
@@ -693,7 +676,6 @@ class tl_member extends Backend
 		$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
 					   ->execute($dc->activeRecord->id);
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -730,7 +712,6 @@ class tl_member extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_log
- */
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
 
@@ -143,7 +139,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		)
 	)
 );
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "article alias".
  *
@@ -28,7 +27,6 @@ class ContentArticle extends \ContentElement
 	{
 		return $this->getArticle($this->articleAlias, false, true);
 	}
-
 
 	/**
 	 * Generate the content element

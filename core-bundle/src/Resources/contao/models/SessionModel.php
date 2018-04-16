@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes sessions
  *
@@ -64,7 +63,6 @@ class SessionModel extends \Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_session';
-
 
 	/**
 	 * Find a session by its hash and name

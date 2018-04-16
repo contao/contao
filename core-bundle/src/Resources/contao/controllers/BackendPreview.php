@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-
 /**
  * Set up the front end preview frames.
  *
@@ -46,7 +45,6 @@ class BackendPreview extends \Backend
 
 		\System::loadLanguageFile('default');
 	}
-
 
 	/**
 	 * Run the controller and parse the template

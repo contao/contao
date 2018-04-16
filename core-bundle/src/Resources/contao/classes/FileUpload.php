@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle file uploads in the back end.
  *
@@ -37,7 +36,6 @@ class FileUpload extends \Backend
 	 */
 	protected $strName = 'files';
 
-
 	/**
 	 * Make the constructor public
 	 */
@@ -45,7 +43,6 @@ class FileUpload extends \Backend
 	{
 		parent::__construct();
 	}
-
 
 	/**
 	 * Return true if there was an error
@@ -57,7 +54,6 @@ class FileUpload extends \Backend
 		return $this->blnHasError;
 	}
 
-
 	/**
 	 * Return true if there was a resized image
 	 *
@@ -68,7 +64,6 @@ class FileUpload extends \Backend
 		return $this->blnHasResized;
 	}
 
-
 	/**
 	 * Override the field name
 	 *
@@ -78,7 +73,6 @@ class FileUpload extends \Backend
 	{
 		$this->strName = $strName;
 	}
-
 
 	/**
 	 * Check the uploaded files and move them to the target directory
@@ -187,7 +181,6 @@ class FileUpload extends \Backend
 		return $arrUploaded;
 	}
 
-
 	/**
 	 * Generate the markup for the default uploader
 	 *
@@ -208,7 +201,6 @@ class FileUpload extends \Backend
 
 		return $return;
 	}
-
 
 	/**
 	 * Get the files from the global $_FILES array
@@ -246,7 +238,6 @@ class FileUpload extends \Backend
 		return $arrFiles;
 	}
 
-
 	/**
 	 * Return the maximum upload file size in bytes
 	 *
@@ -273,7 +264,6 @@ class FileUpload extends \Backend
 
 		return min($upload_max_filesize, \Config::get('maxFileSize'));
 	}
-
 
 	/**
 	 * Resize an uploaded image if neccessary

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * File management
- */
 $GLOBALS['TL_DCA']['tl_files'] = array
 (
 
@@ -228,8 +224,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	)
 );
 
-
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -246,7 +240,6 @@ class tl_files extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the file system
@@ -403,7 +396,6 @@ class tl_files extends Backend
 		}
 	}
 
-
 	/**
 	 * Add the breadcrumb menu
 	 */
@@ -411,7 +403,6 @@ class tl_files extends Backend
 	{
 		Backend::addFilesBreadcrumb();
 	}
-
 
 	/**
 	 * Only show the important part fields for images
@@ -431,7 +422,6 @@ class tl_files extends Backend
 		}
 	}
 
-
 	/**
 	 * Add the file location instead of the help text (see #6503)
 	 *
@@ -446,7 +436,6 @@ class tl_files extends Backend
 
 		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
 	}
-
 
 	/**
 	 * Check a file name and romanize it
@@ -486,7 +475,6 @@ class tl_files extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Return the sync files button
 	 *
@@ -502,7 +490,6 @@ class tl_files extends Backend
 	{
 		return $this->User->hasAccess('f6', 'fop') ? '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'" class="'.$class.'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
-
 
 	/**
 	 * Return the edit file button
@@ -521,7 +508,6 @@ class tl_files extends Backend
 		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the copy file button
 	 *
@@ -539,7 +525,6 @@ class tl_files extends Backend
 		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the cut file button
 	 *
@@ -556,7 +541,6 @@ class tl_files extends Backend
 	{
 		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the delete file button
@@ -588,7 +572,6 @@ class tl_files extends Backend
 
 		return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the edit file source button
@@ -626,7 +609,6 @@ class tl_files extends Backend
 		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
 	}
 
-
 	/**
 	 * Return the show file button
 	 *
@@ -650,7 +632,6 @@ class tl_files extends Backend
 			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'title\':\''.str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href});return false">'.Image::getHtml($icon, $label).'</a> ';
 		}
 	}
-
 
 	/**
 	 * Return a checkbox to delete session data

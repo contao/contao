@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * Provide methods to handle a website root page.
  *

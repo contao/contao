@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class FormPassword
  *
@@ -54,7 +53,6 @@ class FormPassword extends \Widget
 	 */
 	protected $strPrefix = 'widget widget-password';
 
-
 	/**
 	 * Always use raw request data.
 	 *
@@ -66,7 +64,6 @@ class FormPassword extends \Widget
 
 		$this->useRawRequestData = true;
 	}
-
 
 	/**
 	 * Add specific attributes
@@ -107,7 +104,6 @@ class FormPassword extends \Widget
 		}
 	}
 
-
 	/**
 	 * Validate input and set value
 	 *
@@ -146,7 +142,6 @@ class FormPassword extends \Widget
 		return '';
 	}
 
-
 	/**
 	 * Parse the template file and return it as string
 	 *
@@ -160,7 +155,6 @@ class FormPassword extends \Widget
 
 		return parent::parse($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string
@@ -177,7 +171,6 @@ class FormPassword extends \Widget
 						$this->strTagEnding);
 	}
 
-
 	/**
 	 * Generate the label of the confirmation field and return it as string
 	 *
@@ -192,7 +185,6 @@ class FormPassword extends \Widget
 						sprintf($GLOBALS['TL_LANG']['MSC']['confirmation'], $this->strLabel),
 						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

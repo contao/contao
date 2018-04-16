@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Parent class for content elements.
  *
@@ -135,7 +134,6 @@ abstract class ContentElement extends \Frontend
 	 */
 	protected $arrStyle = array();
 
-
 	/**
 	 * Initialize the object
 	 *
@@ -173,7 +171,6 @@ abstract class ContentElement extends \Frontend
 		$this->strColumn = $strColumn;
 	}
 
-
 	/**
 	 * Set an object property
 	 *
@@ -184,7 +181,6 @@ abstract class ContentElement extends \Frontend
 	{
 		$this->arrData[$strKey] = $varValue;
 	}
-
 
 	/**
 	 * Return an object property
@@ -203,7 +199,6 @@ abstract class ContentElement extends \Frontend
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -216,7 +211,6 @@ abstract class ContentElement extends \Frontend
 		return isset($this->arrData[$strKey]);
 	}
 
-
 	/**
 	 * Return the model
 	 *
@@ -226,7 +220,6 @@ abstract class ContentElement extends \Frontend
 	{
 		return $this->objModel;
 	}
-
 
 	/**
 	 * Parse the template
@@ -270,12 +263,10 @@ abstract class ContentElement extends \Frontend
 		return $this->Template->parse();
 	}
 
-
 	/**
 	 * Compile the content element
 	 */
 	abstract protected function compile();
-
 
 	/**
 	 * Find a content element in the TL_CTE array and return the class name

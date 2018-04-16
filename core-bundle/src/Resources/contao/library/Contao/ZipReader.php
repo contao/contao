@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads .zip files and unpacks their content
  *
@@ -113,7 +112,6 @@ class ZipReader
 	 */
 	protected $arrFiles = array();
 
-
 	/**
 	 * Open the archive and return the file handle
 	 *
@@ -148,7 +146,6 @@ class ZipReader
 		$this->readCentralDirectory();
 	}
 
-
 	/**
 	 * Close the file handle
 	 */
@@ -156,7 +153,6 @@ class ZipReader
 	{
 		fclose($this->resFile);
 	}
-
 
 	/**
 	 * Return a property of the archive header or the current file
@@ -197,7 +193,6 @@ class ZipReader
 		return null;
 	}
 
-
 	/**
 	 * Return a list of all files in the archive
 	 *
@@ -214,7 +209,6 @@ class ZipReader
 
 		return $arrFiles;
 	}
-
 
 	/**
 	 * Set the internal pointer to a particular file
@@ -238,7 +232,6 @@ class ZipReader
 		return false;
 	}
 
-
 	/**
 	 * Go to the first file of the archive
 	 *
@@ -250,7 +243,6 @@ class ZipReader
 
 		return $this;
 	}
-
 
 	/**
 	 * Go to the next file of the archive
@@ -269,7 +261,6 @@ class ZipReader
 		return $this;
 	}
 
-
 	/**
 	 * Go to the previous file of the archive
 	 *
@@ -287,7 +278,6 @@ class ZipReader
 		return $this;
 	}
 
-
 	/**
 	 * Go to the last file of the archive
 	 *
@@ -299,7 +289,6 @@ class ZipReader
 
 		return $this;
 	}
-
 
 	/**
 	 * Return the current file as array
@@ -316,7 +305,6 @@ class ZipReader
 		return $this->arrFiles[$this->intIndex];
 	}
 
-
 	/**
 	 * Reset the archive
 	 *
@@ -328,7 +316,6 @@ class ZipReader
 
 		return $this;
 	}
-
 
 	/**
 	 * Unzip the current file and return its contents as string
@@ -423,7 +410,6 @@ class ZipReader
 
 		return $strBuffer;
 	}
-
 
 	/**
 	 * Return a list of all files in the archive
@@ -548,7 +534,6 @@ class ZipReader
 		// Restore the mbstring encoding (see #5842)
 		$strMbCharset && mb_internal_encoding($strMbCharset);
 	}
-
 
 	/**
 	 * Calculate the Unix timestamp from two hexadecimal values

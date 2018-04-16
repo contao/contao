@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormExplanation
  *
@@ -35,7 +34,6 @@ class FormExplanation extends \Widget
 	 */
 	protected $strPrefix = 'widget widget-explanation';
 
-
 	/**
 	 * Do not validate
 	 */
@@ -43,7 +41,6 @@ class FormExplanation extends \Widget
 	{
 		return;
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

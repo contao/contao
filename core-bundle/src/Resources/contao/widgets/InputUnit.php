@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle text fields with unit drop down menu.
  *
@@ -41,7 +40,6 @@ class InputUnit extends \Widget
 	 * @var array
 	 */
 	protected $arrUnits = array();
-
 
 	/**
 	 * Add specific attributes
@@ -86,7 +84,6 @@ class InputUnit extends \Widget
 		}
 	}
 
-
 	/**
 	 * Do not validate unit fields
 	 *
@@ -106,7 +103,6 @@ class InputUnit extends \Widget
 
 		return $varInput;
 	}
-
 
 	/**
 	 * Only check against the unit values (see #7246)
@@ -129,7 +125,6 @@ class InputUnit extends \Widget
 
 		return parent::optionSelected($arrOption['value'], $this->varValue['unit']);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

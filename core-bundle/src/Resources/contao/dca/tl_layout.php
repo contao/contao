@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_layout
- */
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
 
@@ -486,7 +482,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -503,7 +498,6 @@ class tl_layout extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the table
@@ -522,7 +516,6 @@ class tl_layout extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the page layout module.');
 		}
 	}
-
 
 	/**
 	 * Return all style sheets of the current theme
@@ -558,7 +551,6 @@ class tl_layout extends Backend
 		return $return;
 	}
 
-
 	/**
 	 * Return all page templates as array
 	 *
@@ -568,7 +560,6 @@ class tl_layout extends Backend
 	{
 		return $this->getTemplateGroup('fe_');
 	}
-
 
 	/**
 	 * Return all MooTools templates as array
@@ -580,7 +571,6 @@ class tl_layout extends Backend
 		return $this->getTemplateGroup('moo_');
 	}
 
-
 	/**
 	 * Return all jQuery templates as array
 	 *
@@ -590,7 +580,6 @@ class tl_layout extends Backend
 	{
 		return $this->getTemplateGroup('j_');
 	}
-
 
 	/**
 	 * Return all script templates as array
@@ -602,7 +591,6 @@ class tl_layout extends Backend
 		return $this->getTemplateGroup('js_');
 	}
 
-
 	/**
 	 * Return all analytics templates as array
 	 *
@@ -612,7 +600,6 @@ class tl_layout extends Backend
 	{
 		return $this->getTemplateGroup('analytics_');
 	}
-
 
 	/**
 	 * List a page layout
@@ -626,7 +613,6 @@ class tl_layout extends Backend
 		return '<div class="tl_content_left">'. $row['name'] .'</div>';
 	}
 
-
 	/**
 	 * Add a link to edit the stylesheets of the theme
 	 *
@@ -638,7 +624,6 @@ class tl_layout extends Backend
 	{
 		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
 	}
-
 
 	/**
 	 * Auto-select layout.css if responsive.css is selected (see #8222)

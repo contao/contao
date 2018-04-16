@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to handle file meta information.
  *
@@ -32,7 +31,6 @@ class MetaWizard extends \Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
-
 
 	/**
 	 * Set an object property
@@ -58,7 +56,6 @@ class MetaWizard extends \Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Trim the values and add new languages if necessary
@@ -94,7 +91,6 @@ class MetaWizard extends \Widget
 
 		return $varInput;
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_content
- */
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
 
@@ -828,7 +824,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	)
 );
 
-
 /**
  * Dynamically add the permission check and parent table (see #5241)
  */
@@ -837,7 +832,6 @@ if (Input::get('do') == 'article' || Input::get('do') == 'page')
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
 	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content', 'checkPermission');
 }
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
@@ -855,7 +849,6 @@ class tl_content extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_content
@@ -938,7 +931,6 @@ class tl_content extends Backend
 		}
 	}
 
-
 	/**
 	 * Check access to a particular content element
 	 *
@@ -982,7 +974,6 @@ class tl_content extends Backend
 		}
 	}
 
-
 	/**
 	 * Return all content elements as array
 	 *
@@ -1002,7 +993,6 @@ class tl_content extends Backend
 
 		return $groups;
 	}
-
 
 	/**
 	 * Return the group of a content element
@@ -1026,7 +1016,6 @@ class tl_content extends Backend
 
 		return null;
 	}
-
 
 	/**
 	 * Adjust the DCA by type
@@ -1058,7 +1047,6 @@ class tl_content extends Backend
 				break;
 		}
 	}
-
 
 	/**
 	 * Show a hint if a JavaScript library needs to be included in the page layout
@@ -1118,7 +1106,6 @@ class tl_content extends Backend
 				break;
 		}
 	}
-
 
 	/**
 	 * Add the type of content element
@@ -1194,7 +1181,6 @@ class tl_content extends Backend
 </div>' . "\n";
 	}
 
-
 	/**
 	 * Return the edit article alias wizard
 	 *
@@ -1206,7 +1192,6 @@ class tl_content extends Backend
 	{
 		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
-
 
 	/**
 	 * Get all articles and return them as array (article alias)
@@ -1233,7 +1218,7 @@ class tl_content extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('intval', array_unique($arrPids))) .") AND a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
+			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") AND a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
 									   ->execute($dc->id);
 		}
 		else
@@ -1256,7 +1241,6 @@ class tl_content extends Backend
 		return $arrAlias;
 	}
 
-
 	/**
 	 * Return the edit alias wizard
 	 *
@@ -1268,7 +1252,6 @@ class tl_content extends Backend
 	{
 		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
-
 
 	/**
 	 * Get all content elements and return them as array (content element alias)
@@ -1293,7 +1276,7 @@ class tl_content extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE a.pid IN(". implode(',', array_map('intval', array_unique($arrPids))) .") AND (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
+			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") AND (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
 									   ->execute(Input::get('id'));
 		}
 		else
@@ -1334,7 +1317,6 @@ class tl_content extends Backend
 		return $arrAlias;
 	}
 
-
 	/**
 	 * Return the edit form wizard
 	 *
@@ -1346,7 +1328,6 @@ class tl_content extends Backend
 	{
 		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
-
 
 	/**
 	 * Get all forms and return them as array
@@ -1374,7 +1355,6 @@ class tl_content extends Backend
 		return $arrForms;
 	}
 
-
 	/**
 	 * Return the edit module wizard
 	 *
@@ -1386,7 +1366,6 @@ class tl_content extends Backend
 	{
 		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editalias'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editalias'][0]) . '</a>';
 	}
-
 
 	/**
 	 * Get all modules and return them as array
@@ -1406,7 +1385,6 @@ class tl_content extends Backend
 		return $arrModules;
 	}
 
-
 	/**
 	 * Return all gallery templates as array
 	 *
@@ -1416,7 +1394,6 @@ class tl_content extends Backend
 	{
 		return $this->getTemplateGroup('gallery_');
 	}
-
 
 	/**
 	 * Return all content element templates as array
@@ -1430,7 +1407,6 @@ class tl_content extends Backend
 		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type);
 	}
 
-
 	/**
 	 * Return the edit article teaser wizard
 	 *
@@ -1442,7 +1418,6 @@ class tl_content extends Backend
 	{
 		return ($dc->value < 1) ? '' : ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['tl_content']['editarticle'][1]), $dc->value) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editarticle'][1], $dc->value))) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $GLOBALS['TL_LANG']['tl_content']['editarticle'][0]) . '</a>';
 	}
-
 
 	/**
 	 * Get all articles and return them as array (article teaser)
@@ -1480,7 +1455,7 @@ class tl_content extends Backend
 		// Limit pages to the user's pagemounts
 		if ($this->User->isAdmin)
 		{
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid" . (!empty($arrRoot) ? " WHERE a.pid IN(". implode(',', array_map('intval', array_unique($arrRoot))) .")" : "") . " ORDER BY parent, a.sorting");
+			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid" . (!empty($arrRoot) ? " WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrRoot))) .")" : "") . " ORDER BY parent, a.sorting");
 		}
 		else
 		{
@@ -1500,7 +1475,7 @@ class tl_content extends Backend
 				return $arrArticle;
 			}
 
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting");
+			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting");
 		}
 
 		// Edit the result
@@ -1517,7 +1492,6 @@ class tl_content extends Backend
 
 		return $arrArticle;
 	}
-
 
 	/**
 	 * Dynamically set the ace syntax
@@ -1577,7 +1551,6 @@ class tl_content extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Add a link to the list items import wizard
 	 *
@@ -1588,7 +1561,6 @@ class tl_content extends Backend
 		return ' <a href="' . $this->addToUrl('key=list') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][0]) . '</a>';
 	}
 
-
 	/**
 	 * Add a link to the table items import wizard
 	 *
@@ -1598,7 +1570,6 @@ class tl_content extends Backend
 	{
 		return ' <a href="' . $this->addToUrl('key=table') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][0]) . '</a> ' . Image::getHtml('demagnify.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_shrink']) . '" style="cursor:pointer" onclick="Backend.tableWizardResize(0.9)"') . Image::getHtml('magnify.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_expand']) . '" style="cursor:pointer" onclick="Backend.tableWizardResize(1.1)"');
 	}
-
 
 	/**
 	 * Return the link picker wizard
@@ -1616,7 +1587,6 @@ class tl_content extends Backend
 
 		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->inputName);
 	}
-
 
 	/**
 	 * Return the delete content element button
@@ -1638,7 +1608,6 @@ class tl_content extends Backend
 
 		return $objElement->numRows ? Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
 	}
-
 
 	/**
 	 * Dynamically add flags to the "singleSRC" field
@@ -1669,7 +1638,6 @@ class tl_content extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Dynamically add flags to the "multiSRC" field
@@ -1746,7 +1714,6 @@ class tl_content extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Return the "toggle visibility" button
 	 *
@@ -1782,7 +1749,6 @@ class tl_content extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Toggle the visibility of an element

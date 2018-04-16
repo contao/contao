@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormCheckBox
  *
@@ -49,7 +48,6 @@ class FormCheckBox extends \Widget
 	 */
 	protected $strPrefix = 'widget widget-checkbox';
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -76,7 +74,6 @@ class FormCheckBox extends \Widget
 		}
 	}
 
-
 	/**
 	 * Return a parameter
 	 *
@@ -93,7 +90,6 @@ class FormCheckBox extends \Widget
 
 		return parent::__get($strKey);
 	}
-
 
 	/**
 	 * Check the options if the field is mandatory
@@ -147,7 +143,6 @@ class FormCheckBox extends \Widget
 		}
 	}
 
-
 	/**
 	 * Return all attributes as string
 	 *
@@ -165,7 +160,6 @@ class FormCheckBox extends \Widget
 
 		return parent::getAttributes($arrStrip);
 	}
-
 
 	/**
 	 * Generate the options
@@ -227,7 +221,6 @@ class FormCheckBox extends \Widget
 		return $arrOptions;
 	}
 
-
 	/**
 	 * Override the parent method and inject the error message inside the fieldset (see #3392)
 	 *
@@ -241,7 +234,6 @@ class FormCheckBox extends \Widget
 
 		return $this->generate();
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

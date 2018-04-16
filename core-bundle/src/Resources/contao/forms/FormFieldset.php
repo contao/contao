@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class FormFieldset
  *
@@ -30,7 +29,6 @@ class FormFieldset extends \Widget
 	 */
 	protected $strTemplate = 'form_fieldset';
 
-
 	/**
 	 * Do not validate
 	 */
@@ -38,7 +36,6 @@ class FormFieldset extends \Widget
 	{
 		return;
 	}
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -69,7 +66,6 @@ class FormFieldset extends \Widget
 
 		return parent::parse($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

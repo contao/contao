@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Handles the database assisted file system (DBAFS)
  *
@@ -31,7 +30,6 @@ class Dbafs
 	 * @var array
 	 */
 	protected static $arrShouldBeSynchronized = array();
-
 
 	/**
 	 * Adds a file or folder with its parent folders
@@ -226,7 +224,6 @@ class Dbafs
 		return $objReturn;
 	}
 
-
 	/**
 	 * Moves a file or folder to a new location
 	 *
@@ -296,7 +293,6 @@ class Dbafs
 
 		return $objFile;
 	}
-
 
 	/**
 	 * Copies a file or folder to a new location
@@ -380,7 +376,6 @@ class Dbafs
 		return $objNewFile;
 	}
 
-
 	/**
 	 * Removes a file or folder
 	 *
@@ -414,7 +409,6 @@ class Dbafs
 
 		return null;
 	}
-
 
 	/**
 	 * Update the hashes of all parent folders of a resource
@@ -456,7 +450,6 @@ class Dbafs
 		// Store the hash of each folder
 		foreach (array_reverse($arrPaths) as $strPath)
 		{
-			$objFolder = new \Folder($strPath);
 			$objModel  = \FilesModel::findByPath($strPath);
 
 			// The DB entry does not yet exist
@@ -469,7 +462,6 @@ class Dbafs
 			$objModel->save();
 		}
 	}
-
 
 	/**
 	 * Synchronize the file system with the database
@@ -545,6 +537,7 @@ class Dbafs
 			// Get the model
 			if (isset($arrModels[$strRelpath]))
 			{
+				/** @var Model $objModel */
 				$objModel = $arrModels[$strRelpath];
 			}
 			else
@@ -762,7 +755,6 @@ class Dbafs
 		return $strLog;
 	}
 
-
 	/**
 	 * Get the folder hash from the databse by combining the hashes of all children
 	 *
@@ -791,7 +783,6 @@ class Dbafs
 		return md5(implode("\0", $arrHash));
 	}
 
-
 	/**
 	 * Check if the current resource should be synchronized with the database
 	 *
@@ -808,7 +799,6 @@ class Dbafs
 
 		return static::$arrShouldBeSynchronized[$strPath];
 	}
-
 
 	/**
 	 * Check if a file or folder is excluded from synchronization

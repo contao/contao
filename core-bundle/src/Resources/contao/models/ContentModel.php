@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes content elements
  *
@@ -360,7 +359,6 @@ class ContentModel extends \Model
 	 */
 	protected static $strTable = 'tl_content';
 
-
 	/**
 	 * Find all published content elements by their parent ID and parent table
 	 *
@@ -397,7 +395,6 @@ class ContentModel extends \Model
 
 		return static::findBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
 	}
-
 
 	/**
 	 * Find all published content elements by their parent ID and parent table

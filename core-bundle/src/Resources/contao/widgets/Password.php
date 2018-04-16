@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Provide methods to handle password fields.
  *
@@ -44,7 +43,6 @@ class Password extends \Widget
 	 */
 	protected $strTemplate = 'be_widget_pw';
 
-
 	/**
 	 * Always use raw request data.
 	 *
@@ -56,7 +54,6 @@ class Password extends \Widget
 
 		$this->useRawRequestData = true;
 	}
-
 
 	/**
 	 * Add specific attributes
@@ -96,7 +93,6 @@ class Password extends \Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Validate input and set value
@@ -142,7 +138,6 @@ class Password extends \Widget
 		return '';
 	}
 
-
 	/**
 	 * Generate the widget and return it as string
 	 *
@@ -160,7 +155,6 @@ class Password extends \Widget
 						((\strlen($this->description) && \Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">'.$this->description.'</p>' : ''));
 	}
 
-
 	/**
 	 * Generate the label of the confirmation field and return it as string
 	 *
@@ -175,7 +169,6 @@ class Password extends \Widget
 						$GLOBALS['TL_LANG']['MSC']['confirm'][0],
 						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

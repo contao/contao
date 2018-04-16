@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads the environment variables
  *
@@ -45,7 +44,6 @@ class Environment
 	 */
 	protected static $arrCache = array();
 
-
 	/**
 	 * Return an environment variable
 	 *
@@ -74,7 +72,6 @@ class Environment
 		return static::$arrCache[$strKey];
 	}
 
-
 	/**
 	 * Set an environment variable
 	 *
@@ -86,7 +83,6 @@ class Environment
 		static::$arrCache[$strKey] = $varValue;
 	}
 
-
 	/**
 	 * Reset the internal cache
 	 */
@@ -94,7 +90,6 @@ class Environment
 	{
 		static::$arrCache = array();
 	}
-
 
 	/**
 	 * Return the absolute path to the script (e.g. /home/www/html/website/index.php)
@@ -105,7 +100,6 @@ class Environment
 	{
 		return str_replace('//', '/', strtr((static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) ? (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) : (@$_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME']), '\\', '/'));
 	}
-
 
 	/**
 	 * Return the relative path to the script (e.g. /website/index.php)
@@ -124,7 +118,6 @@ class Environment
 		return $request->getScriptName();
 	}
 
-
 	/**
 	 * Alias for scriptName()
 	 *
@@ -134,7 +127,6 @@ class Environment
 	{
 		return static::scriptName();
 	}
-
 
 	/**
 	 * Return the document root (e.g. /home/www/user/)
@@ -183,7 +175,6 @@ class Environment
 		return str_replace('//', '/', strtr(realpath($strDocumentRoot), '\\', '/'));
 	}
 
-
 	/**
 	 * Return the query string (e.g. id=2)
 	 *
@@ -198,7 +189,6 @@ class Environment
 
 		return static::encodeRequestString($_SERVER['QUERY_STRING']);
 	}
-
 
 	/**
 	 * Return the request URI [path]?[query] (e.g. /contao/index.php?id=2)
@@ -219,7 +209,6 @@ class Environment
 
 		return static::encodeRequestString($strRequest);
 	}
-
 
 	/**
 	 * Return the first eight accepted languages as array
@@ -264,7 +253,6 @@ class Environment
 		return \array_slice(array_unique($arrLanguages), 0, 8);
 	}
 
-
 	/**
 	 * Return accepted encoding types as array
 	 *
@@ -274,7 +262,6 @@ class Environment
 	{
 		return array_values(array_unique(explode(',', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
 	}
-
 
 	/**
 	 * Return the user agent as string
@@ -288,7 +275,6 @@ class Environment
 
 		return substr($ua, 0, 255);
 	}
-
 
 	/**
 	 * Return the HTTP Host
@@ -314,7 +300,6 @@ class Environment
 		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', $host);
 	}
 
-
 	/**
 	 * Return the HTTP X-Forwarded-Host
 	 *
@@ -324,7 +309,6 @@ class Environment
 	{
 		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', @$_SERVER['HTTP_X_FORWARDED_HOST']);
 	}
-
 
 	/**
 	 * Return true if the current page was requested via an SSL connection
@@ -342,7 +326,6 @@ class Environment
 
 		return $request->isSecure();
 	}
-
 
 	/**
 	 * Return the current URL without path or query string
@@ -363,7 +346,6 @@ class Environment
 		return (static::get('ssl') ? 'https://' : 'http://') . $host;
 	}
 
-
 	/**
 	 * Return the current URL with path or query string
 	 *
@@ -373,7 +355,6 @@ class Environment
 	{
 		return static::get('url') . static::get('requestUri');
 	}
-
 
 	/**
 	 * Return the real REMOTE_ADDR even if a proxy server is used
@@ -391,7 +372,6 @@ class Environment
 
 		return $request->getClientIp();
 	}
-
 
 	/**
 	 * Return the SERVER_ADDR
@@ -411,7 +391,6 @@ class Environment
 		return $strServer;
 	}
 
-
 	/**
 	 * Return the relative path to the base directory (e.g. /path)
 	 *
@@ -429,7 +408,6 @@ class Environment
 		return $request->getBasePath();
 	}
 
-
 	/**
 	 * Return the relativ path to the script (e.g. index.php)
 	 *
@@ -439,7 +417,6 @@ class Environment
 	{
 		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('scriptName'));
 	}
-
 
 	/**
 	 * Return the relativ path to the script and include the request (e.g. index.php?id=2)
@@ -451,7 +428,6 @@ class Environment
 		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('requestUri'));
 	}
 
-
 	/**
 	 * Return the request string without the script name (e.g. en/news.html)
 	 *
@@ -461,7 +437,6 @@ class Environment
 	{
 		return preg_replace('/^' . preg_quote(static::get('script'), '/') . '\/?/', '', static::get('request'));
 	}
-
 
 	/**
 	 * Return the request string without the index.php fragment
@@ -480,7 +455,6 @@ class Environment
 		return $strRequest;
 	}
 
-
 	/**
 	 * Return the URL and path that can be used in a <base> tag
 	 *
@@ -490,7 +464,6 @@ class Environment
 	{
 		return static::get('url') . static::get('path') . '/';
 	}
-
 
 	/**
 	 * Return the host name
@@ -502,7 +475,6 @@ class Environment
 		return static::get('httpHost');
 	}
 
-
 	/**
 	 * Return true on Ajax requests
 	 *
@@ -512,7 +484,6 @@ class Environment
 	{
 		return @$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
 	}
-
 
 	/**
 	 * Return the operating system and the browser name and version
@@ -592,7 +563,6 @@ class Environment
 		return $return;
 	}
 
-
 	/**
 	 * Encode a request string preserving certain reserved characters
 	 *
@@ -605,7 +575,6 @@ class Environment
 		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', function ($matches) { return rawurlencode($matches[0]); }, $strRequest);
 	}
 
-
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 *
@@ -614,7 +583,6 @@ class Environment
 	 */
 	protected function __construct() {}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 *
@@ -622,7 +590,6 @@ class Environment
 	 *             The Environment class is now static.
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return an environment variable
@@ -639,7 +606,6 @@ class Environment
 		return static::get($strKey);
 	}
 
-
 	/**
 	 * Set an environment variable
 	 *
@@ -653,7 +619,6 @@ class Environment
 	{
 		static::set($strKey, $varValue);
 	}
-
 
 	/**
 	 * Return the object instance (Singleton)

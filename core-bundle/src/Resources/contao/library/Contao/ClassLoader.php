@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Automatically loads class files based on a mapper array
  *
@@ -43,7 +42,6 @@ class ClassLoader
 	 */
 	protected static $classes = array();
 
-
 	/**
 	 * Add a new namespace
 	 *
@@ -63,7 +61,6 @@ class ClassLoader
 		array_unshift(self::$namespaces, $name);
 	}
 
-
 	/**
 	 * Add multiple new namespaces
 	 *
@@ -81,7 +78,6 @@ class ClassLoader
 		}
 	}
 
-
 	/**
 	 * Return the namespaces as array
 	 *
@@ -95,7 +91,6 @@ class ClassLoader
 
 		return self::$namespaces;
 	}
-
 
 	/**
 	 * Add a new class with its file path
@@ -111,7 +106,6 @@ class ClassLoader
 
 		self::$classes[$class] = $file;
 	}
-
 
 	/**
 	 * Add multiple new classes with their file paths
@@ -130,7 +124,6 @@ class ClassLoader
 		}
 	}
 
-
 	/**
 	 * Return the classes as array.
 	 *
@@ -144,7 +137,6 @@ class ClassLoader
 
 		return self::$classes;
 	}
-
 
 	/**
 	 * Autoload a class and create an alias in the global namespace
@@ -207,7 +199,6 @@ class ClassLoader
 		// Pass the request to other autoloaders (e.g. Swift)
 	}
 
-
 	/**
 	 * Search the namespaces for a matching entry
 	 *
@@ -228,7 +219,6 @@ class ClassLoader
 		return null;
 	}
 
-
 	/**
 	 * Register the autoloader
 	 */
@@ -236,7 +226,6 @@ class ClassLoader
 	{
 		spl_autoload_register('ClassLoader::load');
 	}
-
 
 	/**
 	 * Scan the module directories for config/autoload.php files and then

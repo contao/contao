@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_undo
- */
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
 
@@ -112,7 +108,6 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -129,7 +124,6 @@ class tl_undo extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to use table tl_undo
@@ -156,7 +150,6 @@ class tl_undo extends Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
 		}
 	}
-
 
 	/**
 	 * Add the surrounding ellipsis layer

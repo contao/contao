@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormSubmit
  *
@@ -42,7 +41,6 @@ class FormSubmit extends \Widget
 	 * @var string
 	 */
 	protected $strPrefix = 'widget widget-submit';
-
 
 	/**
 	 * Add specific attributes
@@ -83,7 +81,6 @@ class FormSubmit extends \Widget
 		}
 	}
 
-
 	/**
 	 * Do not validate
 	 */
@@ -91,7 +88,6 @@ class FormSubmit extends \Widget
 	{
 		return;
 	}
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -114,7 +110,6 @@ class FormSubmit extends \Widget
 
 		return parent::parse($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

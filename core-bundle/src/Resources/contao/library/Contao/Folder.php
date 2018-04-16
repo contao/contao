@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates, reads, writes and deletes folders
  *
@@ -54,7 +53,6 @@ class Folder extends \System
 	 * @var array
 	 */
 	protected $arrPathinfo = array();
-
 
 	/**
 	 * Check whether the folder exists
@@ -102,7 +100,6 @@ class Folder extends \System
 			}
 		}
 	}
-
 
 	/**
 	 * Return an object property
@@ -166,7 +163,6 @@ class Folder extends \System
 		}
 	}
 
-
 	/**
 	 * Return true if the folder is empty
 	 *
@@ -176,7 +172,6 @@ class Folder extends \System
 	{
 		return \count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1;
 	}
-
 
 	/**
 	 * Purge the folder
@@ -202,7 +197,6 @@ class Folder extends \System
 		}
 	}
 
-
 	/**
 	 * Purge the folder
 	 *
@@ -215,7 +209,6 @@ class Folder extends \System
 
 		$this->purge();
 	}
-
 
 	/**
 	 * Delete the folder
@@ -231,7 +224,6 @@ class Folder extends \System
 		}
 	}
 
-
 	/**
 	 * Set the folder permissions
 	 *
@@ -243,7 +235,6 @@ class Folder extends \System
 	{
 		return $this->Files->chmod($this->strFolder, $intChmod);
 	}
-
 
 	/**
 	 * Rename the folder
@@ -291,7 +282,6 @@ class Folder extends \System
 		return $return;
 	}
 
-
 	/**
 	 * Copy the folder
 	 *
@@ -327,7 +317,6 @@ class Folder extends \System
 		return true;
 	}
 
-
 	/**
 	 * Protect the folder by removing the .public file
 	 */
@@ -340,7 +329,6 @@ class Folder extends \System
 		}
 	}
 
-
 	/**
 	 * Unprotect the folder by adding a .public file
 	 */
@@ -351,7 +339,6 @@ class Folder extends \System
 			\File::putContent($this->strFolder . '/.public', '');
 		}
 	}
-
 
 	/**
 	 * Return the files model
@@ -367,7 +354,6 @@ class Folder extends \System
 
 		return $this->objModel;
 	}
-
 
 	/**
 	 * Return the MD5 hash of the folder
@@ -401,7 +387,6 @@ class Folder extends \System
 		return md5(implode('-', $arrFiles));
 	}
 
-
 	/**
 	 * Return the size of the folder
 	 *
@@ -433,7 +418,6 @@ class Folder extends \System
 		return $intSize;
 	}
 
-
 	/**
 	 * Check if the folder should be synchronized with the database
 	 *
@@ -445,7 +429,6 @@ class Folder extends \System
 	{
 		return \Dbafs::shouldBeSynchronized($this->strFolder);
 	}
-
 
 	/**
 	 * Return the path info (binary-safe)
@@ -459,7 +442,7 @@ class Folder extends \System
 		$matches = array();
 		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
 
-		preg_match('%^^(.*?)[\\\\/]*([^/\\\\]*?)[\\\\/\.]*$%im', $this->strFolder, $matches);
+		preg_match('%^^(.*?)[\\\\/]*([^/\\\\]*?)[\\\\/\.]*$%m', $this->strFolder, $matches);
 
 		if (isset($matches[1]))
 		{

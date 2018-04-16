@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormHtml
  *
@@ -28,7 +27,6 @@ class FormHtml extends \Widget
 	 */
 	protected $strTemplate = 'form_html';
 
-
 	/**
 	 * Do not validate
 	 */
@@ -36,7 +34,6 @@ class FormHtml extends \Widget
 	{
 		return;
 	}
-
 
 	/**
 	 * Parse the template file and return it as string
@@ -54,7 +51,6 @@ class FormHtml extends \Widget
 
 		return parent::parse($arrAttributes);
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

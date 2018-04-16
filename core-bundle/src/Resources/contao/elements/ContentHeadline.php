@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Front end content element "headline".
  *
@@ -24,7 +23,6 @@ class ContentHeadline extends \ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_headline';
-
 
 	/**
 	 * Generate the content element

@@ -15,7 +15,6 @@
  */
 class UnusedArgumentsException extends Exception {}
 
-
 /**
  * Class UnresolvableDependenciesException
  *

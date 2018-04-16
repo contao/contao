@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_theme
- */
 $GLOBALS['TL_DCA']['tl_theme'] = array
 (
 
@@ -226,7 +222,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -243,7 +238,6 @@ class tl_theme extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit the table
@@ -276,7 +270,6 @@ class tl_theme extends Backend
 		}
 	}
 
-
 	/**
 	 * Add an image to each record
 	 *
@@ -300,7 +293,6 @@ class tl_theme extends Backend
 		return $label;
 	}
 
-
 	/**
 	 * Check for modified style sheets and update them if necessary
 	 */
@@ -318,7 +310,6 @@ class tl_theme extends Backend
 		$objSession->set('style_sheet_update_all', null);
 	}
 
-
 	/**
 	 * Schedule a style sheet update
 	 *
@@ -333,7 +324,6 @@ class tl_theme extends Backend
 		$objSession->set('style_sheet_update_all', true);
 	}
 
-
 	/**
 	 * Return all template folders as array
 	 *
@@ -343,7 +333,6 @@ class tl_theme extends Backend
 	{
 		return $this->doGetTemplateFolders('templates');
 	}
-
 
 	/**
 	 * Return all template folders as array
@@ -369,7 +358,6 @@ class tl_theme extends Backend
 		return $return;
 	}
 
-
 	/**
 	 * Return the "import theme" link
 	 *
@@ -386,7 +374,6 @@ class tl_theme extends Backend
 		return $this->User->hasAccess('theme_import', 'themes') ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
 
-
 	/**
 	 * Return the theme store link
 	 *
@@ -396,7 +383,6 @@ class tl_theme extends Backend
 	{
 		return '<a href="https://themes.contao.org" target="_blank" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
 	}
-
 
 	/**
 	 * Return the "edit CSS" button
@@ -415,7 +401,6 @@ class tl_theme extends Backend
 		return $this->User->hasAccess('css', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the "edit modules" button
 	 *
@@ -432,7 +417,6 @@ class tl_theme extends Backend
 	{
 		return $this->User->hasAccess('modules', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the "edit page layouts" button
@@ -451,7 +435,6 @@ class tl_theme extends Backend
 		return $this->User->hasAccess('layout', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the "edit image sizes" button
 	 *
@@ -468,7 +451,6 @@ class tl_theme extends Backend
 	{
 		return $this->User->hasAccess('image_sizes', 'themes') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the "export theme" button

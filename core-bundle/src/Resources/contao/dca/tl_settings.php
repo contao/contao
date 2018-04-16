@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * System configuration
- */
 $GLOBALS['TL_DCA']['tl_settings'] = array
 (
 
@@ -324,7 +320,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -350,7 +345,6 @@ class tl_settings extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Make sure that "html5" is in the list of valid template files, so the back end works correctly (see #3398)
 	 *
@@ -367,7 +361,6 @@ class tl_settings extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Check a static URL

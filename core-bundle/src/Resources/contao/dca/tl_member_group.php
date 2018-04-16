@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_member_group
- */
 $GLOBALS['TL_DCA']['tl_member_group'] = array
 (
 
@@ -171,7 +167,6 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -188,7 +183,6 @@ class tl_member_group extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Add an image to each record
@@ -212,7 +206,6 @@ class tl_member_group extends Backend
 
 		return sprintf('<div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">%s</div>', TL_ASSETS_URL, Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_', $label);
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -249,7 +242,6 @@ class tl_member_group extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Class FormTextArea
  *
@@ -69,7 +68,6 @@ class FormTextArea extends \Widget
 	 */
 	protected $strPrefix = 'widget widget-textarea';
 
-
 	/**
 	 * Add specific attributes
 	 *
@@ -123,7 +121,6 @@ class FormTextArea extends \Widget
 		}
 	}
 
-
 	/**
 	 * Return a parameter
 	 *
@@ -152,7 +149,6 @@ class FormTextArea extends \Widget
 				break;
 		}
 	}
-
 
 	/**
 	 * Generate the widget and return it as string

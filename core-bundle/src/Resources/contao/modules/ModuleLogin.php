@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "login".
  *
@@ -32,7 +31,6 @@ class ModuleLogin extends \Module
 	 * @var string
 	 */
 	protected $strFlashType = 'contao.' . TL_MODE . '.error';
-
 
 	/**
 	 * Display a login form
@@ -155,7 +153,6 @@ class ModuleLogin extends \Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

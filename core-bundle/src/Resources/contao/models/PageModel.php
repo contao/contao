@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-
 /**
  * Reads and writes pages
  *
@@ -267,7 +266,6 @@ class PageModel extends \Model
 	 */
 	protected $blnDetailsLoaded = false;
 
-
 	/**
 	 * Find a published page by its ID
 	 *
@@ -290,7 +288,6 @@ class PageModel extends \Model
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
 	}
 
-
 	/**
 	 * Find published pages by their PID
 	 *
@@ -312,7 +309,6 @@ class PageModel extends \Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find the first published root page by its host name and language
@@ -374,7 +370,6 @@ class PageModel extends \Model
 		}
 	}
 
-
 	/**
 	 * Find the first published page by its parent ID
 	 *
@@ -401,7 +396,6 @@ class PageModel extends \Model
 
 		return static::findOneBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find the first published regular page by its parent ID
@@ -430,7 +424,6 @@ class PageModel extends \Model
 		return static::findOneBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find an error 403 page by its parent ID
 	 *
@@ -458,7 +451,6 @@ class PageModel extends \Model
 		return static::findOneBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find an error 404 page by its parent ID
 	 *
@@ -485,7 +477,6 @@ class PageModel extends \Model
 
 		return static::findOneBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find pages matching a list of possible alias names
@@ -529,7 +520,6 @@ class PageModel extends \Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 
-
 	/**
 	 * Find published pages by their ID or aliases
 	 *
@@ -551,7 +541,6 @@ class PageModel extends \Model
 
 		return static::findBy($arrColumns, $varId, $arrOptions);
 	}
-
 
 	/**
 	 * Find all published subpages by their parent ID and exclude pages only visible for guests
@@ -577,7 +566,6 @@ class PageModel extends \Model
 		return static::createCollectionFromDbResult($objSubpages, 'tl_page');
 	}
 
-
 	/**
 	 * Find all published regular pages by their IDs and exclude pages only visible for guests
 	 *
@@ -594,7 +582,7 @@ class PageModel extends \Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ") AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='root' AND $t.type!='error_403' AND $t.type!='error_404'");
 
 		if (FE_USER_LOGGED_IN)
 		{
@@ -614,7 +602,6 @@ class PageModel extends \Model
 
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
-
 
 	/**
 	 * Find all published regular pages by their parent IDs and exclude pages only visible for guests
@@ -647,7 +634,6 @@ class PageModel extends \Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find the language fallback page by hostname
@@ -682,7 +668,6 @@ class PageModel extends \Model
 		return static::findOneBy($arrColumns, $strHost, $arrOptions);
 	}
 
-
 	/**
 	 * Finds the published root pages
 	 *
@@ -703,7 +688,6 @@ class PageModel extends \Model
 
 		return static::findBy($arrColumns, 'root', $arrOptions);
 	}
-
 
 	/**
 	 * Find the parent pages of a page
@@ -730,7 +714,6 @@ class PageModel extends \Model
 		return static::createCollection($arrModels, 'tl_page');
 	}
 
-
 	/**
 	 * Find the first active page by its member groups
 	 *
@@ -747,7 +730,7 @@ class PageModel extends \Model
 
 		$time = \Date::floorToMinute();
 		$objDatabase = \Database::getInstance();
-		$arrIds = array_map('intval', $arrIds);
+		$arrIds = array_map('\intval', $arrIds);
 
 		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'" . ($time + 60) . "') AND p.published='1' AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'" . ($time + 60) . "') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
 								 ->limit(1)
@@ -769,7 +752,6 @@ class PageModel extends \Model
 		return new static($objResult);
 	}
 
-
 	/**
 	 * Find a page by its ID and return it with the inherited details
 	 *
@@ -789,7 +771,6 @@ class PageModel extends \Model
 		return $objPage->loadDetails();
 	}
 
-
 	/**
 	 * Register the contao.dns-fallback alias when the model is attached to the registry
 	 *
@@ -806,7 +787,6 @@ class PageModel extends \Model
 		}
 	}
 
-
 	/**
 	 * Unregister the contao.dns-fallback alias when the model is detached from the registry
 	 *
@@ -822,7 +802,6 @@ class PageModel extends \Model
 			$registry->unregisterAlias($this, 'contao.dns-fallback', $this->dns);
 		}
 	}
-
 
 	/**
 	 * Get the details of a page including inherited parameters
@@ -1001,7 +980,6 @@ class PageModel extends \Model
 		return $this;
 	}
 
-
 	/**
 	 * Generate a front end URL
 	 *
@@ -1043,7 +1021,6 @@ class PageModel extends \Model
 		return $strUrl;
 	}
 
-
 	/**
 	 * Generate an absolute URL depending on the current rewriteURL setting
 	 *
@@ -1073,7 +1050,6 @@ class PageModel extends \Model
 
 		return $strUrl;
 	}
-
 
 	/**
 	 * Modifies a URL from the URL generator.

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methodes to render a pagination menu.
  *
@@ -121,7 +120,6 @@ class Pagination
 	 */
 	protected $blnForceParam = false;
 
-
 	/**
 	 * Set the number of rows, the number of results per pages and the number of links
 	 *
@@ -163,7 +161,6 @@ class Pagination
 		$this->blnForceParam = $blnForceParam;
 	}
 
-
 	/**
 	 * Return true if the pagination menu has a "<< first" link
 	 *
@@ -173,7 +170,6 @@ class Pagination
 	{
 		return ($this->blnShowFirstLast && $this->intPage > 2) ? true : false;
 	}
-
 
 	/**
 	 * Return true if the pagination menu has a "< previous" link
@@ -185,7 +181,6 @@ class Pagination
 		return ($this->intPage > 1) ? true : false;
 	}
 
-
 	/**
 	 * Return true if the pagination menu has a "next >" link
 	 *
@@ -196,7 +191,6 @@ class Pagination
 		return ($this->intPage < $this->intTotalPages) ? true : false;
 	}
 
-
 	/**
 	 * Return true if the pagination menu has a "last >>" link
 	 *
@@ -206,7 +200,6 @@ class Pagination
 	{
 		return ($this->blnShowFirstLast && $this->intPage < ($this->intTotalPages - 1)) ? true : false;
 	}
-
 
 	/**
 	 * Generate the pagination menu and return it as HTML string
@@ -298,7 +291,6 @@ class Pagination
 		return $objTemplate->parse();
 	}
 
-
 	/**
 	 * Generate all page links separated with the given argument and return them as string
 	 *
@@ -324,7 +316,6 @@ class Pagination
 
 		return implode($strSeparator, $arrLinks);
 	}
-
 
 	/**
 	 * Generate all page links and return them as array
@@ -388,7 +379,6 @@ class Pagination
 
 		return $arrLinks;
 	}
-
 
 	/**
 	 * Generate a link and return the URL

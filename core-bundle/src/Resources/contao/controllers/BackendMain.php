@@ -17,7 +17,6 @@ use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
 /**
  * Main back end controller.
  *
@@ -36,7 +35,6 @@ class BackendMain extends \Backend
 	 * @var BackendTemplate|object
 	 */
 	protected $Template;
-
 
 	/**
 	 * Initialize the controller
@@ -78,7 +76,6 @@ class BackendMain extends \Backend
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('modules');
 	}
-
 
 	/**
 	 * Run the controller and parse the login template
@@ -139,7 +136,6 @@ class BackendMain extends \Backend
 		return $this->output();
 	}
 
-
 	/**
 	 * Add the welcome screen
 	 *
@@ -179,7 +175,6 @@ class BackendMain extends \Backend
 
 		return $objTemplate->parse();
 	}
-
 
 	/**
 	 * Output the template file

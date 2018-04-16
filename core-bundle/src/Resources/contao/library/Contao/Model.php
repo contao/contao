@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads objects from and writes them to to the database
  *
@@ -101,7 +100,6 @@ abstract class Model
 	 */
 	protected $blnPreventSaving = false;
 
-
 	/**
 	 * Load the relations and optionally process a result set
 	 *
@@ -178,7 +176,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Unset the primary key when cloning an object
 	 */
@@ -189,7 +186,6 @@ abstract class Model
 
 		unset($this->arrData[static::$strPk]);
 	}
-
 
 	/**
 	 * Clone a model with its original values
@@ -203,7 +199,6 @@ abstract class Model
 
 		return $clone;
 	}
-
 
 	/**
 	 * Set an object property
@@ -224,7 +219,6 @@ abstract class Model
 		unset($this->arrRelated[$strKey]);
 	}
 
-
 	/**
 	 * Return an object property
 	 *
@@ -242,7 +236,6 @@ abstract class Model
 		return null;
 	}
 
-
 	/**
 	 * Check whether a property is set
 	 *
@@ -255,7 +248,6 @@ abstract class Model
 		return isset($this->arrData[$strKey]);
 	}
 
-
 	/**
 	 * Return the name of the primary key
 	 *
@@ -265,7 +257,6 @@ abstract class Model
 	{
 		return static::$strPk;
 	}
-
 
 	/**
 	 * Return an array of unique field/column names (without the PK)
@@ -279,7 +270,6 @@ abstract class Model
 		return $objDca->getUniqueFields();
 	}
 
-
 	/**
 	 * Return the name of the related table
 	 *
@@ -290,7 +280,6 @@ abstract class Model
 		return static::$strTable;
 	}
 
-
 	/**
 	 * Return the current record as associative array
 	 *
@@ -300,7 +289,6 @@ abstract class Model
 	{
 		return $this->arrData;
 	}
-
 
 	/**
 	 * Return the original values as associative array
@@ -326,7 +314,6 @@ abstract class Model
 		return $originalRow;
 	}
 
-
 	/**
 	 * Return true if the model has been modified
 	 *
@@ -336,7 +323,6 @@ abstract class Model
 	{
 		return !empty($this->arrModified);
 	}
-
 
 	/**
 	 * Set the current record from an array
@@ -359,7 +345,6 @@ abstract class Model
 
 		return $this;
 	}
-
 
 	/**
 	 * Set the current record from an array preserving modified but unsaved fields
@@ -386,7 +371,6 @@ abstract class Model
 		return $this;
 	}
 
-
 	/**
 	 * Mark a field as modified
 	 *
@@ -400,7 +384,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Return the object instance
 	 *
@@ -410,7 +393,6 @@ abstract class Model
 	{
 		return $this;
 	}
-
 
 	/**
 	 * Save the current record
@@ -519,7 +501,6 @@ abstract class Model
 		return $this;
 	}
 
-
 	/**
 	 * Modify the current row before it is stored in the database
 	 *
@@ -531,7 +512,6 @@ abstract class Model
 	{
 		return $arrSet;
 	}
-
 
 	/**
 	 * Modify the current row after it has been stored in the database
@@ -545,7 +525,6 @@ abstract class Model
 			$this->refresh(); // might have been modified by default values or triggers
 		}
 	}
-
 
 	/**
 	 * Delete the current record and return the number of affected rows
@@ -578,7 +557,6 @@ abstract class Model
 
 		return $intAffected;
 	}
-
 
 	/**
 	 * Lazy load related records
@@ -653,7 +631,6 @@ abstract class Model
 		return $this->arrRelated[$strKey];
 	}
 
-
 	/**
 	 * Reload the data from the database discarding all modifications
 	 */
@@ -673,7 +650,6 @@ abstract class Model
 
 		$this->setRow($res->row());
 	}
-
 
 	/**
 	 * Detach the model from the registry
@@ -697,7 +673,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Attach the model to the registry
 	 */
@@ -705,7 +680,6 @@ abstract class Model
 	{
 		\Model\Registry::getInstance()->register($this);
 	}
-
 
 	/**
 	 * Called when the model is attached to the model registry
@@ -726,7 +700,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Called when the model is detached from the model registry
 	 *
@@ -746,7 +719,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Prevent saving the model
 	 *
@@ -757,7 +729,6 @@ abstract class Model
 		$this->detach($blnKeepClone);
 		$this->blnPreventSaving = true;
 	}
-
 
 	/**
 	 * Find a single record by its primary key
@@ -795,7 +766,6 @@ abstract class Model
 
 		return static::find($arrOptions);
 	}
-
 
 	/**
 	 * Find a single record by its ID or alias
@@ -838,7 +808,6 @@ abstract class Model
 		return static::find($arrOptions);
 	}
 
-
 	/**
 	 * Find multiple records by their IDs
 	 *
@@ -880,7 +849,7 @@ abstract class Model
 			(
 				array
 				(
-					'column' => array("$t.id IN(" . implode(',', array_map('intval', $arrUnregistered)) . ")"),
+					'column' => array("$t.id IN(" . implode(',', array_map('\intval', $arrUnregistered)) . ")"),
 					'value'  => null,
 					'order'  => \Database::getInstance()->findInSet("$t.id", $arrIds),
 					'return' => 'Collection'
@@ -903,7 +872,6 @@ abstract class Model
 
 		return static::createCollection(array_filter(array_values($arrRegistered)), static::$strTable);
 	}
-
 
 	/**
 	 * Find a single record by various criteria
@@ -931,7 +899,6 @@ abstract class Model
 
 		return static::find($arrOptions);
 	}
-
 
 	/**
 	 * Find records by various criteria
@@ -967,7 +934,6 @@ abstract class Model
 		return static::find($arrOptions);
 	}
 
-
 	/**
 	 * Find all records
 	 *
@@ -989,7 +955,6 @@ abstract class Model
 
 		return static::find($arrOptions);
 	}
-
 
 	/**
 	 * Magic method to map Model::findByName() to Model::findBy('name')
@@ -1026,7 +991,6 @@ abstract class Model
 
 		throw new \Exception("Unknown method $name");
 	}
-
 
 	/**
 	 * Find records and return the model or model collection
@@ -1127,7 +1091,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Modify the database statement before it is executed
 	 *
@@ -1140,7 +1103,6 @@ abstract class Model
 		return $objStatement;
 	}
 
-
 	/**
 	 * Modify the database result before the model is created
 	 *
@@ -1152,7 +1114,6 @@ abstract class Model
 	{
 		return $objResult;
 	}
-
 
 	/**
 	 * Return the number of records matching certain criteria
@@ -1187,7 +1148,6 @@ abstract class Model
 		return (int) \Database::getInstance()->prepare($strQuery)->execute($arrOptions['value'])->count;
 	}
 
-
 	/**
 	 * Return the total number of rows
 	 *
@@ -1197,7 +1157,6 @@ abstract class Model
 	{
 		return static::countBy();
 	}
-
 
 	/**
 	 * Compile a Model class name from a table name (e.g. tl_form_field becomes FormFieldModel)
@@ -1234,7 +1193,6 @@ abstract class Model
 		}
 	}
 
-
 	/**
 	 * Build a query based on the given options
 	 *
@@ -1246,7 +1204,6 @@ abstract class Model
 	{
 		return \Model\QueryBuilder::find($arrOptions);
 	}
-
 
 	/**
 	 * Build a query based on the given options to count the number of records
@@ -1260,7 +1217,6 @@ abstract class Model
 		return \Model\QueryBuilder::count($arrOptions);
 	}
 
-
 	/**
 	 * Create a model from a database result
 	 *
@@ -1272,7 +1228,6 @@ abstract class Model
 	{
 		return new static($objResult);
 	}
-
 
 	/**
 	 * Create a Model\Collection object
@@ -1287,7 +1242,6 @@ abstract class Model
 		return new \Model\Collection($arrModels, $strTable);
 	}
 
-
 	/**
 	 * Create a new collection from a database result
 	 *
@@ -1300,7 +1254,6 @@ abstract class Model
 	{
 		return \Model\Collection::createFromDbResult($objResult, $strTable);
 	}
-
 
 	/**
 	 * Check if the preview mode is enabled

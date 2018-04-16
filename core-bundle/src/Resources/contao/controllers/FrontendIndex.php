@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Main front end controller.
  *
@@ -36,7 +35,6 @@ class FrontendIndex extends \Frontend
 		\define('BE_USER_LOGGED_IN', $this->getLoginStatus('BE_USER_AUTH'));
 		\define('FE_USER_LOGGED_IN', $this->getLoginStatus('FE_USER_AUTH'));
 	}
-
 
 	/**
 	 * Run the controller
@@ -319,7 +317,6 @@ class FrontendIndex extends \Frontend
 			return $objHandler->getResponse();
 		}
 	}
-
 
 	/**
 	 * Try to load the page from the cache

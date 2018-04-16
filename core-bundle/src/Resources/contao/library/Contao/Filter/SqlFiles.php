@@ -10,7 +10,6 @@
 
 namespace Contao\Filter;
 
-
 /**
  * Filters a directory for .sql files
  *

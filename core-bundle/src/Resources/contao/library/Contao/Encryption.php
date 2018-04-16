@@ -12,7 +12,6 @@ namespace Contao;
 
 @trigger_error('Using the Contao\Encryption class has been deprecated and will no longer work in Contao 5.0. Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
 
-
 /**
  * Encrypts and decrypts data
  *
@@ -43,7 +42,6 @@ class Encryption
 	 * @var resource
 	 */
 	protected static $resTd;
-
 
 	/**
 	 * Encrypt a value
@@ -89,7 +87,6 @@ class Encryption
 
 		return $strEncrypted;
 	}
-
 
 	/**
 	 * Decrypt a value
@@ -144,7 +141,6 @@ class Encryption
 		return $strDecrypted;
 	}
 
-
 	/**
 	 * Initialize the encryption module
 	 *
@@ -163,7 +159,6 @@ class Encryption
 		}
 	}
 
-
 	/**
 	 * Generate a password hash
 	 *
@@ -175,7 +170,6 @@ class Encryption
 	{
 		return password_hash($strPassword, PASSWORD_DEFAULT);
 	}
-
 
 	/**
 	 * Test whether a password hash has been generated with crypt()
@@ -206,7 +200,6 @@ class Encryption
 		return false;
 	}
 
-
 	/**
 	 * Verify a readable password against a password hash
 	 *
@@ -222,7 +215,6 @@ class Encryption
 		return password_verify($strPassword, $strHash);
 	}
 
-
 	/**
 	 * Initialize the encryption module
 	 */
@@ -231,12 +223,10 @@ class Encryption
 		static::initialize();
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the object instance (Singleton)

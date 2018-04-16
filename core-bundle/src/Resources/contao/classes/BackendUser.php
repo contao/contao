@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-
 /**
  * Provide methods to manage back end users.
  *
@@ -99,7 +98,6 @@ class BackendUser extends \User
 	 */
 	protected $arrFilemountIds;
 
-
 	/**
 	 * Initialize the object
 	 */
@@ -110,7 +108,6 @@ class BackendUser extends \User
 		$this->strIp = \Environment::get('ip');
 		$this->strHash = \Input::cookie($this->strCookie);
 	}
-
 
 	/**
 	 * Extend parent getter class and modify some parameters
@@ -155,7 +152,6 @@ class BackendUser extends \User
 		return parent::__get($strKey);
 	}
 
-
 	/**
 	 * Redirect to the login screen if authentication fails
 	 *
@@ -187,7 +183,6 @@ class BackendUser extends \User
 
 		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
 	}
-
 
 	/**
 	 * Check whether the current user has a certain access right
@@ -227,7 +222,6 @@ class BackendUser extends \User
 
 		return false;
 	}
-
 
 	/**
 	 * Return true if the current user is allowed to do the current operation on the current page
@@ -303,7 +297,6 @@ class BackendUser extends \User
 		return \count(array_intersect($permission, $chmod)) > 0;
 	}
 
-
 	/**
 	 * Return true if there is at least one allowed excluded field
 	 *
@@ -321,7 +314,6 @@ class BackendUser extends \User
 		return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0;
 	}
 
-
 	/**
 	 * Restore the original numeric file mounts (see #5083)
 	 */
@@ -337,7 +329,6 @@ class BackendUser extends \User
 		parent::save();
 		$this->filemounts = $filemounts;
 	}
-
 
 	/**
 	 * Set all user properties from a database record
@@ -448,7 +439,6 @@ class BackendUser extends \User
 			}
 		}
 	}
-
 
 	/**
 	 * Generate the navigation menu and return it as array

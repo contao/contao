@@ -20,7 +20,6 @@ use Imagine\Image\Point;
 
 @trigger_error('Using the Contao\Picture class has been deprecated and will no longer work in Contao 5.0. Use the contao.image.picture_factory service instead.', E_USER_DEPRECATED);
 
-
 /**
  * Resizes images and creates picture data
  *
@@ -71,7 +70,6 @@ class Picture
 	 */
 	protected $imageSizeItems = array();
 
-
 	/**
 	 * Create a new object to handle a picture element
 	 *
@@ -81,7 +79,6 @@ class Picture
 	{
 		$this->image = new \Image($file);
 	}
-
 
 	/**
 	 * Create a picture instance from the given image path and size
@@ -153,7 +150,6 @@ class Picture
 		return $picture;
 	}
 
-
 	/**
 	 * Set the important part settings
 	 *
@@ -168,7 +164,6 @@ class Picture
 		return $this;
 	}
 
-
 	/**
 	 * Set the image size
 	 *
@@ -182,7 +177,6 @@ class Picture
 
 		return $this;
 	}
-
 
 	/**
 	 * Set the image size items collection
@@ -202,7 +196,6 @@ class Picture
 
 		return $this;
 	}
-
 
 	/**
 	 * Get the picture element definition array
@@ -253,7 +246,6 @@ class Picture
 			'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL),
 		);
 	}
-
 
 	/**
 	 * Get the config for one picture source element

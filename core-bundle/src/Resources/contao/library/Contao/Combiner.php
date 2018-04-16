@@ -14,7 +14,6 @@ use Leafo\ScssPhp\Compiler;
 use Leafo\ScssPhp\Formatter\Compressed;
 use Leafo\ScssPhp\Formatter\Expanded;
 
-
 /**
  * Combines .css or .js files into one single file
  *
@@ -81,7 +80,6 @@ class Combiner extends \System
 	 */
 	protected $strWebDir;
 
-
 	/**
 	 * Public constructor required
 	 */
@@ -91,7 +89,6 @@ class Combiner extends \System
 
 		parent::__construct();
 	}
-
 
 	/**
 	 * Add a file to the combined file
@@ -164,7 +161,6 @@ class Combiner extends \System
 		$this->strKey .= '-f' . $strFile . '-v' . $strVersion . '-m' . $strMedia;
 	}
 
-
 	/**
 	 * Add multiple files from an array
 	 *
@@ -180,7 +176,6 @@ class Combiner extends \System
 		}
 	}
 
-
 	/**
 	 * Check whether files have been added
 	 *
@@ -190,7 +185,6 @@ class Combiner extends \System
 	{
 		return !empty($this->arrFiles);
 	}
-
 
 	/**
 	 * Generates the files and returns the URLs.
@@ -241,7 +235,6 @@ class Combiner extends \System
 		return $return;
 	}
 
-
 	/**
 	 * Generate the combined file and return its path
 	 *
@@ -258,7 +251,6 @@ class Combiner extends \System
 
 		return $this->getCombinedFileUrl($strUrl);
 	}
-
 
 	/**
 	 * Generates the debug markup.
@@ -281,7 +273,6 @@ class Combiner extends \System
 
 		return implode('"><link rel="stylesheet" href="', $return);
 	}
-
 
 	/**
 	 * Generate the combined file and return its path
@@ -354,7 +345,6 @@ class Combiner extends \System
 		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 	}
 
-
 	/**
 	 * Handle CSS files
 	 *
@@ -375,7 +365,6 @@ class Combiner extends \System
 
 		return $content;
 	}
-
 
 	/**
 	 * Handle SCSS/LESS files
@@ -419,7 +408,6 @@ class Combiner extends \System
 			return $this->fixPaths($objParser->getCss(), $arrFile);
 		}
 	}
-
 
 	/**
 	 * Fix the paths
@@ -504,7 +492,6 @@ class Combiner extends \System
 			$content
 		);
 	}
-
 
 	/**
 	 * Check if the file has a @media tag

@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Provide methods to handle an error 404 page.
  *
@@ -41,7 +40,6 @@ class PageError404 extends \Frontend
 		$objHandler->generate($objPage);
 	}
 
-
 	/**
 	 * Return a response object
 	 *
@@ -60,7 +58,6 @@ class PageError404 extends \Frontend
 
 		return $objHandler->getResponse($objPage)->setStatusCode(404);
 	}
-
 
 	/**
 	 * Prepare the output

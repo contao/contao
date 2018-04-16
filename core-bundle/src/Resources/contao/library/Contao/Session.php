@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 @trigger_error('Using the Contao\Session class has been deprecated and will no longer work in Contao 5.0. Use the session service instead.', E_USER_DEPRECATED);
 
-
 /**
  * Handles reading and updating the session data
  *
@@ -62,7 +61,6 @@ class Session
 	 */
 	private $mappedKeys = array('referer', 'popupReferer', 'CURRENT_ID');
 
-
 	/**
 	 * Get the session data
 	 */
@@ -80,12 +78,10 @@ class Session
 		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());
 	}
 
-
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone() {}
-
 
 	/**
 	 * Return the object instance (Singleton)
@@ -101,7 +97,6 @@ class Session
 
 		return static::$objInstance;
 	}
-
 
 	/**
 	 * Return a session variable
@@ -120,7 +115,6 @@ class Session
 
 		return $this->sessionBag->get($strKey);
 	}
-
 
 	/**
 	 * Set a session variable
@@ -141,7 +135,6 @@ class Session
 		}
 	}
 
-
 	/**
 	 * Remove a session variable
 	 *
@@ -159,7 +152,6 @@ class Session
 			$this->sessionBag->remove($strKey);
 		}
 	}
-
 
 	/**
 	 * Return the session data as array
@@ -183,7 +175,6 @@ class Session
 
 		return $data;
 	}
-
 
 	/**
 	 * Set the session data from an array
@@ -211,7 +202,6 @@ class Session
 
 		$this->sessionBag->replace($arrData);
 	}
-
 
 	/**
 	 * Append data to the session

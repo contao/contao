@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_page
- */
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
 
@@ -672,7 +668,6 @@ if (Input::get('popup'))
 	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['articles']);
 }
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -689,7 +684,6 @@ class tl_page extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_page
@@ -911,7 +905,6 @@ class tl_page extends Backend
 		}
 	}
 
-
 	/**
 	 * Add the breadcrumb menu
 	 */
@@ -919,7 +912,6 @@ class tl_page extends Backend
 	{
 		Backend::addPagesBreadcrumb();
 	}
-
 
 	/**
 	 * Make new top-level pages root pages
@@ -951,7 +943,6 @@ class tl_page extends Backend
 		}
 	}
 
-
 	/**
 	 * Make sure that top-level pages are root pages
 	 *
@@ -972,7 +963,6 @@ class tl_page extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Show a warning if there is no language fallback page
 	 */
@@ -986,7 +976,6 @@ class tl_page extends Backend
 		$messages = new \Messages();
 		Message::addRaw($messages->languageFallback());
 	}
-
 
 	/**
 	 * Make the redirect page mandatory if the page is a logout page
@@ -1006,7 +995,6 @@ class tl_page extends Backend
 			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
 		}
 	}
-
 
 	/**
 	 * Auto-generate a page alias if it has not been set yet
@@ -1102,7 +1090,6 @@ class tl_page extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Automatically create an article in the main column of a new page
 	 *
@@ -1155,7 +1142,6 @@ class tl_page extends Backend
 		$this->Database->prepare("INSERT INTO tl_article %s")->set($arrSet)->execute();
 	}
 
-
 	/**
 	 * Purge the search index if a page is being deleted
 	 *
@@ -1180,7 +1166,6 @@ class tl_page extends Backend
 						   ->execute($objResult->id);
 		}
 	}
-
 
 	/**
 	 * Check the sitemap alias
@@ -1214,7 +1199,6 @@ class tl_page extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Prevent circular references
 	 *
@@ -1235,7 +1219,6 @@ class tl_page extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Check the DNS settings
 	 *
@@ -1247,7 +1230,6 @@ class tl_page extends Backend
 	{
 		return str_ireplace(array('http://', 'https://', 'ftp://'), '', $varValue);
 	}
-
 
 	/**
 	 * Make sure there is only one fallback per domain (thanks to Andreas Schempp)
@@ -1277,7 +1259,6 @@ class tl_page extends Backend
 		return $varValue;
 	}
 
-
 	/**
 	 * Check a static URL
 	 *
@@ -1294,7 +1275,6 @@ class tl_page extends Backend
 
 		return $varValue;
 	}
-
 
 	/**
 	 * Returns all allowed page types as array
@@ -1325,7 +1305,6 @@ class tl_page extends Backend
 		return $arrOptions;
 	}
 
-
 	/**
 	 * Return all page layouts grouped by theme
 	 *
@@ -1350,7 +1329,6 @@ class tl_page extends Backend
 		return $return;
 	}
 
-
 	/**
 	 * Add an image to each page in the tree
 	 *
@@ -1368,7 +1346,6 @@ class tl_page extends Backend
 		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
 	}
 
-
 	/**
 	 * Return the edit page button
 	 *
@@ -1385,7 +1362,6 @@ class tl_page extends Backend
 	{
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the copy page button
@@ -1409,7 +1385,6 @@ class tl_page extends Backend
 
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the copy page with subpages button
@@ -1438,7 +1413,6 @@ class tl_page extends Backend
 		return ($objSubpages->numRows && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the cut page button
 	 *
@@ -1455,7 +1429,6 @@ class tl_page extends Backend
 	{
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the paste page button
@@ -1544,7 +1517,6 @@ class tl_page extends Backend
 		return $return.($disablePI ? Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ');
 	}
 
-
 	/**
 	 * Return the delete page button
 	 *
@@ -1563,7 +1535,6 @@ class tl_page extends Backend
 
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !\in_array($row['id'], $root))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Generate an "edit articles" button and return it as string
@@ -1585,7 +1556,6 @@ class tl_page extends Backend
 
 		return ($row['type'] == 'regular' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;pn='.$row['id']) . '" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Automatically generate the folder URL aliases
@@ -1661,7 +1631,6 @@ class tl_page extends Backend
 		return $arrButtons;
 	}
 
-
 	/**
 	 * Recursively add pages to a sitemap
 	 *
@@ -1672,7 +1641,6 @@ class tl_page extends Backend
 		$this->import('Automator');
 		$this->Automator->generateSitemap($dc->id);
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -1718,7 +1686,6 @@ class tl_page extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Disable/enable a user group

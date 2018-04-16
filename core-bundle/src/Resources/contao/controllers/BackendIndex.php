@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Handle back end logins and logouts.
  *
@@ -64,7 +63,6 @@ class BackendIndex extends \Backend
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('tl_user');
 	}
-
 
 	/**
 	 * Run the controller and parse the login template
