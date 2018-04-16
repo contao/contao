@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes newsletter recipients
  *
@@ -74,7 +73,6 @@ class NewsletterRecipientsModel extends Model
 	 */
 	protected static $strTable = 'tl_newsletter_recipients';
 
-
 	/**
 	 * Find recipients by their e-mail address and parent ID
 	 *
@@ -95,7 +93,6 @@ class NewsletterRecipientsModel extends Model
 
 		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")"), $strEmail, $arrOptions);
 	}
-
 
 	/**
 	 * Find old subscriptions by e-mail address and channels

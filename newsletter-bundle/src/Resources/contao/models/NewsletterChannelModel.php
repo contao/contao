@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes newsletter channels
  *
@@ -61,7 +60,6 @@ class NewsletterChannelModel extends Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_newsletter_channel';
-
 
 	/**
 	 * Find multiple newsletter channels by their IDs

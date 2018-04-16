@@ -8,10 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Back end modules
- */
+// Back end modules
 array_insert($GLOBALS['BE_MOD']['content'], 4, array
 (
 	'newsletter' => array
@@ -23,10 +20,7 @@ array_insert($GLOBALS['BE_MOD']['content'], 4, array
 	)
 ));
 
-
-/**
- * Front end modules
- */
+// Front end modules
 array_insert($GLOBALS['FE_MOD'], 4, array
 (
 	'newsletter' => array
@@ -38,18 +32,12 @@ array_insert($GLOBALS['FE_MOD'], 4, array
 	)
 ));
 
-
-/**
- * Register hooks
- */
+// Register hooks
 $GLOBALS['TL_HOOKS']['createNewUser'][] = array('Newsletter', 'createNewUser');
 $GLOBALS['TL_HOOKS']['activateAccount'][] = array('Newsletter', 'activateAccount');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Newsletter', 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['closeAccount'][] = array('Newsletter', 'removeSubscriptions');
 
-
-/**
- * Add permissions
- */
+// Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletters';
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletterp';

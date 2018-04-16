@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes newsletters
  *
@@ -99,7 +98,6 @@ class NewsletterModel extends Model
 	 */
 	protected static $strTable = 'tl_newsletter';
 
-
 	/**
 	 * Find a sent newsletter by its parent IDs and its ID or alias
 	 *
@@ -128,7 +126,6 @@ class NewsletterModel extends Model
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
 
-
 	/**
 	 * Find sent newsletters by their parent ID
 	 *
@@ -154,7 +151,6 @@ class NewsletterModel extends Model
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
-
 
 	/**
 	 * Find sent newsletters by multiple parent IDs
