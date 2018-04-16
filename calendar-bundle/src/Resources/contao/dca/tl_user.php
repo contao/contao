@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Extend the default palettes
  */
@@ -18,7 +17,6 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->applyToPalette('extend', 'tl_user')
     ->applyToPalette('custom', 'tl_user')
 ;
-
 
 /**
  * Add fields to tl_user

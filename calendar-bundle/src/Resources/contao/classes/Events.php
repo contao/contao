@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods to get all events of a certain period from the database.
  *
@@ -50,7 +49,6 @@ abstract class Events extends \Module
 	 * @var array
 	 */
 	private static $arrUrlCache = array();
-
 
 	/**
 	 * Sort out protected archives
@@ -95,7 +93,6 @@ abstract class Events extends \Module
 
 		return $arrCalendars;
 	}
-
 
 	/**
 	 * Get all events of a certain period
@@ -190,7 +187,6 @@ abstract class Events extends \Module
 
 		return $this->arrEvents;
 	}
-
 
 	/**
 	 * Add an event to the array of active events
@@ -385,7 +381,6 @@ abstract class Events extends \Module
 		}
 	}
 
-
 	/**
 	 * Generate a URL and return it as string
 	 *
@@ -456,7 +451,6 @@ abstract class Events extends \Module
 
 		return self::$arrUrlCache[$strCacheKey];
 	}
-
 
 	/**
 	 * Return the begin and end timestamp and an error message as array

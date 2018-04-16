@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Extend the default palette
  */
@@ -17,7 +16,6 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_user_group')
 ;
-
 
 /**
  * Add fields to tl_user_group

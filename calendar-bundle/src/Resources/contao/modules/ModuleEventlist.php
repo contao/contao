@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "event list".
  *
@@ -43,7 +42,6 @@ class ModuleEventlist extends \Events
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_eventlist';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -82,7 +80,6 @@ class ModuleEventlist extends \Events
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

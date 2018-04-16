@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Back end modules
  */
@@ -21,7 +20,6 @@ array_insert($GLOBALS['BE_MOD']['content'], 1, array
 		'list'        => array('ListWizard', 'importList')
 	)
 ));
-
 
 /**
  * Front end modules
@@ -37,12 +35,10 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 	)
 ));
 
-
 /**
  * Cron jobs
  */
 $GLOBALS['TL_CRON']['daily']['generateCalendarFeeds'] = array('Calendar', 'generateFeeds');
-
 
 /**
  * Style sheet
@@ -52,7 +48,6 @@ if (TL_MODE == 'BE')
 	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/style.css|static';
 }
 
-
 /**
  * Register hooks
  */
@@ -61,7 +56,6 @@ $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Calendar', 'getSearchableP
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('contao_calendar.listener.generate_page', 'onGeneratePage');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Calendar', 'generateFeeds');
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_calendar.listener.insert_tags', 'onReplaceInsertTags');
-
 
 /**
  * Add permissions

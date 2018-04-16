@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Dynamically add the permission check and parent table
  */
@@ -19,7 +18,6 @@ if (Input::get('do') == 'calendar')
 	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content_calendar', 'generateFeed');
 	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['button_callback'] = array('tl_content_calendar', 'toggleIcon');
 }
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
@@ -39,7 +37,6 @@ class tl_content_calendar extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_content
@@ -110,7 +107,6 @@ class tl_content_calendar extends Backend
 		}
 	}
 
-
 	/**
 	 * Check access to a particular content element
 	 *
@@ -148,7 +144,6 @@ class tl_content_calendar extends Backend
 		}
 	}
 
-
 	/**
 	 * Check for modified calendar feeds and update the XML files if necessary
 	 */
@@ -176,7 +171,6 @@ class tl_content_calendar extends Backend
 
 		$objSession->set('calendar_feed_updater', null);
 	}
-
 
 	/**
 	 * Return the "toggle visibility" button
@@ -213,7 +207,6 @@ class tl_content_calendar extends Backend
 
 		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
-
 
 	/**
 	 * Toggle the visibility of an element

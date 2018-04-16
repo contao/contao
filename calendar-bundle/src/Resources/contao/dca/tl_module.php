@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Add palettes to tl_module
  */
@@ -16,7 +15,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']    = '{title_legend},nam
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']   = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader'] = '{title_legend},name,headline,type;{config_legend},cal_calendar;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']   = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_format,cal_noSpan,cal_order,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-
 
 /**
  * Add fields to tl_module
@@ -149,7 +147,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-
 $bundles = System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
@@ -157,7 +154,6 @@ if (isset($bundles['ContaoCommentsBundle']))
 {
 	$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader'] = str_replace('{protected_legend:hide}', '{comment_legend:hide},com_template;{protected_legend:hide}', $GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']);
 }
-
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
@@ -175,7 +171,6 @@ class tl_module_calendar extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Get all calendars and return them as array
@@ -203,7 +198,6 @@ class tl_module_calendar extends Backend
 		return $arrCalendars;
 	}
 
-
 	/**
 	 * Get all event reader modules and return them as array
 	 *
@@ -221,7 +215,6 @@ class tl_module_calendar extends Backend
 
 		return $arrModules;
 	}
-
 
 	/**
 	 * Return the calendar formats depending on the module type
@@ -244,7 +237,6 @@ class tl_module_calendar extends Backend
 			'cal_past'     => array('past_7', 'past_14', 'past_30', 'past_90', 'past_180', 'past_365', 'past_two', 'past_cur_month', 'past_cur_year', 'past_prev_month', 'past_prev_year', 'past_all')
 		);
 	}
-
 
 	/**
 	 * Hide the start day drop-down if not applicable
@@ -275,7 +267,6 @@ class tl_module_calendar extends Backend
   </script>';
 	}
 
-
 	/**
 	 * Return all event templates as array
 	 *
@@ -285,7 +276,6 @@ class tl_module_calendar extends Backend
 	{
 		return $this->getTemplateGroup('event_');
 	}
-
 
 	/**
 	 * Return all calendar templates as array

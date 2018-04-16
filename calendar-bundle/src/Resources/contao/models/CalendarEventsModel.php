@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes events
  *
@@ -186,7 +185,6 @@ class CalendarEventsModel extends \Model
 	 */
 	protected static $strTable = 'tl_calendar_events';
 
-
 	/**
 	 * Find a published event from one or more calendars by its ID or alias
 	 *
@@ -205,7 +203,7 @@ class CalendarEventsModel extends \Model
 
 		$t = static::$strTable;
 		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
-		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('intval', $arrPids)) . ")";
+		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -215,7 +213,6 @@ class CalendarEventsModel extends \Model
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
 	}
-
 
 	/**
 	 * Find events of the current period by their parent ID
@@ -249,7 +246,6 @@ class CalendarEventsModel extends \Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find published events with the default redirect target by their parent ID
 	 *
@@ -277,7 +273,6 @@ class CalendarEventsModel extends \Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 
-
 	/**
 	 * Find upcoming events by their parent IDs
 	 *
@@ -298,7 +293,7 @@ class CalendarEventsModel extends \Model
 		$time = \Date::floorToMinute();
 
 		// Get upcoming events using endTime instead of startTime (see #3917)
-		$arrColumns = array("($t.endTime>=$time OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$time))) AND $t.pid IN(" . implode(',', array_map('intval', $arrIds)) . ") AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'");
+		$arrColumns = array("($t.endTime>=$time OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$time))) AND $t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'");
 
 		if ($intLimit > 0)
 		{
