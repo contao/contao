@@ -24,7 +24,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleEventReader extends \Events
+class ModuleEventReader extends Events
 {
 
 	/**
@@ -341,3 +341,5 @@ class ModuleEventReader extends \Events
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
 	}
 }
+
+class_alias(ModuleEventReader::class, 'ModuleEventReader');

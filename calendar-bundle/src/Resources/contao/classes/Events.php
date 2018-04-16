@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Events extends \Module
+abstract class Events extends Module
 {
 
 	/**
@@ -563,3 +563,5 @@ abstract class Events extends \Module
 		}
 	}
 }
+
+class_alias(Events::class, 'Events');

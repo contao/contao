@@ -23,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleCalendar extends \Events
+class ModuleCalendar extends Events
 {
 
 	/**
@@ -298,3 +298,5 @@ class ModuleCalendar extends \Events
 		return $arrDays;
 	}
 }
+
+class_alias(ModuleCalendar::class, 'ModuleCalendar');

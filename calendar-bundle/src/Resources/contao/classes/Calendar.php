@@ -16,7 +16,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Calendar extends \Frontend
+class Calendar extends Frontend
 {
 
 	/**
@@ -583,3 +583,5 @@ class Calendar extends \Frontend
 		return $arrFeeds;
 	}
 }
+
+class_alias(Calendar::class, 'Calendar');

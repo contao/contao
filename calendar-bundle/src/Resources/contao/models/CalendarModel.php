@@ -81,7 +81,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CalendarModel extends \Model
+class CalendarModel extends Model
 {
 
 	/**
@@ -91,3 +91,5 @@ class CalendarModel extends \Model
 	protected static $strTable = 'tl_calendar';
 
 }
+
+class_alias(CalendarModel::class, 'CalendarModel');

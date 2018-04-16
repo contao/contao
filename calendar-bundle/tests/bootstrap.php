@@ -48,7 +48,11 @@ $legacyLoader = function ($class): void {
 
     $namespaced = 'Contao\\'.$class;
 
-    if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced)) {
+    if (!class_exists($namespaced) && !interface_exists($namespaced) && !trait_exists($namespaced)) {
+        return;
+    }
+
+    if (!class_exists($class, false) && !interface_exists($class, false) && !trait_exists($class, false)) {
         class_alias($namespaced, $class);
     }
 };

@@ -181,7 +181,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class CalendarEventsModel extends \Model
+class CalendarEventsModel extends Model
 {
 
 	/**
@@ -317,3 +317,5 @@ class CalendarEventsModel extends \Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
+
+class_alias(CalendarEventsModel::class, 'CalendarEventsModel');
