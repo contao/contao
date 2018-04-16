@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Provide methods to render content element "listing".
  *
@@ -43,7 +42,6 @@ class ModuleListing extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'list_default';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -91,7 +89,6 @@ class ModuleListing extends Module
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module
@@ -363,7 +360,6 @@ class ModuleListing extends Module
 		$this->Template->no_results = sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
 	}
 
-
 	/**
 	 * List a single record
 	 *
@@ -424,7 +420,6 @@ class ModuleListing extends Module
 
 		$this->Template->record = $arrFields;
 	}
-
 
 	/**
 	 * Format a value
