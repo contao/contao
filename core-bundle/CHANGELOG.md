@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Log unknown insert tag (flags) in the system log (see #1182).
+
 ## 4.4.17 (2018-04-04)
 
  * Correctly hide empty custom layout sections (see #1115).

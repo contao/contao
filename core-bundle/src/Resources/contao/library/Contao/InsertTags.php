@@ -958,10 +958,7 @@ class InsertTags extends \Controller
 						}
 					}
 
-					\System::getContainer()
-						->get('monolog.logger.contao')
-						->log(LogLevel::INFO, 'Unknown insert tag: ' . $strTag)
-					;
+					$this->log('Unknown insert tag {{' . $strTag . '}}', __METHOD__, TL_ERROR);
 					break;
 			}
 
@@ -1052,10 +1049,7 @@ class InsertTags extends \Controller
 								}
 							}
 
-							\System::getContainer()
-								->get('monolog.logger.contao')
-								->log(LogLevel::INFO, 'Unknown insert tag flag: ' . $flag)
-							;
+							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}}', __METHOD__, TL_ERROR);
 							break;
 					}
 				}
