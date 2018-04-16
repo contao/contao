@@ -10,7 +10,7 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -28,6 +28,11 @@ class BypassMaintenanceListener
     private $session;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var bool
      */
     private $disableIpCheck;
@@ -41,12 +46,14 @@ class BypassMaintenanceListener
      * Constructor.
      *
      * @param SessionInterface $session
+     * @param RequestStack     $requestStack
      * @param bool             $disableIpCheck
      * @param string           $requestAttribute
      */
-    public function __construct(SessionInterface $session, $disableIpCheck, $requestAttribute = '_bypass_maintenance')
+    public function __construct(SessionInterface $session, RequestStack $requestStack, $disableIpCheck, $requestAttribute = '_bypass_maintenance')
     {
         $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->disableIpCheck = $disableIpCheck;
         $this->requestAttribute = $requestAttribute;
     }
@@ -60,7 +67,7 @@ class BypassMaintenanceListener
     {
         $request = $event->getRequest();
 
-        if (!$this->hasAuthenticatedBackendUser($request)) {
+        if (!$this->hasAuthenticatedBackendUser()) {
             return;
         }
 
@@ -70,13 +77,13 @@ class BypassMaintenanceListener
     /**
      * Checks if there is an authenticated back end user.
      *
-     * @param Request $request
-     *
      * @return bool
      */
-    private function hasAuthenticatedBackendUser(Request $request)
+    private function hasAuthenticatedBackendUser()
     {
-        if (!$request->cookies->has('BE_USER_AUTH')) {
+        $request = $this->requestStack->getMasterRequest();
+
+        if (null === $request || !$request->cookies->has('BE_USER_AUTH')) {
             return false;
         }
 

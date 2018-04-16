@@ -208,7 +208,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BypassMaintenanceListener::class, $definition->getClass());
         $this->assertSame('session', (string) $definition->getArgument(0));
-        $this->assertSame('%contao.security.disable_ip_check%', (string) $definition->getArgument(1));
+        $this->assertSame('request_stack', (string) $definition->getArgument(1));
+        $this->assertSame('%contao.security.disable_ip_check%', (string) $definition->getArgument(2));
 
         $tags = $definition->getTags();
 

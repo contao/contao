@@ -44,6 +44,7 @@ services:
         class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
         arguments:
             - "@session"
+            - "@request_stack"
             - "%contao.security.disable_ip_check%"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }

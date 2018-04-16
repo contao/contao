@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -28,7 +29,7 @@ class BypassMaintenanceListenerTest extends TestCase
      */
     public function testCanBeInstantiated()
     {
-        $listener = new BypassMaintenanceListener($this->mockSession(), false);
+        $listener = new BypassMaintenanceListener($this->mockSession(), new RequestStack(), false);
 
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\BypassMaintenanceListener', $listener);
     }
@@ -41,13 +42,16 @@ class BypassMaintenanceListenerTest extends TestCase
         $request = new Request();
         $request->cookies->set('BE_USER_AUTH', 'da6c1abd61155f4ce98c6b5f1fbbf0ebeb43638e');
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $event = new GetResponseEvent(
             $this->mockKernel(),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $listener = new BypassMaintenanceListener($this->mockSession(), false);
+        $listener = new BypassMaintenanceListener($this->mockSession(), $requestStack, false);
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->getRequest()->attributes->get('_bypass_maintenance'));
@@ -58,13 +62,16 @@ class BypassMaintenanceListenerTest extends TestCase
      */
     public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser()
     {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
         $event = new GetResponseEvent(
             $this->mockKernel(),
             new Request(),
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $listener = new BypassMaintenanceListener($this->mockSession(), false);
+        $listener = new BypassMaintenanceListener($this->mockSession(), $requestStack, false);
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->getRequest()->attributes->has('_bypass_maintenance'));
