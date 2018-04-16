@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_comments_notify
- */
 $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 (
 

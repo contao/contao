@@ -12,7 +12,6 @@ namespace Contao;
 
 use Patchwork\Utf8;
 
-
 /**
  * Class ContentComments
  *
@@ -28,7 +27,6 @@ class ContentComments extends ContentElement
 	 * @var string
 	 */
 	protected $strTemplate = 'ce_comments';
-
 
 	/**
 	 * Display a wildcard in the back end
@@ -50,7 +48,6 @@ class ContentComments extends ContentElement
 
 		return parent::generate();
 	}
-
 
 	/**
 	 * Generate the module

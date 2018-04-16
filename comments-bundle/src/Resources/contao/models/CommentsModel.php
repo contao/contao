@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes comments
  *
@@ -98,7 +97,6 @@ class CommentsModel extends Model
 	 */
 	protected static $strTable = 'tl_comments';
 
-
 	/**
 	 * Find published comments by their source table and parent ID
 	 *
@@ -131,7 +129,6 @@ class CommentsModel extends Model
 
 		return static::findBy($arrColumns, array($strSource, (int) $intParent), $arrOptions);
 	}
-
 
 	/**
 	 * Count published comments by their source table and parent ID
