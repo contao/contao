@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_calendar_feed
- */
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 
@@ -207,7 +203,6 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -226,7 +221,6 @@ class tl_calendar_feed extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_news_archive
@@ -283,7 +277,7 @@ class tl_calendar_feed extends Backend
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
 						{
-							$objGroup = $this->Database->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
+							$objGroup = $this->Database->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
 
 							while ($objGroup->next())
 							{
@@ -359,7 +353,6 @@ class tl_calendar_feed extends Backend
 		}
 	}
 
-
 	/**
 	 * Check for modified calendar feeds and update the XML files if necessary
 	 */
@@ -388,7 +381,6 @@ class tl_calendar_feed extends Backend
 		$objSession->set('calendar_feed_updater', null);
 	}
 
-
 	/**
 	 * Schedule a calendar feed update
 	 *
@@ -413,7 +405,6 @@ class tl_calendar_feed extends Backend
 		$session[] = $dc->id;
 		$objSession->set('calendar_feed_updater', array_unique($session));
 	}
-
 
 	/**
 	 * Return the IDs of the allowed calendars as array
@@ -443,7 +434,6 @@ class tl_calendar_feed extends Backend
 
 		return $return;
 	}
-
 
 	/**
 	 * Check the RSS-feed alias

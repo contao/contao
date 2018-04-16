@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Provide methods regarding calendars.
  *
@@ -24,7 +23,6 @@ class Calendar extends \Frontend
 	 * @var array
 	 */
 	protected $arrEvents = array();
-
 
 	/**
 	 * Update a particular RSS feed
@@ -57,7 +55,6 @@ class Calendar extends \Frontend
 		}
 	}
 
-
 	/**
 	 * Delete old files and generate all feeds
 	 */
@@ -78,7 +75,6 @@ class Calendar extends \Frontend
 			}
 		}
 	}
-
 
 	/**
 	 * Generate all feeds including a certain calendar
@@ -101,7 +97,6 @@ class Calendar extends \Frontend
 			}
 		}
 	}
-
 
 	/**
 	 * Generate an XML file and save it to the root directory
@@ -289,7 +284,6 @@ class Calendar extends \Frontend
 		\File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
-
 	/**
 	 * Add events to the indexer
 	 *
@@ -384,7 +378,6 @@ class Calendar extends \Frontend
 
 		return $arrPages;
 	}
-
 
 	/**
 	 * Add an event to the array of active events
@@ -513,7 +506,6 @@ class Calendar extends \Frontend
 		$this->arrEvents[$intKey][$intStart][] = $arrEvent;
 	}
 
-
 	/**
 	 * Calculate the span between two timestamps in days
 	 *
@@ -526,7 +518,6 @@ class Calendar extends \Frontend
 	{
 		return self::unixToJd($intEnd) - self::unixToJd($intStart);
 	}
-
 
 	/**
 	 * Convert a UNIX timestamp to a Julian day
@@ -560,7 +551,6 @@ class Calendar extends \Frontend
 
 		return $sdn;
 	}
-
 
 	/**
 	 * Return the names of the existing feeds so they are not removed

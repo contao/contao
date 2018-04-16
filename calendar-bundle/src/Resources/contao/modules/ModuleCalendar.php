@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
-
 /**
  * Front end module "calendar".
  *
@@ -43,7 +42,6 @@ class ModuleCalendar extends \Events
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_calendar';
-
 
 	/**
 	 * Do not show the module if no calendar has been selected
@@ -86,7 +84,6 @@ class ModuleCalendar extends \Events
 		return parent::generate();
 	}
 
-
 	/**
 	 * Generate the module
 	 */
@@ -116,7 +113,7 @@ class ModuleCalendar extends \Events
 		$time = \Date::floorToMinute();
 
 		// Find the boundaries
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(". implode(',', array_map('intval', $this->cal_calendar)) .")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(". implode(',', array_map('\intval', $this->cal_calendar)) .")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
 
 		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->cal_ctemplate);
@@ -173,7 +170,6 @@ class ModuleCalendar extends \Events
 		$this->Template->calendar = $objTemplate->parse();
 	}
 
-
 	/**
 	 * Return the week days and labels as array
 	 *
@@ -211,7 +207,6 @@ class ModuleCalendar extends \Events
 
 		return $arrDays;
 	}
-
 
 	/**
 	 * Return all weeks of the current month as array

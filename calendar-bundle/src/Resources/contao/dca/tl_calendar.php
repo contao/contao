@@ -8,10 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
-/**
- * Table tl_calendar
- */
 $GLOBALS['TL_DCA']['tl_calendar'] = array
 (
 
@@ -249,7 +245,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 	)
 );
 
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -268,7 +263,6 @@ class tl_calendar extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-
 
 	/**
 	 * Check permissions to edit table tl_calendar
@@ -333,7 +327,7 @@ class tl_calendar extends Backend
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
 						{
-							$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('intval', $this->User->groups)) . ")");
+							$objGroup = $this->Database->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
 
 							while ($objGroup->next())
 							{
@@ -409,7 +403,6 @@ class tl_calendar extends Backend
 		}
 	}
 
-
 	/**
 	 * Check for modified calendar feeds and update the XML files if necessary
 	 */
@@ -438,7 +431,6 @@ class tl_calendar extends Backend
 		$objSession->set('calendar_feed_updater', null);
 	}
 
-
 	/**
 	 * Schedule a calendar feed update
 	 *
@@ -464,7 +456,6 @@ class tl_calendar extends Backend
 		$objSession->set('calendar_feed_updater', array_unique($session));
 	}
 
-
 	/**
 	 * Return the manage feeds button
 	 *
@@ -480,7 +471,6 @@ class tl_calendar extends Backend
 	{
 		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || $this->User->hasAccess('create', 'calendarfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
-
 
 	/**
 	 * Return the edit header button
@@ -499,7 +489,6 @@ class tl_calendar extends Backend
 		return $this->User->canEditFieldsOf('tl_calendar') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
-
 	/**
 	 * Return the copy calendar button
 	 *
@@ -516,7 +505,6 @@ class tl_calendar extends Backend
 	{
 		return $this->User->hasAccess('create', 'calendarp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
-
 
 	/**
 	 * Return the delete calendar button

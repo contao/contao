@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads and writes calendar feeds
  *
@@ -79,7 +78,6 @@ class CalendarFeedModel extends \Model
 	 */
 	protected static $strTable = 'tl_calendar_feed';
 
-
 	/**
 	 * Find all feeds which include a certain calendar
 	 *
@@ -94,7 +92,6 @@ class CalendarFeedModel extends \Model
 
 		return static::findBy(array("$t.calendars LIKE '%\"" . (int) $intId . "\"%'"), null, $arrOptions);
 	}
-
 
 	/**
 	 * Find calendar feeds by their IDs
@@ -113,6 +110,6 @@ class CalendarFeedModel extends \Model
 
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.id IN(" . implode(',', array_map('intval', $arrIds)) . ")"), null, $arrOptions);
+		return static::findBy(array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }
