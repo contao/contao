@@ -2,6 +2,8 @@
 
 ## 4.5.7 (2018-04-04)
 
+ * Correctly highlight all keywords in the search results (see #1461).
+ * Log unknown insert tag (flags) in the system log (see #1182).
  * Correctly hide empty custom layout sections (see #1115).
  * Correctly generate the login target URLs in the back end (see #1432).
 

@@ -423,9 +423,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	)
 );
 
-/**
- * Filter disabled groups in the front end (see #6757)
- */
+// Filter disabled groups in the front end (see #6757)
 if (TL_MODE == 'FE')
 {
 	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');

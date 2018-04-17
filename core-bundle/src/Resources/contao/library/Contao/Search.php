@@ -334,7 +334,7 @@ class Search
 		$arrIncluded = array();
 		$arrExcluded = array();
 
-		foreach ($arrChunks[0] as $strKeyword)
+		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
 			if (substr($strKeyword, -1) == '*' && \strlen($strKeyword) > 1)
 			{
