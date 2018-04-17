@@ -12,7 +12,7 @@
       <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
       <meta name="referrer" content="origin">
       <meta name="robots" content="noindex,follow">
-    <?php $this->block('meta'); ?>
+    <?php $this->endblock(); ?>
 
     <link rel="stylesheet" href="<?php
       $objCombiner = new Combiner();
@@ -66,7 +66,7 @@
       </main>
       <?= $this->messages ?>
     </div>
-  <?php $this->block('container'); ?>
+  <?php $this->endblock(); ?>
 
   <div class="tl_info" id="javascript">
     <?= $this->jsDisabled ?>
