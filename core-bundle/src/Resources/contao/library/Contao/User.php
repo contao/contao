@@ -471,7 +471,7 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 
 		if ($request === null)
 		{
-			throw new \RuntimeException('The request stack did not contain a request');
+			return null;
 		}
 
 		$user = new static();
