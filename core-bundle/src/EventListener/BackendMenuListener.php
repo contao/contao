@@ -55,7 +55,10 @@ class BackendMenuListener
 
             if (!$categoryNode) {
                 $categoryNode = $this->createNode($factory, $categoryName, $categoryData);
-                $categoryNode->setDisplayChildren(false !== strpos($categoryData['class'], 'node-expanded'));
+
+                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
+                    $categoryNode->setDisplayChildren(false);
+                }
 
                 $tree->addChild($categoryNode);
             }
