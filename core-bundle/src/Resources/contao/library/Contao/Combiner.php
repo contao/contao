@@ -307,7 +307,7 @@ class Combiner extends System
 			$arrPrefix[] = basename($arrFile['name']);
 		}
 
-		$strKey = \StringUtil::substr(implode('+', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
+		$strKey = \StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
 
 		// Load the existing file
 		if (file_exists(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))

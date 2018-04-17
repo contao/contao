@@ -143,7 +143,7 @@ class FormCaptcha extends Widget
 		}
 
 		$int1 = random_int(1, 9);
-		$int2 = mt_rand(1, 9);
+		$int2 = random_int(1, 9);
 
 		$this->arrCaptcha = array
 		(
