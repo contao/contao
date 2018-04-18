@@ -441,18 +441,21 @@
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.0">
         <source>Player options</source>
+        <target>تنظیمات پلیر</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.1">
         <source>Here you can select the player options.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.0">
         <source>Start at</source>
+        <target>شروع از</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.0">
         <source>Stop at</source>
+        <target>توقف در</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>

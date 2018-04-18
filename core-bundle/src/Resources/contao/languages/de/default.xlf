@@ -230,15 +230,15 @@
         <target>Ungültiges Weiterleitungsziel (Zirkelbezug)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
+        <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
         <target>Keiner der aktiven Website-Startpunkte ohne explizite DNS-Einstellungen wurde als Sprachen-Fallback definiert.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
         <target>Keiner der aktiven Website-Startpunkte für &lt;strong&gt;%s&lt;/strong&gt; wurde als Sprachen-Fallback definiert.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
-        <source>You can only define one website root page per domain as language fallback.</source>
+        <source>You can only define one website root page per domain as the language fallback.</source>
         <target>Sie können nur einen Website-Startpunkt pro Domain als Sprachen-Fallback definieren.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">

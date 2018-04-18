@@ -375,6 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.0">
         <source>External JavaScripts</source>
+        <target>جاوااسکریپت‌های خارجی</target>
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.1">
         <source>Here you can add external JS files from the file system.</source>
