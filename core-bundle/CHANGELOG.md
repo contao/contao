@@ -1,9 +1,13 @@
 # Contao core bundle change log
 
-## 4.5.7 (2018-04-04)
+## DEV
 
+ * Fix an XSS vulnerability in the system log (see CVE-2018-10125).
  * Correctly highlight all keywords in the search results (see #1461).
  * Log unknown insert tag (flags) in the system log (see #1182).
+
+## 4.5.7 (2018-04-04)
+
  * Correctly hide empty custom layout sections (see #1115).
  * Correctly generate the login target URLs in the back end (see #1432).
 

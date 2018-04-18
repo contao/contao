@@ -103,7 +103,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             'username' => (string) $context->getUsername(),
             'func' => $context->getFunc(),
             'ip' => (string) $context->getIp(),
-            'browser' => (string) $context->getBrowser(),
+            'browser' => StringUtil::specialchars((string) $context->getBrowser()),
         ]);
     }
 
