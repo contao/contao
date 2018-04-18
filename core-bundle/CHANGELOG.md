@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly handle spaces when opening nodes in the file picker (see #1449).
+
 ## 4.4.18 (2018-04-18)
 
  * Fix an XSS vulnerability in the system log (see CVE-2018-10125).
