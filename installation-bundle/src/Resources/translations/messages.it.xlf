@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Per ragioni di sicurezza lo strumento di installazione è stato bloccato dopo aver sbagliato la password tre volte. Per sbloccare lo strumento di installazione esegui &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; da linea di comando.</target>
+        <target>Per ragioni di sicurezza lo strumento di installazione è stato bloccato dopo aver sbagliato la password tre volte. Per sbloccare lo strumento di installazione esegui &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; da linea di comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -113,6 +113,7 @@
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
+        <target>Il nome del database non deve contenere punti!</target>
         
       </trans-unit>
       <trans-unit id="24">
@@ -362,10 +363,12 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Trovati iscritti alla newsletter duplicati:</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicates_purged</source>
+        <target>Le voci duplicate sono state eliminate automaticamente. Un backup degli iscritti originali è stato archiviato in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>
