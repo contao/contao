@@ -1,0 +1,62 @@
+{
+    "name": "contao/news-bundle",
+    "type": "contao-bundle",
+    "description": "Adds news functionality to Contao 4",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "contao/core-bundle": "self.version",
+        "symfony/framework-bundle": "^3.3"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0",
+        "doctrine/doctrine-cache-bundle": "^1.3",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/message-factory": "^1.0.2",
+        "phpunit/phpunit": "^5.7.26",
+        "satooshi/php-coveralls": "^1.0",
+        "symfony/phpunit-bridge": "^3.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-4.4": "4.4.x-dev"
+        },
+        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\NewsBundle\\": "src/"
+        },
+        "classmap": [
+            "src/Resources/contao/"
+        ],
+        "exclude-from-classmap": [
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\NewsBundle\\Tests\\": "tests/"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/contao/news-bundle/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/news-bundle",
+        "docs": "https://docs.contao.org"
+    }
+}
