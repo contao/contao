@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.18 (2018-04-18)
 
  * Fix an XSS vulnerability in the system log (see CVE-2018-10125).
  * Correctly highlight all keywords in the search results (see #1461).

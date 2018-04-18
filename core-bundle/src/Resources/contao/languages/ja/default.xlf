@@ -230,16 +230,15 @@
         <target>リダイレクト先が誤って(循環参照して)います。</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
-        <target>明示的にDNSの設定をしていない有効なウェブサイトのルートのページに、代替の言語の選択しているページがありません。</target>
+        <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
-        <target>&lt;strong&gt;%s&lt;/strong&gt;への有効なウェブサイトのルートのページに、言語の代替のオプションをしているページがありません。</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>&lt;strong&gt;%s&lt;/strong&gt;に言語の代替を設定した有効なウェブサイトのルートのページがありません。</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
-        <source>You can only define one website root page per domain as language fallback.</source>
-        <target>言語の代替とするウェブサイトのルートのページは1つだけ設定できます。</target>
+        <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>言語の代替としてのウェブサイトのルートのページは1つだけ設定できます。</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
