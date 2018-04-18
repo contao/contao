@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Fix an XSS vulnerability in the system log (see CVE-2018-10125).
  * Correctly highlight all keywords in the search results (see #1461).
  * Log unknown insert tag (flags) in the system log (see #1182).
 
