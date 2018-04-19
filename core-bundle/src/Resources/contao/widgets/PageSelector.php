@@ -418,7 +418,7 @@ class PageSelector extends \Widget
 		$return .= '</div><div style="clear:both"></div></li>';
 
 		// Begin a new submenu
-		if ($blnIsOpen || !empty($childs) && $objSessionBag->get('page_selector_search') != '')
+		if ($blnIsOpen || (!empty($childs) && $objSessionBag->get('page_selector_search') != ''))
 		{
 			$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
 

@@ -8,8 +8,7 @@
 
 /* Body */
 body {
-	background:#132330;
-	background-image:radial-gradient(#234058, #0f1c26);
+	background:#132330 radial-gradient(#234058, #0f1c26);
 }
 body.popup {
 	background:#fff;
@@ -132,8 +131,7 @@ body.popup {
 	position:absolute;
 	right:9px;
 	top:-14px;
-	border:solid transparent;
-	border-width:7px;
+	border:7px solid transparent;
 	border-bottom-color:#fff;
 }
 #tmenu ul.level_2:after {
@@ -1077,8 +1075,7 @@ ul.sgallery li {
 }
 #tl_messages .tl_error,#tl_messages .tl_confirm,#tl_messages .tl_info,#tl_messages .tl_new {
 	padding:3px 6px 3px 21px;
-	background-color:transparent;
-	background-position:left center;
+	background:transparent left center;
 }
 #tl_shortcuts p a {
 	text-decoration:underline;
@@ -1515,20 +1512,17 @@ time[title] {
 .header_icon,.header_clipboard,.header_back,.header_new,.header_rss,.header_edit_all,.header_delete_all,
 .header_new_folder,.header_css_import,.header_theme_import,.header_store,.header_toggle,.header_sync {
 	padding:3px 0 3px 21px;
-	background-position:left center;
-	background-repeat:no-repeat;
+	background:no-repeat left center;
 	margin-left:15px;
 }
 .list_icon {
 	margin-left:-3px;
 	padding-left:20px;
-	background-position:left center;
-	background-repeat:no-repeat;
+	background:no-repeat left center;
 }
 .list_icon_new {
 	width:16px;
-	background-position:1px center;
-	background-repeat:no-repeat;
+	background:no-repeat 1px center;
 }
 
 /* Header icons */

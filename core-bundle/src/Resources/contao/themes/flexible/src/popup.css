@@ -42,10 +42,8 @@ body {
 	margin:18px;
 }
 #preview .checkerbox {
-	background-color:#fff;
-	background-image:linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd),linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd);
 	background-size:30px 30px;
-	background-position:0 0,15px 15px;
+	background:#fff linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd), linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd) 0 0, 15px 15px;
 }
 #preview .checkerbox,#preview .checkerbox img {
 	max-width:100%;

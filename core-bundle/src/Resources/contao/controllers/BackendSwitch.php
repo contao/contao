@@ -73,7 +73,7 @@ class BackendSwitch extends \Backend
 			}
 		}
 
-		$blnCanSwitchUser = ($this->User->isAdmin || !empty($this->User->amg) && \is_array($this->User->amg));
+		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
 
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');

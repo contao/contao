@@ -88,7 +88,7 @@ class BackendPreview extends \Backend
 		$objTemplate->url = $strUrl;
 
 		// Switch to a particular member (see #6546)
-		if (\Input::get('user') && ($this->User->isAdmin || !empty($this->User->amg) && \is_array($this->User->amg)))
+		if (\Input::get('user') && ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg))))
 		{
 			$objUser = \MemberModel::findByUsername(\Input::get('user'));
 
