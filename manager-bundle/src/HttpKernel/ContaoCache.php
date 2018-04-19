@@ -17,7 +17,7 @@ use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
@@ -25,10 +25,10 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     use EventDispatchingHttpCache;
 
     /**
-     * @param HttpKernelInterface $kernel
-     * @param string|null         $cacheDir
+     * @param KernelInterface $kernel
+     * @param string|null     $cacheDir
      */
-    public function __construct(HttpKernelInterface $kernel, string $cacheDir = null)
+    public function __construct(KernelInterface $kernel, string $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
