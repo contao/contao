@@ -554,7 +554,7 @@ class tl_user extends Backend
 		$image = $row['admin'] ? 'admin' : 'user';
 		$time = \Date::floorToMinute();
 
-		$disabled = $row['start'] !== '' && $row['start'] > $time || $row['stop'] !== '' && $row['stop'] < $time;
+		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
 		if ($row['disable'] || $disabled)
 		{

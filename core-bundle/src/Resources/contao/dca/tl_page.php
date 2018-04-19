@@ -1467,7 +1467,7 @@ class tl_page extends Backend
 		$disablePI = false;
 
 		// Disable all buttons if there is a circular reference
-		if ($arrClipboard !== false && ($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id']) || $arrClipboard['mode'] == 'cutAll' && ($cr == 1 || \in_array($row['id'], $arrClipboard['id']))))
+		if ($arrClipboard !== false && (($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id'])) || ($arrClipboard['mode'] == 'cutAll' && ($cr == 1 || \in_array($row['id'], $arrClipboard['id'])))))
 		{
 			$disablePA = true;
 			$disablePI = true;

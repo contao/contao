@@ -435,7 +435,7 @@ class FileTree extends \Widget
 	 */
 	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
 	{
-		if (($objFile->isSvgImage || $objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth')) && $objFile->viewWidth && $objFile->viewHeight)
+		if (($objFile->isSvgImage || ($objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))) && $objFile->viewWidth && $objFile->viewHeight)
 		{
 			// Inline the image if no preview image will be generated (see #636)
 			if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 75)

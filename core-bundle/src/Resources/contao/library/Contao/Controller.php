@@ -939,7 +939,7 @@ abstract class Controller extends \System
 		}
 
 		$return = array();
-		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
+		$arrDir = compact('top', 'right', 'bottom', 'left');
 
 		foreach ($arrDir as $k=>$v)
 		{

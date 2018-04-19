@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 

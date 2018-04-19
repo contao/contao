@@ -925,7 +925,7 @@ abstract class DataContainer extends \Backend
 
 		foreach ($GLOBALS['TL_DCA'][$strPtable]['list']['operations'] as $k=> $v)
 		{
-			if (empty($v['showInHeader']) || \Input::get('act') == 'select' && !$v['showOnSelect'])
+			if (empty($v['showInHeader']) || (\Input::get('act') == 'select' && !$v['showOnSelect']))
 			{
 				continue;
 			}

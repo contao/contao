@@ -29,7 +29,7 @@ class ControllerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Load the System class so it's not using the fixture
         require __DIR__.'/../../src/Resources/contao/library/Contao/System.php';
@@ -39,7 +39,7 @@ class ControllerTest extends TestCase
     /**
      * Tests the time zones.
      */
-    public function testReturnsTheTimeZones()
+    public function testReturnsTheTimeZones(): void
     {
         $timeZones = System::getTimeZones();
 
@@ -64,7 +64,7 @@ class ControllerTest extends TestCase
     /**
      * Tests generating the margin.
      */
-    public function testGeneratesTheMargin()
+    public function testGeneratesTheMargin(): void
     {
         $margins = [
             'top' => '40px',

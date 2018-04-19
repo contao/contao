@@ -193,7 +193,7 @@ class Search
 				$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
 							->execute($objIndex->id);
 			}
-			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false || \strlen($arrSet['url']) > \strlen($objIndex->url))
+			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || (strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false) || \strlen($arrSet['url']) > \strlen($objIndex->url))
 			{
 				// The current URL is more canonical (shorter and/or less fragments)
 				$arrSet['url'] = $objIndex->url;

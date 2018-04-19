@@ -28,7 +28,7 @@ class SystemTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Load the System class so it's not using the fixture
         require __DIR__.'/../../src/Resources/contao/library/Contao/System.php';
@@ -37,7 +37,7 @@ class SystemTest extends TestCase
     /**
      * Tests formatting a number.
      */
-    public function testFormatsANumber()
+    public function testFormatsANumber(): void
     {
         $number = '12004.34564';
 
@@ -78,7 +78,7 @@ class SystemTest extends TestCase
     /**
      * Tests the IP anonymization.
      */
-    public function testAnonymizesIpAddresses()
+    public function testAnonymizesIpAddresses(): void
     {
         $ipv4 = '172.16.254.112';
         $ipv6 = '2001:0db8:85a3:0042:0000:8a2e:0370:7334';
