@@ -1768,20 +1768,6 @@ fieldset.collapsed > legend {
 	color:#ccc;
 }
 
-/* Widescreen */
-@media (min-width:1440px) {
-	#main {
-		border-right:1px solid #ddd;
-	}
-}
-
-/* Limit width */
-@media (min-width:1140px) {
-	.lw #main {
-		border-right:1px solid #ddd;
-	}
-}
-
 /* Tablet */
 @media (max-width:991px) {
 	body {
