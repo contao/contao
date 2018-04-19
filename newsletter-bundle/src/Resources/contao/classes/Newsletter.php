@@ -802,8 +802,20 @@ class Newsletter extends Backend
 				// E-mail address has changed
 				if (!empty($_POST) && $strEmail != '' && $strEmail != $objUser->email)
 				{
-					$this->Database->prepare("UPDATE tl_newsletter_recipients SET email=? WHERE email=?")
-								   ->execute($strEmail, $objUser->email);
+					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
+											   ->execute($strEmail);
+
+					// Delete the old subscription if the new e-mail address exists (see #19)
+					if ($objCount->count > 0)
+					{
+						$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE email=?")
+									   ->execute($objUser->email);
+					}
+					else
+					{
+						$this->Database->prepare("UPDATE tl_newsletter_recipients SET email=? WHERE email=?")
+									   ->execute($strEmail, $objUser->email);
+					}
 
 					$objUser->email = $strEmail;
 				}
