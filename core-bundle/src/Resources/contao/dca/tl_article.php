@@ -551,7 +551,7 @@ class tl_article extends Backend
 		$image = 'articles';
 		$time = \Date::floorToMinute();
 
-		$unpublished = $row['start'] != '' && $row['start'] > $time || $row['stop'] != '' && $row['stop'] < $time;
+		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
 
 		if (!$row['published'] || $unpublished)
 		{

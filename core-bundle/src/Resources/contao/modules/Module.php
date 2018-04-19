@@ -368,7 +368,7 @@ abstract class Module extends Frontend
 				$trail = \in_array($objSubpage->id, $objPage->trail);
 
 				// Active page
-				if (($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
+				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
 				{
 					// Mark active forward pages (see #4822)
 					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . (($objSubpage->cssClass != '') ? ' ' . $objSubpage->cssClass : '');

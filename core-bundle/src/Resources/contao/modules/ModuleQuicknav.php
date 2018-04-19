@@ -150,7 +150,7 @@ class ModuleQuicknav extends Module
 						'title' => \StringUtil::specialchars(\StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
 						'href' => $objSubpage->getFrontendUrl(),
 						'link' => \StringUtil::stripInsertTags($objSubpage->title),
-						'active' => ($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)
+						'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 					);
 
 					// Subpages

@@ -2603,7 +2603,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$blnIsOpen = (!empty($arrFound) || $session['filetree'][$md5] == 1);
 
 			// Always show selected nodes
-			if (!$blnIsOpen && !empty($this->arrPickerValue) && \count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->arrPickerValue)))
+			if (!$blnIsOpen && !empty($this->arrPickerValue) && \count(preg_grep('/^' . preg_quote($this->urlEncode($currentFolder), '/') . '\//', $this->arrPickerValue)))
 			{
 				$blnIsOpen = true;
 			}

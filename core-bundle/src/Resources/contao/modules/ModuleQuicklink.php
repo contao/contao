@@ -135,7 +135,7 @@ class ModuleQuicklink extends Module
 				'href' => $href,
 				'title' => \StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
 				'link' => $objSubpage->title,
-				'active' => ($objPage->id == $objSubpage->id || $objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)
+				'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 			);
 		}
 

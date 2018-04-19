@@ -102,7 +102,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{expert_legend},cssClass,sizes,densities'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{expert_legend},cssClass,densities,sizes'
 	),
 
 	// Fields
@@ -141,15 +141,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'sizes' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['sizes'],
-			'inputType'               => 'text',
-			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr', 'decodeEntities'=>true),
-			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
 		'densities' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['densities'],
@@ -157,6 +148,15 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'explanation'             => 'imageSizeDensities',
 			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'sizes' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['sizes'],
+			'inputType'               => 'text',
+			'explanation'             => 'imageSizeDensities',
+			'exclude'                 => true,
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'width' => array

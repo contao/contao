@@ -198,7 +198,7 @@ class BackendMain extends Backend
 		$objSession = $container->get('session');
 
 		// File picker reference (backwards compatibility)
-		if (\Input::get('popup') && \Input::get('act') != 'show' && (\Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules') || \Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules')) && $objSession->get('filePickerRef'))
+		if (\Input::get('popup') && \Input::get('act') != 'show' && ((\Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (\Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))) && $objSession->get('filePickerRef'))
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];

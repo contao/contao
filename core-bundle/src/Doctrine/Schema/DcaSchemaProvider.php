@@ -262,8 +262,7 @@ class DcaSchemaProvider
             case 'decimal':
                 if (preg_match('/[a-z]+\((\d+)\,(\d+)\)/i', $dbType, $match)) {
                     $length = null;
-                    $precision = $match[1];
-                    $scale = $match[2];
+                    [, $precision, $scale] = $match;
                 }
                 break;
 

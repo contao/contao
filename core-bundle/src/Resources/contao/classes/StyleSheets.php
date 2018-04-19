@@ -388,7 +388,7 @@ class StyleSheets extends Backend
 					}
 					else
 					{
-						$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
+						$arrDir = compact('top', 'right', 'bottom', 'left');
 
 						foreach ($arrDir as $k=>$v)
 						{
@@ -435,7 +435,7 @@ class StyleSheets extends Backend
 					}
 					else
 					{
-						$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
+						$arrDir = compact('top', 'right', 'bottom', 'left');
 
 						foreach ($arrDir as $k=>$v)
 						{
@@ -673,7 +673,7 @@ class StyleSheets extends Backend
 				}
 				else
 				{
-					$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
+					$arrDir = compact('top', 'right', 'bottom', 'left');
 
 					foreach ($arrDir as $k=>$v)
 					{
