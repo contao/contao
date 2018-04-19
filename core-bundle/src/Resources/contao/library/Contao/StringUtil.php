@@ -1049,6 +1049,12 @@ class StringUtil
 			return $blnForceArray ? array() : '';
 		}
 
+		// Not a serialized array (see #1486)
+		if (strncmp($varValue, 'a:', 2) !== 0)
+		{
+			return $blnForceArray ? array($varValue) : $varValue;
+		}
+
 		// Potentially including an object (see #6724)
 		if (preg_match('/[OoC]:\+?[0-9]+:"/', $varValue))
 		{
