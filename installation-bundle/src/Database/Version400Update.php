@@ -62,7 +62,9 @@ class Version400Update extends AbstractVersionUpdate
                 $jquery = StringUtil::deserialize($layout->jquery);
 
                 if (!empty($jquery) && \is_array($jquery)) {
-                    if (false !== ($key = array_search('j_slider', $jquery, true))) {
+                    $key = array_search('j_slider', $jquery, true);
+
+                    if (false !== $key) {
                         $scripts[] = 'js_slider';
                         unset($jquery[$key]);
 
@@ -85,7 +87,9 @@ class Version400Update extends AbstractVersionUpdate
                 $mootools = StringUtil::deserialize($layout->mootools);
 
                 if (!empty($mootools) && \is_array($mootools)) {
-                    if (false !== ($key = array_search('moo_slider', $mootools, true))) {
+                    $key = array_search('moo_slider', $mootools, true);
+
+                    if (false !== $key) {
                         $scripts[] = 'js_slider';
                         unset($mootools[$key]);
 
@@ -129,10 +133,13 @@ class Version400Update extends AbstractVersionUpdate
         ");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
+            /** @var array $mootools */
             $mootools = StringUtil::deserialize($layout->mootools);
 
             if (!empty($mootools) && \is_array($mootools)) {
-                if (false !== ($key = array_search('moo_slimbox', $mootools, true))) {
+                $key = array_search('moo_slimbox', $mootools, true);
+
+                if (false !== $key) {
                     $mootools[] = 'moo_mediabox';
                     unset($mootools[$key]);
 
@@ -164,7 +171,9 @@ class Version400Update extends AbstractVersionUpdate
             $framework = StringUtil::deserialize($layout->framework);
 
             if (!empty($framework) && \is_array($framework)) {
-                if (false !== ($key = array_search('tinymce.css', $framework, true))) {
+                $key = array_search('tinymce.css', $framework, true);
+
+                if (false !== $key) {
                     unset($framework[$key]);
 
                     $stmt = $this->connection->prepare('
