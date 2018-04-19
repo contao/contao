@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+## DEV
+
+ * Also check the InnoDB file system (see contao/installation-bundle#91).
+
 ## 4.5.8 (2018-04-18)
 
  * Fix an XSS vulnerability in the system log (see CVE-2018-10125).
