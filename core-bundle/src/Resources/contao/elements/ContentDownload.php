@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\PageNotFoundException;
+
 /**
  * Front end content element "download".
  *
@@ -54,10 +56,18 @@ class ContentDownload extends ContentElement
 
 		$file = \Input::get('file', true);
 
-		// Send the file to the browser and do not send a 404 header (see #4632)
-		if ($file != '' && $file == $objFile->path)
+		// Send the file to the browser (see #4632 and #8375)
+		if ($file && (!isset($_GET['cid']) || \Input::get('cid') == $this->id))
 		{
-			\Controller::sendFileToBrowser($file);
+			if ($file == $objFile->path)
+			{
+				\Controller::sendFileToBrowser($file);
+			}
+
+			if (isset($_GET['cid']))
+			{
+				throw new PageNotFoundException('Invalid file name');
+			}
 		}
 
 		$this->singleSRC = $objFile->path;
@@ -80,12 +90,17 @@ class ContentDownload extends ContentElement
 		$strHref = \Environment::get('request');
 
 		// Remove an existing file parameter (see #5683)
-		if (preg_match('/(&(amp;)?|\?)file=/', $strHref))
+		if (isset($_GET['file']))
 		{
 			$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 		}
 
-		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFile->value);
+		if (isset($_GET['cid']))
+		{
+			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
+		}
+
+		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle;
 		$this->Template->title = \StringUtil::specialchars($this->titleText ?: sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));

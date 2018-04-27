@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Throw a "page not found" exception if a download file does not exist (see contao/core#8375).
  * Allow multi-root and multi-page searches (see #1462).
  * Handle case-sensitive file names in the file manager (see #1433).
  * Simplify the slug handling when auto-creating aliases (see #1334).
