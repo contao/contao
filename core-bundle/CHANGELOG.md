@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Allow multi-root and multi-page searches (see #1462).
  * Handle case-sensitive file names in the file manager (see #1433).
  * Simplify the slug handling when auto-creating aliases (see #1334).
  * Do not notify the admin via e-mail if an account is locked (see #7728).
