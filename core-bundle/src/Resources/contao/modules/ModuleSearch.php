@@ -48,6 +48,8 @@ class ModuleSearch extends Module
 			return $objTemplate->parse();
 		}
 
+		$this->pages = \StringUtil::deserialize($this->pages);
+
 		return parent::generate();
 	}
 
@@ -100,12 +102,19 @@ class ModuleSearch extends Module
 		// Execute the search if there are keywords
 		if ($strKeywords != '' && $strKeywords != '*' && !$this->jumpTo)
 		{
-			// Reference page
-			if ($this->rootPage > 0)
+			// Search pages
+			if (!empty($this->pages) && \is_array($this->pages))
 			{
-				$intRootId = $this->rootPage;
-				$arrPages = $this->Database->getChildRecords($this->rootPage, 'tl_page');
-				array_unshift($arrPages, $this->rootPage);
+				$varRootId = \implode('-', $this->pages);
+				$arrPages = [];
+
+				foreach ($this->pages as $intPageId)
+				{
+					$arrPages[] = $intPageId;
+					$arrPages = \array_merge($arrPages, $this->Database->getChildRecords($intPageId, 'tl_page'));
+				}
+
+				$arrPages = \array_unique($arrPages);
 			}
 			// Website root
 			else
@@ -113,7 +122,7 @@ class ModuleSearch extends Module
 				/** @var PageModel $objPage */
 				global $objPage;
 
-				$intRootId = $objPage->rootId;
+				$varRootId = $objPage->rootId;
 				$arrPages = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
 			}
 
@@ -136,7 +145,7 @@ class ModuleSearch extends Module
 			$strCachePath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
 
 			$arrResult = null;
-			$strChecksum = md5($strKeywords . $strQueryType . $intRootId . $blnFuzzy);
+			$strChecksum = md5($strKeywords . $strQueryType . $varRootId . $blnFuzzy);
 			$query_starttime = microtime(true);
 			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
