@@ -150,12 +150,12 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['path'],
 			'eval'                    => array('unique'=>true),
-			'sql'                     => "varchar(1022) NOT NULL default ''",
+			'sql'                     => "varchar(1022) BINARY NOT NULL default ''",
 		),
 		'extension' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['extension'],
-			'sql'                     => "varchar(16) NOT NULL default ''"
+			'sql'                     => "varchar(16) BINARY NOT NULL default ''"
 		),
 		'hash' => array
 		(
@@ -178,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				array('tl_files', 'checkFilename')
 			),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'protected' => array
 		(
