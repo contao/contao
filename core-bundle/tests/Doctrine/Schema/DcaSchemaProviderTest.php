@@ -331,6 +331,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      * @param int|null    $expected
      * @param string      $tableOptions
      * @param string|null $largePrefixes
+     * @param string      $fileSystem
      *
      * @dataProvider getIndexes
      */
