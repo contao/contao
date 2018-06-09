@@ -94,10 +94,10 @@
         "leofeyer/optimize-native-functions-fixer": "^1.0",
         "lexik/maintenance-bundle": "^2.0",
         "monolog/monolog": "^1.22",
+        "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^6.1",
-        "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "suggest": {
