@@ -60,11 +60,20 @@ class AddAssetsPackagesPass implements CompilerPassInterface
                 continue;
             }
 
+            $packageVersion = $version;
             $packageName = $this->getBundlePackageName($name);
             $serviceId = 'assets._package_'.$packageName;
             $basePath = 'bundles/'.preg_replace('/bundle$/', '', strtolower($name));
 
-            $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
+            if (is_file($meta[$name]['path'].'/Resources/public/manifest.json')) {
+                $def = new ChildDefinition('assets.json_manifest_version_strategy');
+                $def->replaceArgument(0, $meta[$name]['path'].'/Resources/public/manifest.json');
+
+                $container->setDefinition('assets._version_'.$packageName, $def);
+                $packageVersion = new Reference('assets._version_'.$packageName);
+            }
+
+            $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $packageVersion, $context));
             $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
         }
     }
