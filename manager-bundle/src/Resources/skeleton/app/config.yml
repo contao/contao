@@ -89,3 +89,13 @@ nelmio_security:
     xss_protection:
         enabled: true
         mode_block: true
+
+# FOS HttpCache configuration
+fos_http_cache:
+    proxy_client:
+        symfony:
+            use_kernel_dispatcher: true
+    cache_manager:
+        enabled: true
+    tags:
+        enabled: true

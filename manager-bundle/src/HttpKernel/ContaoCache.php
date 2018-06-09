@@ -19,7 +19,6 @@ use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
@@ -28,16 +27,18 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     use EventDispatchingHttpCache;
 
     /**
-     * @param KernelInterface $kernel
-     * @param string|null     $cacheDir
+     * @param ContaoKernel $kernel
+     * @param string|null  $cacheDir
      */
-    public function __construct(KernelInterface $kernel, string $cacheDir = null)
+    public function __construct(ContaoKernel $kernel, string $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
 
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new HeaderReplaySubscriber(['ignore_cookies' => ['/^csrf_./']]));
+
+        $kernel->setHttpCache($this);
     }
 
     /**

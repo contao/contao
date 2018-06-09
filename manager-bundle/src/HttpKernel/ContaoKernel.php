@@ -21,14 +21,18 @@ use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
+use FOS\HttpCache\SymfonyCache\HttpCacheAware;
+use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
-class ContaoKernel extends Kernel
+class ContaoKernel extends Kernel implements HttpCacheProvider
 {
+    use HttpCacheAware;
+
     /**
      * @var string
      */

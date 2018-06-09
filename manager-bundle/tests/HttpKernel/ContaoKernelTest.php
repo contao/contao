@@ -31,6 +31,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoKernel', $kernel);
         $this->assertInstanceOf('Symfony\Component\HttpKernel\Kernel', $kernel);
+        $this->assertInstanceOf('FOS\HttpCache\SymfonyCache\HttpCacheProvider', $kernel);
     }
 
     public function testRegisterBundles(): void
