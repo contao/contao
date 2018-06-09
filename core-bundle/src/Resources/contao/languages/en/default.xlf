@@ -212,6 +212,9 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
       </trans-unit>
+      <trans-unit id="ERR.largeImage">
+        <source>Image exceeds the maximum dimensions of %sx%s.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

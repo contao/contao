@@ -80,6 +80,7 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
+        $container->setParameter('contao.image.reject_large_uploads', $mergedConfig['image']['reject_large_uploads']);
 
         if (isset($mergedConfig['localconfig'])) {
             $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);

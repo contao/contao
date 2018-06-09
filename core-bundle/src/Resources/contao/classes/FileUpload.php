@@ -144,10 +144,23 @@ class FileUpload extends Backend
 				$this->blnHasError = true;
 			}
 
-			// Move the file to its destination
 			else
 			{
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
+
+				// Image is too big
+				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png')) && \System::getContainer()->getParameter('contao.image.reject_large_uploads'))
+				{
+					$arrImageSize = getimagesize($file['tmp_name']);
+
+					if ($arrImageSize[0] > \Config::get('gdMaxImgWidth') || $arrImageSize[1] > \Config::get('gdMaxImgHeight'))
+					{
+						\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], \Config::get('gdMaxImgWidth'), \Config::get('gdMaxImgHeight')));
+						$this->blnHasError = true;
+
+						return $arrUploaded;
+					}
+				}
 
 				// File type not allowed
 				if (!\in_array($strExtension, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))))
@@ -155,6 +168,8 @@ class FileUpload extends Backend
 					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $strExtension));
 					$this->blnHasError = true;
 				}
+
+				// Move the file to its destination
 				else
 				{
 					$this->import('Files');

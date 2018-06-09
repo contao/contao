@@ -188,20 +188,21 @@ contao:
     prepend_locale: "%prepend_locale%"
 
     # Optional parameters
-    web_dir:              "%kernel.project_dir%/web"
-    encryption_key:       "%kernel.secret%"
-    url_suffix:           .html
-    upload_path:          files
-    csrf_token_name:      contao_csrf_token
-    pretty_error_screens: true
-    error_level:          8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
+    web_dir:                  "%kernel.project_dir%/web"
+    encryption_key:           "%kernel.secret%"
+    url_suffix:               .html
+    upload_path:              files
+    csrf_token_name:          contao_csrf_token
+    pretty_error_screens:     true
+    error_level:              8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
     image:
-        bypass_cache:     false
-        target_dir:       "%kernel.project_dir%/assets/images"
-        valid_extensions: ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
+        bypass_cache:         false
+        target_dir:           "%kernel.project_dir%/assets/images"
+        valid_extensions:     ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
         imagine_options:
-            jpeg_quality: 80
-            interlace:    plane
+            jpeg_quality:     80
+            interlace:        plane
+        reject_large_uploads: false
 ```
 
 You can also overwrite any parameter stored in the `localconfig.php` file:
