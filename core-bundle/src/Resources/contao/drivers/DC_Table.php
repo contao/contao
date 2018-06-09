@@ -1557,6 +1557,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$this->Database->prepare("DELETE FROM " . $table . " WHERE id=?")
 								   ->limit(1)
 								   ->execute($v);
+
+					// Invalidate cache tags
+					$this->invalidateCacheTags($this->getCacheTags($table, array($v)));
 				}
 			}
 
@@ -1762,6 +1765,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
 							   ->execute($row[1]['sorting'], $row[0]['id']);
+
+				// Invalidate cache tags
+				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id'])));
 			}
 		}
 
@@ -2164,6 +2170,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				throw new ResponseException($objTemplate->getResponse());
 			}
+
+			// Invalidate cache tags
+			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id)));
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -3312,7 +3321,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Remove the entries from the database
 			if (!empty($new_records[$this->strTable]))
 			{
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('\intval', $new_records[$this->strTable])) . ") AND tstamp=0");
+				$ids = array_map('\intval', $new_records[$this->strTable]);
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
+
+				// Invalidate cache tags
+				$this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
 
 				if ($objStmt->affectedRows > 0)
 				{

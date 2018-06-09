@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
+use FOS\HttpCacheBundle\CacheManager;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -1174,6 +1175,49 @@ abstract class DataContainer extends Backend
 </form>';
 
 		return $return;
+	}
+
+	/**
+	 * Invalidates a list of cache tags.
+	 *
+	 * Call this whenever an entry is modified (added, updated, deleted).
+	 *
+	 * @param array $tags
+	 */
+	protected function invalidateCacheTags(array $tags)
+	{
+		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
+		{
+			return;
+		}
+
+		// Filter empty tags
+		$tags = array_filter(array_unique($tags));
+
+		/** @var CacheManager $cacheManager */
+		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
+		$cacheManager->invalidateTags($tags);
+	}
+
+	/**
+	 * Returns an array of cache tags with all parent tables included.
+	 *
+	 * @param string $table
+	 * @param array $ids
+	 *
+	 * @return array
+	 */
+	protected function getCacheTags($table, array $ids = array())
+	{
+		$ns = 'contao.db.';
+		$tags = array($ns . $table);
+
+		foreach ($ids as $id)
+		{
+			$tags[] = $ns . $table . '.' . $id;
+		}
+
+		return array_unique($tags);
 	}
 
 	/**
