@@ -35,6 +35,7 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
+use Contao\CoreBundle\EventListener\ClearFormDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
@@ -266,6 +267,23 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
+    }
+
+    public function testRegistersTheClearFormDataListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.clear_form_data'));
+
+        $definition = $this->container->getDefinition('contao.listener.clear_form_data');
+
+        $this->assertSame(ClearFormDataListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(-768, $tags['kernel.event_listener'][0]['priority']);
     }
 
     public function testRegistersTheCommandSchedulerListener(): void
