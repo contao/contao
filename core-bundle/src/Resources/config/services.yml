@@ -124,6 +124,16 @@ services:
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
 
+    contao.fragment.renderer.forward:
+        class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
+        arguments:
+            - "@http_kernel"
+            - "@event_dispatcher"
+        calls:
+            - ["setFragmentPath", ["%fragment.path%"]]
+        tags:
+            - { name: "kernel.fragment_renderer", alias: "forward" }
+
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:

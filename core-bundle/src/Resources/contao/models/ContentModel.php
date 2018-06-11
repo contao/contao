@@ -94,7 +94,7 @@ namespace Contao;
  * @property boolean $com_requireLogin
  * @property string  $com_template
  * @property string  $typePrefix
- * @property string  $classes
+ * @property array   $classes
  * @property integer $origId
  *
  * @method static ContentModel|null findById($id, array $opt=array())

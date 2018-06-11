@@ -28,5 +28,6 @@ class FrontendModuleReference extends FragmentReference
 
         $this->attributes['moduleModel'] = $model->id;
         $this->attributes['section'] = $section;
+        $this->attributes['classes'] = $model->classes;
     }
 }

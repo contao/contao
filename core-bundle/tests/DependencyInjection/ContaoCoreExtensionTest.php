@@ -53,6 +53,7 @@ use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
+use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
 use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -821,6 +822,28 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FragmentRegistry::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheForwardFragmentRenderer(): void
+    {
+        $this->assertTrue($this->container->has('contao.fragment.renderer.forward'));
+
+        $definition = $this->container->getDefinition('contao.fragment.renderer.forward');
+
+        $this->assertSame(ForwardFragmentRenderer::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('http_kernel', (string) $definition->getArgument(0));
+        $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
+
+        $calls = $definition->getMethodCalls();
+
+        $this->assertSame('setFragmentPath', $calls[0][0]);
+        $this->assertSame('%fragment.path%', (string) $calls[0][1][0]);
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.fragment_renderer', $tags);
+        $this->assertSame('forward', $tags['kernel.fragment_renderer'][0]['alias']);
     }
 
     public function testRegistersTheContaoFramework(): void

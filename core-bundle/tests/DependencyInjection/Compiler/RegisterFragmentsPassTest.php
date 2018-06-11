@@ -46,21 +46,21 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame('add', $methodCalls[0][0]);
         $this->assertSame('contao.content_element.text', $methodCalls[0][1][0]);
-        $this->assertSame('contao.fragment._config_1dahrvn', (string) $methodCalls[0][1][1]);
+        $this->assertSame('contao.fragment._config_s4nmbfu', (string) $methodCalls[0][1][1]);
 
         $arguments = $container->getDefinition((string) $methodCalls[0][1][1])->getArguments();
 
         $this->assertSame('app.fragments.content_controller', $arguments[0]);
-        $this->assertSame('inline', $arguments[1]);
+        $this->assertSame('forward', $arguments[1]);
 
         $this->assertSame('add', $methodCalls[1][0]);
         $this->assertSame('contao.frontend_module.login', $methodCalls[1][1][0]);
-        $this->assertSame('contao.fragment._config_bxm6lpe', (string) $methodCalls[1][1][1]);
+        $this->assertSame('contao.fragment._config_5bktgkn', (string) $methodCalls[1][1][1]);
 
         $arguments = $container->getDefinition((string) $methodCalls[1][1][1])->getArguments();
 
         $this->assertSame('app.fragments.module_controller', $arguments[0]);
-        $this->assertSame('inline', $arguments[1]);
+        $this->assertSame('forward', $arguments[1]);
     }
 
     public function testUsesTheGivenAttributes(): void

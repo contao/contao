@@ -28,5 +28,6 @@ class ContentElementReference extends FragmentReference
 
         $this->attributes['contentModel'] = $model->id;
         $this->attributes['section'] = $section;
+        $this->attributes['classes'] = $model->classes;
     }
 }

@@ -36,7 +36,7 @@ class FragmentConfig
      *
      * @see \Symfony\Component\HttpKernel\Fragment\FragmentHandler::render()
      */
-    public function __construct(string $controller, string $renderer = 'inline', array $options = [])
+    public function __construct(string $controller, string $renderer = 'forward', array $options = [])
     {
         $this->controller = $controller;
         $this->renderer = $renderer;
