@@ -10,6 +10,7 @@
         "gulp": "^3.9.1",
         "gulp-csso": "^3.0.1",
         "gulp-ignore": "^2.0.2",
+        "gulp-livereload": "^3.8.1",
         "gulp-rename": "^1.2.2",
         "gulp-svgo": "^1.4.0",
         "gulp-uglify": "^3.0.0",
