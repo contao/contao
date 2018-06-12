@@ -1136,7 +1136,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				if ($blnIsAjax)
 				{
-					throw new ResponseException(new Response(\Message::generateUnwrapped(), 201));
+					throw new ResponseException(new Response(\Message::generateUnwrapped(TL_MODE, true), 201));
 				}
 
 				// Do not purge the html folder (see #2898)
@@ -1147,6 +1147,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				$this->reload();
+			}
+			elseif ($blnIsAjax)
+			{
+				throw new ResponseException(new Response(\Message::generateUnwrapped(TL_MODE, true), 500));
 			}
 		}
 
