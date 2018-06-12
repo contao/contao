@@ -103,6 +103,9 @@
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
+    "config": {
+        "sort-packages": true
+    },
     "extra": {
         "branch-alias": {
             "dev-4.6": "4.6.x-dev"
