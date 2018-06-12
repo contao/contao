@@ -68,9 +68,6 @@
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
-        <source>Upload files</source>
-      </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
       </trans-unit>
@@ -163,6 +160,12 @@
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit file "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.1">
+        <source>Upload files to folder "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

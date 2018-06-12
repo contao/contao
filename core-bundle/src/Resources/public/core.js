@@ -1400,26 +1400,33 @@ var Backend =
 		});
 
 		ul.addEvent('mousedown', function(event) {
-			var dragElement = (event.target.hasClass('tl_file') || event.target.hasClass('tl_folder')) ? event.target : event.target.getParent('.tl_file,.tl_folder');
+			var dragHandle = event.target.hasClass('drag-handle') ? event.target : event.target.getParent('.drag-handle');
+			var dragElement = event.target.getParent('.tl_file,.tl_folder');
 
-			if (!dragElement || event.target.match('a') || event.target.getParent('a')) {
+			if (!dragHandle || !dragElement) {
 				return;
 			}
 
 			ds.start();
+			ul.addClass('tl_listing_dragging');
 
 			var cloneBase = (dragElement.getElements('.tl_left')[0] || dragElement),
 				clone = cloneBase.clone(true)
 					.inject(ul)
-					.setPosition(cloneBase.getPosition(cloneBase.getOffsetParent()))
-					.setStyle('opacity', 0.7),
+					.addClass('tl_left_dragging'),
 				currentHover, currentHoverTime;
+
+			clone.setPosition({
+				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
+			});
 
 			var move = new Drag.Move(clone, {
 				droppables: $$([ul]).append(ul.getElements('.tl_folder,li.parent,.tl_folder_top')),
+				unDraggableTags: [],
 				modifiers: {
 					x: 'left',
-					y: 'top',
+					y: 'top'
 				},
 				onEnter: function(element, droppable) {
 					droppable = fixDroppable(droppable);
@@ -1461,6 +1468,7 @@ var Backend =
 					ds.stop();
 					clone.destroy();
 					ul.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+					ul.removeClass('tl_listing_dragging');
 
 					droppable = fixDroppable(droppable);
 
