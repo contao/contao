@@ -55,19 +55,25 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'member' => array
 		(
-			'tables'      => array('tl_member')
+			'tables'                  => array('tl_member')
 		),
 		'mgroup' => array
 		(
-			'tables'      => array('tl_member_group')
+			'tables'                  => array('tl_member_group')
+		),
+		'login' => array
+		(
+			'tables'                  => array('tl_user'),
+			'hideInNavigation'        => true,
+			'disablePermissionChecks' => true,
 		),
 		'user' => array
 		(
-			'tables'      => array('tl_user')
+			'tables'                  => array('tl_user')
 		),
 		'group' => array
 		(
-			'tables'      => array('tl_user_group')
+			'tables'                  => array('tl_user_group')
 		)
 	),
 
@@ -76,23 +82,24 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'files' => array
 		(
-			'tables'      => array('tl_files')
+			'tables'                  => array('tl_files')
 		),
 		'log' => array
 		(
-			'tables'      => array('tl_log')
+			'tables'                  => array('tl_log')
 		),
 		'settings' => array
 		(
-			'tables'      => array('tl_settings')
+			'tables'                  => array('tl_settings')
 		),
 		'maintenance' => array
 		(
-			'callback'    => 'ModuleMaintenance'
+			'callback'                => 'ModuleMaintenance'
 		),
 		'undo' => array
 		(
-			'tables'      => array('tl_undo')
+			'tables'                  => array('tl_undo'),
+			'disablePermissionChecks' => true,
 		)
 	)
 );

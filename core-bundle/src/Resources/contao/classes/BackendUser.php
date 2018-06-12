@@ -511,7 +511,10 @@ class BackendUser extends User
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
 					// Check access
-					if ($strModuleName == 'undo' || $this->hasAccess($strModuleName, 'modules'))
+					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $this->hasAccess($strModuleName, 'modules');
+					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
+
+					if ($blnAccess && !$blnHide)
 					{
 						$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);

@@ -73,6 +73,23 @@ class BackendMain extends Backend
 		{
 			$this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'));
 		}
+		
+		// Backend user profile redirect
+		if (\Input::get('do') == 'login' && (\Input::get('act') != 'edit' && \Input::get('id') != $this->User->id))
+		{
+			$container = \System::getContainer();
+
+			$strUrl = $container->get('router')->generate('contao_backend', array
+			(
+				'do' => 'login',
+				'act' => 'edit',
+				'id' => $this->User->id,
+				'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+				'rt' => REQUEST_TOKEN,
+			));
+
+			$this->redirect($strUrl);
+		}
 
 		\System::loadLanguageFile('default');
 		\System::loadLanguageFile('modules');
