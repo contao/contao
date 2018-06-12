@@ -158,7 +158,7 @@ class FileUpload extends Backend
 						\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], \Config::get('gdMaxImgWidth'), \Config::get('gdMaxImgHeight')));
 						$this->blnHasError = true;
 
-						return $arrUploaded;
+						continue;
 					}
 				}
 
