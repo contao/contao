@@ -168,16 +168,10 @@ class FrontendIndex extends \Frontend
 		// If the page has an alias, it can no longer be called via ID (see #7661)
 		if ($objPage->alias != '')
 		{
-			if (\Config::get('addLanguageToUrl'))
-			{
-				$regex = '#^[a-z]{2}(-[A-Z]{2})?/' . $objPage->id . '[$/.]#';
-			}
-			else
-			{
-				$regex = '#^' . $objPage->id . '[$/.]#';
-			}
+			$language = \Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
+			$suffix = \Config::get('urlSuffix') ? preg_quote(\Config::get('urlSuffix'), '#') : '$';
 
-			if (preg_match($regex, \Environment::get('relativeRequest')))
+			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '|/)#', \Environment::get('relativeRequest')))
 			{
 				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 			}
