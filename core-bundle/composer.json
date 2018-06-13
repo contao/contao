@@ -89,17 +89,17 @@
         "leofeyer/optimize-native-functions-fixer": "^1.1",
         "lexik/maintenance-bundle": "^2.1.3",
         "monolog/monolog": "^1.22",
+        "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^5.7.26",
-        "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "config": {
-        "preferred-install": "dist"
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
