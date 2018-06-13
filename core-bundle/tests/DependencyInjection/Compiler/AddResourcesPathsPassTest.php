@@ -57,7 +57,7 @@ class AddResourcesPathsPassTest extends TestCase
 
         $path = $this->getRootDir().'/vendor/contao/test-bundle';
 
-        if ('\\' === DIRECTORY_SEPARATOR) {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
             $path = strtr($path, '/', '\\');
         }
 

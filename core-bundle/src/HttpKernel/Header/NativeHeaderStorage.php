@@ -38,7 +38,7 @@ class NativeHeaderStorage implements HeaderStorageInterface
      */
     public function clear()
     {
-        if ('cli' !== PHP_SAPI && !headers_sent()) {
+        if ('cli' !== \PHP_SAPI && !headers_sent()) {
             header_remove();
         }
     }

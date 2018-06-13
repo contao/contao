@@ -74,6 +74,6 @@ class ControllerTest extends TestCase
             'unit' => '',
         ];
 
-        $this->assertEquals('margin:40px 10% -2px -50%;', Controller::generateMargin($margins));
+        $this->assertSame('margin:40px 10% -2px -50%;', Controller::generateMargin($margins));
     }
 }

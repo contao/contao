@@ -1202,7 +1202,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load([], $container);
 
         $this->assertSame(
-            str_replace('/', DIRECTORY_SEPARATOR, $this->getRootDir().'/assets/images'),
+            str_replace('/', \DIRECTORY_SEPARATOR, $this->getRootDir().'/assets/images'),
             $container->getParameter('contao.image.target_dir')
         );
 
@@ -1216,7 +1216,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame(
-            str_replace('/', DIRECTORY_SEPARATOR, $this->getRootDir()).'/my/custom/dir',
+            str_replace('/', \DIRECTORY_SEPARATOR, $this->getRootDir()).'/my/custom/dir',
             $container->getParameter('contao.image.target_dir')
         );
     }

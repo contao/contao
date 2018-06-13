@@ -194,7 +194,7 @@ class SymlinksCommand extends AbstractLockedCommand
             $this->rows[] = [
                 sprintf(
                     '<fg=green;options=bold>%s</>',
-                    '\\' === DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
+                    '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" // HEAVY CHECK MARK (U+2714)
                 ),
                 $link,
                 $target,
@@ -205,7 +205,7 @@ class SymlinksCommand extends AbstractLockedCommand
             $this->rows[] = [
                 sprintf(
                     '<fg=red;options=bold>%s</>',
-                    '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
+                    '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" // HEAVY BALLOT X (U+2718)
                 ),
                 $link,
                 sprintf('<error>%s</error>', $e->getMessage()),
@@ -266,7 +266,7 @@ class SymlinksCommand extends AbstractLockedCommand
                         $this->rows[] = [
                             sprintf(
                                 '<fg=yellow;options=bold>%s</>',
-                                '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'
+                                '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'
                             ),
                             $this->webDir.'/'.$path,
                             sprintf('<comment>Skipped because %s will be symlinked.</comment>', $parent),

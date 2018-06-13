@@ -162,7 +162,7 @@ class Configuration implements ConfigurationInterface
     {
         $path = Path::canonicalize($value);
 
-        if ('\\' === DIRECTORY_SEPARATOR) {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
             $path = str_replace('/', '\\', $path);
         }
 

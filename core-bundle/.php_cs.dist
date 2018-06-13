@@ -33,6 +33,9 @@ return PhpCsFixer\Config::create()
         'header_comment' => ['header' => $header],
         'heredoc_to_nowdoc' => true,
         'linebreak_after_opening_tag' => true,
+        'native_function_invocation' => [
+            'include' => ['@compiler_optimized'],
+        ],
         'no_null_property_initialization' => true,
         'no_superfluous_elseif' => true,
         'no_unreachable_default_argument_value' => true,
@@ -49,11 +52,6 @@ return PhpCsFixer\Config::create()
         ],
         'strict_comparison' => true,
         'strict_param' => true,
-        // Remove when https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/3222 has been merged
-        'LeoFeyer/optimize_native_functions' => true,
-    ])
-    ->registerCustomFixers([
-        new LeoFeyer\PhpCsFixer\OptimizeNativeFunctionsFixer()
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

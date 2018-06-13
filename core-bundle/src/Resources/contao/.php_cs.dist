@@ -25,6 +25,9 @@ return PhpCsFixer\Config::create()
         'method_argument_space' => true,
         'modernize_types_casting' => true,
         'native_function_casing' => true,
+        'native_function_invocation' => [
+            'include' => ['@compiler_optimized'],
+        ],
         'new_with_braces' => true,
         'no_empty_comment' => true,
         'no_empty_phpdoc' => true,
@@ -79,11 +82,6 @@ return PhpCsFixer\Config::create()
         'unary_operator_spaces' => true,
         'whitespace_after_comma_in_array' => true,
         'yoda_style' => false,
-        // Remove when https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/3222 has been merged
-        'LeoFeyer/optimize_native_functions' => true,
-    ])
-    ->registerCustomFixers([
-        new LeoFeyer\PhpCsFixer\OptimizeNativeFunctionsFixer()
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

@@ -444,7 +444,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         if (!\defined('REQUEST_TOKEN')) {
-            \define('REQUEST_TOKEN', 'cli' === PHP_SAPI ? null : $requestToken->get());
+            \define('REQUEST_TOKEN', 'cli' === \PHP_SAPI ? null : $requestToken->get());
         }
 
         if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {

@@ -60,10 +60,10 @@ class ConfigurationTest extends TestCase
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame(strtr($this->getRootDir().'/web', '/', DIRECTORY_SEPARATOR), $configuration['web_dir']);
+        $this->assertSame(strtr($this->getRootDir().'/web', '/', \DIRECTORY_SEPARATOR), $configuration['web_dir']);
 
         $this->assertSame(
-            strtr($this->getRootDir().'/assets/images', '/', DIRECTORY_SEPARATOR),
+            strtr($this->getRootDir().'/assets/images', '/', \DIRECTORY_SEPARATOR),
             $configuration['image']['target_dir']
         );
     }
