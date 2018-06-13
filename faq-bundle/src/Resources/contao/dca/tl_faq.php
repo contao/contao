@@ -123,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'foreignKey'              => 'tl_faq_category.title',
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
-			'relation'                => array('type'=>'belongsTo', 'load'=>'eager')
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'sorting' => array
 		(
@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
-			'relation'                => array('type'=>'belongsTo', 'load'=>'eager')
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'answer' => array
 		(
