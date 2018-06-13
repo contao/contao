@@ -20,7 +20,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.6"
+        "friendsofphp/php-cs-fixer": "^2.12"
     },
     "extra": {
         "branch-alias": {
