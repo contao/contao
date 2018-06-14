@@ -2,6 +2,12 @@
 
 ## DEV
 
+ * Add extended video support (see #1348).
+ * Pass all search result data to the search template (see #1558).
+ * Auto-clear the session form data (see #1550).
+ * Add abstract controllers for fragment content elements and front end modules (see #1376).
+ * Handle manifest.json files in public bundle folders (see #1510).
+ * Introduce auto cache tag invalidation on DCAs for better DX (see #1478).
  * Throw a "page not found" exception if a download file does not exist (see contao/core#8375).
  * Allow multi-root and multi-page searches (see #1462).
  * Handle case-sensitive file names in the file manager (see #1433).
