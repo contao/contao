@@ -459,7 +459,7 @@
         <source>Include settings</source>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
+        <source>Source</source>
       </trans-unit>
       <trans-unit id="tl_module.interact_legend">
         <source>Interactive Flash movie</source>

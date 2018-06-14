@@ -155,7 +155,45 @@ class ContentMedia extends ContentElement
 		}
 
 		$this->Template->files = array_values(array_filter($arrFiles));
-		$this->Template->autoplay = $this->autoplay;
+
+		$attributes = array('controls' => 'controls');
+		$options = \StringUtil::deserialize($this->playerOptions);
+
+		if (\is_array($options))
+		{
+			foreach ($options as $option)
+			{
+				if ($option == 'player_nocontrols')
+				{
+					unset($attributes['controls']);
+				}
+				else
+				{
+					$attributes[substr($option, 7)] = substr($option, 7);
+				}
+			}
+		}
+
+		$this->Template->attributes = $attributes;
+		$this->Template->preload = $this->playerPreload;
+		$this->Template->caption = $this->playerCaption;
+
+		if ($this->playerStart || $this->playerStop)
+		{
+			$range = '#t=';
+
+			if ($this->playerStart)
+			{
+				$range .= $this->playerStart;
+			}
+
+			if ($this->playerStop)
+			{
+				$range .= ',' . $this->playerStop;
+			}
+
+			$this->Template->range = $range;
+		}
 	}
 }
 

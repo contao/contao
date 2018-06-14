@@ -2,18 +2,23 @@
 
 <?php $this->block('content'); ?>
 
-  <?php if ($this->isVideo): ?>
-    <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>" preload="none"<?php endif; ?><?php if ($this->autoplay): ?> autoplay<?php endif; ?> controls>
-      <?php foreach ($this->files as $file): ?>
-        <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
-      <?php endforeach; ?>
-    </video>
-  <?php else: ?>
-    <audio<?= $this->size ?> preload="none"<?php if ($this->autoplay): ?> autoplay<?php endif; ?> controls>
-      <?php foreach ($this->files as $file): ?>
-        <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
-      <?php endforeach; ?>
-    </audio>
-  <?php endif; ?>
+  <figure class="video_container">
+    <?php if ($this->isVideo): ?>
+      <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>" preload="<?= $this->preload ?>"<?php endif; ?><?= $this->attributes ? ' ' . implode(' ', $this->attributes) : '' ?>>
+        <?php foreach ($this->files as $file): ?>
+          <source type="<?= $file->mime ?>" src="<?= $file->path . $this->range ?>" title="<?= $file->title ?>">
+        <?php endforeach; ?>
+      </video>
+    <?php else: ?>
+      <audio<?= $this->size ?> preload="none"<?= $this->attributes ? ' ' . implode(' ', $this->attributes) : '' ?>>
+        <?php foreach ($this->files as $file): ?>
+          <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
+        <?php endforeach; ?>
+      </audio>
+    <?php endif; ?>
+    <?php if ($this->caption): ?>
+      <figcaption class="caption"><?= $this->caption ?></figcaption>
+    <?php endif; ?>
+  </figure>
 
 <?php $this->endblock(); ?>

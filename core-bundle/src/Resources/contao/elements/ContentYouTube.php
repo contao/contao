@@ -61,13 +61,8 @@ class ContentYouTube extends ContentElement
 		}
 
 		$params = array();
-
-		if ($this->autoplay)
-		{
-			$params[] = 'autoplay=1';
-		}
-
 		$options = \StringUtil::deserialize($this->youtubeOptions);
+		$domain = 'https://www.youtube.com';
 
 		if (\is_array($options))
 		{
@@ -78,6 +73,7 @@ class ContentYouTube extends ContentElement
 					case 'youtube_fs':
 					case 'youtube_rel':
 					case 'youtube_showinfo':
+					case 'youtube_controls':
 						$params[] = substr($option, 8) . '=0';
 						break;
 
@@ -89,23 +85,27 @@ class ContentYouTube extends ContentElement
 						$params[] = substr($option, 8) . '=3';
 						break;
 
+					case 'youtube_nocookie':
+						$domain = 'https://www.youtube-nocookie.com';
+						break;
+
 					default:
 						$params[] = substr($option, 8) . '=1';
 				}
 			}
 		}
 
-		if ($this->youtubeStart > 0)
+		if ($this->playerStart > 0)
 		{
-			$params[] = 'start=' . (int) $this->youtubeStart;
+			$params[] = 'start=' . (int) $this->playerStart;
 		}
 
-		if ($this->youtubeStop > 0)
+		if ($this->playerStop > 0)
 		{
-			$params[] = 'end=' . (int) $this->youtubeStop;
+			$params[] = 'end=' . (int) $this->playerStop;
 		}
 
-		$url = 'https://www.youtube.com/embed/' . $this->youtube;
+		$url = $domain . '/embed/' . $this->youtube;
 
 		if (!empty($params))
 		{
@@ -113,6 +113,8 @@ class ContentYouTube extends ContentElement
 		}
 
 		$this->Template->src = $url;
+		$this->Template->aspect = str_replace(':', '', $this->playerAspect);
+		$this->Template->caption = $this->playerCaption;
 	}
 }
 
