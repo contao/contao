@@ -1074,7 +1074,8 @@ ul.sgallery li {
 }
 #tl_messages .tl_error,#tl_messages .tl_confirm,#tl_messages .tl_info,#tl_messages .tl_new {
 	padding:3px 6px 3px 21px;
-	background:transparent left center;
+	background-position:left center;
+	background-color:transparent;
 }
 #tl_shortcuts p a {
 	text-decoration:underline;
