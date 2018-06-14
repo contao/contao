@@ -72,7 +72,6 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $vimeo
  * @property string  $posterSRC
  * @property string  $playerSize
- * @property boolean $autoplay
  * @property array   $playerOptions
  * @property string  $playerPreload
  * @property integer $playerStart
