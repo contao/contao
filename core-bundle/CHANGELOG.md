@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Remove the app_dev.php/ fragment when generating sitemaps (see #1520).
  * Show the 404 page if a numeric aliases has no url suffix (see #1508).
  * Fix the schema.org markup so the breadcrumb is linked to the webpage (see #1527).
  * Reduce memory consumption during sitemap generation (see #1549).
