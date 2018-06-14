@@ -627,7 +627,7 @@
         <source>Hide the title</source>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_byline">
-        <source>Hide the byline</source>
+        <source>Hide the author</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>
