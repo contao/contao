@@ -2,6 +2,9 @@
 
 ## DEV
 
+ * Show the 404 page if a numeric aliases has no url suffix (see #1508).
+ * Fix the schema.org markup so the breadcrumb is linked to the webpage (see #1527).
+ * Reduce memory consumption during sitemap generation (see #1549).
  * Correctly handle spaces when opening nodes in the file picker (see #1449).
 
 ## 4.4.18 (2018-04-18)
