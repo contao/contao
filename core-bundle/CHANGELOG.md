@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly calculate the nodes when initializing the picker (see #1535).
  * Do not re-send the activation mail if auto-registration is disabled (see #1526).
  * Remove the app_dev.php/ fragment when generating sitemaps (see #1520).
  * Show the 404 page if a numeric aliases has no url suffix (see #1508).

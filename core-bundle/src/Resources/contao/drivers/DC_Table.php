@@ -6005,7 +6005,8 @@ class DC_Table extends \DataContainer implements \listable, \editable
 					array_intersect(
 						array_merge($arrRoot, $this->Database->getChildRecords($arrRoot, $this->strTable)),
 						array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable))
-					)
+					),
+					$this->strTable
 				);
 			}
 
