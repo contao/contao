@@ -351,6 +351,7 @@ class ModuleEventlist extends Events
 		// See #3672
 		$this->Template->headline = $this->headline;
 		$this->Template->events = $strEvents;
+		$this->Template->eventCount = $eventCount;
 
 		// Clear the $_GET array (see #2445)
 		if ($blnClearInput)
