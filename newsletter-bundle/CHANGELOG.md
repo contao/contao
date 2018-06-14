@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Use a given e-mail address in the unsubscribe module (see #12).
  * Delete old subscriptions if the new e-mail address exists (see #19).
 
 ## 4.4.17 (2018-04-04)
