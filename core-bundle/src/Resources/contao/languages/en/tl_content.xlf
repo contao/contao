@@ -621,7 +621,7 @@
         <source>Play in a loop</source>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_portrait">
-        <source>Hide the user’s portrait</source>
+        <source>Hide the profile image</source>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_title">
         <source>Hide the title</source>
