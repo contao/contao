@@ -7,8 +7,8 @@ services:
             - { name: kernel.cache_clearer }
 
     contao_manager.plugin_loader:
-        class: Contao\ManagerBundle\ContaoManager\PluginLoader
         synthetic: true
+        public: true
 
     contao_manager.routing_loader:
         class: Contao\ManagerBundle\Routing\RouteLoader
