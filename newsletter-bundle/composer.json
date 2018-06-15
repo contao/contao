@@ -20,7 +20,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.6",
+        "friendsofphp/php-cs-fixer": "^2.12",
         "leofeyer/optimize-native-functions-fixer": "^1.0"
     },
     "extra": {

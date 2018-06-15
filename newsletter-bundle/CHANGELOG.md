@@ -1,5 +1,11 @@
 # Contao newsletter bundle change log
 
+## DEV
+
+ * Correctly blacklist unsubscribed recipients (see #21).
+ * Use a given e-mail address in the unsubscribe module (see #12).
+ * Delete old subscriptions if the new e-mail address exists (see #19).
+
 ## 4.5.7 (2018-04-04)
 
  * Correctly duplicate recipients if a channel is duplicated (see #15).
