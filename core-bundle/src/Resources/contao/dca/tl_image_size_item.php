@@ -300,6 +300,12 @@ class tl_image_size_item extends Backend
 			$this->redirect($this->getReferer());
 		}
 
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!$this->User->hasAccess('tl_image_size_item::invisible', 'alexf'))
+		{
+			return '';
+		}
+
 		$href .= '&amp;tid='.$row['id'].'&amp;state='.$row['invisible'];
 
 		if ($row['invisible'])
