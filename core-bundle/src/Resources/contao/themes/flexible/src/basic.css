@@ -436,7 +436,7 @@ a.tl_submit {
 	bottom:-12px;
 	z-index:89;
 	border:6px inset transparent;
-	border-top:solid #fff;
+	border-top:6px solid #fff;
 }
 .split-button ul:after {
 	content:"";
@@ -448,7 +448,7 @@ a.tl_submit {
 	bottom:-14px;
 	z-index:88;
 	border:7px inset transparent;
-	border-top:solid #aaa;
+	border-top:7px solid #aaa;
 }
 .split-button button img {
 	vertical-align:0;

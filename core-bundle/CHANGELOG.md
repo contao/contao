@@ -2,6 +2,14 @@
 
 ## DEV
 
+ * Show the 404 page if there is no match in the set of potential pages (see #1522).
+ * Correctly calculate the nodes when initializing the picker (see #1535).
+ * Do not re-send the activation mail if auto-registration is disabled (see #1526).
+ * Remove the app_dev.php/ fragment when generating sitemaps (see #1520).
+ * Show the 404 page if a numeric aliases has no url suffix (see #1508).
+ * Fix the schema.org markup so the breadcrumb is linked to the webpage (see #1527).
+ * Reduce memory consumption during sitemap generation (see #1549).
+ * Correctly handle spaces when opening nodes in the file picker (see #1449).
  * Also check the InnoDB file system (see contao/installation-bundle#91).
 
 ## 4.5.8 (2018-04-18)

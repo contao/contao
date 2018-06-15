@@ -129,11 +129,12 @@ class Message
 	/**
 	 * Return the messages as HTML
 	 *
-	 * @param string $strScope An optional message scope
+	 * @param string  $strScope An optional message scope
+	 * @param boolean $blnRaw   Optionally return the raw messages
 	 *
 	 * @return string The messages HTML markup
 	 */
-	public static function generateUnwrapped($strScope=TL_MODE)
+	public static function generateUnwrapped($strScope=TL_MODE, $blnRaw=false)
 	{
 		$session = \System::getContainer()->get('session');
 
@@ -152,7 +153,7 @@ class Message
 
 			foreach (array_unique($arrMessages) as $strMessage)
 			{
-				if ($strType == 'TL_RAW')
+				if ($strType == 'TL_RAW' || $blnRaw)
 				{
 					$strMessages .= $strMessage;
 				}

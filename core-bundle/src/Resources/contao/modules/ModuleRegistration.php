@@ -159,7 +159,7 @@ class ModuleRegistration extends \Module
 		$objMember = null;
 
 		// Check for a follow-up registration (see #7992)
-		if (\Input::post('email', true) != '' && ($objMember = \MemberModel::findUnactivatedByEmail(\Input::post('email', true))) !== null)
+		if ($this->reg_activate && \Input::post('email', true) != '' && ($objMember = \MemberModel::findUnactivatedByEmail(\Input::post('email', true))) !== null)
 		{
 			$this->resendActivationMail($objMember);
 
