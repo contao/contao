@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,10 +16,6 @@ use Contao\System;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the System class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- *
  * @group contao3
  *
  * @runTestsInSeparateProcesses
@@ -34,9 +32,6 @@ class SystemTest extends TestCase
         require __DIR__.'/../../src/Resources/contao/library/Contao/System.php';
     }
 
-    /**
-     * Tests formatting a number.
-     */
     public function testFormatsANumber(): void
     {
         $number = '12004.34564';
@@ -75,9 +70,6 @@ class SystemTest extends TestCase
         }
     }
 
-    /**
-     * Tests the IP anonymization.
-     */
     public function testAnonymizesIpAddresses(): void
     {
         $ipv4 = '172.16.254.112';
