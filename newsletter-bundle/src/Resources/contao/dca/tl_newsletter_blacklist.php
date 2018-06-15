@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_blacklist'] = array
 			(
 				'id' => 'primary',
                 'pid' => 'index',
-				'hash' => 'unique'
+				'pid,hash' => 'unique'
 			)
 		)
 	),

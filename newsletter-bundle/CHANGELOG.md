@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly blacklist unsubscribed recipients (see #21).
  * Use a given e-mail address in the unsubscribe module (see #12).
  * Delete old subscriptions if the new e-mail address exists (see #19).
 
