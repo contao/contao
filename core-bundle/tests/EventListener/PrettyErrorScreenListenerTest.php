@@ -203,7 +203,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testRendersServiceUnavailableHttpExceptions(): void
     {
-        $exception = new ServiceUnavailableHttpException('', new ServiceUnavailableException());
+        $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
         $event = $this->mockResponseEvent($exception);
 
         $listener = $this->mockListener(FrontendUser::class);
@@ -219,7 +219,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderExceptionsIfDisabled(): void
     {
-        $exception = new ServiceUnavailableHttpException('', new ServiceUnavailableException());
+        $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
         $event = $this->mockResponseEvent($exception);
 
         $twig = $this->createMock('Twig_Environment');
@@ -235,7 +235,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderExceptionsUponSubrequests(): void
     {
-        $exception = new ServiceUnavailableHttpException('', new ServiceUnavailableException());
+        $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
         $event = $this->mockResponseEvent($exception, null, true);
 
         $twig = $this->createMock('Twig_Environment');
