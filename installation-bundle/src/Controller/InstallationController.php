@@ -572,7 +572,7 @@ class InstallationController implements ContainerAwareInterface
      *
      * @return Response
      */
-    private function render($name, $context = [])
+    private function render($name, array $context = [])
     {
         return new Response(
             $this->container->get('twig')->render(
