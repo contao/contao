@@ -17,6 +17,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -138,8 +139,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         @trigger_error('Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
+        /** @var System $system */
+        $system = $this->framework->getAdapter(System::class);
+
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
-            $this->framework->createInstance($callback[0])->{$callback[1]}($this->user);
+            $system->importStatic($callback[0])->{$callback[1]}($this->user);
         }
     }
 

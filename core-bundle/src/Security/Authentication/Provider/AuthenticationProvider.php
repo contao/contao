@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\FrontendUser;
 use Contao\Idna;
+use Contao\System;
 use Contao\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
@@ -216,10 +217,13 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 
         @trigger_error('Using the checkCredentials hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-        foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback) {
-            $objectInstance = $this->framework->createInstance($callback[0]);
+        /** @var System $system */
+        $system = $this->framework->getAdapter(System::class);
+        $username = $token->getUsername();
+        $credentials = $token->getCredentials();
 
-            if ($objectInstance->{$callback[1]}($token->getUsername(), $token->getCredentials(), $user)) {
+        foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback) {
+            if ($system->importStatic($callback[0])->{$callback[1]}($username, $credentials, $user)) {
                 return true;
             }
         }

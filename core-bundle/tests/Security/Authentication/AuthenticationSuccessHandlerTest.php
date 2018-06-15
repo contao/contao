@@ -13,11 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
+use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -108,20 +110,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
      */
     public function testTriggersThePostLoginHook(): void
     {
-        $framework = $this->mockContaoFramework();
-
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        $framework
-            ->expects($this->once())
-            ->method('createInstance')
-            ->with(__CLASS__)
-            ->willReturn($this)
-        ;
-
         $logger = $this->createMock(LoggerInterface::class);
 
         $logger
@@ -156,20 +144,36 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $GLOBALS['TL_HOOKS']['postLogin'] = [[__CLASS__, 'onPostLogin']];
+        $listener = $this->createPartialMock(Controller::class, ['onPostLogin']);
+
+        $listener
+            ->expects($this->once())
+            ->method('onPostLogin')
+            ->with($user)
+        ;
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+
+        $systemAdapter
+            ->expects($this->once())
+            ->method('importStatic')
+            ->with('HookListener')
+            ->willReturn($listener)
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $GLOBALS['TL_HOOKS']['postLogin'] = [['HookListener', 'onPostLogin']];
 
         $handler = $this->mockSuccessHandler($framework, $logger);
         $handler->onAuthenticationSuccess($request, $token);
 
         unset($GLOBALS['TL_HOOKS']);
-    }
-
-    /**
-     * @param UserInterface $user
-     */
-    public function onPostLogin(UserInterface $user): void
-    {
-        $this->assertInstanceOf('Contao\BackendUser', $user);
     }
 
     public function testUsesTheUrlOfThePage(): void
