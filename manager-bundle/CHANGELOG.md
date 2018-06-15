@@ -1,5 +1,9 @@
 # Contao manager bundle change log
 
+## DEV
+
+ * Disable the maintenance mode for local requests (see #1492).
+
 ## 4.4.17 (2018-04-04)
 
  * Suppress error messages in production (see contao/core-bundle#1422).
