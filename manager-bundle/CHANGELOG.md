@@ -1,5 +1,9 @@
 # Contao manager bundle change log
 
+## DEV
+
+ * Disable the maintenance mode for local requests (see #1492).
+
 ## 4.5.7 (2018-04-04)
 
  * Warm up the cache in the Composer script handler (see #59).
