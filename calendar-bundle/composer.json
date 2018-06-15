@@ -21,12 +21,11 @@
     "require-dev": {
         "contao/manager-plugin": "^2.0",
         "contao/test-case": "^1.1",
-        "friendsofphp/php-cs-fixer": "^2.6",
-        "leofeyer/optimize-native-functions-fixer": "^1.0",
+        "friendsofphp/php-cs-fixer": "^2.12",
+        "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^6.1",
-        "satooshi/php-coveralls": "^1.0",
         "symfony/phpunit-bridge": "^3.2"
     },
     "extra": {
