@@ -127,6 +127,12 @@ class FrontendIndex extends \Frontend
 				$arrLangs = $arrPages['*'] ?: array(); // empty domain
 			}
 
+			// Throw an exception if there are no matches (see #1522)
+			if (empty($arrLangs))
+			{
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			}
+
 			// Use the first result (see #4872)
 			if (!\Config::get('addLanguageToUrl'))
 			{

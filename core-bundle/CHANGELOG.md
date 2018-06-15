@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Show the 404 page if there is no match in the set of potential pages (see #1522).
  * Correctly calculate the nodes when initializing the picker (see #1535).
  * Do not re-send the activation mail if auto-registration is disabled (see #1526).
  * Remove the app_dev.php/ fragment when generating sitemaps (see #1520).
