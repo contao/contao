@@ -52,7 +52,7 @@ class String extends \StringUtil
 	/**
 	 * Return the object instance (Singleton)
 	 *
-	 * @return string The object instance
+	 * @return static The object instance
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The String class is now static.
