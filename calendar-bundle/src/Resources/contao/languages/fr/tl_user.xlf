@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Events permissions</source>
+        <target>Permissions des événements</target>
       </trans-unit>
     </body>
   </file>
