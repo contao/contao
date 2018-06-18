@@ -1,0 +1,143 @@
+{% trans_default_domain 'contao_exception' %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <title>{% block title %}{{ statusCode }} Error{% endblock %}</title>
+        <meta name="generator" content="Contao Open Source CMS">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+        <link rel="stylesheet" href="{{ asset('system/themes/flexible/fonts.css') }}">
+        {% block style %}
+            <style>
+                html {
+                    background: #fff;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font: 1rem/1.25 Lato,sans-serif;
+                    font-weight: 300;
+                    color: #222;
+                }
+                @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+                    body {
+                        font-family: "Lato Retina", Lato, sans-serif;
+                    }
+                }
+                a, a:visited {
+                    text-decoration: none;
+                    color: #e4790f;
+                }
+                a:hover {
+                    text-decoration: underline;
+                }
+                h1, h2, h3 {
+                    font-weight: 300;
+                }
+                h1 {
+                    margin: 0;
+                    padding-bottom: 2%;
+                    font-size: 3em;
+                }
+                h2, h3 {
+                    font-size: 1.5em;
+                }
+                pre, code {
+                    font: 300 .75rem/1.25 "Roboto Mono", monospace;
+                }
+                #header {
+                    padding: 12px 0 10px;
+                }
+                #content {
+                    padding: 3% 0;
+                    background-color: #eee;
+                }
+                #footer {
+                    font-size: 0.75em;
+                    text-align: center;
+                    padding: .5em 0;
+                    color: #808080;
+                }
+                .wrap {
+                    width: 60%;
+                    margin: 0 auto;
+                    padding: 1em;
+                    overflow: hidden;
+                }
+                .header-logo {
+                    display: inline-block;
+                }
+                .block-error {
+                    margin-bottom: 20px;
+                    background-color: #fff;
+                    border: 1px solid #dfdfdf;
+                    border-radius: 16px;
+                    padding: 15px 30px 24px;
+                    word-wrap: break-word;
+                    overflow: hidden;
+                }
+                .block-error:before {
+                    float: left;
+                    content: "</";
+                    font-size: 5em;
+                    color: #ccc;
+                }
+                .block-error .inner {
+                    padding-left: 13%;
+                }
+            </style>
+       {% endblock %}
+    {% endblock %}
+</head>
+<body>
+    <div id="header">
+        <div class="wrap">
+            <div class="header-logo">
+                <img width="200" height="54" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NzQuMDIiIGhlaWdodD0iMTU1LjkxIiB2aWV3Qm94PSIwIDAgNTc0LjAyIDE1NS45MSI+PHBhdGggZD0iTTI3MS4wMSAxMjEuNDRhMzEuNDUgMzEuNDUgMCAwIDEtMjMuMDctOS4zOGMtOC42NC04LjY1LTguNDItMTkuMzQtOC40Mi0zNC4xcy0uMjMtMjUuNDYgOC40Mi0zNC4xMmEzMS41IDMxLjUgMCAwIDEgMjMuMDctOS4zOGMxNiAwIDI4LjQ3IDkuMTMgMzEuNDggMjdoLTE3Yy0xLjY4LTYuODUtNi0xMi4xMi0xNC40MS0xMi4xMmExMy44NCAxMy44NCAwIDAgMC0xMC42OCA0LjQxYy0zLjI1IDMuNjQtNC4yMiA3LjctNC4yMiAyNC4xN3MxIDIwLjUxIDQuMjIgMjQuMTRhMTMuODMgMTMuODMgMCAwIDAgMTAuNjggNC40M2M4LjQxIDAgMTIuNzMtNS4yOCAxNC40MS0xMi4xMmgxN2MtMy4wMSAxNy45My0xNS42MiAyNy4wNy0zMS40OCAyNy4wN3ptODIuMjgtNy42OWMtMy44NCA0LjA5LTEwLjIxIDcuNjktMTkuNDYgNy42OXMtMTUuNS0zLjYxLTE5LjM1LTcuNjljLTUuNjQtNS44OC03LjA4LTEzLTcuMDgtMjQuMzhzMS40NC0xOC4zOCA3LjA4LTI0LjI4YzMuODUtNC4wOCAxMC4xLTcuNjYgMTkuMzUtNy42NnMxNS42MSAzLjU4IDE5LjQ2IDcuNjZjNS42NSA1Ljg5IDcuMDkgMTMgNy4wOSAyNC4yOHMtMS40MyAxOC40OS03LjA4IDI0LjM3em0tMTIuMTQtMzkuNTJhOS44NiA5Ljg2IDAgMCAwLTcuMzItMi43NiA5LjYzIDkuNjMgMCAwIDAtNy4yMiAyLjc2Yy0zLjIzIDMuMjUtMy42IDguNjQtMy42IDE1LjE0cy4zNyAxMiAzLjYgMTUuMjNhOS42IDkuNiAwIDAgMCA3LjIyIDIuNzkgOS44MyA5LjgzIDAgMCAwIDcuMzItMi43OWMzLjI1LTMuMjQgMy42MS04Ljc2IDMuNjEtMTUuMjNzLS4zNS0xMS44OS0zLjYtMTUuMTR6bTYzLjQxIDQ2LjQ5VjgyLjg3YzAtOC41My01LjQtMTEuNC0xMC4zMy0xMS40cy0xMC40NCAyLjg3LTEwLjQ0IDExLjR2MzcuODRoLTE1LjYzVjU4LjEyaDE1LjI4djUuNzhhMjEuMzMgMjEuMzMgMCAwIDEgMTUuNi02LjQ4YzYuMjYgMCAxMS4zIDIgMTQuNzggNS41MyA1LjA2IDUgNi4zNyAxMC45IDYuMzcgMTcuNzZ2NDB6bTQ1LjE2IDBjLTEyLjczIDAtMTguMTUtOS0xOC4xNS0xNy45MXYtMzFoLTYuNTZWNTkuOTVoNi42di0xOC41YzYuNTMgMCAxNS42My0zLjQzIDE1LjYzLTMuNDN2MjEuOTNoMTF2MTEuODloLTExdjMwYzAgMy42IDEuNjkgNS42NSA1LjQyIDUuNjVoNS42M3YxMy4yMXptNDkgMHYtNS40Yy00LjIgNC4yMi04LjE2IDYtMTUuMzcgNnMtMTIuMjUtMS43OS0xNi01LjU0YTIwLjA4IDIwLjA4IDAgMCAxLTUuMTYtMTQuMDZjMC0xMCA2Ljg0LTE4LjEyIDIxLjM4LTE4LjEyaDE0Ljc2di0zLjEzYzAtNi44My0zLjM0LTkuODYtMTEuNjMtOS44Ni02IDAtOC43NyAxLjQ1LTEyIDUuMThsLTEwLTkuNzNjNi4xMy02LjczIDEyLjE0LTguNjMgMjIuNTktOC42MyAxNy41NCAwIDI2LjY2IDcuNDMgMjYuNjYgMjIuMDl2NDEuMnptLS4zNy0yNi40MWgtMTIuMzRjLTUuNjUgMC04Ljc3IDIuNjMtOC43NyA3LjA2czIuODggNy4yMSA5IDcuMjFjNC4zMSAwIDcuMDktLjM0IDkuODQtMyAxLjY3LTEuNTcgMi4yNy00LjA3IDIuMjctNy45M3ptNjguNjMgMTkuNDVjLTMuODQgNC4wOS0xMC4yMSA3LjY5LTE5LjQ3IDcuNjlzLTE1LjUtMy42MS0xOS4zNC03LjY5Yy01LjY1LTUuODgtNy4wOC0xMy03LjA4LTI0LjM4czEuNDMtMTguMzggNy4wOC0yNC4yOGMzLjg0LTQuMDggMTAuMDktNy42NiAxOS4zNC03LjY2czE1LjYzIDMuNTggMTkuNDcgNy42NmM1LjY0IDUuODkgNy4wNyAxMyA3LjA3IDI0LjI4cy0xLjQ2IDE4LjQ4LTcuMSAyNC4zNnptLTEyLjEzLTM5LjUyYTkuOTEgOS45MSAwIDAgMC03LjM0LTIuNzYgOS41NiA5LjU2IDAgMCAwLTcuMiAyLjc2Yy0zLjI1IDMuMjUtMy42MiA4LjY0LTMuNjIgMTUuMTRzLjM3IDEyIDMuNjIgMTUuMjNhOS41MyA5LjUzIDAgMCAwIDcuMiAyLjc5IDkuODggOS44OCAwIDAgMCA3LjM0LTIuNzljMy4yMy0zLjI0IDMuNTktOC43NiAzLjU5LTE1LjIzcy0uNDMtMTEuOS0zLjYyLTE1LjE1eiIgZmlsbD0iI2Y0N2MwMCIvPjxwYXRoIGQ9Ik0xMS44Mi0uMDVBMTEuODEgMTEuODEgMCAwIDAgLjAxIDExLjc0djEzMi40MmExMS44MSAxMS44MSAwIDAgMCAxMS44MSAxMS43OWgxNTQuOTVhMTEuODEgMTEuODEgMCAwIDAgMTEuODItMTEuNzRWMTEuNzRBMTEuODEgMTEuODEgMCAwIDAgMTY2Ljc3LS4wNXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTUuODggOTQuNTVjNSAyMy4yNiA5LjE2IDQ1LjQxIDIzLjczIDYxLjM1SDExLjgyQTExLjgxIDExLjgxIDAgMCAxIC4wMSAxNDQuMTZWMTEuNzRBMTEuODEgMTEuODEgMCAwIDEgMTEuODItLjA1SDMxLjlhNzYuOCA3Ni44IDAgMCAwLTEyLjc4IDE1LjFjLTE1Ljg5IDI0LjM1LTkuMzYgNTAuOS0zLjI0IDc5LjV6TTE2Ni43Ny0uMDVoLTMxLjUxYzcuNDYgNy40NiAxMy43NSAxNy4xMiAxOC41IDI5LjEzbC00Ny45IDEwLjExYy01LjI1LTEwLjA2LTEzLjIzLTE4LjQzLTI4Ljg0LTE1LjE0LTguNjEgMS44Mi0xNC4zMiA2LjY1LTE2Ljg1IDExLjk0LTMuMTEgNi41Mi00LjY0IDEzLjgzIDIuOCA0OC41N3MxMS44MiA0MC44IDE3LjMyIDQ1LjVjNC40NyAzLjggMTEuNjggNS45MSAyMC4yOSA0LjA5IDE1LjYyLTMuMjkgMTkuNDctMTQuMTYgMjAuMTUtMjUuNDdsNDcuOS0xMC4xMmMxLjEzIDI0Ljc4LTYuNTQgNDQtMjAuMDggNTcuMjloMTguMjJhMTEuODEgMTEuODEgMCAwIDAgMTEuODItMTEuNzRWMTEuNzRBMTEuODEgMTEuODEgMCAwIDAgMTY2Ljc3LS4wNXoiIGZpbGw9IiNmNDdjMDAiLz48L3N2Zz4K" alt="Contao Open source CMS"/>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="wrap">
+            <div class="error">
+                {% block message %}<h1>{{ block('title') }}</h1>{% endblock %}
+                <div class="block-error">
+                    <div class="inner">
+                        <div class="text-error">
+                            {% block main %}
+                                {% if block('matter') is defined %}
+                                    {% set _block = block('matter') %}
+                                    {% if _block|trim is not empty %}
+                                        <h2>{{ 'XPT.matter'|trans }}</h2>
+                                        {{ _block|raw }}
+                                    {% endif %}
+                                {% endif %}
+                                {% if block('howToFix') is defined %}
+                                    {% set _block = block('howToFix') %}
+                                    {% if _block|trim is not empty %}
+                                        <h2>{{ 'XPT.howToFix'|trans }}</h2>
+                                        {{ _block|raw }}
+                                    {% endif %}
+                                {% endif %}
+                                {% if block('explain') is defined %}
+                                    {% set _block = block('explain') %}
+                                    {% if _block|trim is not empty %}
+                                        <h3>{{ 'XPT.more'|trans }}</h3>
+                                        {{ _block|raw }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="wrap">
+            {% block hint %}{{ 'XPT.hint'|trans|format(template)|raw }}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
