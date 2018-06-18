@@ -18,6 +18,7 @@ use Contao\CoreBundle\HttpKernel\ControllerResolver;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class ControllerResolverTest extends TestCase
 {
@@ -73,6 +74,12 @@ class ControllerResolverTest extends TestCase
      */
     public function testForwardsArgumentsToDecoratedClass(): void
     {
+        if (Kernel::MAJOR_VERSION > 3) {
+            $this->markTestSkipped('The getArguments() method has been removed in Symfony 4');
+
+            return;
+        }
+
         $decorated = $this->createMock(ControllerResolverInterface::class);
 
         $decorated
