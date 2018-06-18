@@ -59,7 +59,7 @@ class ControllerResolver implements ControllerResolverInterface
      */
     public function getArguments(Request $request, $controller): array
     {
-        if (!method_exists($controller, 'getArguments')) {
+        if (!method_exists($this->resolver, 'getArguments')) {
             return [];
         }
 
