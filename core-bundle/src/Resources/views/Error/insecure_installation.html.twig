@@ -1,0 +1,13 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.insecure }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.insecureRoot }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.insecureFix|raw }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ error.insecureExplain|raw }}</p>
+{% endblock %}

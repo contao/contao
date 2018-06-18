@@ -1,0 +1,19 @@
+<?php
+
+// Add the mediaelement style sheet
+$GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|static';
+
+?>
+
+<script src="<?= TL_ASSETS_URL ?>assets/mediaelement/js/mediaelement-and-player.min.js"></script>
+<script>
+  (function() {
+    var e = document.querySelectorAll(':not(picture) > video, :not(picture) > audio');
+    for (var i=0; i<e.length; i++) {
+      new MediaElementPlayer(e[i], {
+        // Put custom options here
+        pluginPath: '<?= Environment::get('path') ?>/assets/mediaelement/plugins/'
+      });
+    }
+  })();
+</script>

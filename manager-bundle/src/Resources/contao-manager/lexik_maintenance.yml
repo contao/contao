@@ -1,0 +1,10 @@
+# Lexik configuration
+lexik_maintenance:
+    authorized:
+        path: ^/contao($|/)
+        ips: ['127.0.0.1']
+        attributes:
+            _bypass_maintenance: true
+    driver:
+        class: "Lexik\\Bundle\\MaintenanceBundle\\Drivers\\FileDriver"
+        options: { file_path: "%kernel.project_dir%/var/maintenance_lock" }

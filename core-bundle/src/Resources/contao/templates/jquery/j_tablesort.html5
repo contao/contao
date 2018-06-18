@@ -1,0 +1,15 @@
+<?php
+
+// Add the tablesorter style sheet
+$GLOBALS['TL_CSS'][] = 'assets/tablesorter/css/tablesorter.min.css|static';
+
+?>
+
+<script src="<?= TL_ASSETS_URL ?>assets/tablesorter/js/tablesorter.min.js"></script>
+<script>
+  jQuery(function($) {
+    $('.ce_table .sortable').each(function(i, table) {
+      $(table).tablesorter();
+    });
+  });
+</script>
