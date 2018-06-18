@@ -67,15 +67,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
+        <target>Nom de l'emplacement</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
         <source>Here you can enter the name of the event location.</source>
+        <target>Saisir le lieu de l'événement</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.0">
         <source>Location address</source>
+        <target>Adresse du lieu</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.1">
         <source>Here you can enter the address of the event location.</source>
+        <target>Saisir le lieu de l'événement</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
@@ -183,6 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>En cliquant sur le lien &quot;En savoir plus ...&quot;, les visiteurs seront redirigés vers une URL spécifique.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
