@@ -1419,15 +1419,17 @@ var Backend =
 			clone.setPosition({
 				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
 				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
-			});
+			}).setStyle('display', 'none');
 
 			var move = new Drag.Move(clone, {
 				droppables: $$([ul]).append(ul.getElements('.tl_folder,li.parent,.tl_folder_top')),
 				unDraggableTags: [],
-				snap: -1,
 				modifiers: {
 					x: 'left',
 					y: 'top'
+				},
+				onStart: function() {
+					clone.setStyle('display', '');
 				},
 				onEnter: function(element, droppable) {
 					droppable = fixDroppable(droppable);
@@ -1461,6 +1463,15 @@ var Backend =
 							}, 1000);
 						}
 					}
+				},
+				onCancel: function() {
+					currentHover = undefined;
+					currentHoverTime = undefined;
+
+					ds.stop();
+					clone.destroy();
+					ul.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+					ul.removeClass('tl_listing_dragging');
 				},
 				onDrop: function(element, droppable) {
 					currentHover = undefined;
@@ -1497,7 +1508,6 @@ var Backend =
 			});
 
 			move.start(event);
-			move.check(event);
 		});
 
 		function fixDroppable(droppable) {
