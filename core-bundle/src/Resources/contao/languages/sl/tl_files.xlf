@@ -1,265 +1,264 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_files.php" source-language="en" target-language="fr">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_files.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
-        <target>Nom</target>
+        <target>Naziv</target>
       </trans-unit>
       <trans-unit id="tl_files.name.1">
         <source>The file or folder name (without extension).</source>
-        <target>Le nom du fichier ou du dossier (sans extension).</target>
+        <target>Ime datoteke ali mape (brez končnice).</target>
       </trans-unit>
       <trans-unit id="tl_files.path.0">
         <source>Path</source>
-        <target>Chemin d’accès</target>
+        <target>Pot</target>
       </trans-unit>
       <trans-unit id="tl_files.path.1">
         <source>The relative path to the file or folder.</source>
-        <target>Le chemin d’accès relatif au fichier ou dossier.</target>
+        <target>Relativna pot do datoteke ali direktorija</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.0">
         <source>Extension</source>
-        <target>Extension</target>
+        <target>Razširitev</target>
       </trans-unit>
       <trans-unit id="tl_files.extension.1">
         <source>The file extension</source>
-        <target>L'extension du fichier</target>
+        <target>Končnica datoteke</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.0">
         <source>Public</source>
-        <target>Public</target>
+        <target>Javno</target>
       </trans-unit>
       <trans-unit id="tl_files.protected.1">
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
-        <target>Rendre le dossier et ses sous-dossiers accessibles via HTTP.</target>
+        <target>Omogoči dostop do te mape in map znotraj nje preko HTTP.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
-        <target>Coordonnée X de la partie importante </target>
+        <target>Pomemben del, x koordinata</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.1">
         <source>Here you can enter the x coordinate of the important part.</source>
-        <target>Saisir la coordonnée X de la partie importante.</target>
+        <target>Tukaj lahko nastavite x koordinato pomembnega dela.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartY.0">
         <source>Important part y coordinate</source>
-        <target>Coordonnée Y de la partie importante </target>
+        <target>Pomemben del, y koordinata</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartY.1">
         <source>Here you can enter the y coordinate of the important part.</source>
-        <target>Saisir la coordonnée Y de la partie importante.</target>
+        <target>Tukaj lahko nastavite y koordinato pomembnega dela.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartWidth.0">
         <source>Important part width</source>
-        <target>Largeur de la partie importante</target>
+        <target>Pomembni del, širina</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartWidth.1">
         <source>Here you can enter the width of the important part.</source>
-        <target>Saisir la largeur de la partie importante.</target>
+        <target>Tukaj lahko nastavite širino pomembnega dela.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartHeight.0">
         <source>Important part height</source>
-        <target>Hauteur de la partie importante</target>
+        <target>Pomembni del, višina</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartHeight.1">
         <source>Here you can enter the height of the important part.</source>
-        <target>Saisir la hauteur de la partie importante.</target>
+        <target>Tukaj lahko nastavite višino pomembnega dela.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
         <source>Meta data</source>
-        <target>Métadonnées</target>
+        <target>Meta podatki</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file meta data.</source>
-        <target>Ici, vous pouvez saisir les métadonnées du fichier.</target>
+        <target>Tu lahko vnesete meta podatke.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
-        <target>Envoi de fichier</target>
+        <target>Naloži datoteko</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.1">
         <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
-        <target>Sélectionnez les fichiers que vous souhaitez téléverser sur le serveur (maximum %s et %s pixels).</target>
+        <target>Izberite datoteke, katere želite prenesti na strežnik (maksimalna %s in %s v pikslih).</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.0">
         <source>Source editor</source>
-        <target>Éditeur de code source</target>
+        <target>Urejevalnik izvora</target>
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
-        <target>Vous pouvez modifier ici le fichier source (pressez F11 pour passer en mode plein écran).</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files</source>
-        <target>Envoi des fichiers</target>
+        <target>Prenesi datoteke</target>
       </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
-        <target>Envoi des fichiers et retour en arrière</target>
+        <target>Prenesi datoteke in pojdi nazaj</target>
       </trans-unit>
       <trans-unit id="tl_files.editFF">
         <source>Edit a file or folder</source>
-        <target>Éditer un fichier ou un répertoire</target>
+        <target>Uredi datoteko ali mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.uploadFF">
         <source>Upload files to folder &quot;%s&quot;</source>
-        <target>Envoyer un fichier dans le répertoire &quot;%s&quot;</target>
+        <target>Prenesi datoteko v mapo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
-        <target>Éditer le fichier &quot;%s&quot;</target>
+        <target>Uredi vir datoteke &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
-        <target>Parcourir les fichiers</target>
+        <target>Brskaj datoteke</target>
       </trans-unit>
       <trans-unit id="tl_files.clearList">
         <source>Clear list</source>
-        <target>Effacer la liste</target>
+        <target>Izprazni seznam</target>
       </trans-unit>
       <trans-unit id="tl_files.startUpload">
         <source>Start upload</source>
-        <target>Lancer le transfert</target>
+        <target>Prični z nalaganjem</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
-        <target>Cliquez ou déposer des fichiers ici pour téléverser</target>
+        <target>Dokumente naložite tako, da jih povlečete sem ali pa pritisnete ta gumb.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
-        <target>Emplacement du fichier : %s</target>
+        <target>Lokacija datoteke: %s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
-        <target>Fichier ou répertoire &quot;%s&quot; ajouté</target>
+        <target>Dodana datoteka ali mapa &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.syncChanged">
         <source>Updated the hash of the file or folder &quot;%s&quot;</source>
-        <target>Hash-code du fichier ou répertoire &quot;%s&quot; mis à jour</target>
+        <target>Posodobljen hash datoteke ali direktorija &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.syncUnchanged">
         <source>Found the file or folder &quot;%s&quot;</source>
-        <target>Fichier ou répertoire &quot;%s&quot; trouvé</target>
+        <target>Najdena datoteka ali mapa &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.syncMoved">
         <source>Found the file or folder &quot;%s&quot; at &quot;%s&quot;</source>
-        <target>Fichier ou répertoire &quot;%s&quot; trouvé à &quot;%s&quot;</target>
+        <target>Najdena datoteka ali mapa &quot;%s&quot; v &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.syncDeleted">
         <source>Removed the file or folder &quot;%s&quot;</source>
-        <target>Le fichier ou le répertoire &quot;%s&quot; a été supprimé</target>
+        <target>Datoteka ali mapa &quot;%s&quot; odstranjena</target>
       </trans-unit>
       <trans-unit id="tl_files.syncComplete">
         <source>The synchronization has been completed</source>
-        <target>La synchronisation est terminée</target>
+        <target>Sinhronizacija je bila zaključena</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
         <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;Résultat : &lt;/strong&gt;%s ajouté |%s modifié |%s inchangé | %s déplacé |%s supprimé</target>
+        <target>&lt;strong&gt;Rezultat:&lt;/strong&gt; %s dodanih | %s spremenjenih | %s nespremenjenih | %s premaknjenih | %s izbrisanih</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>
-        <target>Afficher les inchangés</target>
+        <target>Prikaži nespremenjene</target>
       </trans-unit>
       <trans-unit id="tl_files.new.0">
         <source>New folder</source>
-        <target>Nouveau répertoire</target>
+        <target>Nova predloga</target>
       </trans-unit>
       <trans-unit id="tl_files.new.1">
         <source>Create a new folder</source>
-        <target>Créer un nouveau répertoire</target>
+        <target>Ustvari novo predlogo</target>
       </trans-unit>
       <trans-unit id="tl_files.cut.0">
         <source>Move file or folder</source>
-        <target>Déplacer un fichier ou un répertoire</target>
+        <target>Premakni datoteko ali mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.cut.1">
         <source>Move file or folder &quot;%s&quot;</source>
-        <target>Déplacer le fichier ou le répertoire &quot;%s&quot;</target>
+        <target>Premakni datoteko ali mapo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.copy.0">
         <source>Duplicate file or folder</source>
-        <target>Dupliquer un fichier ou un répertoire</target>
+        <target>Kopiraj datoteko ali mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.copy.1">
         <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>Dupliquer le fichier ou le répertoire &quot;%s&quot;</target>
+        <target>Kopiraj datoteko ali mapo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.edit.0">
         <source>Edit file or folder</source>
-        <target>Éditer le fichier ou le répertoire</target>
+        <target>Uredi datoteko ali mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder &quot;%s&quot;</source>
-        <target>Éditer le fichier ou le répertoire &quot;%s&quot;</target>
+        <target>Uredi datoteko ali mapo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.delete.0">
         <source>Delete file or folder</source>
-        <target>Supprimer un fichier ou un répertoire</target>
+        <target>Izbriši datoteko ali mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.delete.1">
         <source>Delete file or folder &quot;%s&quot;</source>
-        <target>Supprimer le fichier ou le répertoire &quot;%s&quot;</target>
+        <target>Izbriši datoteko ali mapo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.show.0">
         <source>File or folder details</source>
-        <target>Détails d'un fichier ou d'un répertoire</target>
+        <target>Podatki o datoteki ali mapi</target>
       </trans-unit>
       <trans-unit id="tl_files.show.1">
         <source>Show the details of file or folder &quot;%s&quot;</source>
-        <target>Afficher les détails du fichier ou du répertoire &quot;%s&quot;</target>
+        <target>Prikaži podatke o datoteki ali mapi &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.source.0">
         <source>Edit file</source>
-        <target>Éditer le fichier</target>
+        <target>Uredi vir</target>
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
-        <target>Éditer le fichier &quot;%s&quot;</target>
+        <target>Uredi vir datoteke &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>
-        <target>Protéger le répertoire</target>
+        <target>Zaščiti mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.1">
         <source>Protect folder &quot;%s&quot;</source>
-        <target>Protéger le répertoire &quot;%s&quot;</target>
+        <target>Zaščiti mapo &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.unlock.0">
         <source>Remove protection</source>
-        <target>Retirer la protection</target>
+        <target>Odstrani zaščito</target>
       </trans-unit>
       <trans-unit id="tl_files.unlock.1">
         <source>Unprotect folder &quot;%s&quot;</source>
-        <target>Retirer la protection du répertoire &quot;%s&quot;</target>
+        <target>Odstrani zaščito na mapi &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.move.0">
         <source>File upload</source>
-        <target>Envoi de fichier</target>
+        <target>Naloži datoteko</target>
       </trans-unit>
       <trans-unit id="tl_files.move.1">
         <source>Upload files to the server</source>
-        <target>Envoyer les fichiers sur le serveur</target>
+        <target>Naloži datoteke na strežnik</target>
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.0">
         <source>Paste into</source>
-        <target>Coller dedans</target>
+        <target>Prilepi v</target>
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.1">
         <source>Paste into this folder</source>
-        <target>Coller dedans ce répertoire</target>
+        <target>Prilepi v mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.sync.0">
         <source>Synchronize</source>
-        <target>Synchroniser</target>
+        <target>Sinhroniziraj</target>
       </trans-unit>
       <trans-unit id="tl_files.sync.1">
         <source>Synchronize the file system and the database</source>
-        <target>Synchroniser le système de fichiers et la base de données.</target>
+        <target>Sinhroniziraj datotečni sistem in podatkovno bazo</target>
       </trans-unit>
       <trans-unit id="tl_files.edit_preview_help">
         <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Marquer la partie importante de l'image avec le curseur de la souris.</target>
+        <target>Označite pomembni del slike z miškinim kazalcem.</target>
       </trans-unit>
     </body>
   </file>

@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.5.9 (2018-06-18)
 
  * Show the 404 page if there is no match in the set of potential pages (see #1522).
  * Correctly calculate the nodes when initializing the picker (see #1535).

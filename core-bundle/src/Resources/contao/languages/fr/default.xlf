@@ -231,12 +231,15 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>Aucune des pages racines du site actives sans un paramètre DNS explicite n'a une langue de secours configurée.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>Aucune des pages racines du site pour &lt;strong&gt;%s&lt;/strong&gt; a une langue de secours configurée.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>Vous pouvez seulement définir une page racine par domaine comme langue de secours.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -652,45 +655,59 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>am</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>AM</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
+        <target>DD</target>
       </trans-unit>
       <trans-unit id="DATE.j">
         <source>D</source>
+        <target>D</target>
       </trans-unit>
       <trans-unit id="DATE.m">
         <source>MM</source>
+        <target>MM</target>
       </trans-unit>
       <trans-unit id="DATE.n">
         <source>M</source>
+        <target>M</target>
       </trans-unit>
       <trans-unit id="DATE.y">
         <source>YY</source>
+        <target>YY</target>
       </trans-unit>
       <trans-unit id="DATE.Y">
         <source>YYYY</source>
+        <target>YYYY</target>
       </trans-unit>
       <trans-unit id="DATE.h">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.H">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.g">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.G">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.i">
         <source>mm</source>
+        <target>mm</target>
       </trans-unit>
       <trans-unit id="DATE.s">
         <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1452,6 +1469,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.burgerTitle">
         <source>Toggle navigation</source>
+        <target>Basculer la navigation</target>
       </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
@@ -1475,6 +1493,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.switchBT">
         <source>Back to %s</source>
+        <target>Retour vers %s</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1750,6 +1769,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Gestionnaire de versions</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -1901,6 +1921,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
+        <target>Fonctions de recherche et de filtrage</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2344,30 +2365,39 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file meta data.</source>
+        <target>Il vous faut ajouter une page racine dans la structure du site afin de stocker les méta-informations.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
+        <target>Navigation &quot;fil d'Ariane&quot;</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>
+        <target>Menu de navigation principal</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
+        <target>Menu de navigation d'entête</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
+        <target>Menu de pagination</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>Chiffres et caractères en minuscules au format Unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>Chiffres et caractères au format Unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
+        <target>Chiffres et lettres en minuscules au format ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+        <target>Chiffres et lettres au format ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
@@ -2491,6 +2521,7 @@ Cet e-mail a été généré par Contao. Merci de ne pas y répondre directement
       </trans-unit>
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
+        <target>Sortie manuelle</target>
       </trans-unit>
     </body>
   </file>

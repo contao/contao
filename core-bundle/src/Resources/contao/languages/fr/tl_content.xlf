@@ -414,8 +414,7 @@
         <target>ID Vimeo</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
-        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
-        <target>Saisir l'ID de la vidéo Vimeo (ex. : &lt;em&gt;95674578&lt;/em&gt;).</target>
+        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -443,21 +442,27 @@
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.0">
         <source>Player options</source>
+        <target>Options du lecteur</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeOptions.1">
         <source>Here you can select the player options.</source>
+        <target>Vous pouvez sélectionner ici les options du lecteur.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.0">
         <source>Start at</source>
+        <target>Débute à</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Débute la lecture de la vidéo au nombre de secondes indiquées. Indiquez 0 pour sélectionner cette option.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.0">
         <source>Stop at</source>
+        <target>Arrêter à</target>
       </trans-unit>
       <trans-unit id="tl_content.youtubeStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Arrête la lecture de la vidéo au nombre de secondes indiquées. Indiquez 0 pour désactiver.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -709,24 +714,31 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
+        <target>Afficher la légende par défaut</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_fs">
         <source>Hide the fullscreen button</source>
+        <target>Cacher le bouton plein écran.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
+        <target>Utiliser la langue de la page de Contao</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
+        <target>Cacher les annotations</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_modestbranding">
         <source>Hide the YouTube logo</source>
+        <target>Cacher le logo YouTube</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Do not show related videos at the end</source>
+        <target>Ne pas afficher les vidéos liées à la fin</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
+        <target>Cacher la bar supérieure lors de la prévisualisation</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>
