@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zakljenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep zaženite &lt;code&gt;app/console doctrine:cache:clear contato.cache&lt;/code&gt; v ukazni vrstici.</target>
+        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zaklenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep v ukazni vrstici zaženite &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -113,6 +113,7 @@
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
+        <target>Ime podatkovne baze ne sme vsebovati pik (.)!</target>
         
       </trans-unit>
       <trans-unit id="24">
