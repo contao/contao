@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Test\Security\Authentication\Provider;
 
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\System;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -180,15 +182,14 @@ class AuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @param string $callback
-     * @param bool   $success
+     * @param bool $success
      *
      * @group legacy
      * @dataProvider getCheckCredentialsHookData
      *
      * @expectedDeprecation Using the checkCredentials hook has been deprecated %s.
      */
-    public function testTriggersTheCheckCredentialsHook(string $callback, bool $success): void
+    public function testTriggersTheCheckCredentialsHook(bool $success): void
     {
         /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
@@ -234,21 +235,32 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn('bar')
         ;
 
-        $framework = $this->mockContaoFramework();
+        $listener = $this->createPartialMock(Controller::class, ['onCheckCredentials']);
+
+        $listener
+            ->expects($this->once())
+            ->method('onCheckCredentials')
+            ->with('foo', 'bar', $user)
+            ->willReturn($success)
+        ;
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+
+        $systemAdapter
+            ->expects($this->once())
+            ->method('importStatic')
+            ->with('HookListener')
+            ->willReturn($listener)
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
 
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
         ;
 
-        $framework
-            ->expects($this->once())
-            ->method('createInstance')
-            ->with(__CLASS__)
-            ->willReturn($this)
-        ;
-
-        $GLOBALS['TL_HOOKS']['checkCredentials'] = [[__CLASS__, $callback]];
+        $GLOBALS['TL_HOOKS']['checkCredentials'] = [['HookListener', 'onCheckCredentials']];
 
         $provider = $this->mockProvider($framework);
 
@@ -268,41 +280,9 @@ class AuthenticationProviderTest extends TestCase
     public function getCheckCredentialsHookData(): array
     {
         return [
-            ['onCheckCredentialsTrue', true],
-            ['onCheckCredentialsFalse', false],
+            [true],
+            [false],
         ];
-    }
-
-    /**
-     * @param string        $username
-     * @param string        $password
-     * @param UserInterface $user
-     *
-     * @return bool
-     */
-    public function onCheckCredentialsTrue(string $username, string $password, UserInterface $user): bool
-    {
-        $this->assertSame('foo', $username);
-        $this->assertSame('bar', $password);
-        $this->assertInstanceOf('Contao\FrontendUser', $user);
-
-        return true;
-    }
-
-    /**
-     * @param string        $username
-     * @param string        $password
-     * @param UserInterface $user
-     *
-     * @return bool
-     */
-    public function onCheckCredentialsFalse(string $username, string $password, UserInterface $user): bool
-    {
-        $this->assertSame('foo', $username);
-        $this->assertSame('bar', $password);
-        $this->assertInstanceOf('Contao\FrontendUser', $user);
-
-        return false;
     }
 
     /**

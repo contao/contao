@@ -459,7 +459,20 @@ class DcaSchemaProvider
             return 3072;
         }
 
-        return \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true) ? 3072 : 767;
+        $fileFormat = $this->doctrine
+            ->getConnection()
+            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        if (
+            'barracuda' === strtolower((string) $fileFormat->Value)
+            && \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)
+        ) {
+            return 3072;
+        }
+
+        return 767;
     }
 
     /**

@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
+use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -157,8 +158,11 @@ class ContaoUserProvider implements UserProviderInterface
 
         @trigger_error('Using the "postAuthenticate" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
+        /** @var System $system */
+        $system = $this->framework->getAdapter(System::class);
+
         foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {
-            $this->framework->createInstance($callback[0])->{$callback[1]}($user);
+            $system->importStatic($callback[0])->{$callback[1]}($user);
         }
     }
 }

@@ -130,7 +130,7 @@ template as follows:
 ```php
 <?php $this->extend('fe_page'); ?>
 
-<?php $this->block('meta'): ?>
+<?php $this->block('meta'); ?>
   <?php $this->parent(); ?>
   <meta name="keywords" content="<?= $this->keywords ?>">
 <?php $this->endblock(); ?>

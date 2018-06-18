@@ -331,16 +331,20 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      * @param int|null    $expected
      * @param string      $tableOptions
      * @param string|null $largePrefixes
+     * @param string      $fileSystem
      *
      * @dataProvider getIndexes
      */
-    public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = ''): void
+    public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = '', string $fileSystem = 'antelope'): void
     {
         $statement = $this->createMock(Statement::class);
 
         $statement
             ->method('fetch')
-            ->willReturn((object) ['Value' => $largePrefixes])
+            ->willReturnOnConsecutiveCalls(
+                (object) ['Value' => $largePrefixes],
+                (object) ['Value' => $fileSystem]
+            )
         ;
 
         $provider = $this->getProvider(
@@ -391,7 +395,9 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'Off'],
             [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '0'],
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On'],
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1'],
+            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1'],
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'barracuda'],
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1', 'barracuda'],
         ];
     }
 

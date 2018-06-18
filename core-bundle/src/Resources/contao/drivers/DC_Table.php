@@ -5100,7 +5100,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
 				$this->procedure[] = "(" . sprintf($strPattern, \Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . \Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . \Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $session['search'][$this->strTable]['value'];
 			}
@@ -6022,7 +6022,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 					array_intersect(
 						array_merge($arrRoot, $this->Database->getChildRecords($arrRoot, $this->strTable)),
 						array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable))
-					)
+					),
+					$this->strTable
 				);
 			}
 

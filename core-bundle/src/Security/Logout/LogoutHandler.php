@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Logout;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,10 +80,13 @@ class LogoutHandler implements LogoutHandlerInterface
 
         @trigger_error('Using the "postLogout" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
+        /** @var System $system */
+        $system = $this->framework->getAdapter(System::class);
+
         $GLOBALS['TL_USERNAME'] = $user->getUsername();
 
         foreach ($GLOBALS['TL_HOOKS']['postLogout'] as $callback) {
-            $this->framework->createInstance($callback[0])->{$callback[1]}($user);
+            $system->importStatic($callback[0])->{$callback[1]}($user);
         }
     }
 }

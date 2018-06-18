@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\Test\Security\User;
 
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
@@ -219,31 +221,40 @@ class ContaoUserProviderTest extends TestCase
     {
         /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
-        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
-        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
+        $listener = $this->createPartialMock(Controller::class, ['onPostAuthenticate']);
+
+        $listener
+            ->expects($this->once())
+            ->method('onPostAuthenticate')
+            ->with($user)
+        ;
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+
+        $systemAdapter
+            ->expects($this->once())
+            ->method('importStatic')
+            ->with('HookListener')
+            ->willReturn($listener)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            BackendUser::class => $this->mockConfiguredAdapter(['loadUserByUsername' => $user]),
+            System::class => $systemAdapter,
+        ]);
 
         $framework
             ->expects($this->once())
-            ->method('createInstance')
-            ->with(__CLASS__)
-            ->willReturn($this)
+            ->method('initialize')
         ;
 
-        $GLOBALS['TL_HOOKS']['postAuthenticate'] = [[__CLASS__, 'onPostAuthenticate']];
+        $GLOBALS['TL_HOOKS']['postAuthenticate'] = [['HookListener', 'onPostAuthenticate']];
 
         $userProvider = $this->mockUserProvider($framework);
 
         $this->assertSame($user, $userProvider->refreshUser($user));
 
         unset($GLOBALS['TL_HOOKS']);
-    }
-
-    /**
-     * @param UserInterface $user
-     */
-    public function onPostAuthenticate(UserInterface $user): void
-    {
-        $this->assertInstanceOf('Contao\BackendUser', $user);
     }
 
     /**

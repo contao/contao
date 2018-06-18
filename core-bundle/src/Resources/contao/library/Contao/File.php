@@ -703,7 +703,7 @@ class File extends System
 			new \Folder($strParent);
 		}
 
-		$this->Files->copy($this->strFile, $strNewName);
+		$return = $this->Files->copy($this->strFile, $strNewName);
 
 		// Update the database AFTER the file has been renamed
 		$syncSource = \Dbafs::shouldBeSynchronized($this->strFile);
@@ -719,7 +719,7 @@ class File extends System
 			\Dbafs::addResource($strNewName);
 		}
 
-		return true;
+		return $return;
 	}
 
 	/**
