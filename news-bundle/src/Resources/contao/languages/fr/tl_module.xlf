@@ -115,15 +115,19 @@
       </trans-unit>
       <trans-unit id="tl_module.order_date_asc">
         <source>Date ascending</source>
+        <target>Date (ordre ascendant)</target>
       </trans-unit>
       <trans-unit id="tl_module.order_date_desc">
         <source>Date descending</source>
+        <target>Date (ordre descendant)</target>
       </trans-unit>
       <trans-unit id="tl_module.order_headline_asc">
         <source>Headline ascending</source>
+        <target>Titre (ordre ascendant)</target>
       </trans-unit>
       <trans-unit id="tl_module.order_headline_desc">
         <source>Headline descending</source>
+        <target>Titre (ordre descendant)</target>
       </trans-unit>
       <trans-unit id="tl_module.order_random">
         <source>Random order</source>

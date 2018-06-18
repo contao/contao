@@ -127,6 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
+        <target>En cliquant sur le lien &quot;En savoir plus ...&quot;, les visiteurs seront redirigés vers une URL spécifique.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
