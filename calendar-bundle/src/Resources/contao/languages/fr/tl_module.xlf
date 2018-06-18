@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
+        <target>Cacher les événements en cours</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>
+        <target>Ne pas afficher les événements en cours dans la liste des événements à venir.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
