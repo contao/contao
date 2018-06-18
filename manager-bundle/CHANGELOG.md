@@ -1,6 +1,6 @@
 # Contao manager bundle change log
 
-## DEV
+## 4.4.19 (2018-06-18)
 
  * Disable the maintenance mode for local requests (see #1492).
 
