@@ -1403,7 +1403,7 @@ var Backend =
 			var dragHandle = event.target.hasClass('drag-handle') ? event.target : event.target.getParent('.drag-handle');
 			var dragElement = event.target.getParent('.tl_file,.tl_folder');
 
-			if (!dragHandle || !dragElement) {
+			if (!dragHandle || !dragElement || event.rightClick) {
 				return;
 			}
 
@@ -1424,6 +1424,7 @@ var Backend =
 			var move = new Drag.Move(clone, {
 				droppables: $$([ul]).append(ul.getElements('.tl_folder,li.parent,.tl_folder_top')),
 				unDraggableTags: [],
+				snap: -1,
 				modifiers: {
 					x: 'left',
 					y: 'top'
@@ -1477,7 +1478,7 @@ var Backend =
 					}
 
 					var id = dragElement.get('data-id'),
-						pid = droppable.get('data-id');
+						pid = droppable.get('data-id') || decodeURIComponent(options.url.split(/[?&]pid=/)[1].split('&')[0]);
 
 					// Ignore invalid move operations
 					if (id && pid && ((pid+'/').indexOf(id+'/') === 0 || pid+'/' === id.replace(/[^/]+$/, ''))) {
@@ -1485,14 +1486,7 @@ var Backend =
 					}
 
 					Backend.getScrollOffset();
-
-					var url = options.url + '&id=' + encodeURIComponent(id);
-
-					if (pid) {
-						url += '&pid=' + encodeURIComponent(pid);
-					}
-
-					document.location.href = url;
+					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
 				},
 				onLeave: function(element, droppable) {
 					droppable = fixDroppable(droppable);
@@ -1503,6 +1497,7 @@ var Backend =
 			});
 
 			move.start(event);
+			move.check(event);
 		});
 
 		function fixDroppable(droppable) {
