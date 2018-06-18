@@ -573,7 +573,6 @@ class tl_files extends Backend
 		return $this->User->hasAccess('f2', 'fop') ? '<button type="button" title="'.StringUtil::specialchars($title).'" '.$attributes.'>'.Image::getHtml($icon, $label).'</button> ' : ' ';
 	}
 
-
 	/**
 	 * Return the upload file button
 	 *
@@ -595,7 +594,6 @@ class tl_files extends Backend
 
 		return ' ';
 	}
-
 
 	/**
 	 * Return the delete file button

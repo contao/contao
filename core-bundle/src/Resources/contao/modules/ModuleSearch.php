@@ -106,7 +106,7 @@ class ModuleSearch extends Module
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
 				$varRootId = \implode('-', $this->pages);
-				$arrPages = [];
+				$arrPages = array();
 
 				foreach ($this->pages as $intPageId)
 				{

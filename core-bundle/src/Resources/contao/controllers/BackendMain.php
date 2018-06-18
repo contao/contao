@@ -73,7 +73,7 @@ class BackendMain extends Backend
 		{
 			$this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'));
 		}
-		
+
 		// Backend user profile redirect
 		if (\Input::get('do') == 'login' && (\Input::get('act') != 'edit' && \Input::get('id') != $this->User->id))
 		{
