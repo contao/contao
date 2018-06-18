@@ -1,6 +1,6 @@
 # Contao newsletter bundle change log
 
-## DEV
+## 4.5.9 (2018-06-18)
 
  * Correctly blacklist unsubscribed recipients (see #21).
  * Use a given e-mail address in the unsubscribe module (see #12).
