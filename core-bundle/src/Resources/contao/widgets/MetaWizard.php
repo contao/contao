@@ -170,7 +170,7 @@ class MetaWizard extends Widget
 		// Add the existing entries
 		if (!empty($this->varValue))
 		{
-			$return = '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard">';
+			$return = '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">';
 
 			// Add the input fields
 			foreach ($this->varValue as $lang=>$meta)

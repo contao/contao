@@ -1279,9 +1279,7 @@ ul.sgallery li {
 	margin:1px 0;
 }
 .tl_metawizard .tl_text + a {
-	position:relative;
 	top:6px;
-	margin-left:-22px;
 }
 .tl_metawizard br {
 	clear:left;
