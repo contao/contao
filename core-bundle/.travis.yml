@@ -18,6 +18,7 @@ matrix:
     # Latest dependencies with all PHP versions
     - php: 7.1
     - php: 7.2
+    - php: nightly
 
     # Generate the coverage with the latest PHP version
     - php: 7.2
@@ -28,6 +29,8 @@ matrix:
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
     - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
+  allow_failures:
+    - php: nightly
   fast_finish: true
 
 before_install:
