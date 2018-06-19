@@ -2192,7 +2192,7 @@ var Backend =
 			return; // no language given
 		}
 
-		var li = $(ul).getLast('li').clone(),
+		var li = $(ul).getLast('li').clone(true, true),
 			span = li.getElement('span'),
 			img = span.getElement('img');
 
@@ -2216,6 +2216,15 @@ var Backend =
 		// Update the class name
 		li.className = (li.className == 'even') ? 'odd' : 'even';
 		li.inject($(ul), 'bottom');
+
+		// Update the picker
+		li.getElements('a[id^=pp_]').each(function(link) {
+			var i = parseInt(link.get('id').replace(/pp_[^_]+_/, ''));
+			link.id = link.get('id').replace(i, i + 1);
+			var script = link.getNext('script');
+			script.set('html', script.get('html').replace(new RegExp('_' + i, 'g'), '_' + (i + 1)));
+			eval(script.get('html'));
+		});
 
 		// Disable the "add language" button
 		el.getParent('div').getElement('input[type="button"]').setProperty('disabled', true);

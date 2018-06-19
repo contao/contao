@@ -48,6 +48,14 @@ class MetaWizard extends Widget
 					$varValue = array_combine($varValue, array_fill(0, \count($varValue), ''));
 				}
 
+				foreach($varValue as $strArrKey=>$varArrValue)
+				{
+					if (!\is_array($varArrValue))
+					{
+						$varValue[$strArrKey] = array('attributes'=>$varArrValue);
+					}
+				}
+
 				$this->arrConfiguration['metaFields'] = $varValue;
 				break;
 
@@ -173,9 +181,17 @@ class MetaWizard extends Widget
 				$return .= '<span class="lang">' . (isset($languages[$lang]) ? $languages[$lang] : $lang) . ' ' . \Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" onclick="Backend.metaDelete(this)"') . '</span>';
 
 				// Take the fields from the DCA (see #4327)
-				foreach ($this->metaFields as $field=>$attributes)
+				foreach ($this->metaFields as $field=>$fieldConfig)
 				{
-					$return .= '<label for="ctrl_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label> <input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $field . '_' . $count . '" class="tl_text" value="' . \StringUtil::specialchars($meta[$field]) . '"' . (!empty($attributes) ? ' ' . $attributes : '') . '><br>';
+					$return .= '<label for="ctrl_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label> <input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $field . '_' . $count . '" class="tl_text" value="' . \StringUtil::specialchars($meta[$field]) . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
+
+					// DCA picker
+					if (isset($fieldConfig['dcaPicker']) && (\is_array($fieldConfig['dcaPicker']) || $fieldConfig['dcaPicker'] === true))
+					{
+						$return .= \Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField, $field . '_' . $count);
+					}
+
+					$return .= '<br>';
 				}
 
 				$return .= '
