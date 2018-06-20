@@ -18,7 +18,10 @@ matrix:
     # Latest dependencies with all PHP versions
     - php: 7.1
     - php: 7.2
+
+    # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
+      env: COMPOSER_FLAGS='--ignore-platform-reqs'
 
     # Generate the coverage with the latest PHP version
     - php: 7.2
