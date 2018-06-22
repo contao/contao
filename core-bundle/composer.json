@@ -98,7 +98,7 @@
         "php-http/message-factory": "^1.0.2",
         "phpstan/phpstan": "^0.10@dev",
         "phpunit/phpunit": "^7.0",
-        "symfony/phpunit-bridge": "^3.4"
+        "symfony/phpunit-bridge": "^3.4.5"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
