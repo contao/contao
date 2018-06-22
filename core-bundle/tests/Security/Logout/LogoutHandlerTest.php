@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Test\Security\Logout;
+namespace Contao\CoreBundle\Tests\Security\Logout;
 
 use Contao\BackendUser;
 use Contao\Controller;

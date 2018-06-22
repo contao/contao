@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Test\Security\Encoder;
+namespace Contao\CoreBundle\Tests\Security\Encoder;
 
 use Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder;
 use Contao\CoreBundle\Tests\TestCase;

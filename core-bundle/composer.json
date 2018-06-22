@@ -86,6 +86,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
+        "contao/manager-bundle": "^4.4",
         "contao/manager-plugin": "^2.0",
         "contao/test-case": "^1.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
@@ -96,8 +97,10 @@
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
+        "phpstan/phpstan": "^0.10@dev",
         "phpunit/phpunit": "^6.1",
-        "symfony/phpunit-bridge": "^3.3.11"
+        "symfony/phpunit-bridge": "^3.3.11",
+        "symfony/twig-bundle": "^4.1"
     },
     "suggest": {
         "lexik/maintenance-bundle": "To put the application into maintenance mode"

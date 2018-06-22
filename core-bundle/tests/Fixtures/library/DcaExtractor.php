@@ -4,7 +4,7 @@ namespace Contao\Fixtures;
 
 class DcaExtractor
 {
-    public static function getInstance()
+    public static function getInstance($table)
     {
         return new static();
     }

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Test\Security\Authentication\Token;
+namespace Contao\CoreBundle\Tests\Security\Authentication\Token;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;

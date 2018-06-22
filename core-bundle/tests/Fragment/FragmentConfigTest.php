@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Fragment\Reference;
+namespace Contao\CoreBundle\Tests\Fragment;
 
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Tests\TestCase;

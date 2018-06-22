@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Menu\BackendMenu;
+namespace Contao\CoreBundle\Tests\Menu;
 
 use Contao\CoreBundle\Menu\BackendMenuRenderer;
 use Knp\Menu\ItemInterface;

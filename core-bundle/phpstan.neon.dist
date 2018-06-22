@@ -1,0 +1,5 @@
+parameters:
+    bootstrap: %currentWorkingDirectory%/tests/bootstrap.php
+    excludes_analyse:
+        - %currentWorkingDirectory%/src/Resources/*
+        - %currentWorkingDirectory%/tests/Fixtures/*

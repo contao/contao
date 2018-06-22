@@ -47,6 +47,7 @@ install:
 script:
   - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
   - php vendor/bin/phpunit $COVERAGE
+  - php vendor/bin/phpstan analyse src tests --level=0
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls; fi
