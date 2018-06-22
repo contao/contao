@@ -97,7 +97,7 @@
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "phpstan/phpstan": "^0.10@dev",
-        "phpunit/phpunit": "^6.1",
+        "phpunit/phpunit": "^7.0",
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "suggest": {

@@ -198,7 +198,7 @@ class UserPasswordCommandTest extends TestCase
                         $this->assertArrayHasKey('password', $data);
                         $this->assertSame(PASSWORD_DEFAULT, password_get_info($data['password'])['algo']);
 
-                        return $data;
+                        return true;
                     }
                 ),
                 ['username' => $username]
