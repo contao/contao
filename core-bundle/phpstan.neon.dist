@@ -1,5 +1,14 @@
 parameters:
     bootstrap: %currentWorkingDirectory%/tests/bootstrap.php
+
+    # Do not analyse resources and fixtures
     excludes_analyse:
         - %currentWorkingDirectory%/src/Resources/*
         - %currentWorkingDirectory%/tests/Fixtures/*
+
+    # Ignore missing classes that are only used in BundleConfig::setLoadAfter()
+    ignoreErrors:
+        - '#Class Symfony\\Bundle\\TwigBundle\\TwigBundle not found\.#'
+        - '#Class Symfony\\Bundle\\MonologBundle\\MonologBundle not found\.#'
+        - '#Class Nelmio\\SecurityBundle\\NelmioSecurityBundle not found\.#'
+        - '#Class Contao\\ManagerBundle\\ContaoManagerBundle not found\.#'
