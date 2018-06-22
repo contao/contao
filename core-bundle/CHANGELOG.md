@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Remove the "flash movie" front end module.
  * Add extended video support (see #1348).
  * Pass all search result data to the search template (see #1558).
  * Auto-clear the session form data (see #1550).

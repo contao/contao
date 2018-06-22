@@ -48,16 +48,8 @@ namespace Contao;
  * @property string  $inColumn
  * @property integer $skipFirst
  * @property boolean $loadFirst
- * @property string  $size
- * @property boolean $transparent
- * @property string  $flashvars
- * @property string  $altContent
- * @property string  $source
  * @property string  $singleSRC
  * @property string  $url
- * @property boolean $interactive
- * @property string  $flashID
- * @property string  $flashJS
  * @property string  $imgSize
  * @property boolean $useCaption
  * @property boolean $fullsize
@@ -125,16 +117,8 @@ namespace Contao;
  * @method static ModuleModel|null findOneByInColumn($val, array $opt=array())
  * @method static ModuleModel|null findOneBySkipFirst($val, array $opt=array())
  * @method static ModuleModel|null findOneByLoadFirst($val, array $opt=array())
- * @method static ModuleModel|null findOneBySize($val, array $opt=array())
- * @method static ModuleModel|null findOneByTransparent($val, array $opt=array())
- * @method static ModuleModel|null findOneByFlashvars($val, array $opt=array())
- * @method static ModuleModel|null findOneByAltContent($val, array $opt=array())
- * @method static ModuleModel|null findOneBySource($val, array $opt=array())
  * @method static ModuleModel|null findOneBySingleSRC($val, array $opt=array())
  * @method static ModuleModel|null findOneByUrl($val, array $opt=array())
- * @method static ModuleModel|null findOneByInteractive($val, array $opt=array())
- * @method static ModuleModel|null findOneByFlashID($val, array $opt=array())
- * @method static ModuleModel|null findOneByFlashJS($val, array $opt=array())
  * @method static ModuleModel|null findOneByImgSize($val, array $opt=array())
  * @method static ModuleModel|null findOneByUseCaption($val, array $opt=array())
  * @method static ModuleModel|null findOneByFullsize($val, array $opt=array())
@@ -197,16 +181,8 @@ namespace Contao;
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByInColumn($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySkipFirst($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByLoadFirst($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySize($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByTransparent($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFlashvars($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByAltContent($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySource($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySingleSRC($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByUrl($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByInteractive($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFlashID($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFlashJS($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByImgSize($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByUseCaption($val, array $opt=array())
  * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFullsize($val, array $opt=array())
@@ -273,16 +249,8 @@ namespace Contao;
  * @method static integer countByInColumn($val, array $opt=array())
  * @method static integer countBySkipFirst($val, array $opt=array())
  * @method static integer countByLoadFirst($val, array $opt=array())
- * @method static integer countBySize($val, array $opt=array())
- * @method static integer countByTransparent($val, array $opt=array())
- * @method static integer countByFlashvars($val, array $opt=array())
- * @method static integer countByAltContent($val, array $opt=array())
- * @method static integer countBySource($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
- * @method static integer countByInteractive($val, array $opt=array())
- * @method static integer countByFlashID($val, array $opt=array())
- * @method static integer countByFlashJS($val, array $opt=array())
  * @method static integer countByImgSize($val, array $opt=array())
  * @method static integer countByUseCaption($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())

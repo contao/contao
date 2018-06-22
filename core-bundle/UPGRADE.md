@@ -1,5 +1,11 @@
 # API changes
 
+## Version 4.* to 4.6
+
+### Flash movie
+
+The "flash movie" front end module has been removed.
+
 ## Version 4.* to 4.5
 
 ### Template changes

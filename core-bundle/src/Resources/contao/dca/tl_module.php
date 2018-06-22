@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'defineRoot', 'source', 'interactive', 'protected', 'reg_assignDir', 'reg_activate'),
+		'__selector__'                => array('type', 'defineRoot', 'protected', 'reg_assignDir', 'reg_activate'),
 		'default'                     => '{title_legend},name,type',
 		'navigation'                  => '{title_legend},name,headline,type;{nav_legend},levelOffset,showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},defineRoot;{template_legend:hide},navigationTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'customnav'                   => '{title_legend},name,headline,type;{nav_legend},pages,showProtected;{template_legend:hide},navigationTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
@@ -117,7 +117,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'form'                        => '{title_legend},name,headline,type;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'search'                      => '{title_legend},name,headline,type;{config_legend},queryType,fuzzy,contextLength,totalLength,perPage,searchType;{redirect_legend:hide},jumpTo;{reference_legend:hide},pages;{template_legend:hide},searchTpl,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'articlelist'                 => '{title_legend},name,headline,type;{config_legend},skipFirst,inColumn;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
-		'flash'                       => '{title_legend},name,headline,type;{config_legend},size,transparent,flashvars,altContent;{source_legend},source;{interact_legend:hide},interactive;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID'
@@ -127,9 +126,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	'subpalettes' => array
 	(
 		'defineRoot'                  => 'rootPage',
-		'source_internal'             => 'singleSRC',
-		'source_external'             => 'url',
-		'interactive'                 => 'flashID,flashJS',
 		'protected'                   => 'groups',
 		'reg_assignDir'               => 'reg_homeDir',
 		'reg_activate'                => 'reg_jumpTo,reg_text'
@@ -447,50 +443,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
-		'size' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['size'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'transparent' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['transparent'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'flashvars' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['flashvars'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('nospace'=>true, 'maxlength'=>255, 'tl_class'=>'long clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
-		'altContent' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['altContent'],
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'style'=>'height:60px', 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
-		),
-		'source' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['source'],
-			'default'                 => 'internal',
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('internal', 'external'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['singleSRC'],
@@ -506,30 +458,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
-		'interactive' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['interactive'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'flashID' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['flashID'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'flashJS' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['flashJS'],
-			'exclude'                 => true,
-			'inputType'               => 'textarea',
-			'eval'                    => array('class'=>'monospace', 'rte'=>'ace|js'),
-			'sql'                     => "text NULL"
 		),
 		'imgSize' => array
 		(

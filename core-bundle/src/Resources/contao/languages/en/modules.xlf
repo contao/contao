@@ -266,12 +266,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
       </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-      </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>
       </trans-unit>

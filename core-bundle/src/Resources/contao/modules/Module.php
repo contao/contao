@@ -50,16 +50,8 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $inColumn
  * @property integer $skipFirst
  * @property boolean $loadFirst
- * @property string  $size
- * @property boolean $transparent
- * @property string  $flashvars
- * @property string  $altContent
- * @property string  $source
  * @property string  $singleSRC
  * @property string  $url
- * @property boolean $interactive
- * @property string  $flashID
- * @property string  $flashJS
  * @property string  $imgSize
  * @property boolean $useCaption
  * @property boolean $fullsize
