@@ -18,4 +18,19 @@ abstract class User
     {
         // ignore
     }
+
+    public function save()
+    {
+        // ignore
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public static function loadUserByUsername($username)
+    {
+        return new static();
+    }
 }

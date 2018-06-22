@@ -306,11 +306,11 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     /**
      * Returns the index event argument.
      *
-     * @param $name
+     * @param string $name
      *
      * @return array
      */
-    private function getIndexEventArg($name): array
+    private function getIndexEventArg(string $name): array
     {
         return [
             'name' => $name,

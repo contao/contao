@@ -15,8 +15,13 @@ parameters:
         - '#Constant BE_USER_LOGGED_IN not found\.#'
         - '#Constant FE_USER_LOGGED_IN not found\.#'
 
+        # Undefined properties in Contao fixtures
+        - '#Access to an undefined property Contao\\Fixtures\\#'
+
         # Missing classes that are only used in BundleConfig::setLoadAfter()
         - '#Class Symfony\\Bundle\\TwigBundle\\TwigBundle not found\.#'
         - '#Class Symfony\\Bundle\\MonologBundle\\MonologBundle not found\.#'
         - '#Class Nelmio\\SecurityBundle\\NelmioSecurityBundle not found\.#'
         - '#Class Contao\\ManagerBundle\\ContaoManagerBundle not found\.#'
+
+    reportUnmatchedIgnoredErrors: false

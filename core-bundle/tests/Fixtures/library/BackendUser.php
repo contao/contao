@@ -54,4 +54,9 @@ class BackendUser extends \Contao\User implements UserInterface
     {
         // ignore
     }
+
+    public function hasAccess($field, $array)
+    {
+        return true;
+    }
 }

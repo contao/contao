@@ -69,7 +69,7 @@ class System
         static::$objContainer = $container;
     }
 
-    public static function loadLanguageFile()
+    public static function loadLanguageFile($file)
     {
         // ignore
     }

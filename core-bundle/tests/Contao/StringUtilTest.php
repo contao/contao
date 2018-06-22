@@ -331,7 +331,6 @@ class StringUtilTest extends TestCase
 
     /**
      * @param string $string
-     * @param bool
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
@@ -375,7 +374,6 @@ class StringUtilTest extends TestCase
 
     /**
      * @param array $tokens
-     * @param bool
      *
      * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
@@ -432,11 +430,11 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param $string
+     * @param string $string
      *
      * @dataProvider parseSimpleTokensInvalidComparison
      */
-    public function testFailsIfTheComparisonOperatorIsInvalid($string): void
+    public function testFailsIfTheComparisonOperatorIsInvalid(string $string): void
     {
         $this->expectException('InvalidArgumentException');
 

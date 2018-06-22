@@ -76,9 +76,9 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
     /**
      * Returns the response.
      *
-     * @param Template|\stdClass $template
-     * @param ModuleModel        $model
-     * @param Request            $request
+     * @param Template|object $template
+     * @param ModuleModel     $model
+     * @param Request         $request
      *
      * @return Response
      */

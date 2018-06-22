@@ -45,9 +45,9 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
     /**
      * Returns the response.
      *
-     * @param Template|\stdClass $template
-     * @param ContentModel       $model
-     * @param Request            $request
+     * @param Template|object $template
+     * @param ContentModel    $model
+     * @param Request         $request
      *
      * @return Response
      */

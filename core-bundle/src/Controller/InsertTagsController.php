@@ -33,9 +33,9 @@ class InsertTagsController extends Controller
     private $framework;
 
     /**
-     * @param $framework
+     * @param ContaoFrameworkInterface $framework
      */
-    public function __construct($framework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
