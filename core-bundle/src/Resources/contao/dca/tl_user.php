@@ -542,18 +542,18 @@ class tl_user extends Backend
 
 	/**
 	 * Handle the profile page.
-	 * 
+	 *
 	 * @param DataContainer $dc
 	 */
 	public function handleUserProfile($dc)
 	{
-		if (\Input::get('do') != 'login')
+		if (Input::get('do') != 'login')
 		{
 			return;
 		}
 
 		// Should not happen because of the redirect but better safe than sorry
-		if (\BackendUser::getInstance()->id != \Input::get('id') || \Input::get('act') != 'edit')
+		if (BackendUser::getInstance()->id != Input::get('id') || Input::get('act') != 'edit')
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not allowed to edit this page.');
 		}
@@ -567,7 +567,7 @@ class tl_user extends Backend
 			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
 		);
 
-		$arrFields = \StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default']);
+		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default']);
 
 		foreach ($arrFields as $strField)
 		{
