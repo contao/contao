@@ -192,6 +192,12 @@ class ModuleEventlist extends Events
 						continue;
 					}
 
+					// Hide running non-recurring events (see #30)
+					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time())
+					{
+						continue;
+					}
+
 					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
 					$event['firstDate'] = \Date::parse($objPage->dateFormat, $day);
 
