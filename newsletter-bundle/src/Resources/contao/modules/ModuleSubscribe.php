@@ -324,7 +324,7 @@ class ModuleSubscribe extends Module
 			$objRecipient->email = $strEmail;
 			$objRecipient->active = '';
 			$objRecipient->addedOn = $time;
-			$objRecipient->ip = $this->anonymizeIp(\Environment::get('ip'));
+			$objRecipient->ip = \Environment::get('ip');
 			$objRecipient->token = $strToken;
 			$objRecipient->confirmed = '';
 			$objRecipient->save();
