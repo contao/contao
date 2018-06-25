@@ -40,9 +40,9 @@ class ManagerConfigTest extends TestCase
     private $config;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,9 +56,9 @@ class ManagerConfigTest extends TestCase
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -70,26 +70,26 @@ class ManagerConfigTest extends TestCase
         $this->assertInstanceOf('Contao\ManagerBundle\Api\ManagerConfig', $this->config);
     }
 
-    public function testWritesToConfigFile()
+    public function testWritesConfigToFile(): void
     {
         $this->config->write(['foo' => 'bar']);
 
         $this->assertSame("foo: bar\n", file_get_contents($this->tempfile));
     }
 
-    public function testReadsConfigFromFile()
+    public function testReadsConfigFromFile(): void
     {
         $this->dumpTestdata(['bar' => 'foo']);
 
         $this->assertSame(['bar' => 'foo'], $this->config->read());
     }
 
-    public function testReturnsEmptyConfigIfFileDoesNotExist()
+    public function testReturnsEmptyConfigIfFileDoesNotExist(): void
     {
         $this->assertSame([], $this->config->read());
     }
 
-    public function testDoesNotReadMultipleTimes()
+    public function testDoesNotReadMultipleTimes(): void
     {
         $this->dumpTestdata(['bar' => 'foo']);
 
@@ -100,7 +100,10 @@ class ManagerConfigTest extends TestCase
         $this->assertSame(['bar' => 'foo'], $this->config->all());
     }
 
-    private function dumpTestdata($data)
+    /**
+     * @param array $data
+     */
+    private function dumpTestdata(array $data): void
     {
         $this->filesystem->dumpFile($this->tempfile, Yaml::dump($data));
     }

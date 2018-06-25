@@ -31,9 +31,9 @@ class GetConfigCommandTest extends TestCase
     private $command;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class GetConfigCommandTest extends TestCase
         $this->assertSame('config:get', $this->command->getName());
     }
 
-    public function testDumpsManagerConfigAsJSON()
+    public function testDumpsManagerConfigAsJson(): void
     {
         $this->config
             ->expects($this->once())

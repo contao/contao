@@ -200,13 +200,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
             ->willReturnOnConsecutiveCalls('foo', 'bar')
         ;
 
-//        $questionHelper
-//            ->expects($this->once())
-//            ->method('setHidden')
-//            ->with(true)
-//            ->willReturnSelf()
-//        ;
-
         $this->command->getHelperSet()->set($questionHelper, 'question');
 
         $commandTester = new CommandTester($this->command);

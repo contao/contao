@@ -18,8 +18,10 @@ ini_set('error_reporting', '-1');
 ini_set('display_startup_errors', '1');
 ini_set('display_errors', '1');
 
-/** @var Composer\Autoload\ClassLoader $loader */
-$loader = require \dirname(__DIR__, 4).'/vendor/autoload.php';
+$projectDir = \dirname(__DIR__, 4);
 
-$application = new Application(\dirname(__DIR__, 4));
+/** @var Composer\Autoload\ClassLoader $loader */
+$loader = require $projectDir.'/vendor/autoload.php';
+
+$application = new Application($projectDir);
 $application->run();

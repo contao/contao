@@ -31,9 +31,9 @@ class SetConfigCommandTest extends TestCase
     private $command;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -52,7 +52,7 @@ class SetConfigCommandTest extends TestCase
         $this->assertTrue($this->command->getDefinition()->hasArgument('json'));
     }
 
-    public function testWritesManagerConfigFromJSON()
+    public function testWritesManagerConfigFromJson(): void
     {
         $this->config
             ->expects($this->once())
@@ -64,12 +64,13 @@ class SetConfigCommandTest extends TestCase
         $commandTester->execute(['json' => '{"foo":"bar"}']);
     }
 
-    public function testThrowsExceptionWhenJsonIsInvalid()
+    public function testThrowsExceptionWhenJsonIsInvalid(): void
     {
+        $commandTester = new CommandTester($this->command);
+
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid JSON:');
 
-        $commandTester = new CommandTester($this->command);
         $commandTester->execute(['json' => 'foobar']);
     }
 }

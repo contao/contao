@@ -29,7 +29,7 @@ class VersionCommandTest extends TestCase
         $this->assertSame('version', (new VersionCommand())->getName());
     }
 
-    public function testOutputsApiVersion()
+    public function testOutputsApiVersion(): void
     {
         $commandTester = new CommandTester(new VersionCommand());
         $commandTester->execute([]);
