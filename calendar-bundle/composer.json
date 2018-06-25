@@ -12,7 +12,7 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
-        "symfony/framework-bundle": "^3.4"
+        "symfony/framework-bundle": "^3.4 || ^4.0"
     },
     "conflict": {
         "contao/core": "*",
@@ -25,8 +25,8 @@
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
-        "phpunit/phpunit": "^6.1",
-        "symfony/phpunit-bridge": "^3.2"
+        "phpunit/phpunit": "^7.0",
+        "symfony/phpunit-bridge": "^3.4.5"
     },
     "extra": {
         "branch-alias": {
