@@ -253,7 +253,7 @@ class ContentGallery extends ContentElement
 
 		$rowcount = 0;
 		$colwidth = floor(100/$this->perRow);
-		$strLightboxId = 'lightbox[lb' . $this->id . ']';
+		$strLightboxId = 'lb' . $this->id;
 		$body = array();
 
 		// Rows

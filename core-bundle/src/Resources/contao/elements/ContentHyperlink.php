@@ -53,17 +53,10 @@ class ContentHyperlink extends ContentElement
 			}
 		}
 
-		if (strncmp($this->rel, 'lightbox', 8) !== 0)
+		if ($this->rel)
 		{
-			$this->Template->attribute = ' rel="'. $this->rel .'"';
+			$this->Template->attribute = ' data-lightbox="'. $this->rel .'"';
 		}
-		else
-		{
-			$this->Template->attribute = ' data-lightbox="'. substr($this->rel, 9, -1) .'"';
-		}
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->rel = $this->rel;
 
 		if ($this->linkTitle == '')
 		{
@@ -75,6 +68,7 @@ class ContentHyperlink extends ContentElement
 		$this->Template->embed_post = $embed[1];
 		$this->Template->link = $this->linkTitle;
 		$this->Template->target = '';
+		$this->Template->rel = '';
 
 		if ($this->titleText)
 		{
@@ -85,6 +79,7 @@ class ContentHyperlink extends ContentElement
 		if ($this->target)
 		{
 			$this->Template->target = ' target="_blank"';
+			$this->Template->rel = ' rel="noreferrer noopener"';
 		}
 
 		// Unset the title attributes in the back end (see #6258)

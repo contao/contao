@@ -1605,7 +1605,7 @@ abstract class Controller extends System
 		// Provide an ID for single lightbox images in HTML5 (see #3742)
 		if ($strLightboxId === null && $arrItem['fullsize'])
 		{
-			$strLightboxId = 'lightbox[' . substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6) . ']';
+			$strLightboxId = substr(md5($objTemplate->getName() . '_' . $arrItem['id']), 0, 6);
 		}
 
 		// Float image
@@ -1634,7 +1634,7 @@ abstract class Controller extends System
 						$objTemplate->$strHrefKey = static::addFilesUrlTo(\System::urlEncode($arrItem['imageUrl']));
 					}
 
-					$objTemplate->attributes = ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
+					$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
 				}
 				else
 				{
@@ -1647,7 +1647,7 @@ abstract class Controller extends System
 		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
 		{
 			$objTemplate->$strHrefKey = static::addFilesUrlTo(\System::urlEncode($arrItem['singleSRC']));
-			$objTemplate->attributes = ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
+			$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
 		}
 
 		// Add the meta data to the template

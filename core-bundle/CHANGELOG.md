@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Use "noreferrer noopener" for links that open in a new window (see #1125).
  * Do not store IP addresses in tl_log (see #1512).
  * Append the module ID to the form field IDs to prevent duplicate IDs (see #1493).
  * Add the page picker to the meta fields in file manager (see #1568).

@@ -904,16 +904,7 @@ class InsertTags extends Controller
 						// Add a lightbox link
 						if ($rel != '')
 						{
-							if (strncmp($rel, 'lightbox', 8) !== 0)
-							{
-								$attribute = ' rel="' . \StringUtil::specialchars($rel) . '"';
-							}
-							else
-							{
-								$attribute = ' data-lightbox="' . \StringUtil::specialchars(substr($rel, 8)) . '"';
-							}
-
-							$arrCache[$strTag] = '<a href="' . \Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
+							$arrCache[$strTag] = '<a href="' . \Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . ' data-lightbox="' . \StringUtil::specialchars($rel) . '">' . $arrCache[$strTag] . '</a>';
 						}
 					}
 					catch (\Exception $e)

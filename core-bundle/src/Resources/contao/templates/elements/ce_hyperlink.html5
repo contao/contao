@@ -6,7 +6,7 @@
     <figure class="image_container">
 
       <?= $this->embed_pre ?>
-      <a href="<?= $this->href ?>"<?php if ($this->linkTitle) echo ' title="' . $this->linkTitle . '"'; ?> class="hyperlink_img"<?= $this->attribute ?><?= $this->target ?>><?php $this->insert('picture_default', $this->picture); ?></a>
+      <a href="<?= $this->href ?>"<?php if ($this->linkTitle) echo ' title="' . $this->linkTitle . '"'; ?> class="hyperlink_img"<?= $this->attribute ?><?= $this->target ?><?= $this->rel ?>><?php $this->insert('picture_default', $this->picture); ?></a>
       <?= $this->embed_post ?>
 
       <?php if ($this->caption): ?>
@@ -16,7 +16,7 @@
     </figure>
   <?php else: ?>
     <?= $this->embed_pre ?>
-    <a href="<?= $this->href ?>" class="hyperlink_txt" title="<?= $this->linkTitle ?>"<?= $this->attribute ?><?= $this->target ?>><?= $this->link ?></a>
+    <a href="<?= $this->href ?>" class="hyperlink_txt" title="<?= $this->linkTitle ?>"<?= $this->attribute ?><?= $this->target ?><?= $this->rel ?>><?= $this->link ?></a>
     <?= $this->embed_post ?>
   <?php endif; ?>
 

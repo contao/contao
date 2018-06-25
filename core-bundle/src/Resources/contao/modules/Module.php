@@ -400,7 +400,8 @@ abstract class Module extends Frontend
 				$row['pageTitle'] = \StringUtil::specialchars($objSubpage->pageTitle, true);
 				$row['link'] = $objSubpage->title;
 				$row['href'] = $href;
-				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);
+				$row['rel'] = '';
+				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
 				$row['target'] = '';
 				$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
@@ -408,6 +409,25 @@ abstract class Module extends Frontend
 				if ($objSubpage->type == 'redirect' && $objSubpage->target)
 				{
 					$row['target'] = ' target="_blank"';
+				}
+
+				$arrRel = array();
+
+				if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
+				{
+					$arrRel[] = 'nofollow';
+				}
+
+				if ($objSubpage->type == 'redirect' && $objSubpage->target)
+				{
+					$arrRel[] = 'noreferrer';
+					$arrRel[] = 'noopener';
+				}
+
+				// Override the rel attribute
+				if (!empty($arrRel))
+				{
+					$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 				}
 
 				$items[] = $row;
