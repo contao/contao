@@ -32,9 +32,11 @@ class FrontendIndex extends Frontend
 		$this->import('FrontendUser', 'User');
 		parent::__construct();
 
+		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
+
 		// Check whether a user is logged in
-		\define('BE_USER_LOGGED_IN', $this->getLoginStatus('BE_USER_AUTH'));
-		\define('FE_USER_LOGGED_IN', $this->getLoginStatus('FE_USER_AUTH'));
+		\define('BE_USER_LOGGED_IN', $objTokenChecker->hasBackendUser() && $objTokenChecker->isPreviewMode());
+		\define('FE_USER_LOGGED_IN', $objTokenChecker->hasFrontendUser());
 	}
 
 	/**

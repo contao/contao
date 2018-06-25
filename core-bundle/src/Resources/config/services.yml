@@ -393,6 +393,7 @@ services:
             - "@security.token_storage"
             - "@contao.security.frontend_user_provider"
             - "@logger"
+        public: true
 
     contao.security.frontend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
