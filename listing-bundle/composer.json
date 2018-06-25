@@ -12,7 +12,7 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
-        "symfony/framework-bundle": "^3.4"
+        "symfony/framework-bundle": "^3.4 || ^4.0"
     },
     "conflict": {
         "contao/core": "*",
