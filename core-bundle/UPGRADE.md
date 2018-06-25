@@ -2,6 +2,11 @@
 
 ## Version 4.* to 4.6
 
+### Maximum front end width
+
+The `$GLOBALS['TL_CONFIG']['maxImageWidth']` parameter has been deprecated. Use
+responsive images instead.
+
 ### Flash movie
 
 The "flash movie" front end module has been removed.
