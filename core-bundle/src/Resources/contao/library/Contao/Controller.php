@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Database\Result;
+use Contao\Image\PictureConfigurationInterface;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -1442,12 +1443,15 @@ abstract class Controller extends System
 		{
 			$size = array(0, 0, (int) $size);
 		}
-		elseif (!\is_array($size))
+		elseif (!$size instanceof PictureConfigurationInterface)
 		{
-			$size = array();
-		}
+			if (!\is_array($size))
+			{
+				$size = array();
+			}
 
-		$size += array(0, 0, 'crop');
+			$size += array(0, 0, 'crop');
+		}
 
 		if ($intMaxWidth === null)
 		{
@@ -1480,7 +1484,7 @@ abstract class Controller extends System
 				}
 			}
 
-			if ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && (!$imgSize[0] || $imgSize[0] > $intMaxWidth)))
+			if (\is_array($size) && ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && (!$imgSize[0] || $imgSize[0] > $intMaxWidth))))
 			{
 				// See #2268 (thanks to Thyon)
 				$ratio = ($size[0] && $size[1]) ? $size[1] / $size[0] : (($imgSize[0] && $imgSize[1]) ? $imgSize[1] / $imgSize[0] : 0);
@@ -1493,14 +1497,20 @@ abstract class Controller extends System
 		// Disable responsive images in the back end (see #7875)
 		if (TL_MODE == 'BE')
 		{
-			unset($size[2]);
+			if (\is_array($size))
+			{
+				unset($size[2]);
+			}
+			else
+			{
+				$size = [$intMaxWidth, 0, 'crop'];
+			}
 		}
 
 		try
 		{
 			$container = \System::getContainer();
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$src = $container->get('contao.image.image_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size)->getUrl(TL_ROOT);
 			$picture = $container->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
@@ -1508,6 +1518,8 @@ abstract class Controller extends System
 				'img' => $picture->getImg(TL_ROOT, $staticUrl),
 				'sources' => $picture->getSources(TL_ROOT, $staticUrl)
 			);
+
+			$src = $picture['img']['src'];
 
 			if ($src !== $arrItem['singleSRC'])
 			{
