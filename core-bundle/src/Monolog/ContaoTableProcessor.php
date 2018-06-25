@@ -36,22 +36,15 @@ class ContaoTableProcessor
     private $scopeMatcher;
 
     /**
-     * @var bool
-     */
-    private $anonymizeIp;
-
-    /**
      * @param RequestStack          $requestStack
      * @param TokenStorageInterface $tokenStorage
      * @param ScopeMatcher          $scopeMatcher
-     * @param bool                  $anonymizeIp
      */
-    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher, bool $anonymizeIp = true)
+    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
         $this->tokenStorage = $tokenStorage;
         $this->scopeMatcher = $scopeMatcher;
-        $this->anonymizeIp = $anonymizeIp;
     }
 
     /**
@@ -72,7 +65,6 @@ class ContaoTableProcessor
         $level = $record['level'] ?? 0;
 
         $this->updateAction($context, $level);
-        $this->updateIp($context, $request);
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
         $this->updateSource($context, $request);
@@ -100,27 +92,6 @@ class ContaoTableProcessor
         } else {
             $context->setAction(ContaoContext::GENERAL);
         }
-    }
-
-    /**
-     * Sets the IP adress.
-     *
-     * @param ContaoContext $context
-     * @param Request|null  $request
-     */
-    private function updateIp(ContaoContext $context, Request $request = null): void
-    {
-        $ip = $context->getIp();
-
-        if (null === $ip) {
-            $ip = null === $request ? '127.0.0.1' : (string) $request->getClientIp();
-        }
-
-        if ($this->anonymizeIp) {
-            $ip = $this->anonymizeIp($ip);
-        }
-
-        $context->setIp($ip);
     }
 
     /**
@@ -167,25 +138,5 @@ class ContaoTableProcessor
         }
 
         $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
-    }
-
-    /**
-     * Anonymizes the IP adress.
-     *
-     * @param string $ip
-     *
-     * @return string
-     */
-    private function anonymizeIp(string $ip): string
-    {
-        if ('127.0.0.1' === $ip || '::1' === $ip) {
-            return $ip;
-        }
-
-        if (false !== strpos($ip, ':')) {
-            return substr_replace($ip, ':0000', strrpos($ip, ':'));
-        }
-
-        return substr_replace($ip, '.0', strrpos($ip, '.'));
     }
 }

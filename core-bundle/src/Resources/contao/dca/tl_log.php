@@ -122,14 +122,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'ip' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['ip'],
-			'sorting'                 => true,
-			'filter'                  => true,
-			'search'                  => true,
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
 		'browser' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['browser'],

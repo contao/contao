@@ -102,7 +102,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
             'func' => $context->getFunc(),
-            'ip' => (string) $context->getIp(),
             'browser' => StringUtil::specialchars((string) $context->getBrowser()),
         ]);
     }
@@ -133,9 +132,9 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         $this->statement = $this->container->get($this->dbalServiceName)->prepare('
             INSERT INTO
                 tl_log
-                    (tstamp, source, action, username, text, func, ip, browser)
+                    (tstamp, source, action, username, text, func, browser)
                 VALUES
-                    (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
+                    (:tstamp, :source, :action, :username, :text, :func, :browser)
         ');
     }
 

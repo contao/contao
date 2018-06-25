@@ -38,12 +38,6 @@
       <trans-unit id="tl_log.func.1">
         <source>Name of the initiating function</source>
       </trans-unit>
-      <trans-unit id="tl_log.ip.0">
-        <source>IP address</source>
-      </trans-unit>
-      <trans-unit id="tl_log.ip.1">
-        <source>IP address of the user</source>
-      </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
       </trans-unit>

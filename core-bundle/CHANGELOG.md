@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not store IP addresses in tl_log (see #1512).
  * Append the module ID to the form field IDs to prevent duplicate IDs (see #1493).
  * Add the page picker to the meta fields in file manager (see #1568).
  * Remove the "flash movie" front end module.
