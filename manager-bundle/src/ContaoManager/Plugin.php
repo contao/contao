@@ -29,7 +29,6 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Sensio\Bundle\DistributionBundle\SensioDistributionBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -92,7 +91,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(ContaoManagerBundle::class),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
-            BundleConfig::create(SensioDistributionBundle::class)->setLoadInProduction(false),
         ];
 
         // Autoload the legacy modules
