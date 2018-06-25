@@ -41,7 +41,7 @@ class FrontendLoader extends Loader
 
         $defaults = [
             '_token_check' => true,
-            '_controller' => 'ContaoCoreBundle:Frontend:index',
+            '_controller' => 'Contao\CoreBundle\Controller\FrontendController::indexAction',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
         ];
 

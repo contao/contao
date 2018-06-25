@@ -58,12 +58,20 @@ class FrontendLoaderTest extends TestCase
         $frontend = $collection->get('contao_frontend');
 
         $this->assertNotNull($frontend);
-        $this->assertSame('ContaoCoreBundle:Frontend:index', $frontend->getDefault('_controller'));
+
+        $this->assertSame(
+            'Contao\CoreBundle\Controller\FrontendController::indexAction',
+            $frontend->getDefault('_controller')
+        );
 
         $index = $collection->get('contao_index');
 
         $this->assertNotNull($index);
-        $this->assertSame('ContaoCoreBundle:Frontend:index', $index->getDefault('_controller'));
+
+        $this->assertSame(
+            'Contao\CoreBundle\Controller\FrontendController::indexAction',
+            $index->getDefault('_controller')
+        );
     }
 
     public function testFailsToGenerateTheFrontEndUrlIfTheAliasIsMissing(): void
