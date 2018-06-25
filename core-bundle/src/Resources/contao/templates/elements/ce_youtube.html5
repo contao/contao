@@ -6,7 +6,7 @@
     <?php if ($this->aspect): ?>
       <div class="responsive ratio-<?= $this->aspect ?>">
     <?php endif; ?>
-    <iframe<?= $this->size ?> src="<?= $this->src ?>" frameborder="0" allowfullscreen></iframe>
+    <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
     <?php if ($this->aspect): ?>
       </div>
     <?php endif; ?>
