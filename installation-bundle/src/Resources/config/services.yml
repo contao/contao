@@ -5,11 +5,13 @@ services:
             - "@database_connection"
             - "%kernel.project_dir%"
             - "@logger"
+        public: true
 
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
         arguments:
             - "@session"
+        public: true
 
     contao.install_tool_twig_extension:
         class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
@@ -21,3 +23,4 @@ services:
         arguments:
             - "@database_connection"
             - "@contao.doctrine.schema_provider"
+        public: true
