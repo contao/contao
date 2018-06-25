@@ -20,6 +20,21 @@ use Symfony\Component\HttpFoundation\Request;
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
+if (file_exists(__DIR__.'/../.env')) {
+    (new Dotenv())->load(__DIR__.'/../.env');
+}
+
+// See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
+if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
+    Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
+}
+
+if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
+    Request::setTrustedHosts(explode(',', $trustedHosts));
+}
+
+unset($trustedProxies, $trustedHosts);
+
 $request = Request::createFromGlobals();
 
 if (
@@ -27,10 +42,6 @@ if (
     || $request->server->has('HTTP_X_FORWARDED_FOR')
     || !(IpUtils::checkIp($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1']) || PHP_SAPI === 'cli-server')
 ) {
-    if (file_exists(__DIR__.'/../.env')) {
-        (new Dotenv())->load(__DIR__.'/../.env');
-    }
-
     ##########################################################################
     #                                                                        #
     #  Access to debug front controllers is only allowed on localhost or     #
