@@ -152,12 +152,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
       </trans-unit>

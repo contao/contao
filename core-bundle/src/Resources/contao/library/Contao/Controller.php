@@ -1455,7 +1455,7 @@ abstract class Controller extends System
 
 		if ($intMaxWidth === null)
 		{
-			$intMaxWidth = (TL_MODE == 'BE') ? 320 : \Config::get('maxImageWidth');
+			$intMaxWidth = \Config::get('maxImageWidth');
 		}
 
 		$arrMargin = (TL_MODE == 'BE') ? array() : \StringUtil::deserialize($arrItem['imagemargin']);
@@ -1467,6 +1467,8 @@ abstract class Controller extends System
 		// Adjust the image size
 		if ($intMaxWidth > 0)
 		{
+			@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
+
 			// Subtract the margins before deciding whether to resize (see #6018)
 			if (\is_array($arrMargin) && $arrMargin['unit'] == 'px')
 			{
@@ -1491,19 +1493,6 @@ abstract class Controller extends System
 
 				$size[0] = $intMaxWidth;
 				$size[1] = floor($intMaxWidth * $ratio);
-			}
-		}
-
-		// Disable responsive images in the back end (see #7875)
-		if (TL_MODE == 'BE')
-		{
-			if (\is_array($size))
-			{
-				unset($size[2]);
-			}
-			else
-			{
-				$size = [$intMaxWidth, 0, 'crop'];
 			}
 		}
 

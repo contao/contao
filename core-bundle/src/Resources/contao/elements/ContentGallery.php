@@ -253,7 +253,6 @@ class ContentGallery extends ContentElement
 
 		$rowcount = 0;
 		$colwidth = floor(100/$this->perRow);
-		$intMaxWidth = (TL_MODE == 'BE') ? floor((640 / $this->perRow)) : floor((\Config::get('maxImageWidth') / $this->perRow));
 		$strLightboxId = 'lightbox[lb' . $this->id . ']';
 		$body = array();
 
@@ -305,7 +304,7 @@ class ContentGallery extends ContentElement
 					$images[($i+$j)]['imagemargin'] = $this->imagemargin;
 					$images[($i+$j)]['fullsize'] = $this->fullsize;
 
-					$this->addImageToTemplate($objCell, $images[($i+$j)], $intMaxWidth, $strLightboxId, $images[($i+$j)]['filesModel']);
+					$this->addImageToTemplate($objCell, $images[($i+$j)], null, $strLightboxId, $images[($i+$j)]['filesModel']);
 
 					// Add column width and class
 					$objCell->colWidth = $colwidth . '%';
