@@ -121,7 +121,7 @@ class InsertTags extends Controller
 
 					$strBuffer .= $fragmentHandler->render(
 						new ControllerReference(
-							'contao.controller.insert_tags::renderAction',
+							'contao.controller.insert_tags:renderAction',
 							array('insertTag' => '{{' . $strTag . '}}'),
 							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
 						),
