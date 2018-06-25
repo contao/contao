@@ -54,7 +54,6 @@
         }
     },
     "bin": [
-        "bin/contao-api",
         "bin/contao-console"
     ],
     "support": {
