@@ -22,7 +22,7 @@
         "sensio/framework-extra-bundle": "^5.0",
         "symfony/monolog-bundle": "^3.1",
         "symfony/swiftmailer-bundle": "^3.1.5",
-        "symfony/symfony": "3.4.*",
+        "symfony/symfony": "^3.4 || ^4.0 <4.2",
         "terminal42/header-replay-bundle": "^1.4.2",
         "toflar/psr6-symfony-http-cache-store": "^1.0.2"
     },
@@ -33,9 +33,9 @@
         "php-coveralls/php-coveralls": "^2.1",
         "ocramius/proxy-manager": "^2.0",
         "php-http/message-factory": "^1.0.2",
-        "phpunit/phpunit": "^6.1",
-        "symfony/console": "^3.3.7",
-        "symfony/phpunit-bridge": "^3.3"
+        "phpunit/phpunit": "^7.0",
+        "symfony/console": "^3.4 || ^4.0",
+        "symfony/phpunit-bridge": "^3.4.5"
     },
     "extra": {
         "branch-alias": {
