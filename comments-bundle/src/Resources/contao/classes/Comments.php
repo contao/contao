@@ -260,6 +260,9 @@ class Comments extends Frontend
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value']));
 
+			// Append the parent ID to prevent duplicate IDs (see #1493)
+			$objWidget->id .= '_' . $intParent;
+
 			// Validate the widget
 			if (\Input::post('FORM_SUBMIT') == $strFormId)
 			{
