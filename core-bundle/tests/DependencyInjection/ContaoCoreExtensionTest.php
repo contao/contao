@@ -1372,7 +1372,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.security.frontend_preview_authenticator');
 
         $this->assertSame(FrontendPreviewAuthenticator::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertFalse($definition->isPrivate());
         $this->assertSame('session', (string) $definition->getArgument(0));
         $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
         $this->assertSame('contao.security.frontend_user_provider', (string) $definition->getArgument(2));
