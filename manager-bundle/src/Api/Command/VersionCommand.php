@@ -37,6 +37,6 @@ class VersionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $output->writeln(Application::VERSION);
+        $output->write(Application::VERSION);
     }
 }

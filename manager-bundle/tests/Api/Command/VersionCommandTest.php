@@ -34,6 +34,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester(new VersionCommand());
         $commandTester->execute([]);
 
-        $this->assertSame(Application::VERSION."\n", $commandTester->getDisplay());
+        $this->assertSame((string) Application::VERSION, $commandTester->getDisplay());
+        $this->assertSame(0, $commandTester->getStatusCode());
     }
 }

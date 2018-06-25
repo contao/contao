@@ -52,6 +52,6 @@ class GetConfigCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $output->writeln(json_encode($this->managerConfig->all()));
+        $output->write(json_encode($this->managerConfig->all()));
     }
 }

@@ -50,6 +50,7 @@ class SetConfigCommandTest extends TestCase
     {
         $this->assertSame('config:set', $this->command->getName());
         $this->assertTrue($this->command->getDefinition()->hasArgument('json'));
+        $this->assertTrue($this->command->getDefinition()->getArgument('json')->isRequired());
     }
 
     public function testWritesManagerConfigFromJson(): void
@@ -62,6 +63,8 @@ class SetConfigCommandTest extends TestCase
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['json' => '{"foo":"bar"}']);
+
+        $this->assertSame(0, $commandTester->getStatusCode());
     }
 
     public function testThrowsExceptionWhenJsonIsInvalid(): void
@@ -72,5 +75,7 @@ class SetConfigCommandTest extends TestCase
         $this->expectExceptionMessage('Invalid JSON:');
 
         $commandTester->execute(['json' => 'foobar']);
+
+        $this->assertSame(0, $commandTester->getStatusCode());
     }
 }

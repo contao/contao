@@ -62,6 +62,7 @@ class GetConfigCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $this->assertSame('{"foo":"bar"}'."\n", $commandTester->getDisplay());
+        $this->assertSame('{"foo":"bar"}', $commandTester->getDisplay());
+        $this->assertSame(0, $commandTester->getStatusCode());
     }
 }
