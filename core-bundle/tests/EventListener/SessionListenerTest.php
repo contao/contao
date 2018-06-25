@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionListener;
@@ -55,12 +56,34 @@ class SessionListenerTest extends TestCase
     }
 
     /**
+     * Tests that the onKernelRequest call is forwarded.
+     */
+    public function testForwardsTheOnFinishRequestCall()
+    {
+        if (!method_exists(BaseSessionListener::class, 'onFinishRequest')) {
+            $this->markTestSkipped('The onFinishRequest method has only been added in Symfony 3.4.12.');
+        }
+
+        $event = $this->createMock(FinishRequestEvent::class);
+        $inner = $this->createMock(BaseSessionListener::class);
+
+        $inner
+            ->expects($this->once())
+            ->method('onFinishRequest')
+            ->with($event)
+        ;
+
+        $listener = $this->getListener($inner);
+        $listener->onFinishRequest($event);
+    }
+
+    /**
      * Tests that the session is saved upon kernel response.
      */
     public function testSavesTheSessionUponKernelResponse()
     {
         if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
-            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.');
+            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.4.');
         }
 
         $session = $this->createMock(SessionInterface::class);
