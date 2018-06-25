@@ -207,6 +207,8 @@ class ModuleRegistration extends Module
 
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], '', '', $this));
 
+			// Append the module ID to prevent duplicate IDs (see #1493)
+			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
