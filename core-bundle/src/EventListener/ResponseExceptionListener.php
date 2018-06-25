@@ -30,6 +30,7 @@ class ResponseExceptionListener
             return;
         }
 
+        $event->allowCustomResponseCode();
         $event->setResponse($exception->getResponse());
     }
 }
