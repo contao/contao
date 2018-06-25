@@ -471,7 +471,7 @@ class ModuleListing extends Module
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'url' && preg_match('@^(https?://|ftp://)@i', $value))
 		{
 			$value = \Idna::decode($value); // see #5946
-			$value = '<a href="' . $value . '" target="_blank" rel="noopener">' . $value . '</a>';
+			$value = '<a href="' . $value . '" target="_blank" rel="noreferrer noopener">' . $value . '</a>';
 		}
 
 		// E-mail addresses
