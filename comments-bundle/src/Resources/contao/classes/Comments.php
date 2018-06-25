@@ -336,7 +336,7 @@ class Comments extends Frontend
 				'email'     => $arrWidgets['email']->value,
 				'website'   => $strWebsite,
 				'comment'   => $this->convertLineFeeds($strComment),
-				'ip'        => $this->anonymizeIp(\Environment::get('ip')),
+				'ip'        => \Environment::get('ip'),
 				'date'      => $time,
 				'published' => ($objConfig->moderate ? '' : 1)
 			);
@@ -533,7 +533,7 @@ class Comments extends Frontend
 			'email'        => $objComment->email,
 			'url'          => \Environment::get('request'),
 			'addedOn'      => $time,
-			'ip'           => \System::anonymizeIp(\Environment::get('ip')),
+			'ip'           => \Environment::get('ip'),
 			'tokenConfirm' => md5(uniqid(mt_rand(), true)),
 			'tokenRemove'  => md5(uniqid(mt_rand(), true))
 		);
