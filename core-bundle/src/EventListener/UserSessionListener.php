@@ -140,9 +140,7 @@ class UserSessionListener
      */
     private function getSessionBag(Request $request): AttributeBagInterface
     {
-        $session = $request->getSession();
-
-        if (null === $session) {
+        if (!$request->hasSession() || null === ($session = $request->getSession())) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 

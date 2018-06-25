@@ -14,13 +14,12 @@ namespace Contao\CoreBundle\Tests\Session\Attribute;
 
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 class ArrayAttributeBagTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $adapter = new ArrayAttributeBag(new AttributeBag('foobar_storageKey'));
+        $adapter = new ArrayAttributeBag('foobar_storageKey');
 
         $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $adapter);
         $this->assertInstanceOf('ArrayAccess', $adapter);

@@ -46,7 +46,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame('add', $methodCalls[0][0]);
         $this->assertSame('contao.content_element.text', $methodCalls[0][1][0]);
-        $this->assertSame('contao.fragment._config_s4nmbfu', (string) $methodCalls[0][1][1]);
+        $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[0][1][1]);
 
         $arguments = $container->getDefinition((string) $methodCalls[0][1][1])->getArguments();
 
@@ -55,7 +55,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame('add', $methodCalls[1][0]);
         $this->assertSame('contao.frontend_module.login', $methodCalls[1][1][0]);
-        $this->assertSame('contao.fragment._config_5bktgkn', (string) $methodCalls[1][1][1]);
+        $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[1][1][1]);
 
         $arguments = $container->getDefinition((string) $methodCalls[1][1][1])->getArguments();
 

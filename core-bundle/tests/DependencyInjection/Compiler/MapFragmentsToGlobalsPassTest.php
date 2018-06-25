@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\ContentProxy;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
+use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -43,7 +44,16 @@ class MapFragmentsToGlobalsPassTest extends TestCase
         $pass = new MapFragmentsToGlobalsPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition('contao.listener.uigfyml');
+        $definition = null;
+
+        foreach ($container->getDefinitions() as $def) {
+            if ($def->getClass() === GlobalsMapListener::class) {
+                $definition = $def;
+                break;
+            }
+        }
+
+        $this->assertNotNull($definition);
 
         $this->assertSame(
             [

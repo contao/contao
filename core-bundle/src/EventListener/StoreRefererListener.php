@@ -96,9 +96,7 @@ class StoreRefererListener
             return;
         }
 
-        $session = $request->getSession();
-
-        if (null === $session) {
+        if (!$request->hasSession() || null === ($session = $request->getSession())) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 
@@ -173,9 +171,7 @@ class StoreRefererListener
      */
     private function storeFrontendReferer(Request $request): void
     {
-        $session = $request->getSession();
-
-        if (null === $session) {
+        if (!$request->hasSession() || null === ($session = $request->getSession())) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 
