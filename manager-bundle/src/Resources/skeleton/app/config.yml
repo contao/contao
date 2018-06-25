@@ -13,7 +13,7 @@ framework:
     translator: { fallbacks: ["%locale%"] }
     secret: "%secret%"
     router:
-        resource: "contao_manager.routing_loader:loadFromPlugins"
+        resource: "contao_manager.routing_loader::loadFromPlugins"
         type: service
         strict_requirements: "%kernel.debug%"
     csrf_protection: ~

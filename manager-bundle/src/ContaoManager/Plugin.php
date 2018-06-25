@@ -172,7 +172,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 '/install.php',
                 [
                     '_scope' => 'backend',
-                    '_controller' => 'FrameworkBundle:Redirect:redirect',
+                    '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction',
                     'route' => 'contao_install',
                     'permanent' => true,
                 ]
