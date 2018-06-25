@@ -12,7 +12,6 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
-        "sensio/distribution-bundle": "^5.0",
         "sensiolabs/ansi-to-html": "^1.1",
         "symfony/filesystem": "^3.4 || ^4.0",
         "symfony/framework-bundle": "^3.4 || ^4.0"
