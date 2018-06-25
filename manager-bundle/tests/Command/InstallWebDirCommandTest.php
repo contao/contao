@@ -18,6 +18,9 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
@@ -169,12 +172,45 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testAccesskeyFromInput(): void
     {
-        $commandTester = new CommandTester($this->command);
-        $commandTester->setInputs(['foo', 'bar']);
-        $commandTester->execute(['path' => $this->getTempDir(), '--password' => null]);
+        $questionHelper = $this->createMock(QuestionHelper::class);
 
-        $this->assertContains('Please enter a username:', $commandTester->getDisplay());
-        $this->assertContains('Please enter a password:', $commandTester->getDisplay());
+        $questionHelper
+            ->expects($this->exactly(2))
+            ->method('ask')
+            ->withConsecutive(
+                [
+                    $this->isInstanceOf(InputInterface::class),
+                    $this->isInstanceOf(OutputInterface::class),
+                    $this->callback(
+                        function (Question $question) {
+                            return 'Please enter a username:' === $question->getQuestion() && !$question->isHidden();
+                        }
+                    ),
+                ],
+                [
+                    $this->isInstanceOf(InputInterface::class),
+                    $this->isInstanceOf(OutputInterface::class),
+                    $this->callback(
+                        function (Question $question) {
+                            return 'Please enter a password:' === $question->getQuestion() && $question->isHidden();
+                        }
+                    ),
+                ]
+            )
+            ->willReturnOnConsecutiveCalls('foo', 'bar')
+        ;
+
+//        $questionHelper
+//            ->expects($this->once())
+//            ->method('setHidden')
+//            ->with(true)
+//            ->willReturnSelf()
+//        ;
+
+        $this->command->getHelperSet()->set($questionHelper, 'question');
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['path' => $this->getTempDir(), '--password' => null]);
 
         $this->assertFileExists($this->getTempDir().'/.env');
 
@@ -186,12 +222,27 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testAccesskeyWithUserFromInput(): void
     {
-        $commandTester = new CommandTester($this->command);
-        $commandTester->setInputs(['bar']);
-        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo']);
+        $questionHelper = $this->createMock(QuestionHelper::class);
 
-        $this->assertNotContains('Please enter a username:', $commandTester->getDisplay());
-        $this->assertContains('Please enter a password:', $commandTester->getDisplay());
+        $questionHelper
+            ->expects($this->once())
+            ->method('ask')
+            ->with(
+                $this->isInstanceOf(InputInterface::class),
+                $this->isInstanceOf(OutputInterface::class),
+                $this->callback(
+                    function (Question $question) {
+                        return 'Please enter a password:' === $question->getQuestion() && $question->isHidden();
+                    }
+                )
+            )
+            ->willReturn('bar')
+        ;
+
+        $this->command->getHelperSet()->set($questionHelper, 'question');
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo']);
 
         $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 

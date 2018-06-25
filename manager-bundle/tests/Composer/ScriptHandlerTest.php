@@ -30,10 +30,20 @@ class ScriptHandlerTest extends TestCase
 
     public function testAddAppDirectory(): void
     {
+        $filesystem = new Filesystem();
+        $tempdir = sys_get_temp_dir().'/ScriptHandlerTest';
+
+        if ($filesystem->exists($tempdir)) {
+            $filesystem->remove($tempdir);
+        }
+
+        $filesystem->mkdir($tempdir);
+        chdir($tempdir);
+
         ScriptHandler::addAppDirectory();
 
-        $this->assertDirectoryExists(__DIR__.'/../../app');
+        $this->assertDirectoryExists($tempdir.'/app');
 
-        (new Filesystem())->remove(__DIR__.'/../../app');
+        $filesystem->remove($tempdir.'/app');
     }
 }
