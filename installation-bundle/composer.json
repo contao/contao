@@ -14,8 +14,8 @@
         "contao/core-bundle": "self.version",
         "sensio/distribution-bundle": "^5.0",
         "sensiolabs/ansi-to-html": "^1.1",
-        "symfony/filesystem": "^3.4",
-        "symfony/framework-bundle": "^3.4"
+        "symfony/filesystem": "^3.4 || ^4.0",
+        "symfony/framework-bundle": "^3.4 || ^4.0"
     },
     "conflict": {
         "contao/core": "*",
@@ -27,8 +27,8 @@
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
-        "phpunit/phpunit": "^6.1",
-        "symfony/phpunit-bridge": "^2.8 || ^3.0"
+        "phpunit/phpunit": "^7.0",
+        "symfony/phpunit-bridge": "^3.4.5"
     },
     "extra": {
         "branch-alias": {
