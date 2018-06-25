@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Api;
 
 use Contao\ManagerBundle\Api\ManagerConfig;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
-class ManagerConfigTest extends TestCase
+class ManagerConfigTest extends ContaoTestCase
 {
     /**
      * @var Filesystem
@@ -47,11 +47,8 @@ class ManagerConfigTest extends TestCase
         parent::setUp();
 
         $this->filesystem = new Filesystem();
-        $this->tempdir = sys_get_temp_dir().'/'.uniqid('manager-config-', false);
+        $this->tempdir = $this->getTempDir();
         $this->tempfile = $this->tempdir.'/app/config/contao-manager.yml';
-
-        $this->filesystem->mkdir($this->tempdir);
-
         $this->config = new ManagerConfig($this->tempdir);
     }
 
