@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionListener;
@@ -86,6 +87,14 @@ class SessionListener implements EventSubscriberInterface
         if ($session && $session->isStarted()) {
             $session->save();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onFinishRequest(FinishRequestEvent $event)
+    {
+        $this->inner->onFinishRequest($event);
     }
 
     /**
