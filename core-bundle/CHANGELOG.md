@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.20 (2018-06-26)
 
  * Make the session listener compatible with Symfony 3.4.12.
 
