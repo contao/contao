@@ -75,7 +75,7 @@ $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 // Timeout values
 $GLOBALS['TL_CONFIG']['undoPeriod']     = 86400;
 $GLOBALS['TL_CONFIG']['versionPeriod']  = 7776000;
-$GLOBALS['TL_CONFIG']['logPeriod']      = 1209600;
+$GLOBALS['TL_CONFIG']['logPeriod']      = 604800;
 $GLOBALS['TL_CONFIG']['sessionTimeout'] = 3600;
 
 // User defaults
