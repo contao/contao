@@ -1,5 +1,9 @@
 # Contao core bundle change log
 
+## DEV
+
+ * Make the session listener compatible with Symfony 3.4.12.
+
 ## 4.5.9 (2018-06-18)
 
  * Show the 404 page if there is no match in the set of potential pages (see #1522).
