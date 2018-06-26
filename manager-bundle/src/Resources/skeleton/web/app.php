@@ -43,7 +43,10 @@ ContaoKernel::setProjectDir(\dirname(__DIR__));
 $kernel = new ContaoKernel('prod', false);
 
 // Enable the Symfony reverse proxy
-$kernel = new ContaoCache($kernel);
+if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? false)) {
+    $kernel = new ContaoCache($kernel);
+}
+
 Request::enableHttpMethodParameterOverride();
 
 // Handle the request
