@@ -18,6 +18,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Symfony\Component\Console\Application;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -62,7 +63,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
         $container->addCompilerPass(new AddImagineClassPass());
-        $container->addCompilerPass(new DoctrineMigrationsPass());
+        $container->addCompilerPass(new DoctrineMigrationsPass(), PassConfig::TYPE_BEFORE_REMOVING);
         $container->addCompilerPass(new PickerProviderPass());
     }
 }

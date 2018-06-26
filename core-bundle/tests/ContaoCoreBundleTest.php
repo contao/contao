@@ -60,10 +60,16 @@ class ContaoCoreBundleTest extends TestCase
         $bundle->build($container);
 
         $classes = [];
+        $beforeRemovingClasses = [];
 
         foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
             $reflection = new \ReflectionClass($pass);
             $classes[] = $reflection->getName();
+        }
+
+        foreach ($container->getCompilerPassConfig()->getBeforeRemovingPasses() as $pass) {
+            $reflection = new \ReflectionClass($pass);
+            $beforeRemovingClasses[] = $reflection->getName();
         }
 
         $this->assertContains(AddPackagesPass::class, $classes);
@@ -71,5 +77,6 @@ class ContaoCoreBundleTest extends TestCase
         $this->assertContains(AddResourcesPathsPass::class, $classes);
         $this->assertContains(AddImagineClassPass::class, $classes);
         $this->assertContains(DoctrineMigrationsPass::class, $classes);
+        $this->assertContains(DoctrineMigrationsPass::class, $beforeRemovingClasses);
     }
 }
