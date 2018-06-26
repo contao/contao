@@ -75,6 +75,10 @@ class SessionListener implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
+        if (!method_exists($this->inner, 'onKernelResponse')) {
+            return;
+        }
+
         if (!$this->framework->isInitialized() || !$this->scopeMatcher->isFrontendMasterRequest($event)) {
             $this->inner->onKernelResponse($event);
 
@@ -92,8 +96,12 @@ class SessionListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function onFinishRequest(FinishRequestEvent $event)
+    public function onFinishRequest(FinishRequestEvent $event): void
     {
+        if (!method_exists($this->inner, 'onFinishRequest')) {
+            return;
+        }
+
         $this->inner->onFinishRequest($event);
     }
 
