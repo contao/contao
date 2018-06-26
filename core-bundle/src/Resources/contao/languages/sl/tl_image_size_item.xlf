@@ -1,0 +1,115 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_image_size_item.php" source-language="en" target-language="sl">
+    <body>
+      <trans-unit id="tl_image_size_item.media.0">
+        <source>Media query</source>
+        <target>Media query</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.media.1">
+        <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
+        <target>Tukaj lahko določite, v katerem primeru se bo uporabila velikost slike, npr. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.0">
+        <source>Invisible</source>
+        <target>Nevidno</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.invisible.1">
+        <source>Do not use the image size definition.</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.0">
+        <source>Revision date</source>
+        <target>Datum revizije</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum in ura zadnje revizije</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.title_legend">
+        <source>Image size settings</source>
+        <target>Nastavitve velikosti slike</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.expert_legend">
+        <source>Expert settings</source>
+        <target>Napredne nastavitve</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.visibility_legend">
+        <source>Visibility</source>
+        <target>Vidnost</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.0">
+        <source>New media query</source>
+        <target>Nov &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.new.1">
+        <source>Create a new media query</source>
+        <target>Ustvari nov &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.show.0">
+        <source>Media query details</source>
+        <target>Podrobnosti o &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.show.1">
+        <source>Show the details of media query ID %s</source>
+        <target>Prikaži podrobnosti o &quot;media query&quot; z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit.0">
+        <source>Edit media query</source>
+        <target>Uredi &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit.1">
+        <source>Edit media query ID %s</source>
+        <target>Uredi &quot;media query&quot; z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.cut.0">
+        <source>Move media query</source>
+        <target>Premakni &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.cut.1">
+        <source>Move media query ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.copy.0">
+        <source>Duplicate media query</source>
+        <target>Podvoji &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.copy.1">
+        <source>Duplicate media query ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete.0">
+        <source>Delete media query</source>
+        <target>Izbriši &quot;media query&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete.1">
+        <source>Delete media query ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.editheader.0">
+        <source>Edit image size</source>
+        <target>Uredi velikost slike</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.editheader.1">
+        <source>Edit the image size settings</source>
+        <target>Uredi nastavitve velikosti slik</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Prilepi na vrh</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.1">
+        <source>Paste after media query ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.0">
+        <source>Add new at the top</source>
+        <target>Dodaj novo na vrh</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenew.1">
+        <source>Add new after media query ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.0">
+        <source>Toggle visibility</source>
+        <target>Preklopi vidljivost</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.1">
+        <source>Toggle the visibility of media query ID %s</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

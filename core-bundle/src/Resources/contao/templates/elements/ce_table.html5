@@ -1,0 +1,47 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+  <table id="<?= $this->id ?>"<?php if ($this->sortable): ?> class="sortable"<?php endif; ?>>
+
+    <?php if ($this->summary != ''): ?>
+      <caption><?= $this->summary ?></caption>
+    <?php endif; ?>
+
+    <?php if ($this->useHeader): ?>
+      <thead>
+        <tr>
+          <?php foreach ($this->header as $col): ?>
+            <th class="<?= $col['class'] ?>"><?= $col['content'] ?></th>
+          <?php endforeach; ?>
+        </tr>
+      </thead>
+    <?php endif; ?>
+
+    <?php if ($this->useFooter): ?>
+      <tfoot>
+        <tr>
+          <?php foreach ($this->footer as $col): ?>
+            <td class="<?= $col['class'] ?>"><?= $col['content'] ?></td>
+          <?php endforeach; ?>
+        </tr>
+      </tfoot>
+    <?php endif; ?>
+
+    <tbody>
+      <?php foreach ($this->body as $class=>$row): ?>
+        <tr class="<?= $class ?>">
+          <?php foreach ($row as $i=>$col): ?>
+            <?php if ($i == 0 && $this->useLeftTh): ?>
+              <th scope="row" class="<?= $col['class'] ?>"><?= $col['content'] ?></th>
+            <?php else: ?>
+              <td class="<?= $col['class'] ?>"><?= $col['content'] ?></td>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+
+  </table>
+
+<?php $this->endblock(); ?>
