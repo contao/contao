@@ -60,23 +60,23 @@ class ContaoCoreBundleTest extends TestCase
         $bundle->build($container);
 
         $classes = [];
-        $beforeRemovingClasses = [];
+        $config = $container->getCompilerPassConfig();
 
-        foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
-            $reflection = new \ReflectionClass($pass);
-            $classes[] = $reflection->getName();
-        }
-
-        foreach ($container->getCompilerPassConfig()->getBeforeRemovingPasses() as $pass) {
-            $reflection = new \ReflectionClass($pass);
-            $beforeRemovingClasses[] = $reflection->getName();
+        foreach ($config->getBeforeOptimizationPasses() as $pass) {
+            $classes[] = (new \ReflectionClass($pass))->getName();
         }
 
         $this->assertContains(AddPackagesPass::class, $classes);
         $this->assertContains(AddSessionBagsPass::class, $classes);
         $this->assertContains(AddResourcesPathsPass::class, $classes);
         $this->assertContains(AddImagineClassPass::class, $classes);
+
+        $classes = [];
+
+        foreach ($config->getBeforeRemovingPasses() as $pass) {
+            $classes[] = (new \ReflectionClass($pass))->getName();
+        }
+
         $this->assertContains(DoctrineMigrationsPass::class, $classes);
-        $this->assertContains(DoctrineMigrationsPass::class, $beforeRemovingClasses);
     }
 }
