@@ -58,7 +58,7 @@ class SessionListenerTest extends TestCase
     /**
      * Tests that the onKernelRequest call is forwarded.
      */
-    public function testForwardsTheOnFinishRequestCall()
+    public function testForwardsTheOnFinishRequestCall(): void
     {
         if (!method_exists(BaseSessionListener::class, 'onFinishRequest')) {
             $this->markTestSkipped('The onFinishRequest method has only been added in Symfony 3.4.12.');
