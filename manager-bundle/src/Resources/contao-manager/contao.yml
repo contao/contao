@@ -1,0 +1,6 @@
+parameters:
+    prepend_locale: false
+
+# Contao configuration
+contao:
+    prepend_locale: "%prepend_locale%"

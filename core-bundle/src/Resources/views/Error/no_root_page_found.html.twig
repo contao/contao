@@ -1,0 +1,10 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.noRoot }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.noRootPage }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.noRootFix|format(base, adminEmail)|raw }}</p>
+{% endblock %}

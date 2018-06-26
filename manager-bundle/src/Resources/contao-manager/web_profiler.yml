@@ -1,0 +1,8 @@
+# Framework configuration
+framework:
+    profiler: { only_exceptions: false }
+
+# Web profiler configuration
+web_profiler:
+    toolbar: true
+    intercept_redirects: false

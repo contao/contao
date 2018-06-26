@@ -1,0 +1,7 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.unavailable }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.maintenance }}</p>
+{% endblock %}
