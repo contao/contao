@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.5.10 (2018-06-26)
 
  * Make the session listener compatible with Symfony 3.4.12.
 
