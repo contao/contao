@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Also use the file meta data in the download element (see #1459).
  * Purge the system log by default after 7 days (see #1512).
  * Use "noreferrer noopener" for links that open in a new window (see #1125).
  * Do not store IP addresses in tl_log (see #1512).

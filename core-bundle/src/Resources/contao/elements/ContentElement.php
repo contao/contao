@@ -52,6 +52,7 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $code
  * @property string  $url
  * @property boolean $target
+ * @property boolean $overwriteLink
  * @property string  $titleText
  * @property string  $linkTitle
  * @property string  $embed

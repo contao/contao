@@ -500,9 +500,6 @@
       <trans-unit id="tl_content.source_legend">
         <source>Source</source>
       </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
-        <source>Download settings</source>
-      </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
       </trans-unit>

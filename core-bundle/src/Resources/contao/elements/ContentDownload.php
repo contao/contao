@@ -21,6 +21,11 @@ class ContentDownload extends ContentElement
 {
 
 	/**
+	 * @var FilesModel
+	 */
+	protected $objFile;
+
+	/**
 	 * Template
 	 * @var string
 	 */
@@ -70,6 +75,7 @@ class ContentDownload extends ContentElement
 			}
 		}
 
+		$this->objFile = $objFile;
 		$this->singleSRC = $objFile->path;
 
 		return parent::generate();
@@ -82,9 +88,31 @@ class ContentDownload extends ContentElement
 	{
 		$objFile = new \File($this->singleSRC);
 
-		if ($this->linkTitle == '')
+		if (TL_MODE == 'FE')
 		{
-			$this->linkTitle = \StringUtil::specialchars($objFile->basename);
+			global $objPage;
+
+			$arrMeta = \Frontend::getMetaData($this->objFile->meta, $objPage->language);
+
+			if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
+			{
+				$arrMeta = \Frontend::getMetaData($this->objFile->meta, $objPage->rootFallbackLanguage);
+			}
+		}
+		else
+		{
+			$arrMeta = \Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
+		}
+
+		// Use the meta title (see #1459)
+		if (!$this->overwriteLink && isset($arrMeta['title']))
+		{
+			$this->linkTitle = \StringUtil::specialchars($arrMeta['title']);
+		}
+
+		if (!$this->titleText || !$this->overwriteLink)
+		{
+			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
 		$strHref = \Environment::get('request');
@@ -102,8 +130,8 @@ class ContentDownload extends ContentElement
 
 		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
 
-		$this->Template->link = $this->linkTitle;
-		$this->Template->title = \StringUtil::specialchars($this->titleText ?: sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename));
+		$this->Template->link = $this->linkTitle ?: $objFile->basename;
+		$this->Template->title = \StringUtil::specialchars($this->titleText);
 		$this->Template->href = $strHref;
 		$this->Template->filesize = $this->getReadableSize($objFile->filesize, 1);
 		$this->Template->icon = \Image::getPath($objFile->icon);
