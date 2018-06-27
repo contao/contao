@@ -247,7 +247,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $frontendUser->groups = $groups;
 
         $frontendUser
-            ->expects($this->any())
             ->method('getRoles')
             ->willReturn([])
         ;
@@ -277,7 +276,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
-            ->expects($this->any())
             ->method('loadUserByUsername')
             ->willReturn($frontendUser)
         ;
@@ -311,7 +309,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $frontendUser = $this->createMock(FrontendUser::class);
 
         $frontendUser
-            ->expects($this->any())
             ->method('getRoles')
             ->willReturn([])
         ;
@@ -344,7 +341,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
-            ->expects($this->any())
             ->method('loadUserByUsername')
             ->willReturn($frontendUser)
         ;
@@ -369,7 +365,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $frontendUser = $this->createMock(FrontendUser::class);
 
         $frontendUser
-            ->expects($this->any())
             ->method('getRoles')
             ->willReturn([])
         ;
@@ -402,7 +397,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $userProvider = $this->createMock(UserProviderInterface::class);
 
         $userProvider
-            ->expects($this->any())
             ->method('loadUserByUsername')
             ->willReturn($frontendUser)
         ;

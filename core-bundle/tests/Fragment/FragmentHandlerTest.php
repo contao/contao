@@ -280,7 +280,6 @@ class FragmentHandlerTest extends TestCase
         $renderer = $this->createMock(FragmentRendererInterface::class);
 
         $renderer
-            ->expects($this->any())
             ->method('getName')
             ->willReturn($name)
         ;
