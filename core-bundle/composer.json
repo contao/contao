@@ -96,7 +96,7 @@
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
-        "phpstan/phpstan": "^0.10@dev",
+        "phpstan/phpstan": "^0.10",
         "phpunit/phpunit": "^7.0",
         "symfony/phpunit-bridge": "^3.4.5"
     },
