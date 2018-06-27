@@ -47,6 +47,22 @@ class Version460Update extends AbstractVersionUpdate
                 type = 'search' AND rootPage != 0
         ");
 
+        $this->connection->query("
+            ALTER TABLE
+                tl_content
+            ADD
+                overwriteLink CHAR(1) DEFAULT '' NOT NULL
+        ");
+
+        $this->connection->query("
+            UPDATE
+                tl_content
+            SET
+                overwriteLink = '1'
+            WHERE
+                linkTitle != '' OR titleText != ''
+        ");
+
         $this->connection->query('
             ALTER TABLE
                 tl_content
