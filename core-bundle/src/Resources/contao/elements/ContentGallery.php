@@ -106,7 +106,6 @@ class ContentGallery extends ContentElement
 					'uuid'       => $objFiles->uuid,
 					'name'       => $objFile->basename,
 					'singleSRC'  => $objFiles->path,
-					'title'      => \StringUtil::specialchars($objFile->basename),
 					'filesModel' => $objFiles->current()
 				);
 
@@ -145,7 +144,6 @@ class ContentGallery extends ContentElement
 						'uuid'       => $objSubfiles->uuid,
 						'name'       => $objFile->basename,
 						'singleSRC'  => $objSubfiles->path,
-						'title'      => \StringUtil::specialchars($objFile->basename),
 						'filesModel' => $objSubfiles->current()
 					);
 
