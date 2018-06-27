@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class SetAccesskeyCommand extends Command
+class SetDotEnvCommand extends Command
 {
     /**
      * @var string
@@ -43,9 +43,10 @@ class SetAccesskeyCommand extends Command
         parent::configure();
 
         $this
-            ->setName('access-key:set')
-            ->setDescription('Sets the debug access key.')
-            ->addArgument('value', InputArgument::REQUIRED, 'The access key')
+            ->setName('dot-env:set')
+            ->setDescription('Writes a parameter to the .env file.')
+            ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
+            ->addArgument('value', InputArgument::REQUIRED, 'The new value')
         ;
     }
 
@@ -58,6 +59,9 @@ class SetAccesskeyCommand extends Command
         $path = $this->projectDir.'/.env';
         $content = '';
 
+        $key = $input->getArgument('key');
+        $value = $input->getArgument('value');
+
         if ($fs->exists($path)) {
             $lines = file($path, FILE_IGNORE_NEW_LINES);
 
@@ -66,7 +70,7 @@ class SetAccesskeyCommand extends Command
             }
 
             foreach ($lines as $line) {
-                if (0 === strncmp($line, 'APP_DEV_ACCESSKEY=', 18)) {
+                if (0 === strpos($line, $key.'=')) {
                     continue;
                 }
 
@@ -74,7 +78,7 @@ class SetAccesskeyCommand extends Command
             }
         }
 
-        $content .= 'APP_DEV_ACCESSKEY='.escapeshellarg($input->getArgument('value'))."\n";
+        $content .= $key.'='.escapeshellarg($value)."\n";
 
         $fs->dumpFile($path, $content);
     }

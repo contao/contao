@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Api;
 
-use Contao\ManagerBundle\Api\Command\GetAccesskeyCommand;
 use Contao\ManagerBundle\Api\Command\GetConfigCommand;
-use Contao\ManagerBundle\Api\Command\RemoveAccesskeyCommand;
-use Contao\ManagerBundle\Api\Command\SetAccesskeyCommand;
+use Contao\ManagerBundle\Api\Command\GetDotEnvCommand;
+use Contao\ManagerBundle\Api\Command\RemoveDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\SetConfigCommand;
+use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\VersionCommand;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    public const VERSION = 1;
+    public const VERSION = '2';
 
     /**
      * @var string
@@ -86,11 +86,9 @@ class Application extends BaseApplication
      */
     protected function getDefaultInputDefinition(): InputDefinition
     {
-        return new InputDefinition(
-            [
-                new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
-            ]
-        );
+        return new InputDefinition([
+            new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
+        ]);
     }
 
     /**
@@ -103,9 +101,9 @@ class Application extends BaseApplication
         $commands[] = new VersionCommand();
         $commands[] = new GetConfigCommand($this->getManagerConfig());
         $commands[] = new SetConfigCommand($this->getManagerConfig());
-        $commands[] = new GetAccesskeyCommand($this->projectDir);
-        $commands[] = new SetAccesskeyCommand($this->projectDir);
-        $commands[] = new RemoveAccesskeyCommand($this->projectDir);
+        $commands[] = new GetDotEnvCommand($this->projectDir);
+        $commands[] = new SetDotEnvCommand($this->projectDir);
+        $commands[] = new RemoveDotEnvCommand($this->projectDir);
 
         return $commands;
     }

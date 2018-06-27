@@ -13,11 +13,12 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Api\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Dotenv\Dotenv;
 
-class RemoveAccesskeyCommand extends Command
+class GetDotEnvCommand extends Command
 {
     /**
      * @var string
@@ -42,8 +43,9 @@ class RemoveAccesskeyCommand extends Command
         parent::configure();
 
         $this
-            ->setName('access-key:remove')
-            ->setDescription('Removes the debug access key.')
+            ->setName('dot-env:get')
+            ->setDescription('Reads a parameter from the .env file.')
+            ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
         ;
     }
 
@@ -52,32 +54,17 @@ class RemoveAccesskeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $fs = new Filesystem();
         $path = $this->projectDir.'/.env';
 
-        if (!$fs->exists($path)) {
+        if (!file_exists($path)) {
             return;
         }
 
-        $content = '';
-        $lines = file($path, FILE_IGNORE_NEW_LINES);
+        $vars = (new Dotenv())->parse(file_get_contents($path));
+        $key = $input->getArgument('key');
 
-        if (false === $lines) {
-            throw new \RuntimeException(sprintf('Could not read "%s" file.', $path));
-        }
-
-        foreach ($lines as $line) {
-            if (0 === strncmp($line, 'APP_DEV_ACCESSKEY=', 18)) {
-                continue;
-            }
-
-            $content .= $line."\n";
-        }
-
-        if (empty($content)) {
-            $fs->remove($path);
-        } else {
-            $fs->dumpFile($path, $content);
+        if (isset($vars[$key])) {
+            $output->write($vars[$key]);
         }
     }
 }

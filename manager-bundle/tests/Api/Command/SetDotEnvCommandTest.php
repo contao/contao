@@ -1,0 +1,128 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\ManagerBundle\Tests\Api\Command;
+
+use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
+use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
+
+class SetDotEnvCommandTest extends ContaoTestCase
+{
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var string
+     */
+    private $tempdir;
+
+    /**
+     * @var string
+     */
+    private $tempfile;
+
+    /**
+     * @var SetDotEnvCommand
+     */
+    private $command;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->filesystem = new Filesystem();
+        $this->tempdir = $this->getTempDir();
+        $this->tempfile = $this->tempdir.'/.env';
+        $this->command = new SetDotEnvCommand($this->tempdir);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->filesystem->remove($this->tempdir);
+    }
+
+    public function testInstantiation(): void
+    {
+        $this->assertInstanceOf('Contao\ManagerBundle\Api\Command\SetDotEnvCommand', $this->command);
+    }
+
+    public function testHasCorrectNameAndArguments(): void
+    {
+        $this->assertSame('dot-env:set', $this->command->getName());
+        $this->assertTrue($this->command->getDefinition()->hasArgument('key'));
+        $this->assertTrue($this->command->getDefinition()->getArgument('key')->isRequired());
+        $this->assertTrue($this->command->getDefinition()->hasArgument('value'));
+        $this->assertTrue($this->command->getDefinition()->getArgument('value')->isRequired());
+    }
+
+    public function testCreatesDotEnvFileIfItDoesNotExist(): void
+    {
+        $this->assertFileNotExists($this->tempfile);
+
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO', 'value' => 'BAR']);
+
+        $this->assertSame('', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+        $this->assertFileExists($this->tempfile);
+        $this->assertSame("FOO='BAR'\n", file_get_contents($this->tempfile));
+    }
+
+    public function testAppendsToDotEnvFileIfItExists(): void
+    {
+        $this->filesystem->dumpFile($this->tempfile, "BAR='FOO'\n");
+
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO', 'value' => 'BAR']);
+
+        $this->assertSame('', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+        $this->assertFileExists($this->tempfile);
+        $this->assertSame("BAR='FOO'\nFOO='BAR'\n", file_get_contents($this->tempfile));
+    }
+
+    public function testOverwriteDotEnvIfKeyExists(): void
+    {
+        $this->filesystem->dumpFile($this->tempfile, "BAR='FOO'\nFOO='FOO'\n");
+
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO', 'value' => 'BAR']);
+
+        $this->assertSame('', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+        $this->assertFileExists($this->tempfile);
+        $this->assertSame("BAR='FOO'\nFOO='BAR'\n", file_get_contents($this->tempfile));
+    }
+
+    public function testEscapesShellArguments(): void
+    {
+        $tester = new CommandTester($this->command);
+        $tester->execute(['key' => 'FOO', 'value' => "UNESCAPED ' STRING"]);
+
+        $this->assertSame('', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+        $this->assertFileExists($this->tempfile);
+        $this->assertSame("FOO='UNESCAPED '\'' STRING'\n", file_get_contents($this->tempfile));
+    }
+}
