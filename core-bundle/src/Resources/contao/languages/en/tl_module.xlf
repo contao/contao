@@ -401,9 +401,6 @@
       <trans-unit id="tl_module.source_legend">
         <source>Source</source>
       </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-      </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
       </trans-unit>
