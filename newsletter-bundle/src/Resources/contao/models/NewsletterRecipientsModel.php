@@ -126,7 +126,7 @@ class NewsletterRecipientsModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.addedOn<? AND $t.token!=''"), array(strtotime('-1 day')), $arrOptions);
+		return static::findBy(array("$t.active='' AND  $t.addedOn<? AND $t.token!=''"), array(strtotime('-1 day')), $arrOptions);
 	}
 }
 

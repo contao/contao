@@ -25,6 +25,10 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			array('tl_newsletter_recipients', 'clearOptInData')
 		),
+		'onsubmit_callback' => array
+		(
+			array('tl_newsletter_recipients', 'removeOptInToken')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -320,6 +324,20 @@ class tl_newsletter_recipients extends Backend
 	{
 		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='', confirmed='', ip='', token='' WHERE id=?")
 					   ->execute($dc->id);
+	}
+
+	/**
+	 * Reset the double opt-in data if a recipient is moved manually
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function removeOptInToken(DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->active && $dc->activeRecord->token)
+		{
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET token='' WHERE id=?")
+						   ->execute($dc->id);
+		}
 	}
 
 	/**
