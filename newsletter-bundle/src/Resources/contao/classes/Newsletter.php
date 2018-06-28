@@ -868,6 +868,24 @@ class Newsletter extends Backend
 	}
 
 	/**
+	 * Purge subscriptions that have not been activated within 24 hours
+	 */
+	public function purgeSubscriptions()
+	{
+		$objRecipient = \NewsletterRecipientsModel::findExpiredSubscriptions();
+
+		if ($objRecipient === null)
+		{
+			return;
+		}
+
+		foreach ($objRecipient as $objModel)
+		{
+			$objModel->delete();
+		}
+	}
+
+	/**
 	 * Get all editable newsletters and return them as array
 	 *
 	 * @param ModuleModel|object $objModule

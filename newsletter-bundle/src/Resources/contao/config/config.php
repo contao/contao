@@ -41,3 +41,6 @@ $GLOBALS['TL_HOOKS']['closeAccount'][] = array('Newsletter', 'removeSubscription
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletters';
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletterp';
+
+// Cron jobs
+$GLOBALS['TL_CRON']['daily']['purgeNewsletterSubscriptions'] = array('Newsletter', 'purgeSubscriptions');

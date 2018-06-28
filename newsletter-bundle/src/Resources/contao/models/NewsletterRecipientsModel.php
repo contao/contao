@@ -114,6 +114,20 @@ class NewsletterRecipientsModel extends Model
 
 		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ") AND $t.active=''"), $strEmail, $arrOptions);
 	}
+
+	/**
+	 * Find subscriptions that have not been activated for more than 24 hours
+	 *
+	 * @param array $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null A collection of models or null if there are no subscriptions
+	 */
+	public static function findExpiredSubscriptions(array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		return static::findBy(array("$t.addedOn<? AND $t.token!=''"), array(strtotime('-1 day')), $arrOptions);
+	}
 }
 
 class_alias(NewsletterRecipientsModel::class, 'NewsletterRecipientsModel');
