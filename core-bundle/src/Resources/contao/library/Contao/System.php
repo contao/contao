@@ -725,12 +725,6 @@ abstract class System
 	 */
 	public static function anonymizeIp($strIp)
 	{
-		// The feature has been disabled
-		if (!\Config::get('privacyAnonymizeIp'))
-		{
-			return $strIp;
-		}
-
 		// Localhost
 		if ($strIp == '127.0.0.1' || $strIp == '::1')
 		{

@@ -92,18 +92,6 @@
       <trans-unit id="tl_settings.sslProxyDomain.1">
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize all IP addresses that are stored in the database.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
       </trans-unit>
@@ -259,9 +247,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

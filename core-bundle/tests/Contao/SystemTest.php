@@ -75,12 +75,6 @@ class SystemTest extends TestCase
         $ipv4 = '172.16.254.112';
         $ipv6 = '2001:0db8:85a3:0042:0000:8a2e:0370:7334';
 
-        $this->assertSame('172.16.254.112', System::anonymizeIp($ipv4));
-        $this->assertSame('2001:0db8:85a3:0042:0000:8a2e:0370:7334', System::anonymizeIp($ipv6));
-
-        // Enable IP anonymization
-        $GLOBALS['TL_CONFIG']['privacyAnonymizeIp'] = true;
-
         $this->assertSame('172.16.254.0', System::anonymizeIp($ipv4));
         $this->assertSame('2001:0db8:85a3:0042:0000:8a2e:0370:0000', System::anonymizeIp($ipv6));
     }

@@ -2,6 +2,18 @@
 
 ## Version 4.* to 4.6
 
+### Anonymize Google Analytics
+
+The "Anonymize Google Analytics" flag in the back end settings has been
+removed. IP addresses are anonymized by default in the analytics_google.html5
+template now.
+
+### Anonymize IP addresses
+
+The "Anonymize IP addresses" flag in the back end settings has been removed. It
+was used to bypass IP anonymization in the `System::anonymizeIp()` method,
+which is no longer supported.
+
 ### Maximum front end width
 
 The `$GLOBALS['TL_CONFIG']['maxImageWidth']` parameter has been deprecated. Use
