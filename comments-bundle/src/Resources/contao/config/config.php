@@ -23,3 +23,6 @@ array_insert($GLOBALS['BE_MOD']['content'], 5, array
 		'stylesheet' => 'bundles/contaocomments/comments.min.css'
 	)
 ));
+
+// Cron jobs
+$GLOBALS['TL_CRON']['daily']['purgeCommentSubscriptions'] = array('Comments', 'purgeSubscriptions');

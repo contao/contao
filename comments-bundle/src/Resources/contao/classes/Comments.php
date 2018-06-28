@@ -507,6 +507,24 @@ class Comments extends Frontend
 	}
 
 	/**
+	 * Purge subscriptions that have not been activated within 24 hours
+	 */
+	public function purgeSubscriptions()
+	{
+		$objNotify = \CommentsNotifyModel::findExpiredSubscriptions();
+
+		if ($objNotify === null)
+		{
+			return;
+		}
+
+		foreach ($objNotify as $objModel)
+		{
+			$objModel->delete();
+		}
+	}
+
+	/**
 	 * Add the subscription and send the activation mail (double opt-in)
 	 *
 	 * @param CommentsModel $objComment
