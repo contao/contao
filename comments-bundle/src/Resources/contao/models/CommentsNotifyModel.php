@@ -122,7 +122,7 @@ class CommentsNotifyModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.source=? AND $t.parent=? AND tokenConfirm=''"), array($strSource, $intParent), $arrOptions);
+		return static::findBy(array("$t.source=? AND $t.parent=? AND $t.tokenConfirm=''"), array($strSource, $intParent), $arrOptions);
 	}
 
 	/**
