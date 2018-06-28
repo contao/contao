@@ -14,6 +14,12 @@
       <trans-unit id="tl_module.nl_channels.1">
         <source>Please select one or more channels.</source>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
       </trans-unit>
@@ -38,6 +44,9 @@
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
       </trans-unit>
@@ -46,7 +55,9 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click ##link## to activate your subscription.
+
+You can unsubscribe from our newsletter at any time. If you did not subscribe yourself, please ignore this e-mail.
 </source>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">

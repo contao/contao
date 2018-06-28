@@ -35,6 +35,12 @@
 
       <?= $this->captcha ?>
 
+      <?php if ($this->text): ?>
+        <div class="widget widget-explanation">
+          <?= $this->text ?>
+        </div>
+      <?php endif; ?>
+
       <div class="widget widget-submit">
         <button type="submit" class="submit"><?= $this->submit ?></button>
       </div>

@@ -18,6 +18,7 @@ use Patchwork\Utf8;
  * @property string $nl_subscribe
  * @property array  $nl_channels
  * @property string $nl_template
+ * @property string $nl_text
  * @property bool   $nl_hideChannels
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -158,6 +159,7 @@ class ModuleSubscribe extends Module
 		$this->Template->action = \Environment::get('indexFreeRequest');
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
+		$this->Template->text = $this->nl_text;
 	}
 
 	/**
