@@ -361,7 +361,8 @@ $GLOBALS['TL_CRON'] = array
 	(
 		'purgeTempFolder' => array('Automator', 'purgeTempFolder'),
 		'purgeSearchCache' => array('Automator', 'purgeSearchCache'),
-		'generateSitemap' => array('Automator', 'generateSitemap')
+		'generateSitemap' => array('Automator', 'generateSitemap'),
+		'purgeRegistrations' => array('Automator', 'purgeRegistrations')
 	),
 	'hourly' => array(),
 	'minutely' => array()

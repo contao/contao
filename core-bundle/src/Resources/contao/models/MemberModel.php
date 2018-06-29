@@ -214,6 +214,20 @@ class MemberModel extends Model
 
 		return static::findOneBy(array("$t.email=? AND $t.activation LIKE 'RG%'"), $strEmail, $arrOptions);
 	}
+
+	/**
+	 * Find registrations that have not been activated for more than 24 hours
+	 *
+	 * @param array $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|MemberModel[]|MemberModel|null A collection of models or null if there are no expired registrations
+	 */
+	public static function findExpiredRegistrations(array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		return static::findBy(array("$t.disable='1' AND $t.dateAdded<? AND $t.activation!=''"), strtotime('-1 day'), $arrOptions);
+	}
 }
 
 class_alias(MemberModel::class, 'MemberModel');

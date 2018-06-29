@@ -18,7 +18,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'enableVersioning'            => true,
 		'onsubmit_callback' => array
 		(
-			array('tl_member', 'storeDateAdded')
+			array('tl_member', 'storeDateAdded'),
+			array('tl_member', 'removeOptInToken')
 		),
 		'sql' => array
 		(
@@ -588,6 +589,20 @@ class tl_member extends Backend
 
 		$this->Database->prepare("UPDATE tl_member SET dateAdded=? WHERE id=?")
 					   ->execute($time, $dc->id);
+	}
+
+	/**
+	 * Remove the double opt-in token if an account is activated manually
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function removeOptInToken(DataContainer $dc)
+	{
+		if ($dc->activeRecord && !$dc->activeRecord->disable && $dc->activeRecord->activation)
+		{
+			$this->Database->prepare("UPDATE tl_member SET activation='' WHERE id=?")
+						   ->execute($dc->id);
+		}
 	}
 
 	/**

@@ -199,6 +199,24 @@ class Automator extends System
 	}
 
 	/**
+	 * Purge registrations that have not been activated within 24 hours
+	 */
+	public function purgeRegistrations()
+	{
+		$objMember = \MemberModel::findExpiredRegistrations();
+
+		if ($objMember === null)
+		{
+			return;
+		}
+
+		foreach ($objMember as $objModel)
+		{
+			$objModel->delete();
+		}
+	}
+
+	/**
 	 * Remove old XML files from the share directory
 	 *
 	 * @param boolean $blnReturn If true, only return the finds and don't delete

@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Remove registrations that are not activated within 24 hours (see #1512).
  * Remove the "number of columns" field from the login module (see #1577).
  * Also use the file meta data in the download element (see #1459).
  * Purge the system log by default after 7 days (see #1512).
