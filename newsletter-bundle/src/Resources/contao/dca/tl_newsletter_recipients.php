@@ -327,7 +327,7 @@ class tl_newsletter_recipients extends Backend
 	}
 
 	/**
-	 * Reset the double opt-in data if a recipient is moved manually
+	 * Remove the double opt-in token if a recipient is activated manually
 	 *
 	 * @param DataContainer $dc
 	 */

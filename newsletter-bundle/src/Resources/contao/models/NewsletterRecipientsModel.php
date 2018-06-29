@@ -101,7 +101,7 @@ class NewsletterRecipientsModel extends Model
 	 * @param array  $arrPids    An array of newsletter channel IDs
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null A collection of models or null if there are no subscriptions
+	 * @return Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null A collection of models or null if there are no old subscriptions
 	 */
 	public static function findOldSubscriptionsByEmailAndPids($strEmail, $arrPids, array $arrOptions=array())
 	{
@@ -120,13 +120,13 @@ class NewsletterRecipientsModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null A collection of models or null if there are no subscriptions
+	 * @return Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null A collection of models or null if there are no expired subscriptions
 	 */
 	public static function findExpiredSubscriptions(array $arrOptions=array())
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.active='' AND  $t.addedOn<? AND $t.token!=''"), array(strtotime('-1 day')), $arrOptions);
+		return static::findBy(array("$t.active='' AND  $t.addedOn<? AND $t.token!=''"), strtotime('-1 day'), $arrOptions);
 	}
 }
 
