@@ -37,6 +37,7 @@ class Version460Update extends AbstractVersionUpdate
      */
     public function run(): void
     {
+        // Adjust the search module settings (see contao/core-bundle#1462)
         $this->connection->query("
             UPDATE
                 tl_module
@@ -47,6 +48,7 @@ class Version460Update extends AbstractVersionUpdate
                 type = 'search' AND rootPage != 0
         ");
 
+        // Activate the "overwriteLink" option (see contao/core-bundle#1459)
         $this->connection->query("
             ALTER TABLE
                 tl_content
@@ -63,6 +65,30 @@ class Version460Update extends AbstractVersionUpdate
                 linkTitle != '' OR titleText != ''
         ");
 
+        // Revert the incorrect version 2.8 update changes
+        $this->connection->query('
+            UPDATE
+                tl_member
+            SET
+                currentLogin = 0
+            WHERE
+                currentLogin > 0 AND currentLogin = dateAdded
+        ');
+
+        // Remove all activation tokens older than one day to prevent accidental
+        // deletion of existing member accounts
+        $stmt = $this->connection->prepare("
+            UPDATE
+                tl_member
+            SET
+                activation = ''
+            WHERE
+                activation != '' AND dateAdded < :dateAdded
+        ");
+
+        $stmt->execute([':dateAdded' => strtotime('-1 day')]);
+
+        // Update the video element settings (see contao/core-bundle#1348)
         $this->connection->query('
             ALTER TABLE
                 tl_content
