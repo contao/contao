@@ -130,13 +130,13 @@ class CommentsNotifyModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null A collection of models or null if there are no active subscriptions
+	 * @return Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null A collection of models or null if there are no expired subscriptions
 	 */
 	public static function findExpiredSubscriptions(array $arrOptions=array())
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.addedOn<? AND $t.tokenConfirm!=''"), array(strtotime('-1 day')), $arrOptions);
+		return static::findBy(array("$t.addedOn<? AND $t.tokenConfirm!=''"), strtotime('-1 day'), $arrOptions);
 	}
 }
 
