@@ -73,14 +73,16 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['copy'],
 				'href'                => 'act=copy',
-				'icon'                => 'copy.svg'
+				'icon'                => 'copy.svg',
+				'button_callback'     => array('tl_news_feed', 'copyFeed')
 			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_news_feed', 'deleteFeed')
 			),
 			'show' => array
 			(
@@ -250,6 +252,14 @@ class tl_news_feed extends Backend
 		if (!$this->User->hasAccess('create', 'newsfeedp'))
 		{
 			$GLOBALS['TL_DCA']['tl_news_feed']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_news_feed']['config']['notCreatable'] = true;
+			$GLOBALS['TL_DCA']['tl_news_feed']['config']['notCopyable'] = true;
+		}
+
+		// Check permissions to delete feeds
+		if (!$this->User->hasAccess('delete', 'newsfeedp'))
+		{
+			$GLOBALS['TL_DCA']['tl_news_feed']['config']['notDeletable'] = true;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
@@ -258,9 +268,19 @@ class tl_news_feed extends Backend
 		// Check current action
 		switch (Input::get('act'))
 		{
-			case 'create':
 			case 'select':
-				// Allow
+			case 'copyAll':
+				// Regular users cannot copy multiple news feeds, because we do not know the new IDs
+				// that will be generated and thus cannot dynamically add them to the user's permissions.
+				// We therefore remove the "copy" button in "edit multiple" mode.
+				$GLOBALS['TL_DCA']['tl_news_feed']['config']['notCopyable'] = true;
+				break;
+
+			case 'create':
+				if (!$this->User->hasAccess('create', 'newsfeedp'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news feeds.');
+				}
 				break;
 
 			case 'edit':
@@ -351,6 +371,40 @@ class tl_news_feed extends Backend
 				}
 				break;
 		}
+	}
+
+	/**
+	 * Return the copy news feed button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
+	{
+		return $this->User->hasAccess('create', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
+	}
+
+	/**
+	 * Return the delete news feed button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
+	{
+		return $this->User->hasAccess('delete', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 	/**
