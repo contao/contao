@@ -324,6 +324,12 @@ class tl_form extends Backend
 			$GLOBALS['TL_DCA']['tl_form']['config']['notCopyable'] = true;
 		}
 
+		// Check permissions to delete forms
+		if (!$this->User->hasAccess('delete', 'formp'))
+		{
+			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
+		}
+
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
