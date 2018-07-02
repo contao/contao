@@ -300,6 +300,14 @@ class tl_calendar extends Backend
 		if (!$this->User->hasAccess('create', 'calendarp'))
 		{
 			$GLOBALS['TL_DCA']['tl_calendar']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_calendar']['config']['notCreatable'] = true;
+			$GLOBALS['TL_DCA']['tl_calendar']['config']['notCopyable'] = true;
+		}
+
+		// Check permissions to delete calendars
+		if (!$this->User->hasAccess('delete', 'calendarp'))
+		{
+			$GLOBALS['TL_DCA']['tl_calendar']['config']['notDeletable'] = true;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
@@ -308,9 +316,19 @@ class tl_calendar extends Backend
 		// Check current action
 		switch (Input::get('act'))
 		{
-			case 'create':
 			case 'select':
-				// Allow
+			case 'copyAll':
+				// Regular users cannot copy multiple calendars, because we do not know the new IDs
+				// that will be generated and thus cannot dynamically add them to the user's permissions.
+				// We therefore remove the "copy" button in "edit multiple" mode.
+				$GLOBALS['TL_DCA']['tl_calendar']['config']['notCopyable'] = true;
+				break;
+
+			case 'create':
+				if (!$this->User->hasAccess('create', 'calendarp'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create calendars.');
+				}
 				break;
 
 			case 'edit':
@@ -469,7 +487,7 @@ class tl_calendar extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || $this->User->hasAccess('create', 'calendarfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+		return ($this->User->isAdmin || !empty($this->User->calendarfeeds) || !empty($this->User->calendarfeedp)) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
 
 	/**
