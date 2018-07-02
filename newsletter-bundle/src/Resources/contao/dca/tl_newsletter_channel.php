@@ -219,6 +219,14 @@ class tl_newsletter_channel extends Backend
 		if (!$this->User->hasAccess('create', 'newsletterp'))
 		{
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notCreatable'] = true;
+			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notCopyable'] = true;
+		}
+
+		// Check permissions to delete channels
+		if (!$this->User->hasAccess('delete', 'newsletterp'))
+		{
+			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notDeletable'] = true;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
@@ -227,9 +235,19 @@ class tl_newsletter_channel extends Backend
 		// Check current action
 		switch (Input::get('act'))
 		{
-			case 'create':
 			case 'select':
-				// Allow
+			case 'copyAll':
+				// Regular users cannot copy multiple newsletter channels, because we do not know the new
+				// IDs that will be generated and thus cannot dynamically add them to the user's permissions.
+				// We therefore remove the "copy" button in "edit multiple" mode.
+				$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notCopyable'] = true;
+				break;
+
+			case 'create':
+				if (!$this->User->hasAccess('create', 'newsletterp'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletter channels.');
+				}
 				break;
 
 			case 'edit':
