@@ -422,7 +422,13 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
@@ -431,7 +437,11 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
       </trans-unit>
       <trans-unit id="tl_module.internal">
