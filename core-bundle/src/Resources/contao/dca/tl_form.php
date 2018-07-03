@@ -22,6 +22,14 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			array('tl_form', 'checkPermission')
 		),
+		'oncreate_callback' => array
+		(
+			array('tl_form', 'adjustPermissions')
+		),
+		'oncopy_callback' => array
+		(
+			array('tl_form', 'adjustPermissions')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -337,11 +345,7 @@ class tl_form extends Backend
 		switch (Input::get('act'))
 		{
 			case 'select':
-			case 'copyAll':
-				// Regular users cannot copy multiple forms, because we do not know the new IDs that
-				// will be generated and thus cannot dynamically add them to the user's permissions.
-				// We therefore remove the "copy" button in "edit multiple" mode.
-				$GLOBALS['TL_DCA']['tl_form']['config']['notCopyable'] = true;
+				// Allow
 				break;
 
 			case 'create':
@@ -352,62 +356,6 @@ class tl_form extends Backend
 				break;
 
 			case 'edit':
-				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
-				{
-					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-					$objSessionBag = $objSession->getBag('contao_backend');
-
-					$arrNew = $objSessionBag->get('new_records');
-
-					if (\is_array($arrNew['tl_form']) && \in_array(Input::get('id'), $arrNew['tl_form']))
-					{
-						// Add the permissions on group level
-						if ($this->User->inherit != 'custom')
-						{
-							$objGroup = $this->Database->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
-
-							while ($objGroup->next())
-							{
-								$arrFormp = StringUtil::deserialize($objGroup->formp);
-
-								if (\is_array($arrFormp) && \in_array('create', $arrFormp))
-								{
-									$arrForms = StringUtil::deserialize($objGroup->forms, true);
-									$arrForms[] = Input::get('id');
-
-									$this->Database->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")
-												   ->execute(serialize($arrForms), $objGroup->id);
-								}
-							}
-						}
-
-						// Add the permissions on user level
-						if ($this->User->inherit != 'group')
-						{
-							$objUser = $this->Database->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
-													   ->limit(1)
-													   ->execute($this->User->id);
-
-							$arrFormp = StringUtil::deserialize($objUser->formp);
-
-							if (\is_array($arrFormp) && \in_array('create', $arrFormp))
-							{
-								$arrForms = StringUtil::deserialize($objUser->forms, true);
-								$arrForms[] = Input::get('id');
-
-								$this->Database->prepare("UPDATE tl_user SET forms=? WHERE id=?")
-											   ->execute(serialize($arrForms), $this->User->id);
-							}
-						}
-
-						// Add the new element to the user object
-						$root[] = Input::get('id');
-						$this->User->forms = $root;
-					}
-				}
-				// No break;
-
 			case 'copy':
 			case 'delete':
 			case 'show':
@@ -420,6 +368,7 @@ class tl_form extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
+			case 'copyAll':
 				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'formp'))
 				{
@@ -438,6 +387,92 @@ class tl_form extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' forms.');
 				}
 				break;
+		}
+	}
+
+	/**
+	 * Add the new form to the permissions
+	 *
+	 * @param $insertId
+	 */
+	public function adjustPermissions($insertId)
+	{
+		// The oncreate_callback passes $insertId as second argument
+		if (func_num_args() == 4)
+		{
+			$insertId = func_get_arg(1);
+		}
+
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		// Set root IDs
+		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		{
+			$root = array(0);
+		}
+		else
+		{
+			$root = $this->User->forms;
+		}
+
+		// The form is enabled already
+		if (\in_array($insertId, $root))
+		{
+			return;
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+
+		$arrNew = $objSessionBag->get('new_records');
+
+		if (\is_array($arrNew['tl_form']) && \in_array($insertId, $arrNew['tl_form']))
+		{
+			// Add the permissions on group level
+			if ($this->User->inherit != 'custom')
+			{
+				$objGroup = $this->Database->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+
+				while ($objGroup->next())
+				{
+					$arrFormp = StringUtil::deserialize($objGroup->formp);
+
+					if (\is_array($arrFormp) && \in_array('create', $arrFormp))
+					{
+						$arrForms = StringUtil::deserialize($objGroup->forms, true);
+						$arrForms[] = $insertId;
+
+						$this->Database->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")
+									   ->execute(serialize($arrForms), $objGroup->id);
+					}
+				}
+			}
+
+			// Add the permissions on user level
+			if ($this->User->inherit != 'group')
+			{
+				$objUser = $this->Database->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
+										   ->limit(1)
+										   ->execute($this->User->id);
+
+				$arrFormp = StringUtil::deserialize($objUser->formp);
+
+				if (\is_array($arrFormp) && \in_array('create', $arrFormp))
+				{
+					$arrForms = StringUtil::deserialize($objUser->forms, true);
+					$arrForms[] = $insertId;
+
+					$this->Database->prepare("UPDATE tl_user SET forms=? WHERE id=?")
+								   ->execute(serialize($arrForms), $this->User->id);
+				}
+			}
+
+			// Add the new element to the user object
+			$root[] = $insertId;
+			$this->User->forms = $root;
 		}
 	}
 

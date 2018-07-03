@@ -989,12 +989,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$insertID = $objInsertStmt->insertId;
 
 				// Save the new record in the session
-				if (!$blnDoNotRedirect)
-				{
-					$new_records = $objSessionBag->get('new_records');
-					$new_records[$this->strTable][] = $insertID;
-					$objSessionBag->set('new_records', $new_records);
-				}
+				$new_records = $objSessionBag->get('new_records');
+				$new_records[$this->strTable][] = $insertID;
+				$objSessionBag->set('new_records', $new_records);
 
 				// Duplicate the records of the child table
 				$this->copyChilds($this->strTable, $insertID, $this->intId, $insertID);
