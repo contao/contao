@@ -398,79 +398,6 @@ a.tl_submit {
 	display:inline-block;
 	position:relative;
 	z-index:1;
-	margin-left:1px;
-}
-.split-button ul {
-	position:absolute;
-	right:0;
-	bottom:20px;
-	min-width:100%;
-	background:#fff;
-	border:1px solid #aaa;
-	border-radius:2px;
-	box-sizing:border-box;
-	padding:3px 0;
-	margin-bottom:1em;
-}
-.split-button ul button {
-	border:0;
-	width:100%;
-	text-align:left;
-	white-space:nowrap;
-}
-.split-button ul .tl_submit {
-	margin-top:0;
-	margin-bottom:0;
-	background:#fff;
-}
-.split-button ul .tl_submit:hover {
-	background:#f3f3f3;
-}
-.split-button ul:before {
-	content:"";
-	display:block;
-	height:0;
-	width:0;
-	position:absolute;
-	right:4px;
-	bottom:-12px;
-	z-index:89;
-	border:6px inset transparent;
-	border-top:6px solid #fff;
-}
-.split-button ul:after {
-	content:"";
-	display:block;
-	height:0;
-	width:0;
-	position:absolute;
-	right:3px;
-	bottom:-14px;
-	z-index:88;
-	border:7px inset transparent;
-	border-top:7px solid #aaa;
-}
-.split-button button img {
-	vertical-align:0;
-}
-.split-button > button[type="submit"] {
-	position:relative;
-	border-radius:2px 0 0 2px;
-}
-.split-button > button[type="button"] {
-	padding:7px 4px;
-	background:#fff;
-	border:1px solid #aaa;
-	border-left:0;
-	border-radius:0 2px 2px 0;
-	box-sizing:border-box;
-	transition:background .2s ease;
-}
-.split-button > button[type="button"].active,.split-button > button[type="button"]:hover {
-	background:#f6f6f6;
-}
-.split-button > button[type="button"]:focus {
-	outline:none;
 }
 
 /* Placeholders */
@@ -575,6 +502,24 @@ a.tl_submit {
 	background-color:#fffce1 !important;
 }
 
+@media (min-width:768px) {
+	#sbtog {
+		display:none;
+	}
+	.split-button ul {
+		display:inline-flex;
+		clip:initial;
+		height:auto;
+		margin:0 0 0 -4px;
+		overflow:initial;
+		position:initial;
+		width:auto;
+	}
+	.split-button li {
+		margin-left:4px;
+	}
+}
+
 /* Handheld */
 @media (max-width:767px) {
 	.w50 {
@@ -594,5 +539,77 @@ a.tl_submit {
 	.tl_checkbox_single_container label {
 		position:relative;
 		top:1px;
+	}
+	.split-button ul {
+		position:absolute;
+		right:0;
+		bottom:20px;
+		min-width:100%;
+		background:#fff;
+		border:1px solid #aaa;
+		border-radius:2px;
+		box-sizing:border-box;
+		padding:3px 0;
+		margin-bottom:1em;
+	}
+	.split-button ul button {
+		border:0;
+		width:100%;
+		text-align:left;
+		white-space:nowrap;
+	}
+	.split-button ul .tl_submit {
+		margin-top:0;
+		margin-bottom:0;
+		background:#fff;
+	}
+	.split-button ul .tl_submit:hover {
+		background:#f3f3f3;
+	}
+	.split-button ul:before {
+		content:"";
+		display:block;
+		height:0;
+		width:0;
+		position:absolute;
+		right:4px;
+		bottom:-12px;
+		z-index:89;
+		border:6px inset transparent;
+		border-top:6px solid #fff;
+	}
+	.split-button ul:after {
+		content:"";
+		display:block;
+		height:0;
+		width:0;
+		position:absolute;
+		right:3px;
+		bottom:-14px;
+		z-index:88;
+		border:7px inset transparent;
+		border-top:7px solid #aaa;
+	}
+	.split-button button img {
+		vertical-align:0;
+	}
+	.split-button > button[type="submit"] {
+		position:relative;
+		border-radius:2px 0 0 2px;
+	}
+	.split-button > button[type="button"] {
+		padding:7px 4px;
+		background:#fff;
+		border:1px solid #aaa;
+		border-left:0;
+		border-radius:0 2px 2px 0;
+		box-sizing:border-box;
+		transition:background .2s ease;
+	}
+	.split-button > button[type="button"].active,.split-button > button[type="button"]:hover {
+		background:#f6f6f6;
+	}
+	.split-button > button[type="button"]:focus {
+		outline:none;
 	}
 }

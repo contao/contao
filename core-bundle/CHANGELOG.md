@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not stack the buttons if the screen is wide enough (see contao/core#8816).
  * Remove registrations that are not activated within 24 hours (see #1512).
  * Remove the "number of columns" field from the login module (see #1577).
  * Also use the file meta data in the download element (see #1459).
