@@ -23,6 +23,14 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			array('tl_news_archive', 'checkPermission'),
 			array('tl_news_archive', 'generateFeed')
 		),
+		'oncreate_callback' => array
+		(
+			array('tl_news_archive', 'adjustPermissions')
+		),
+		'oncopy_callback' => array
+		(
+			array('tl_news_archive', 'adjustPermissions')
+		),
 		'onsubmit_callback' => array
 		(
 			array('tl_news_archive', 'scheduleUpdate')
@@ -317,11 +325,7 @@ class tl_news_archive extends Backend
 		switch (Input::get('act'))
 		{
 			case 'select':
-			case 'copyAll':
-				// Regular users cannot copy multiple news archives, because we do not know the new IDs
-				// that will be generated and thus cannot dynamically add them to the user's permissions.
-				// We therefore remove the "copy" button in "edit multiple" mode.
-				$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCopyable'] = true;
+				// Allow
 				break;
 
 			case 'create':
@@ -332,62 +336,6 @@ class tl_news_archive extends Backend
 				break;
 
 			case 'edit':
-				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
-				{
-					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-					$objSessionBag = $objSession->getBag('contao_backend');
-
-					$arrNew = $objSessionBag->get('new_records');
-
-					if (\is_array($arrNew['tl_news_archive']) && \in_array(Input::get('id'), $arrNew['tl_news_archive']))
-					{
-						// Add the permissions on group level
-						if ($this->User->inherit != 'custom')
-						{
-							$objGroup = $this->Database->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
-
-							while ($objGroup->next())
-							{
-								$arrNewp = StringUtil::deserialize($objGroup->newp);
-
-								if (\is_array($arrNewp) && \in_array('create', $arrNewp))
-								{
-									$arrNews = StringUtil::deserialize($objGroup->news, true);
-									$arrNews[] = Input::get('id');
-
-									$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
-												   ->execute(serialize($arrNews), $objGroup->id);
-								}
-							}
-						}
-
-						// Add the permissions on user level
-						if ($this->User->inherit != 'group')
-						{
-							$objUser = $this->Database->prepare("SELECT news, newp FROM tl_user WHERE id=?")
-													   ->limit(1)
-													   ->execute($this->User->id);
-
-							$arrNewp = StringUtil::deserialize($objUser->newp);
-
-							if (\is_array($arrNewp) && \in_array('create', $arrNewp))
-							{
-								$arrNews = StringUtil::deserialize($objUser->news, true);
-								$arrNews[] = Input::get('id');
-
-								$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
-											   ->execute(serialize($arrNews), $this->User->id);
-							}
-						}
-
-						// Add the new element to the user object
-						$root[] = Input::get('id');
-						$this->User->news = $root;
-					}
-				}
-				// No break;
-
 			case 'copy':
 			case 'delete':
 			case 'show':
@@ -400,6 +348,7 @@ class tl_news_archive extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
+			case 'copyAll':
 				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newp'))
 				{
@@ -418,6 +367,92 @@ class tl_news_archive extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archives.');
 				}
 				break;
+		}
+	}
+
+	/**
+	 * Add the new archive to the permissions
+	 *
+	 * @param $insertId
+	 */
+	public function adjustPermissions($insertId)
+	{
+		// The oncreate_callback passes $insertId as second argument
+		if (func_num_args() == 4)
+		{
+			$insertId = func_get_arg(1);
+		}
+
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		// Set root IDs
+		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		{
+			$root = array(0);
+		}
+		else
+		{
+			$root = $this->User->forms;
+		}
+
+		// The archive is enabled already
+		if (\in_array($insertId, $root))
+		{
+			return;
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+
+		$arrNew = $objSessionBag->get('new_records');
+
+		if (\is_array($arrNew['tl_news_archive']) && \in_array($insertId, $arrNew['tl_news_archive']))
+		{
+			// Add the permissions on group level
+			if ($this->User->inherit != 'custom')
+			{
+				$objGroup = $this->Database->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+
+				while ($objGroup->next())
+				{
+					$arrNewp = StringUtil::deserialize($objGroup->newp);
+
+					if (\is_array($arrNewp) && \in_array('create', $arrNewp))
+					{
+						$arrNews = StringUtil::deserialize($objGroup->news, true);
+						$arrNews[] = $insertId;
+
+						$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
+									   ->execute(serialize($arrNews), $objGroup->id);
+					}
+				}
+			}
+
+			// Add the permissions on user level
+			if ($this->User->inherit != 'group')
+			{
+				$objUser = $this->Database->prepare("SELECT news, newp FROM tl_user WHERE id=?")
+										   ->limit(1)
+										   ->execute($this->User->id);
+
+				$arrNewp = StringUtil::deserialize($objUser->newp);
+
+				if (\is_array($arrNewp) && \in_array('create', $arrNewp))
+				{
+					$arrNews = StringUtil::deserialize($objUser->news, true);
+					$arrNews[] = $insertId;
+
+					$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
+								   ->execute(serialize($arrNews), $this->User->id);
+				}
+			}
+
+			// Add the new element to the user object
+			$root[] = $insertId;
+			$this->User->news = $root;
 		}
 	}
 
