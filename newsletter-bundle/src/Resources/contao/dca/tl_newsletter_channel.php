@@ -22,6 +22,14 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		(
 			array('tl_newsletter_channel', 'checkPermission')
 		),
+		'oncreate_callback' => array
+		(
+			array('tl_newsletter_channel', 'adjustPermissions')
+		),
+		'oncopy_callback' => array
+		(
+			array('tl_newsletter_channel', 'adjustPermissions')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -236,11 +244,7 @@ class tl_newsletter_channel extends Backend
 		switch (Input::get('act'))
 		{
 			case 'select':
-			case 'copyAll':
-				// Regular users cannot copy multiple newsletter channels, because we do not know the new
-				// IDs that will be generated and thus cannot dynamically add them to the user's permissions.
-				// We therefore remove the "copy" button in "edit multiple" mode.
-				$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notCopyable'] = true;
+				// Allow
 				break;
 
 			case 'create':
@@ -251,62 +255,6 @@ class tl_newsletter_channel extends Backend
 				break;
 
 			case 'edit':
-				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
-				{
-					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-					$objSessionBag = $objSession->getBag('contao_backend');
-
-					$arrNew = $objSessionBag->get('new_records');
-
-					if (\is_array($arrNew['tl_newsletter_channel']) && \in_array(Input::get('id'), $arrNew['tl_newsletter_channel']))
-					{
-						// Add the permissions on group level
-						if ($this->User->inherit != 'custom')
-						{
-							$objGroup = $this->Database->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
-
-							while ($objGroup->next())
-							{
-								$arrNewsletterp = StringUtil::deserialize($objGroup->newsletterp);
-
-								if (\is_array($arrNewsletterp) && \in_array('create', $arrNewsletterp))
-								{
-									$arrNewsletters = StringUtil::deserialize($objGroup->newsletters, true);
-									$arrNewsletters[] = Input::get('id');
-
-									$this->Database->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")
-												   ->execute(serialize($arrNewsletters), $objGroup->id);
-								}
-							}
-						}
-
-						// Add the permissions on user level
-						if ($this->User->inherit != 'group')
-						{
-							$objUser = $this->Database->prepare("SELECT newsletters, newsletterp FROM tl_user WHERE id=?")
-													   ->limit(1)
-													   ->execute($this->User->id);
-
-							$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
-
-							if (\is_array($arrNewsletterp) && \in_array('create', $arrNewsletterp))
-							{
-								$arrNewsletters = StringUtil::deserialize($objUser->newsletters, true);
-								$arrNewsletters[] = Input::get('id');
-
-								$this->Database->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")
-											   ->execute(serialize($arrNewsletters), $this->User->id);
-							}
-						}
-
-						// Add the new element to the user object
-						$root[] = Input::get('id');
-						$this->User->newsletter = $root;
-					}
-				}
-				// No break;
-
 			case 'copy':
 			case 'delete':
 			case 'show':
@@ -319,6 +267,7 @@ class tl_newsletter_channel extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
+			case 'copyAll':
 				$session = $objSession->all();
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsletterp'))
 				{
@@ -337,6 +286,92 @@ class tl_newsletter_channel extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channels.');
 				}
 				break;
+		}
+	}
+
+	/**
+	 * Add the new channel to the permissions
+	 *
+	 * @param $insertId
+	 */
+	public function adjustPermissions($insertId)
+	{
+		// The oncreate_callback passes $insertId as second argument
+		if (func_num_args() == 4)
+		{
+			$insertId = func_get_arg(1);
+		}
+
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		// Set root IDs
+		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		{
+			$root = array(0);
+		}
+		else
+		{
+			$root = $this->User->forms;
+		}
+
+		// The channel is enabled already
+		if (\in_array($insertId, $root))
+		{
+			return;
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+
+		$arrNew = $objSessionBag->get('new_records');
+
+		if (\is_array($arrNew['tl_newsletter_channel']) && \in_array($insertId, $arrNew['tl_newsletter_channel']))
+		{
+			// Add the permissions on group level
+			if ($this->User->inherit != 'custom')
+			{
+				$objGroup = $this->Database->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+
+				while ($objGroup->next())
+				{
+					$arrNewsletterp = StringUtil::deserialize($objGroup->newsletterp);
+
+					if (\is_array($arrNewsletterp) && \in_array('create', $arrNewsletterp))
+					{
+						$arrNewsletters = StringUtil::deserialize($objGroup->newsletters, true);
+						$arrNewsletters[] = $insertId;
+
+						$this->Database->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")
+									   ->execute(serialize($arrNewsletters), $objGroup->id);
+					}
+				}
+			}
+
+			// Add the permissions on user level
+			if ($this->User->inherit != 'group')
+			{
+				$objUser = $this->Database->prepare("SELECT newsletters, newsletterp FROM tl_user WHERE id=?")
+										   ->limit(1)
+										   ->execute($this->User->id);
+
+				$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
+
+				if (\is_array($arrNewsletterp) && \in_array('create', $arrNewsletterp))
+				{
+					$arrNewsletters = StringUtil::deserialize($objUser->newsletters, true);
+					$arrNewsletters[] = $insertId;
+
+					$this->Database->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")
+								   ->execute(serialize($arrNewsletters), $this->User->id);
+				}
+			}
+
+			// Add the new element to the user object
+			$root[] = $insertId;
+			$this->User->newsletter = $root;
 		}
 	}
 
