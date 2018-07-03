@@ -448,6 +448,7 @@ services:
         class: Ausi\SlugGenerator\SlugGenerator
         arguments:
             - { validChars: "0-9a-z" }
+        public: true
 
     contao.slug.valid_characters:
         class: Contao\CoreBundle\Slug\ValidCharacters
