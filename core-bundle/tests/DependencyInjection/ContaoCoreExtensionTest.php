@@ -1489,7 +1489,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.slug.generator');
 
         $this->assertSame(SlugGenerator::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame(['validChars' => '0-9a-z'], $definition->getArgument(0));
     }
 
