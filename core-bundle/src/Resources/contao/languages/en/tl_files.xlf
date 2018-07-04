@@ -92,6 +92,12 @@
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
       </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+      </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
       </trans-unit>
