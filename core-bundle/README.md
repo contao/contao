@@ -182,12 +182,8 @@ security:
 Edit your `app/config/config.yml` file and add the following:
 
 ```yml
-# Contao configuration
+# Contao configuration (all parameters are optional)
 contao:
-    # Required parameters
-    prepend_locale: "%prepend_locale%"
-
-    # Optional parameters
     web_dir:                  "%kernel.project_dir%/web"
     encryption_key:           "%kernel.secret%"
     url_suffix:               .html
@@ -195,6 +191,7 @@ contao:
     csrf_token_name:          contao_csrf_token
     pretty_error_screens:     true
     error_level:              8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
+    prepend_locale:           false
     image:
         bypass_cache:         false
         target_dir:           "%kernel.project_dir%/assets/images"
