@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use AppBundle\AppBundle;
+use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
@@ -89,6 +90,30 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->mockKernel($this->getTempDir());
 
         $this->assertSame($kernel->getProjectDir().'/var/logs', $kernel->getLogDir());
+    }
+
+    public function testSetsDisabledPackagesInPluginLoader(): void
+    {
+        $config = $this->createMock(ManagerConfig::class);
+
+        $config
+            ->expects($this->once())
+            ->method('all')
+            ->willReturn([
+                'contao_manager' => [
+                    'disabled_packages' => ['foo/bar'],
+                ],
+            ])
+        ;
+
+        ContaoKernel::setProjectDir($this->getTempDir());
+
+        $kernel = new ContaoKernel('prod', true);
+        $kernel->setManagerConfig($config);
+
+        $pluginLoader = $kernel->getPluginLoader();
+
+        $this->assertSame(['foo/bar'], $pluginLoader->getDisabledPackages());
     }
 
     /**

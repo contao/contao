@@ -10,9 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\Api\Command;
+namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
 
-use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
+use Contao\ManagerBundle\Api\Application;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\SetDotEnvCommand;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,7 +50,15 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->filesystem = new Filesystem();
         $this->tempdir = $this->getTempDir();
         $this->tempfile = $this->tempdir.'/.env';
-        $this->command = new SetDotEnvCommand($this->tempdir);
+
+        $application = $this->createMock(Application::class);
+
+        $application
+            ->method('getProjectDir')
+            ->willReturn($this->tempdir)
+        ;
+
+        $this->command = new SetDotEnvCommand($application);
     }
 
     /**
@@ -64,7 +73,7 @@ class SetDotEnvCommandTest extends ContaoTestCase
 
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\Command\SetDotEnvCommand', $this->command);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\ApiCommand\SetDotEnvCommand', $this->command);
     }
 
     public function testHasCorrectNameAndArguments(): void

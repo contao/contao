@@ -10,10 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\Api\Command;
+namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
 
-use Contao\ManagerBundle\Api\Command\SetConfigCommand;
+use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Api\ManagerConfig;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\SetConfigCommand;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -38,12 +39,20 @@ class SetConfigCommandTest extends TestCase
         parent::setUp();
 
         $this->config = $this->createMock(ManagerConfig::class);
-        $this->command = new SetConfigCommand($this->config);
+
+        $application = $this->createMock(Application::class);
+
+        $application
+            ->method('getManagerConfig')
+            ->willReturn($this->config)
+        ;
+
+        $this->command = new SetConfigCommand($application);
     }
 
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\Command\SetConfigCommand', $this->command);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\ApiCommand\SetConfigCommand', $this->command);
     }
 
     public function testHasCorrectNameAndArguments(): void
@@ -69,11 +78,10 @@ class SetConfigCommandTest extends TestCase
 
     public function testThrowsExceptionWhenJsonIsInvalid(): void
     {
-        $commandTester = new CommandTester($this->command);
-
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid JSON:');
 
+        $commandTester = new CommandTester($this->command);
         $commandTester->execute(['json' => 'foobar']);
 
         $this->assertSame(0, $commandTester->getStatusCode());

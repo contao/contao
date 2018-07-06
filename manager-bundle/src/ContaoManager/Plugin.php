@@ -12,7 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\RemoveDotEnvCommand;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\SetConfigCommand;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\SetDotEnvCommand;
 use Contao\ManagerBundle\ContaoManagerBundle;
+use Contao\ManagerPlugin\Api\ApiPluginInterface;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -45,7 +51,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
     /**
      * @var string|null
@@ -224,5 +230,37 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApiFeatures(): array
+    {
+        return [
+            'dot-env' => [
+                'APP_DEV_ACCESSKEY',
+                'TRUSTED_PROXIES',
+                'TRUSTED_HOSTS',
+                'DISABLE_HTTP_CACHE',
+            ],
+            'config' => [
+                'disable-packages',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApiCommands(): array
+    {
+        return [
+            GetConfigCommand::class,
+            SetConfigCommand::class,
+            GetDotEnvCommand::class,
+            SetDotEnvCommand::class,
+            RemoveDotEnvCommand::class,
+        ];
     }
 }

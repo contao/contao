@@ -10,8 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Api\Command;
+namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
+use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,11 +29,11 @@ class SetConfigCommand extends Command
     /**
      * @param ManagerConfig $managerConfig
      */
-    public function __construct(ManagerConfig $managerConfig)
+    public function __construct(Application $application)
     {
         parent::__construct();
 
-        $this->managerConfig = $managerConfig;
+        $this->managerConfig = $application->getManagerConfig();
     }
 
     /**

@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Api;
 
-use Contao\ManagerBundle\Api\Command\GetConfigCommand;
-use Contao\ManagerBundle\Api\Command\GetDotEnvCommand;
-use Contao\ManagerBundle\Api\Command\RemoveDotEnvCommand;
-use Contao\ManagerBundle\Api\Command\SetConfigCommand;
-use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\VersionCommand;
+use Contao\ManagerPlugin\Api\ApiPluginInterface;
+use Contao\ManagerPlugin\PluginLoader;
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,6 +32,11 @@ class Application extends BaseApplication
     private $projectDir;
 
     /**
+     * @var PluginLoader
+     */
+    private $pluginLoader;
+
+    /**
      * @var ManagerConfig
      */
     private $managerConfig;
@@ -46,6 +49,48 @@ class Application extends BaseApplication
         $this->projectDir = realpath($projectDir) ?: $projectDir;
 
         parent::__construct('contao-api', self::VERSION);
+    }
+
+    /**
+     * Gets the project directory (Contao root).
+     *
+     * @return string
+     */
+    public function getProjectDir(): string
+    {
+        return $this->projectDir;
+    }
+
+    /**
+     * Gets the plugin loader.
+     *
+     * @return PluginLoader
+     */
+    public function getPluginLoader(): PluginLoader
+    {
+        if (null === $this->pluginLoader) {
+            $this->pluginLoader = new PluginLoader();
+
+            $config = $this->getManagerConfig()->all();
+
+            if (isset($config['contao_manager']['disabled_packages'])
+                && \is_array($config['contao_manager']['disabled_packages'])
+            ) {
+                $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
+            }
+        }
+
+        return $this->pluginLoader;
+    }
+
+    /**
+     * Sets the plugin loader.
+     *
+     * @param PluginLoader $pluginLoader
+     */
+    public function setPluginLoader(PluginLoader $pluginLoader): void
+    {
+        $this->pluginLoader = $pluginLoader;
     }
 
     /**
@@ -97,13 +142,18 @@ class Application extends BaseApplication
     protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();
+        $commands[] = new VersionCommand($this);
 
-        $commands[] = new VersionCommand();
-        $commands[] = new GetConfigCommand($this->getManagerConfig());
-        $commands[] = new SetConfigCommand($this->getManagerConfig());
-        $commands[] = new GetDotEnvCommand($this->projectDir);
-        $commands[] = new SetDotEnvCommand($this->projectDir);
-        $commands[] = new RemoveDotEnvCommand($this->projectDir);
+        /** @var ApiPluginInterface $plugin */
+        foreach ($this->getPluginLoader()->getInstancesOf(ApiPluginInterface::class) as $plugin) {
+            foreach ($plugin->getApiCommands() as $class) {
+                if (!is_a($class, Command::class, true)) {
+                    throw new \RuntimeException(sprintf('"%s" is not a console command.', $class));
+                }
+
+                $commands[] = new $class($this);
+            }
+        }
 
         return $commands;
     }

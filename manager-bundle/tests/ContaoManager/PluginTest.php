@@ -19,6 +19,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -33,6 +35,7 @@ class PluginTest extends ContaoTestCase
         $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $plugin);
         $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $plugin);
         $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $plugin);
+        $this->assertInstanceOf('Contao\ManagerPlugin\Api\ApiPluginInterface', $plugin);
         $this->assertTrue(method_exists($plugin, 'autoloadModules'));
     }
 
@@ -179,5 +182,39 @@ class PluginTest extends ContaoTestCase
         $this->assertCount(3, $routes);
         $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
         $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
+    }
+
+    public function testReturnsApiCommands(): void
+    {
+        $files = Finder::create()
+            ->name('*.php')
+            ->in(__DIR__.'/../../src/ContaoManager/ApiCommand')
+        ;
+
+        /** @var SplFileInfo $file */
+        foreach ($files as $file) {
+            $this->assertContains(
+                'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
+                (new Plugin())->getApiCommands()
+            );
+        }
+    }
+
+    public function testReturnsApiFeatures(): void
+    {
+        $this->assertSame(
+            [
+                'dot-env' => [
+                    'APP_DEV_ACCESSKEY',
+                    'TRUSTED_PROXIES',
+                    'TRUSTED_HOSTS',
+                    'DISABLE_HTTP_CACHE',
+                ],
+                'config' => [
+                    'disable-packages',
+                ],
+            ],
+            (new Plugin())->getApiFeatures()
+        );
     }
 }

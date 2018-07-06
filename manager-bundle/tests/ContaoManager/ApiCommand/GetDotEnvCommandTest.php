@@ -10,9 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\Api\Command;
+namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
 
-use Contao\ManagerBundle\Api\Command\GetDotEnvCommand;
+use Contao\ManagerBundle\Api\Application;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,7 +50,15 @@ class GetDotEnvCommandTest extends ContaoTestCase
         $this->filesystem = new Filesystem();
         $this->tempdir = $this->getTempDir();
         $this->tempfile = $this->tempdir.'/.env';
-        $this->command = new GetDotEnvCommand($this->tempdir);
+
+        $application = $this->createMock(Application::class);
+
+        $application
+            ->method('getProjectDir')
+            ->willReturn($this->tempdir)
+        ;
+
+        $this->command = new GetDotEnvCommand($application);
     }
 
     /**
@@ -64,14 +73,14 @@ class GetDotEnvCommandTest extends ContaoTestCase
 
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\Command\GetDotEnvCommand', $this->command);
+        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand', $this->command);
     }
 
     public function testHasCorrectNameAndArguments(): void
     {
         $this->assertSame('dot-env:get', $this->command->getName());
         $this->assertTrue($this->command->getDefinition()->hasArgument('key'));
-        $this->assertTrue($this->command->getDefinition()->getArgument('key')->isRequired());
+        $this->assertFalse($this->command->getDefinition()->getArgument('key')->isRequired());
     }
 
     public function testReadsDotEnvFile(): void
@@ -102,6 +111,17 @@ class GetDotEnvCommandTest extends ContaoTestCase
         $tester->execute(['key' => 'FOO']);
 
         $this->assertSame('', $tester->getDisplay());
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function testOutputsAllKeysIfNoArgumentIsGiven(): void
+    {
+        $this->filesystem->dumpFile($this->tempfile, "FOO=BAR\nBAR=BAZ");
+
+        $tester = new CommandTester($this->command);
+        $tester->execute([]);
+
+        $this->assertSame('{"FOO":"BAR","BAR":"BAZ"}', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
     }
 }
