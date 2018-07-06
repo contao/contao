@@ -24,10 +24,6 @@ framework:
         handler_id: ~
     fragments: { path: /_fragment }
 
-# Contao configuration
-contao:
-    prepend_locale: "%prepend_locale%"
-
 # Twig configuration
 twig:
     debug: "%kernel.debug%"

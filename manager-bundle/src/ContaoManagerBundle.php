@@ -12,8 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle;
 
+use Contao\ManagerBundle\DependencyInjection\Compiler\SwiftMailerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoManagerBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new SwiftMailerPass());
+    }
 }

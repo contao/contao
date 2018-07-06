@@ -191,12 +191,93 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * {@inheritdoc}
      */
+    public function getApiFeatures(): array
+    {
+        return [
+            'dot-env' => [
+                'APP_DEV_ACCESSKEY',
+                'TRUSTED_PROXIES',
+                'TRUSTED_HOSTS',
+                'DISABLE_HTTP_CACHE',
+            ],
+            'config' => [
+                'disable-packages',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApiCommands(): array
+    {
+        return [
+            GetConfigCommand::class,
+            SetConfigCommand::class,
+            GetDotEnvCommand::class,
+            SetDotEnvCommand::class,
+            RemoveDotEnvCommand::class,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
-        if ('doctrine' !== $extensionName) {
+        switch ($extensionName) {
+            case 'contao':
+                return $this->handlePrependLocale($extensionConfigs, $container);
+
+            case 'doctrine':
+                return $this->addDefaultServerVersion($extensionConfigs, $container);
+
+            default:
+                return $extensionConfigs;
+        }
+    }
+
+    /**
+     * Adds backwards compatibility for the %prepend_locale% parameter.
+     *
+     * @param array            $extensionConfigs
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function handlePrependLocale(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        if (!$container->hasParameter('prepend_locale')) {
             return $extensionConfigs;
         }
 
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['contao']['prepend_locale'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml or config_prod.yml instead.', E_USER_DEPRECATED);
+
+        $extensionConfigs[] = [
+            'contao' => [
+                'prepend_locale' => '%prepend_locale%',
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Adds the database server version to the Doctrine DBAL configuration.
+     *
+     * @param array            $extensionConfigs
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
+    {
         $params = [];
 
         foreach ($extensionConfigs as $extensionConfig) {
@@ -230,37 +311,5 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getApiFeatures(): array
-    {
-        return [
-            'dot-env' => [
-                'APP_DEV_ACCESSKEY',
-                'TRUSTED_PROXIES',
-                'TRUSTED_HOSTS',
-                'DISABLE_HTTP_CACHE',
-            ],
-            'config' => [
-                'disable-packages',
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getApiCommands(): array
-    {
-        return [
-            GetConfigCommand::class,
-            SetConfigCommand::class,
-            GetDotEnvCommand::class,
-            SetDotEnvCommand::class,
-            RemoveDotEnvCommand::class,
-        ];
     }
 }

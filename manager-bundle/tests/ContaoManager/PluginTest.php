@@ -14,6 +14,8 @@ namespace Contao\ManagerBundle\Tests\ContaoManager;
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -216,5 +218,63 @@ class PluginTest extends ContaoTestCase
             ],
             (new Plugin())->getApiFeatures()
         );
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Defining the "prepend_locale" parameter in the parameters.yml file %s.
+     */
+    public function testGetExtensionConfigContao(): void
+    {
+        $pluginLoader = $this->createMock(PluginLoader::class);
+
+        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container->setParameter('prepend_locale', true);
+
+        $expect = [[
+            'contao' => [
+                'prepend_locale' => '%prepend_locale%',
+            ],
+        ]];
+
+        $extensionConfig = (new Plugin())->getExtensionConfig('contao', [], $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testGetExtensionConfigDoctrine(): void
+    {
+        $pluginLoader = $this->createMock(PluginLoader::class);
+        $container = new PluginContainerBuilder($pluginLoader, []);
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ]]
+        );
+
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
     }
 }

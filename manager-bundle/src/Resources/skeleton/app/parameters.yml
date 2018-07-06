@@ -11,5 +11,4 @@ parameters:
     mailer_password: ~
     mailer_port: 25
     mailer_encryption: ~
-    prepend_locale: false
     secret: ThisTokenIsNotSoSecretChangeIt

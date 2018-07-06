@@ -22,7 +22,6 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoKernelTest extends ContaoTestCase
 {
@@ -132,14 +131,7 @@ class ContaoKernelTest extends ContaoTestCase
             ->method('load')
             ->willReturnCallback(
                 function ($resource) use (&$files): void {
-                    if (\is_string($resource)) {
-                        $files[] = basename($resource);
-                    } elseif (\is_callable($resource)) {
-                        $container = new ContainerBuilder();
-                        $container->setParameter('mailer_transport', 'sendmail');
-
-                        $resource($container);
-                    }
+                    $files[] = basename($resource);
                 }
             )
         ;
@@ -199,30 +191,6 @@ class ContaoKernelTest extends ContaoTestCase
 
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
-    }
-
-    public function testUpdatesTheMailerTransport(): void
-    {
-        $container = new ContainerBuilder();
-        $loader = $this->createMock(LoaderInterface::class);
-
-        $loader
-            ->method('load')
-            ->willReturnCallback(
-                function ($resource) use ($container): void {
-                    if (\is_callable($resource)) {
-                        $container->setParameter('mailer_transport', 'mail');
-
-                        $resource($container);
-                    }
-                }
-            )
-        ;
-
-        $kernel = $this->mockKernel($this->getTempDir());
-        $kernel->registerContainerConfiguration($loader);
-
-        $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
     /**

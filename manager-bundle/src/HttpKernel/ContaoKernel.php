@@ -26,7 +26,6 @@ use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
@@ -218,15 +217,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         } elseif (file_exists($rootDir.'/config/config.yml')) {
             $loader->load($rootDir.'/config/config.yml');
         }
-
-        // The "mail" transport has been removed in SwiftMailer 6, so use "sendmail" instead
-        $loader->load(
-            function (ContainerBuilder $container): void {
-                if ('mail' === $container->getParameter('mailer_transport')) {
-                    $container->setParameter('mailer_transport', 'sendmail');
-                }
-            }
-        );
     }
 
     /**
