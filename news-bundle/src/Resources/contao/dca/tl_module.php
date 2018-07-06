@@ -214,10 +214,10 @@ class tl_module_news extends Backend
       if ($("ctrl_news_format").value == "news_day") {
         e1.setStyle("display", "block");
         e2.setStyle("display", "none");
-	  } else {
+      } else {
         e1.setStyle("display", "none");
         e2.setStyle("display", "block");
-	  }
+      }
     };
     window.addEvent("domready", function() {
       if ($("ctrl_news_startDay")) {
