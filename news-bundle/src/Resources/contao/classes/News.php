@@ -391,7 +391,7 @@ class News extends Frontend
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId)) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 
@@ -456,7 +456,7 @@ class News extends Frontend
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objItem->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+				if (($objArticle = \ArticleModel::findByPk($objItem->articleId)) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
 					return ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
