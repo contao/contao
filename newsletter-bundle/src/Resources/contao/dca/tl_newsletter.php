@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'foreignKey'              => 'tl_newsletter_channel.title',
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
-			'relation'                => array('type'=>'belongsTo', 'load'=>'eager')
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
