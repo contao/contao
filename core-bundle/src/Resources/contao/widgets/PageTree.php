@@ -247,8 +247,8 @@ class PageTree extends Widget
 		e.preventDefault();
 		Backend.openModalSelector({
 		  "id": "tl_listing",
-		  "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
-		  "url": this.href + document.getElementById("ctrl_'.$this->strId.'").value,
+		  "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0]) . ',
+		  "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
 		  "callback": function(table, value) {
 			new Request.Contao({
 			  evalScripts: false,

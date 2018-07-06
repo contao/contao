@@ -57,8 +57,8 @@ class DropZone extends FileUpload
         timeout: 0,
         previewsContainer: ".dropzone-previews",
         clickable: ".dropzone",
-        dictFileTooBig: "' . str_replace('"', '\\"', $GLOBALS['TL_LANG']['tl_files']['dropzoneFileTooBig']) . '",
-        dictInvalidFileType: "' . str_replace('"', '\\"', $GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '"
+        dictFileTooBig: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneFileTooBig']) . ',
+        dictInvalidFileType: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '
       }).on("addedfile", function() {
         $$(".dz-message").setStyle("display", "none");
       });
