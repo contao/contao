@@ -16,6 +16,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	(
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_news_feed', 'checkPermission'),

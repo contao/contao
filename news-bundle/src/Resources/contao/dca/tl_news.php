@@ -21,6 +21,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'headline',
 		'onload_callback' => array
 		(
 			array('tl_news', 'checkPermission'),
