@@ -83,7 +83,6 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
@@ -1414,16 +1413,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('logger', (string) $definition->getArgument(1));
-    }
-
-    public function testRegistersTheSecuritySha1PasswordEncoder(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.sha1_password_encoder'));
-
-        $definition = $this->container->getDefinition('contao.security.sha1_password_encoder');
-
-        $this->assertSame(Sha1PasswordEncoder::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
     }
 
     public function testRegistersTheSecurityTokenChecker(): void

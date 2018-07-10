@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -98,7 +97,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class User extends System implements UserInterface, EncoderAwareInterface, EquatableInterface, \Serializable
+abstract class User extends System implements UserInterface, EquatableInterface, \Serializable
 {
 
 	/**
@@ -154,12 +153,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	 * @var string
 	 */
 	protected $salt;
-
-	/**
-	 * Encoder name
-	 * @var string
-	 */
-	protected $encoder = false;
 
 	/**
 	 * Import the database object
@@ -502,19 +495,8 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		// Check if a passwords needs rehashing (see contao/core#8820)
 		if ($isLogin)
 		{
-			$blnNeedsRehash = true;
-
-			// Handle old sha1() passwords with an optional salt
-			if (preg_match('/^[a-f0-9]{40}(:[a-f0-9]{23})?$/', $user->password))
-			{
-				list($strPassword, $strSalt) = explode(':', $user->password);
-				$blnAuthenticated = ($strPassword === sha1($strSalt . $request->request->get('password')));
-			}
-			else
-			{
-				$blnAuthenticated = password_verify($request->request->get('password'), $user->password);
-				$blnNeedsRehash = password_needs_rehash($user->password, PASSWORD_DEFAULT);
-			}
+			$blnAuthenticated = password_verify($request->request->get('password'), $user->password);
+			$blnNeedsRehash = password_needs_rehash($user->password, PASSWORD_DEFAULT);
 
 			// Re-hash the password if the algorithm has changed
 			if ($blnAuthenticated && $blnNeedsRehash)
@@ -586,29 +568,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getEncoderName()
-	{
-		if (false === $this->encoder)
-		{
-			$this->selectEncoder();
-		}
-
-		return $this->encoder;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function setEncoder($encoder)
-	{
-		$this->encoder = $encoder;
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
 	public function serialize()
 	{
 		return serialize(array($this->id, $this->username, $this->disable, $this->admin, $this->groups));
@@ -658,30 +617,6 @@ abstract class User extends System implements UserInterface, EncoderAwareInterfa
 		}
 
 		return true;
-	}
-
-	/**
-	 * Select a matching encoder based on the password
-	 */
-	protected function selectEncoder()
-	{
-		if ($this->encoder !== false)
-		{
-			return;
-		}
-
-		if (preg_match('/^[a-f0-9]{40}(:[a-f0-9]{23})?$/', $this->arrData['password']))
-		{
-			list($password, $salt) = explode(':', $this->getPassword());
-
-			$this->setEncoder('legacy');
-			$this->setPassword($password);
-			$this->setSalt($salt);
-		}
-		else
-		{
-			$this->setEncoder('default');
-		}
 	}
 
 	/**

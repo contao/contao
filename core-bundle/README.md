@@ -106,11 +106,8 @@ security:
             id: contao.security.frontend_user_provider
 
     encoders:
-        default:
+        Contao\User:
             algorithm: bcrypt
-
-        legacy:
-            id: contao.security.sha1_password_encoder
 
     firewalls:
         dev:

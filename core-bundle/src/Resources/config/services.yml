@@ -414,9 +414,6 @@ services:
             - "@contao.framework"
             - "@logger"
 
-    contao.security.sha1_password_encoder:
-        class: Contao\CoreBundle\Security\Encoder\Sha1PasswordEncoder
-
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
         arguments:
