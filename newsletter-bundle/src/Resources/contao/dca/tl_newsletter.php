@@ -17,6 +17,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'subject',
 		'onload_callback' => array
 		(
 			array('tl_newsletter', 'checkPermission')
