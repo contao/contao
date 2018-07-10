@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Link to the event if no image link has been defined (see contao/news-bundle#30).
  * Hide running non-recurring events (see #30).
  * Pass the number of events to the main template (see #32).
  * Make the calendar model available in the event reader (see contao/core#8869).
