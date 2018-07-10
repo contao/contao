@@ -713,12 +713,21 @@ class tl_calendar_events extends Backend
 	/**
 	 * Set the timestamp to 1970-01-01 (see #26)
 	 *
-	 * @param integer $value
+	 * @param integer       $value
+	 * @param DataContainer $dc
 	 *
 	 * @return integer
 	 */
-	public function loadTime($value)
+	public function loadTime($value, DataContainer $dc)
 	{
+		$return = strtotime('1970-01-01 ' . date('H:i:s', $value));
+
+		// Return an empty string if the start time is the same as the end time (see #23)
+		if ($dc->field == 'endTime' && $dc->activeRecord && $return == $dc->activeRecord->startTime)
+		{
+			return '';
+		}
+
 		return strtotime('1970-01-01 ' . date('H:i:s', $value));
 	}
 

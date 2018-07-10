@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Hide the end time of open-ended events in the back end form (see #23).
  * Link to the event if no image link has been defined (see contao/news-bundle#30).
  * Hide running non-recurring events (see #30).
  * Pass the number of events to the main template (see #32).
