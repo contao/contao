@@ -945,35 +945,24 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$this->set['tstamp'] = ($blnDoNotRedirect ? time() : 0);
 
-			// Mark the new record with "copy of" (see #2938)
-			foreach (array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields']) as $strKey)
+			// Mark the new record with "copy of" (see #586)
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy']))
 			{
-				if (!empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strKey]['eval']['doNotCopy']))
+				$strKey = $GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy'];
+
+				if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strKey]['inputType'] == 'inputUnit')
 				{
-					continue;
+					$value = \StringUtil::deserialize($this->set[$strKey]);
+
+					if (!empty($value) && \is_array($value) && $value['value'] != '')
+					{
+						$value['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
+						$this->set[$strKey] = serialize($value);
+					}
 				}
-
-				if (\in_array($strKey, array('headline', 'name', 'subject', 'title', 'question', 'label')))
+				elseif (!empty($this->set[$strKey]))
 				{
-					if ($strKey == 'headline')
-					{
-						$headline = \StringUtil::deserialize($this->set['headline']);
-
-						if (!empty($headline) && \is_array($headline) && $headline['value'] != '')
-						{
-							$headline['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $headline['value']);
-							$this->set['headline'] = serialize($headline);
-
-							continue;
-						}
-					}
-
-					if ($this->set[$strKey] != '')
-					{
-						$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
-					}
-
-					break;
+					$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
 				}
 			}
 

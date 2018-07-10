@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'enableVersioning'            => true,
 		'ptable'                      => '',
 		'dynamicPtable'               => true,
+		'markAsCopy'                  => 'headline',
 		'onload_callback'             => array
 		(
 			array('tl_content', 'adjustDcaByType'),

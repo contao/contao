@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Add the "markAsCopy" config option to the DCA (see #586).
  * Sort the custom layout sections by their position (see #1529).
  * Make the DropZone error messages translatable (see #1320).
  * Do not stack the buttons if the screen is wide enough (see contao/core#8816).

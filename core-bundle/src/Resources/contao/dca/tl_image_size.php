@@ -19,6 +19,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'ctable'                      => array('tl_image_size_item'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
 			array('tl_image_size', 'checkPermission'),

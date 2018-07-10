@@ -17,6 +17,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_theme',
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
 			array('tl_layout', 'checkPermission'),

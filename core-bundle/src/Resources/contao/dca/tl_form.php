@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'ctable'                      => array('tl_form_field'),
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_form', 'checkPermission')

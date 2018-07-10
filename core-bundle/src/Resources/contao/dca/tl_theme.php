@@ -16,6 +16,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	(
 		'dataContainer'               => 'Table',
 		'ctable'                      => array('tl_module', 'tl_style_sheet', 'tl_layout', 'tl_image_size'),
+		'notCopyable'                 => true,
 		'enableVersioning'            => true,
 		'sql' => array
 		(

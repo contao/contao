@@ -17,6 +17,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
 		'ptable'                      => 'tl_form',
+		'markAsCopy'                  => 'label',
 		'onload_callback' => array
 		(
 			array('tl_form_field', 'checkPermission')
