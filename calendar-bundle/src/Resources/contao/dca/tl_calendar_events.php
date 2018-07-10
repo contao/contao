@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'eval'                    => array('rgxp'=>'time', 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'load_callback' => array
 			(
-				array('tl_calendar_events', 'loadTime')
+				array('tl_calendar_events', 'loadEndTime')
 			),
 			'save_callback' => array
 			(
@@ -713,17 +713,35 @@ class tl_calendar_events extends Backend
 	/**
 	 * Set the timestamp to 1970-01-01 (see #26)
 	 *
+	 * @param integer $value
+	 *
+	 * @return integer
+	 */
+	public function loadTime($value)
+	{
+		return strtotime('1970-01-01 ' . date('H:i:s', $value));
+	}
+
+	/**
+	 * Set the end time to an empty string (see #23)
+	 *
 	 * @param integer       $value
 	 * @param DataContainer $dc
 	 *
 	 * @return integer
 	 */
-	public function loadTime($value, DataContainer $dc)
+	public function loadEndTime($value, DataContainer $dc)
 	{
 		$return = strtotime('1970-01-01 ' . date('H:i:s', $value));
 
 		// Return an empty string if the start time is the same as the end time (see #23)
-		if ($dc->field == 'endTime' && $dc->activeRecord && $return == $dc->activeRecord->startTime)
+		if ($dc->activeRecord && $return == $dc->activeRecord->startTime)
+		{
+			return '';
+		}
+
+		// Return an empty string if no time has been set yet
+		if ($dc->activeRecord && $return - $dc->activeRecord->startTime == 86399)
 		{
 			return '';
 		}
@@ -902,7 +920,7 @@ class tl_calendar_events extends Backend
 		if ($dc->activeRecord->addTime)
 		{
 			$arrSet['startTime'] = strtotime(date('Y-m-d', $arrSet['startTime']) . ' ' . date('H:i:s', $dc->activeRecord->startTime));
-			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime));
+			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?: $dc->activeRecord->startTime));
 		}
 
 		// Adjust end time of "all day" events
