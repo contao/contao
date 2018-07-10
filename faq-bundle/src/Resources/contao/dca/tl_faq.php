@@ -19,6 +19,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_faq_category',
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'question',
 		'onload_callback' => array
 		(
 			array('tl_faq', 'checkPermission')

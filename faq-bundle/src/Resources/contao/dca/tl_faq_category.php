@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		'ctable'                      => array('tl_faq'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_faq_category', 'checkPermission')
