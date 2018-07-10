@@ -16,6 +16,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 	(
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),

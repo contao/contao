@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'ctable'                      => array('tl_calendar_events'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_calendar', 'checkPermission'),

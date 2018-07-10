@@ -21,6 +21,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_calendar_events', 'checkPermission'),
