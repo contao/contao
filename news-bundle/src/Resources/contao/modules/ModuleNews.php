@@ -184,7 +184,7 @@ abstract class ModuleNews extends Module
 				$this->addImageToTemplate($objTemplate, $arrArticle, null, null, $objModel);
 
 				// Link to the news article if no image link has been defined (see #30)
-				if (!$objTemplate->imageUrl)
+				if (!$objTemplate->fullsize && !$objTemplate->imageUrl)
 				{
 					// Unset the image title attribute
 					$picture = $objTemplate->picture;
