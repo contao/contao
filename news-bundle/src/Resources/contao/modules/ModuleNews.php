@@ -182,6 +182,19 @@ abstract class ModuleNews extends Module
 
 				$arrArticle['singleSRC'] = $objModel->path;
 				$this->addImageToTemplate($objTemplate, $arrArticle, null, null, $objModel);
+
+				// Link to the news article if no image link has been defined (see #30)
+				if (!$objTemplate->imageUrl)
+				{
+					// Unset the image title attribute
+					$picture = $objTemplate->picture;
+					unset($picture['title']);
+					$objTemplate->picture = $picture;
+
+					// Link to the news article
+					$objTemplate->href = $objTemplate->link;
+					$objTemplate->linkTitle = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+				}
 			}
 		}
 
