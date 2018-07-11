@@ -38,6 +38,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         $this->addHeadlineToTemplate($template, $model->headline);
         $this->addCssAttributesToTemplate($template, 'ce_'.$type, $model->cssID, $classes);
         $this->addSectionToTemplate($template, $section);
+        $this->tagResponse(['contao.db.tl_content.'.$model->id]);
 
         return $this->getResponse($template, $model, $request);
     }

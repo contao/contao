@@ -99,6 +99,20 @@ abstract class AbstractFragmentController extends Controller implements Fragment
     }
 
     /**
+     * Tags the current response with given cache tags.
+     *
+     * @param array $tags
+     */
+    protected function tagResponse(array $tags): void
+    {
+        if (!$this->has('fos_http_cache.http.symfony_response_tagger')) {
+            return;
+        }
+
+        $this->get('fos_http_cache.http.symfony_response_tagger')->addTags($tags);
+    }
+
+    /**
      * Returns the type from the class name.
      *
      * @return string

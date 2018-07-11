@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\ModuleModel;
+use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -108,6 +109,28 @@ class FrontendModuleControllerTest extends TestCase
         $template = json_decode($response->getContent());
 
         $this->assertSame('left', $template->inColumn);
+    }
+
+    public function testAddsTheCacheTags(): void
+    {
+        $model = new ModuleModel();
+        $model->id = 42;
+
+        $responseTagger = $this->createMock(ResponseTagger::class);
+
+        $responseTagger
+            ->expects($this->once())
+            ->method('addTags')
+            ->with(['contao.db.tl_module.42'])
+        ;
+
+        $container = $this->mockContainerWithFrameworkTemplate('mod_test');
+        $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $controller(new Request(), $model, 'main');
     }
 
     /**
