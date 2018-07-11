@@ -443,6 +443,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
       </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
