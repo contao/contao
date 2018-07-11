@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Remove support for deprecated user password hashes (see #1608).
+
 ## 4.4.20 (2018-06-26)
 
  * Make the session listener compatible with Symfony 3.4.12.
