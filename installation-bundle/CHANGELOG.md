@@ -1,5 +1,9 @@
 # Contao installation bundle change log
 
+## DEV
+
+ * Fix the MySQL 8 compatibility (see #93).
+
 ## 4.4.17 (2018-04-04)
 
  * Preserve the container directory when purging the cache.
