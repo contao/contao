@@ -320,26 +320,28 @@ class InstallationController implements ContainerAwareInterface
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
-        $parameters = [];
-
-        $parameters['parameters'] = [
-            'database_host' => $this->getContainerParameter('database_host'),
-            'database_port' => $this->getContainerParameter('database_port'),
-            'database_user' => $this->getContainerParameter('database_user'),
-            'database_password' => $this->getContainerParameter('database_password'),
-            'database_name' => $this->getContainerParameter('database_name'),
+        $parameters = [
+            'parameters' => [
+                'database_host' => $this->getContainerParameter('database_host'),
+                'database_port' => $this->getContainerParameter('database_port'),
+                'database_user' => $this->getContainerParameter('database_user'),
+                'database_password' => $this->getContainerParameter('database_password'),
+                'database_name' => $this->getContainerParameter('database_name'),
+            ],
         ];
 
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('database.html.twig', $parameters);
         }
 
-        $parameters['parameters'] = [
-            'database_host' => $request->request->get('dbHost'),
-            'database_port' => $request->request->get('dbPort'),
-            'database_user' => $request->request->get('dbUser'),
-            'database_password' => $this->getContainerParameter('database_password'),
-            'database_name' => $request->request->get('dbName'),
+        $parameters = [
+            'parameters' => [
+                'database_host' => $request->request->get('dbHost'),
+                'database_port' => $request->request->get('dbPort'),
+                'database_user' => $request->request->get('dbUser'),
+                'database_password' => $this->getContainerParameter('database_password'),
+                'database_name' => $request->request->get('dbName'),
+            ],
         ];
 
         if ('*****' !== $request->request->get('dbPassword')) {
