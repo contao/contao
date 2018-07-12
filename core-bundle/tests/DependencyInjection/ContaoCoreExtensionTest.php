@@ -85,6 +85,9 @@ use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
+use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer;
+use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
@@ -1425,6 +1428,40 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPublic());
         $this->assertSame('session', (string) $definition->getArgument(0));
         $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(1));
+    }
+
+    public function testRegistersTheSecurityTwoFactorAuthenticator(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.two_factor.authenticator'));
+
+        $definition = $this->container->getDefinition('contao.security.two_factor.authenticator');
+
+        $this->assertSame(Authenticator::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+    }
+
+    public function testRegistersTheSecurityTwoFactorBackendFormRenderer(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.two_factor.backend_form_renderer'));
+
+        $definition = $this->container->getDefinition('contao.security.two_factor.backend_form_renderer');
+
+        $this->assertSame(BackendFormRenderer::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('router', (string) $definition->getArgument(0));
+    }
+
+    public function testRegistersTheSecurityTwoFactorBackendProvider(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.two_factor.backend_provider'));
+
+        $definition = $this->container->getDefinition('contao.security.two_factor.backend_provider');
+
+        $this->assertSame(Provider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.security.two_factor.authenticator', (string) $definition->getArgument(0));
+        $this->assertSame('contao.security.two_factor.backend_form_renderer', (string) $definition->getArgument(1));
+        $this->assertSame('%contao.security.two_factor.enforce_backend%', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityUserChecker(): void

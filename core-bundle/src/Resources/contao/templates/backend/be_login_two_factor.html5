@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="<?= $this->language ?>">
+<head>
+
+  <?php $this->block('head'); ?>
+    <meta charset="<?= $this->charset ?>">
+    <title><?= $this->title ?> - Contao Open Source CMS</title>
+    <base href="<?= $this->base ?>">
+
+    <?php $this->block('meta'); ?>
+      <meta name="generator" content="Contao Open Source CMS">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+      <meta name="referrer" content="origin">
+      <meta name="robots" content="noindex,follow">
+    <?php $this->endblock(); ?>
+
+    <link rel="stylesheet" href="<?php
+      $objCombiner = new Combiner();
+      $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
+      $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
+      $objCombiner->add('system/themes/'. $this->theme .'/login.css');
+      echo $objCombiner->getCombinedFile();
+    ?>">
+    <?= $this->stylesheets ?>
+
+    <script><?= $this->getLocaleString() ?></script>
+    <script src="<?php
+      $objCombiner = new Combiner();
+      $objCombiner->add('assets/mootools/js/mootools.min.js');
+      $objCombiner->add('bundles/contaocore/mootao.min.js');
+      $objCombiner->add('bundles/contaocore/core.min.js');
+      echo $objCombiner->getCombinedFile();
+    ?>"></script>
+    <script><?= $this->getDateString() ?></script>
+    <?= $this->javascripts ?>
+  <?php $this->endblock(); ?>
+
+</head>
+<body class="<?= $this->ua ?>">
+
+  <?php $this->block('container'); ?>
+    <div id="container" class="cf">
+      <main id="main">
+        <form action="<?= $this->action ?>" class="tl_login_form" method="post">
+          <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_login">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+            <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
+            <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
+            <input type="hidden" name="_always_use_target_path" value="1">
+            <h1><?= $this->headline ?></h1>
+            <?php if ($this->qrCode): ?>
+              <div class="qr_code">
+                <p class="tl_help" title=""><?= $this->authCodeHelp; ?></p>
+                <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>">
+              </div>
+            <?php endif; ?>
+            <div class="widget">
+              <label for="verify"><?= $this->authCode ?></label>
+              <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="off" placeholder="<?= $this->authCode ?>" required>
+            </div>
+            <div class="submit_container cf">
+              <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
+              <a href="<?= $this->route('contao_backend_logout') ?>" class="footer_preview"><?= $this->cancel ?> ›</a>
+            </div>
+          </div>
+        </form>
+      </main>
+      <?= $this->messages ?>
+    </div>
+  <?php $this->endblock(); ?>
+
+  <script>
+    window.addEvent('domready', function() {
+      $('verify').focus();
+    });
+  </script>
+
+</body>
+</html>

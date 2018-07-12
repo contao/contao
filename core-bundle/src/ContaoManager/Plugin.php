@@ -25,6 +25,7 @@ use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -46,6 +47,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
         return [
             BundleConfig::create(KnpMenuBundle::class),
             BundleConfig::create(KnpTimeBundle::class),
+            BundleConfig::create(SchebTwoFactorBundle::class),
             BundleConfig::create(HeaderReplayBundle::class),
             BundleConfig::create(ContaoCoreBundle::class)
                 ->setReplace(['core'])
@@ -64,6 +66,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         NelmioCorsBundle::class,
                         NelmioSecurityBundle::class,
                         SensioFrameworkExtraBundle::class,
+                        SchebTwoFactorBundle::class,
                         HeaderReplayBundle::class,
                         ContaoManagerBundle::class,
                     ]

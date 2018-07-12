@@ -33,4 +33,9 @@ abstract class User
     {
         return new static();
     }
+
+    public function getSecret()
+    {
+        // ignore
+    }
 }

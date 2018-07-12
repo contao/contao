@@ -215,6 +215,9 @@
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
       </trans-unit>
+      <trans-unit id="ERR.invalidTwoFactor">
+        <source>Invalid two-factor verification code!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -1792,6 +1795,12 @@
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorAuthentication">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MSC.authCode">
+        <source>Verification code</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
