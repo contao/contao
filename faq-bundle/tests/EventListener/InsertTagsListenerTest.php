@@ -30,7 +30,6 @@ class InsertTagsListenerTest extends ContaoTestCase
     public function testReplacesTheFaqTags(): void
     {
         $page = $this->createMock(PageModel::class);
-
         $page
             ->method('getFrontendUrl')
             ->willReturn('faq/what-does-foobar-mean.html')
@@ -42,7 +41,6 @@ class InsertTagsListenerTest extends ContaoTestCase
         ;
 
         $categoryModel = $this->createMock(FaqCategoryModel::class);
-
         $categoryModel
             ->method('getRelated')
             ->willReturn($page)
@@ -54,7 +52,6 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $faqModel = $this->mockClassWithProperties(FaqModel::class, $properties);
-
         $faqModel
             ->method('getRelated')
             ->willReturn($categoryModel)
@@ -113,7 +110,6 @@ class InsertTagsListenerTest extends ContaoTestCase
     public function testReturnsAnEmptyStringIfThereIsNoCategoryModel(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
-
         $faqModel
             ->method('getRelated')
             ->willReturn(null)
