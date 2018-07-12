@@ -54,8 +54,8 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $newsModel = $this->mockClassWithProperties(NewsModel::class, $properties);
-        $news = $this->mockAdapter(['generateNewsUrl']);
 
+        $news = $this->mockAdapter(['generateNewsUrl']);
         $news
             ->method('generateNewsUrl')
             ->willReturnCallback(

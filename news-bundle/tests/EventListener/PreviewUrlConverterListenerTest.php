@@ -59,7 +59,6 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(false)
