@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Add two factor authentication for the back end login (see #1545).
  * Add the "markAsCopy" config option to the DCA (see #586).
  * Sort the custom layout sections by their position (see #1529).
  * Make the DropZone error messages translatable (see #1320).

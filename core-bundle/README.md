@@ -135,6 +135,11 @@ security:
                 failure_handler: contao.security.authentication_failure_handler
                 remember_me: false
 
+            two_factor:
+                auth_form_path: contao_backend_two_factor
+                check_path: contao_backend_two_factor_check
+                auth_code_parameter_name: verify
+
             logout:
                 path: contao_backend_logout
                 target: contao_backend_login
@@ -173,6 +178,7 @@ security:
 
     access_control:
         - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao/two-factor, role: [IS_AUTHENTICATED_2FA_IN_PROGRESS, ROLE_USER] }
         - { path: ^/contao, roles: ROLE_USER }
 ```
 
