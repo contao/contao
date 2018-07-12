@@ -58,7 +58,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
         parent::setUp();
 
         $menuFactory = $this->createMock(FactoryInterface::class);
-
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -75,7 +74,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->method('generate')
             ->willReturnCallback(
@@ -150,7 +148,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
     public function testFailsToCheckTheContextIfThereIsNoToken(): void
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn(null)
@@ -167,14 +164,12 @@ class ArticlePickerProviderTest extends ContaoTestCase
     public function testFailsToCheckTheContextIfThereIsNoUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn(null)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)

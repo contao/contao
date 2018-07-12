@@ -155,7 +155,6 @@ class ContaoTableProcessorTest extends TestCase
     public function testAddsTheUsername(): void
     {
         $token = $this->createMock(UsernamePasswordToken::class);
-
         $token
             ->method('getUsername')
             ->willReturn('k.jones')

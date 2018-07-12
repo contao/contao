@@ -28,7 +28,6 @@ class InsertTagsControllerTest extends TestCase
     public function testRendersNonCacheableInsertTag(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->method('initialize')
         ;

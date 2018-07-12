@@ -45,7 +45,6 @@ class UserSessionListenerTest extends TestCase
         $request->setSession($session);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->expects($this->atLeastOnce())
             ->method($method)
@@ -72,8 +71,8 @@ class UserSessionListenerTest extends TestCase
     public function testDoesNotAddTheForceNoCacheHeaderIfNotInContaoScope(): void
     {
         $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());
-        $tokenChecker = $this->createMock(TokenChecker::class);
 
+        $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->expects($this->never())
             ->method('hasBackendUser')
@@ -91,7 +90,6 @@ class UserSessionListenerTest extends TestCase
         $request->attributes->set('_scope', 'frontend');
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->expects($this->never())
             ->method('hasBackendUser')
@@ -112,7 +110,6 @@ class UserSessionListenerTest extends TestCase
         $request->setSession($this->mockSession());
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->expects($this->once())
             ->method('hasBackendUser')

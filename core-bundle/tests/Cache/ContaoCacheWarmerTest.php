@@ -63,7 +63,6 @@ class ContaoCacheWarmerTest extends TestCase
         $class2->language = 'en';
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->expects($this->exactly(3))
             ->method('fetch')
@@ -71,7 +70,6 @@ class ContaoCacheWarmerTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('prepare')
             ->willReturn($statement)
@@ -133,7 +131,6 @@ class ContaoCacheWarmerTest extends TestCase
         $class2->language = 'en';
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->expects($this->exactly(3))
             ->method('fetch')
@@ -141,7 +138,6 @@ class ContaoCacheWarmerTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('prepare')
             ->willReturn($statement)
@@ -156,14 +152,12 @@ class ContaoCacheWarmerTest extends TestCase
     public function testDoesNotCreateTheCacheFolderIfTheInstallationIsIncomplete(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('query')
             ->willThrowException(new \Exception())
         ;
 
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->never())
             ->method('initialize')

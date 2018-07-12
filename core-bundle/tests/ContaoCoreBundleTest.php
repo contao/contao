@@ -74,26 +74,24 @@ class ContaoCoreBundleTest extends TestCase
             RegisterHookListenersPass::class,
         ];
 
-        $container = $this->createMock(ContainerBuilder::class);
-
-        $container
-            ->expects($this->exactly(\count($passes)))
-            ->method('addCompilerPass')
-            ->with(
-                $this->callback(function ($param) use ($passes) {
-                    return \in_array(\get_class($param), $passes, true);
-                })
-            )
-        ;
-
         $security = $this->createMock(SecurityExtension::class);
-
         $security
             ->expects($this->once())
             ->method('addSecurityListenerFactory')
             ->with(
                 $this->callback(function ($param) {
                     return $param instanceof ContaoLoginFactory;
+                })
+            )
+        ;
+
+        $container = $this->createMock(ContainerBuilder::class);
+        $container
+            ->expects($this->exactly(\count($passes)))
+            ->method('addCompilerPass')
+            ->with(
+                $this->callback(function ($param) use ($passes) {
+                    return \in_array(\get_class($param), $passes, true);
                 })
             )
         ;

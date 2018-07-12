@@ -34,8 +34,8 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testMergesTheHeadersSent(): void
     {
         $responseEvent = $this->mockResponseEvent();
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')
@@ -54,8 +54,8 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testDoesNotMergeTheHeadersSentIfTheContaoFrameworkIsNotInitialized(): void
     {
         $responseEvent = $this->mockResponseEvent();
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')
@@ -74,8 +74,8 @@ class MergeHttpHeadersListenerTest extends TestCase
         $response->headers->set('Set-Cookie', 'content=foobar');
 
         $responseEvent = $this->mockResponseEvent($response);
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')
@@ -154,8 +154,8 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testInheritsHeadersFromSubrequest(): void
     {
         $responseEvent = $this->mockResponseEvent();
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $framework
             ->expects($this->atLeastOnce())
             ->method('isInitialized')
@@ -186,8 +186,8 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
         $responseEvent = $this->mockResponseEvent();
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $framework
             ->expects($this->atLeastOnce())
             ->method('isInitialized')
@@ -224,8 +224,8 @@ class MergeHttpHeadersListenerTest extends TestCase
     public function testDoesNotMergeCacheControlHeaders(): void
     {
         $responseEvent = $this->mockResponseEvent();
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
 
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')

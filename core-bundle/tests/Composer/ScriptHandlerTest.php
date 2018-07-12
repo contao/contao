@@ -239,7 +239,6 @@ class ScriptHandlerTest extends TestCase
     private function mockComposer(PackageInterface $package): Composer
     {
         $composer = $this->createMock(Composer::class);
-
         $composer
             ->method('getConfig')
             ->willReturn($this->createMock(Config::class))
@@ -286,7 +285,6 @@ class ScriptHandlerTest extends TestCase
     private function mockPackage(array $extras = []): PackageInterface
     {
         $package = $this->createMock(PackageInterface::class);
-
         $package
             ->method('getTargetDir')
             ->willReturn('')

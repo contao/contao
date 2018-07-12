@@ -236,7 +236,6 @@ class RegisterHookListenersPassTest extends TestCase
     public function testDoesNothingIfThereIsNoFramework(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
-
         $container
             ->method('hasDefinition')
             ->with('contao.framework')

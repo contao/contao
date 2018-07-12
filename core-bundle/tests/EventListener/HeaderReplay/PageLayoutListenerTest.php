@@ -38,7 +38,6 @@ class PageLayoutListenerTest extends TestCase
     public function testAddsThePageLayoutHeader(bool $agentIsMobile, string $tlViewCookie = null, string $expectedHeaderValue): void
     {
         $adapter = $this->mockAdapter(['get']);
-
         $adapter
             ->method('get')
             ->willReturnCallback(

@@ -29,7 +29,6 @@ class InstallCommandTest extends TestCase
         parent::tearDown();
 
         $fs = new Filesystem();
-
         $fs->remove($this->getTempDir().'/assets/css');
         $fs->remove($this->getTempDir().'/assets/images');
         $fs->remove($this->getTempDir().'/assets/images_test');

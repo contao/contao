@@ -92,7 +92,6 @@ class TokenCheckerTest extends TestCase
     public function testReturnsTheFrontendUsername(): void
     {
         $user = $this->createMock(FrontendUser::class);
-
         $user
             ->method('getUsername')
             ->willReturn('foobar')
@@ -107,7 +106,6 @@ class TokenCheckerTest extends TestCase
     public function testReturnsTheBackendUsername(): void
     {
         $user = $this->createMock(BackendUser::class);
-
         $user
             ->method('getUsername')
             ->willReturn('foobar')
@@ -147,7 +145,6 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
     {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -168,7 +165,6 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheSessionKeyIsNotSet(): void
     {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -190,7 +186,6 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheSerializedObjectIsNotAToken(): void
     {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -234,7 +229,6 @@ class TokenCheckerTest extends TestCase
     private function mockTokenChecker(TokenInterface $token): TokenChecker
     {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')

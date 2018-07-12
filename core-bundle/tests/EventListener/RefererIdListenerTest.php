@@ -102,7 +102,6 @@ class RefererIdListenerTest extends TestCase
     private function mockTokenManager(): CsrfTokenManagerInterface
     {
         $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
-
         $tokenManager
             ->method('getToken')
             ->willReturn(new CsrfToken('_csrf', 'testValue'))

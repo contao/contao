@@ -45,7 +45,6 @@ class SwitchUserListenerTest extends TestCase
     public function testFailsIfTheTokenStorageDoesNotContainAToken(): void
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -106,7 +105,6 @@ class SwitchUserListenerTest extends TestCase
 
         if (null !== $username) {
             $token = $this->createMock(TokenInterface::class);
-
             $token
                 ->expects($this->once())
                 ->method('getUser')

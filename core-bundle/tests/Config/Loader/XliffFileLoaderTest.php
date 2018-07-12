@@ -108,7 +108,6 @@ TXT;
     public function testLoadsXlfFilesIntoTheGlobalVariables(): void
     {
         $loader = new XliffFileLoader($this->getFixturesDir().'/app', true);
-
         $loader->load(
             $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
             'en'
@@ -146,7 +145,6 @@ TXT;
         $GLOBALS['TL_LANG']['MSC']['third'] = 'is-a-string';
 
         $loader = new XliffFileLoader($this->getFixturesDir().'/app', true);
-
         $loader->load(
             $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf',
             'en'

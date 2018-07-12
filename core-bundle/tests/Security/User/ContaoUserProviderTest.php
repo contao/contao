@@ -78,8 +78,8 @@ class ContaoUserProviderTest extends TestCase
         /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
-        $configAdapter = $this->mockAdapter(['get']);
 
+        $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->expects($this->once())
             ->method('get')
@@ -93,8 +93,8 @@ class ContaoUserProviderTest extends TestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
-        $metadata = $this->createMock(MetadataBag::class);
 
+        $metadata = $this->createMock(MetadataBag::class);
         $metadata
             ->expects($this->once())
             ->method('getLastUsed')
@@ -102,7 +102,6 @@ class ContaoUserProviderTest extends TestCase
         ;
 
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -116,7 +115,6 @@ class ContaoUserProviderTest extends TestCase
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->never())
             ->method('info')
@@ -132,8 +130,8 @@ class ContaoUserProviderTest extends TestCase
         /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
-        $configAdapter = $this->mockAdapter(['get']);
 
+        $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->expects($this->once())
             ->method('get')
@@ -147,8 +145,8 @@ class ContaoUserProviderTest extends TestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
-        $metadata = $this->createMock(MetadataBag::class);
 
+        $metadata = $this->createMock(MetadataBag::class);
         $metadata
             ->expects($this->once())
             ->method('getLastUsed')
@@ -156,7 +154,6 @@ class ContaoUserProviderTest extends TestCase
         ;
 
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -170,7 +167,6 @@ class ContaoUserProviderTest extends TestCase
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('info')
@@ -221,8 +217,8 @@ class ContaoUserProviderTest extends TestCase
     {
         /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
-        $listener = $this->createPartialMock(Controller::class, ['onPostAuthenticate']);
 
+        $listener = $this->createPartialMock(Controller::class, ['onPostAuthenticate']);
         $listener
             ->expects($this->once())
             ->method('onPostAuthenticate')
@@ -230,7 +226,6 @@ class ContaoUserProviderTest extends TestCase
         ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
-
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')

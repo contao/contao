@@ -39,7 +39,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testUpdatesTheUser(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('info')
@@ -47,7 +46,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
@@ -65,7 +63,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -82,14 +79,12 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testDoesNotUpdateTheUserIfNotAContaoUser(): void
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -111,7 +106,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testTriggersThePostLoginHook(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('info')
@@ -119,7 +113,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
@@ -137,7 +130,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -145,7 +137,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $listener = $this->createPartialMock(Controller::class, ['onPostLogin']);
-
         $listener
             ->expects($this->once())
             ->method('onPostLogin')
@@ -153,7 +144,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
-
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
@@ -162,7 +152,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -179,7 +168,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testUsesTheUrlOfThePage(): void
     {
         $model = $this->createMock(PageModel::class);
-
         $model
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -187,7 +175,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
-
         $adapter
             ->expects($this->once())
             ->method('findFirstActiveByMemberGroups')
@@ -209,7 +196,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -225,7 +211,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testUsesTheDefaultUrlIfNotAPageModel(): void
     {
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
-
         $adapter
             ->expects($this->once())
             ->method('findFirstActiveByMemberGroups')
@@ -250,7 +235,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -266,7 +250,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testUsesTheTargetPath(): void
     {
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
-
         $adapter
             ->expects($this->never())
             ->method('findFirstActiveByMemberGroups')
@@ -290,7 +273,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -314,7 +296,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
     private function mockSuccessHandler(ContaoFrameworkInterface $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-
         $urlGenerator
             ->method('generate')
             ->willReturn('http://localhost')

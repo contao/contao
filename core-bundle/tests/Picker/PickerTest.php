@@ -35,7 +35,6 @@ class PickerTest extends TestCase
         parent::setUp();
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->method('trans')
             ->willReturn('Page picker')

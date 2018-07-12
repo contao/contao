@@ -106,7 +106,6 @@ class LocaleListenerTest extends TestCase
     public function testDoesNothingIfThereIsNoRequestScope(): void
     {
         $attributes = $this->createMock(ParameterBag::class);
-
         $attributes
             ->expects($this->never())
             ->method('set')

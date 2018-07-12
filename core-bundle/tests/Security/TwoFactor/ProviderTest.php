@@ -46,8 +46,8 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $context = $this->createMock(AuthenticationContextInterface::class);
 
+        $context = $this->createMock(AuthenticationContextInterface::class);
         $context
             ->expects($this->once())
             ->method('getUser')
@@ -63,15 +63,14 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $user = $this->createMock(User::class);
 
+        $user = $this->createMock(User::class);
         $user
             ->expects($this->once())
             ->method('save')
         ;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
-
         $context
             ->expects($this->once())
             ->method('getUser')
@@ -92,7 +91,6 @@ class ProviderTest extends TestCase
         $user->confirmedTwoFactor = false;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
-
         $context
             ->expects($this->once())
             ->method('getUser')
@@ -113,7 +111,6 @@ class ProviderTest extends TestCase
         $user->confirmedTwoFactor = false;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
-
         $context
             ->expects($this->once())
             ->method('getUser')
@@ -134,7 +131,6 @@ class ProviderTest extends TestCase
         $user->confirmedTwoFactor = true;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
-
         $context
             ->expects($this->once())
             ->method('getUser')
@@ -159,8 +155,8 @@ class ProviderTest extends TestCase
     {
         $user = $this->createMock(User::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $authenticator = $this->createMock(Authenticator::class);
 
+        $authenticator = $this->createMock(Authenticator::class);
         $authenticator
             ->expects($this->once())
             ->method('validateCode')
@@ -185,8 +181,8 @@ class ProviderTest extends TestCase
         ;
 
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $authenticator = $this->createMock(Authenticator::class);
 
+        $authenticator = $this->createMock(Authenticator::class);
         $authenticator
             ->expects($this->once())
             ->method('validateCode')
@@ -206,8 +202,8 @@ class ProviderTest extends TestCase
         $user->confirmedTwoFactor = true;
 
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $authenticator = $this->createMock(Authenticator::class);
 
+        $authenticator = $this->createMock(Authenticator::class);
         $authenticator
             ->expects($this->once())
             ->method('validateCode')

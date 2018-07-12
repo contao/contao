@@ -114,7 +114,6 @@ class AddAssetsPackagesPass implements CompilerPassInterface
     private function createPackageDefinition(string $basePath, Reference $version, Reference $context): Definition
     {
         $package = new ChildDefinition('assets.path_package');
-
         $package
             ->setPublic(false)
             ->replaceArgument(0, $basePath)

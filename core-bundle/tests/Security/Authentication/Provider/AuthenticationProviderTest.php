@@ -55,7 +55,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $currentUser = $this->createMock(UserInterface::class);
-
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
@@ -63,7 +62,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -81,7 +79,6 @@ class AuthenticationProviderTest extends TestCase
     public function testDoesNotHandleNonContaoUsers(): void
     {
         $user = $this->createMock(UserInterface::class);
-
         $user
             ->expects($this->once())
             ->method('getPassword')
@@ -89,7 +86,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $currentUser = $this->createMock(UserInterface::class);
-
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
@@ -97,7 +93,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -133,7 +128,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $currentUser = $this->createMock(UserInterface::class);
-
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
@@ -141,7 +135,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -149,7 +142,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -166,7 +158,6 @@ class AuthenticationProviderTest extends TestCase
     public function testOnlyHandlesBadCredentialsExceptions(): void
     {
         $token = $this->createMock(UsernamePasswordToken::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -208,7 +199,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $currentUser = $this->createMock(UserInterface::class);
-
         $currentUser
             ->expects($this->once())
             ->method('getPassword')
@@ -216,7 +206,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $token = $this->createMock(UsernamePasswordToken::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -236,7 +225,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $listener = $this->createPartialMock(Controller::class, ['onCheckCredentials']);
-
         $listener
             ->expects($this->once())
             ->method('onCheckCredentials')
@@ -245,7 +233,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
-
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
@@ -254,7 +241,6 @@ class AuthenticationProviderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')

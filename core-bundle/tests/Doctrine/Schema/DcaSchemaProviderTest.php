@@ -275,7 +275,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testCreatesTheTableDefinitions(): void
     {
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('fetch')
             ->willReturn((object) ['Collation' => null])
@@ -338,7 +337,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = '', string $fileSystem = 'antelope'): void
     {
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(
@@ -404,7 +402,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testHandlesFulltextIndexes(): void
     {
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('fetch')
             ->willReturn((object) ['Value' => 'On'])

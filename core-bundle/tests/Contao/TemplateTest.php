@@ -214,7 +214,6 @@ EOF
     public function testLoadsTheAssetsPackages(): void
     {
         $packages = $this->createMock(Packages::class);
-
         $packages
             ->expects($this->once())
             ->method('getUrl')

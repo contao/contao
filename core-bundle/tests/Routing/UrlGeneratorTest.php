@@ -186,7 +186,6 @@ class UrlGeneratorTest extends TestCase
     public function testFailsIfAParameterIsMissing(): void
     {
         $router = $this->createMock(UrlGeneratorInterface::class);
-
         $router
             ->method('getContext')
             ->willReturn(new RequestContext())
@@ -286,7 +285,6 @@ class UrlGeneratorTest extends TestCase
     private function mockRouterWithContext(array $expectedParameters = [], $expectedRoute = 'contao_frontend', $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): UrlGeneratorInterface
     {
         $router = $this->createMock(UrlGeneratorInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')

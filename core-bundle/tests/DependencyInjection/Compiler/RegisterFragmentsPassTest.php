@@ -133,7 +133,6 @@ class RegisterFragmentsPassTest extends TestCase
     public function testDoesNothingIfThereIsNoFragmentRegistry(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
-
         $container
             ->expects($this->never())
             ->method('findDefinition')

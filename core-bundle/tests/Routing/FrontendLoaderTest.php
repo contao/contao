@@ -166,7 +166,6 @@ class FrontendLoaderTest extends TestCase
     private function mockRouter(RouteCollection $collection, string $urlSuffix = '.html'): Router
     {
         $loader = $this->createMock(LoaderInterface::class);
-
         $loader
             ->method('load')
             ->willReturn($collection)

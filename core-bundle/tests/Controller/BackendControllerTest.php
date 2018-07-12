@@ -44,8 +44,8 @@ class BackendControllerTest extends TestCase
         $requestStack->push(new Request());
 
         $previewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
 
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->expects($this->once())
             ->method('isGranted')
@@ -77,7 +77,6 @@ class BackendControllerTest extends TestCase
     public function testRedirectsToTheBackendIfTheUserIsFullyAuthenticatedUponLogin(): void
     {
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-
         $authorizationChecker
             ->expects($this->once())
             ->method('isGranted')
@@ -85,7 +84,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')
@@ -111,7 +109,6 @@ class BackendControllerTest extends TestCase
     public function testRedirectsToTheBackendLoginAfterAUserHasLoggedOut(): void
     {
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')
@@ -136,21 +133,18 @@ class BackendControllerTest extends TestCase
     public function testReturnsAResponseInThePickerActionMethod(): void
     {
         $picker = $this->createMock(PickerInterface::class);
-
         $picker
             ->method('getCurrentUrl')
             ->willReturn('/foobar')
         ;
 
         $builder = $this->createMock(PickerBuilderInterface::class);
-
         $builder
             ->method('create')
             ->willReturn($picker)
         ;
 
         $container = $this->createMock(ContainerInterface::class);
-
         $container
             ->method('get')
             ->willReturn($builder)
@@ -187,14 +181,12 @@ class BackendControllerTest extends TestCase
     public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported(): void
     {
         $builder = $this->createMock(PickerBuilderInterface::class);
-
         $builder
             ->method('create')
             ->willReturn(null)
         ;
 
         $container = $this->createMock(ContainerInterface::class);
-
         $container
             ->method('get')
             ->willReturn($builder)
@@ -215,7 +207,6 @@ class BackendControllerTest extends TestCase
     public function testRedirectsToTheBackendLoginIfTheTokenIsNotATwoFactorToken(): void
     {
         $tokenStorage = $this->createMock(TokenStorage::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -223,7 +214,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')
@@ -249,7 +239,6 @@ class BackendControllerTest extends TestCase
     public function testRedirectsToTheBackendLoginIfTheTokenIsNotAUsernamePasswordToken(): void
     {
         $token = $this->createMock(TwoFactorToken::class);
-
         $token
             ->expects($this->once())
             ->method('getAuthenticatedToken')
@@ -257,7 +246,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(TokenStorage::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -265,7 +253,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')
@@ -291,7 +278,6 @@ class BackendControllerTest extends TestCase
     public function testRedirectsToTheBackendLoginIfTheUserIsNotABackendUser(): void
     {
         $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
-
         $authenticatedToken
             ->expects($this->once())
             ->method('getUser')
@@ -299,7 +285,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $token = $this->createMock(TwoFactorToken::class);
-
         $token
             ->expects($this->once())
             ->method('getAuthenticatedToken')
@@ -307,7 +292,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(TokenStorage::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -315,7 +299,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')
@@ -341,8 +324,8 @@ class BackendControllerTest extends TestCase
     public function testCallsTheLoginActionIfAValidTwoFactorTokenIsProvided(): void
     {
         $user = $this->createMock(BackendUser::class);
-        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
 
+        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
         $authenticatedToken
             ->expects($this->once())
             ->method('getUser')
@@ -350,7 +333,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $token = $this->createMock(TwoFactorToken::class);
-
         $token
             ->expects($this->once())
             ->method('getAuthenticatedToken')
@@ -358,7 +340,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(TokenStorage::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -366,7 +347,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')
@@ -375,7 +355,6 @@ class BackendControllerTest extends TestCase
         ;
 
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-
         $authorizationChecker
             ->expects($this->once())
             ->method('isGranted')
@@ -401,7 +380,6 @@ class BackendControllerTest extends TestCase
     public function testRedirectsToTheBackendIfTheTwoFactorCheckRouteIsCalledManually(): void
     {
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')

@@ -66,7 +66,6 @@ class CombinedFileDumperTest extends TestCase
     private function mockFilesystem($expects): Filesystem
     {
         $filesystem = $this->createMock(Filesystem::class);
-
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
@@ -84,7 +83,6 @@ class CombinedFileDumperTest extends TestCase
     private function mockLoader(): PhpFileLoader
     {
         $loader = $this->createMock(PhpFileLoader::class);
-
         $loader
             ->expects($this->once())
             ->method('load')

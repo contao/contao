@@ -46,7 +46,6 @@ class CsrfTokenCookieListenerTest extends TestCase
         ]);
 
         $requestEvent = $this->createMock(GetResponseEvent::class);
-
         $requestEvent
             ->method('isMasterRequest')
             ->willReturn(true)
@@ -58,7 +57,6 @@ class CsrfTokenCookieListenerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(MemoryTokenStorage::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('initialize')
@@ -75,14 +73,12 @@ class CsrfTokenCookieListenerTest extends TestCase
     public function testDoesNotInitializeTheStorageUponSubrequests(): void
     {
         $requestEvent = $this->createMock(GetResponseEvent::class);
-
         $requestEvent
             ->method('isMasterRequest')
             ->willReturn(false)
         ;
 
         $tokenStorage = $this->createMock(MemoryTokenStorage::class);
-
         $tokenStorage
             ->expects($this->never())
             ->method('initialize')
@@ -95,7 +91,6 @@ class CsrfTokenCookieListenerTest extends TestCase
     public function testAddsTheTokenCookiesToTheResponse(): void
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->method('isSecure')
             ->willReturn(true)
@@ -103,7 +98,6 @@ class CsrfTokenCookieListenerTest extends TestCase
 
         $response = $this->createMock(Response::class);
         $responseEvent = $this->createMock(FilterResponseEvent::class);
-
         $responseEvent
             ->method('isMasterRequest')
             ->willReturn(true)
@@ -120,7 +114,6 @@ class CsrfTokenCookieListenerTest extends TestCase
         ;
 
         $responseHeaders = $this->createMock(ResponseHeaderBag::class);
-
         $responseHeaders
             ->expects($this->once())
             ->method('setCookie')
@@ -141,7 +134,6 @@ class CsrfTokenCookieListenerTest extends TestCase
         $response->headers = $responseHeaders;
 
         $tokenStorage = $this->createMock(MemoryTokenStorage::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getUsedTokens')
@@ -155,7 +147,6 @@ class CsrfTokenCookieListenerTest extends TestCase
     public function testDoesNotAddTheTokenCookiesToTheResponseUponSubrequests(): void
     {
         $responseEvent = $this->createMock(FilterResponseEvent::class);
-
         $responseEvent
             ->method('isMasterRequest')
             ->willReturn(false)
@@ -167,7 +158,6 @@ class CsrfTokenCookieListenerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(MemoryTokenStorage::class);
-
         $tokenStorage
             ->expects($this->never())
             ->method('getUsedTokens')

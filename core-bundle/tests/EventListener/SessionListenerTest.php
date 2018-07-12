@@ -43,8 +43,8 @@ class SessionListenerTest extends TestCase
     public function testForwardsTheOnKernelRequestCall(): void
     {
         $event = $this->createMock(GetResponseEvent::class);
-        $inner = $this->createMock(BaseSessionListener::class);
 
+        $inner = $this->createMock(BaseSessionListener::class);
         $inner
             ->expects($this->once())
             ->method('onKernelRequest')
@@ -65,8 +65,8 @@ class SessionListenerTest extends TestCase
         }
 
         $event = $this->createMock(FinishRequestEvent::class);
-        $inner = $this->createMock(BaseSessionListener::class);
 
+        $inner = $this->createMock(BaseSessionListener::class);
         $inner
             ->expects($this->once())
             ->method('onFinishRequest')
@@ -87,7 +87,6 @@ class SessionListenerTest extends TestCase
         }
 
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -103,7 +102,6 @@ class SessionListenerTest extends TestCase
         $request->setSession($session);
 
         $event = $this->createMock(FilterResponseEvent::class);
-
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -111,7 +109,6 @@ class SessionListenerTest extends TestCase
         ;
 
         $inner = $this->createMock(BaseSessionListener::class);
-
         $inner
             ->expects($this->never())
             ->method('onKernelResponse')
@@ -119,14 +116,12 @@ class SessionListenerTest extends TestCase
         ;
 
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
         $scopeMatcher
             ->method('isFrontendMasterRequest')
             ->willReturn(true)
@@ -146,14 +141,12 @@ class SessionListenerTest extends TestCase
         }
 
         $event = $this->createMock(FilterResponseEvent::class);
-
         $event
             ->expects($this->never())
             ->method('getRequest')
         ;
 
         $inner = $this->createMock(BaseSessionListener::class);
-
         $inner
             ->expects($this->once())
             ->method('onKernelResponse')
@@ -161,14 +154,12 @@ class SessionListenerTest extends TestCase
         ;
 
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(false)
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
         $scopeMatcher
             ->expects($this->never())
             ->method('isFrontendMasterRequest')
@@ -188,14 +179,12 @@ class SessionListenerTest extends TestCase
         }
 
         $event = $this->createMock(FilterResponseEvent::class);
-
         $event
             ->expects($this->never())
             ->method('getRequest')
         ;
 
         $inner = $this->createMock(BaseSessionListener::class);
-
         $inner
             ->expects($this->once())
             ->method('onKernelResponse')
@@ -203,14 +192,12 @@ class SessionListenerTest extends TestCase
         ;
 
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
         $scopeMatcher
             ->expects($this->once())
             ->method('isFrontendMasterRequest')

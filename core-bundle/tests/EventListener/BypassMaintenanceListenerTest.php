@@ -33,8 +33,8 @@ class BypassMaintenanceListenerTest extends TestCase
     {
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
-        $tokenChecker = $this->createMock(TokenChecker::class);
 
+        $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->expects($this->once())
             ->method('hasBackendUser')
@@ -51,8 +51,8 @@ class BypassMaintenanceListenerTest extends TestCase
     {
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
-        $tokenChecker = $this->createMock(TokenChecker::class);
 
+        $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->expects($this->once())
             ->method('hasBackendUser')

@@ -42,14 +42,12 @@ class CommandSchedulerListenerTest extends TestCase
     public function testRunsTheCommandScheduler(): void
     {
         $controller = $this->createMock(FrontendCron::class);
-
         $controller
             ->expects($this->once())
             ->method('run')
         ;
 
         $framework = $this->mockContaoFramework();
-
         $framework
             ->method('createInstance')
             ->willReturn($controller)
@@ -62,7 +60,6 @@ class CommandSchedulerListenerTest extends TestCase
     public function testDoesNotRunTheCommandSchedulerIfTheContaoFrameworkIsNotInitialized(): void
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -84,7 +81,6 @@ class CommandSchedulerListenerTest extends TestCase
     public function testDoesNotRunTheCommandSchedulerInTheInstallTool(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->never())
             ->method('getAdapter')
@@ -112,7 +108,6 @@ class CommandSchedulerListenerTest extends TestCase
     public function testDoesNotRunTheCommandSchedulerUponFragmentRequests(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->never())
             ->method('getAdapter')
@@ -140,7 +135,6 @@ class CommandSchedulerListenerTest extends TestCase
     public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete(): void
     {
         $adapter = $this->mockAdapter(['isComplete', 'get']);
-
         $adapter
             ->method('isComplete')
             ->willReturn(false)
@@ -152,7 +146,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([Config::class => $adapter]);
-
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -169,7 +162,6 @@ class CommandSchedulerListenerTest extends TestCase
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled(): void
     {
         $adapter = $this->mockAdapter(['isComplete', 'get']);
-
         $adapter
             ->method('isComplete')
             ->willReturn(true)
@@ -182,7 +174,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([Config::class => $adapter]);
-
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -199,14 +190,12 @@ class CommandSchedulerListenerTest extends TestCase
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->once())
             ->method('getAdapter')
         ;
 
         $controller = $this->createMock(FrontendCron::class);
-
         $controller
             ->expects($this->never())
             ->method('run')
@@ -218,7 +207,6 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('isConnected')
             ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
@@ -236,14 +224,12 @@ class CommandSchedulerListenerTest extends TestCase
     private function mockConnection()
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
-
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('isConnected')
             ->willReturn(true)

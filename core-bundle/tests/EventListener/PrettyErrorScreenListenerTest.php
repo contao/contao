@@ -68,15 +68,14 @@ class PrettyErrorScreenListenerTest extends TestCase
         $twig = $this->createMock('Twig_Environment');
         $framework = $this->mockContaoFramework();
         $scopeMatcher = $this->mockScopeMatcher();
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
             ->willReturn(null)
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('critical')
@@ -101,22 +100,20 @@ class PrettyErrorScreenListenerTest extends TestCase
         $twig = $this->createMock('Twig_Environment');
         $framework = $this->mockContaoFramework();
         $scopeMatcher = $this->mockScopeMatcher();
-        $token = $this->createMock(TokenInterface::class);
 
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn(null)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('critical')
@@ -244,8 +241,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $twig = $this->createMock('Twig_Environment');
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage(BackendUser::class);
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
 
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->never())
             ->method('isContaoRequest')
@@ -358,8 +355,8 @@ class PrettyErrorScreenListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage($userClass);
         $scopeMatcher = $this->mockScopeMatcher();
-        $logger = $this->createMock(LoggerInterface::class);
 
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($expectLogging ? $this->once() : $this->never())
             ->method('critical')

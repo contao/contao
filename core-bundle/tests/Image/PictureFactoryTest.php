@@ -46,8 +46,8 @@ class PictureFactoryTest extends TestCase
         $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
-        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
             ->method('generate')
             ->with(
@@ -87,7 +87,6 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
-
         $imageFactory
             ->method('create')
             ->with(
@@ -133,7 +132,6 @@ class PictureFactoryTest extends TestCase
         ];
 
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $properties);
-
         $imageSizeItemModel
             ->method('__isset')
             ->willReturn(true)
@@ -185,8 +183,8 @@ class PictureFactoryTest extends TestCase
 
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = $this->createMock(PictureInterface::class);
-        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
             ->method('generate')
             ->with(
@@ -219,7 +217,6 @@ class PictureFactoryTest extends TestCase
         $path = $this->getTempDir().'/images/dummy.jpg';
         $pictureMock = $this->createMock(PictureInterface::class);
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
-
         $pictureGenerator
             ->expects($this->once())
             ->method('generate')
@@ -252,8 +249,8 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageMock = $this->createMock(ImageInterface::class);
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
 
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
             ->expects($this->once())
             ->method('create')
@@ -300,8 +297,8 @@ class PictureFactoryTest extends TestCase
         $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = $this->createMock(PictureInterface::class);
-        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
             ->method('generate')
             ->with(
@@ -334,7 +331,6 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
-
         $imageFactory
             ->method('create')
             ->with(

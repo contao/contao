@@ -32,8 +32,8 @@ class ContaoTemplateExtensionTest extends TestCase
     public function testRendersTheContaoBackendTemplate(): void
     {
         $template = new \stdClass();
-        $backendRoute = $this->createMock(BackendCustom::class);
 
+        $backendRoute = $this->createMock(BackendCustom::class);
         $backendRoute
             ->expects($this->once())
             ->method('getTemplateObject')
@@ -47,7 +47,6 @@ class ContaoTemplateExtensionTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework();
-
         $framework
             ->method('createInstance')
             ->with(BackendCustom::class)

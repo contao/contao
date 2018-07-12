@@ -56,7 +56,6 @@ class AuthenticatorTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->exactly(2))
             ->method('getSchemeAndHttpHost')
@@ -99,7 +98,6 @@ SVG;
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->once())
             ->method('getSchemeAndHttpHost')

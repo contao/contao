@@ -65,8 +65,8 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
-        $resizer = $this->createMock(ResizerInterface::class);
 
+        $resizer = $this->createMock(ResizerInterface::class);
         $resizer
             ->expects($this->exactly(2))
             ->method('resize')
@@ -130,8 +130,8 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
-        $resizer = $this->createMock(ResizerInterface::class);
 
+        $resizer = $this->createMock(ResizerInterface::class);
         $resizer
             ->expects($this->once())
             ->method('resize')
@@ -234,8 +234,8 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imageMock = $this->createMock(ImageInterface::class);
-        $resizer = $this->createMock(ResizerInterface::class);
 
+        $resizer = $this->createMock(ResizerInterface::class);
         $resizer
             ->expects($this->once())
             ->method('resize')
@@ -299,8 +299,8 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getFixturesDir().'/images/none.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
-        $filesystem = $this->createMock(Filesystem::class);
 
+        $filesystem = $this->createMock(Filesystem::class);
         $filesystem
             ->expects($this->once())
             ->method('exists')
@@ -308,7 +308,6 @@ class ImageFactoryTest extends TestCase
         ;
 
         $resizer = $this->createMock(ResizerInterface::class);
-
         $resizer
             ->expects($this->once())
             ->method('resize')
@@ -343,7 +342,6 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imagineImageMock = $this->createMock(ImagineImageInterface::class);
-
         $imagineImageMock
             ->expects($this->once())
             ->method('getSize')
@@ -351,7 +349,6 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imagine = $this->createMock(ImagineInterface::class);
-
         $imagine
             ->expects($this->once())
             ->method('open')
@@ -383,14 +380,12 @@ class ImageFactoryTest extends TestCase
     public function testReturnsTheImportantPartFromALegacyMode($mode, $expected): void
     {
         $dimensionsMock = $this->createMock(ImageDimensionsInterface::class);
-
         $dimensionsMock
             ->method('getSize')
             ->willReturn(new Box(100, 100))
         ;
 
         $imageMock = $this->createMock(ImageInterface::class);
-
         $imageMock
             ->method('getDimensions')
             ->willReturn($dimensionsMock)

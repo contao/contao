@@ -161,7 +161,6 @@ class ContaoFrameworkTest extends TestCase
         $requestStack->push($request);
 
         $routingLoader = $this->createMock(LoaderInterface::class);
-
         $routingLoader
             ->method('load')
             ->willReturn(new RouteCollection())
@@ -241,7 +240,6 @@ class ContaoFrameworkTest extends TestCase
         Config::preload();
 
         $framework = $this->createMock(ContaoFramework::class);
-
         $framework
             ->method('isInitialized')
             ->willReturnOnConsecutiveCalls(false, true)
@@ -420,7 +418,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->mockContainer());
 
         $adapter = $this->mockAdapter(['get', 'validate']);
-
         $adapter
             ->method('get')
             ->willReturn('foobar')
@@ -748,7 +745,6 @@ class ContaoFrameworkTest extends TestCase
     private function mockRouter(string $url): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->method('generate')
             ->willReturn($url)
@@ -798,7 +794,6 @@ class ContaoFrameworkTest extends TestCase
     private function mockConfigAdapter(bool $complete = true): Adapter
     {
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
-
         $config
             ->method('isComplete')
             ->willReturn($complete)
@@ -828,7 +823,6 @@ class ContaoFrameworkTest extends TestCase
     private function mockRequestTokenAdapter(bool $valid = true): Adapter
     {
         $adapter = $this->mockAdapter(['get', 'validate']);
-
         $adapter
             ->method('get')
             ->willReturn('foobar')

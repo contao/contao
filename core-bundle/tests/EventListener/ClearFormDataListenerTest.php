@@ -33,7 +33,6 @@ class ClearFormDataListenerTest extends TestCase
     public function testClearsTheFormData(): void
     {
         $session = $this->createMock(Session::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -61,7 +60,6 @@ class ClearFormDataListenerTest extends TestCase
     public function testDoesNotClearTheFormDataUponSubrequests(): void
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->never())
             ->method('isMethod')
@@ -81,7 +79,6 @@ class ClearFormDataListenerTest extends TestCase
     public function testDoesNotClearTheFormDataUponPostRequests(): void
     {
         $session = $this->createMock(Session::class);
-
         $session
             ->expects($this->never())
             ->method('isStarted')
@@ -105,7 +102,6 @@ class ClearFormDataListenerTest extends TestCase
     public function testDoesNotClearTheFormDataIfTheSessionIsNotStarted(): void
     {
         $session = $this->createMock(Session::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')

@@ -29,7 +29,6 @@ class BackendFormRendererTest extends TestCase
     public function testRedirectsOnRenderFormCall(): void
     {
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->expects($this->once())
             ->method('generate')

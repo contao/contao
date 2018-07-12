@@ -68,7 +68,6 @@ class ContaoContextTest extends TestCase
     public function testReadsTheBasePathFromThePageModel(string $domain, bool $useSSL, string $basePath, string $expected): void
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->once())
             ->method('getBasePath')
@@ -102,7 +101,6 @@ class ContaoContextTest extends TestCase
     public function testReadsTheBasePathFromTheGlobalConfigurationIfThePageDoesNotDefineIt(string $domain, bool $useSSL, string $basePath, string $expected): void
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->once())
             ->method('getBasePath')
@@ -139,7 +137,6 @@ class ContaoContextTest extends TestCase
     public function testReturnsTheStaticUrl(): void
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->once())
             ->method('getBasePath')

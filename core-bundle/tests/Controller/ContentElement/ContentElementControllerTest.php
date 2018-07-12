@@ -128,7 +128,6 @@ class ContentElementControllerTest extends TestCase
         $model->id = 42;
 
         $responseTagger = $this->createMock(ResponseTagger::class);
-
         $responseTagger
                 ->expects($this->once())
                 ->method('addTags')
@@ -152,7 +151,6 @@ class ContentElementControllerTest extends TestCase
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->once())
             ->method('createInstance')

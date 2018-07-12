@@ -82,7 +82,6 @@ class UserPasswordCommandTest extends TestCase
     public function testAsksForThePasswordIfNotGiven(): void
     {
         $question = $this->createMock(QuestionHelper::class);
-
         $question
             ->method('ask')
             ->willReturn('12345678')
@@ -98,7 +97,6 @@ class UserPasswordCommandTest extends TestCase
     public function testFailsIfThePasswordsDoNotMatch(): void
     {
         $question = $this->createMock(QuestionHelper::class);
-
         $question
             ->method('ask')
             ->willReturnOnConsecutiveCalls('12345678', '87654321')
@@ -160,7 +158,6 @@ class UserPasswordCommandTest extends TestCase
     public function testFailsIfTheUsernameIsUnknown(): void
     {
         $connection = $this->container->get('database_connection');
-
         $connection
             ->expects($this->once())
             ->method('update')
@@ -187,7 +184,6 @@ class UserPasswordCommandTest extends TestCase
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $password): void
     {
         $connection = $this->container->get('database_connection');
-
         $connection
             ->expects($this->once())
             ->method('update')

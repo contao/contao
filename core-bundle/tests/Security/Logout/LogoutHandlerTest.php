@@ -35,8 +35,8 @@ class LogoutHandlerTest extends TestCase
     public function testAddsTheLogEntry(): void
     {
         $framework = $this->mockContaoFramework();
-        $logger = $this->createMock(LoggerInterface::class);
 
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method('info')
@@ -44,8 +44,8 @@ class LogoutHandlerTest extends TestCase
         ;
 
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
-        $token = $this->createMock(TokenInterface::class);
 
+        $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -59,15 +59,14 @@ class LogoutHandlerTest extends TestCase
     public function testDoesNotAddALogEntryIfTheUserIsNotSupported(): void
     {
         $framework = $this->mockContaoFramework();
-        $logger = $this->createMock(LoggerInterface::class);
 
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->never())
             ->method('info')
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -86,8 +85,8 @@ class LogoutHandlerTest extends TestCase
     public function testTriggersThePostLogoutHook(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
-        $listener = $this->createPartialMock(Controller::class, ['onPostLogout']);
 
+        $listener = $this->createPartialMock(Controller::class, ['onPostLogout']);
         $listener
             ->expects($this->once())
             ->method('onPostLogout')
@@ -95,7 +94,6 @@ class LogoutHandlerTest extends TestCase
         ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
-
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
@@ -104,14 +102,12 @@ class LogoutHandlerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('info')
@@ -119,7 +115,6 @@ class LogoutHandlerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')

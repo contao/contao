@@ -46,7 +46,6 @@ class AddAssetsPackagesPassTest extends TestCase
     public function testAbortsIfTheAssetsPackagesServiceDoesNotExist(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
-
         $container
             ->expects($this->once())
             ->method('hasDefinition')

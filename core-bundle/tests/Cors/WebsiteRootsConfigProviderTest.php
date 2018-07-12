@@ -36,7 +36,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request->headers->set('Origin', 'http://origin.com');
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('bindValue')
             ->with('dns', 'origin.com')
@@ -69,7 +68,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request->headers->set('Origin', 'https://origin.com');
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('bindValue')
             ->with('dns', 'origin.com')
@@ -95,7 +93,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request->headers->remove('Origin');
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->never())
             ->method('prepare')
@@ -113,7 +110,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request->headers->set('Origin', 'https://foobar.com');
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->never())
             ->method('prepare')
@@ -131,7 +127,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request->headers->set('Origin', 'https://origin.com');
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('isConnected')
             ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
@@ -154,7 +149,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request->headers->set('Origin', 'https://origin.com');
 
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
-
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -162,7 +156,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('isConnected')
             ->willReturn(true)
@@ -194,7 +187,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
     private function mockConnection(Statement $statement): Connection
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
-
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -202,7 +194,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('isConnected')

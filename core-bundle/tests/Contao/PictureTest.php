@@ -89,7 +89,6 @@ class PictureTest extends TestCase
 
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -350,7 +349,6 @@ class PictureTest extends TestCase
         ];
 
         $context = $this->createMock(ContaoContext::class);
-
         $context
             ->method('getStaticUrl')
             ->willReturn('http://example.com/')

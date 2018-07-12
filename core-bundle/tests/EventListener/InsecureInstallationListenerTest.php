@@ -69,7 +69,6 @@ class InsecureInstallationListenerTest extends TestCase
     private function getRequest(): Request
     {
         $request = new Request();
-
         $request->server->set('SCRIPT_NAME', 'app_dev.php');
         $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/web/app_dev.php');
         $request->server->set('REMOTE_ADDR', '123.456.789.0');

@@ -32,7 +32,6 @@ class BackendMenuListenerTest extends TestCase
     public function testCreatesANodeListFromTheBackendUserMenuArray(): void
     {
         $user = $this->createPartialMock(BackendUser::class, ['hasAccess', 'navigation']);
-
         $user
             ->method('hasAccess')
             ->willReturn(true)
@@ -74,14 +73,12 @@ class BackendMenuListenerTest extends TestCase
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
@@ -136,7 +133,6 @@ class BackendMenuListenerTest extends TestCase
     public function testDoesNotModifyTheTreeIfNoUserOrTokenIsGiven(): void
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn(null)

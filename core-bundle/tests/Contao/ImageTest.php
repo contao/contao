@@ -82,7 +82,6 @@ class ImageTest extends TestCase
 
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -99,7 +98,6 @@ class ImageTest extends TestCase
     public function testFailsIfTheFileDoesNotExist(): void
     {
         $fileMock = $this->createMock(File::class);
-
         $fileMock
             ->method('exists')
             ->willReturn(false)
@@ -119,7 +117,6 @@ class ImageTest extends TestCase
     {
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'foobar']);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -150,7 +147,6 @@ class ImageTest extends TestCase
 
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -586,7 +582,6 @@ class ImageTest extends TestCase
 
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -761,7 +756,6 @@ class ImageTest extends TestCase
 
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -885,7 +879,6 @@ class ImageTest extends TestCase
 
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)
@@ -960,7 +953,6 @@ class ImageTest extends TestCase
     {
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
-
         $fileMock
             ->method('exists')
             ->willReturn(true)

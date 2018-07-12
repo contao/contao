@@ -34,7 +34,6 @@ class ValidCharactersTest extends TestCase
     public function testReadsTheOptionsFromTheDispatchedEvent(): void
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
@@ -55,7 +54,6 @@ class ValidCharactersTest extends TestCase
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->expects($this->atLeastOnce())
             ->method('trans')

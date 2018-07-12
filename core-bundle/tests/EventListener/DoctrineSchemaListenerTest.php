@@ -61,7 +61,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     public function testChangesTheIndexIfThereIsASubpart(): void
     {
         $result = $this->createMock(ResultStatement::class);
-
         $result
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(
@@ -100,7 +99,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -160,7 +158,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     public function testDoesNotChangeTheIndexIfThereIsNoSubpart(): void
     {
         $result = $this->createMock(ResultStatement::class);
-
         $result
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(
@@ -184,7 +181,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -196,7 +192,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
-
         $event
             ->method('getConnection')
             ->willReturn($connection)
@@ -236,7 +231,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     public function testDoesNotChangeTheIndexOfThePrimaryKeyColumn(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -248,7 +242,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
-
         $event
             ->method('getConnection')
             ->willReturn($connection)
@@ -271,7 +264,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     public function testDoesNotChangeTheIndexOnDatabasePlatformsOtherThanMysql(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new PostgreSqlPlatform())
@@ -283,7 +275,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
-
         $event
             ->method('getConnection')
             ->willReturn($connection)

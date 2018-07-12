@@ -42,7 +42,6 @@ class BackendLocaleListenerTest extends TestCase
         $user->language = 'de';
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -50,7 +49,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -58,7 +56,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->once())
             ->method('setLocale')
@@ -66,7 +63,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->expects($this->once())
             ->method('setLocale')
@@ -89,7 +85,6 @@ class BackendLocaleListenerTest extends TestCase
     public function testDoesNotSetTheLocaleIfThereIsNoToken(): void
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -97,7 +92,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->never())
             ->method('setLocale')
@@ -114,7 +108,6 @@ class BackendLocaleListenerTest extends TestCase
     public function testDoesNotSetTheLocaleIfNotABackendUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -122,7 +115,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -130,7 +122,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->never())
             ->method('setLocale')
@@ -150,7 +141,6 @@ class BackendLocaleListenerTest extends TestCase
         $user->language = '';
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -158,7 +148,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
@@ -166,7 +155,6 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-
         $request
             ->expects($this->never())
             ->method('setLocale')

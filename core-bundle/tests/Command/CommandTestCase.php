@@ -32,7 +32,6 @@ abstract class CommandTestCase extends TestCase
         $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(KernelInterface::class);
-
         $kernel
             ->method('getContainer')
             ->willReturn($container)

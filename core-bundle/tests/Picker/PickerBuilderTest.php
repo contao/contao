@@ -37,7 +37,6 @@ class PickerBuilderTest extends ContaoTestCase
         parent::setUp();
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->method('generate')
             ->willReturn('/contao/picker?context=page')

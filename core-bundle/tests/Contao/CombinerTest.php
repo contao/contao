@@ -58,7 +58,6 @@ class CombinerTest extends ContaoTestCase
         \define('TL_ROOT', $this->getTempDir());
 
         $context = $this->createMock(ContaoContext::class);
-
         $context
             ->method('getStaticUrl')
             ->willReturn('')

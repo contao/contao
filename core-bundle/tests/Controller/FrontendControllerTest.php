@@ -45,7 +45,6 @@ class FrontendControllerTest extends TestCase
     public function testThrowsAnExceptionUponLoginIfThereIsNoError401Page(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -68,14 +67,12 @@ class FrontendControllerTest extends TestCase
     public function testRendersTheError401PageUponLogin(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->once())
             ->method('initialize')
         ;
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->expects($this->once())
             ->method('hasFrontendUser')
@@ -121,14 +118,12 @@ class FrontendControllerTest extends TestCase
     public function testThrowsAnExceptionUponLoginIfTheError401PageThrowsAnException(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->once())
             ->method('initialize')
         ;
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->expects($this->once())
             ->method('hasFrontendUser')

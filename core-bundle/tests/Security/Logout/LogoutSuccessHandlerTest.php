@@ -33,7 +33,6 @@ class LogoutSuccessHandlerTest extends TestCase
         $request->query->set('redirect', 'http://localhost/home');
 
         $httpUtils = $this->createMock(HttpUtils::class);
-
         $httpUtils
             ->expects($this->once())
             ->method('createRedirectResponse')
@@ -54,7 +53,6 @@ class LogoutSuccessHandlerTest extends TestCase
         $request->headers->set('Referer', 'http://localhost/home');
 
         $httpUtils = $this->createMock(HttpUtils::class);
-
         $httpUtils
             ->expects($this->once())
             ->method('createRedirectResponse')
@@ -73,7 +71,6 @@ class LogoutSuccessHandlerTest extends TestCase
     {
         $request = new Request();
         $httpUtils = $this->createMock(HttpUtils::class);
-
         $httpUtils
             ->expects($this->once())
             ->method('createRedirectResponse')

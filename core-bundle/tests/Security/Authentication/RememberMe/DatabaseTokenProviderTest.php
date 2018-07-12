@@ -59,7 +59,6 @@ class DatabaseTokenProviderTest extends TestCase
         $row->lastUsed = 'now';
 
         $stmt = $this->createMock(Statement::class);
-
         $stmt
             ->expects($this->once())
             ->method('fetch')
@@ -68,7 +67,6 @@ class DatabaseTokenProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -90,7 +88,6 @@ class DatabaseTokenProviderTest extends TestCase
     public function testFailsToLoadATokenIfTheSeriesDoesNotExist(): void
     {
         $stmt = $this->createMock(Statement::class);
-
         $stmt
             ->expects($this->once())
             ->method('fetch')
@@ -98,7 +95,6 @@ class DatabaseTokenProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -130,7 +126,6 @@ class DatabaseTokenProviderTest extends TestCase
         ];
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('executeUpdate')
@@ -167,7 +162,6 @@ class DatabaseTokenProviderTest extends TestCase
         ];
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('executeUpdate')
@@ -184,7 +178,6 @@ class DatabaseTokenProviderTest extends TestCase
     public function testFailsToUpdateATokenIfTheSeriesDoesNotExist(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('executeUpdate')
@@ -227,7 +220,6 @@ class DatabaseTokenProviderTest extends TestCase
         ];
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('executeUpdate')

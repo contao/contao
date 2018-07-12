@@ -41,21 +41,18 @@ abstract class DoctrineTestCase extends TestCase
     protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
-
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
         ;
 
         $config = $this->createMock(Configuration::class);
-
         $config
             ->method('getFilterSchemaAssetsExpression')
             ->willReturn($filter)
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -89,7 +86,6 @@ abstract class DoctrineTestCase extends TestCase
         ;
 
         $registry = $this->createMock(Registry::class);
-
         $registry
             ->method('getConnection')
             ->willReturn($connection)
@@ -119,14 +115,12 @@ abstract class DoctrineTestCase extends TestCase
     protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null): Registry
     {
         $config = $this->createMock(Configuration::class);
-
         $config
             ->method('getFilterSchemaAssetsExpression')
             ->willReturn($filter)
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -144,28 +138,24 @@ abstract class DoctrineTestCase extends TestCase
         ;
 
         $factory = $this->createMock(ClassMetadataFactory::class);
-
         $factory
             ->method('getAllMetadata')
             ->willReturn($metadata)
         ;
 
         $configuration = $this->createMock(Configuration::class);
-
         $configuration
             ->method('getQuoteStrategy')
             ->willReturn(new DefaultQuoteStrategy())
         ;
 
         $eventManager = $this->createMock(EventManager::class);
-
         $eventManager
             ->method('hasListeners')
             ->willReturn(false)
         ;
 
         $em = $this->createMock(EntityManagerInterface::class);
-
         $em
             ->method('getMetadataFactory')
             ->willReturn($factory)
@@ -187,7 +177,6 @@ abstract class DoctrineTestCase extends TestCase
         ;
 
         $registry = $this->createMock(Registry::class);
-
         $registry
             ->method('getConnection')
             ->willReturn($connection)
@@ -222,7 +211,6 @@ abstract class DoctrineTestCase extends TestCase
     protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFrameworkInterface
     {
         $installer = $this->createMock(Installer::class);
-
         $installer
             ->method('getFromDca')
             ->willReturn($dca)
@@ -234,7 +222,6 @@ abstract class DoctrineTestCase extends TestCase
         ;
 
         $framework = $this->mockContaoFramework();
-
         $framework
             ->method('createInstance')
             ->willReturn($installer)

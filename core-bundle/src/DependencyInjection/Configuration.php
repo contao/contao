@@ -62,8 +62,8 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('contao');
 
+        $rootNode = $treeBuilder->root('contao');
         $rootNode
             ->children()
                 ->scalarNode('web_dir')

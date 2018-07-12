@@ -30,7 +30,6 @@ class SymlinksCommandTest extends TestCase
         parent::tearDown();
 
         $fs = new Filesystem();
-
         $fs->remove($this->getFixturesDir().'/system/logs');
         $fs->remove($this->getFixturesDir().'/system/themes');
         $fs->remove($this->getFixturesDir().'/var/cache');

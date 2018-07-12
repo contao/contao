@@ -54,7 +54,6 @@ class AddToSearchIndexListenerTest extends TestCase
     public function testIndexesTheResponse(): void
     {
         $event = $this->mockPostResponseEvent();
-
         $event
             ->expects($this->once())
             ->method('getResponse')
@@ -68,14 +67,12 @@ class AddToSearchIndexListenerTest extends TestCase
     public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized(): void
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(false)
         ;
 
         $event = $this->mockPostResponseEvent();
-
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -88,7 +85,6 @@ class AddToSearchIndexListenerTest extends TestCase
     public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet(): void
     {
         $event = $this->mockPostResponseEvent(null, Request::METHOD_POST);
-
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -101,7 +97,6 @@ class AddToSearchIndexListenerTest extends TestCase
     public function testDoesNotIndexTheResponseUponFragmentRequests(): void
     {
         $event = $this->mockPostResponseEvent('_fragment/foo/bar');
-
         $event
             ->expects($this->never())
             ->method('getResponse')

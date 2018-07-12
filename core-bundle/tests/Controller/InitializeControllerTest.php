@@ -57,7 +57,6 @@ class InitializeControllerTest extends TestCase
     public function testFailsIfTheRequestIsNotAMasterRequest(): void
     {
         $requestStack = $this->createMock(RequestStack::class);
-
         $requestStack
             ->expects($this->once())
             ->method('getMasterRequest')

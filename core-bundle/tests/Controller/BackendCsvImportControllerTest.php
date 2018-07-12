@@ -84,7 +84,6 @@ EOF;
     public function testImportsTheListWizardData(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
@@ -138,7 +137,6 @@ EOF;
     public function testImportsTheTableWizardData(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
@@ -192,7 +190,6 @@ EOF;
     public function testImportsTheOptionWizardData(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
@@ -238,7 +235,6 @@ EOF;
         $requestStack->push($request);
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->method('trans')
             ->willReturnArgument(0)
@@ -287,7 +283,6 @@ EOF;
         $requestStack->push($request);
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->method('trans')
             ->willReturnArgument(0)
@@ -319,7 +314,6 @@ EOF;
         $requestStack->push($request);
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->method('trans')
             ->willReturnArgument(0)
@@ -350,21 +344,18 @@ EOF;
     private function mockFramework(array $files = [], bool $expectError = false): ContaoFrameworkInterface
     {
         $uploader = $this->createMock(FileUpload::class);
-
         $uploader
             ->method('uploadTo')
             ->willReturn($files)
         ;
 
         $adapter = $this->mockAdapter(['addError']);
-
         $adapter
             ->expects($expectError ? $this->once() : $this->never())
             ->method('addError')
         ;
 
         $framework = $this->mockContaoFramework([Message::class => $adapter]);
-
         $framework
             ->method('createInstance')
             ->willReturn($uploader)
@@ -386,7 +377,6 @@ EOF;
         $requestStack->push($request ?: new Request());
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $translator
             ->method('trans')
             ->willReturnArgument(0)

@@ -29,7 +29,6 @@ class FrontendPreviewTokenTest extends TestCase
     public function testAuthenticatesUsers(): void
     {
         $user = $this->createMock(FrontendUser::class);
-
         $user
             ->expects($this->once())
             ->method('getRoles')
@@ -90,7 +89,6 @@ class FrontendPreviewTokenTest extends TestCase
     public function testDoesNotReturnCredentials(): void
     {
         $user = $this->createMock(FrontendUser::class);
-
         $user
             ->expects($this->once())
             ->method('getRoles')

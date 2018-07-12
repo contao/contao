@@ -173,7 +173,6 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', $config);
 
         $preHandlers = $this->createMock(FragmentPreHandlerInterface::class);
-
         $preHandlers
             ->expects($this->once())
             ->method('preHandleFragment')
@@ -190,14 +189,12 @@ class FragmentHandlerTest extends TestCase
     public function testPassesUnknownUrisToTheBaseFragmentHandler(): void
     {
         $baseHandler = $this->createMock(BaseFragmentHandler::class);
-
         $baseHandler
             ->expects($this->once())
             ->method('render')
         ;
 
         $fragmentRegistry = $this->createMock(FragmentRegistry::class);
-
         $fragmentRegistry
             ->expects($this->never())
             ->method('get')
@@ -278,7 +275,6 @@ class FragmentHandlerTest extends TestCase
     private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
     {
         $renderer = $this->createMock(FragmentRendererInterface::class);
-
         $renderer
             ->method('getName')
             ->willReturn($name)
@@ -313,7 +309,6 @@ class FragmentHandlerTest extends TestCase
     private function mockServiceLocator(string $name, $service): ServiceLocator
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
-
         $serviceLocator
             ->expects($this->once())
             ->method('has')
