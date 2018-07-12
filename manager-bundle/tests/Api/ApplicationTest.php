@@ -62,7 +62,6 @@ class ApplicationTest extends ContaoTestCase
     public function testSetsDisabledPackagesInPluginLoader(): void
     {
         $config = $this->createMock(ManagerConfig::class);
-
         $config
             ->expects($this->once())
             ->method('all')
@@ -103,7 +102,6 @@ class ApplicationTest extends ContaoTestCase
     public function testGetsCommandsFromPlugins(): void
     {
         $plugin = $this->createMock(ApiPluginInterface::class);
-
         $plugin
             ->expects($this->once())
             ->method('getApiCommands')
@@ -111,7 +109,6 @@ class ApplicationTest extends ContaoTestCase
         ;
 
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
@@ -132,7 +129,6 @@ class ApplicationTest extends ContaoTestCase
     public function testThrowsExceptionIfPluginReturnsInvalidCommand(): void
     {
         $plugin = $this->createMock(ApiPluginInterface::class);
-
         $plugin
             ->expects($this->once())
             ->method('getApiCommands')
@@ -140,7 +136,6 @@ class ApplicationTest extends ContaoTestCase
         ;
 
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')

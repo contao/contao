@@ -50,7 +50,6 @@ class PluginTest extends ContaoTestCase
         Plugin::autoloadModules($this->getTempDir());
 
         $parser = $this->createMock(ParserInterface::class);
-
         $parser
             ->expects($this->atLeastOnce())
             ->method('parse')
@@ -73,8 +72,8 @@ class PluginTest extends ContaoTestCase
     public function testRegisterContainerConfigurationInProd(): void
     {
         $files = [];
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->atLeastOnce())
             ->method('load')
@@ -101,8 +100,8 @@ class PluginTest extends ContaoTestCase
     public function testRegisterContainerConfigurationInDev(): void
     {
         $files = [];
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->atLeastOnce())
             ->method('load')
@@ -129,7 +128,6 @@ class PluginTest extends ContaoTestCase
     public function testGetRouteCollectionInProd(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
-
         $kernel
             ->expects($this->once())
             ->method('getEnvironment')
@@ -145,7 +143,6 @@ class PluginTest extends ContaoTestCase
     public function testGetRouteCollectionInDev(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-
         $loader
             ->expects($this->atLeastOnce())
             ->method('load')
@@ -160,7 +157,6 @@ class PluginTest extends ContaoTestCase
         ;
 
         $resolver = $this->createMock(LoaderResolverInterface::class);
-
         $resolver
             ->expects($this->atLeastOnce())
             ->method('resolve')
@@ -168,7 +164,6 @@ class PluginTest extends ContaoTestCase
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-
         $kernel
             ->expects($this->once())
             ->method('getEnvironment')

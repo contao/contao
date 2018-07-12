@@ -173,7 +173,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testAccesskeyFromInput(): void
     {
         $questionHelper = $this->createMock(QuestionHelper::class);
-
         $questionHelper
             ->expects($this->exactly(2))
             ->method('ask')
@@ -216,7 +215,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testAccesskeyWithUserFromInput(): void
     {
         $questionHelper = $this->createMock(QuestionHelper::class);
-
         $questionHelper
             ->expects($this->once())
             ->method('ask')
@@ -286,7 +284,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(ContaoKernel::class);
-
         $kernel
             ->method('getContainer')
             ->willReturn($container)

@@ -37,7 +37,6 @@ class ContaoKernelTest extends ContaoTestCase
     public function testRegisterBundles(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
-
         $bundleLoader
             ->expects($this->once())
             ->method('getBundleConfigs')
@@ -59,7 +58,6 @@ class ContaoKernelTest extends ContaoTestCase
     public function testRegistersAppBundle(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
-
         $bundleLoader
             ->expects($this->once())
             ->method('getBundleConfigs')
@@ -94,7 +92,6 @@ class ContaoKernelTest extends ContaoTestCase
     public function testSetsDisabledPackagesInPluginLoader(): void
     {
         $config = $this->createMock(ManagerConfig::class);
-
         $config
             ->expects($this->once())
             ->method('all')
@@ -125,8 +122,8 @@ class ContaoKernelTest extends ContaoTestCase
     public function testRegisterContainerConfiguration(string $projectDir, string $env, array $expectedResult): void
     {
         $files = [];
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -179,8 +176,8 @@ class ContaoKernelTest extends ContaoTestCase
     public function testRegisterContainerConfigurationLoadsPlugins(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $pluginLoader = $this->createMock(PluginLoader::class);
 
+        $pluginLoader = $this->createMock(PluginLoader::class);
         $pluginLoader
             ->expects($this->atLeastOnce())
             ->method('getInstancesOf')
@@ -188,7 +185,6 @@ class ContaoKernelTest extends ContaoTestCase
         ;
 
         $kernel = $this->mockKernel($this->getTempDir());
-
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
     }
@@ -204,7 +200,6 @@ class ContaoKernelTest extends ContaoTestCase
     private function mockKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->method('getInstancesOf')
             ->willReturn([])
@@ -228,7 +223,6 @@ class ContaoKernelTest extends ContaoTestCase
     private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
     {
         $plugin = $this->createMock(ConfigPluginInterface::class);
-
         $plugin
             ->expects($this->once())
             ->method('registerContainerConfiguration')

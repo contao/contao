@@ -41,7 +41,6 @@ class SetConfigCommandTest extends TestCase
         $this->config = $this->createMock(ManagerConfig::class);
 
         $application = $this->createMock(Application::class);
-
         $application
             ->method('getManagerConfig')
             ->willReturn($this->config)

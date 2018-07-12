@@ -124,7 +124,6 @@ class VersionCommandTest extends TestCase
     public function testOutputsPluginFeatures(): void
     {
         $plugin = $this->createMock(ApiPluginInterface::class);
-
         $plugin
             ->expects($this->once())
             ->method('getApiFeatures')

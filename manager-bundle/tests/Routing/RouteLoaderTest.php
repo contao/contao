@@ -38,8 +38,8 @@ class RouteLoaderTest extends TestCase
     public function testLoadFromPlugins(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->exactly(2))
             ->method('getResolver')
@@ -50,7 +50,6 @@ class RouteLoaderTest extends TestCase
         $plugin2 = $this->mockRoutePlugin('foo2', '/foo2/path2');
 
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
@@ -76,8 +75,8 @@ class RouteLoaderTest extends TestCase
     public function testCatchAllIsLast(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->exactly(4))
             ->method('getResolver')
@@ -90,7 +89,6 @@ class RouteLoaderTest extends TestCase
         $plugin4 = $this->mockRoutePlugin('foo4', '/foo4/path4');
 
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
@@ -125,7 +123,6 @@ class RouteLoaderTest extends TestCase
         $collection->add($routeName, new Route($routePath));
 
         $plugin = $this->createMock(RoutingPluginInterface::class);
-
         $plugin
             ->expects($this->atLeastOnce())
             ->method('getRouteCollection')
