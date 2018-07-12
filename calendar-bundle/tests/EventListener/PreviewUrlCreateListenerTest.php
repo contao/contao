@@ -52,7 +52,6 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
     public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(false)

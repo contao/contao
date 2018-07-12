@@ -54,8 +54,8 @@ class InsertTagsListenerTest extends ContaoTestCase
         ];
 
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $properties);
-        $events = $this->mockAdapter(['generateEventUrl']);
 
+        $events = $this->mockAdapter(['generateEventUrl']);
         $events
             ->method('generateEventUrl')
             ->willReturnCallback(
