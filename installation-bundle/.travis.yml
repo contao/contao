@@ -34,7 +34,8 @@ matrix:
   fast_finish: true
 
 before_install:
- - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
+  - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
+  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
