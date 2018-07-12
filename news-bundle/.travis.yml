@@ -38,8 +38,8 @@ before_install:
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
-  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --quiet; fi
-  - composer update $COMPOSER_FLAGS --no-interaction
+  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
+  - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
   - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
