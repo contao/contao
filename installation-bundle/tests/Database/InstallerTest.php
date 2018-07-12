@@ -34,14 +34,12 @@ class InstallerTest extends TestCase
     public function testReturnsTheAlterTableCommands(): void
     {
         $fromSchema = new Schema();
-
         $fromSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addOption('engine', 'InnoDB')
@@ -71,7 +69,6 @@ class InstallerTest extends TestCase
     public function testReturnsTheDropColumnCommands(): void
     {
         $fromSchema = new Schema();
-
         $fromSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string')
@@ -83,7 +80,6 @@ class InstallerTest extends TestCase
         ;
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string')
@@ -99,14 +95,12 @@ class InstallerTest extends TestCase
     public function testReturnsTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
-
         $fromSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string')
@@ -133,7 +127,6 @@ class InstallerTest extends TestCase
         $fromSchema->createTable('tl_foobar');
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2])
@@ -155,7 +148,6 @@ class InstallerTest extends TestCase
         $fromSchema->createTable('tl_foobar');
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string', ['default' => ','])
@@ -177,7 +169,6 @@ class InstallerTest extends TestCase
         $fromSchema->createTable('tl_foobar');
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addColumn('foo1', 'string')
@@ -215,14 +206,12 @@ class InstallerTest extends TestCase
     public function testReturnsNoCommandsIfTheSchemasAreIdentical(): void
     {
         $fromSchema = new Schema();
-
         $fromSchema
             ->createTable('tl_foobar')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema = new Schema();
-
         $toSchema
             ->createTable('tl_foobar')
             ->addOption('engine', 'MyISAM')
@@ -249,7 +238,6 @@ class InstallerTest extends TestCase
     private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = []): Installer
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
-
         $schemaManager
             ->method('createSchema')
             ->willReturn($fromSchema)
@@ -261,14 +249,12 @@ class InstallerTest extends TestCase
         ;
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('fetch')
             ->willReturn((object) ['Engine' => 'MyISAM', 'Collation' => 'utf8_unicode_ci'])
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getSchemaManager')
             ->willReturn($schemaManager)
@@ -290,7 +276,6 @@ class InstallerTest extends TestCase
         ;
 
         $schemaProvider = $this->createMock(DcaSchemaProvider::class);
-
         $schemaProvider
             ->method('createSchema')
             ->willReturn($toSchema)
