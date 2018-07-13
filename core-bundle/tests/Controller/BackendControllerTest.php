@@ -12,21 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BackendControllerTest extends TestCase
@@ -204,180 +200,7 @@ class BackendControllerTest extends TestCase
         $controller->pickerAction($request);
     }
 
-    public function testRedirectsToTheBackendLoginIfTheTokenIsNotATwoFactorToken(): void
-    {
-        $tokenStorage = $this->createMock(TokenStorage::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn(null)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend_login')
-            ->willReturn('/contao')
-        ;
-
-        $container = $this->mockContainer();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('router', $router);
-        $container->set('security.token_storage', $tokenStorage);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        /** @var RedirectResponse $response */
-        $response = $controller->twoFactorAuthenticationAction();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame('/contao', $response->getTargetUrl());
-    }
-
-    public function testRedirectsToTheBackendLoginIfTheTokenIsNotAUsernamePasswordToken(): void
-    {
-        $token = $this->createMock(TwoFactorToken::class);
-        $token
-            ->expects($this->once())
-            ->method('getAuthenticatedToken')
-            ->willReturn($token)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorage::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend_login')
-            ->willReturn('/contao')
-        ;
-
-        $container = $this->mockContainer();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('router', $router);
-        $container->set('security.token_storage', $tokenStorage);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        /** @var RedirectResponse $response */
-        $response = $controller->twoFactorAuthenticationAction();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame('/contao', $response->getTargetUrl());
-    }
-
-    public function testRedirectsToTheBackendLoginIfTheUserIsNotABackendUser(): void
-    {
-        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
-        $authenticatedToken
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn(null)
-        ;
-
-        $token = $this->createMock(TwoFactorToken::class);
-        $token
-            ->expects($this->once())
-            ->method('getAuthenticatedToken')
-            ->willReturn($authenticatedToken)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorage::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend_login')
-            ->willReturn('/contao')
-        ;
-
-        $container = $this->mockContainer();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('router', $router);
-        $container->set('security.token_storage', $tokenStorage);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        /** @var RedirectResponse $response */
-        $response = $controller->twoFactorAuthenticationAction();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame('/contao', $response->getTargetUrl());
-    }
-
-    public function testCallsTheLoginActionIfAValidTwoFactorTokenIsProvided(): void
-    {
-        $user = $this->createMock(BackendUser::class);
-
-        $authenticatedToken = $this->createMock(UsernamePasswordToken::class);
-        $authenticatedToken
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $token = $this->createMock(TwoFactorToken::class);
-        $token
-            ->expects($this->once())
-            ->method('getAuthenticatedToken')
-            ->willReturn($authenticatedToken)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorage::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->with('contao_backend')
-            ->willReturn('/contao')
-        ;
-
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-        $authorizationChecker
-            ->expects($this->once())
-            ->method('isGranted')
-            ->willReturn(true)
-        ;
-
-        $container = $this->mockContainer();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('router', $router);
-        $container->set('security.token_storage', $tokenStorage);
-        $container->set('security.authorization_checker', $authorizationChecker);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        /** @var RedirectResponse $response */
-        $response = $controller->twoFactorAuthenticationAction();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame('/contao', $response->getTargetUrl());
-    }
-
-    public function testRedirectsToTheBackendIfTheTwoFactorCheckRouteIsCalledManually(): void
+    public function testRedirectsToTheBackendIfTheTwoFactorRouteIsCalledManually(): void
     {
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -393,7 +216,7 @@ class BackendControllerTest extends TestCase
         $controller = new BackendController();
         $controller->setContainer($container);
 
-        $response = $controller->twoFactorAuthenticationCheckAction();
+        $response = $controller->twoFactorAuthenticationAction();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
     }
