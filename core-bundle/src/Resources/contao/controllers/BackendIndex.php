@@ -90,7 +90,7 @@ class BackendIndex extends Backend
 		{
 			$objTemplate = new \BackendTemplate('be_login_two_factor');
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-			$objTemplate->action = $router->generate('contao_backend_two_factor_check');
+			$objTemplate->action = $router->generate('contao_backend_two_factor');
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		}
