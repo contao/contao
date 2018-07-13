@@ -61,12 +61,6 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_member_group')
 		),
-		'login' => array
-		(
-			'tables'                  => array('tl_user'),
-			'hideInNavigation'        => true,
-			'disablePermissionChecks' => true,
-		),
 		'user' => array
 		(
 			'tables'                  => array('tl_user')
@@ -74,6 +68,18 @@ $GLOBALS['BE_MOD'] = array
 		'group' => array
 		(
 			'tables'                  => array('tl_user_group')
+		),
+		'login' => array
+		(
+			'tables'                  => array('tl_user'),
+			'hideInNavigation'        => true,
+			'disablePermissionChecks' => true
+		),
+		'two-factor' => array
+		(
+			'callback'                => 'Contao\ModuleTwoFactor',
+			'hideInNavigation'        => true,
+			'disablePermissionChecks' => true
 		)
 	),
 
@@ -99,7 +105,7 @@ $GLOBALS['BE_MOD'] = array
 		'undo' => array
 		(
 			'tables'                  => array('tl_undo'),
-			'disablePermissionChecks' => true,
+			'disablePermissionChecks' => true
 		)
 	)
 );

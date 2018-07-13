@@ -188,23 +188,8 @@
       <trans-unit id="tl_user.session.1">
         <source>Please select the data you want to purge.</source>
       </trans-unit>
-      <trans-unit id="tl_user.useTwoFactor.0">
+      <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
-      </trans-unit>
-      <trans-unit id="tl_user.useTwoFactor.1">
-        <source>Use two-factor authentication to log into the Contao back end.</source>
-      </trans-unit>
-      <trans-unit id="tl_user.twoFactorQrCode.0">
-        <source>QR code</source>
-      </trans-unit>
-      <trans-unit id="tl_user.twoFactorQrCode.1">
-        <source>Please scan the QR code with a 2FA/TOTP app of your choice (e.g. 1Password).</source>
-      </trans-unit>
-      <trans-unit id="tl_user.confirmedTwoFactor.0">
-        <source>Verification code</source>
-      </trans-unit>
-      <trans-unit id="tl_user.confirmedTwoFactor.1">
-        <source>Please enter the verfication code provided by your 2FA/TOTP app.</source>
       </trans-unit>
       <trans-unit id="tl_user.name_legend">
         <source>Name and e-mail</source>

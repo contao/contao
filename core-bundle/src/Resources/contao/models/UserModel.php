@@ -45,7 +45,6 @@ namespace Contao;
  * @property string  $session
  * @property integer $dateAdded
  * @property boolean $useTwoFactor
- * @property boolean $confirmedTwoFactor
  * @property string  $secret
  * @property integer $lastLogin
  * @property integer $currentLogin
@@ -87,7 +86,6 @@ namespace Contao;
  * @method static UserModel|null findOneBySession($val, array $opt=array())
  * @method static UserModel|null findOneByDateAdded($val, array $opt=array())
  * @method static UserModel|null findOneByUseTwoFactor($val, array $opt=array())
- * @method static UserModel|null findOneByConfirmedTwoFactor($val, array $opt=array())
  * @method static UserModel|null findOneBySecret($val, array $opt=array())
  * @method static UserModel|null findOneByLastLogin($val, array $opt=array())
  * @method static UserModel|null findOneByCurrentLogin($val, array $opt=array())
@@ -124,7 +122,6 @@ namespace Contao;
  * @method static Model\Collection|UserModel[]|UserModel|null findBySession($val, array $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByDateAdded($val, array $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByUseTwoFactor($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByConfirmedTwoFactor($val, array $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findBySecret($val, array $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByLastLogin($val, array $opt=array())
  * @method static Model\Collection|UserModel[]|UserModel|null findByCurrentLogin($val, array $opt=array())
@@ -166,7 +163,6 @@ namespace Contao;
  * @method static integer countBySession($val, array $opt=array())
  * @method static integer countByDateAdded($val, array $opt=array())
  * @method static integer countByUseTwoFactor($val, array $opt=array())
- * @method static integer countByConfirmedTwoFactor($val, array $opt=array())
  * @method static integer countBySecret($val, array $opt=array())
  * @method static integer countByLastLogin($val, array $opt=array())
  * @method static integer countByCurrentLogin($val, array $opt=array())

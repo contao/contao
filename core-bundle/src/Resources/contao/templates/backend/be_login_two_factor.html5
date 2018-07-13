@@ -49,12 +49,6 @@
             <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
             <input type="hidden" name="_always_use_target_path" value="1">
             <h1><?= $this->headline ?></h1>
-            <?php if ($this->qrCode): ?>
-              <div class="qr_code">
-                <p class="tl_help" title=""><?= $this->authCodeHelp; ?></p>
-                <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>">
-              </div>
-            <?php endif; ?>
             <div class="widget">
               <label for="verify"><?= $this->authCode ?></label>
               <input type="text" name="verify" id="verify" class="tl_text" value="" autocapitalize="off" autocomplete="off" placeholder="<?= $this->authCode ?>" required>

@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -84,9 +83,6 @@ class BackendIndex extends Backend
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 
-		/** @var Request $request */
-		$request = $container->get('request_stack')->getCurrentRequest();
-
 		/** @var TokenInterface $token */
 		$token = $container->get('security.token_storage')->getToken();
 
@@ -95,14 +91,8 @@ class BackendIndex extends Backend
 			$objTemplate = new \BackendTemplate('be_login_two_factor');
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 			$objTemplate->action = $router->generate('contao_backend_two_factor_check');
-			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['authCode'];
-			$objTemplate->authCodeHelp = $GLOBALS['TL_LANG']['tl_user']['twoFactorQrCode'][1];
+			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
-			$objTemplate->qrCode = null;
-
-			if (!$this->User->confirmedTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend')) {
-				$objTemplate->qrCode = base64_encode($container->get('contao.security.two_factor.authenticator')->getQrCode($this->User, $request));
-			}
 		}
 
 		$objTemplate->theme = \Backend::getTheme();

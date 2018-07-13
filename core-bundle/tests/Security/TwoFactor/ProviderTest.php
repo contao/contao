@@ -25,7 +25,7 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertInstanceOf('Contao\CoreBundle\Security\TwoFactor\Provider', $provider);
     }
@@ -34,7 +34,7 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertInstanceOf(
             'Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface',
@@ -54,32 +54,9 @@ class ProviderTest extends TestCase
             ->willReturn(null)
         ;
 
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertFalse($provider->beginAuthentication($context));
-    }
-
-    public function testGeneratesASecretIfThereIsNoneYet(): void
-    {
-        $authenticator = $this->createMock(Authenticator::class);
-        $renderer = $this->createMock(BackendFormRenderer::class);
-
-        $user = $this->createMock(User::class);
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
-        $context = $this->createMock(AuthenticationContextInterface::class);
-        $context
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $provider = new Provider($authenticator, $renderer, true);
-
-        $this->assertTrue($provider->beginAuthentication($context));
     }
 
     public function testDoesNotBeginAuthenticationIfTwoFactorIsDisabled(): void
@@ -88,7 +65,7 @@ class ProviderTest extends TestCase
         $renderer = $this->createMock(BackendFormRenderer::class);
 
         $user = $this->createMock(User::class);
-        $user->confirmedTwoFactor = false;
+        $user->useTwoFactor = '';
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -97,29 +74,9 @@ class ProviderTest extends TestCase
             ->willReturn($user)
         ;
 
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertFalse($provider->beginAuthentication($context));
-    }
-
-    public function testBeginsAuthenticationIfTwoFactorIsEnforced(): void
-    {
-        $authenticator = $this->createMock(Authenticator::class);
-        $renderer = $this->createMock(BackendFormRenderer::class);
-
-        $user = $this->createMock(User::class);
-        $user->confirmedTwoFactor = false;
-
-        $context = $this->createMock(AuthenticationContextInterface::class);
-        $context
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $provider = new Provider($authenticator, $renderer, true);
-
-        $this->assertTrue($provider->beginAuthentication($context));
     }
 
     public function testBeginsAuthenticationIfTwoFactorIsEnabled(): void
@@ -128,7 +85,7 @@ class ProviderTest extends TestCase
         $renderer = $this->createMock(BackendFormRenderer::class);
 
         $user = $this->createMock(User::class);
-        $user->confirmedTwoFactor = true;
+        $user->useTwoFactor = '1';
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -137,7 +94,7 @@ class ProviderTest extends TestCase
             ->willReturn($user)
         ;
 
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertTrue($provider->beginAuthentication($context));
     }
@@ -146,7 +103,7 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertFalse($provider->validateAuthenticationCode(null, ''));
     }
@@ -164,42 +121,15 @@ class ProviderTest extends TestCase
             ->willReturn(false)
         ;
 
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertFalse($provider->validateAuthenticationCode($user, '123456'));
-    }
-
-    public function testSetsTheTwoFactorFlagIfTheAuthenticationIsValid(): void
-    {
-        $user = $this->createMock(User::class);
-        $user->confirmedTwoFactor = false;
-
-        $user
-            ->expects($this->once())
-            ->method('save')
-            ->willReturn(null)
-        ;
-
-        $renderer = $this->createMock(BackendFormRenderer::class);
-
-        $authenticator = $this->createMock(Authenticator::class);
-        $authenticator
-            ->expects($this->once())
-            ->method('validateCode')
-            ->with($user, '123456')
-            ->willReturn(true)
-        ;
-
-        $provider = new Provider($authenticator, $renderer, true);
-        $provider->validateAuthenticationCode($user, '123456');
-
-        $this->assertTrue($user->confirmedTwoFactor);
     }
 
     public function testValidatesTheAuthenticationCode(): void
     {
         $user = $this->createMock(User::class);
-        $user->confirmedTwoFactor = true;
+        $user->useTwoFactor = '1';
 
         $renderer = $this->createMock(BackendFormRenderer::class);
 
@@ -211,7 +141,7 @@ class ProviderTest extends TestCase
             ->willReturn(true)
         ;
 
-        $provider = new Provider($authenticator, $renderer, false);
+        $provider = new Provider($authenticator, $renderer);
 
         $this->assertTrue($provider->validateAuthenticationCode($user, '123456'));
     }

@@ -92,6 +92,12 @@
       <trans-unit id="MOD.maintenance.1">
         <source>Maintain or update Contao</source>
       </trans-unit>
+      <trans-unit id="MOD.two-factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MOD.two-factor.1">
+        <source>Configure two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
       </trans-unit>

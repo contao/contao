@@ -51,8 +51,10 @@ class BackendMain extends Backend
 	 */
 	public function __construct()
 	{
+		$container = \System::getContainer();
+
 		/** @var AuthorizationCheckerInterface $authorizationChecker */
-		$authorizationChecker = \System::getContainer()->get('security.authorization_checker');
+		$authorizationChecker = $container->get('security.authorization_checker');
 
 		$this->import('BackendUser', 'User');
 		parent::__construct();
@@ -68,6 +70,12 @@ class BackendMain extends Backend
 			$this->redirect('contao/password.php');
 		}
 
+		// Two-factor setup required
+		if (!$this->User->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && \Input::get('do') != 'two-factor')
+		{
+			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'two-factor')));
+		}
+
 		// Front end redirect
 		if (\Input::get('do') == 'feRedirect')
 		{
@@ -77,8 +85,6 @@ class BackendMain extends Backend
 		// Backend user profile redirect
 		if (\Input::get('do') == 'login' && (\Input::get('act') != 'edit' && \Input::get('id') != $this->User->id))
 		{
-			$container = \System::getContainer();
-
 			$strUrl = $container->get('router')->generate('contao_backend', array
 			(
 				'do' => 'login',
@@ -237,6 +243,7 @@ class BackendMain extends Backend
 		$this->Template->previewTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
 		$this->Template->profileTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
+		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 		$this->Template->pageOffset = (int) \Input::cookie('BE_PAGE_OFFSET');
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
 		$this->Template->logoutLink = \System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();

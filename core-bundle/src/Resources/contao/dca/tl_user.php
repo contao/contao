@@ -18,7 +18,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'enableVersioning'            => true,
 		'onload_callback' => array
 		(
-			array('tl_user', 'buildTwoFactorPalette'),
 			array('tl_user', 'handleUserProfile'),
 			array('tl_user', 'checkPermission')
 		),
@@ -441,42 +440,16 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
-		'useTwoFactor' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useTwoFactor'],
-			'inputType'               => 'checkbox',
-			'filter'                  => true,
-			'eval'                    => array('submitOnChange'=>true, 'doNotCopy'=>true),
-			'load_callback' => array
-			(
-				array('tl_user', 'adjustDcaConfig')
-			),
-			'save_callback' => array
-			(
-				array('tl_user', 'resetTwoFactorSecret')
-			),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'twoFactorQrCode' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['twoFactorQrCode'],
-			'input_field_callback'    => array('tl_user', 'getTwoFactorQrCode')
-		),
-		'confirmedTwoFactor' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['confirmedTwoFactor'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_user', 'confirmTwoFactor')
-			),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
 		'secret' => array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "binary(128) NULL default NULL"
+		),
+		'useTwoFactor' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useTwoFactor'],
+			'eval'                    => array('isBoolean'=>true),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'lastLogin' => array
 		(
@@ -630,7 +603,7 @@ class tl_user extends Backend
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
-		if ($row['confirmedTwoFactor'])
+		if ($row['useTwoFactor'])
 		{
 			$image .= '_two_factor';
 		}
@@ -1027,160 +1000,5 @@ class tl_user extends Backend
 		}
 
 		$objVersions->create();
-	}
-
-	/**
-	 * Build the palette for 2FA dynamically
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function buildTwoFactorPalette(DataContainer $dc)
-	{
-		/** @var BackendUser $activeRecord */
-		$activeRecord = UserModel::findById($dc->id);
-
-		if ($activeRecord === null)
-		{
-			return;
-		}
-
-		$user = BackendUser::getInstance();
-
-		foreach ($GLOBALS['TL_DCA'][$dc->table]['palettes'] as $palette => $v)
-		{
-			if ($palette === '__selector__')
-			{
-				continue;
-			}
-
-			// Don't show the 2FA options to the logged in user
-			if ($dc->id != $user->id && !$activeRecord->useTwoFactor)
-			{
-				continue;
-			}
-
-			Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-				->addLegend('two_factor_legend', 'password_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-				->addField('useTwoFactor', 'two_factor_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
-				->applyToPalette($palette, $dc->table)
-			;
-		}
-
-		// Hide the QR code subpalette once the code has been confirmed
-		if ($dc->id == $user->id && !$user->confirmedTwoFactor)
-		{
-			$GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'][] = 'useTwoFactor';
-			$GLOBALS['TL_DCA'][$dc->table]['subpalettes']['useTwoFactor'] = 'twoFactorQrCode';
-
-			Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-				->addField('confirmedTwoFactor', 'twoFactorQrCode')
-				->applyToSubpalette('useTwoFactor', $dc->table)
-			;
-		}
-	}
-
-	/**
-	 * Adjust the DCA configuration
-	 *
-	 * @param string        $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function adjustDcaConfig($varValue, DataContainer $dc)
-	{
-		// Disable auto-submit if 2FA is enabled
-		if ($varValue)
-		{
-			unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['submitOnChange']);
-		}
-
-		// Disable the checkbox if 2FA is enforced
-		if ($varValue && Input::get('do') == 'login' && System::getContainer()->getParameter('contao.security.two_factor.enforce_backend'))
-		{
-			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['disabled'] = true;
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Clear the secret and confirmation flag if 2FA is disabled
-	 *
-	 * @param string        $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function resetTwoFactorSecret($varValue, DataContainer $dc)
-	{
-		if (!$varValue)
-		{
-			$this->Database->prepare("UPDATE tl_user SET secret=NULL, confirmedTwoFactor='' WHERE id=?")
-						   ->execute($dc->id);
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Display the QR code in the subpalette
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function getTwoFactorQrCode(DataContainer $dc)
-	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->secret)
-		{
-			$user->secret = random_bytes(128);
-			$user->save();
-		}
-
-		/** @var Contao\CoreBundle\Security\TwoFactor\Authenticator $twoFactorAuthenticator */
-		$twoFactorAuthenticator = System::getContainer()->get('contao.security.two_factor.authenticator');
-
-		/** @var Symfony\Component\HttpFoundation\Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		return '
-<div class="twoFactor-qr-code widget">
-  <div id="ctrl_' . $dc->field . '" class="">
-    <h3><label for="ctrl_' . $dc->field . '">' . $GLOBALS['TL_LANG']['tl_user']['twoFactorQrCode'][0] . '</label></h3>
-    <img src="data:image/svg+xml;base64,' . base64_encode($twoFactorAuthenticator->getQrCode($user, $request)) . '" />
-  </div>' . (Config::get('showHelp') ? '
-  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_user']['twoFactorQrCode'][1] . '</p>' : '') . '
-</div>';
-	}
-
-	/**
-	 * Confirm the 2FA activation
-	 *
-	 * @param string $varValue
-	 *
-	 * @throws RuntimeException
-	 *
-	 * @return string
-	 */
-	public function confirmTwoFactor($varValue)
-	{
-		$user = BackendUser::getInstance();
-
-		/** @var Contao\CoreBundle\Security\TwoFactor\Authenticator $twoFactorAuthenticator */
-		$twoFactorAuthenticator = System::getContainer()->get('contao.security.two_factor.authenticator');
-
-		if (!$twoFactorAuthenticator->validateCode($user, $varValue))
-		{
-			// Disable 2FA, otherwise 2FA stays enabled if the user leaves the window
-			$user->useTwoFactor = false;
-			$user->save();
-
-			throw new RuntimeException($GLOBALS['TL_LANG']['ERR']['invalidTwoFactor']);
-		}
-
-		return '1';
 	}
 }

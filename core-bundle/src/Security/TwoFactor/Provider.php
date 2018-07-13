@@ -30,20 +30,13 @@ class Provider implements TwoFactorProviderInterface
     private $formRenderer;
 
     /**
-     * @var bool
-     */
-    private $enforceTwoFactor;
-
-    /**
      * @param Authenticator                  $authenticator
      * @param TwoFactorFormRendererInterface $formRenderer
-     * @param bool                           $enforceTwoFactor
      */
-    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer, bool $enforceTwoFactor)
+    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer)
     {
         $this->authenticator = $authenticator;
         $this->formRenderer = $formRenderer;
-        $this->enforceTwoFactor = $enforceTwoFactor;
     }
 
     /**
@@ -57,14 +50,7 @@ class Provider implements TwoFactorProviderInterface
             return false;
         }
 
-        // Generate a secret if 2FA is enforced and the user has not yet enabled it
-        if ($this->enforceTwoFactor && !$user->secret) {
-            $user->secret = random_bytes(128);
-            $user->save();
-        }
-
-        // Check confirmedTwoFactor since useTwoFactor does not guarantee a successfull 2FA activation
-        return $this->enforceTwoFactor || $user->confirmedTwoFactor;
+        return (bool) $user->useTwoFactor;
     }
 
     /**
@@ -78,13 +64,6 @@ class Provider implements TwoFactorProviderInterface
 
         if (!$this->authenticator->validateCode($user, $authenticationCode)) {
             return false;
-        }
-
-        // 2FA is now confirmed, save the user flag
-        if ($this->enforceTwoFactor && !$user->confirmedTwoFactor) {
-            $user->useTwoFactor = true;
-            $user->confirmedTwoFactor = true;
-            $user->save();
         }
 
         return true;

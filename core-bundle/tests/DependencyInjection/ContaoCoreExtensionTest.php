@@ -1461,7 +1461,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.security.two_factor.authenticator', (string) $definition->getArgument(0));
         $this->assertSame('contao.security.two_factor.backend_form_renderer', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.security.two_factor.enforce_backend%', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityUserChecker(): void

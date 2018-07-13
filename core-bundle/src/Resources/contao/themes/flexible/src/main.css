@@ -157,6 +157,9 @@ body:not(.fullscreen) #header .inner {
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
 }
+#tmenu .icon-two-factor {
+	background:url("icons/shield_dark.svg") 20px center no-repeat;
+}
 #tmenu .icon-logout {
 	background:url("icons/exit_dark.svg") 20px center no-repeat;
 }
@@ -537,8 +540,61 @@ input[type=search]::-webkit-search-decoration {
 #tl_maintenance_mode .tl_message {
 	margin-bottom:12px;
 }
+#tl_maintenance_mode .tl_message > p {
+	padding-top:0;
+	padding-bottom:0;
+	background-color:transparent;
+}
 #tl_maintenance_index .tl_tbox {
 	margin-top:-12px;
+}
+
+/* Two-factor */
+.two-factor {
+	border-top:1px solid #e6e6e8;
+	padding-bottom:9px;
+}
+.two-factor h2.sub_headline {
+	margin:18px 15px 3px;
+}
+.two-factor > p {
+	margin:0 15px 12px;
+	line-height:1.3;
+}
+.two-factor li {
+	margin-left:2em;
+	list-style:initial;
+}
+.two-factor .qr-code {
+	margin:0 15px;
+}
+.two-factor .widget {
+	height:auto;
+	margin:15px 15px 12px;
+}
+.two-factor .widget .tl_error {
+	margin:0;
+	padding:1px 0;
+	background:none;
+	font-size:.75rem;
+	line-height:1.25;
+}
+.two-factor .tl_submit_container {
+	background:none;
+	padding:0 15px 10px;
+	border:0;
+}
+.two-factor .submit_container {
+	clear:both;
+	margin:0 15px 12px;
+}
+.two-factor .tl_message {
+	margin-bottom:12px;
+}
+.two-factor .tl_message > p {
+	padding-top:0;
+	padding-bottom:0;
+	background-color:transparent;
 }
 
 /* Picker search */

@@ -60,6 +60,7 @@
                 <ul class="level_2">
                   <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
                   <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
+                  <li><a href="<?= $this->route('contao_backend', ['do'=>'two-factor', 'ref'=>$this->ref]) ?>" class="icon-two-factor"><?= $this->twoFactor ?></a></li>
                   <li><a href="<?= $this->logoutLink ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
                 </ul>
               </li>
