@@ -71,7 +71,7 @@ label[for="username"] {
 	height:16px;
 	text-indent:-999em;
 }
-label[for="password"],label[for="confirm"],label[for="verify"] {
+label[for="password"],label[for="confirm"] {
 	position:absolute;
 	top:10px;
 	right:7px;
@@ -79,6 +79,16 @@ label[for="password"],label[for="confirm"],label[for="verify"] {
 	background-size:14px;
 	width:14px;
 	height:14px;
+	text-indent:-999em;
+}
+label[for="verify"] {
+	position:absolute;
+	top:9px;
+	right:6px;
+	background:url("icons/shield.svg") left top no-repeat;
+	background-size:16px;
+	width:16px;
+	height:16px;
 	text-indent:-999em;
 }
 .qr_code {
