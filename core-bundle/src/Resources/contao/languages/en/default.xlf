@@ -1817,6 +1817,9 @@
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorEnforced">
+        <source>Please enable up two-factor authentication before you continue.</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
       </trans-unit>
