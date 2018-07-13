@@ -216,7 +216,7 @@
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
-        <source>Invalid two-factor verification code!</source>
+        <source>Invalid verification code!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
