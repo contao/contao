@@ -188,9 +188,6 @@
       <trans-unit id="tl_user.session.1">
         <source>Please select the data you want to purge.</source>
       </trans-unit>
-      <trans-unit id="tl_user.useTwoFactor">
-        <source>Use two-factor authentication</source>
-      </trans-unit>
       <trans-unit id="tl_user.name_legend">
         <source>Name and e-mail</source>
       </trans-unit>
@@ -233,9 +230,6 @@
       <trans-unit id="tl_user.session_legend">
         <source>Clear cache</source>
       </trans-unit>
-      <trans-unit id="tl_user.two_factor_legend">
-        <source>Two-factor authentication (2FA)</source>
-      </trans-unit>
       <trans-unit id="tl_user.sessionLabel">
         <source>Session data</source>
       </trans-unit>
@@ -256,6 +250,9 @@
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

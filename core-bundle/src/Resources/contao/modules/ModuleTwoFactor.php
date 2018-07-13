@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Back end module "two factor".
@@ -41,6 +42,16 @@ class ModuleTwoFactor extends BackendModule
 		$strRefererId = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$ref = $container->get('router')->generate('contao_backend', array('do'=>'two-factor', 'ref'=>$strRefererId));
 		$user = BackendUser::getInstance();
+		$canDisable = true;
+
+		// If 2FA is enforced, only admins can disable it
+		if ($container->getParameter('contao.security.two_factor.enforce_backend'))
+		{
+			/** @var AuthorizationCheckerInterface $authorizationChecker */
+			$authorizationChecker = $container->get('security.authorization_checker');
+
+			$canDisable = $authorizationChecker->isGranted(array('ROLE_ADMIN', 'ROLE_PREVIOUS_ADMIN'));
+		}
 
 		$this->Template->href = $this->getReferer(true);
 		$this->Template->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
@@ -48,22 +59,18 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->ref = $ref;
 		$this->Template->action = \Environment::get('indexFreeRequest');
 
-		// Enable two-factor authentication
 		if (Input::get('act') == 'enable')
 		{
 			$this->enableTwoFactor($user, $ref);
 		}
 
-		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_disable')
+		if ($canDisable && Input::post('FORM_SUBMIT') == 'tl_two_factor_disable')
 		{
-			$user->secret = null;
-			$user->useTwoFactor = '';
-			$user->save();
-
-			throw new RedirectResponseException($ref);
+			$this->disableTwoFactor($user, $ref);
 		}
 
 		$this->Template->isEnabled = $this->User->useTwoFactor;
+		$this->Template->canDisable = $canDisable;
 		$this->Template->activation = $GLOBALS['TL_LANG']['MSC']['twoFactorActivation'];
 		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
 		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
@@ -120,5 +127,26 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->scan = $GLOBALS['TL_LANG']['MSC']['twoFactorScan'];
 		$this->Template->verify = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 		$this->Template->verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
+	}
+
+	/**
+	 * Disable two-factor authentication
+	 *
+	 * @param BackendUser $user
+	 * @param string      $ref
+	 */
+	protected function disableTwoFactor(BackendUser $user, $ref)
+	{
+		// Return if 2FA is disabled already
+		if (!$user->useTwoFactor)
+		{
+			return;
+		}
+
+		$user->secret = null;
+		$user->useTwoFactor = '';
+		$user->save();
+
+		throw new RedirectResponseException($ref);
 	}
 }
