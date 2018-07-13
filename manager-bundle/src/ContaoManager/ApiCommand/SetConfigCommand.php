@@ -27,7 +27,7 @@ class SetConfigCommand extends Command
     private $managerConfig;
 
     /**
-     * @param ManagerConfig $managerConfig
+     * @param Application $application
      */
     public function __construct(Application $application)
     {
