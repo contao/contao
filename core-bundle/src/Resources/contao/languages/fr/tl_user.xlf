@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.0">
         <source>Fullscreen</source>
+        <target>Plein écran</target>
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
+        <target>Ne pas limiter la largeur du back office.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>Les membres de ces groupes peuvent utilisés en prévisualisation du front office.</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -329,6 +332,9 @@
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
         <target>Outil d'envoi de fichier par défaut</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

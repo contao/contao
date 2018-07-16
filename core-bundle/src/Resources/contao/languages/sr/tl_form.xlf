@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
-        <target>Преусмеравање странице</target>
+        <target>Страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_form.subject.0">
         <source>Subject</source>
-        <target>Тема поруке</target>
+        <target>Тема</target>
       </trans-unit>
       <trans-unit id="tl_form.subject.1">
         <source>Please enter the e-mail subject.</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_form.title_legend">
         <source>Title and redirect page</source>
-        <target>Назив и страница преусмеравања</target>
+        <target>Назив и страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_form.email_legend">
         <source>Send form data</source>

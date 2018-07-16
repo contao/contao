@@ -121,22 +121,6 @@
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
         <target>ウェブサイトをSSLプロキシサーバー経由で提供している場合は、そのドメイン名を入力してください。(例: &lt;em&gt;sslsites.de&lt;/em&gt;)</target>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-        <target>IPアドレスの匿名化</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize all IP addresses that are stored in the database.</source>
-        <target>データベースに保存するすべてのIPアドレスを匿名化します。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-        <target>Googleアナリティックスを匿名化</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-        <target>Googleアナリティックスに送るIPアドレスを匿名化します。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>空のURLにリダイレクトしない</target>
@@ -200,14 +184,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
         <target>サポートするテンプレートのファイル形式をコンマで区切ったリストで入力します。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-        <target>フロントエンドの最大幅</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
-        <target> 画像や動画の大きさがこの値を超えている場合は自動的に調整します。0にすると制限を無効にします。</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -352,10 +328,6 @@
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
         <target>プロキシの構成</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
-        <target>プライバシーの設定</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

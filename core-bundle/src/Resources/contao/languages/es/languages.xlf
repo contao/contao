@@ -810,6 +810,10 @@
         <target>
 Nynorsk noruego</target>
       </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+        <target>Noruego</target>
+      </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
         <target>Ndebele del sur</target>

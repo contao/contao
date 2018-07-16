@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
         <source>Meta data</source>
-        <target>Métadonnées</target>
+        <target>Meta-données</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file meta data.</source>
@@ -87,10 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
-      </trans-unit>
-      <trans-unit id="tl_files.upload">
-        <source>Upload files</source>
-        <target>Envoi des fichiers</target>
+        <target>Vous pouvez modifier ici le fichier source (pressez F11 pour passer en mode plein écran).</target>
       </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
@@ -123,6 +120,12 @@
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
         <target>Cliquez ou déposer des fichiers ici pour téléverser</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -215,6 +218,14 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
         <target>Éditer le fichier &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Envoi des fichiers</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.1">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Envoyer un fichier dans le répertoire &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

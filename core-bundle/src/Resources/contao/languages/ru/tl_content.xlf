@@ -310,8 +310,8 @@
         <target>Лайтбокс (Lightbox)</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
-        <source>To trigger the lightbox, enter a &lt;em&gt;rel&lt;/em&gt; attribute here.</source>
-        <target>Чтобы активировать лайтбокс, введите атрибут &lt;em&gt;rel&lt;/em&gt;.</target>
+        <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
+        <target>Чтобы активировать лайтбокс, введите атрибут &lt;em&gt;data-lightbox&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -414,8 +414,8 @@
         <target>Vimeo ID</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
-        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
-        <target>Введите Vimeo ID видео (напр. &lt;em&gt;95674578&lt;/em&gt;).</target>
+        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
+        <target>Введите Vimeo ID видео (напр. &lt;em&gt;275028611&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -433,37 +433,61 @@
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
         <target>Ширина и высота проигрывателя в пикселах (напр. 640x480).</target>
       </trans-unit>
-      <trans-unit id="tl_content.autoplay.0">
-        <source>Autoplay</source>
-        <target>Автовоспроизведение</target>
-      </trans-unit>
-      <trans-unit id="tl_content.autoplay.1">
-        <source>Automatically play the video when the page loads.</source>
-        <target>Автоматически воспроизводить видео при загрузке страницы.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.0">
+      <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
         <target>Настройки проигрывателя</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.1">
+      <trans-unit id="tl_content.playerOptions.1">
         <source>Here you can select the player options.</source>
         <target>Вы можете выбрать настройки проигрывателя.</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.0">
+      <trans-unit id="tl_content.playerPreload.0">
+        <source>Preloading</source>
+        <target>Предварительная загрузка</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerPreload.1">
+        <source>Here you can suggest how the browser shall preload the video.</source>
+        <target>Вы можете предложить, как браузер должен предварительно загружать видео.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
         <target>Начать с</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.1">
+      <trans-unit id="tl_content.playerStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Начать воспроизведение видео с указанного количества секунд. Установите 0 для отключения.</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.0">
+      <trans-unit id="tl_content.playerStop.0">
         <source>Stop at</source>
         <target>Остановить с</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.1">
+      <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Остановить воспроизведение видео с указанного количества секунд. Установите 0 для отключения.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.0">
+        <source>Caption</source>
+        <target>Подпись</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.1">
+        <source>Here you can enter a caption.</source>
+        <target>Вы можете ввести подпись.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.0">
+        <source>Aspect ratio</source>
+        <target>Соотношение сторон</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.1">
+        <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+        <target>Вы можете выбрать соотношение сторон видео, чтобы сделать его адаптивным.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.0">
+        <source>Controls color</source>
+        <target>Элементы управления цветом</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.1">
+        <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
+        <target>Вы можете ввести шестнадцатеричный цвет (напр., ff0000) для элементов управления видео.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -638,12 +662,8 @@
         <target>Настройки изображения ссылки</target>
       </trans-unit>
       <trans-unit id="tl_content.source_legend">
-        <source>Files and folders</source>
-        <target>Файлы и каталоги</target>
-      </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
-        <source>Download settings</source>
-        <target>Настройки загрузки</target>
+        <source>Source</source>
+        <target>Исходник</target>
       </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
@@ -713,6 +733,46 @@
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>Шаблон &lt;em&gt;%s&lt;/em&gt; или &lt;em&gt;%s&lt;/em&gt; должен быть включен в макет страницы.</target>
       </trans-unit>
+      <trans-unit id="tl_content.player_autoplay">
+        <source>Autoplay</source>
+        <target>Автовоспроизведение</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_nocontrols">
+        <source>Hide the controls</source>
+        <target>Скрыть элементы управления</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_loop">
+        <source>Play in a loop</source>
+        <target>Воспроизводить по кругу</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_muted">
+        <source>Mute the audio output</source>
+        <target>Отключение звука</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_playsinline">
+        <source>Play inline (no fullscreen mode)</source>
+        <target>Воспроизвести inline (без полноэкранного режима)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.auto">
+        <source>Auto (preload the entiry video)</source>
+        <target>Авто (предварительная загрузка видео)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.metadata">
+        <source>Metadata (preload the metadata only)</source>
+        <target>Метаданные (предварительная загрузка только метаданных)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.none">
+        <source>None (do not preload anything)</source>
+        <target>Нет (не загружать ничего)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_autoplay">
+        <source>Autoplay</source>
+        <target>Автовоспроизведение</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_controls">
+        <source>Hide the controls</source>
+        <target>Скрыть элементы управления</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
         <target>Показать подписи по умолчанию</target>
@@ -740,6 +800,30 @@
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
         <target>Скрыть верхнюю панель в предпросмотре</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_nocookie">
+        <source>Use the youtube-nocookie.com domain</source>
+        <target>Использовать домен youtube-nocookie.com</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_autoplay">
+        <source>Autoplay</source>
+        <target>Автовоспроизведение</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_loop">
+        <source>Play in a loop</source>
+        <target>Воспроизводить по кругу</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_portrait">
+        <source>Hide the profile image</source>
+        <target>Скрыть изображение профиля</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_title">
+        <source>Hide the title</source>
+        <target>Скрыть заголовок</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_byline">
+        <source>Hide the author</source>
+        <target>Скрыть автора</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>返回到用户最近访问的页面</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>列数</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>表单列数</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>一列</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>如果没有记录被选中，自动跳转到第一条记录</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>宽和高</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>请输入宽和高的像素值</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>透明的影片</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Flash透明化(wmode = transparent)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>传递参数给Flash(&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Flash播放器版本</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>请输入Flash播放器的版本 (e.g. 6.0.12)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>替代内容</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>如果Flash影片无法加载将会显示替代内容。允许HTML标签。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>源</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>是否使用服务器上的一个文件或指向到一个外部URL。</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>图像源文件</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>请输入Flash影片的URL (http://…)。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>使用交互</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>使Flash影片和浏览器交互 (需要Javascript)。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>Flash影片ID</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>请输入一个唯一的Flash影片ID。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>请输入Javascript代码</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>包含设置</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>文件与文件夹</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>交互式Flash影片</target>
+        <source>Source</source>
+        <target>源</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,9 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
-        <target>感谢您注册##domain## 。请按##link## 的联系，以完成您的注册，并激活您的帐户。如果您没有要求一个帐户，请忽略此电子邮件。</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -655,9 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
-        <target>您已要求一个新的密码， ##domain##. 。请点击链接##link## 进入新的密码。如果您没有要求此电子邮件，请联系管理员的网站。</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

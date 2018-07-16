@@ -475,7 +475,7 @@
       </trans-unit>
       <trans-unit id="tl_style.custom_legend">
         <source>Custom code</source>
-        <target>Додатни код</target>
+        <target>Прилагођени кôд</target>
       </trans-unit>
       <trans-unit id="tl_style.normal">
         <source>normal</source>

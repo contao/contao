@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Add new at the top</source>
-        <target>Додај ново на врх</target>
+        <target>Додај нову на врх</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Add new after media query ID %s</source>

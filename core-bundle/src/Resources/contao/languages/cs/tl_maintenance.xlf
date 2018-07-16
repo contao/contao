@@ -29,14 +29,6 @@
         <source>Maintenance mode</source>
         <target>Bezpečnostní režim</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceEnable">
-        <source>Enable</source>
-        <target>Povolit</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceDisable">
-        <source>Disable</source>
-        <target>Neaktivní</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Vyčistit data</target>

@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>Rediriger l'utilisateur vers la dernière page visitée au lieu de la page de redirection.</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>Nombre de colonnes</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>Choisir le nombre de colonnes du formulaire.</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>Une colonne</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>Rediriger automatiquement vers le premier élément si aucun n'est sélectionné.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>Largeur et hauteur</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>Saisir la largeur et la hauteur en pixels.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>Animation Flash transparente</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Rendre l'animation Flash transparente (wmode = transparent).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Saisir les variables qui seront passées à l'animation Flash (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Version du lecteur Flash</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Saisir la version du lecteur Flash requise (ex : 6.0.12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>Contenu alternatif</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>Saisir un contenu alternatif à afficher au cas où l'animation Flash ne pourrait être chargée. Le HTML est autorisé.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>Source</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Choisir d'utiliser un fichier sur le serveur ou de pointer vers une URL externe.</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>Fichier source</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Saisir l'URL (http://...) de l'animation Flash.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>Animation Flash interactive</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Faire interagir l'animation Flash avec le navigateur (nécessite Javascript).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>ID de l'animation Flash</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>Saisir un ID unique pour l'animation Flash.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>Javascript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>Saisir du code JavaScript.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>Paramètres des éléments inclus</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>Fichiers et répertoires</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>Animation Flash interactive</target>
+        <source>Source</source>
+        <target>Source</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,12 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
-</source>
-        <target>Merci de vous être inscrit sur ##domain##.
+Click here to complete your registration and to activate your account:
 
-Veuillez cliquer sur ##link## pour compléter votre inscription et activer votre compte. Si vous n'avez pas demandé la création d'un compte, merci de ne pas tenir compte de cet e-mail.
-</target>
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
+</source>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -658,12 +576,12 @@ Veuillez cliquer sur ##link## pour compléter votre inscription et activer votre
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
-</source>
-        <target>Vous avez demandé un nouveau mot de passe pour ##domain##.
+Click here to set the new password:
 
-Veuillez cliquer sur ##link## pour saisir un nouveau mot de passe. Si vous n'avez pas demandé cet e-mail, merci de contacter l'administrateur du site internet.
-</target>
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
+</source>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

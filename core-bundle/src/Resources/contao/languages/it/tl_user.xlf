@@ -43,6 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.0">
         <source>Fullscreen</source>
+        <target>Schermo intero</target>
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
@@ -330,6 +331,9 @@
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
         <target>Uploader predefinito</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

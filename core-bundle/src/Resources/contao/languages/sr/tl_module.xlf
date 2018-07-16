@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.0">
         <source>Redirect page</source>
-        <target>Преусмерење странице</target>
+        <target>Страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
@@ -135,15 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Преусмери корисника на последњу страницу коју је посетио, уместо да иде на страницу за преусмерење.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>Број колона</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>Изаберите број колона формулара.</target>
+        <target>Преусмери корисника на последњу страницу коју је посетио, уместо да иде на страницу преусмеравања.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -179,11 +171,11 @@
       </trans-unit>
       <trans-unit id="tl_module.form.0">
         <source>Form</source>
-        <target>Образац</target>
+        <target>Формулар</target>
       </trans-unit>
       <trans-unit id="tl_module.form.1">
         <source>Please select a form.</source>
-        <target>Изаберите образац.</target>
+        <target>Изаберите формулар.</target>
       </trans-unit>
       <trans-unit id="tl_module.queryType.0">
         <source>Default query type</source>
@@ -297,57 +289,9 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>Аутоматски преусмери на прву ставку ако ништа није изабрано.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>Ширина и висина</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>Унесите ширину и висина у пикселима.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>Транспарентни филм</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Нека Flash филм буде транспарентан (wmode = transparent).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Проследи варијабле Flash филму (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Верзија Flash плејера</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Унесите потребну верзију Flash плејера (нпр. 6.0.12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>Алтернативни садржај</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>Алтернативни садржај ће бити приказан ако филм не може да се учита. Дозвољено је кориштење HTML тагова.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>Извор</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Да ли желите да користите фајл са сервера или са неког вањског URL-а.</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
-        <target>Изворни код</target>
+        <target>Изворни фајл</target>
       </trans-unit>
       <trans-unit id="tl_module.singleSRC.1">
         <source>Please select a file from the files directory.</source>
@@ -361,33 +305,9 @@
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Унесите URL (http://…) Flash филма.</target>
       </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>Интерактивност</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Нека Flash филм буде интерактиван у односу на интернет претраживал (потребна употреба JavaScript-а).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>ID Flash филма</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>Унесите јединствени  ID Flash филма.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>Унесите JavaScript код.</target>
-      </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
-        <target>Преглед у пуној величини/нови прозор</target>
+        <target>Преглед у пуној величини/посебан прозор</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
@@ -419,7 +339,7 @@
       </trans-unit>
       <trans-unit id="tl_module.html.0">
         <source>HTML code</source>
-        <target>HTML код</target>
+        <target>HTML кȏд</target>
       </trans-unit>
       <trans-unit id="tl_module.html.1">
         <source>You can modify the list of allowed HTML tags in the back end settings.</source>
@@ -499,7 +419,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
-        <target>Чланске групе</target>
+        <target>Групе чланова</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
         <source>Here you can assign the user to one or more groups.</source>
@@ -610,12 +530,8 @@
         <target>Подешавања уметања</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>Фајлови и фолдери</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>Интерактивни Flash филм</target>
+        <source>Source</source>
+        <target>Извор</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,12 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
-</source>
-        <target>Хвала вам за регистрацију на ##domain##.
+Click here to complete your registration and to activate your account:
 
-Молимо Вас да кликнете на ##link## да завршите процес регистрације и извршите активацију Вашег налога. Ако нисте тражили да отворите налог, молимо Вас да игноришете овај e-mail.
-</target>
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
+</source>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -658,12 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
-</source>
-        <target>Захтевали сте нову лозинку на ##domain##.
+Click here to set the new password:
 
-Молимо Вас да кликнете на  ##link## tда поставите нову лозинку. Ако Ви нисте тражили да добијете овај e-mail, контактирајте администратора сајта.
-</target>
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
+</source>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
@@ -671,7 +589,7 @@ Please click ##link## to set the new password. If you did not request this e-mai
       </trans-unit>
       <trans-unit id="tl_module.external">
         <source>External URL</source>
-        <target>Екстерни URL</target>
+        <target>Вањски URL</target>
       </trans-unit>
       <trans-unit id="tl_module.close_deactivate">
         <source>Deactivate account</source>

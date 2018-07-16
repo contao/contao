@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>リダイレクト先のページの代わりに、ユーザーが最後に参照していたページに移動します。</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>列の数</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>フォームの列の数を選択してください。</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>1列</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>何も選択していない場合、自動的に最初の項目に移動します。</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>幅と高さ</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>ピクセル単位の幅と高さを入力してください。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>透明な動画</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Flash動画を透明(wmode = transparent)にします。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Flash動画に変数(&lt;em&gt;var1=value1&amp;var2=value2&lt;/em&gt;)を渡します。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Flashプレーヤーのバージョン</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Flashプレーヤーのバージョンを入力してください。(例: 6.0.12)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>代替のコンテンツ</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>動画をロードできない場合に代わりに表示する代替コンテンツです。HTMLタグを使用できます。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>ソース</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>サーバーのファイルを使用するか、外部のURLを指すか選択してください。</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>ソースファイル</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Flash動画のURL(http://...)を入力してください。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>対話型</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Flash動画をブラウザーと対話型にします。(JavaScriptが必要です。)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>Flash動画のID</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>重複しないFlash動画のIDを入力してください。</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>JavaScriptのコードを入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>含める設定</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>ファイルとフォルダー</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>対話型Flash動画</target>
+        <source>Source</source>
+        <target>ソース</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,13 +560,22 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
-</source>
-        <target>##domain##でアカウントの登録の依頼を受け付けました。
-
-登録処理を完了してアカウントを有効するには、以下のURLをクリックしてください。
+Click here to complete your registration and to activate your account:
 
 ##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
+</source>
+        <target>##domain##にアカウントの登録をありがとうございます。
+
+以下のURLをクリックすると、登録処理を完了してアカウントを有効します:
+Click here to complete your registration and to activate your account:
+
+##link##
+
+この承認のリンクは24時間有効です。
 
 アカウントの登録を依頼した覚えがない場合は、この電子メールを無視してください。
 </target>
@@ -662,15 +587,20 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
-</source>
-        <target>##domain##で新しいパスワードを設定の依頼を受け付けました。
-
-新しいパスワードを設定する場合は、以下のURLをクリックしてください。
+Click here to set the new password:
 
 ##link##
 
-この電子メールを依頼した覚えがない場合は、ウェブサイトの管理者に連絡していただけると幸いです。
+If you did not request this e-mail, please contact the website administrator.
+</source>
+        <target>##domain##で新しいパスワードを設定の依頼を受け付けました。
+
+以下をクリックすると新しいパスワードを設定してください:
+
+##link##
+
+この電子メールを依頼した覚えがない場合は、ウェブサイトの管理者に連絡していただ
+けると幸いです。
 </target>
       </trans-unit>
       <trans-unit id="tl_module.internal">

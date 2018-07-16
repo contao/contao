@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.amg_legend">
         <source>Allowed member groups</source>
-        <target>Дозвољене групе чланова</target>
+        <target>Дозвољене групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
@@ -119,11 +119,11 @@
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.0">
         <source>Activate/deactivate group</source>
-        <target>Активирај/деактивирај групу</target>
+        <target>Активирање/Деактивирање групе</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.1">
         <source>Activate/deactivate group ID %s</source>
-        <target>Активирај/деактивирај групу ID %s</target>
+        <target>Активирање/Деактивирање групе ID %s</target>
       </trans-unit>
     </body>
   </file>

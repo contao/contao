@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
+        <target>Caractères valides pour l'alias</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Vous pouvez sélectionner ici un jeu de caractère personnalisé</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -273,9 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
+        <target>Nécessite un élément</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Génère une erreur 404 si l'URL de la page ne contient aucun élément d'alias.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -375,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias_legend">
         <source>Alias settings</source>
+        <target>Paramètres d'alias</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -583,6 +588,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
         <target>30 jours</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
       </trans-unit>
     </body>
   </file>

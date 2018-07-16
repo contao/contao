@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
         <source>Source table</source>
-        <target>Původní tabulka</target>
+        <target>Zdrojová tabulka</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.1">
         <source>Name of the original table</source>
@@ -19,19 +19,19 @@
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.0">
         <source>Affected rows</source>
-        <target>Obsahující záznamy</target>
+        <target>Dotčené řádky</target>
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.1">
         <source>Number of records included in the undo step</source>
-        <target>Počet záznamů, které jsou</target>
+        <target>Počet záznamů, které jsou obsažené v navrácení změn</target>
       </trans-unit>
       <trans-unit id="tl_undo.query.0">
         <source>Details</source>
-        <target>Detaily</target>
+        <target>Podrobnosti</target>
       </trans-unit>
       <trans-unit id="tl_undo.query.1">
         <source>Details of the undo step</source>
-        <target>Detaily zpětných kroků.</target>
+        <target>Podrobnosti k vrácení změn.</target>
       </trans-unit>
       <trans-unit id="tl_undo.data.0">
         <source>Data</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo.0">
         <source>Restore</source>
-        <target>Zpět</target>
+        <target>Obnovit</target>
       </trans-unit>
       <trans-unit id="tl_undo.undo.1">
         <source>Restore entry ID %s</source>

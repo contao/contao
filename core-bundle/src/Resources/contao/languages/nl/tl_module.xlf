@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>Stuur de gebruiker door naar de laatst bezochte pagina na login/logout.</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>Aantal kolommen</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>Kies het aantal kolommen van het formulier.</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>Eén kolom</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>Leidt automatisch naar het eerste item als er niets is geselecteerd.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>Breedte en hoogte</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>Geef de breedte en hoogte in pixels op.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>Transparante Flash film</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Kies deze optie om een Flash film transparant te maken (wmode = transparant).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Hier kunt u variabelen opgeven die doorgegeven worden aan een Flash movie (&lt;em&gt;var1=value1&amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Flash player versie en build</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Geef de vereiste Flash player versie en build nummer op (bv Flash 6.0.12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>ALT inhoud</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>De ALT tekst zal worden getoond als een Flash film niet geladen kan worden. HTML is toegestaan.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>Bron</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Kies de bron van het element (bestand op de server of URL).</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>Bronbestand</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Geef de complete URL van de Flash film op, beginnend met http:// .</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>Maak interactief</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Kies deze optie om interactie te verkrijgen tussen uw Flash film en de browser (vereist JavaScript).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>Flash film ID</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>Geef een unieke Flash film ID op.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>Geef JavaScript code op.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>Instellingen toevoegen</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>Bestanden en mappen</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>Interactieve Flash film</target>
+        <source>Source</source>
+        <target>Bron</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,9 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
-        <target>Bedankt voor uw registratie voor ##domain##. Klik op deze link om uw registratie te completeren en uw account te activeren: ##link##. Indien u geen account bij ons aanvroeg, gelieve deze e-mail te negeren.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -655,10 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
-        <target>U vroeg een nieuw wachtwoord aan voor ##domain##. Klik op deze link ##link## om uw nieuwe wachtwoord op te geven. Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de website contact op te nemen.
-</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

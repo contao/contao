@@ -121,22 +121,6 @@
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
         <target>Indien uw website beschikbaar is via een SSL proxy server, geef dan hier het domein op (bijv.&lt;em&gt;sslsites.de&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-        <target>Anonimiseer IP-adressen</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize all IP addresses that are stored in the database.</source>
-        <target>Maak alle IP adressen anoniem welke opgeslagen staan in de database.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-        <target>Anonimiseren Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-        <target>Anonimiseer de IP adressen die verzonden worden naar Google Analytics.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>Redirect geen lege URLs</target>
@@ -200,14 +184,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
         <target>Hier kunt u een komma gescheiden lijst van ondersteunde template bestandstypen invoeren.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-        <target>Maximum afbeeldingsbreedte</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
-        <target>Als de breedte van een afbeelding of film deze waarde overschrijdt, wordt dit automatisch aangepast. Stel in op 0 om dit uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -352,10 +328,6 @@
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
         <target>Proxy configuratie</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
-        <target>Privacy instellingen</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

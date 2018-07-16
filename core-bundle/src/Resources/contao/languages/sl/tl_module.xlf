@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>Namesto na refernčno stran, preusmeri uporabnika na zadnjo obiskano stran.</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>Število stolpcev</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>Prosimo, izberite število stolpcev obrazca.</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>En stolpec</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>Samodejno preusmeri na prvi element, v kolikor noben ni izbran.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>Širina in višina</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>Prosimo, vnesite širino in višino v pikslih.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>Transparenca filma</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Naredi Flash film transparenten (wmode = transparent).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>Flash spremenljivke</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Dodaj spremenljivke k Flash filmu (&lt;em&gt;var1=value1&amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Različica Flash predvajalnika</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Prosimo, vnesite zahtevano različico Flash predvajalnika (npr. 6.0.12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>Alternativno vsebina</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>Alternativna vsebina bo prikazana, v kolikor predvajalnika ne bo mogoče naložiti.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>Izvor</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Želite uporabiti datoteko na strežniku ali pa pokazati na zunanji URL naslov.</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>Izvorna datoteka</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Prosimo, vnesite URL (http://…) Flash filma.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>Omogoči interaktivnost</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Omogoči interakcijo Flash filma z brskalnikom (zahteva JavaScript).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>ID Flash filma</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>Prosimo, vnesite edinstven ID Flash filma.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>Prosimo, vnesite JavaScript kodo.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>Vključi nastavitve</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>Datoteke in mape</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>Interaktiven Flash film</target>
+        <source>Source</source>
+        <target>Izvor</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,9 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
-        <target>Zahvaljujemo se vam za vašo registracijo na domeni ##domain##. Prosimo le še, da kliknete sledečo povezavo ##link## za zaključek registracije in aktivacijo vašega računa. V kolikor niste zahtevali omenjenega računa, prosimo ignorirajte to e-sporočilo.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -655,9 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
-        <target>Zahtevali ste novo geslo za uporabniški račun na domeni ##domain##. Prosimo, kliknite ##link## za generiranje novega gesla. V kolikor niste zahtevali tega sporočila, prosimo kontaktirajte skrbnika spletnega mesta.</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

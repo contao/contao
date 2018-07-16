@@ -89,10 +89,6 @@
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
         <target>Овде можете уређивати изворни фајл (притисните тастер F11 за приказ у целом екрану).</target>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
-        <source>Upload files</source>
-        <target>Постави фајлове на сервер</target>
-      </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
         <target>Постави фајлове на сервер и врати се назад</target>
@@ -124,6 +120,12 @@
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
         <target>Кликни или превуци фајлове ради постављања на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -216,6 +218,14 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
         <target>Уреди фајл &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Постави фајлове на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.1">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Копирај фајлове у фолдер &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

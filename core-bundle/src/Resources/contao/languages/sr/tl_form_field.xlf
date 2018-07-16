@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.options.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Ако је JavaScript онемогућен, будите сигурни да сте сачували измене пре него што промените редослед у листи.</target>
+        <target>Ако је JavaScript онемогућен, будите сигурни да сте сачували измене пре него што промените редослед.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.mandatory.0">
         <source>Mandatory field</source>
@@ -534,7 +534,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Add new at the top</source>
-        <target>Додај ново на врх</target>
+        <target>Додај нову на врх</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Add new after field ID %s</source>

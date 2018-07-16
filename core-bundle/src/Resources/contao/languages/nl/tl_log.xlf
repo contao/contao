@@ -49,14 +49,6 @@
         <source>Name of the initiating function</source>
         <target>Naam functie welke getriggerd wordt</target>
       </trans-unit>
-      <trans-unit id="tl_log.ip.0">
-        <source>IP address</source>
-        <target>IP adres</target>
-      </trans-unit>
-      <trans-unit id="tl_log.ip.1">
-        <source>IP address of the user</source>
-        <target>IP adres van de gebruiker</target>
-      </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
         <target>Browser</target>

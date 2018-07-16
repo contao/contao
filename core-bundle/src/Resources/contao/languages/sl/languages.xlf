@@ -810,6 +810,10 @@
         <source>Norwegian Nynorsk</source>
         <target>Norveščina, nynorsk</target>
       </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+        <target>Norwegian</target>
+      </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
         <target>Južna ndebelščina</target>

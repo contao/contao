@@ -147,11 +147,11 @@
       </trans-unit>
       <trans-unit id="tl_member.username.0">
         <source>Username</source>
-        <target>Nazwa</target>
+        <target>Login</target>
       </trans-unit>
       <trans-unit id="tl_member.username.1">
         <source>Please enter a unique username.</source>
-        <target>Wprowadź nazwę redaktora.</target>
+        <target>Wprowadź unikalny login redaktora.</target>
       </trans-unit>
       <trans-unit id="tl_member.assignDir.0">
         <source>Set home directory</source>

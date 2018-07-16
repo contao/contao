@@ -89,10 +89,6 @@
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
         <target>Hier können Sie den Quelltext der Datei bearbeiten (Vollbildansicht mit F11).</target>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
-        <source>Upload files</source>
-        <target>Dateien hochladen</target>
-      </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
         <target>Dateien hochladen und zurück</target>
@@ -124,6 +120,14 @@
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
         <target>Hier klicken oder Dateien ablegen</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Die Datei ist zu groß ({{filesize}} MiB). Die maximale Dateigröße beträgt {{maxFilesize}} MiB.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>Dateien dieses Typs können nicht hochgeladen werden.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -216,6 +220,14 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
         <target>Die Datei &quot;%s&quot; bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Dateien hochladen</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.1">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Dateien in den Ordner &quot;%s&quot; hochladen</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

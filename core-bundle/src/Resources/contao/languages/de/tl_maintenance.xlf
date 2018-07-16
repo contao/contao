@@ -29,14 +29,6 @@
         <source>Maintenance mode</source>
         <target>Wartungsmodus</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceEnable">
-        <source>Enable</source>
-        <target>Aktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceDisable">
-        <source>Disable</source>
-        <target>Deaktivieren</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Daten bereinigen</target>

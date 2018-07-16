@@ -589,6 +589,19 @@
         <source>30 days</source>
         <target>30日</target>
       </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+        <target>3か月</target>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+        <target>6か月</target>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
+        <target>1
+年</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.0">
         <source>Fullscreen</source>
+        <target>Backend na celou šířku obrazovky</target>
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
+        <target>Neomezovat šířku backendu.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -330,6 +332,9 @@
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
         <target>Výchozí způsob nahrávání souborů</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

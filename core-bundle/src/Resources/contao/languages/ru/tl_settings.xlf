@@ -121,22 +121,6 @@
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
         <target>Если сайт доступен через SSL-прокси, введите свой домен (напр. &lt;em&gt;sslsites.de&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-        <target>Анонимизировать IP-адреса</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize all IP addresses that are stored in the database.</source>
-        <target>Анонимизировать все IP-адреса, которые хранятся в базе данных.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-        <target>Анонимизировать Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-        <target>Анонимизировать IP-адреса, которые направляются в Google Analytics.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>Не перенаправлять пустые URL</target>
@@ -200,14 +184,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
         <target>Вы можете ввести разделенный запятыми список расширений поддерживаемых типов файлов шаблонов Contao.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-        <target>Максимальная ширина во внешнем интерфейсе</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
-        <target>Если ширина изображения или ролика превысит это значение, то он будет автоматически масштабирован. Установите 0, чтобы отключить ограничение.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -352,10 +328,6 @@
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
         <target>Конфигурация прокси</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
-        <target>Настройки конфиденциальности</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

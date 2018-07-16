@@ -809,6 +809,10 @@
         <source>Norwegian Nynorsk</source>
         <target>نروژی نینورسک</target>
       </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+        <target>نروژی</target>
+      </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>
         <target>اندبل جنوبی</target>

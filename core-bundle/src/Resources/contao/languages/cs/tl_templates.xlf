@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
-        <target>Nová šablona</target>
+        <target>Nová složka</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.1">
         <source>Create a new folder</source>
-        <target>Vytvořit novo šablonu</target>
+        <target>Vytvořit novou složku</target>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
         <source>Paste into</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
         <source>Paste into this folder</source>
-        <target>Umístit do adresáře</target>
+        <target>Umístit do složky</target>
       </trans-unit>
       <trans-unit id="tl_templates.compare.0">
         <source>Compare template</source>

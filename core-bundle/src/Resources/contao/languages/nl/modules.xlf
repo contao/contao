@@ -121,6 +121,12 @@
         <source>Maintain or update Contao</source>
         <target>Onderhoud of update uw Contao installatie.</target>
       </trans-unit>
+      <trans-unit id="MOD.two-factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MOD.two-factor.1">
+        <source>Configure two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
         <target>Herstellen</target>
@@ -352,14 +358,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>Diverse</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Flash film</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>Sluit een Flash film in op een pagina.</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

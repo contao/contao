@@ -19,15 +19,19 @@
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.0">
         <source>Fieldset start</source>
+        <target>Marque fieldset de départ</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.1">
         <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Début d'un &quot;fieldset&quot; avec une légende optionnelle.</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.0">
         <source>Fieldset stop</source>
+        <target>Marque fieldset de fin</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.1">
         <source>The closing part of a fieldset.</source>
+        <target>La marque de fin d'un fieldset</target>
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>
@@ -419,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
+        <target>L'élément ne sera pas visible sur le site.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>

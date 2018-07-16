@@ -331,6 +331,9 @@
         <source>Default uploader</source>
         <target>Domyślny uploader</target>
       </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>
         <target>Nowy redaktor</target>

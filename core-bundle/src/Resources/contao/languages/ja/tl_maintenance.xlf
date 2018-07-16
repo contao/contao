@@ -29,14 +29,6 @@
         <source>Maintenance mode</source>
         <target>保守モード</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceEnable">
-        <source>Enable</source>
-        <target>有効</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceDisable">
-        <source>Disable</source>
-        <target>無効</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>データを消去</target>

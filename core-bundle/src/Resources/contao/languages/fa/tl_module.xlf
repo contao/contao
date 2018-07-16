@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>تغییر مسیر به عقب کاربر به آخرین برگه دیده شده به جای برگه تغییر مسیر.</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>تعداد ستون‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>لطفا تعداد ستونی‌های فرم را انتخاب نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>یک ستونی</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>بازگرداتی خودکار به اولین مورد در صورتی که هیچ کدام انتخاب نشده باشند.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>عرض و ارتفاع</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>لطفا عرض و ارتفاع را به پیکسل وارد کنید.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>فیلم شفاف</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>ایجاد فیلم فلش شفاف (wmode = transparent).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>تحویل متغییرها به فیلم فلش (&lt;em&gt;var1=value1&amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>نسخه Flash player</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>لطفا نسخه Flash player لازم را وارد کنید (برای نمونه 6.0.12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>محتوای جایگزین</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>محتوای جایگزین زمانی که فیلم بارگذاری نشود نمایش داده خواهد شد. تگ‌های اچ‌تی‌ام‌ال مجاز هستند.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>منبع</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>چگونگی استفاده از یک پرونده در سرور یا اشاره به نشانی وب خارجی.</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>منبع پرونده</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>لطفا نشانی وب (http://...) فیلم فلش را وارد کنید.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>interactive ساختن</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>وادار کردن فیلم فلش به تعامل با مرورگر (نیاز به جاوا اسکریپت)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>شناسه فیلم فلش</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>لطفا یک شناسه یکتا برای فیلم فلش وارد کنید.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>جاوا اسکریپت _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>لطفا کد جاوا اسکریپت را وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>تنظیمات گنجاندن</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>پرونده‌ها و پوشه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>فیلم فلش فعال</target>
+        <source>Source</source>
+        <target>منبع</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,9 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
-        <target>با سپاس از شما برای نام‌نویسی در ##domain##. لطفا اینجا را##link## برای تکمیل نام‌نویسی و فعال سازی حساب کاربری کلیک نمایید. اگر شما خواهان حساب کاربری نیستید این ایمیل را نادیده بگیرید.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -655,9 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
-        <target>شما گذرواژه جدید برای ##domain## درخواست نموده اید. لطفا اینجا را ##link## برای واردنمودن گذرواژه جدید کلیک نمایی. اگر شما این ایمیل را درخواست ننموده اید لطفا با مدیریت وب‌سایت تماس بگیرید.</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
