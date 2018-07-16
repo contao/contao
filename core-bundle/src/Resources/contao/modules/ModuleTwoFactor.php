@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Back end module "two factor".
