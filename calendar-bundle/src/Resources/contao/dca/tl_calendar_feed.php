@@ -331,7 +331,7 @@ class tl_calendar_feed extends Backend
 	public function adjustPermissions($insertId)
 	{
 		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
+		if (\func_num_args() == 4)
 		{
 			$insertId = func_get_arg(1);
 		}
