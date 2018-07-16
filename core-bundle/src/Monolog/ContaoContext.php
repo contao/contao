@@ -90,7 +90,6 @@ class ContaoContext
             'func' => $this->func,
             'action' => $this->action,
             'username' => $this->username,
-            'ip' => $this->ip,
             'browser' => $this->browser,
         ]);
     }
