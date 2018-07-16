@@ -144,9 +144,14 @@ services:
             - "%contao.error_level%"
         public: true
 
-    contao.image.imagine:
+    contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
-        public: true
+
+    contao.image.imagine.gmagick:
+        class: Imagine\Gmagick\Imagine
+
+    contao.image.imagine.imagick:
+        class: Imagine\Imagick\Imagine
 
     contao.image.imagine_svg:
         class: Contao\ImagineSvg\Imagine

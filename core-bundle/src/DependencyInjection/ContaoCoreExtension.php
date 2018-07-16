@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Imagine\Exception\RuntimeException;
+use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
@@ -87,12 +90,60 @@ class ContaoCoreExtension extends ConfigurableExtension
             $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
         }
 
+        $this->setImagineService($mergedConfig, $container);
         $this->overwriteImageTargetDir($mergedConfig, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
+    }
+
+    /**
+     * Configures the "contao.image.imagine" service.
+     *
+     * @param array            $mergedConfig
+     * @param ContainerBuilder $container
+     */
+    private function setImagineService(array $mergedConfig, ContainerBuilder $container): void
+    {
+        $imagineServiceId = $mergedConfig['image']['imagine_service'];
+
+        // Generate if not present
+        if (null === $imagineServiceId) {
+            $class = $this->getImagineImplementation();
+            $imagineServiceId = 'contao.image.imagine.'.ContainerBuilder::hash($class);
+
+            $container->setDefinition($imagineServiceId, new Definition($class));
+        }
+
+        $container->setAlias('contao.image.imagine', $imagineServiceId);
+        $container->findDefinition('contao.image.imagine')->setPublic(true);
+    }
+
+    /**
+     * Returns the best available Imagine implementation.
+     *
+     * @return string
+     */
+    private function getImagineImplementation(): string
+    {
+        static $magicks = ['Gmagick', 'Imagick'];
+
+        foreach ($magicks as $name) {
+            $class = 'Imagine\\'.$name.'\Imagine';
+
+            // Will throw an exception if the PHP implementation is not available
+            try {
+                new $class();
+            } catch (RuntimeException $e) {
+                continue;
+            }
+
+            return $class;
+        }
+
+        return Imagine::class; // see #616
     }
 
     /**

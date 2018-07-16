@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
@@ -69,7 +68,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
-        $container->addCompilerPass(new AddImagineClassPass());
         $container->addCompilerPass(new DoctrineMigrationsPass());
         $container->addCompilerPass(new PickerProviderPass());
         $container->addCompilerPass(new RegisterFragmentsPass());

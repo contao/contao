@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
@@ -65,7 +64,6 @@ class ContaoCoreBundleTest extends TestCase
             AddAssetsPackagesPass::class,
             AddSessionBagsPass::class,
             AddResourcesPathsPass::class,
-            AddImagineClassPass::class,
             DoctrineMigrationsPass::class,
             PickerProviderPass::class,
             RegisterFragmentsPass::class,
