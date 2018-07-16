@@ -17,6 +17,12 @@
         <source>Please select one or more channels.</source>
         <target>Wybierz jeden lub więcej kanałów.</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>Ukryj wybór kanału</target>
@@ -49,6 +55,9 @@
         <source>Here you can select the newsletter template.</source>
         <target>Wybierz szablon modułu. Możesz dodać własne szablony do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów newslettera muszą zaczynać się od &lt;em&gt;nl_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>Twoja subskrypcja %s</target>
@@ -58,18 +67,14 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
-</source>
-        <target>Witaj
+Please click here to activate your subscription:
 
-Dziękujemy za subskrypcję newslettera ##channel## na ##domain##.
-
-Prosimy kliknąć w poniższy link aby dokończyć proces subskrypcji
 ##link##
-Jeśli powyższy link nie działa, musisz skopiować go i wkleić do swojej przeglądarki internetowej lub samemu go wpisać.
 
-Jeśli nie zapisywałeś się do naszego newslettera, prosimy zignorować tego e-maila.
-</target>
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
+</source>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

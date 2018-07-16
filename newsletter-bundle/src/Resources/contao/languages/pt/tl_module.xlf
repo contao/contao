@@ -1,21 +1,21 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" target-language="nl">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en" target-language="pt">
     <body>
       <trans-unit id="tl_module.newsletters.0">
         <source>Subscribable newsletters</source>
-        <target>Kiesbare nieuwsbrief abonnementen</target>
+        <target>Canais de informativos</target>
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Toon deze kanalen in het front-end formulier</target>
+        <target>Favor selecionar os canais que os usuários poderão assinar durante o processo de registro.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
-        <target>Nieuwsbrieven</target>
+        <target>Canais</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.1">
         <source>Please select one or more channels.</source>
-        <target>Selecteer één of meerdere nieuwsbriefkanalen.</target>
+        <target>Favor selecionar um ou mais canais.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
@@ -25,42 +25,42 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
-        <target>Verberg nieuwsbrieven menu</target>
+        <target>Esconder menu de canais</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.1">
         <source>Do not show the channel selection menu.</source>
-        <target>Menu om nieuwsbriefkanalen te kiezen verbergen.</target>
+        <target>Não mostrar a seleção de canais do menu.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.0">
         <source>Subscription message</source>
-        <target>E-mailbericht inschrijving</target>
+        <target>E-mail de assinatura</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>Geef de tekst van de inschrijvings e-mail. U kunt gebruik maken van de wildcards &lt;em&gt;##channel##&lt;/em&gt; (naam nieuwsbrief/kanaal), &lt;em&gt;##domain##&lt;/em&gt; (domeinnaam) en &lt;em&gt;##link##&lt;/em&gt; (activatielink).</target>
+        <target>Favor entrar o texto do e-mail de confirmação de assinatura. Você pode usar os curingas &lt;em&gt;##channel##&lt;/em&gt; (nome de canal), &lt;em&gt;##domain##&lt;/em&gt; (domínio atual) e &lt;em&gt;##link##&lt;/em&gt; (link de ativação).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>E-mailbericht afmelding</target>
+        <target>E-mail de cancelamento de assinatura</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Geef de tekst van de afmelding e-mail. U kunt gebruik maken van de wildcards &lt;em&gt;##channel##&lt;/em&gt; (naam nieuwsbrief/kanaal) en &lt;em&gt;##domain##&lt;/em&gt; (domeinnaam).</target>
+        <target>Favor entrar o texto do e-mail de confirmação de cancelamento de assinatura. Você pode usar os curingas &lt;em&gt;##channel##&lt;/em&gt; (nome de canal), &lt;em&gt;##domain##&lt;/em&gt; (domínio atual) e &lt;em&gt;##link##&lt;/em&gt; (link de ativação).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
-        <target>Nieuwsbrief template</target>
+        <target>Layout de módulos</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
-        <target>Kies een nieuwsbrief template.</target>
+        <target>Favor selecionar um layout de módulos. Você pode adicionar layouts personalizados de notícias na pasta &lt;em&gt;templates&lt;/em&gt;. Arquivos de modelos de newsletters começam com &lt;em&gt;nl_&lt;/em&gt; e requerem a extensão de arquivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
-        <target>Uw inschrijving voor nieuwsbrief %s</target>
+        <target>Sua assinatura no %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.1">
         <source>You have subscribed to the following channels on ##domain##:
@@ -78,14 +78,14 @@ If you did not subscribe yourself, please ignore this e-mail.
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
-        <target>Uw inschrijving voor nieuwsbrief %s</target>
+        <target>Sua assinatura no %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.1">
         <source>You have unsubscribed from the following channels on ##domain##:
 
 ##channels##
 </source>
-        <target>U bent succesvol uitgeschreven van de nieuwsbrief ##channel## op ##domain##.</target>
+        <target>Você cancelou sua assinatura do ##channel## com sucesso.</target>
       </trans-unit>
     </body>
   </file>

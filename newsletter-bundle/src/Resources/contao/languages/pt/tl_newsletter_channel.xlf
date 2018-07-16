@@ -1,121 +1,121 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter_channel.php" source-language="en" target-language="cs">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter_channel.php" source-language="en" target-language="pt">
     <body>
       <trans-unit id="tl_newsletter_channel.title.0">
         <source>Title</source>
-        <target>Název</target>
+        <target>Título</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title.1">
         <source>Please enter the title of the channel.</source>
-        <target>Zadejte prosím název distribuce Zpravodajů.</target>
+        <target>Favor inserir o título do canal.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.0">
         <source>Redirect page</source>
-        <target>Přesměrovat na stránku</target>
+        <target>Redirecionar página</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
-        <target>Vyberte prosím stránku, na níž se nachází Zpravodaj, aby na ní mohl být přesměrován návštěvník po kliknutí na příslušný odkaz.</target>
+        <target>Por favor, escolha a página para a qual os visitantes serão direcionados ao clicarem na newsletter.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.0">
         <source>E-mail template</source>
-        <target>Předloha e-mailu</target>
+        <target>Exemplo de e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can choose the e-mail template.</source>
-        <target>Zde můžete zvolit předlohu e-mailu.</target>
+        <target>Por favor escolha um modelo de email (grupo de modelos &lt;em&gt;mail_&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>
-        <target>Mailová adresa odesílatele</target>
+        <target>Endereço de e-mail do remetente</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.1">
         <source>Please enter the e-mail address of the sender.</source>
-        <target>Prosím zadejte mailovou adresu odesílatele.</target>
+        <target>Por favor introduza o endereço de e-mail do remetente.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.0">
         <source>Sender name</source>
-        <target>Jméno odesílatele</target>
+        <target>Nome do remetente</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.1">
         <source>Here you can enter an optional sender name.</source>
-        <target>Sem můžete zadat volitelné jméno odesílatele.</target>
+        <target>Aqui pode introduzir um nome de remetente opcional.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
-        <target>Datum změny</target>
+        <target>Data da última alteração</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Datum a čas poslední změny</target>
+        <target>Data e hora da última alteração</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.title_legend">
         <source>Title and redirect</source>
-        <target>Název a přesměrování</target>
+        <target>Título e redirecionamento</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template_legend">
         <source>Template settings</source>
-        <target>Předloha komentáře</target>
+        <target>Configurações de modelos</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender_legend">
         <source>Sender settings</source>
-        <target>Nastavení odesílatele</target>
+        <target>Configurações do remetente</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New channel</source>
-        <target>Nová distribuce Zpravodaje</target>
+        <target>Novo canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
-        <target>Vytvořit novou distribuci.</target>
+        <target>Criar um novo canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.show.0">
         <source>Channel details</source>
-        <target>Zobrazit podrobnosti</target>
+        <target>Detalhes do canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.show.1">
         <source>Show the details of channel ID %s</source>
-        <target>Zobrazit podrobnosti k distribuci ID %s</target>
+        <target>Mostrar detalhes do canal com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.edit.0">
         <source>Edit channel</source>
-        <target>Upravit distribuci</target>
+        <target>Editar canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.edit.1">
         <source>Edit channel ID %s</source>
-        <target>Upravit distribuci ID %s</target>
+        <target>Editar o canal com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader.0">
         <source>Edit channel</source>
-        <target>Upravit distribuci</target>
+        <target>Editar canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader.1">
         <source>Edit the channel settings</source>
-        <target>Upraví nastavení distribuce</target>
+        <target>Editar as configurações de canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.0">
         <source>Duplicate channel</source>
-        <target>Duplikovat distribuci</target>
+        <target>Copiar canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.1">
         <source>Duplicate channel ID %s</source>
-        <target>Duplikovat distribuci ID %s</target>
+        <target>Copiar o canal com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.delete.0">
         <source>Delete channel</source>
-        <target>Smazat distribuci</target>
+        <target>Remover canal</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.delete.1">
         <source>Delete channel ID %s</source>
-        <target>Smazat distribuci ID %s</target>
+        <target>Remover o canal com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.recipients.0">
         <source>Edit recipients</source>
-        <target>Upravit příjemce</target>
+        <target>Editar destinatários</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.recipients.1">
         <source>Edit the recipients of channel ID %s</source>
-        <target>Upravit příjemce distribuce ID %s</target>
+        <target>Editar os destinatários do canal com ID %s</target>
       </trans-unit>
     </body>
   </file>
