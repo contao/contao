@@ -1,0 +1,507 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Framework;
+
+use Contao\ClassLoader;
+use Contao\Config;
+use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\Input;
+use Contao\RequestToken;
+use Contao\System;
+use Contao\TemplateLoader;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+
+/**
+ * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
+ */
+class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
+{
+    use ContainerAwareTrait;
+
+    /**
+     * @var bool
+     */
+    private static $initialized = false;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var int
+     */
+    private $errorLevel;
+
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * @var array
+     */
+    private $adapterCache = [];
+
+    /**
+     * @var array
+     */
+    private $hookListeners = [];
+
+    /**
+     * @var array
+     */
+    private static $basicClasses = [
+        'System',
+        'Config',
+        'ClassLoader',
+        'TemplateLoader',
+        'ModuleLoader',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $installRoutes = [
+        'contao_install',
+        'contao_install_redirect',
+    ];
+
+    /**
+     * @param RequestStack    $requestStack
+     * @param RouterInterface $router
+     * @param ScopeMatcher    $scopeMatcher
+     * @param string          $rootDir
+     * @param int             $errorLevel
+     */
+    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    {
+        $this->requestStack = $requestStack;
+        $this->router = $router;
+        $this->scopeMatcher = $scopeMatcher;
+        $this->rootDir = $rootDir;
+        $this->errorLevel = $errorLevel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isInitialized(): bool
+    {
+        return self::$initialized;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \LogicException
+     */
+    public function initialize(): void
+    {
+        if ($this->isInitialized()) {
+            return;
+        }
+
+        // Set before calling any methods to prevent recursion
+        self::$initialized = true;
+
+        if (null === $this->container) {
+            throw new \LogicException('The service container has not been set.');
+        }
+
+        // Set the current request
+        $this->request = $this->requestStack->getCurrentRequest();
+
+        $this->setConstants();
+        $this->initializeFramework();
+    }
+
+    /**
+     * Sets the hook listeners.
+     *
+     * @param array $hookListeners
+     */
+    public function setHookListeners(array $hookListeners): void
+    {
+        $this->hookListeners = $hookListeners;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createInstance($class, $args = [])
+    {
+        if (\in_array('getInstance', get_class_methods($class), true)) {
+            return \call_user_func_array([$class, 'getInstance'], $args);
+        }
+
+        $reflection = new \ReflectionClass($class);
+
+        return $reflection->newInstanceArgs($args);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAdapter($class): Adapter
+    {
+        if (!isset($this->adapterCache[$class])) {
+            $this->adapterCache[$class] = new Adapter($class);
+        }
+
+        return $this->adapterCache[$class];
+    }
+
+    /**
+     * Sets the Contao constants.
+     *
+     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
+     */
+    private function setConstants(): void
+    {
+        if (!\defined('TL_MODE')) {
+            \define('TL_MODE', $this->getMode());
+        }
+
+        \define('TL_START', microtime(true));
+        \define('TL_ROOT', $this->rootDir);
+        \define('TL_REFERER_ID', $this->getRefererId());
+
+        if (!\defined('TL_SCRIPT')) {
+            \define('TL_SCRIPT', $this->getRoute());
+        }
+
+        // Define the login status constants in the back end (see #4099, #5279)
+        if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
+            \define('BE_USER_LOGGED_IN', false);
+            \define('FE_USER_LOGGED_IN', false);
+        }
+
+        // Define the relative path to the installation (see #5339)
+        \define('TL_PATH', $this->getPath());
+    }
+
+    /**
+     * Returns the TL_MODE value.
+     *
+     * @return string|null
+     */
+    private function getMode(): ?string
+    {
+        if (null === $this->request) {
+            return null;
+        }
+
+        if ($this->scopeMatcher->isBackendRequest($this->request)) {
+            return 'BE';
+        }
+
+        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
+            return 'FE';
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the referer ID.
+     *
+     * @return string|null
+     */
+    private function getRefererId(): ?string
+    {
+        if (null === $this->request) {
+            return null;
+        }
+
+        return $this->request->attributes->get('_contao_referer_id', '');
+    }
+
+    /**
+     * Returns the route.
+     *
+     * @return string|null
+     */
+    private function getRoute(): ?string
+    {
+        if (null === $this->request) {
+            return null;
+        }
+
+        $attributes = $this->request->attributes;
+
+        try {
+            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return substr($route, \strlen($this->request->getBasePath()) + 1);
+    }
+
+    /**
+     * Returns the base path.
+     *
+     * @return string|null
+     */
+    private function getPath(): ?string
+    {
+        if (null === $this->request) {
+            return null;
+        }
+
+        return $this->request->getBasePath();
+    }
+
+    /**
+     * Initializes the framework.
+     */
+    private function initializeFramework(): void
+    {
+        // Set the error_reporting level
+        error_reporting($this->errorLevel);
+
+        $this->includeHelpers();
+        $this->includeBasicClasses();
+
+        // Set the container
+        System::setContainer($this->container);
+
+        /** @var Config $config */
+        $config = $this->getAdapter(Config::class);
+
+        // Preload the configuration (see #5872)
+        $config->preload();
+
+        // Register the class loader
+        ClassLoader::scanAndRegister();
+
+        $this->initializeLegacySessionAccess();
+        $this->setDefaultLanguage();
+
+        // Fully load the configuration
+        $config->getInstance();
+
+        $this->registerHookListeners();
+        $this->validateInstallation();
+
+        Input::initialize();
+        TemplateLoader::initialize();
+
+        $this->setTimezone();
+        $this->triggerInitializeSystemHook();
+        $this->handleRequestToken();
+    }
+
+    /**
+     * Includes some helper files.
+     */
+    private function includeHelpers(): void
+    {
+        require __DIR__.'/../Resources/contao/helper/functions.php';
+        require __DIR__.'/../Resources/contao/config/constants.php';
+        require __DIR__.'/../Resources/contao/helper/interface.php';
+        require __DIR__.'/../Resources/contao/helper/exception.php';
+    }
+
+    /**
+     * Includes the basic classes required for further processing.
+     */
+    private function includeBasicClasses(): void
+    {
+        foreach (self::$basicClasses as $class) {
+            if (!class_exists($class, false)) {
+                require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
+            }
+        }
+    }
+
+    /**
+     * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
+     */
+    private function initializeLegacySessionAccess(): void
+    {
+        if (null === $this->request || !$this->request->hasSession()) {
+            return;
+        }
+
+        $session = $this->request->getSession();
+
+        if (!$session->isStarted()) {
+            $_SESSION = new LazySessionAccess($session);
+        } else {
+            $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
+            $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
+        }
+    }
+
+    /**
+     * Sets the default language.
+     */
+    private function setDefaultLanguage(): void
+    {
+        $language = 'en';
+
+        if (null !== $this->request) {
+            $language = str_replace('_', '-', $this->request->getLocale());
+        }
+
+        // Deprecated since Contao 4.0, to be removed in Contao 5.0
+        $GLOBALS['TL_LANGUAGE'] = $language;
+    }
+
+    /**
+     * Validates the installation.
+     *
+     * @throws IncompleteInstallationException If the installation has not been completed
+     */
+    private function validateInstallation(): void
+    {
+        if (
+            null === $this->request
+            || \in_array($this->request->attributes->get('_route'), self::$installRoutes, true)
+        ) {
+            return;
+        }
+
+        /** @var Config $config */
+        $config = $this->getAdapter(Config::class);
+
+        // Show the "incomplete installation" message
+        if (!$config->isComplete()) {
+            throw new IncompleteInstallationException(
+                'The installation has not been completed. Open the Contao install tool to continue.'
+            );
+        }
+    }
+
+    /**
+     * Sets the time zone.
+     */
+    private function setTimezone(): void
+    {
+        /** @var Config $config */
+        $config = $this->getAdapter(Config::class);
+
+        $this->iniSet('date.timezone', (string) $config->get('timeZone'));
+        date_default_timezone_set((string) $config->get('timeZone'));
+    }
+
+    /**
+     * Triggers the initializeSystem hook (see #5665).
+     */
+    private function triggerInitializeSystemHook(): void
+    {
+        if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
+            foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
+                System::importStatic($callback[0])->{$callback[1]}();
+            }
+        }
+
+        if (file_exists($this->rootDir.'/system/config/initconfig.php')) {
+            @trigger_error('Using the initconfig.php file has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            include $this->rootDir.'/system/config/initconfig.php';
+        }
+    }
+
+    /**
+     * Handles the request token.
+     *
+     * @throws InvalidRequestTokenException
+     */
+    private function handleRequestToken(): void
+    {
+        /** @var RequestToken $requestToken */
+        $requestToken = $this->getAdapter(RequestToken::class);
+
+        // Deprecated since Contao 4.0, to be removed in Contao 5.0
+        if (!\defined('REQUEST_TOKEN')) {
+            \define('REQUEST_TOKEN', 'cli' === \PHP_SAPI ? null : $requestToken->get());
+        }
+
+        if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {
+            return;
+        }
+
+        throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
+    }
+
+    /**
+     * Tries to set a php.ini configuration option.
+     *
+     * @param string $key
+     * @param string $value
+     */
+    private function iniSet(string $key, string $value): void
+    {
+        if (\function_exists('ini_set')) {
+            ini_set($key, $value);
+        }
+    }
+
+    /**
+     * Checks if the token check can be skipped.
+     *
+     * @return bool
+     */
+    private function canSkipTokenCheck(): bool
+    {
+        return null === $this->request
+            || 'POST' !== $this->request->getRealMethod()
+            || $this->request->isXmlHttpRequest()
+            || !$this->request->attributes->has('_token_check')
+            || false === $this->request->attributes->get('_token_check')
+        ;
+    }
+
+    /**
+     * Registers the hooks listeners in the global array.
+     */
+    private function registerHookListeners(): void
+    {
+        foreach ($this->hookListeners as $hookName => $priorities) {
+            if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {
+                if (isset($priorities[0])) {
+                    $priorities[0] = array_merge($GLOBALS['TL_HOOKS'][$hookName], $priorities[0]);
+                } else {
+                    $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
+                    krsort($priorities);
+                }
+            }
+
+            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...$priorities);
+        }
+    }
+}

@@ -1,0 +1,27 @@
+parameters:
+    bootstrap: %currentWorkingDirectory%/tests/bootstrap.php
+
+    excludes_analyse:
+        - %currentWorkingDirectory%/src/Resources/*
+        - %currentWorkingDirectory%/tests/Fixtures/*
+
+    ignoreErrors:
+        # Missing constants that are defined at runtime
+        - '#Constant TL_ROOT not found\.#'
+        - '#Constant TL_MODE not found\.#'
+        - '#Constant TL_REFERER_ID not found\.#'
+        - '#Constant TL_PATH not found\.#'
+        - '#Constant TL_SCRIPT not found\.#'
+        - '#Constant BE_USER_LOGGED_IN not found\.#'
+        - '#Constant FE_USER_LOGGED_IN not found\.#'
+
+        # Undefined properties in Contao fixtures
+        - '#Access to an undefined property Contao\\Fixtures\\#'
+
+        # Missing classes that are only used in BundleConfig::setLoadAfter()
+        - '#Class Symfony\\Bundle\\TwigBundle\\TwigBundle not found\.#'
+        - '#Class Symfony\\Bundle\\MonologBundle\\MonologBundle not found\.#'
+        - '#Class Nelmio\\SecurityBundle\\NelmioSecurityBundle not found\.#'
+        - '#Class Contao\\ManagerBundle\\ContaoManagerBundle not found\.#'
+
+    reportUnmatchedIgnoredErrors: false

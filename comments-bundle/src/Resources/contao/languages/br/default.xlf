@@ -1,0 +1,148 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="br">
+    <body>
+      <trans-unit id="MSC.comments">
+        <source>Comments</source>
+        <target>Evezhiadennoù</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_name">
+        <source>Name</source>
+        <target>Anv</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_email">
+        <source>E-mail (not published)</source>
+        <target>Postel (na vo ket embannet)</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_website">
+        <source>Website</source>
+        <target>Lec'hienn internet</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_comment">
+        <source>Comment</source>
+        <target>Evezhiadenn</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notify">
+        <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_submit">
+        <source>Submit comment</source>
+        <target>Kas an evezhiadenn</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_login">
+        <source>You need to be logged in to add comments.</source>
+        <target>Rankout a rit bezañ kevreet evit gellout ouzhpennañ evezhiadennoù.</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_by">
+        <source>Comment by</source>
+        <target>Evezhiadenn gant</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_reply">
+        <source>Reply by</source>
+        <target>Respont gant</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_quote">
+        <source>%s wrote:</source>
+        <target>%s en deus skrivet:</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_code">
+        <source>Code:</source>
+        <target>Kod:</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_subject">
+        <source>New comment on %s</source>
+        <target>Evezhiadenn nevez war %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_message">
+        <source>%s has created a new comment on your website:
+
+%s
+
+---
+
+Click here to view the comment:
+
+%s
+
+
+Click here to edit or answer the comment:
+
+%s
+</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_moderated">
+        <source>This comment has to be published in the back end before it will appear on the website!</source>
+        <target>Rankout a ra an evezhiadenn-mañ bezañ embannet er backend a-raok m'en em gavfe war al lec'hienn!</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_confirm">
+        <source>Your comment has been added and is now pending for approval.</source>
+        <target>Hoc'h evezhiadenn a zo bet ouzhpennet hag ez eo bremañ o c'hortoz da vezañ aprouet.</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInConfirm">
+        <source>Your subscription has been activated</source>
+        <target>Enaouet eo bet ho koumanant</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInCancel">
+        <source>Your subscription has been cancelled</source>
+        <target>Nullet eo bet ho koumanant</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInSubject">
+        <source>Your subscription on %s</source>
+        <target>Ho koumanant da %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_optInMessage">
+        <source>Hello %s,
+
+please confirm that you want to be notified of new comments by e-mail on this page:
+
+%s
+
+Click here to confirm your subscription:
+
+%s
+
+The confirmation link is valid for 24 hours.
+
+You can cancel your subscription at any time by clicking here:
+
+%s
+</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifySubject">
+        <source>New comment on %s</source>
+        <target>Evezhiadenn nevez war %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyMessage">
+        <source>Hello %s,
+
+a new comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+Click here to cancel your subscription:
+
+%s
+</source>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplySubject">
+        <source>New reply to a comment on %s</source>
+        <target>Respont nevez d'un evezhiadenn war %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.com_notifyReplyMessage">
+        <source>Hello %s,
+
+a new reply to a comment has been added on a page you have subscribed to:
+
+%s
+
+---
+
+Click here to cancel your subscription:
+
+%s
+</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

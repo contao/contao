@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao.command.install-web-dir:
+        class: Contao\ManagerBundle\Command\InstallWebDirCommand
