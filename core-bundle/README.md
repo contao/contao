@@ -187,21 +187,25 @@ Edit your `app/config/config.yml` file and add the following:
 # Contao configuration (all parameters are optional)
 contao:
     web_dir:                  "%kernel.project_dir%/web"
+    prepend_locale:           false
     encryption_key:           "%kernel.secret%"
     url_suffix:               .html
     upload_path:              files
     csrf_token_name:          contao_csrf_token
     pretty_error_screens:     true
     error_level:              8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
-    prepend_locale:           false
     image:
         bypass_cache:         false
         target_dir:           "%kernel.project_dir%/assets/images"
         valid_extensions:     ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
+        imagine_service:      ~
         imagine_options:
             jpeg_quality:     80
             interlace:        plane
         reject_large_uploads: false
+    security:
+        two_factor:
+            enforce_backend:  false
 ```
 
 You can also overwrite any parameter stored in the `localconfig.php` file:
