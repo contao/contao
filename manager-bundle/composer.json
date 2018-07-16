@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": "^7.1",
-        "contao/core-bundle": "4.5.*",
-        "contao/installation-bundle": "4.5.*",
+        "contao/core-bundle": "self.version",
+        "contao/installation-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
         "doctrine/doctrine-bundle": "^1.6",
         "friendsofsymfony/http-cache-bundle": "^2.3",
