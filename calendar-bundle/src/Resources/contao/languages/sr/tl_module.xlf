@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Овде можете изабрати којим даном почиње недеља.</target>
+        <target>Овде можете изабрати први дан у недељи.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Редослед сортирања</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>

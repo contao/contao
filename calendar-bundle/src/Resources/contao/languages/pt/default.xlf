@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="br">
+  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="pt">
     <body>
       <trans-unit id="MSC.cal_events">
         <source>%d event(s)</source>
-        <target>%ddarvoud</target>
+        <target>%d evento(s)</target>
       </trans-unit>
       <trans-unit id="MSC.cal_previous">
         <source>&amp;lt;</source>
@@ -19,47 +19,47 @@
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
-        <target>N'eus darvoud ebet war an deiz-mañ.</target>
+        <target>Não existem eventos para este dia.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyWeek">
         <source>There are no events for this week.</source>
-        <target>N'eus darvoud ebet war ar sizhun-mañ.</target>
+        <target>Não existem eventos para esta semana.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyMonth">
         <source>There are no events for this month.</source>
-        <target>N'eus darvoud ebet war ar miz-mañ.</target>
+        <target>Não existem eventos para este mês.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyYear">
         <source>There are no events for this year.</source>
-        <target>N'eus darvoud ebet war ar bloaz-mañ.</target>
+        <target>Não existem eventos para este ano.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
-        <target>N'eus darvoud ebet evit ar mare.</target>
+        <target>Não existem eventos futuros.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_days">
         <source>This event is repeated every %s. day</source>
-        <target>An darvoud-mañ a zo adc'hraet pep %s. devezh</target>
+        <target>Este evento repete-se a cada %s. dias</target>
       </trans-unit>
       <trans-unit id="MSC.cal_weeks">
         <source>This event is repeated every %s. week</source>
-        <target>An darvoud-mañ a zo adc'hraet pep %s. sizhun</target>
+        <target>Este evento repete-se a cada %s. semanas</target>
       </trans-unit>
       <trans-unit id="MSC.cal_months">
         <source>This event is repeated every %s. month</source>
-        <target>An darvoud-mañ a zo adc'hraet pep %s. miz</target>
+        <target>Este evento repete-se a cada %s. meses</target>
       </trans-unit>
       <trans-unit id="MSC.cal_years">
         <source>This event is repeated every %s. year</source>
-        <target>An darvoud-mañ a zo adc'hraet pep %s. bloavezh</target>
+        <target>Este evento repete-se a cada %s. anos</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
-        <target>abaoe %s</target>
+        <target>até %s</target>
       </trans-unit>
       <trans-unit id="MSC.eventPicker">
         <source>Events</source>
-        <target>Darvoudoù</target>
+        <target>Calendário/Eventos</target>
       </trans-unit>
     </body>
   </file>

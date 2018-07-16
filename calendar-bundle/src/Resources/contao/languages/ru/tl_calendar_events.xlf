@@ -46,8 +46,8 @@
         <target>Время завершения</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Введите время завершения согласно глобальному формату времени.</target>
+        <source>Leave blank to create an open-ended event.</source>
+        <target>Оставьте поле пустым, чтобы создать событие с открытым завершением.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>

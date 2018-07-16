@@ -46,8 +46,7 @@
         <target>زمان خاتمه</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>لطفا زمان خاتمه را بر اساس قالب ساعت جهانی وارد نمایید.</target>
+        <source>Leave blank to create an open-ended event.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>

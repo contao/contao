@@ -1,6 +1,6 @@
 # Contao calendar bundle change log
 
-## DEV
+## 4.6.0-RC1 (2018-07-16)
 
  * Hide the end time of open-ended events in the back end form (see #23).
  * Link to the event if no image link has been defined (see contao/news-bundle#30).

@@ -46,8 +46,7 @@
         <target>Heure de fin</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Utiliser la même valeur pour l'heure de début et de fin crée un événement sans fin.</target>
+        <source>Leave blank to create an open-ended event.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -67,11 +66,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
-        <target>Nom de l'emplacement</target>
+        <target>Lieu</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
         <source>Here you can enter the name of the event location.</source>
-        <target>Saisir le lieu de l'événement</target>
+        <target>Saisir le nom du lieu de l'événement</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.0">
         <source>Location address</source>

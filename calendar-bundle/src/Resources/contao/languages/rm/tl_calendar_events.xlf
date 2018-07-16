@@ -46,8 +46,7 @@
         <target>Temp da finiziun</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Utilisar il medem temp d'entschatta e finiziun per crear ina occurrenza cun fin averta.</target>
+        <source>Leave blank to create an open-ended event.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
