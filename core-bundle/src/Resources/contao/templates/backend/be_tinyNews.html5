@@ -26,7 +26,7 @@ setTimeout(function() {
       editor.on('focus', function() { Backend.getScrollOffset(); });
     },
     file_browser_callback: function(field_name, url, type, win) {
-      Backend.openModalBrowser(field_name, url, type, win);
+      Backend.openModalBrowser(field_name, url, type, win, '<?= $this->source ?>');
     },
     file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
     doctype: '<!DOCTYPE html PUBLIC \'-//W3C//DTD HTML 3.2//EN\'>',

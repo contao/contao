@@ -972,12 +972,13 @@ var Backend =
 	 * @param {string} url        The URL
 	 * @param {string} type       The picker type
 	 * @param {object} win        The window object
+	 * @param {string} source     The source record
 	 */
-	openModalBrowser: function(field_name, url, type, win) {
+	openModalBrowser: function(field_name, url, type, win, source) {
 		Backend.openModalSelector({
 			'id': 'tl_listing',
 			'title': win.document.getElement('div.mce-title').get('text'),
-			'url': document.location.pathname + '/picker?context=' + (type == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;value=' + url + '&amp;popup=1',
+			'url': document.location.pathname + '/picker?context=' + (type == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=' + source + '&amp;value=' + url + '&amp;popup=1',
 			'callback': function(table, value) {
 				win.document.getElementById(field_name).value = value.join(',');
 			}
