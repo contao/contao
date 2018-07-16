@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.date.1">
         <source>Please enter the comment date.</source>
-        <target>Ebarzhit mar plij deiziad an evezhiadenn</target>
+        <target>Ebarzhit mar plij deiziad an evezhiadenn.</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.0">
         <source>Author</source>

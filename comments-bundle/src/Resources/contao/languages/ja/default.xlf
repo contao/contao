@@ -22,8 +22,8 @@
         <target>コメント</target>
       </trans-unit>
       <trans-unit id="MSC.com_notify">
-        <source>Notify me of new comments by e-mail</source>
-        <target>新しいコメントを電子メールで通知</target>
+        <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>新しいコメントを電子メールで通知(何時でも取り止め可能)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -54,27 +54,35 @@
         <target>%sで新しいコメント</target>
       </trans-unit>
       <trans-unit id="MSC.com_message">
-        <source>%s has created a new comment on your website.
-
----
+        <source>%s has created a new comment on your website:
 
 %s
 
 ---
 
-View: %s
-Edit: %s
+Click here to view the comment:
+
+%s
+
+
+Click here to edit or answer the comment:
+
+%s
 </source>
-        <target>%sさんがウェブサイトで新しいコメントを作成しました。
-
----
+        <target>%sさんがウェブサイトで新しいコメントを作成しました:
 
 %s
 
 ---
 
-表示: %s
-編集: %s
+クリックしてコメントを表示:
+
+%s
+
+
+クリックしてコメントを編集または返信:
+
+%s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
@@ -104,21 +112,31 @@ please confirm that you want to be notified of new comments by e-mail on this pa
 
 %s
 
----
+Click here to confirm your subscription:
 
-Confirm: %s
-Cancel: %s
+%s
+
+The confirmation link is valid for 24 hours.
+
+You can cancel your subscription at any time by clicking here:
+
+%s
 </source>
-        <target>こんにちは %sさん、
+        <target>こんにちは、%sさん。
 
 このページの新しいコメントを電子メールで通知を受けるかどうか確認してください:
 
 %s
 
----
+クリックすると登録を承認:
 
-承認: %s
-取り消し: %s
+%s
+
+承認のリンクは24時間有効です。
+
+次をクリックするといつでも登録を止められます。
+
+%s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
@@ -134,7 +152,8 @@ a new comment has been added on a page you have subscribed to:
 
 ---
 
-To cancel your subscription, please click here:
+Click here to cancel your subscription:
+
 %s
 </source>
         <target>こんにちは、%sさん。
@@ -145,7 +164,8 @@ To cancel your subscription, please click here:
 
 ---
 
-登録を取り消すには、次をクリックしてください:
+次をクイックすると登録を取り止めます:
+
 %s
 </target>
       </trans-unit>
@@ -162,7 +182,8 @@ a new reply to a comment has been added on a page you have subscribed to:
 
 ---
 
-To cancel your subscription, please click here:
+Click here to cancel your subscription:
+
 %s
 </source>
         <target>こんにちは、%sさん。
@@ -173,7 +194,8 @@ To cancel your subscription, please click here:
 
 ---
 
-登録を取り消すには、次をクリックしてください:
+次をクイックすると登録を取り止めます:
+
 %s
 </target>
       </trans-unit>

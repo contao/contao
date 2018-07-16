@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_comments.source.0">
         <source>Origin</source>
-        <target>Asıl</target>
+        <target>Aslı</target>
       </trans-unit>
       <trans-unit id="tl_comments.source.1">
         <source>The associated table.</source>
@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.parent.0">
         <source>Parent ID</source>
-        <target>Ana ID</target>
+        <target>Ana kimlik</target>
       </trans-unit>
       <trans-unit id="tl_comments.parent.1">
         <source>The associated record.</source>

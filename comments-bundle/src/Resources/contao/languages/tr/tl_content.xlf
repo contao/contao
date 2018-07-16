@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
-        <target>BBCode kullanılmasına izin ver</target>
+        <target>BBCode kullanılmasına izin ver.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Ziyaretçiler yorumlarında BBCode kullanmasına izin ver.</target>
+        <target>Ziyaretçilerin yorumlarında BBCode kullanmalarına izin ver.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
