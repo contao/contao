@@ -66,6 +66,10 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     {
         $attributes = ['fieldType' => 'radio'];
 
+        if ($source = $config->getExtra('source')) {
+            $attributes['preserveRecord'] = $source;
+        }
+
         if ($this->supportsValue($config)) {
             $attributes['value'] = str_replace(['{{event_url::', '}}'], '', $config->getValue());
         }
