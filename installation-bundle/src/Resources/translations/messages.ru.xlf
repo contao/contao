@@ -406,26 +406,6 @@
         <target>Настроенное ядро базы данных &lt;code&gt;%s&lt;/code&gt; недоступно на этом сервере. Установите его (рекомендуется) или настройте другое ядро базы данных в файле &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
-      <trans-unit id="82">
-        <source>innodb_large_prefix</source>
-        <target>Параметр innodb_large_prefix не включен!</target>
-        
-      </trans-unit>
-      <trans-unit id="83">
-        <source>innodb_large_prefix_explain</source>
-        <target>Параметр &lt;code&gt;innodb_large_prefix&lt;/code&gt; не включен на вашем сервере. Включите его (рекомендуется) или настройте другой набор символов и сортировку в файле &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
-        
-      </trans-unit>
-      <trans-unit id="84">
-        <source>innodb_additional</source>
-        <target>InnoDB не настроен правильно!</target>
-        
-      </trans-unit>
-      <trans-unit id="85">
-        <source>innodb_additional_explain</source>
-        <target>Использование больших префиксов в MySQL до версий 5.7.7 и MariaDB до версий 10.2 требует формат файла Barracuda и опции &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
-        
-      </trans-unit>
     </body>
   </file>
 </xliff>

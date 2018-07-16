@@ -1,409 +1,403 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="zh">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="sl">
     <body>
       <trans-unit id="1">
         <source>install_tool</source>
-        <target>Contao安装工具</target>
+        <target>Contao namestitveno orodje</target>
         
       </trans-unit>
       <trans-unit id="2">
         <source>an_error_occurred</source>
-        <target>发生一个错误</target>
+        <target>Prišlo je do napake</target>
         
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>安装工具已经被锁定!</target>
+        <target>Namestitveno orodje je bilo zakljenjeno!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>由于安全原因，连续输入超过3次错误密码安装工具会被锁定，请在命令行中运行&lt;code&gt;bin/console doctrine:cache:clear contao.cache&lt;/code&gt;来解除锁定。</target>
+        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zaklenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep v ukazni vrstici zaženite &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>不允许PHP写文件!</target>
+        <target>PHP nima dovoljenja za pisanje datotek!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>您的服务器不支持通过PHP存取文件; 最有可能的情况是PHP作为Apache模块运行在不同用户下，请联系服务器管理员来修复问题。</target>
+        <target>Strežnik ne podpira dostopa do datotek preko PHP; najverjetneje je PHP zagnan kot Apache modul kot drugi uporabnik. Prosimo kontaktirajte administratorja strežnika za pomoč pri odpravi problema.</target>
         
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;不要尝试将文件和文件夹写权限给所有人来修复!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;Ne poskušajte odpraviti napake sami, tako da dovolite pisanje datotek in direktorijev za vse!&lt;/strong&gt;</target>
         
       </trans-unit>
       <trans-unit id="8">
         <source>accept_license</source>
-        <target>接受许可信息</target>
+        <target>Sprejmi licenčne pogoje</target>
         
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>安装工具密码</target>
+        <target>Geslo namestitvenega orodja</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>请输入密码来防止未授权访问.</target>
+        <target>Vpišite geslo, da bi preprečili neavtoriziran dostop.</target>
         
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
-        <target>密码</target>
+        <target>Geslo</target>
         
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>确认密码</target>
+        <target>Ponovno vnesite geslo</target>
         
       </trans-unit>
       <trans-unit id="13">
         <source>save_password</source>
-        <target>保存密码</target>
+        <target>Shrani geslo.</target>
         
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>密码不一致!</target>
+        <target>Gesli se ne ujemata!</target>
         
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>密码至少%d个字符!</target>
+        <target>Geslo mora vsebovati najmanj %d znakov!</target>
         
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
-        <target>安装工具登录</target>
+        <target>Prijava v namestitveno orodje</target>
         
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>请输入安装工具登录密码。该密码和Contao后台登录密码是不一样的。</target>
+        <target>Vnesite geslo namestitvenega orodja. Namestitveno geslo NI enako geslu za vpis v Contao administracijo.</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>您必须启用“Cookies”支持来使用Contao</target>
+        <target>Piškotki morajo biti omogočeni.</target>
         
       </trans-unit>
       <trans-unit id="19">
         <source>login</source>
-        <target>登录</target>
+        <target>Prijava</target>
         
       </trans-unit>
       <trans-unit id="20">
         <source>invalid_password</source>
-        <target>密码错误！</target>
+        <target>Napačno geslo!</target>
         
       </trans-unit>
       <trans-unit id="21">
         <source>database_connection</source>
-        <target>数据库连接</target>
+        <target>Povezava do podatkovne baze</target>
         
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>数据库连接已创建。</target>
+        <target>Povezava s podatkovno bazo je bila uspešna.</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
-        <target>数据库名字中不能包含点！</target>
+        <target>Ime podatkovne baze ne sme vsebovati pik (.)!</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_could_not_connect</source>
-        <target>不能连接到数据库!</target>
+        <target>Povezava s podatkovno bazo ni bila mogoča.</target>
         
       </trans-unit>
       <trans-unit id="25">
         <source>database_connection_explain</source>
-        <target>请输入您的数据库连接参数。</target>
+        <target>Prosimo, vnesite parametre za povezavo s podatkovno bazo.</target>
         
       </trans-unit>
       <trans-unit id="26">
         <source>database_host</source>
-        <target>主机</target>
+        <target>Gostitelj</target>
         
       </trans-unit>
       <trans-unit id="27">
         <source>database_port</source>
-        <target>端口号</target>
+        <target>Številka vrat</target>
         
       </trans-unit>
       <trans-unit id="28">
         <source>database_user</source>
-        <target>用户名</target>
+        <target>Uporabniško ime</target>
         
       </trans-unit>
       <trans-unit id="29">
         <source>database_password</source>
-        <target>密码</target>
+        <target>Geslo</target>
         
       </trans-unit>
       <trans-unit id="30">
         <source>database_name</source>
-        <target>数据库名字</target>
+        <target>Naziv podatkovne baze</target>
         
       </trans-unit>
       <trans-unit id="31">
         <source>save_settings</source>
-        <target>保存设置</target>
+        <target>Shranite nastavitve</target>
         
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables</source>
-        <target>更新数据库</target>
+        <target>Posodobite podatkovno bazo</target>
         
       </trans-unit>
       <trans-unit id="33">
         <source>update_tables_explain</source>
-        <target>请注意，更新助手仅处理以&lt;code&gt;tl_&lt;/code&gt;开头的数据表.</target>
+        <target>Pomočnik za posodobitev lahko upravlja le tabele, katera imena se začnejo z &lt;code&gt;tl_&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="34">
         <source>update_tables_confirm</source>
-        <target>数据库是最新的。</target>
+        <target>Podatkovna baza je posodobljena.</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>update_save</source>
-        <target>更新数据库</target>
+        <target>Posodobi podatkovno bazo</target>
         
       </trans-unit>
       <trans-unit id="36">
         <source>CREATE</source>
-        <target>创建数据表</target>
+        <target>Ustvari tabele</target>
         
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_TABLE</source>
-        <target>更改数据表</target>
+        <target>Spremeni tabele</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_ADD</source>
-        <target>添加列</target>
+        <target>Dodaj stolpce</target>
         
       </trans-unit>
       <trans-unit id="39">
         <source>ALTER_CHANGE</source>
-        <target>变更列</target>
+        <target>Spremeni stolpce</target>
         
       </trans-unit>
       <trans-unit id="40">
         <source>ALTER_DROP</source>
-        <target>删除列</target>
+        <target>Odstrani stolpce</target>
         
       </trans-unit>
       <trans-unit id="41">
         <source>DROP</source>
-        <target>删除数据表</target>
+        <target>Odstrani tabelo</target>
         
       </trans-unit>
       <trans-unit id="42">
         <source>select_all</source>
-        <target>全选</target>
+        <target>Izberi vse</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>template_import</source>
-        <target>导入一个模板</target>
+        <target>Uvozi predlogo</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>template_import_explain</source>
-        <target>此处您可以从&lt;code&gt;templates&lt;/code &gt;目录中导入&lt;code &gt;.sql&lt;/code &gt;格式的文件。已有数据会被删除！如果您需要导入一个主题，请在Contao后台使用主题管理器来完成。</target>
+        <target>Tukaj lahko uvozite &lt;code&gt;.sql&lt;/code&gt; datoteko iz &lt;code&gt;templates&lt;/code&gt; direktorija. Vsi obstoječi podatki bodo odstranjeni. Če želite samo uvoziti prelogo, raje uporabite upravljalnik predlog v Contao administraciji.</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_exception</source>
-        <target>导入失败！数据库结构是否是最新版本，并且模板文件是否与您的Contao版本兼容？</target>
+        <target>Uvoz je bil neuspešen. Preverite če je podatkovna baza posodobljena in če je predloga skladna z vašo Contao različico.</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>import_empty_source</source>
-        <target>请选择一个模板文件！</target>
+        <target>Prosimo, izberite datoteko predloge!</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
-        <target>所有的现有数据将会被删除！</target>
+        <target>Vsi obstoječi podatki bodo izbrisani!</target>
         
       </trans-unit>
       <trans-unit id="48">
         <source>imported_on</source>
-        <target>已导入模板 %s</target>
+        <target>Predloga uvožena na %s</target>
         
       </trans-unit>
       <trans-unit id="49">
         <source>templates</source>
-        <target>模板</target>
+        <target>Predloge</target>
         
       </trans-unit>
       <trans-unit id="50">
         <source>do_not_truncate</source>
-        <target>不清空数据表</target>
+        <target>Ne izprazni tabel</target>
         
       </trans-unit>
       <trans-unit id="51">
         <source>import_confirm</source>
-        <target>所有的现有数据将会被删除！您真的要继续该操作？</target>
+        <target>Vsi obstoječi podatki bodo izbrisani! Res želite nadaljevati?</target>
         
       </trans-unit>
       <trans-unit id="52">
         <source>template_save</source>
-        <target>导入模板</target>
+        <target>Uvozi predlogo</target>
         
       </trans-unit>
       <trans-unit id="53">
         <source>admin_create</source>
-        <target>创建一个管理员</target>
+        <target>Ustvari skrbniški račun</target>
         
       </trans-unit>
       <trans-unit id="54">
         <source>admin_create_explain</source>
-        <target>您可以在这里创建管理员帐号用来登录Contao后台.</target>
+        <target>Tukaj lahko ustvarite skrbniški račun za prijavo v Contao administracijo.</target>
         
       </trans-unit>
       <trans-unit id="55">
         <source>admin_confirm</source>
-        <target>已创建一位管理员</target>
+        <target>Skrbniški račun je bil ustvarjen.</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_username</source>
-        <target>用户名</target>
+        <target>Uporabniško ime</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_name</source>
-        <target>名称</target>
+        <target>Naziv</target>
         
       </trans-unit>
       <trans-unit id="58">
         <source>admin_email</source>
-        <target>电子邮件格式</target>
+        <target>E-poštni naslov</target>
         
       </trans-unit>
       <trans-unit id="59">
         <source>admin_save</source>
-        <target>创建管理员</target>
+        <target>Ustvari skrbniški račun</target>
         
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>由于安全原因，在这里您不能使用这些字符：#()/&lt;=&gt;</target>
+        <target>Zaradi varnostnih razlogo ni mogoče uporabiti sledečih znakov: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_no_space</source>
-        <target>用户名不能包含空白字符!</target>
+        <target>Uporabniško ime ne sme vsebovati presledkov.</target>
         
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_email</source>
-        <target>请输入合法的电子邮件地址！</target>
+        <target>Prosimo vpišite veljaven e-poštni naslov!</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error_password_match</source>
-        <target>您两次输入的密码不一致！</target>
+        <target>Gesli se ne ujemata!</target>
         
       </trans-unit>
       <trans-unit id="64">
         <source>admin_error_password_user</source>
-        <target>您的用户名和密码不应该相同！</target>
+        <target>Uporabniško ime in geslo ne smeta biti enaka!</target>
         
       </trans-unit>
       <trans-unit id="65">
         <source>admin_error</source>
-        <target>请填写所有字段，以创建一位管理员！</target>
+        <target>Prosimo, izpolnite vsa polja za ustvarjanje skrbniškega računa!</target>
         
       </trans-unit>
       <trans-unit id="66">
         <source>congratulations</source>
-        <target>恭喜！</target>
+        <target>Čestitamo!</target>
         
       </trans-unit>
       <trans-unit id="67">
         <source>congratulations_explain</source>
-        <target>Contao安装成功。</target>
+        <target>Contao je bil uspešno nameščen.</target>
         
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete</source>
-        <target>安装完成</target>
+        <target>Namestitev končana</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>installation_complete_explain</source>
-        <target>现在请登录Contao后台并检查系统设置.</target>
+        <target>Nadaljujte v Contao administracijo in preverite sistemske nastavitve.</target>
         
       </trans-unit>
       <trans-unit id="70">
         <source>back_end</source>
-        <target>Contao后台</target>
+        <target>Contao administracija</target>
         
       </trans-unit>
       <trans-unit id="71">
         <source>old_database</source>
-        <target>数据库太旧!</target>
+        <target>Podatkovna baza je prestara!</target>
         
       </trans-unit>
       <trans-unit id="72">
         <source>old_database_explanation</source>
-        <target>至少需要升级Contao从版本3.2到版本4.</target>
+        <target>Potrebujete najmanj Contao 3.2 za nadgradnjo v Contao 4.</target>
         
       </trans-unit>
       <trans-unit id="73">
         <source>console_explanation</source>
-        <target>无法完成安装任务!</target>
+        <target>Naloge po zaključku namestitve ni bilo mogoče dokončati.</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicate_subscriptions</source>
-        <target>发现重复的新闻订阅:</target>
         
       </trans-unit>
       <trans-unit id="75">
         <source>duplicates_purged</source>
-        <target>重复的条目已自动被删除。原始的订阅备份存储在数据表 &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="76">
         <source>unsupported_version</source>
-        <target>数据库版本不支持！</target>
+        <target>Različica vaše podatkovne baze ni podprta!</target>
         
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao至少需要MySQL 5.5.7，但是当前版本为 %s。请更新数据库版本。</target>
+        <target>Contao zahteva najmanj MySQL 5.5.7, vi pa uporabljate %s. Prosimo, posodobite vaš MySQL strežnik.</target>
         
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
-        <target>配置的collation不支持！</target>
         
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>配置的collation &lt;code&gt;%s&lt;/code&gt;  在当前服务器中无效。 请安装collation或者在 &lt;code&gt;app/config/config.yml&lt;/code&gt; 文件中配置不同的字符集和collation。</target>
         
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
-        <target>配置的数据库引擎不支持！</target>
         
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>配置的数据库引擎 &lt;code&gt;%s&lt;/code&gt; 在当前服务器中无效。请安装数据库引擎 (推荐) 或在文件&lt;code&gt;app/config/config.yml&lt;/code&gt; 中配置不同的数据库引擎.</target>
         
       </trans-unit>
     </body>
