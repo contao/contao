@@ -24,7 +24,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.6.x-dev"
+            "dev-4.6": "4.6.x-dev"
         },
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     },
