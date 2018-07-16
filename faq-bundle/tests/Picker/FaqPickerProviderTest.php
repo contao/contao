@@ -239,17 +239,23 @@ class FaqPickerProviderTest extends TestCase
      */
     public function testReturnsTheDcaAttributes()
     {
+        $extra = ['source' => 'tl_faq.2'];
+
         $this->assertSame(
             [
                 'fieldType' => 'radio',
+                'preserveRecord' => 'tl_faq.2',
                 'value' => '5',
             ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', [], '{{faq_url::5}}'))
+            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5}}'))
         );
 
         $this->assertSame(
-            ['fieldType' => 'radio'],
-            $this->provider->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5}}'))
+            [
+                'fieldType' => 'radio',
+                'preserveRecord' => 'tl_faq.2',
+            ],
+            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
         );
     }
 
