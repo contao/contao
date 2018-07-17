@@ -334,7 +334,7 @@ class tl_newsletter extends Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
 				}
-				// NO BREAK STATEMENT HERE
+				// no break;
 
 			case 'edit':
 			case 'show':
