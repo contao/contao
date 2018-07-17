@@ -178,7 +178,7 @@ class Statement
 		{
 			$strQuery = sprintf('(%s) VALUES (%s)',
 								implode(', ', array_map('Database::quoteIdentifier', array_keys($arrParams))),
-								str_replace('%', '%%', implode(', ', array_values($arrParams))));
+								str_replace('%', '%%', implode(', ', $arrParams)));
 		}
 
 		// UPDATE
@@ -334,7 +334,7 @@ class Statement
 					break;
 
 				default:
-					$arrValues[$k] = ($v === null) ? 'NULL' : $v;
+					$arrValues[$k] = $v ?? 'NULL';
 					break;
 			}
 		}

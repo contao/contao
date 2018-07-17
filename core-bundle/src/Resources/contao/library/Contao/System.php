@@ -503,7 +503,7 @@ abstract class System
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
-			$return[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? $GLOBALS['TL_LANG']['CNT'][$strKey] : $countries[$strKey];
+			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $countries[$strKey];
 		}
 
 		// HOOK: add custom logic
@@ -551,7 +551,7 @@ abstract class System
 				continue;
 			}
 
-			$return[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? $GLOBALS['TL_LANG']['LNG'][$strKey] : $languages[$strKey];
+			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $languages[$strKey];
 
 			if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey])
 			{

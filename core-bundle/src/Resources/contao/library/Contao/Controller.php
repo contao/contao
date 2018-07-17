@@ -896,7 +896,7 @@ abstract class Controller extends System
 
 		$arrReplace['[[TL_HEAD]]'] = $strScripts;
 
-		return str_replace(array_keys($arrReplace), array_values($arrReplace), $strBuffer);
+		return str_replace(array_keys($arrReplace), $arrReplace, $strBuffer);
 	}
 
 	/**
@@ -1061,7 +1061,7 @@ abstract class Controller extends System
 			'contao/switch.php'    => $generate('contao_backend_switch')
 		);
 
-		return str_replace(array_keys($arrMapper), array_values($arrMapper), $strContext);
+		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);
 	}
 
 	/**

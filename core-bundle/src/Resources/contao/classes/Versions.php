@@ -624,7 +624,7 @@ class Versions extends Controller
 								->execute($objUser->id);
 
 		$intLast   = ceil($objTotal->count / 30);
-		$intPage   = (\Input::get('vp') !== null) ? \Input::get('vp') : 1;
+		$intPage   = \Input::get('vp') ?? 1;
 		$intOffset = ($intPage - 1) * 30;
 
 		// Validate the page number

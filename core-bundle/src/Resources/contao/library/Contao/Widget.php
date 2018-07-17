@@ -1366,7 +1366,7 @@ abstract class Widget extends Controller
 
 			if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple'])
 			{
-				$strLabel = isset($arrData['eval']['blankOptionLabel']) ? $arrData['eval']['blankOptionLabel'] : '-';
+				$strLabel = $arrData['eval']['blankOptionLabel'] ?? '-';
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
 			}
 

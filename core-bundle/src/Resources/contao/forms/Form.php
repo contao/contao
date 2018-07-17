@@ -343,7 +343,7 @@ class Form extends Hybrid
 				}
 
 				// Add field to message
-				$message .= (isset($arrLabels[$k]) ? $arrLabels[$k] : ucfirst($k)) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
+				$message .= ($arrLabels[$k] ?? ucfirst($k)) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 
 				// Prepare XML file
 				if ($this->format == 'xml')

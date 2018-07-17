@@ -135,7 +135,7 @@ class ModuleRssReader extends Module
 		{
 			// Get the current page
 			$id = 'page_r' . $this->id;
-			$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
+			$page = \Input::get($id) ?? 1;
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil(\count($arrItems)/$this->perPage), 1))

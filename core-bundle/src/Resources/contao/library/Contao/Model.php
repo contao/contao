@@ -315,7 +315,7 @@ abstract class Model
 
 		foreach ($row as $k=>$v)
 		{
-			$originalRow[$k] = isset($this->arrModified[$k]) ? $this->arrModified[$k] : $v;
+			$originalRow[$k] = $this->arrModified[$k] ?? $v;
 		}
 
 		return $originalRow;
