@@ -29,7 +29,7 @@ use FOS\HttpCache\ResponseTagger;
  * @property integer $rootPage
  * @property string  $navigationTpl
  * @property string  $customTpl
- * @property string  $pages
+ * @property array   $pages
  * @property string  $orderPages
  * @property boolean $showHidden
  * @property string  $customLabel
