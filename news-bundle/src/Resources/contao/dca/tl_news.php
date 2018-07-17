@@ -538,9 +538,27 @@ class tl_news extends Backend
 
 			case 'cut':
 			case 'copy':
-				if (!\in_array(Input::get('pid'), $root))
+				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . Input::get('pid') . '.');
+					$objArchive = $this->Database->prepare("SELECT pid FROM tl_news WHERE id=?")
+												 ->limit(1)
+												 ->execute(Input::get('pid'));
+
+					if ($objArchive->numRows < 1)
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news item ID ' . Input::get('pid') . '.');
+					}
+
+					$pid = $objArchive->pid;
+				}
+				else
+				{
+					$pid = Input::get('pid');
+				}
+
+				if (!\in_array($pid, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . $pid . '.');
 				}
 				// NO BREAK STATEMENT HERE
 
