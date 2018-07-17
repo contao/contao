@@ -16,7 +16,6 @@ use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageError401;
-use Contao\PageError401Exception;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
@@ -149,7 +148,7 @@ class FrontendControllerTest extends TestCase
         $controller = new FrontendController();
         $controller->setContainer($container);
 
-        $GLOBALS['TL_PTY']['error_401'] = PageError401Exception::class;
+        $GLOBALS['TL_PTY']['error_401'] = 'Contao\PageError401Exception';
 
         $this->expectException(UnauthorizedHttpException::class);
 

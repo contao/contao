@@ -1,5 +1,5 @@
 parameters:
-    bootstrap: %currentWorkingDirectory%/tests/bootstrap.php
+    bootstrap: %currentWorkingDirectory%/vendor/autoload.php
 
     excludes_analyse:
         - %currentWorkingDirectory%/src/Resources/*
