@@ -331,7 +331,7 @@ class ModuleListing extends Module
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
 					'url' => $strUrl . $strVarConnector . 'show=' . $arrRows[$i][$this->strPk],
-					'details' => (isset($arrRows[$i]['_details']) ? $arrRows[$i]['_details'] : 1)
+					'details' => $arrRows[$i]['_details'] ?? 1
 				);
 			}
 		}
