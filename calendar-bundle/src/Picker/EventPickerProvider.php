@@ -100,11 +100,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     }
 
     /**
-     * Returns the calendar ID.
-     *
      * @param int|string $id
-     *
-     * @return int|null
      */
     private function getCalendarId($id): ?int
     {
