@@ -25,17 +25,6 @@ class InsertTagsListener
      */
     private $framework;
 
-    /**
-     * @var array
-     */
-    private static $supportedTags = [
-        'news',
-        'news_open',
-        'news_url',
-        'news_title',
-        'news_teaser',
-    ];
-
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -53,7 +42,15 @@ class InsertTagsListener
             return $this->replaceNewsFeedInsertTag($elements[1]);
         }
 
-        if (\in_array($key, self::$supportedTags, true)) {
+        static $supportedTags = [
+            'news',
+            'news_open',
+            'news_url',
+            'news_title',
+            'news_teaser',
+        ];
+
+        if (\in_array($key, $supportedTags, true)) {
             return $this->replaceNewsInsertTags($key, $elements[1], $flags);
         }
 
