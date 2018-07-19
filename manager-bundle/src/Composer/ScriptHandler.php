@@ -21,8 +21,6 @@ class ScriptHandler
 {
     /**
      * Runs all Composer tasks to initialize a Contao Managed Edition.
-     *
-     * @param Event $event
      */
     public static function initializeApplication(Event $event): void
     {
@@ -38,9 +36,6 @@ class ScriptHandler
         static::executeCommand(sprintf('contao:symlinks %s', $webDir), $event);
     }
 
-    /**
-     * Purges the cache folder.
-     */
     public static function purgeCacheFolder(): void
     {
         $filesystem = new Filesystem();
@@ -57,11 +52,6 @@ class ScriptHandler
     }
 
     /**
-     * Executes a command.
-     *
-     * @param string $cmd
-     * @param Event  $event
-     *
      * @throws \RuntimeException
      */
     private static function executeCommand(string $cmd, Event $event): void
@@ -100,13 +90,6 @@ class ScriptHandler
         }
     }
 
-    /**
-     * Returns the web directory.
-     *
-     * @param Event $event
-     *
-     * @return string
-     */
     private static function getWebDir(Event $event): string
     {
         $extra = $event->getComposer()->getPackage()->getExtra();
@@ -114,13 +97,6 @@ class ScriptHandler
         return $extra['symfony-web-dir'] ?? 'web';
     }
 
-    /**
-     * Returns the verbosity flag depending on the console IO verbosity.
-     *
-     * @param Event $event
-     *
-     * @return string
-     */
     private static function getVerbosityFlag(Event $event): string
     {
         $io = $event->getIO();

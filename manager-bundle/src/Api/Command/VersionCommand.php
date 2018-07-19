@@ -25,9 +25,6 @@ class VersionCommand extends Command
      */
     private $application;
 
-    /**
-     * @param Application $application
-     */
     public function __construct(Application $application)
     {
         parent::__construct();
@@ -61,9 +58,7 @@ class VersionCommand extends Command
     }
 
     /**
-     * Gets list of command names.
-     *
-     * @return array
+     * @return string[]
      */
     private function getCommandNames(): array
     {
@@ -71,9 +66,7 @@ class VersionCommand extends Command
     }
 
     /**
-     * Gets feature list from plugins.
-     *
-     * @return array
+     * @return array<string,string[]>
      */
     private function getFeatures(): array
     {

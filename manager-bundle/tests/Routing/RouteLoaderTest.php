@@ -110,11 +110,6 @@ class RouteLoaderTest extends TestCase
     }
 
     /**
-     * Mocks a route plugin.
-     *
-     * @param string $routeName
-     * @param string $routePath
-     *
      * @return RoutingPluginInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface

@@ -270,13 +270,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Mocks the application.
-     *
-     * @param ManagerConfig|null $config
-     *
-     * @return Application
-     */
     private function mockApplication(ManagerConfig $config = null): Application
     {
         $container = new ContainerBuilder();

@@ -35,11 +35,6 @@ class RouteLoader
      */
     private $kernel;
 
-    /**
-     * @param LoaderInterface $loader
-     * @param PluginLoader    $pluginLoader
-     * @param KernelInterface $kernel
-     */
     public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel)
     {
         $this->loader = $loader;
@@ -49,8 +44,6 @@ class RouteLoader
 
     /**
      * Returns a route collection build from all plugin routes.
-     *
-     * @return RouteCollection
      */
     public function loadFromPlugins(): RouteCollection
     {

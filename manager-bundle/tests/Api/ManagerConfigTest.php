@@ -97,9 +97,6 @@ class ManagerConfigTest extends ContaoTestCase
         $this->assertSame(['bar' => 'foo'], $this->config->all());
     }
 
-    /**
-     * @param array $data
-     */
     private function dumpTestdata(array $data): void
     {
         $this->filesystem->dumpFile($this->tempfile, Yaml::dump($data));

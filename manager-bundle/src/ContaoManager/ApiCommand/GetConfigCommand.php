@@ -25,9 +25,6 @@ class GetConfigCommand extends Command
      */
     private $managerConfig;
 
-    /**
-     * @param Application $application
-     */
     public function __construct(Application $application)
     {
         parent::__construct();

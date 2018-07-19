@@ -113,10 +113,6 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
-     * @param string $projectDir
-     * @param string $env
-     * @param array  $expectedResult
-     *
      * @dataProvider containerConfigurationProvider
      */
     public function testRegisterContainerConfiguration(string $projectDir, string $env, array $expectedResult): void
@@ -140,7 +136,7 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
-     * @return array
+     * @return (string[]|string)[][]
      */
     public function containerConfigurationProvider(): array
     {
@@ -192,9 +188,6 @@ class ContaoKernelTest extends ContaoTestCase
     /**
      * Mocks a kernel with the plugin loader.
      *
-     * @param string $projectDir
-     * @param string $env
-     *
      * @return ContaoKernel|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockKernel(string $projectDir, string $env = 'prod'): ContaoKernel
@@ -214,10 +207,6 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
-     * Mocks a configuartion plugin.
-     *
-     * @param LoaderInterface $loader
-     *
      * @return ConfigPluginInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface

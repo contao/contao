@@ -21,9 +21,6 @@ class InitializeApplicationListener
      */
     private $projectDir;
 
-    /**
-     * @param string $projectDir
-     */
     public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir;

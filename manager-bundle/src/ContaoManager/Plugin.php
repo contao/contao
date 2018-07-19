@@ -60,8 +60,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
-     *
-     * @param string $modulePath
      */
     public static function autoloadModules(string $modulePath): void
     {
@@ -240,10 +238,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds backwards compatibility for the %prepend_locale% parameter.
      *
-     * @param array            $extensionConfigs
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return array<string,array<string,mixed>>
      */
     private function handlePrependLocale(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -271,10 +266,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds the database server version to the Doctrine DBAL configuration.
      *
-     * @param array            $extensionConfigs
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
     private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
     {
