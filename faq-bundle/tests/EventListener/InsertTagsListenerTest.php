@@ -65,17 +65,17 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
-            $listener->onReplaceInsertTags('faq::2')
+            $listener->onReplaceInsertTags('faq::2', false, null, [])
         );
 
         $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">',
-            $listener->onReplaceInsertTags('faq_open::2')
+            $listener->onReplaceInsertTags('faq_open::2', false, null, [])
         );
 
         $this->assertSame(
             'faq/what-does-foobar-mean.html',
-            $listener->onReplaceInsertTags('faq_url::2')
+            $listener->onReplaceInsertTags('faq_url::2', false, null, [])
         );
 
         $this->assertSame(
@@ -85,7 +85,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             'What does &quot;foobar&quot; mean?',
-            $listener->onReplaceInsertTags('faq_title::2')
+            $listener->onReplaceInsertTags('faq_title::2', false, null, [])
         );
     }
 
@@ -93,7 +93,7 @@ class InsertTagsListenerTest extends ContaoTestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertFalse($listener->onReplaceInsertTags('link_url::2'));
+        $this->assertFalse($listener->onReplaceInsertTags('link_url::2', false, null, []));
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
@@ -104,7 +104,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
-        $this->assertSame('', $listener->onReplaceInsertTags('faq_url::2'));
+        $this->assertSame('', $listener->onReplaceInsertTags('faq_url::2', false, null, []));
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoCategoryModel(): void
@@ -121,6 +121,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
-        $this->assertSame('', $listener->onReplaceInsertTags('faq_url::3'));
+        $this->assertSame('', $listener->onReplaceInsertTags('faq_url::3', false, null, []));
     }
 }

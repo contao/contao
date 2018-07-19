@@ -100,11 +100,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     }
 
     /**
-     * Returns the FAQ category ID.
-     *
      * @param int|string $id
-     *
-     * @return int|null
      */
     private function getFaqCategoryId($id): ?int
     {

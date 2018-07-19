@@ -36,25 +36,17 @@ class InsertTagsListener
         'faq_title',
     ];
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
 
     /**
-     * Replaces FAQ insert tags.
-     *
-     * @param string $tag
-     * @param bool   $useCache
-     * @param mixed  $cacheValue
-     * @param array  $flags
+     * Replaces the FAQ insert tags.
      *
      * @return string|false
      */
-    public function onReplaceInsertTags(string $tag, bool $useCache = true, $cacheValue = null, array $flags = [])
+    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags)
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -78,11 +70,6 @@ class InsertTagsListener
     }
 
     /**
-     * Generates the URL for an FAQ.
-     *
-     * @param FaqModel $faq
-     * @param bool     $absolute
-     *
      * @return string|false
      */
     private function generateUrl(FaqModel $faq, bool $absolute)
@@ -103,12 +90,6 @@ class InsertTagsListener
     }
 
     /**
-     * Generates the replacement string.
-     *
-     * @param FaqModel $faq
-     * @param string   $key
-     * @param string   $url
-     *
      * @return string|false
      */
     private function generateReplacement(FaqModel $faq, string $key, string $url)
