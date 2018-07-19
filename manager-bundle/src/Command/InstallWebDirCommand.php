@@ -37,26 +37,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $io;
 
     /**
-     * Files that should not be copied if they exist in the web directory.
-     *
-     * @var array
-     */
-    private $optionalFiles = [
-        '.htaccess',
-        'favicon.ico',
-        'robots.txt',
-    ];
-
-    /**
-     * Files that should not be copied if the "no-dev" option is set.
-     *
-     * @var array
-     */
-    private $devFiles = [
-        'app_dev.php',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     protected function configure(): void
@@ -162,7 +142,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 continue;
             }
 
-            if (!$dev && \in_array($file->getRelativePathname(), $this->devFiles, true)) {
+            if (!$dev && 'app_dev.php' === $file->getRelativePathname()) {
                 continue;
             }
 
@@ -246,7 +226,13 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
     {
-        if (!\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
+        static $optional = [
+            '.htaccess',
+            'favicon.ico',
+            'robots.txt',
+        ];
+
+        if (!\in_array($file->getRelativePathname(), $optional, true)) {
             return false;
         }
 
