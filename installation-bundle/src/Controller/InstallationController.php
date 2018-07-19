@@ -668,6 +668,9 @@ class InstallationController implements ContainerAwareInterface
         return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
+    /**
+     * @return string|bool|null
+     */
     private function getContainerParameter(string $name)
     {
         if ($this->container->hasParameter($name)) {

@@ -66,7 +66,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     /**
      * @param string $message
      */
-    protected function addMessage($message)
+    protected function addMessage($message): void
     {
         $this->messages[] = $message;
     }
@@ -74,7 +74,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     /**
      * @param string $message
      */
-    protected function prependMessage($message)
+    protected function prependMessage($message): void
     {
         array_unshift($this->messages, $message);
     }
