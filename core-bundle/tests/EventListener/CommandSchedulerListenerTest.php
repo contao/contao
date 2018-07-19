@@ -241,10 +241,7 @@ class CommandSchedulerListenerTest extends TestCase
         return $connection;
     }
 
-    /**
-     * @param string|null $route
-     */
-    private function mockPostResponseEvent($route = null): PostResponseEvent
+    private function mockPostResponseEvent(string $route = null): PostResponseEvent
     {
         $request = new Request();
 

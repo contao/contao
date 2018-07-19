@@ -36,9 +36,7 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Reads the contents of a XLIFF file and returns the PHP code.
-     *
-     * @param string|null $type
+     * {@inheritdoc}
      */
     public function load($file, $type = null): string
     {

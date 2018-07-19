@@ -290,11 +290,9 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * @param string $mode
-     *
      * @dataProvider getCreateWithLegacyMode
      */
-    public function testCreatesAnImageObjectFromAnImagePathInLegacyMode($mode, array $expected): void
+    public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = $this->getFixturesDir().'/images/none.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
@@ -371,12 +369,9 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * @param string $mode
-     * @param string $expected
-     *
      * @dataProvider getCreateWithLegacyMode
      */
-    public function testReturnsTheImportantPartFromALegacyMode($mode, $expected): void
+    public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
         $dimensionsMock = $this->createMock(ImageDimensionsInterface::class);
         $dimensionsMock
@@ -670,9 +665,6 @@ class ImageFactoryTest extends TestCase
 
     /**
      * Mocks an image factory.
-     *
-     * @param bool  $bypassCache
-     * @param array $imagineOptions
      */
     private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
     {

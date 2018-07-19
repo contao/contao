@@ -134,11 +134,9 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * @param int $type
-     *
      * @dataProvider getErrorTypes
      */
-    public function testRendersTheContaoPageHandler($type, \Exception $exception): void
+    public function testRendersTheContaoPageHandler(int $type, \Exception $exception): void
     {
         $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
 

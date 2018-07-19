@@ -102,13 +102,9 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param string $scope
-     * @param string $userClass
-     * @param string $userTable
-     *
      * @dataProvider scopeTableProvider
      */
-    public function testStoresTheSessionUponKernelResponse($scope, $userClass, $userTable): void
+    public function testStoresTheSessionUponKernelResponse(string $scope, string $userClass, string $userTable): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -154,8 +150,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $token
-     *
      * @dataProvider noUserProvider
      */
     public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
@@ -182,8 +176,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $token
-     *
      * @dataProvider noUserProvider
      */
     public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $token = null): void

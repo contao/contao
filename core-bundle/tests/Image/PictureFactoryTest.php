@@ -365,13 +365,10 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * @param PictureGenerator|null         $pictureGenerator
-     * @param ImageFactory|null             $imageFactory
-     * @param ContaoFrameworkInterface|null $framework
-     * @param bool                          $bypassCache
-     * @param array                         $imagineOptions
+     * @param PictureGenerator|\PHPUnit_Framework_MockObject_MockObject|null $pictureGenerator
+     * @param ImageFactory|\PHPUnit_Framework_MockObject_MockObject|null     $imageFactory
      */
-    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null): PictureFactory
+    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);

@@ -324,8 +324,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @param string|null $largePrefixes
-     *
      * @dataProvider getIndexes
      */
     public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = '', string $fileSystem = 'antelope'): void

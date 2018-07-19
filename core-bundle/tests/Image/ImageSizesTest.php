@@ -139,10 +139,8 @@ class ImageSizesTest extends TestCase
 
     /**
      * Adds an expected method call to the event dispatcher mock object.
-     *
-     * @param string $event
      */
-    private function expectEvent($event): void
+    private function expectEvent(string $event): void
     {
         $this->eventDispatcher
             ->expects($this->atLeastOnce())

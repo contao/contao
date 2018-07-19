@@ -139,11 +139,9 @@ class PaletteManipulator
     }
 
     /**
-     * @param string $position
-     *
      * @throws PalettePositionException
      */
-    private function validatePosition($position): void
+    private function validatePosition(string $position): void
     {
         static $positions = [
             self::POSITION_BEFORE,

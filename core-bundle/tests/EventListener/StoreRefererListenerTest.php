@@ -199,8 +199,6 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $noUserReturn
-     *
      * @dataProvider noUserProvider
      */
     public function testDoesNotStoreTheRefererIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
@@ -330,9 +328,6 @@ class StoreRefererListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
     private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener
     {
         if (null === $tokenStorage) {

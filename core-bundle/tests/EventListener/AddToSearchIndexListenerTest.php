@@ -107,12 +107,9 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * @param string|null $requestUri
-     * @param string      $requestMethod
-     *
      * @return PostResponseEvent|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockPostResponseEvent($requestUri = null, $requestMethod = Request::METHOD_GET): PostResponseEvent
+    private function mockPostResponseEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): PostResponseEvent
     {
         $request = new Request();
         $request->setMethod($requestMethod);

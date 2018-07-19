@@ -59,11 +59,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * Generates a Contao URL.
-     *
-     * @param string $name
-     * @param array  $parameters
-     * @param int    $referenceType
+     * {@inheritdoc}
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
     {

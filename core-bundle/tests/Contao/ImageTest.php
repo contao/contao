@@ -128,15 +128,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param array $arguments
-     * @param array $expectedResult
-     *
      * @group legacy
      * @dataProvider getComputeResizeDataWithoutImportantPart
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testResizesImagesWithoutImportantPart($arguments, $expectedResult): void
+    public function testResizesImagesWithoutImportantPart(array $arguments, array $expectedResult): void
     {
         $properties = [
             'extension' => 'jpg',
@@ -563,15 +560,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param array $arguments
-     * @param array $expectedResult
-     *
      * @group legacy
      * @dataProvider getComputeResizeDataWithImportantPart
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testResizesImagesWithImportantPart($arguments, $expectedResult): void
+    public function testResizesImagesWithImportantPart(array $arguments, array $expectedResult): void
     {
         $properties = [
             'extension' => 'jpg',
@@ -856,15 +850,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param array  $arguments
-     * @param string $expectedCacheName
-     *
      * @group legacy
      * @dataProvider getCacheName
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testReturnsTheCacheName($arguments, $expectedCacheName): void
+    public function testReturnsTheCacheName(array $arguments, string $expectedCacheName): void
     {
         $properties = [
             'extension' => 'jpg',
@@ -942,14 +933,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param int $value
-     *
      * @group legacy
      * @dataProvider getZoomLevel
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testFailsIfTheZoomValueIsOutOfBounds($value): void
+    public function testFailsIfTheZoomValueIsOutOfBounds(int $value): void
     {
         /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
@@ -977,36 +966,30 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param array $arguments
-     * @param array $expectedResult
-     *
      * @group legacy
      * @dataProvider getGetLegacy
      *
      * @expectedDeprecation Using Image::get() has been deprecated %s.
      */
-    public function testFactorsImagesInTheLegacyMethod($arguments, $expectedResult): void
+    public function testFactorsImagesInTheLegacyMethod(array $arguments): void
     {
         $result = Image::get($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
 
-        $this->assertSame($result, $expectedResult);
+        $this->assertNull($result);
     }
 
     /**
-     * @return array<string,mixed[]|null>
+     * @return array<string,mixed[]>
      */
     public function getGetLegacy(): array
     {
         // original image, target width, target height, resize mode, target, force override
-        // expected result
         return [
             'No empty image path returns null' => [
                 ['', 100, 100, 'crop', null, false],
-                null,
             ],
             'Inexistent file returns null' => [
                 ['foobar.jpg', 100, 100, 'crop', null, false],
-                null,
             ],
         ];
     }
@@ -1024,19 +1007,16 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param array $arguments
-     * @param array $expectedResult
-     *
      * @group legacy
      * @dataProvider getResizeLegacy
      *
      * @expectedDeprecation Using Image::resize() has been deprecated %s.
      */
-    public function testResizesImagesInTheLegacyMethod($arguments, $expectedResult): void
+    public function testResizesImagesInTheLegacyMethod(array $arguments): void
     {
         $result = Image::resize($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
 
-        $this->assertSame($result, $expectedResult);
+        $this->assertFalse($result);
     }
 
     /**
@@ -1045,15 +1025,12 @@ class ImageTest extends TestCase
     public function getResizeLegacy(): array
     {
         // original image, target width, target height, resize mode
-        // expected result
         return [
             'No empty image path returns false' => [
                 ['', 100, 100, 'crop'],
-                false,
             ],
             'Inexistent file returns false' => [
                 ['foobar.jpg', 100, 100, 'crop'],
-                false,
             ],
         ];
     }
@@ -1419,7 +1396,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param object $imageObj The image object
+     * @param object $imageObj
      *
      * @return string The image path
      */
@@ -1493,16 +1470,10 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param string $originalPath
-     * @param int    $targetWidth
-     * @param int    $targetHeight
-     * @param string $resizeMode
-     * @param string $cacheName
      * @param object $fileObj
-     * @param string $targetPath
      * @param object $imageObj
      */
-    public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj): string
+    public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, $fileObj, string $targetPath, $imageObj): string
     {
         // Do not include $cacheName as it is dynamic (mtime)
         $path = 'assets/'
@@ -1523,15 +1494,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param string $value
-     * @param int    $expected
-     *
      * @group legacy
      * @dataProvider getGetPixelValueData
      *
      * @expectedDeprecation Using Image::getPixelValue() has been deprecated %s.
      */
-    public function testReadsThePixelValue($value, $expected): void
+    public function testReadsThePixelValue(string $value, int $expected): void
     {
         $this->assertSame($expected, Image::getPixelValue($value));
     }

@@ -479,14 +479,12 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @param string $route
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      *
      * @dataProvider getInstallRoutes
      */
-    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool($route): void
+    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
     {
         $request = new Request();
         $request->attributes->set('_route', $route);
