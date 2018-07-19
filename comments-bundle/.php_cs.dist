@@ -39,6 +39,7 @@ return PhpCsFixer\Config::create()
         ],
         'no_null_property_initialization' => true,
         'no_superfluous_elseif' => true,
+        'no_superfluous_phpdoc_tags' => true,
         'no_unreachable_default_argument_value' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,
