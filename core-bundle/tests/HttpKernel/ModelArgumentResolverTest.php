@@ -56,7 +56,7 @@ class ModelArgumentResolverTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function getArguments(): array
     {

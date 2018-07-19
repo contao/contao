@@ -180,7 +180,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array<string,array<(int|null)[]|array<string,int>>>
+     * @return array<string,((int|null)[]|array<string,int>)[]
      */
     public function getComputeResizeDataWithoutImportantPart(): array
     {
@@ -598,7 +598,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array<string,array<mixed[]|array<string,int>>>
+     * @return array<string,(mixed[]|array<string,int>)[]
      */
     public function getComputeResizeDataWithImportantPart(): array
     {
@@ -895,7 +895,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array<array<mixed[]|string>>
+     * @return (mixed[]|string)[][]
      */
     public function getCacheName(): array
     {

@@ -80,7 +80,7 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function actionLevelProvider(): array
     {
@@ -232,7 +232,7 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @return array<(string|null)[]>
+     * @return (string|null)[][]
      */
     public function sourceProvider(): array
     {

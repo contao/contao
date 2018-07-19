@@ -141,7 +141,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string,string|bool>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
@@ -168,7 +168,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string,string|bool>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {

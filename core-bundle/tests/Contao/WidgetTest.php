@@ -80,7 +80,7 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @return array<mixed[]>
+     * @return (array<string,string>|string|null)[][]
      */
     public function postProvider(): array
     {

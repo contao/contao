@@ -91,7 +91,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function scopeBagProvider(): array
     {
@@ -143,7 +143,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function scopeTableProvider(): array
     {
@@ -216,7 +216,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array<(AnonymousToken|null)[]>
+     * @return (AnonymousToken|null)[][]
      */
     public function noUserProvider(): array
     {

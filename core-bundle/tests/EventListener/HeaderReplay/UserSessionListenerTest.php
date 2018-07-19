@@ -59,7 +59,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function getForceNoCacheHeaderData(): array
     {

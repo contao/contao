@@ -129,7 +129,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @return array<array<string,array<string,array<string,string>>>>
+     * @return array<string,array<string,array<string,string>>>[]
      */
     public function createSchemaProvider(): array
     {
@@ -377,7 +377,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @return array<(string|int|null)[]>
+     * @return (string|int|null)[][]
      */
     public function getIndexes(): array
     {

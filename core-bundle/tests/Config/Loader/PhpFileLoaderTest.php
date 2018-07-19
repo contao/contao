@@ -215,7 +215,7 @@ EOF;
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function loadWithDeclareStatementsStrictType(): array
     {
@@ -261,7 +261,7 @@ EOF;
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function loadWithDeclareStatementsMultipleDefined(): array
     {

@@ -52,7 +52,7 @@ class TranslationListenerTest extends TestCase
     }
 
     /**
-     * @return array<string[]|string>
+     * @return (string[]|string)[][]
      */
     public function insertTagsProvider(): array
     {

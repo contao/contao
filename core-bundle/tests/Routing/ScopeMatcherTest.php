@@ -60,7 +60,7 @@ class ScopeMatcherTest extends TestCase
     }
 
     /**
-     * @return array<(string|bool|null)[]>
+     * @return (string|bool|null)[][]
      */
     public function masterRequestProvider(): array
     {

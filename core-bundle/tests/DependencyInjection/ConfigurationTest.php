@@ -84,7 +84,7 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function getPaths(): array
     {
@@ -118,7 +118,7 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function getInvalidUploadPaths(): array
     {

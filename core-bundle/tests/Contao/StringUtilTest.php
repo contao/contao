@@ -330,7 +330,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,mixed[]>
+     * @return array<string,(string|bool)[]>
      */
     public function parseSimpleTokensDoesntExecutePhp(): array
     {
@@ -371,7 +371,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,mixed[]>
+     * @return array<string,(string|bool)[]>
      */
     public function parseSimpleTokensDoesntExecutePhpInToken(): array
     {
@@ -428,7 +428,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string,string[]>
      */
     public function parseSimpleTokensInvalidComparison(): array
     {

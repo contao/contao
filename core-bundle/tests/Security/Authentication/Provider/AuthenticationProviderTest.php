@@ -259,7 +259,7 @@ class AuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @return array<bool[]>
+     * @return bool[][]
      */
     public function getCheckCredentialsHookData(): array
     {

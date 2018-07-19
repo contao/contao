@@ -49,7 +49,7 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @return array<(string|null)[]>
+     * @return (string|null)[][]
      */
     public function getLocaleRequestData(): array
     {
@@ -81,7 +81,7 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @return array<(string[]|string|null)[]>
+     * @return (string[]|string|null)[][]
      */
     public function acceptLanguageTestData(): array
     {

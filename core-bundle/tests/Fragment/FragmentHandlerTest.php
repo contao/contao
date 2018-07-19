@@ -69,7 +69,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function getRenderingStrategies(): array
     {
@@ -98,7 +98,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return array<array<array<string,string>>>
+     * @return array<string,string>[][]
      */
     public function getOptions(): array
     {

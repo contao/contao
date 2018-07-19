@@ -123,8 +123,6 @@ class XliffFileLoader extends Loader
 
     /**
      * Splits the ID attribute and returns the chunks.
-     *
-     * @param string[]
      */
     private function getChunksFromUnit(\DOMElement $unit): array
     {

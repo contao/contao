@@ -158,7 +158,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * @return array<(HttpException|int)[]>
+     * @return (UnauthorizedHttpException|AccessDeniedHttpException|NotFoundHttpException|int)[][]
      */
     public function getErrorTypes(): array
     {

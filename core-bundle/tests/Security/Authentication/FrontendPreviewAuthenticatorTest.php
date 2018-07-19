@@ -155,7 +155,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @return array<mixed[]>
+     * @return (string[]|string|bool|null)[][]
      */
     public function getAccessPermissions(): array
     {
@@ -261,7 +261,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @return array<mixed[]>
+     * @return (string[]|string|bool|null)[][]
      */
     public function getFrontendGroupAccessPermissions(): array
     {

@@ -124,7 +124,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Returns the routing parameters for the back end picker.
      *
-     * @return array<string,mixed>
+     * @return array<string,string|int>
      */
     abstract protected function getRouteParameters(PickerConfig $config = null);
 

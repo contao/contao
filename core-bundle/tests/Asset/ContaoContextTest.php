@@ -114,7 +114,7 @@ class ContaoContextTest extends TestCase
     }
 
     /**
-     * @return array<(string|bool)[]>
+     * @return (string|bool)[][]
      */
     public function getBasePaths(): array
     {

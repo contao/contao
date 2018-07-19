@@ -50,7 +50,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return array<(string|bool)[]>
+     * @return (string|bool)[][]
      */
     public function getFrontendUserData(): array
     {
@@ -73,7 +73,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return array<(string|bool)[]>
+     * @return (string|bool)[][]
      */
     public function getBackendUserData(): array
     {
@@ -122,7 +122,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return array<(AbstractToken|bool)[]>
+     * @return (FrontendPreviewToken|UsernamePasswordToken|bool)[][]
      */
     public function getPreviewModeData(): array
     {

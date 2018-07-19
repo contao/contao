@@ -60,7 +60,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array<string,(Request|array<array<string,string>>|null)[]>
+     * @return array<string,(Request|array<string,string>[]|null)[]>
      */
     public function refererStoredOnKernelResponseProvider(): array
     {
@@ -227,7 +227,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array<(AnonymousToken|null)[]>
+     * @return (AnonymousToken|null)[][]
      */
     public function noUserProvider(): array
     {
@@ -320,7 +320,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function noSessionProvider(): array
     {

@@ -208,7 +208,7 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function usernamePasswordProvider(): array
     {

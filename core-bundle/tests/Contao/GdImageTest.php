@@ -123,7 +123,7 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * @return array<string[]>
+     * @return string[][]
      */
     public function getImageTypes(): array
     {

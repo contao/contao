@@ -41,7 +41,7 @@ class GlobalsMapListenerTest extends TestCase
     }
 
     /**
-     * @return array<array<array<string,array<string,string>|string>>>
+     * @return (array<string,array<string,string>|string>)[][]
      */
     public function getValuesData(): array
     {

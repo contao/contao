@@ -37,7 +37,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @return array<string,int>
+     * @return (string,int)[]
      */
     public function emailProvider(): array
     {
