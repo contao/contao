@@ -36,31 +36,21 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
 
     /**
-     * Replaces news insert tags.
-     *
-     * @param string $tag
-     * @param bool   $useCache
-     * @param mixed  $cacheValue
-     * @param array  $flags
-     *
      * @return string|false
      */
-    public function onReplaceInsertTags(string $tag, bool $useCache = true, $cacheValue = null, array $flags = [])
+    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags)
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
 
         if ('news_feed' === $key) {
-            return $this->replaceFeedInsertTag($elements[1]);
+            return $this->replaceNewsFeedInsertTag($elements[1]);
         }
 
         if (\in_array($key, self::$supportedTags, true)) {
@@ -70,14 +60,7 @@ class InsertTagsListener
         return false;
     }
 
-    /**
-     * Replaces the news feed insert tag.
-     *
-     * @param string $feedId
-     *
-     * @return string
-     */
-    private function replaceFeedInsertTag(string $feedId): string
+    private function replaceNewsFeedInsertTag(string $feedId): string
     {
         $this->framework->initialize();
 
@@ -91,15 +74,6 @@ class InsertTagsListener
         return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
-    /**
-     * Replaces a news-related insert tag.
-     *
-     * @param string $insertTag
-     * @param string $idOrAlias
-     * @param array  $flags
-     *
-     * @return string
-     */
     private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $flags): string
     {
         $this->framework->initialize();
@@ -107,51 +81,37 @@ class InsertTagsListener
         /** @var NewsModel $adapter */
         $adapter = $this->framework->getAdapter(NewsModel::class);
 
-        if (null === ($news = $adapter->findByIdOrAlias($idOrAlias))) {
+        if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        return $this->generateReplacement($news, $insertTag, $flags);
-    }
-
-    /**
-     * Generates the replacement string.
-     *
-     * @param NewsModel $news
-     * @param string    $insertTag
-     * @param array     $flags
-     *
-     * @return string
-     */
-    private function generateReplacement(NewsModel $news, string $insertTag, array $flags): string
-    {
-        /** @var News $adapter */
-        $adapter = $this->framework->getAdapter(News::class);
+        /** @var News $news */
+        $news = $this->framework->getAdapter(News::class);
 
         switch ($insertTag) {
             case 'news':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $adapter->generateNewsUrl($news, false, \in_array('absolute', $flags, true)),
-                    StringUtil::specialchars($news->headline),
-                    $news->headline
+                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)),
+                    StringUtil::specialchars($model->headline),
+                    $model->headline
                 );
 
             case 'news_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $adapter->generateNewsUrl($news, false, \in_array('absolute', $flags, true)),
-                    StringUtil::specialchars($news->headline)
+                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)),
+                    StringUtil::specialchars($model->headline)
                 );
 
             case 'news_url':
-                return $adapter->generateNewsUrl($news, false, \in_array('absolute', $flags, true));
+                return $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true));
 
             case 'news_title':
-                return StringUtil::specialchars($news->headline);
+                return StringUtil::specialchars($model->headline);
 
             case 'news_teaser':
-                return StringUtil::toHtml5($news->teaser);
+                return StringUtil::toHtml5($model->teaser);
         }
 
         return '';

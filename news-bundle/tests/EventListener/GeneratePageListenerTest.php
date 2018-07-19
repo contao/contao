@@ -34,9 +34,6 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        $pageModel = $this->createMock(PageModel::class);
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
-
         $properties = [
             'feedBase' => 'http://localhost/',
             'alias' => 'news',
@@ -52,8 +49,11 @@ class GeneratePageListenerTest extends ContaoTestCase
             Template::class => new Adapter(Template::class),
         ];
 
+        /** @var LayoutModel|\PHPUnit_Framework_MockObject_MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
+
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertSame(
             ['<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">'],
@@ -65,11 +65,11 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        $pageModel = $this->createMock(PageModel::class);
+        /** @var LayoutModel|\PHPUnit_Framework_MockObject_MockObject $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => '']);
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
@@ -78,15 +78,15 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        $pageModel = $this->createMock(PageModel::class);
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
-
         $adapters = [
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
         ];
 
+        /** @var LayoutModel|\PHPUnit_Framework_MockObject_MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
+
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }

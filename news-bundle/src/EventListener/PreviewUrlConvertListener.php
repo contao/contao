@@ -31,10 +31,6 @@ class PreviewUrlConvertListener
      */
     private $framework;
 
-    /**
-     * @param RequestStack             $requestStack The request stack
-     * @param ContaoFrameworkInterface $framework    The Contao framework service
-     */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
     {
         $this->requestStack = $requestStack;
@@ -42,9 +38,7 @@ class PreviewUrlConvertListener
     }
 
     /**
-     * Modifies the front end preview URL.
-     *
-     * @param PreviewUrlConvertEvent $event The event object
+     * Adds the front end preview URL to the event.
      */
     public function onPreviewUrlConvert(PreviewUrlConvertEvent $event): void
     {
@@ -64,13 +58,6 @@ class PreviewUrlConvertListener
         $event->setUrl($request->getSchemeAndHttpHost().'/'.$newsAdapter->generateNewsUrl($news));
     }
 
-    /**
-     * Returns the news model.
-     *
-     * @param Request $request The request object
-     *
-     * @return NewsModel|null The news model or null
-     */
     private function getNewsModel(Request $request): ?NewsModel
     {
         if (!$request->query->has('news')) {

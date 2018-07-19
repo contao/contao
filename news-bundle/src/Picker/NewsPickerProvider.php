@@ -100,11 +100,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     }
 
     /**
-     * Returns the news archive ID.
-     *
      * @param int|string $id
-     *
-     * @return int|null
      */
     private function getNewsArchiveId($id): ?int
     {
