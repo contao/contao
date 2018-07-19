@@ -57,13 +57,6 @@ class ResponseExceptionListenerTest extends TestCase
         $this->assertFalse($event->isAllowingCustomResponseCode());
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param \Exception $exception
-     *
-     * @return GetResponseForExceptionEvent
-     */
     private function mockResponseEvent(\Exception $exception): GetResponseForExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

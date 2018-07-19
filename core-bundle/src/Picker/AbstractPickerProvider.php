@@ -40,11 +40,6 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      */
     private $tokenStorage;
 
-    /**
-     * @param FactoryInterface         $menuFactory
-     * @param RouterInterface          $router
-     * @param TranslatorInterface|null $translator
-     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {
         $this->menuFactory = $menuFactory;
@@ -85,11 +80,6 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         );
     }
 
-    /**
-     * Sets the security token storage.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function setTokenStorage(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
@@ -134,19 +124,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Returns the routing parameters for the back end picker.
      *
-     * @param PickerConfig|null $config
-     *
-     * @return array
+     * @return array<string,mixed>
      */
     abstract protected function getRouteParameters(PickerConfig $config = null);
 
     /**
      * Generates the URL for the picker.
-     *
-     * @param PickerConfig $config
-     * @param bool         $ignoreValue
-     *
-     * @return string|null
      */
     private function generateUrl(PickerConfig $config, bool $ignoreValue): ?string
     {

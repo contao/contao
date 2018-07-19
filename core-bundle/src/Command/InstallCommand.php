@@ -106,9 +106,6 @@ class InstallCommand extends AbstractLockedCommand
         return 0;
     }
 
-    /**
-     * Adds the empty directories.
-     */
     private function addEmptyDirs(): void
     {
         foreach (self::$emptyDirs as $path) {
@@ -118,11 +115,6 @@ class InstallCommand extends AbstractLockedCommand
         $this->addEmptyDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.upload_path'));
     }
 
-    /**
-     * Adds an empty directory.
-     *
-     * @param string $path
-     */
     private function addEmptyDir(string $path): void
     {
         if ($this->fs->exists($path)) {
@@ -134,9 +126,6 @@ class InstallCommand extends AbstractLockedCommand
         $this->rows[] = str_replace($this->rootDir.'/', '', $path);
     }
 
-    /**
-     * Adds the ignored directories.
-     */
     private function addIgnoredDirs(): void
     {
         foreach (self::$ignoredDirs as $path) {
@@ -146,11 +135,6 @@ class InstallCommand extends AbstractLockedCommand
         $this->addIgnoredDir($this->getContainer()->getParameter('contao.image.target_dir'));
     }
 
-    /**
-     * Adds a directory with a .gitignore file.
-     *
-     * @param string $path
-     */
     private function addIgnoredDir(string $path): void
     {
         $this->addEmptyDir($path);

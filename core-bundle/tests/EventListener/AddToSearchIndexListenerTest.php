@@ -107,8 +107,6 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Mocks a post response event.
-     *
      * @param string|null $requestUri
      * @param string      $requestMethod
      *

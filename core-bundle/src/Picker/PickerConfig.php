@@ -35,10 +35,7 @@ class PickerConfig implements \JsonSerializable
     private $current;
 
     /**
-     * @param string     $context
-     * @param array      $extras
      * @param string|int $value
-     * @param string     $current
      */
     public function __construct(string $context, array $extras = [], $value = '', string $current = '')
     {
@@ -48,31 +45,19 @@ class PickerConfig implements \JsonSerializable
         $this->current = $current;
     }
 
-    /**
-     * Returns the context.
-     *
-     * @return string
-     */
     public function getContext(): string
     {
         return $this->context;
     }
 
     /**
-     * Returns the extras.
-     *
-     * @return array
+     * @return array<string,mixed>
      */
     public function getExtras(): array
     {
         return $this->extras;
     }
 
-    /**
-     * Returns the value.
-     *
-     * @return string
-     */
     public function getValue(): string
     {
         return (string) $this->value;
@@ -80,32 +65,17 @@ class PickerConfig implements \JsonSerializable
 
     /**
      * Returns the alias of the current picker.
-     *
-     * @return string
      */
     public function getCurrent(): string
     {
         return $this->current;
     }
 
-    /**
-     * Returns an extra by name.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
     public function getExtra(string $name)
     {
         return $this->extras[$name] ?? null;
     }
 
-    /**
-     * Sets an extra.
-     *
-     * @param string $name
-     * @param mixed  $value
-     */
     public function setExtra(string $name, $value): void
     {
         $this->extras[$name] = $value;
@@ -113,10 +83,6 @@ class PickerConfig implements \JsonSerializable
 
     /**
      * Duplicates the configuration and overrides the current picker alias.
-     *
-     * @param string $current
-     *
-     * @return PickerConfig
      */
     public function cloneForCurrent(string $current): self
     {
@@ -138,8 +104,6 @@ class PickerConfig implements \JsonSerializable
 
     /**
      * Encodes the picker configuration for the URL.
-     *
-     * @return string
      */
     public function urlEncode(): string
     {
@@ -155,11 +119,7 @@ class PickerConfig implements \JsonSerializable
     /**
      * Initializes the object from the URL data.
      *
-     * @param string $data
-     *
      * @throws \InvalidArgumentException
-     *
-     * @return PickerConfig
      */
     public static function urlDecode(string $data): self
     {

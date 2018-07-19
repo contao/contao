@@ -133,21 +133,11 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         return parent::executeResize($image, $coordinates, $path, $options);
     }
 
-    /**
-     * Checks if the executeResize hook is set.
-     *
-     * @return bool
-     */
     private function hasExecuteResizeHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize']);
     }
 
-    /**
-     * Checks if the getImage hook is set.
-     *
-     * @return bool
-     */
     private function hasGetImageHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']);

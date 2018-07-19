@@ -19,11 +19,6 @@ class GlobalsMapListener
      */
     private $globals;
 
-    /**
-     * Constructor.
-     *
-     * @param array $globals
-     */
     public function __construct(array $globals)
     {
         $this->globals = $globals;

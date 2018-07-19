@@ -21,9 +21,6 @@ class AssetListener
      */
     private $packages;
 
-    /**
-     * @param Packages $packages
-     */
     public function __construct(Packages $packages)
     {
         $this->packages = $packages;
@@ -31,8 +28,6 @@ class AssetListener
 
     /**
      * Replaces the "asset" insert tag.
-     *
-     * @param string $tag
      *
      * @return string|false
      */

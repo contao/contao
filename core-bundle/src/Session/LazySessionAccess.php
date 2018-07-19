@@ -24,9 +24,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      */
     private $session;
 
-    /**
-     * @param SessionInterface $session
-     */
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
@@ -83,8 +80,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     }
 
     /**
-     * Starts the session.
-     *
      * @throws \RuntimeException
      */
     private function startSession(): void

@@ -176,9 +176,6 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @param string $username
-     * @param string $password
-     *
      * @dataProvider usernamePasswordProvider
      */
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $password): void
@@ -211,7 +208,7 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function usernamePasswordProvider(): array
     {

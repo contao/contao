@@ -50,13 +50,6 @@ class DoctrineMigrationsPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * Checks if the Doctrine migrations bundle is enabled.
-     *
-     * @param ContainerBuilder $container
-     *
-     * @return bool
-     */
     private function hasMigrationsBundle(ContainerBuilder $container): bool
     {
         return \in_array(DoctrineMigrationsBundle::class, $container->getParameter('kernel.bundles'), true);

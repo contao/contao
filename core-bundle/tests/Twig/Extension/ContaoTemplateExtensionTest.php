@@ -80,14 +80,6 @@ class ContaoTemplateExtensionTest extends TestCase
         $this->assertEmpty($this->mockExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
 
-    /**
-     * Mocks a Contao template extension with an optional scope.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     * @param string                        $scope
-     *
-     * @return ContaoTemplateExtension
-     */
     private function mockExtension(ContaoFrameworkInterface $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();

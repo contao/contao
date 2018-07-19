@@ -24,9 +24,6 @@ class FrontendLoader extends Loader
      */
     private $prependLocale;
 
-    /**
-     * @param bool $prependLocale
-     */
     public function __construct(bool $prependLocale)
     {
         $this->prependLocale = $prependLocale;
@@ -61,9 +58,6 @@ class FrontendLoader extends Loader
 
     /**
      * Adds the frontend route, which is language-aware.
-     *
-     * @param RouteCollection $routes
-     * @param array           $defaults
      */
     private function addFrontendRoute(RouteCollection $routes, array $defaults): void
     {
@@ -76,9 +70,6 @@ class FrontendLoader extends Loader
 
     /**
      * Adds a route to redirect a user to the index page.
-     *
-     * @param RouteCollection $routes
-     * @param array           $defaults
      */
     private function addIndexRoute(RouteCollection $routes, array $defaults): void
     {
@@ -91,8 +82,6 @@ class FrontendLoader extends Loader
 
     /**
      * Adds the locale to the route if prepend_locale is enabled.
-     *
-     * @param Route $route
      */
     private function addLocaleToRoute(Route $route): void
     {

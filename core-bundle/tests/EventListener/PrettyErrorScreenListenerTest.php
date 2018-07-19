@@ -134,8 +134,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * @param int        $type
-     * @param \Exception $exception
+     * @param int $type
      *
      * @dataProvider getErrorTypes
      */
@@ -159,7 +158,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(HttpException|int)[]>
      */
     public function getErrorTypes(): array
     {
@@ -337,15 +336,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $response->getStatusCode());
     }
 
-    /**
-     * Mocks a pretty error screen listener.
-     *
-     * @param string                 $userClass
-     * @param bool                   $expectLogging
-     * @param \Twig_Environment|null $twig
-     *
-     * @return PrettyErrorScreenListener
-     */
     private function mockListener(string $userClass, bool $expectLogging = false, \Twig_Environment $twig = null): PrettyErrorScreenListener
     {
         if (null === $twig) {
@@ -365,15 +355,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         return new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher, $logger);
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param \Exception   $exception
-     * @param Request|null $request
-     * @param bool         $isSubRequest
-     *
-     * @return GetResponseForExceptionEvent
-     */
     private function mockResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): GetResponseForExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

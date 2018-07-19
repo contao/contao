@@ -27,10 +27,6 @@ class ImageSizesEvent extends Event
      */
     private $user;
 
-    /**
-     * @param array            $imageSizes
-     * @param BackendUser|null $user
-     */
     public function __construct(array $imageSizes, BackendUser $user = null)
     {
         $this->imageSizes = $imageSizes;
@@ -38,30 +34,18 @@ class ImageSizesEvent extends Event
     }
 
     /**
-     * Returns the image sizes.
-     *
-     * @return array
+     * @return array<string,string[]>
      */
     public function getImageSizes(): array
     {
         return $this->imageSizes;
     }
 
-    /**
-     * Sets the image sizes.
-     *
-     * @param array $imageSizes
-     */
     public function setImageSizes(array $imageSizes): void
     {
         $this->imageSizes = $imageSizes;
     }
 
-    /**
-     * Returns the back end user object.
-     *
-     * @return BackendUser
-     */
     public function getUser(): BackendUser
     {
         return $this->user;

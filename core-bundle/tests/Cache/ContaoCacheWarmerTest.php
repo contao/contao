@@ -169,15 +169,6 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
     }
 
-    /**
-     * Mocks a cache warmer.
-     *
-     * @param Connection|null               $connection
-     * @param ContaoFrameworkInterface|null $framework
-     * @param string                        $bundle
-     *
-     * @return ContaoCacheWarmer
-     */
     private function mockCacheWarmer(Connection $connection = null, ContaoFrameworkInterface $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
         if (null === $connection) {

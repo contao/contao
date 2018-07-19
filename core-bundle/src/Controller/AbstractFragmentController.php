@@ -27,21 +27,13 @@ abstract class AbstractFragmentController extends Controller implements Fragment
      */
     protected $options = [];
 
-    /**
-     * @param array $options
-     */
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
     }
 
     /**
-     * Creates a template by name or from customTpl in model.
-     *
-     * @param Model  $model
-     * @param string $templateName
-     *
-     * @return Template
+     * Creates a template by name or from the "customTpl" field of the model.
      */
     protected function createTemplate(Model $model, string $templateName): Template
     {
@@ -56,9 +48,6 @@ abstract class AbstractFragmentController extends Controller implements Fragment
     }
 
     /**
-     * Adds the headline to the template.
-     *
-     * @param Template     $template
      * @param string|array $headline
      */
     protected function addHeadlineToTemplate(Template $template, $headline): void
@@ -69,12 +58,7 @@ abstract class AbstractFragmentController extends Controller implements Fragment
     }
 
     /**
-     * Adds the CSS ID and class to the template.
-     *
-     * @param Template     $template
-     * @param string       $templateName
      * @param string|array $cssID
-     * @param array|null   $classes
      */
     protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, array $classes = null): void
     {
@@ -87,22 +71,11 @@ abstract class AbstractFragmentController extends Controller implements Fragment
         }
     }
 
-    /**
-     * Adds the article section to the template.
-     *
-     * @param Template $template
-     * @param string   $section
-     */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
         $template->inColumn = $section;
     }
 
-    /**
-     * Tags the current response with given cache tags.
-     *
-     * @param array $tags
-     */
     protected function tagResponse(array $tags): void
     {
         if (!$this->has('fos_http_cache.http.symfony_response_tagger')) {
@@ -114,8 +87,6 @@ abstract class AbstractFragmentController extends Controller implements Fragment
 
     /**
      * Returns the type from the class name.
-     *
-     * @return string
      */
     protected function getType(): string
     {

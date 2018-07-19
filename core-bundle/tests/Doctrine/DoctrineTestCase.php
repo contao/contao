@@ -33,9 +33,6 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @param Statement|null $statement
-     * @param string|null    $filter
-     *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
@@ -107,7 +104,6 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection and ORM.
      *
-     * @param array  $metadata
      * @param string $filter
      *
      * @return Registry|\PHPUnit_Framework_MockObject_MockObject
@@ -203,9 +199,6 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks the Contao framework with the database installer.
      *
-     * @param array $dca
-     * @param array $file
-     *
      * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFrameworkInterface
@@ -230,14 +223,6 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
-    /**
-     * @param array          $dca
-     * @param array          $file
-     * @param Statement|null $statement
-     * @param string|null    $filter
-     *
-     * @return DcaSchemaProvider
-     */
     protected function getProvider(array $dca = [], array $file = [], Statement $statement = null, string $filter = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(

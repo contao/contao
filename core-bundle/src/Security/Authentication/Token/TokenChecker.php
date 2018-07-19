@@ -30,10 +30,6 @@ class TokenChecker
      */
     private $trustResolver;
 
-    /**
-     * @param SessionInterface                     $session
-     * @param AuthenticationTrustResolverInterface $trustResolveer
-     */
     public function __construct(SessionInterface $session, AuthenticationTrustResolverInterface $trustResolveer)
     {
         $this->session = $session;
@@ -42,8 +38,6 @@ class TokenChecker
 
     /**
      * Checks if a front end user is authenticated.
-     *
-     * @return bool
      */
     public function hasFrontendUser(): bool
     {
@@ -54,8 +48,6 @@ class TokenChecker
 
     /**
      * Checks if a back end user is authenticated.
-     *
-     * @return bool
      */
     public function hasBackendUser(): bool
     {
@@ -66,8 +58,6 @@ class TokenChecker
 
     /**
      * Gets the front end username from the session.
-     *
-     * @return string|null
      */
     public function getFrontendUsername(): ?string
     {
@@ -82,8 +72,6 @@ class TokenChecker
 
     /**
      * Gets the back end username from the session.
-     *
-     * @return string|null
      */
     public function getBackendUsername(): ?string
     {
@@ -98,8 +86,6 @@ class TokenChecker
 
     /**
      * Tells whether the front end preview can show unpublished fragments.
-     *
-     * @return bool
      */
     public function isPreviewMode(): bool
     {
@@ -108,13 +94,6 @@ class TokenChecker
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();
     }
 
-    /**
-     * Gets the token from the session storage.
-     *
-     * @param string $sessionKey
-     *
-     * @return TokenInterface|null
-     */
     private function getToken(string $sessionKey): ?TokenInterface
     {
         if (!$this->session->isStarted() || !$this->session->has($sessionKey)) {

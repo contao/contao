@@ -55,11 +55,6 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $input
-     * @param mixed  $value
-     * @param string $expected
-     *
      * @dataProvider postProvider
      */
     public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void
@@ -85,7 +80,7 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<mixed[]>
      */
     public function postProvider(): array
     {

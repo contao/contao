@@ -153,8 +153,6 @@ class ImageSizesTest extends TestCase
 
     /**
      * Adds an expected method call to the database connection mock object.
-     *
-     * @param array $imageSizes
      */
     private function expectImageSizes(array $imageSizes): void
     {

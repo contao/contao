@@ -34,21 +34,11 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      */
     private $statement;
 
-    /**
-     * Returns the service name for the database connection.
-     *
-     * @return string
-     */
     public function getDbalServiceName(): string
     {
         return $this->dbalServiceName;
     }
 
-    /**
-     * Sets the service name for the database connection.
-     *
-     * @param string $name
-     */
     public function setDbalServiceName(string $name): void
     {
         $this->dbalServiceName = $name;
@@ -139,9 +129,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
     /**
      * Executes the legacy hook if the Contao framework is booted.
-     *
-     * @param string        $message
-     * @param ContaoContext $context
      */
     private function executeHook(string $message, ContaoContext $context): void
     {
@@ -169,11 +156,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         }
     }
 
-    /**
-     * Checks if the addLogEntry hook is set.
-     *
-     * @return bool
-     */
     private function hasAddLogEntryHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['addLogEntry']) && \is_array($GLOBALS['TL_HOOKS']['addLogEntry']);

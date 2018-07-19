@@ -29,8 +29,7 @@ class Translator implements TranslatorInterface
     private $framework;
 
     /**
-     * @param TranslatorInterface      $translator The translator to decorate
-     * @param ContaoFrameworkInterface $framework
+     * @param TranslatorInterface $translator The translator to decorate
      */
     public function __construct(TranslatorInterface $translator, ContaoFrameworkInterface $framework)
     {
@@ -95,8 +94,6 @@ class Translator implements TranslatorInterface
      * Returns the labels from the $GLOBALS['TL_LANG'] array.
      *
      * @param string $id Message id, e.g. "MSC.view"
-     *
-     * @return string|null
      */
     private function getFromGlobals(string $id): ?string
     {
@@ -119,8 +116,6 @@ class Translator implements TranslatorInterface
 
     /**
      * Loads a Contao framework language file.
-     *
-     * @param string $name
      */
     private function loadLanguageFile(string $name): void
     {

@@ -48,8 +48,6 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @param string $renderingStrategy
-     *
      * @dataProvider getRenderingStrategies
      */
     public function testPassesTheRenderingStrategyToTheRenderer(string $renderingStrategy): void
@@ -71,7 +69,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function getRenderingStrategies(): array
     {
@@ -79,8 +77,6 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @param array $options
-     *
      * @dataProvider getOptions
      */
     public function testPassesTheOptionsToTheRenderer(array $options): void
@@ -102,7 +98,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<array<array<string,string>>>
      */
     public function getOptions(): array
     {
@@ -224,17 +220,6 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * Mocks a fragment handler.
-     *
-     * @param FragmentRegistry|null    $registry
-     * @param ServiceLocator|null      $renderers
-     * @param ServiceLocator|null      $preHandlers
-     * @param Request|null             $request
-     * @param BaseFragmentHandler|null $fragmentHandler
-     *
-     * @return FragmentHandler
-     */
     private function mockFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
         if (null === $registry) {
@@ -264,12 +249,6 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * Mocks a service container with a fragment renderer.
-     *
-     * @param string        $name
-     * @param array|null    $with
-     * @param Response|null $response
-     *
      * @return ServiceLocator|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
@@ -299,9 +278,6 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * Mocks a service locator.
-     *
-     * @param string $name
      * @param object $service
      *
      * @return ServiceLocator|\PHPUnit_Framework_MockObject_MockObject

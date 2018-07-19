@@ -25,9 +25,6 @@ class DoctrineSchemaListener
      */
     private $provider;
 
-    /**
-     * @param DcaSchemaProvider $provider
-     */
     public function __construct(DcaSchemaProvider $provider)
     {
         $this->provider = $provider;
@@ -35,8 +32,6 @@ class DoctrineSchemaListener
 
     /**
      * Adds the Contao DCA information to the Doctrine schema.
-     *
-     * @param GenerateSchemaEventArgs $event
      */
     public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
@@ -45,8 +40,6 @@ class DoctrineSchemaListener
 
     /**
      * Adds the index length on MySQL platforms.
-     *
-     * @param SchemaIndexDefinitionEventArgs $event
      */
     public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event): void
     {

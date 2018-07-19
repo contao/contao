@@ -23,9 +23,6 @@ class BackendMenuRenderer implements RendererInterface
      */
     private $twig;
 
-    /**
-     * @param Environment $twig
-     */
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;

@@ -46,13 +46,7 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
     }
 
     /**
-     * Returns the globals array map.
-     *
-     * @param array  $tags
-     * @param string $globalsKey
-     * @param string $proxyClass
-     *
-     * @return array
+     * @return string[]
      */
     private function getGlobalsMap(array $tags, string $globalsKey, string $proxyClass): array
     {
@@ -66,14 +60,9 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
     }
 
     /**
-     * Returns an array of tag attributes from all services.
-     *
-     * @param ContainerBuilder $container
-     * @param string           $tag
-     *
      * @throws InvalidConfigurationException
      *
-     * @return array
+     * @return string[]
      */
     private function getFragmentTags(ContainerBuilder $container, string $tag): array
     {

@@ -113,11 +113,6 @@ class SymlinksCommand extends AbstractLockedCommand
         $this->symlink('vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
     }
 
-    /**
-     * Creates the file symlinks.
-     *
-     * @param string $uploadPath
-     */
     private function symlinkFiles(string $uploadPath): void
     {
         $this->createSymlinksFromFinder(
@@ -126,9 +121,6 @@ class SymlinksCommand extends AbstractLockedCommand
         );
     }
 
-    /**
-     * Creates symlinks for the public module subfolders.
-     */
     private function symlinkModules(): void
     {
         $filter = function (SplFileInfo $file): bool {
@@ -141,9 +133,6 @@ class SymlinksCommand extends AbstractLockedCommand
         );
     }
 
-    /**
-     * Creates the theme symlinks.
-     */
     private function symlinkThemes(): void
     {
         /** @var SplFileInfo[] $themes */
@@ -160,12 +149,6 @@ class SymlinksCommand extends AbstractLockedCommand
         }
     }
 
-    /**
-     * Generates symlinks from a Finder object.
-     *
-     * @param Finder $finder
-     * @param string $prepend
-     */
     private function createSymlinksFromFinder(Finder $finder, string $prepend): void
     {
         $files = $this->filterNestedPaths($finder, $prepend);
@@ -177,13 +160,8 @@ class SymlinksCommand extends AbstractLockedCommand
     }
 
     /**
-     * Generates a symlink.
-     *
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
-     *
-     * @param string $target
-     * @param string $link
      */
     private function symlink(string $target, string $link): void
     {
@@ -217,10 +195,6 @@ class SymlinksCommand extends AbstractLockedCommand
 
     /**
      * Returns a finder instance to find files in the given path.
-     *
-     * @param string $path
-     *
-     * @return Finder
      */
     private function findIn(string $path): Finder
     {
@@ -241,9 +215,6 @@ class SymlinksCommand extends AbstractLockedCommand
 
     /**
      * Filters nested paths so only the top folder is symlinked.
-     *
-     * @param Finder $finder
-     * @param string $prepend
      *
      * @return SplFileInfo[]
      */
@@ -284,13 +255,6 @@ class SymlinksCommand extends AbstractLockedCommand
         return array_values($files);
     }
 
-    /**
-     * Returns the path relative to the root directory.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
     private function getRelativePath(string $path): string
     {
         return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));

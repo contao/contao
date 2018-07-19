@@ -136,8 +136,6 @@ class AuthenticationFailureHandlerTest extends TestCase
 
     /**
      * Returns a request object with session.
-     *
-     * @return Request
      */
     private function getRequest(): Request
     {

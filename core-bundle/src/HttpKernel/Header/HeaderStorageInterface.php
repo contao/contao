@@ -17,14 +17,12 @@ interface HeaderStorageInterface
     /**
      * Returns all headers.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function all(): array;
 
     /**
      * Adds a header to the storage.
-     *
-     * @param string $header
      */
     public function add(string $header): void;
 

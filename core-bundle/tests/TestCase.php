@@ -22,9 +22,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 abstract class TestCase extends ContaoTestCase
 {
-    /**
-     * @return string
-     */
     protected function getFixturesDir(): string
     {
         return __DIR__.\DIRECTORY_SEPARATOR.'Fixtures';
@@ -32,8 +29,6 @@ abstract class TestCase extends ContaoTestCase
 
     /**
      * Mocks a request scope matcher.
-     *
-     * @return ScopeMatcher
      */
     protected function mockScopeMatcher(): ScopeMatcher
     {
@@ -45,8 +40,6 @@ abstract class TestCase extends ContaoTestCase
 
     /**
      * Mocks a session containing the Contao attribute bags.
-     *
-     * @return SessionInterface
      */
     protected function mockSession(): SessionInterface
     {

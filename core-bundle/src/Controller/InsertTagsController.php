@@ -32,22 +32,11 @@ class InsertTagsController extends Controller
      */
     private $framework;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Renders an insert tag.
-     *
-     * @param Request $request
-     * @param string  $insertTag
-     *
-     * @return Response
-     */
     public function renderAction(Request $request, string $insertTag): Response
     {
         $this->framework->initialize();

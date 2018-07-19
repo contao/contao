@@ -32,10 +32,6 @@ class PickerBuilder implements PickerBuilderInterface
      */
     private $providers = [];
 
-    /**
-     * @param FactoryInterface $menuFactory
-     * @param RouterInterface  $router
-     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
     {
         $this->menuFactory = $menuFactory;
@@ -44,8 +40,6 @@ class PickerBuilder implements PickerBuilderInterface
 
     /**
      * Adds a picker provider.
-     *
-     * @param PickerProviderInterface $provider
      */
     public function addProvider(PickerProviderInterface $provider): void
     {

@@ -25,8 +25,6 @@ class InsecureInstallationListener
     /**
      * Throws an exception if the document root is insecure.
      *
-     * @param GetResponseEvent $event
-     *
      * @throws InsecureInstallationException
      */
     public function onKernelRequest(GetResponseEvent $event): void

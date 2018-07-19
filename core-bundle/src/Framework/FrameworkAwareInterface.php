@@ -14,10 +14,5 @@ namespace Contao\CoreBundle\Framework;
 
 interface FrameworkAwareInterface
 {
-    /**
-     * Sets the framework service.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     */
     public function setFramework(ContaoFrameworkInterface $framework = null);
 }

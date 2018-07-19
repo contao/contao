@@ -255,15 +255,6 @@ class UrlGeneratorTest extends TestCase
         ;
     }
 
-    /**
-     * Mocks an URL generator.
-     *
-     * @param UrlGeneratorInterface $router
-     * @param bool                  $prependLocale
-     * @param bool                  $useAutoItem
-     *
-     * @return UrlGenerator
-     */
     private function mockGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator
     {
         $framework = $this->mockContaoFramework();
@@ -274,9 +265,6 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
-     * Mocks a router with context.
-     *
-     * @param array  $expectedParameters
      * @param string $expectedRoute
      * @param int    $referenceType
      *

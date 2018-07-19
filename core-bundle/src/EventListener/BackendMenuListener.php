@@ -25,9 +25,6 @@ class BackendMenuListener
      */
     private $tokenStorage;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
@@ -35,8 +32,6 @@ class BackendMenuListener
 
     /**
      * Adds the back end user navigation.
-     *
-     * @param MenuEvent $event
      */
     public function onBuild(MenuEvent $event): void
     {
@@ -73,15 +68,6 @@ class BackendMenuListener
         }
     }
 
-    /**
-     * Creates a node.
-     *
-     * @param FactoryInterface $factory
-     * @param string           $name
-     * @param array            $attributes
-     *
-     * @return ItemInterface
-     */
     private function createNode(FactoryInterface $factory, string $name, array $attributes): ItemInterface
     {
         $classes = [];

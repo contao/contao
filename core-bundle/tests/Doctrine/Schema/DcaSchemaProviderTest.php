@@ -31,9 +31,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @param array $dca
-     * @param array $sql
-     *
      * @dataProvider createSchemaProvider
      */
     public function testCreatesASchema(array $dca = [], array $sql = []): void
@@ -132,7 +129,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @return array
+     * @return array<array<string,array<string,array<string,string>>>>
      */
     public function createSchemaProvider(): array
     {
@@ -327,10 +324,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @param int|null    $expected
-     * @param string      $tableOptions
      * @param string|null $largePrefixes
-     * @param string      $fileSystem
      *
      * @dataProvider getIndexes
      */
@@ -383,7 +377,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @return array
+     * @return array<(string|int|null)[]>
      */
     public function getIndexes(): array
     {

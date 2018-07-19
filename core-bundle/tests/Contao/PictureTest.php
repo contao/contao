@@ -334,11 +334,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Mocks a container with image services.
-     *
-     * @return ContainerBuilder
-     */
     private function mockContainerWithImageServices(): ContainerBuilder
     {
         $filesystem = new Filesystem();

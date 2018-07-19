@@ -105,9 +105,6 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @param array  $extra
-     * @param string $expected
-     *
      * @dataProvider binDirProvider
      */
     public function testReadsTheBinDirFromTheConfiguration(array $extra, string $expected): void
@@ -119,7 +116,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<array<string,string>|string>
      */
     public function binDirProvider(): array
     {
@@ -147,9 +144,6 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @param array  $extra
-     * @param string $expected
-     *
      * @dataProvider webDirProvider
      */
     public function testReadsTheWebDirFromTheConfiguration(array $extra, string $expected): void
@@ -161,7 +155,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<array<string,string>|string>
      */
     public function webDirProvider(): array
     {
@@ -214,14 +208,6 @@ class ScriptHandlerTest extends TestCase
         $this->assertGreaterThanOrEqual(64, \strlen(getenv(ScriptHandler::RANDOM_SECRET_NAME)));
     }
 
-    /**
-     * Mocks a Composer event.
-     *
-     * @param array       $extra
-     * @param string|null $method
-     *
-     * @return Event
-     */
     private function mockComposerEvent(array $extra = [], string $method = null): Event
     {
         $package = $this->mockPackage($extra);
@@ -230,10 +216,6 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Mocks Composer.
-     *
-     * @param PackageInterface $package
-     *
      * @return Composer|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockComposer(PackageInterface $package): Composer
@@ -258,10 +240,6 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Mocks the IO object.
-     *
-     * @param string|null $method
-     *
      * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockIO(string $method = null): IOInterface
@@ -276,10 +254,6 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Mocks a package.
-     *
-     * @param array $extras
-     *
      * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockPackage(array $extras = []): PackageInterface

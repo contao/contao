@@ -25,12 +25,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
     /**
      * Logs the security exception to the Contao back end.
      *
-     * @param Request                 $request
-     * @param AuthenticationException $exception
-     *
      * @throws \RuntimeException
-     *
-     * @return RedirectResponse
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {

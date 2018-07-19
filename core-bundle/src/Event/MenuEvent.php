@@ -28,31 +28,17 @@ class MenuEvent extends Event
      */
     private $tree;
 
-    /**
-     * @param FactoryInterface $factory
-     * @param ItemInterface    $tree
-     */
     public function __construct(FactoryInterface $factory, ItemInterface $tree)
     {
         $this->factory = $factory;
         $this->tree = $tree;
     }
 
-    /**
-     * Returns the menu item factory.
-     *
-     * @return FactoryInterface
-     */
     public function getFactory(): FactoryInterface
     {
         return $this->factory;
     }
 
-    /**
-     * Returns the menu item tree.
-     *
-     * @return ItemInterface
-     */
     public function getTree(): ItemInterface
     {
         return $this->tree;

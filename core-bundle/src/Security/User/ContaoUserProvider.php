@@ -49,11 +49,6 @@ class ContaoUserProvider implements UserProviderInterface
     private $logger;
 
     /**
-     * @param ContaoFrameworkInterface $framework
-     * @param SessionInterface         $session
-     * @param string                   $userClass
-     * @param LoggerInterface|null     $logger
-     *
      * @throws \RuntimeException
      */
     public function __construct(ContaoFrameworkInterface $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
@@ -115,8 +110,6 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * Validates the session lifetime and logs the user out if the session has expired.
      *
-     * @param User $user
-     *
      * @throws UsernameNotFoundException
      */
     private function validateSessionLifetime(User $user): void
@@ -145,11 +138,6 @@ class ContaoUserProvider implements UserProviderInterface
         );
     }
 
-    /**
-     * Triggers the postAuthenticate hook.
-     *
-     * @param User $user
-     */
     private function triggerPostAuthenticateHook(User $user): void
     {
         if (empty($GLOBALS['TL_HOOKS']['postAuthenticate']) || !\is_array($GLOBALS['TL_HOOKS']['postAuthenticate'])) {

@@ -24,22 +24,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionListener;
 
-/**
- * Tests the SessionListener class.
- */
 class SessionListenerTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $this->getListener());
     }
 
-    /**
-     * Tests that the onKernelRequest call is forwarded.
-     */
     public function testForwardsTheOnKernelRequestCall(): void
     {
         $event = $this->createMock(GetResponseEvent::class);
@@ -55,9 +46,6 @@ class SessionListenerTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    /**
-     * Tests that the onKernelRequest call is forwarded.
-     */
     public function testForwardsTheOnFinishRequestCall(): void
     {
         if (!method_exists(BaseSessionListener::class, 'onFinishRequest')) {
@@ -77,9 +65,6 @@ class SessionListenerTest extends TestCase
         $listener->onFinishRequest($event);
     }
 
-    /**
-     * Tests that the session is saved upon kernel response.
-     */
     public function testSavesTheSessionUponKernelResponse(): void
     {
         if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
@@ -131,9 +116,6 @@ class SessionListenerTest extends TestCase
         $listener->onKernelResponse($event);
     }
 
-    /**
-     * Tests that the session is not saved upon kernel response if the Contao framework is not initialized.
-     */
     public function testDoesNotSaveTheSessionUponKernelRequestIfTheFrameworkIsNotInitialized(): void
     {
         if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
@@ -169,9 +151,6 @@ class SessionListenerTest extends TestCase
         $listener->onKernelResponse($event);
     }
 
-    /**
-     * Tests that the session is not saved upon kernel response if not a front end master request.
-     */
     public function testDoesNotSaveTheSessionUponKernelRequestIfNotAFrontendMasterRequest(): void
     {
         if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
@@ -208,9 +187,6 @@ class SessionListenerTest extends TestCase
         $listener->onKernelResponse($event);
     }
 
-    /**
-     * Tests that the subscribed events are returned.
-     */
     public function testReturnsTheSubscribedEvents(): void
     {
         $this->assertSame(
@@ -219,15 +195,6 @@ class SessionListenerTest extends TestCase
         );
     }
 
-    /**
-     * Returns the session listener object.
-     *
-     * @param BaseSessionListener|null      $inner
-     * @param ContaoFrameworkInterface|null $framework
-     * @param ScopeMatcher|null             $scopeMatcher
-     *
-     * @return SessionListener
-     */
     private function getListener(BaseSessionListener $inner = null, ContaoFrameworkInterface $framework = null, ScopeMatcher $scopeMatcher = null): SessionListener
     {
         if (null === $inner) {

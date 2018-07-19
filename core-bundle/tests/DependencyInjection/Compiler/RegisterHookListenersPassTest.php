@@ -279,11 +279,7 @@ class RegisterHookListenersPassTest extends TestCase
     }
 
     /**
-     * Returns the hook listeners from the container definition.
-     *
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return array<string,array<int,string[]>>
      */
     private function getHookListenersFromDefinition(ContainerBuilder $container): array
     {
@@ -301,8 +297,6 @@ class RegisterHookListenersPassTest extends TestCase
 
     /**
      * Returns the container builder with a dummy contao.framework definition.
-     *
-     * @return ContainerBuilder
      */
     private function getContainerBuilder(): ContainerBuilder
     {

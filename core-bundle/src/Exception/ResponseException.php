@@ -21,10 +21,6 @@ class ResponseException extends \RuntimeException
      */
     private $response;
 
-    /**
-     * @param Response        $response
-     * @param \Exception|null $previous
-     */
     public function __construct(Response $response, \Exception $previous = null)
     {
         $this->response = $response;
@@ -32,11 +28,6 @@ class ResponseException extends \RuntimeException
         parent::__construct('This exception has no message. Use $exception->getResponse() instead.', 0, $previous);
     }
 
-    /**
-     * Returns the response object.
-     *
-     * @return Response
-     */
     public function getResponse(): Response
     {
         return $this->response;

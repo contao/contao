@@ -28,10 +28,6 @@ class ControllerResolver implements ControllerResolverInterface
      */
     private $registry;
 
-    /**
-     * @param ControllerResolverInterface $resolver
-     * @param FragmentRegistry            $registry
-     */
     public function __construct(ControllerResolverInterface $resolver, FragmentRegistry $registry)
     {
         $this->resolver = $resolver;

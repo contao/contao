@@ -29,10 +29,6 @@ class PageLayoutListenerTest extends TestCase
     }
 
     /**
-     * @param bool        $agentIsMobile
-     * @param string|null $tlViewCookie
-     * @param string      $expectedHeaderValue
-     *
      * @dataProvider onReplayProvider
      */
     public function testAddsThePageLayoutHeader(bool $agentIsMobile, string $tlViewCookie = null, string $expectedHeaderValue): void
@@ -69,7 +65,7 @@ class PageLayoutListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(string|bool|null)[]>
      */
     public function onReplayProvider(): array
     {

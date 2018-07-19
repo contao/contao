@@ -22,10 +22,6 @@ class FrontendPreviewToken extends AbstractToken
      */
     private $showUnpublished;
 
-    /**
-     * @param FrontendUser|null $user
-     * @param bool              $showUnpublished
-     */
     public function __construct(?FrontendUser $user, bool $showUnpublished)
     {
         if (null === $user) {
@@ -49,9 +45,6 @@ class FrontendPreviewToken extends AbstractToken
         return null;
     }
 
-    /**
-     * @return bool
-     */
     public function showUnpublished(): bool
     {
         return $this->showUnpublished;

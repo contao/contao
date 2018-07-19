@@ -37,15 +37,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      */
     private $options;
 
-    /**
-     * @param UserProviderInterface    $userProvider
-     * @param UserCheckerInterface     $userChecker
-     * @param string                   $providerKey
-     * @param EncoderFactoryInterface  $encoderFactory
-     * @param ContaoFrameworkInterface $framework
-     * @param array                    $options
-     */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFrameworkInterface $framework, array $options = [])
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFrameworkInterface $framework, array $options = [])
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 
@@ -82,11 +74,6 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 
     /**
      * Counts the login attempts and locks the user if it reaches zero.
-     *
-     * @param User                    $user
-     * @param AuthenticationException $exception
-     *
-     * @return AuthenticationException
      */
     public function onBadCredentials(User $user, AuthenticationException $exception): AuthenticationException
     {
@@ -121,14 +108,6 @@ class AuthenticationProvider extends DaoAuthenticationProvider
         return $exception;
     }
 
-    /**
-     * Triggers the checkCredentials hook.
-     *
-     * @param User                  $user
-     * @param UsernamePasswordToken $token
-     *
-     * @return bool
-     */
     private function triggerCheckCredentialsHook(User $user, UsernamePasswordToken $token): bool
     {
         $this->framework->initialize();

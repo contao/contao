@@ -37,10 +37,6 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param Request    $request
-     * @param array|null $currentReferer
-     * @param array|null $expectedReferer
-     *
      * @dataProvider refererStoredOnKernelResponseProvider
      */
     public function testStoresTheReferer(Request $request, ?array $currentReferer, ?array $expectedReferer): void
@@ -64,7 +60,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(Request|array<array<string,string>>|null)[]>
      */
     public function refererStoredOnKernelResponseProvider(): array
     {
@@ -231,7 +227,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(AnonymousToken|null)[]>
      */
     public function noUserProvider(): array
     {
@@ -300,8 +296,6 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param string $scope
-     *
      * @dataProvider noSessionProvider
      */
     public function testFailsToStoreTheRefererIfThereIsNoSession(string $scope): void
@@ -326,7 +320,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function noSessionProvider(): array
     {
@@ -337,11 +331,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * Mocks a session listener.
-     *
      * @param TokenStorageInterface $tokenStorage
-     *
-     * @return StoreRefererListener
      */
     private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener
     {
@@ -354,13 +344,6 @@ class StoreRefererListenerTest extends TestCase
         return new StoreRefererListener($tokenStorage, $trustResolver, $this->mockScopeMatcher());
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param Request|null $request
-     *
-     * @return FilterResponseEvent
-     */
     private function mockResponseEvent(Request $request = null): FilterResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

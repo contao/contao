@@ -31,10 +31,6 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
      */
     private $scopeMatcher;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
-     */
     public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->framework = $framework;
@@ -71,14 +67,6 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         yield $this->fetchModel($request, $argument);
     }
 
-    /**
-     * Fetches the model.
-     *
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
-     * @return Model|null
-     */
     private function fetchModel(Request $request, ArgumentMetadata $argument): ?Model
     {
         $name = $this->getArgumentName($request, $argument);
@@ -95,11 +83,6 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
 
     /**
      * Returns the argument name from the model class.
-     *
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
-     * @return string|null
      */
     private function getArgumentName(Request $request, ArgumentMetadata $argument): ?string
     {
@@ -118,10 +101,6 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
 
     /**
      * Strips the namespace from a class name.
-     *
-     * @param string $fqcn
-     *
-     * @return string
      */
     private function stripNamespace(string $fqcn): string
     {

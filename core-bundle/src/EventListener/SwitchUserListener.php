@@ -29,10 +29,6 @@ class SwitchUserListener
      */
     private $logger;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param LoggerInterface       $logger
-     */
     public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger)
     {
         $this->tokenStorage = $tokenStorage;
@@ -41,8 +37,6 @@ class SwitchUserListener
 
     /**
      * Logs successful user impersonations.
-     *
-     * @param SwitchUserEvent $event
      *
      * @throws \RuntimeException
      */

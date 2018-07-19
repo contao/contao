@@ -75,20 +75,13 @@ class MemoryTokenStorage implements TokenStorageInterface
         $this->tokens[$tokenId] = null;
     }
 
-    /**
-     * Initializes the storage.
-     *
-     * @param array $tokens
-     */
     public function initialize(array $tokens): void
     {
         $this->tokens = $tokens;
     }
 
     /**
-     * Returns all used tokens.
-     *
-     * @return array
+     * @return mixed[]
      */
     public function getUsedTokens(): array
     {
@@ -100,9 +93,7 @@ class MemoryTokenStorage implements TokenStorageInterface
     }
 
     /**
-     * Checks if the storage is initialized.
-     *
-     * @throws \LogicException if the store was not initialized
+     * @throws \LogicException
      */
     private function assertInitialized(): void
     {

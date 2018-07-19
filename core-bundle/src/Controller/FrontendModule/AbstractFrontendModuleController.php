@@ -22,13 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
     /**
-     * Invokes the controller.
-     *
-     * @param Request     $request
-     * @param ModuleModel $model
-     * @param string      $section
-     * @param array|null  $classes
-     *
      * @return Response
      */
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null)
@@ -48,13 +41,6 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return $this->getResponse($template, $model, $request);
     }
 
-    /**
-     * Returns the back end wildcard.
-     *
-     * @param ModuleModel $module
-     *
-     * @return Response
-     */
     protected function getBackendWildcard(ModuleModel $module): Response
     {
         $href = $this->get('router')->generate(
@@ -74,14 +60,5 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return $template->getResponse();
     }
 
-    /**
-     * Returns the response.
-     *
-     * @param Template|object $template
-     * @param ModuleModel     $model
-     * @param Request         $request
-     *
-     * @return Response
-     */
     abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): Response;
 }

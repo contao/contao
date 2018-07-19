@@ -22,9 +22,6 @@ final class ContaoModuleBundle extends Bundle
     /**
      * Sets the module name and application root directory.
      *
-     * @param string $name
-     * @param string $rootDir
-     *
      * @throws \LogicException
      */
     public function __construct(string $name, string $rootDir)

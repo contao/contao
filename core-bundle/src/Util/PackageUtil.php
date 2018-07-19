@@ -18,10 +18,6 @@ class PackageUtil
 {
     /**
      * Returns the version number of a package.
-     *
-     * @param string $packageName
-     *
-     * @return string
      */
     public static function getVersion(string $packageName): string
     {
@@ -32,10 +28,6 @@ class PackageUtil
 
     /**
      * Returns the version number as "major.minor.patch".
-     *
-     * @param string $packageName
-     *
-     * @return string
      */
     public static function getNormalizedVersion(string $packageName): string
     {
@@ -54,10 +46,6 @@ class PackageUtil
      *
      * The method either returns a version number such as 1.0.0 (a leading "v"
      * will be stripped) or a branch name such as dev-master.
-     *
-     * @param string $version
-     *
-     * @return string
      */
     public static function parseVersion(string $version): string
     {

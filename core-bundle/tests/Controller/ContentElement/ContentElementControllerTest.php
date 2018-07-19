@@ -143,11 +143,6 @@ class ContentElementControllerTest extends TestCase
         $controller(new Request(), $model, 'main');
     }
 
-    /**
-     * @param string $templateName
-     *
-     * @return ContainerBuilder
-     */
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
     {
         $framework = $this->mockContaoFramework();

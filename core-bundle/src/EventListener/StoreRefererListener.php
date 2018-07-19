@@ -35,11 +35,6 @@ class StoreRefererListener
      */
     private $scopeMatcher;
 
-    /**
-     * @param TokenStorageInterface                $tokenStorage
-     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
-     * @param ScopeMatcher                         $scopeMatcher
-     */
     public function __construct(TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
     {
         $this->tokenStorage = $tokenStorage;
@@ -49,8 +44,6 @@ class StoreRefererListener
 
     /**
      * Stores the referer in the session.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
@@ -84,10 +77,6 @@ class StoreRefererListener
     }
 
     /**
-     * Stores the back end referer.
-     *
-     * @param Request $request
-     *
      * @throws \RuntimeException
      */
     private function storeBackendReferer(Request $request): void
@@ -117,13 +106,6 @@ class StoreRefererListener
         $session->set($key, $referers);
     }
 
-    /**
-     * Checks if the back end session can be modified.
-     *
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function canModifyBackendSession(Request $request): bool
     {
         return !$request->query->has('act')
@@ -137,12 +119,7 @@ class StoreRefererListener
     }
 
     /**
-     * Prepares the back end referer array.
-     *
-     * @param string     $refererId
-     * @param array|null $referers
-     *
-     * @return array
+     * @return array<string,array<string,string>
      */
     private function prepareBackendReferer(string $refererId, array $referers = null): array
     {
@@ -163,10 +140,6 @@ class StoreRefererListener
     }
 
     /**
-     * Stores the front end referer.
-     *
-     * @param Request $request
-     *
      * @throws \RuntimeException
      */
     private function storeFrontendReferer(Request $request): void
@@ -189,14 +162,6 @@ class StoreRefererListener
         $session->set('referer', $refererNew);
     }
 
-    /**
-     * Checks if the front end session can be modified.
-     *
-     * @param Request    $request
-     * @param array|null $referer
-     *
-     * @return bool
-     */
     private function canModifyFrontendSession(Request $request, array $referer = null): bool
     {
         return (null !== $referer)
@@ -212,10 +177,6 @@ class StoreRefererListener
 
     /**
      * Returns the current request URI relative to the base path.
-     *
-     * @param Request $request
-     *
-     * @return string
      */
     private function getRelativeRequestUri(Request $request): string
     {

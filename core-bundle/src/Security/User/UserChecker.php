@@ -29,9 +29,6 @@ class UserChecker implements UserCheckerInterface
      */
     private $framework;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -60,10 +57,6 @@ class UserChecker implements UserCheckerInterface
     }
 
     /**
-     * Checks whether the account is locked.
-     *
-     * @param User $user
-     *
      * @throws LockedException
      */
     private function checkIfAccountIsLocked(User $user): void
@@ -84,11 +77,6 @@ class UserChecker implements UserCheckerInterface
         throw $ex;
     }
 
-    /**
-     * Checks whether the account is disabled.
-     *
-     * @param User $user
-     */
     private function checkIfAccountIsDisabled(User $user): void
     {
         if (!$user->disable) {
@@ -103,8 +91,6 @@ class UserChecker implements UserCheckerInterface
 
     /**
      * Checks wether login is allowed (front end only).
-     *
-     * @param User $user
      */
     private function checkIfLoginIsAllowed(User $user): void
     {
@@ -120,8 +106,6 @@ class UserChecker implements UserCheckerInterface
 
     /**
      * Checks whether the account is not active yet or not anymore.
-     *
-     * @param User $user
      */
     private function checkIfAccountIsActive(User $user): void
     {

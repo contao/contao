@@ -56,16 +56,9 @@ class ContaoContext
     private $source;
 
     /**
-     * @param string      $func
-     * @param string|null $action
-     * @param string|null $username
-     * @param string|null $ip
-     * @param string|null $browser
-     * @param string|null $source
-     *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $func, string $action = null, $username = null, $ip = null, $browser = null, $source = null)
+    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
     {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
@@ -81,8 +74,6 @@ class ContaoContext
 
     /**
      * Returns a JSON representation of the object.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -94,111 +85,56 @@ class ContaoContext
         ]);
     }
 
-    /**
-     * Returns the function name.
-     *
-     * @return string
-     */
     public function getFunc(): string
     {
         return $this->func;
     }
 
-    /**
-     * Returns the action.
-     *
-     * @return string|null
-     */
     public function getAction(): ?string
     {
         return $this->action;
     }
 
-    /**
-     * Sets the action.
-     *
-     * @param string $action
-     */
-    public function setAction($action): void
+    public function setAction(string $action): void
     {
-        $this->action = (string) $action;
+        $this->action = $action;
     }
 
-    /**
-     * Returns the username.
-     *
-     * @return string|null
-     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * Sets the username.
-     *
-     * @param string $username
-     */
     public function setUsername(string $username): void
     {
         $this->username = $username;
     }
 
-    /**
-     * Returns the IP address.
-     *
-     * @return string|null
-     */
     public function getIp(): ?string
     {
         return $this->ip;
     }
 
-    /**
-     * Sets the IP address.
-     *
-     * @param string|null $ip
-     */
     public function setIp(?string $ip): void
     {
         $this->ip = (string) $ip;
     }
 
-    /**
-     * Returns the browser.
-     *
-     * @return string|null
-     */
     public function getBrowser(): ?string
     {
         return $this->browser;
     }
 
-    /**
-     * Sets the browser.
-     *
-     * @param string $browser
-     */
     public function setBrowser(string $browser): void
     {
         $this->browser = $browser;
     }
 
-    /**
-     * Returns the source.
-     *
-     * @return string|null
-     */
     public function getSource(): ?string
     {
         return $this->source;
     }
 
-    /**
-     * Sets the source.
-     *
-     * @param string $source
-     */
     public function setSource(string $source): void
     {
         $this->source = $source;

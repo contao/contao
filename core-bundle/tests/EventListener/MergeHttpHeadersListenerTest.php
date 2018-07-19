@@ -243,13 +243,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param Response|null $response
-     *
-     * @return FilterResponseEvent
-     */
     private function mockResponseEvent(Response $response = null): FilterResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

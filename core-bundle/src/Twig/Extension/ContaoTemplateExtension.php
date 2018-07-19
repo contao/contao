@@ -34,11 +34,6 @@ class ContaoTemplateExtension extends \Twig_Extension
      */
     private $scopeMatcher;
 
-    /**
-     * @param RequestStack             $requestStack
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
-     */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
@@ -58,10 +53,6 @@ class ContaoTemplateExtension extends \Twig_Extension
 
     /**
      * Renders a Contao back end template with the given blocks.
-     *
-     * @param array $blocks
-     *
-     * @return string
      */
     public function renderContaoBackendTemplate(array $blocks = []): string
     {

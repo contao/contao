@@ -38,9 +38,6 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @param string $class
-     * @param bool   $expect
-     *
      * @dataProvider getFrontendUserData
      */
     public function testChecksIfThereIsAFrontendUser(string $class, bool $expect): void
@@ -53,7 +50,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(string|bool)[]>
      */
     public function getFrontendUserData(): array
     {
@@ -64,9 +61,6 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @param string $class
-     * @param bool   $expect
-     *
      * @dataProvider getBackendUserData
      */
     public function testChecksIfThereIsABackendUser(string $class, bool $expect): void
@@ -79,7 +73,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(string|bool)[]>
      */
     public function getBackendUserData(): array
     {
@@ -118,9 +112,6 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @param TokenInterface $token
-     * @param bool           $expect
-     *
      * @dataProvider getPreviewModeData
      */
     public function testChecksIfThePreviewModeIsActive(TokenInterface $token, bool $expect): void
@@ -131,7 +122,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(AbstractToken|bool)[]>
      */
     public function getPreviewModeData(): array
     {

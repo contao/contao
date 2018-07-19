@@ -21,10 +21,6 @@ abstract class SecurityTestCase extends TestCase
 {
     /**
      * Mocks a container with the given scope.
-     *
-     * @param string $scope
-     *
-     * @return ContainerBuilder
      */
     protected function mockContainerWithScope(string $scope): ContainerBuilder
     {

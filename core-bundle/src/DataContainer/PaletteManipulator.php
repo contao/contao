@@ -33,27 +33,16 @@ class PaletteManipulator
      */
     private $fields = [];
 
-    /**
-     * Creates a new object instance.
-     *
-     * @return static
-     */
-    public static function create()
+    public static function create(): self
     {
         return new static();
     }
 
     /**
-     * Adds a new legend.
-     *
      * If the legend already exists, nothing will be changed.
      *
-     * @param string       $name
      * @param string|array $parent
-     * @param string       $position
      * @param bool         $hide
-     *
-     * @return static
      */
     public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, $hide = false): self
     {
@@ -70,19 +59,14 @@ class PaletteManipulator
     }
 
     /**
-     * Adds a new field.
-     *
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
      * @param string|array               $name
      * @param string|array               $parent
-     * @param string                     $position
      * @param string|array|\Closure|null $fallback
      * @param string                     $fallbackPosition
      *
      * @throws PalettePositionException
-     *
-     * @return static
      */
     public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND): self
     {
@@ -104,12 +88,7 @@ class PaletteManipulator
     }
 
     /**
-     * Applies the changes to a palette.
-     *
      * @param string $name
-     * @param string $table
-     *
-     * @return static
      */
     public function applyToPalette($name, string $table): self
     {
@@ -124,14 +103,6 @@ class PaletteManipulator
         return $this;
     }
 
-    /**
-     * Applies the changes to a subpalette.
-     *
-     * @param string $name
-     * @param string $table
-     *
-     * @return static
-     */
     public function applyToSubpalette(string $name, string $table): self
     {
         $subpalettes = &$GLOBALS['TL_DCA'][$table]['subpalettes'];
@@ -145,14 +116,6 @@ class PaletteManipulator
         return $this;
     }
 
-    /**
-     * Applies the changes to a palette string.
-     *
-     * @param string $palette
-     * @param bool   $skipLegends
-     *
-     * @return string
-     */
     public function applyToString(string $palette, bool $skipLegends = false): string
     {
         $config = $this->explode($palette);
@@ -176,8 +139,6 @@ class PaletteManipulator
     }
 
     /**
-     * Validates the position.
-     *
      * @param string $position
      *
      * @throws PalettePositionException
@@ -199,9 +160,7 @@ class PaletteManipulator
     /**
      * Converts a palette string to a configuration array.
      *
-     * @param string $palette
-     *
-     * @return array
+     * @return array<string,array<string[],bool>>
      */
     private function explode(string $palette): array
     {
@@ -233,10 +192,6 @@ class PaletteManipulator
 
     /**
      * Converts a configuration array to a palette string.
-     *
-     * @param array $config
-     *
-     * @return string
      */
     private function implode(array $config): string
     {
@@ -261,12 +216,6 @@ class PaletteManipulator
         return $palette;
     }
 
-    /**
-     * Adds a new legend to the configuration array.
-     *
-     * @param array $config
-     * @param array $action
-     */
     private function applyLegend(array &$config, array $action): void
     {
         // Legend already exists, do nothing
@@ -305,13 +254,6 @@ class PaletteManipulator
         $config += $template;
     }
 
-    /**
-     * Adds a new field to the configuration array.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
-     */
     private function applyField(array &$config, array $action, bool $skipLegends = false): void
     {
         if (self::POSITION_PREPEND === $action['position'] || self::POSITION_APPEND === $action['position']) {
@@ -321,13 +263,6 @@ class PaletteManipulator
         }
     }
 
-    /**
-     * Adds fields to a legend.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
-     */
     private function applyFieldToLegend(array &$config, array $action, bool $skipLegends = false): void
     {
         // If $skipLegends is true, we usually only have one legend without name, so we simply append to that
@@ -348,13 +283,6 @@ class PaletteManipulator
         $this->applyFallback($config, $action, $skipLegends);
     }
 
-    /**
-     * Adds a field after a field.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
-     */
     private function applyFieldToField(array &$config, array $action, bool $skipLegends = false): void
     {
         $offset = (int) (self::POSITION_AFTER === $action['position']);
@@ -375,13 +303,7 @@ class PaletteManipulator
     }
 
     /**
-     * Applies the fallback when adding a field fails.
-     *
      * Adds a new legend if possible or appends to the last one.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
      */
     private function applyFallback(array &$config, array $action, bool $skipLegends = false): void
     {
@@ -392,12 +314,6 @@ class PaletteManipulator
         }
     }
 
-    /**
-     * Aplies the fallback to a palette.
-     *
-     * @param array $config
-     * @param array $action
-     */
     private function applyFallbackPalette(array &$config, array $action): void
     {
         end($config);
@@ -427,12 +343,7 @@ class PaletteManipulator
     }
 
     /**
-     * Searches all legends for a field.
-     *
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
-     *
-     * @param array  $config
-     * @param string $field
      *
      * @return string|false
      */
@@ -447,16 +358,6 @@ class PaletteManipulator
         return false;
     }
 
-    /**
-     * Tries to apply to a parent.
-     *
-     * @param array  $config
-     * @param array  $action
-     * @param string $key
-     * @param string $position
-     *
-     * @return bool
-     */
     private function canApplyToParent(array &$config, array $action, string $key, string $position): bool
     {
         foreach ($action[$key] as $parent) {

@@ -41,11 +41,6 @@ class ImageSizes
      */
     private $options;
 
-    /**
-     * @param Connection               $connection
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
     {
         $this->connection = $connection;
@@ -56,7 +51,7 @@ class ImageSizes
     /**
      * Returns the image sizes as options suitable for widgets.
      *
-     * @return array
+     * @return array<string,string[]>
      */
     public function getAllOptions(): array
     {
@@ -72,9 +67,7 @@ class ImageSizes
     /**
      * Returns the image sizes for the given user suitable for widgets.
      *
-     * @param BackendUser $user
-     *
-     * @return array
+     * @return array<string,string[]>
      */
     public function getOptionsForUser(BackendUser $user): array
     {
@@ -129,9 +122,7 @@ class ImageSizes
     /**
      * Filters the options by the given allowed sizes and returns the result.
      *
-     * @param array $allowedSizes
-     *
-     * @return array
+     * @return array<string,string[]>
      */
     private function filterOptions(array $allowedSizes): array
     {
@@ -152,14 +143,6 @@ class ImageSizes
         return $filteredSizes;
     }
 
-    /**
-     * Filters image sizes.
-     *
-     * @param array  $sizes
-     * @param array  $allowedSizes
-     * @param array  $filteredSizes
-     * @param string $group
-     */
     private function filterImageSizes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $key => $size) {
@@ -169,14 +152,6 @@ class ImageSizes
         }
     }
 
-    /**
-     * Filters resize modes.
-     *
-     * @param array  $sizes
-     * @param array  $allowedSizes
-     * @param array  $filteredSizes
-     * @param string $group
-     */
     private function filterResizeModes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $size) {

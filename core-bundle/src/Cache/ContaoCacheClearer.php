@@ -22,9 +22,6 @@ class ContaoCacheClearer implements CacheClearerInterface
      */
     private $filesystem;
 
-    /**
-     * @param Filesystem $filesystem
-     */
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;

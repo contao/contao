@@ -45,12 +45,6 @@ class FrontendPreviewAuthenticator
      */
     private $logger;
 
-    /**
-     * @param SessionInterface      $session
-     * @param TokenStorageInterface $tokenStorage
-     * @param UserProviderInterface $userProvider
-     * @param LoggerInterface|null  $logger
-     */
     public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
         $this->session = $session;
@@ -59,14 +53,6 @@ class FrontendPreviewAuthenticator
         $this->logger = $logger;
     }
 
-    /**
-     * Authenticates a front end user based on the username.
-     *
-     * @param string $username
-     * @param bool   $showUnpublished
-     *
-     * @return bool
-     */
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
         $backendUser = $this->loadBackendUser();
@@ -93,13 +79,6 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    /**
-     * Authenticates a front end guest.
-     *
-     * @param bool $showUnpublished
-     *
-     * @return bool
-     */
     public function authenticateFrontendGuest(bool $showUnpublished): bool
     {
         $backendUser = $this->loadBackendUser();
@@ -117,8 +96,6 @@ class FrontendPreviewAuthenticator
 
     /**
      * Removes a front end authentication from the session.
-     *
-     * @return bool
      */
     public function removeFrontendAuthentication(): bool
     {
@@ -131,11 +108,6 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    /**
-     * Loads the back end user.
-     *
-     * @return BackendUser|null
-     */
     private function loadBackendUser(): ?BackendUser
     {
         if (!$this->session->isStarted()) {
@@ -160,11 +132,6 @@ class FrontendPreviewAuthenticator
 
     /**
      * Loads the front end user and checks its group access permissions.
-     *
-     * @param string      $username
-     * @param BackendUser $backendUser
-     *
-     * @return FrontendUser|null
      */
     private function loadFrontendUser(string $username, BackendUser $backendUser): ?FrontendUser
     {

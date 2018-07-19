@@ -21,21 +21,11 @@ class PreviewUrlConvertEvent extends Event
      */
     private $url;
 
-    /**
-     * Returns the URL.
-     *
-     * @return string|null
-     */
     public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    /**
-     * Sets the URL.
-     *
-     * @param string $url
-     */
     public function setUrl(string $url): void
     {
         $this->url = $url;

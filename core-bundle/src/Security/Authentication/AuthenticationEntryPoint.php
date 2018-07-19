@@ -31,10 +31,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     private $router;
 
-    /**
-     * @param HttpUtils       $httpUtils
-     * @param RouterInterface $router
-     */
     public function __construct(HttpUtils $httpUtils, RouterInterface $router)
     {
         $this->httpUtils = $httpUtils;

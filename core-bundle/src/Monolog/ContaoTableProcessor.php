@@ -35,11 +35,6 @@ class ContaoTableProcessor
      */
     private $scopeMatcher;
 
-    /**
-     * @param RequestStack          $requestStack
-     * @param TokenStorageInterface $tokenStorage
-     * @param ScopeMatcher          $scopeMatcher
-     */
     public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
@@ -50,9 +45,7 @@ class ContaoTableProcessor
     /**
      * Move the Contao context into the "extra" section.
      *
-     * @param array $record
-     *
-     * @return array
+     * @return array<string,array<string,mixed>>
      */
     public function __invoke(array $record): array
     {
@@ -75,12 +68,6 @@ class ContaoTableProcessor
         return $record;
     }
 
-    /**
-     * Sets the action.
-     *
-     * @param ContaoContext $context
-     * @param int           $level
-     */
     private function updateAction(ContaoContext $context, int $level): void
     {
         if (null !== $context->getAction()) {
@@ -94,12 +81,6 @@ class ContaoTableProcessor
         }
     }
 
-    /**
-     * Sets the browser.
-     *
-     * @param ContaoContext $context
-     * @param Request|null  $request
-     */
     private function updateBrowser(ContaoContext $context, Request $request = null): void
     {
         if (null !== $context->getBrowser()) {
@@ -109,11 +90,6 @@ class ContaoTableProcessor
         $context->setBrowser(null === $request ? 'N/A' : (string) $request->server->get('HTTP_USER_AGENT'));
     }
 
-    /**
-     * Sets the username.
-     *
-     * @param ContaoContext $context
-     */
     private function updateUsername(ContaoContext $context): void
     {
         if (null !== $context->getUsername()) {
@@ -125,12 +101,6 @@ class ContaoTableProcessor
         $context->setUsername(null === $token ? 'N/A' : $token->getUsername());
     }
 
-    /**
-     * Sets the source.
-     *
-     * @param ContaoContext $context
-     * @param Request|null  $request
-     */
     private function updateSource(ContaoContext $context, Request $request = null): void
     {
         if (null !== $context->getSource()) {

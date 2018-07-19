@@ -365,15 +365,11 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * Mocks a picture factory.
-     *
      * @param PictureGenerator|null         $pictureGenerator
      * @param ImageFactory|null             $imageFactory
      * @param ContaoFrameworkInterface|null $framework
      * @param bool                          $bypassCache
      * @param array                         $imagineOptions
-     *
-     * @return PictureFactory
      */
     private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null): PictureFactory
     {

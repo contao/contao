@@ -173,8 +173,6 @@ class AuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @param bool $success
-     *
      * @group legacy
      * @dataProvider getCheckCredentialsHookData
      *
@@ -261,7 +259,7 @@ class AuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<bool[]>
      */
     public function getCheckCredentialsHookData(): array
     {
@@ -271,13 +269,6 @@ class AuthenticationProviderTest extends TestCase
         ];
     }
 
-    /**
-     * Mocks an authentication provider.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     *
-     * @return AuthenticationProvider
-     */
     private function mockProvider(ContaoFrameworkInterface $framework = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);

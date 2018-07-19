@@ -167,15 +167,6 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertSame($expectedVersion, $actualVersion);
     }
 
-    /**
-     * Mocks a container with assets packages.
-     *
-     * @param string $name
-     * @param string $class
-     * @param string $path
-     *
-     * @return ContainerBuilder
-     */
     private function mockContainerWithAssets(string $name, string $class, string $path): ContainerBuilder
     {
         $container = $this->mockContainer();

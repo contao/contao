@@ -143,8 +143,6 @@ EOF;
     }
 
     /**
-     * @param string $file
-     *
      * @dataProvider loadWithDeclareStatementsStrictType
      */
     public function testStripsDeclareStrictTypes(string $file): void
@@ -217,7 +215,7 @@ EOF;
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function loadWithDeclareStatementsStrictType(): array
     {
@@ -228,8 +226,6 @@ EOF;
     }
 
     /**
-     * @param string $file
-     *
      * @dataProvider loadWithDeclareStatementsMultipleDefined
      */
     public function testPreservesOtherDeclareDefinitions(string $file): void
@@ -265,7 +261,7 @@ EOF;
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function loadWithDeclareStatementsMultipleDefined(): array
     {

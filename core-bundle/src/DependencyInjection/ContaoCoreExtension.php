@@ -101,9 +101,6 @@ class ContaoCoreExtension extends ConfigurableExtension
 
     /**
      * Configures the "contao.image.imagine" service.
-     *
-     * @param array            $mergedConfig
-     * @param ContainerBuilder $container
      */
     private function setImagineService(array $mergedConfig, ContainerBuilder $container): void
     {
@@ -121,11 +118,6 @@ class ContaoCoreExtension extends ConfigurableExtension
         $container->findDefinition('contao.image.imagine')->setPublic(true);
     }
 
-    /**
-     * Returns the best available Imagine implementation.
-     *
-     * @return string
-     */
     private function getImagineImplementation(): string
     {
         static $magicks = ['Gmagick', 'Imagick'];
@@ -148,9 +140,6 @@ class ContaoCoreExtension extends ConfigurableExtension
 
     /**
      * Reads the old contao.image.target_path parameter.
-     *
-     * @param array            $mergedConfig
-     * @param ContainerBuilder $container
      */
     private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container): void
     {

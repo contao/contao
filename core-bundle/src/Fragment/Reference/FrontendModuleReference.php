@@ -18,10 +18,6 @@ class FrontendModuleReference extends FragmentReference
 {
     public const TAG_NAME = 'contao.frontend_module';
 
-    /**
-     * @param ModuleModel $model
-     * @param string      $section
-     */
     public function __construct(ModuleModel $model, string $section = 'main')
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);

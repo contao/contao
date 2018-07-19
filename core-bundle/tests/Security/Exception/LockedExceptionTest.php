@@ -54,8 +54,6 @@ class LockedExceptionTest extends TestCase
 
     /**
      * Returns the serialized exception.
-     *
-     * @return string
      */
     private function getSerializedException(): string
     {

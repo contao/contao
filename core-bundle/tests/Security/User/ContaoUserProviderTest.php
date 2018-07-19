@@ -254,11 +254,6 @@ class ContaoUserProviderTest extends TestCase
 
     /**
      * Mocks a user provider.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     * @param string                        $userClass
-     *
-     * @return ContaoUserProvider
      */
     private function mockUserProvider(ContaoFrameworkInterface $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {

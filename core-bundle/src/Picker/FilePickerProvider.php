@@ -30,12 +30,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     private $uploadPath;
 
-    /**
-     * @param FactoryInterface    $menuFactory
-     * @param RouterInterface     $router
-     * @param TranslatorInterface $translator
-     * @param string              $uploadPath
-     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, string $uploadPath)
     {
         parent::__construct($menuFactory, $router, $translator);
@@ -123,10 +117,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
 
     /**
      * Converts the UUID value to a file path if possible.
-     *
-     * @param string $value
-     *
-     * @return string
      */
     private function convertValueToPath(string $value): string
     {
@@ -143,10 +133,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * Urlencodes a file path preserving slashes.
      *
-     * @param string $strPath
-     *
-     * @return string
-     *
      * @see \Contao\System::urlEncode()
      */
     private function urlEncode(string $strPath): string
@@ -155,11 +141,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     }
 
     /**
-     * Returns the DCA attributes in file context.
-     *
-     * @param PickerConfig $config
-     *
-     * @return array
+     * @return array<string,mixed>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
@@ -186,11 +168,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     }
 
     /**
-     * Returns the DCA attributes in link context.
-     *
-     * @param PickerConfig $config
-     *
-     * @return array
+     * @return array<string,mixed>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {

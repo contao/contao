@@ -48,13 +48,6 @@ class SessionListener implements EventSubscriberInterface
      */
     private $scopeMatcher;
 
-    /**
-     * Constructor.
-     *
-     * @param BaseSessionListener      $inner
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
-     */
     public function __construct(BaseSessionListener $inner, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->inner = $inner;

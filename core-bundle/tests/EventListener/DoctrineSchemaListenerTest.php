@@ -295,11 +295,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Returns the index event argument.
-     *
-     * @param string $name
-     *
-     * @return array
+     * @return array<string,string[]|string|bool>
      */
     private function getIndexEventArg(string $name): array
     {

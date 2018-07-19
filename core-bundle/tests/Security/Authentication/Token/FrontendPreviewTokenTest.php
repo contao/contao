@@ -100,11 +100,6 @@ class FrontendPreviewTokenTest extends TestCase
         $this->assertNull($token->getCredentials());
     }
 
-    /**
-     * Returns the serialized token.
-     *
-     * @return string
-     */
     private function getSerializedToken(): string
     {
         return serialize([true, serialize(['anon.', true, [], []])]);

@@ -31,9 +31,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @param string|null $locale
-     * @param string      $expected
-     *
      * @dataProvider getLocaleRequestData
      */
     public function testReadsTheLocaleFromTheRequest(?string $locale, string $expected): void
@@ -52,7 +49,7 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(string|null)[]>
      */
     public function getLocaleRequestData(): array
     {
@@ -67,10 +64,6 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @param string|null $locale
-     * @param string      $expected
-     * @param array       $available
-     *
      * @dataProvider acceptLanguageTestData
      */
     public function testReadsTheLocaleFromTheAcceptLanguageHeader(?string $locale, string $expected, array $available): void
@@ -88,7 +81,7 @@ class LocaleListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<(string[]|string|null)[]>
      */
     public function acceptLanguageTestData(): array
     {

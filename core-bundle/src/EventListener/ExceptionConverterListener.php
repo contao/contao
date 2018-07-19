@@ -56,8 +56,6 @@ class ExceptionConverterListener
 
     /**
      * Maps known exceptions to HTTP exceptions.
-     *
-     * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
@@ -73,13 +71,6 @@ class ExceptionConverterListener
         }
     }
 
-    /**
-     * Maps the extension to a target class.
-     *
-     * @param \Exception $exception
-     *
-     * @return string|null
-     */
     private function getTargetClass(\Exception $exception): ?string
     {
         foreach (self::$mapper as $source => $target) {
@@ -91,15 +82,7 @@ class ExceptionConverterListener
         return null;
     }
 
-    /**
-     * Converts an exception to an HTTP exception.
-     *
-     * @param \Exception $exception
-     * @param string     $target
-     *
-     * @return HttpException|null
-     */
-    private function convertToHttpException(\Exception $exception, $target): ?HttpException
+    private function convertToHttpException(\Exception $exception, string $target): ?HttpException
     {
         switch ($target) {
             case 'AccessDeniedHttpException':

@@ -43,11 +43,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
     }
 
     /**
-     * Returns the hook listeners.
-     *
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return array<string,int,string[]>
      */
     private function getHooks(ContainerBuilder $container): array
     {
@@ -64,12 +60,6 @@ class RegisterHookListenersPass implements CompilerPassInterface
     }
 
     /**
-     * Adds hook for given service and attributes.
-     *
-     * @param array  $hooks
-     * @param string $serviceId
-     * @param array  $attributes
-     *
      * @throws InvalidConfigurationException
      */
     private function addHookCallback(array &$hooks, string $serviceId, array $attributes): void
@@ -85,13 +75,6 @@ class RegisterHookListenersPass implements CompilerPassInterface
         $hooks[$attributes['hook']][$priority][] = [$serviceId, $this->getMethod($attributes)];
     }
 
-    /**
-     * Gets the method name from config or hook name.
-     *
-     * @param array $attributes
-     *
-     * @return string
-     */
     private function getMethod(array $attributes): string
     {
         if (isset($attributes['method'])) {

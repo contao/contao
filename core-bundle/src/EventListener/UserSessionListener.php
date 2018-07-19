@@ -52,13 +52,6 @@ class UserSessionListener
      */
     private $eventDispatcher;
 
-    /**
-     * @param Connection                           $connection
-     * @param TokenStorageInterface                $tokenStorage
-     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
-     * @param ScopeMatcher                         $scopeMatcher
-     * @param EventDispatcherInterface             $eventDispatcher
-     */
     public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
     {
         $this->connection = $connection;
@@ -70,8 +63,6 @@ class UserSessionListener
 
     /**
      * Replaces the current session data with the stored session data.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -103,8 +94,6 @@ class UserSessionListener
 
     /**
      * Writes the current session data to the database.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
@@ -131,8 +120,6 @@ class UserSessionListener
 
     /**
      * Returns the session bag.
-     *
-     * @param Request $request
      *
      * @throws \RuntimeException
      *

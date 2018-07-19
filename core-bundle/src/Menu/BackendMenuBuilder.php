@@ -30,10 +30,6 @@ class BackendMenuBuilder
      */
     private $eventDispatcher;
 
-    /**
-     * @param FactoryInterface         $factory
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(FactoryInterface $factory, EventDispatcherInterface $eventDispatcher)
     {
         $this->factory = $factory;
@@ -42,8 +38,6 @@ class BackendMenuBuilder
 
     /**
      * Creates a new root node and dispatches an event to fill it with child nodes.
-     *
-     * @return ItemInterface
      */
     public function create(): ItemInterface
     {

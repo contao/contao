@@ -29,37 +29,21 @@ class FragmentReference extends ControllerReference
         }
     }
 
-    /**
-     * Sets the front end scope.
-     */
     public function setFrontendScope(): void
     {
         $this->attributes['_scope'] = ContaoCoreBundle::SCOPE_FRONTEND;
     }
 
-    /**
-     * Checks if the fragment is in front end scope.
-     *
-     * @return bool
-     */
     public function isFrontendScope(): bool
     {
         return ContaoCoreBundle::SCOPE_FRONTEND === $this->attributes['_scope'];
     }
 
-    /**
-     * Sets the back end scope.
-     */
     public function setBackendScope(): void
     {
         $this->attributes['_scope'] = ContaoCoreBundle::SCOPE_BACKEND;
     }
 
-    /**
-     * Checks if the fragment is in back end scope.
-     *
-     * @return bool
-     */
     public function isBackendScope(): bool
     {
         return ContaoCoreBundle::SCOPE_BACKEND === $this->attributes['_scope'];

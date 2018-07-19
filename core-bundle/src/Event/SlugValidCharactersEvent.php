@@ -21,29 +21,19 @@ class SlugValidCharactersEvent extends Event
      */
     private $options;
 
-    /**
-     * @param array $options
-     */
     public function __construct(array $options)
     {
         $this->options = $options;
     }
 
     /**
-     * Returns the options.
-     *
-     * @return array
+     * @return array<string,string>
      */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * Sets the options.
-     *
-     * @param array $options
-     */
     public function setOptions(array $options): void
     {
         $this->options = $options;

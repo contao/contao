@@ -44,11 +44,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     private $user;
 
-    /**
-     * @param HttpUtils                $httpUtils
-     * @param ContaoFrameworkInterface $framework
-     * @param LoggerInterface|null     $logger
-     */
     public function __construct(HttpUtils $httpUtils, ContaoFrameworkInterface $framework, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);
@@ -59,11 +54,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     /**
      * Redirects the authenticated user.
-     *
-     * @param Request        $request
-     * @param TokenInterface $token
-     *
-     * @return RedirectResponse
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
@@ -114,21 +104,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         return parent::determineTargetUrl($request);
     }
 
-    /**
-     * Generates a redirect response.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     private function getRedirectResponse(Request $request): RedirectResponse
     {
         return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
     }
 
-    /**
-     * Triggers the postLogin hook.
-     */
     private function triggerPostLoginHook(): void
     {
         $this->framework->initialize();
@@ -147,13 +127,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         }
     }
 
-    /**
-     * Returns the fixed target path.
-     *
-     * @param Request $request
-     *
-     * @return string|null
-     */
     private function getFixedTargetPath(Request $request): ?string
     {
         if (!$request->request->get('_always_use_target_path')) {

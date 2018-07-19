@@ -23,7 +23,6 @@ use PHPUnit\Framework\TestCase;
 class ValidatorTest extends TestCase
 {
     /**
-     * @param string   $email
      * @param int|bool $expected
      *
      * @dataProvider emailProvider
@@ -38,7 +37,7 @@ class ValidatorTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,int>
      */
     public function emailProvider(): array
     {

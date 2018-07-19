@@ -178,10 +178,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * Mocks a database connection.
-     *
-     * @param Statement $statement
-     *
      * @return Connection|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockConnection(Statement $statement): Connection

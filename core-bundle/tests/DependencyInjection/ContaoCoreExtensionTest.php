@@ -159,9 +159,6 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $class
-     *
      * @dataProvider getCommandTestData
      */
     public function testRegistersTheCommands(string $key, string $class): void
@@ -184,7 +181,7 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function getCommandTestData(): array
     {

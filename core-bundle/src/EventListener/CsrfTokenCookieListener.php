@@ -35,11 +35,6 @@ class CsrfTokenCookieListener
      */
     private $cookiePrefix;
 
-    /**
-     * @param MemoryTokenStorage $tokenStorage
-     * @param int                $cookieLifetime
-     * @param string             $cookiePrefix
-     */
     public function __construct(MemoryTokenStorage $tokenStorage, int $cookieLifetime = 86400, string $cookiePrefix = 'csrf_')
     {
         $this->tokenStorage = $tokenStorage;
@@ -49,8 +44,6 @@ class CsrfTokenCookieListener
 
     /**
      * Reads the cookies from the request and injects them into the storage.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -63,8 +56,6 @@ class CsrfTokenCookieListener
 
     /**
      * Adds the token cookies to the response.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
@@ -96,11 +87,7 @@ class CsrfTokenCookieListener
     }
 
     /**
-     * Returns the tokens from the cookies.
-     *
-     * @param ParameterBag $cookies
-     *
-     * @return array
+     * @return array<string,string>
      */
     private function getTokensFromCookies(ParameterBag $cookies): array
     {

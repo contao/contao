@@ -57,10 +57,6 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Mocks the filesystem.
-     *
-     * @param mixed $expects
-     *
      * @return Filesystem|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockFilesystem($expects): Filesystem
@@ -76,8 +72,6 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * Mocks a file loader.
-     *
      * @return PhpFileLoader|\PHPUnit_Framework_MockObject_MockObject
      */
     private function mockLoader(): PhpFileLoader

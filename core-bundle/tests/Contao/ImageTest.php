@@ -180,7 +180,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,array<(int|null)[]|array<string,int>>>
      */
     public function getComputeResizeDataWithoutImportantPart(): array
     {
@@ -598,7 +598,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,array<mixed[]|array<string,int>>>
      */
     public function getComputeResizeDataWithImportantPart(): array
     {
@@ -895,7 +895,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<array<mixed[]|string>>
      */
     public function getCacheName(): array
     {
@@ -966,7 +966,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,int[]>
      */
     public function getZoomLevel(): array
     {
@@ -993,7 +993,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,mixed[]|null>
      */
     public function getGetLegacy(): array
     {
@@ -1040,7 +1040,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,mixed[]|false>
      */
     public function getResizeLegacy(): array
     {
@@ -1501,8 +1501,6 @@ class ImageTest extends TestCase
      * @param object $fileObj
      * @param string $targetPath
      * @param object $imageObj
-     *
-     * @return string
      */
     public static function getImageHookCallback($originalPath, $targetWidth, $targetHeight, $resizeMode, $cacheName, $fileObj, $targetPath, $imageObj): string
     {
@@ -1539,7 +1537,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(string|int)[]>
      */
     public function getGetPixelValueData(): array
     {
@@ -1557,11 +1555,6 @@ class ImageTest extends TestCase
         ];
     }
 
-    /**
-     * Mocks a container with image services.
-     *
-     * @return ContainerBuilder
-     */
     private function mockContainerWithImageServices(): ContainerBuilder
     {
         $container = $this->mockContainer($this->getTempDir());

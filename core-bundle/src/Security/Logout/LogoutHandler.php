@@ -34,10 +34,6 @@ class LogoutHandler implements LogoutHandlerInterface
      */
     private $logger;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param LoggerInterface|null     $logger
-     */
     public function __construct(ContaoFrameworkInterface $framework, LoggerInterface $logger = null)
     {
         $this->framework = $framework;
@@ -65,11 +61,6 @@ class LogoutHandler implements LogoutHandlerInterface
         $this->triggerPostLogoutHook($user);
     }
 
-    /**
-     * Triggers the postLogout hook.
-     *
-     * @param User $user
-     */
     private function triggerPostLogoutHook(User $user): void
     {
         $this->framework->initialize();

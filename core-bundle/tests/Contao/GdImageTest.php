@@ -79,8 +79,6 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * @param string $type
-     *
      * @group legacy
      *
      * @dataProvider getImageTypes
@@ -104,8 +102,6 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * @param string $type
-     *
      * @group legacy
      *
      * @dataProvider getImageTypes
@@ -127,7 +123,7 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string[]>
      */
     public function getImageTypes(): array
     {
