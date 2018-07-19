@@ -30,19 +30,12 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
      */
     protected $messages = [];
 
-    /**
-     * Constructor.
-     *
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
     /**
-     * Checks if there is a message.
-     *
      * @return bool
      */
     public function hasMessage()
@@ -51,8 +44,6 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     }
 
     /**
-     * Returns the message.
-     *
      * @return string
      */
     public function getMessage()
@@ -73,8 +64,6 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     abstract public function run();
 
     /**
-     * Adds a message.
-     *
      * @param string $message
      */
     protected function addMessage($message)
@@ -83,8 +72,6 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     }
 
     /**
-     * Prepends a message.
-     *
      * @param string $message
      */
     protected function prependMessage($message)

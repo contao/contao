@@ -32,10 +32,6 @@ class ParameterDumper
      */
     private $parameters = ['parameters' => []];
 
-    /**
-     * @param string          $rootDir
-     * @param Filesystem|null $filesystem
-     */
     public function __construct(string $rootDir, Filesystem $filesystem = null)
     {
         $this->rootDir = $rootDir;
@@ -51,22 +47,11 @@ class ParameterDumper
         }
     }
 
-    /**
-     * Sets a parameter.
-     *
-     * @param string $name
-     * @param mixed  $value
-     */
     public function setParameter(string $name, $value): void
     {
         $this->parameters['parameters'][$name] = $value;
     }
 
-    /**
-     * Sets multiple parameters.
-     *
-     * @param array $params
-     */
     public function setParameters(array $params): void
     {
         foreach ($params['parameters'] as $name => $value) {
@@ -99,7 +84,7 @@ class ParameterDumper
     /**
      * Escapes % and @.
      *
-     * @return array<string,array>
+     * @return array<string,string[]>
      *
      * @see http://symfony.com/doc/current/service_container/parameters.html#parameters-in-configuration-files
      */

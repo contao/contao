@@ -31,8 +31,6 @@ class InitializeApplicationListener implements ContainerAwareInterface
 
     /**
      * Listens to the contao_installation.initialize event.
-     *
-     * @param InitializeApplicationEvent $event
      */
     public function onInitialize(InitializeApplicationEvent $event): void
     {
@@ -41,11 +39,6 @@ class InitializeApplicationListener implements ContainerAwareInterface
         $this->createSymlinks($event);
     }
 
-    /**
-     * Installs the assets.
-     *
-     * @param InitializeApplicationEvent $event
-     */
     private function installAssets(InitializeApplicationEvent $event): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
@@ -68,11 +61,6 @@ class InitializeApplicationListener implements ContainerAwareInterface
         $event->setOutput($output);
     }
 
-    /**
-     * Installs the Contao folders.
-     *
-     * @param InitializeApplicationEvent $event
-     */
     private function installContao(InitializeApplicationEvent $event): void
     {
         $projectDir = $this->container->getParameter('kernel.project_dir');
@@ -88,11 +76,6 @@ class InitializeApplicationListener implements ContainerAwareInterface
         $event->setOutput($output);
     }
 
-    /**
-     * Creates the symlinks.
-     *
-     * @param InitializeApplicationEvent $event
-     */
     private function createSymlinks(InitializeApplicationEvent $event): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
@@ -110,11 +93,6 @@ class InitializeApplicationListener implements ContainerAwareInterface
 
     /**
      * Runs a command and returns the error (if any).
-     *
-     * @param ContainerAwareCommand $command
-     * @param InputInterface|null   $input
-     *
-     * @return string|null
      */
     private function runCommand(ContainerAwareCommand $command, InputInterface $input = null): ?string
     {

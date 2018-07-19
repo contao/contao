@@ -26,19 +26,11 @@ class InstallToolUser
      */
     private $timeout = 300;
 
-    /**
-     * @param Session $session
-     */
     public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
-    /**
-     * Checks if the user is authenticated.
-     *
-     * @return bool
-     */
     public function isAuthenticated(): bool
     {
         if (!$this->session->has('_auth_until') || $this->session->get('_auth_until') < time()) {
@@ -51,11 +43,6 @@ class InstallToolUser
         return true;
     }
 
-    /**
-     * Sets the authentication flag.
-     *
-     * @param bool $authenticated
-     */
     public function setAuthenticated(bool $authenticated): void
     {
         if (true === $authenticated) {

@@ -23,8 +23,6 @@ class InitializeApplicationEvent extends Event
 
     /**
      * Returns the console output.
-     *
-     * @return string
      */
     public function getOutput(): string
     {
@@ -33,8 +31,6 @@ class InitializeApplicationEvent extends Event
 
     /**
      * Sets the console output and stops event propagation.
-     *
-     * @param string $output
      */
     public function setOutput(string $output): void
     {
@@ -45,8 +41,6 @@ class InitializeApplicationEvent extends Event
 
     /**
      * Checks if there is a console output.
-     *
-     * @return bool
      */
     public function hasOutput(): bool
     {

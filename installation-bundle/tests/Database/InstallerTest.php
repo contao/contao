@@ -229,9 +229,6 @@ class InstallerTest extends TestCase
     /**
      * Mocks an installer.
      *
-     * @param Schema|null $fromSchema
-     * @param Schema|null $toSchema
-     * @param array       $tables
      *
      * @return Installer|\PHPUnit_Framework_MockObject_MockObject
      */
