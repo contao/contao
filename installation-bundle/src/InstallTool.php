@@ -284,10 +284,7 @@ class InstallTool
         return false;
     }
 
-    /**
-     * @param string $username
-     */
-    public function persistAdminUser($username, string $name, string $email, string $password, string $language): void
+    public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
         $statement = $this->connection->prepare("
             INSERT INTO
