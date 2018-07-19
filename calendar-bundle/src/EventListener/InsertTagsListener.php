@@ -25,17 +25,6 @@ class InsertTagsListener
      */
     private $framework;
 
-    /**
-     * @var array
-     */
-    private static $supportedTags = [
-        'event',
-        'event_open',
-        'event_url',
-        'event_title',
-        'event_teaser',
-    ];
-
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -53,7 +42,15 @@ class InsertTagsListener
             return $this->replaceCalendarFeedInsertTag($elements[1]);
         }
 
-        if (\in_array($key, self::$supportedTags, true)) {
+        static $supportedTags = [
+            'event',
+            'event_open',
+            'event_url',
+            'event_title',
+            'event_teaser',
+        ];
+
+        if (\in_array($key, $supportedTags, true)) {
             return $this->replaceEventInsertTag($key, $elements[1], $flags);
         }
 
