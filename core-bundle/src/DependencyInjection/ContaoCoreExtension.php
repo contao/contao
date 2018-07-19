@@ -24,15 +24,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class ContaoCoreExtension extends ConfigurableExtension
 {
     /**
-     * @var array
-     */
-    private static $files = [
-        'commands.yml',
-        'listener.yml',
-        'services.yml',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     public function getAlias(): string
@@ -66,7 +57,13 @@ class ContaoCoreExtension extends ConfigurableExtension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        foreach (self::$files as $file) {
+        static $files = [
+            'commands.yml',
+            'listener.yml',
+            'services.yml',
+        ];
+
+        foreach ($files as $file) {
             $loader->load($file);
         }
 
