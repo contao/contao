@@ -599,8 +599,8 @@ class PageModel extends Model
 	/**
 	 * Find all published regular pages by their IDs and exclude pages only visible for guests
 	 *
-	 * @param integer $arrIds     An array of page IDs
-	 * @param array   $arrOptions An optional options array
+	 * @param array $arrIds     An array of page IDs
+	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
