@@ -18,6 +18,7 @@ use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -49,7 +50,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
 
         $application = new Application($this->container->get('kernel'));
 
-        $command = new AssetsInstallCommand();
+        $command = new AssetsInstallCommand($this->container->get('filesystem'));
         $command->setApplication($application);
 
         $input = new ArgvInput(['assets:install', '--relative', $webDir]);
@@ -94,13 +95,15 @@ class InitializeApplicationListener implements ContainerAwareInterface
     /**
      * Runs a command and returns the error (if any).
      */
-    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null): ?string
+    private function runCommand(Command $command, InputInterface $input = null): ?string
     {
         if (null === $input) {
             $input = new ArgvInput([]);
         }
 
-        $command->setContainer($this->container);
+        if ($command instanceof ContainerAwareCommand) {
+            $command->setContainer($this->container);
+        }
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
         $status = $command->run($input, $output);
