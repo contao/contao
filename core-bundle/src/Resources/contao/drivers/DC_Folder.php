@@ -2502,8 +2502,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	protected function generateTree($path, $intMargin, $mount=false, $blnProtected=true, $arrClipboard=null, $arrFound=array())
 	{
-		static $session;
-
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 

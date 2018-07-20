@@ -329,8 +329,6 @@ class PageSelector extends Widget
 	 */
 	protected function renderPagetree($id, $intMargin, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		static $session;
-
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 

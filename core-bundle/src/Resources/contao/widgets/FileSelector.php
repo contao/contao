@@ -374,8 +374,6 @@ class FileSelector extends Widget
 			$this->varValue = array($this->varValue);
 		}
 
-		static $session;
-
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
