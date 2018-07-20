@@ -45,11 +45,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
     private $webFiles;
 
     /**
-     * @var array
-     */
-    private $optionalFiles;
-
-    /**
      * {@inheritdoc}
      */
     public function setUp(): void
@@ -66,11 +61,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
             ->ignoreDotFiles(false)
             ->in(__DIR__.'/../../src/Resources/skeleton/web')
         ;
-
-        $ref = new \ReflectionClass(InstallWebDirCommand::class);
-        $prop = $ref->getProperty('optionalFiles');
-        $prop->setAccessible(true);
-        $this->optionalFiles = $prop->getValue($this->command);
     }
 
     /**
@@ -119,11 +109,17 @@ class InstallWebDirCommandTest extends ContaoTestCase
             $this->filesystem->dumpFile($this->getTempDir().'/web/'.$file->getRelativePathname(), 'foobar-content');
         }
 
+        static $optional = [
+            '.htaccess',
+            'favicon.ico',
+            'robots.txt',
+        ];
+
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->getTempDir()]);
 
         foreach ($this->webFiles as $file) {
-            if (\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
+            if (\in_array($file->getRelativePathname(), $optional, true)) {
                 $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
             } else {
                 $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
