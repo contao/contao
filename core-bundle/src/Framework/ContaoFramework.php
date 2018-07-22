@@ -220,6 +220,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
+        // The Symfony router can return null even though the interface only allows strings
+        if (!\is_string($route)) {
+            return null;
+        }
+
         return substr($route, \strlen($this->request->getBasePath()) + 1);
     }
 
