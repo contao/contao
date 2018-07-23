@@ -179,32 +179,39 @@ class InstallTool
         }
 
         $options = $this->connection->getParams()['defaultTableOptions'];
-        $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
 
-        // The configured collation is not installed
-        if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $context['errorCode'] = 2;
-            $context['collation'] = $options['collate'];
+        // Check the collation if the user has configured it
+        if (isset($options['collate'])) {
+            $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
 
-            return true;
-        }
+            // The configured collation is not installed
+            if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                $context['errorCode'] = 2;
+                $context['collation'] = $options['collate'];
 
-        $engineFound = false;
-        $statement = $this->connection->query('SHOW ENGINES');
-
-        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if ($options['engine'] === $row->Engine) {
-                $engineFound = true;
-                break;
+                return true;
             }
         }
 
-        // The configured engine is not available
-        if (!$engineFound) {
-            $context['errorCode'] = 3;
-            $context['engine'] = $options['engine'];
+        // Check the engine if the user has configured it
+        if (isset($options['engine'])) {
+            $engineFound = false;
+            $statement = $this->connection->query('SHOW ENGINES');
 
-            return true;
+            while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                if ($options['engine'] === $row->Engine) {
+                    $engineFound = true;
+                    break;
+                }
+            }
+
+            // The configured engine is not available
+            if (!$engineFound) {
+                $context['errorCode'] = 3;
+                $context['engine'] = $options['engine'];
+
+                return true;
+            }
         }
 
         return false;
