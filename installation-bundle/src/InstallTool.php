@@ -171,7 +171,7 @@ class InstallTool
         [$version] = explode('-', $row->Version);
 
         // The database version is too old
-        if (version_compare($version, '5.5.7', '<')) {
+        if (version_compare($version, '5.1.0', '<')) {
             $context['errorCode'] = 1;
             $context['version'] = $version;
 

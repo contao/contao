@@ -308,7 +308,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao requires at least MySQL 5.5.7 but you have version %s. Please update your database version.</target>
+        <target>Contao requires at least MySQL 5.1.0 but you have version %s. Please update your database version.</target>
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
