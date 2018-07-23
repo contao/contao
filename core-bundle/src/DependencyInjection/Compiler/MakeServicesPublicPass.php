@@ -36,6 +36,10 @@ class MakeServicesPublicPass implements CompilerPassInterface
         ];
 
         foreach ($services as $service) {
+            if (!$container->hasDefinition($service)) {
+                continue;
+            }
+
             $definition = $container->getDefinition($service);
             $definition->setPublic(true);
         }
@@ -46,6 +50,10 @@ class MakeServicesPublicPass implements CompilerPassInterface
         ];
 
         foreach ($aliases as $alias) {
+            if (!$container->hasAlias($alias)) {
+                continue;
+            }
+
             $alias = $container->getAlias($alias);
             $alias->setPublic(true);
         }
