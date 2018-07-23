@@ -62,6 +62,13 @@ class RouteLoader
             new RouteCollection()
         );
 
+        $configFile = $this->kernel->getRootDir().'/config/routing.yml';
+
+        // Load the app/config/routing.yml file if it exists
+        if (file_exists($configFile) && $this->loader->supports($configFile)) {
+            $this->loader->load($configFile);
+        }
+
         // Make sure the Contao frontend routes are always loaded last
         foreach (['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'] as $name) {
             if ($route = $collection->get($name)) {
