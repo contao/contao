@@ -1520,7 +1520,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.slug.valid_characters');
 
         $this->assertSame(ValidCharacters::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('event_dispatcher', (string) $definition->getArgument(0));
         $this->assertSame('translator', (string) $definition->getArgument(1));
     }
