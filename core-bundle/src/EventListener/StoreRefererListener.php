@@ -119,7 +119,7 @@ class StoreRefererListener
     }
 
     /**
-     * @return array<string,array<string,string>
+     * @return array<string,array<string,string>>
      */
     private function prepareBackendReferer(string $refererId, array $referers = null): array
     {
