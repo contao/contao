@@ -247,17 +247,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['contao']['prepend_locale'])) {
+            if (isset($extensionConfig['prepend_locale'])) {
                 return $extensionConfigs;
             }
         }
 
-        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml or config_prod.yml instead.', E_USER_DEPRECATED);
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
 
         $extensionConfigs[] = [
-            'contao' => [
-                'prepend_locale' => '%prepend_locale%',
-            ],
+            'prepend_locale' => '%prepend_locale%',
         ];
 
         return $extensionConfigs;
