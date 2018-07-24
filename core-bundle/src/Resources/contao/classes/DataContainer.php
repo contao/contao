@@ -586,7 +586,6 @@ abstract class DataContainer extends Backend
 				}
 			}
 
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_' . $file);
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 			$objTemplate->type = $type;

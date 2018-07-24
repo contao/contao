@@ -36,9 +36,7 @@ class ModulePassword extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -180,10 +178,7 @@ class ModulePassword extends Module
 		{
 			$this->strTemplate = 'mod_message';
 
-			/** @var FrontendTemplate|object $objTemplate */
-			$objTemplate = new \FrontendTemplate($this->strTemplate);
-
-			$this->Template = $objTemplate;
+			$this->Template = new \FrontendTemplate($this->strTemplate);
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
 
@@ -264,10 +259,7 @@ class ModulePassword extends Module
 				// Confirm
 				$this->strTemplate = 'mod_message';
 
-				/** @var FrontendTemplate|object $objTemplate */
-				$objTemplate = new \FrontendTemplate($this->strTemplate);
-
-				$this->Template = $objTemplate;
+				$this->Template = new \FrontendTemplate($this->strTemplate);
 				$this->Template->type = 'confirm';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['newPasswordSet'];
 

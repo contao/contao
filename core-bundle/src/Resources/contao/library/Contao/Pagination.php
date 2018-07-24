@@ -80,7 +80,7 @@ class Pagination
 
 	/**
 	 * Template object
-	 * @var Template|object
+	 * @var Template
 	 */
 	protected $objTemplate;
 
@@ -153,7 +153,6 @@ class Pagination
 
 		if ($objTemplate === null)
 		{
-			/** @var FrontendTemplate|object $objTemplate */
 			$objTemplate = new \FrontendTemplate('pagination');
 		}
 

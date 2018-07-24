@@ -275,11 +275,7 @@ class PageRegular extends Frontend
 	 */
 	protected function createTemplate($objPage, $objLayout)
 	{
-		/** @var FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($objPage->template);
-
-		$this->Template = $objTemplate;
-
+		$this->Template = new \FrontendTemplate($objPage->template);
 		$this->Template->viewport = '';
 		$this->Template->framework = '';
 

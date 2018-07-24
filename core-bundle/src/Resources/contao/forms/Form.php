@@ -70,9 +70,7 @@ class Form extends Hybrid
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
@@ -418,9 +416,7 @@ class Form extends Hybrid
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
-				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate('form_xml');
-
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = \Config::get('characterSet');
 
@@ -605,9 +601,7 @@ class Form extends Hybrid
 
 				foreach ($_SESSION[$formId][$tl] as $message)
 				{
-					/** @var FrontendTemplate|object $objTemplate */
 					$objTemplate = new \FrontendTemplate('form_message');
-
 					$objTemplate->message = $message;
 					$objTemplate->class = strtolower($tl);
 

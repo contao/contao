@@ -50,7 +50,6 @@ class BackendAlerts extends Backend
 	 */
 	public function run()
 	{
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_alerts');
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');

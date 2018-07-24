@@ -1998,7 +1998,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Prepare the code editor
 		if (\Config::get('useCE'))
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_ace');
 			$objTemplate->selector = 'ctrl_source';
 			$objTemplate->type = $objFile->extension;

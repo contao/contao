@@ -39,19 +39,19 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *         }
  *     }
  *
- * @property Automator                               $Automator   The automator object
- * @property Config                                  $Config      The config object
- * @property Database                                $Database    The database object
- * @property Environment                             $Environment The environment object
- * @property Files                                   $Files       The files object
- * @property Input                                   $Input       The input object
- * @property Installer                               $Installer   The database installer object
- * @property Updater                                 $Updater     The database updater object
- * @property Messages                                $Messages    The messages object
- * @property Session                                 $Session     The session object
- * @property StyleSheets                             $StyleSheets The style sheets object
- * @property BackendTemplate|FrontendTemplate|object $Template    The template object
- * @property BackendUser|FrontendUser|object         $User        The user object
+ * @property Automator                        $Automator   The automator object
+ * @property Config                           $Config      The config object
+ * @property Database                         $Database    The database object
+ * @property Environment                      $Environment The environment object
+ * @property Files                            $Files       The files object
+ * @property Input                            $Input       The input object
+ * @property Installer                        $Installer   The database installer object
+ * @property Updater                          $Updater     The database updater object
+ * @property Messages                         $Messages    The messages object
+ * @property Session                          $Session     The session object
+ * @property StyleSheets                      $StyleSheets The style sheets object
+ * @property BackendTemplate|FrontendTemplate $Template    The template object
+ * @property BackendUser|FrontendUser         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

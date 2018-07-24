@@ -98,7 +98,6 @@ class BackendPopup extends Backend
 			$objFile->sendToBrowser();
 		}
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_popup');
 
 		// Add the resource (see #6880)

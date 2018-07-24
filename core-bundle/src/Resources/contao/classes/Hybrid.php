@@ -57,7 +57,7 @@ abstract class Hybrid extends Frontend
 
 	/**
 	 * Parent element
-	 * @var Model|object
+	 * @var Model
 	 */
 	protected $objParent;
 

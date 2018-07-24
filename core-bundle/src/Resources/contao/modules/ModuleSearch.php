@@ -36,9 +36,7 @@ class ModuleSearch extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -258,10 +256,8 @@ class ModuleSearch extends Module
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate($this->searchTpl);
 				$objTemplate->setData($arrResult[$i]);
-
 				$objTemplate->href = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->url = \StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);

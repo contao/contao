@@ -234,7 +234,7 @@ class Statement
 	/**
 	 * Execute the query and return the result object
 	 *
-	 * @return Result|object The result object
+	 * @return Result The result object
 	 */
 	public function execute()
 	{

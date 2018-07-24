@@ -323,10 +323,8 @@ class ContentGallery extends ContentElement
 			$strTemplate = $this->galleryTpl;
 		}
 
-		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($strTemplate);
 		$objTemplate->setData($this->arrData);
-
 		$objTemplate->body = $body;
 		$objTemplate->headline = $this->headline; // see #1603
 

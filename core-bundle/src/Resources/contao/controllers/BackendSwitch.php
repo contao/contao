@@ -86,13 +86,11 @@ class BackendSwitch extends Backend
 			}
 		}
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_switch');
 		$objTemplate->user = (string) $strUser;
 		$objTemplate->show = $blnShowUnpublished;
 		$objTemplate->update = $blnUpdate;
 		$objTemplate->canSwitchUser = $blnCanSwitchUser;
-
 		$objTemplate->theme = \Backend::getTheme();
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];

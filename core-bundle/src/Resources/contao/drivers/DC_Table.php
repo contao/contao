@@ -2139,9 +2139,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Show a warning if the record has been saved by another user (see #8412)
 			if ($intLatestVersion !== null && isset($_POST['VERSION_NUMBER']) && $intLatestVersion > \Input::post('VERSION_NUMBER'))
 			{
-				/** @var BackendTemplate|object $objTemplate */
 				$objTemplate = new \BackendTemplate('be_conflict');
-
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->theme = \Backend::getTheme();

@@ -78,7 +78,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @property boolean       $doNotTrim         Do not trim the user input
  * @property string        $forAttribute      The "for" attribute
  * @property DataContainer $dataContainer     The data container object
- * @property Result|object $activeRecord      The active record
+ * @property Result        $activeRecord      The active record
  * @property string        $mandatoryField    The "mandatory field" label
  * @property string        $customTpl         A custom template name
  * @property string        $slabel            The submit button label

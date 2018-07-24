@@ -991,9 +991,9 @@ class Updater extends Controller
 	/**
 	 * Create a content element
 	 *
-	 * @param Result|object $objElement A database result object
-	 * @param string        $strPtable  The name of the parent table
-	 * @param string        $strField   The name of the text column
+	 * @param Result $objElement A database result object
+	 * @param string $strPtable  The name of the parent table
+	 * @param string $strField   The name of the text column
 	 */
 	protected function createContentElement(Result $objElement, $strPtable, $strField)
 	{

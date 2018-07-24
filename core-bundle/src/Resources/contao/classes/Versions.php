@@ -388,7 +388,6 @@ class Versions extends Controller
 		$intTo = 0;
 		$intFrom = 0;
 
-		/** @var Result|object $objVersions */
 		$objVersions = $this->Database->prepare("SELECT * FROM tl_version WHERE pid=? AND fromTable=? ORDER BY version DESC")
 									  ->execute($this->intPid, $this->strTable);
 
@@ -547,10 +546,7 @@ class Versions extends Controller
 			return $strBuffer;
 		}
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_diff');
-
-		// Template variables
 		$objTemplate->content = $strBuffer;
 		$objTemplate->versions = $arrVersions;
 		$objTemplate->to = $intTo;
@@ -610,7 +606,7 @@ class Versions extends Controller
 	/**
 	 * Add a list of versions to a template
 	 *
-	 * @param BackendTemplate|object $objTemplate
+	 * @param BackendTemplate $objTemplate
 	 */
 	public static function addToTemplate(BackendTemplate $objTemplate)
 	{
