@@ -23,11 +23,11 @@ class Comments extends Frontend
 	/**
 	 * Add comments to a template
 	 *
-	 * @param FrontendTemplate|object $objTemplate
-	 * @param \stdClass               $objConfig
-	 * @param string                  $strSource
-	 * @param integer                 $intParent
-	 * @param mixed                   $varNotifies
+	 * @param FrontendTemplate $objTemplate
+	 * @param \stdClass        $objConfig
+	 * @param string           $strSource
+	 * @param integer          $intParent
+	 * @param mixed            $varNotifies
 	 */
 	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
@@ -99,7 +99,6 @@ class Comments extends Frontend
 				$objConfig->template = 'com_default';
 			}
 
-			/** @var FrontendTemplate|object $objPartial */
 			$objPartial = new \FrontendTemplate($objConfig->template);
 
 			while ($objComments->next())
@@ -154,11 +153,11 @@ class Comments extends Frontend
 	/**
 	 * Add a form to create new comments
 	 *
-	 * @param FrontendTemplate|object $objTemplate
-	 * @param \stdClass               $objConfig
-	 * @param string                  $strSource
-	 * @param integer                 $intParent
-	 * @param mixed                   $varNotifies
+	 * @param FrontendTemplate $objTemplate
+	 * @param \stdClass        $objConfig
+	 * @param string           $strSource
+	 * @param integer          $intParent
+	 * @param mixed            $varNotifies
 	 */
 	protected function renderCommentForm(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
@@ -575,7 +574,7 @@ class Comments extends Frontend
 	/**
 	 * Change the subscription status
 	 *
-	 * @param FrontendTemplate|object $objTemplate
+	 * @param FrontendTemplate $objTemplate
 	 */
 	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
