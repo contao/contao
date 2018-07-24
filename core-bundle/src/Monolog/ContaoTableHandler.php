@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -118,7 +119,10 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
-        $this->statement = $this->container->get($this->dbalServiceName)->prepare('
+        /** @var Connection $connection */
+        $connection = $this->container->get($this->dbalServiceName);
+
+        $this->statement = $connection->prepare('
             INSERT INTO
                 tl_log
                     (tstamp, source, action, username, text, func, browser)

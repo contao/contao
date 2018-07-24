@@ -85,7 +85,9 @@ class UserSessionListener
         $session = $user->session;
 
         if (\is_array($session)) {
-            $this->getSessionBag($event->getRequest())->replace($session);
+            /** @var AttributeBagInterface $sessionBag */
+            $sessionBag = $this->getSessionBag($event->getRequest());
+            $sessionBag->replace($session);
         }
 
         // Dynamically register the kernel.response listener (see #1293)
@@ -113,7 +115,9 @@ class UserSessionListener
             return;
         }
 
-        $data = $this->getSessionBag($event->getRequest())->all();
+        /** @var AttributeBagInterface $sessionBag */
+        $sessionBag = $this->getSessionBag($event->getRequest());
+        $data = $sessionBag->all();
 
         $this->connection->update($user->getTable(), ['session' => serialize($data)], ['id' => $user->id]);
     }
@@ -122,10 +126,8 @@ class UserSessionListener
      * Returns the session bag.
      *
      * @throws \RuntimeException
-     *
-     * @return AttributeBagInterface|SessionBagInterface
      */
-    private function getSessionBag(Request $request): AttributeBagInterface
+    private function getSessionBag(Request $request): SessionBagInterface
     {
         if (!$request->hasSession() || null === ($session = $request->getSession())) {
             throw new \RuntimeException('The request did not contain a session.');

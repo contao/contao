@@ -581,6 +581,8 @@ class ContaoFrameworkTest extends TestCase
     public function testCreatesAnObjectInstance(): void
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
+
+        /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
 
         $class = LegacyClass::class;
@@ -593,6 +595,8 @@ class ContaoFrameworkTest extends TestCase
     public function testCreateASingeltonObjectInstance(): void
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
+
+        /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
 
         $class = LegacySingletonClass::class;
@@ -607,6 +611,8 @@ class ContaoFrameworkTest extends TestCase
         $class = LegacyClass::class;
 
         $reflection = new \ReflectionClass(ContaoFramework::class);
+
+        /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
         $adapter = $framework->getAdapter($class);
 

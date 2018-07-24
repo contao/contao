@@ -50,7 +50,6 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
 
         $name = $this->get('translator')->trans('FMD.'.$this->getType().'.0', [], 'contao_modules');
 
-        /** @var BackendTemplate|object $template */
         $template = new BackendTemplate('be_wildcard');
         $template->wildcard = '### '.strtoupper($name).' ###';
         $template->id = $module->id;

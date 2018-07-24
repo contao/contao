@@ -1150,11 +1150,14 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
+        /** @var \DOMElement $firstChild */
+        $firstChild = $doc->documentElement->firstChild;
+
+        $this->assertSame('100 100 400 200', $firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $firstChild->getAttribute('x'));
+        $this->assertSame('0', $firstChild->getAttribute('y'));
+        $this->assertSame('200', $firstChild->getAttribute('width'));
+        $this->assertSame('100', $firstChild->getAttribute('height'));
     }
 
     /**
@@ -1191,11 +1194,14 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
+        /** @var \DOMElement $firstChild */
+        $firstChild = $doc->documentElement->firstChild;
+
+        $this->assertSame('100 100 400 200', $firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $firstChild->getAttribute('x'));
+        $this->assertSame('0', $firstChild->getAttribute('y'));
+        $this->assertSame('200', $firstChild->getAttribute('width'));
+        $this->assertSame('100', $firstChild->getAttribute('height'));
     }
 
     /**
@@ -1230,11 +1236,14 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
+        /** @var \DOMElement $firstChild */
+        $firstChild = $doc->documentElement->firstChild;
+
+        $this->assertSame('100 100 400 200', $firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $firstChild->getAttribute('x'));
+        $this->assertSame('0', $firstChild->getAttribute('y'));
+        $this->assertSame('200', $firstChild->getAttribute('width'));
+        $this->assertSame('100', $firstChild->getAttribute('height'));
     }
 
     /**
@@ -1270,11 +1279,14 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML($resultFile->getContent());
 
-        $this->assertSame('0 0 200.1 100.1', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
+        /** @var \DOMElement $firstChild */
+        $firstChild = $doc->documentElement->firstChild;
+
+        $this->assertSame('0 0 200.1 100.1', $firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $firstChild->getAttribute('x'));
+        $this->assertSame('0', $firstChild->getAttribute('y'));
+        $this->assertSame('200', $firstChild->getAttribute('width'));
+        $this->assertSame('100', $firstChild->getAttribute('height'));
     }
 
     /**
@@ -1340,11 +1352,14 @@ class ImageTest extends TestCase
         $doc = new \DOMDocument();
         $doc->loadXML(gzdecode($resultFile->getContent()));
 
-        $this->assertSame('100 100 400 200', $doc->documentElement->firstChild->getAttribute('viewBox'));
-        $this->assertSame('-50', $doc->documentElement->firstChild->getAttribute('x'));
-        $this->assertSame('0', $doc->documentElement->firstChild->getAttribute('y'));
-        $this->assertSame('200', $doc->documentElement->firstChild->getAttribute('width'));
-        $this->assertSame('100', $doc->documentElement->firstChild->getAttribute('height'));
+        /** @var \DOMElement $firstChild */
+        $firstChild = $doc->documentElement->firstChild;
+
+        $this->assertSame('100 100 400 200', $firstChild->getAttribute('viewBox'));
+        $this->assertSame('-50', $firstChild->getAttribute('x'));
+        $this->assertSame('0', $firstChild->getAttribute('y'));
+        $this->assertSame('200', $firstChild->getAttribute('width'));
+        $this->assertSame('100', $firstChild->getAttribute('height'));
     }
 
     /**
@@ -1395,12 +1410,7 @@ class ImageTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @param object $imageObj
-     *
-     * @return string The image path
-     */
-    public static function executeResizeHookCallback($imageObj): string
+    public static function executeResizeHookCallback(Image $imageObj): string
     {
         // Do not include $cacheName as it is dynamic (mtime)
         $path = 'assets/'

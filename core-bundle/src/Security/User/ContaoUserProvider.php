@@ -91,7 +91,7 @@ class ContaoUserProvider implements UserProviderInterface
         }
 
         /** @var User $user */
-        $user = $this->loadUserByUsername($user->username);
+        $user = $this->loadUserByUsername($user->getUsername());
 
         $this->validateSessionLifetime($user);
         $this->triggerPostAuthenticateHook($user);

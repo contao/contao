@@ -37,7 +37,13 @@ class BackendMenuListener
     {
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token || !($user = $token->getUser()) instanceof BackendUser) {
+        if (null === $token) {
+            return;
+        }
+
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
             return;
         }
 
