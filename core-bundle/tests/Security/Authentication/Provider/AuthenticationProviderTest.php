@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -38,7 +39,7 @@ class AuthenticationProviderTest extends TestCase
 
     public function testHandlesContaoUsers(): void
     {
-        /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var FrontendUser|MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -107,7 +108,7 @@ class AuthenticationProviderTest extends TestCase
 
     public function testLocksAUserAfterThreeFailedLoginAttempts(): void
     {
-        /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var FrontendUser|MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
@@ -180,7 +181,7 @@ class AuthenticationProviderTest extends TestCase
      */
     public function testTriggersTheCheckCredentialsHook(bool $success): void
     {
-        /** @var FrontendUser|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var FrontendUser|MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;

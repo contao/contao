@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -95,7 +96,7 @@ class RefererIdListenerTest extends TestCase
     }
 
     /**
-     * @return CsrfTokenManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return CsrfTokenManagerInterface|MockObject
      */
     private function mockTokenManager(): CsrfTokenManagerInterface
     {

@@ -27,13 +27,14 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
+use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class DoctrineTestCase extends TestCase
 {
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @return Registry|\PHPUnit_Framework_MockObject_MockObject
+     * @return Registry|MockObject
      */
     protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
     {
@@ -104,7 +105,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection and ORM.
      *
-     * @return Registry|\PHPUnit_Framework_MockObject_MockObject
+     * @return Registry|MockObject
      */
     protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null): Registry
     {
@@ -197,7 +198,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks the Contao framework with the database installer.
      *
-     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFrameworkInterface|MockObject
      */
     protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFrameworkInterface
     {

@@ -18,6 +18,7 @@ use Contao\File;
 use Contao\Image;
 use Contao\Image\ResizeCalculator;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -80,7 +81,7 @@ class ImageTest extends TestCase
             'path' => 'dummy.jpg',
         ];
 
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -115,7 +116,7 @@ class ImageTest extends TestCase
      */
     public function testFailsIfTheFileExtensionIsInvalid(): void
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'foobar']);
         $fileMock
             ->method('exists')
@@ -142,7 +143,7 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -574,7 +575,7 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -748,7 +749,7 @@ class ImageTest extends TestCase
             'viewHeight' => 100,
         ];
 
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -868,7 +869,7 @@ class ImageTest extends TestCase
             'viewHeight' => 200,
         ];
 
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -940,7 +941,7 @@ class ImageTest extends TestCase
      */
     public function testFailsIfTheZoomValueIsOutOfBounds(int $value): void
     {
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
         $fileMock
             ->method('exists')

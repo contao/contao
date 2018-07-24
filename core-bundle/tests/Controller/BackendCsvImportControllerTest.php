@@ -22,6 +22,7 @@ use Contao\FileUpload;
 use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -379,7 +380,7 @@ EOF;
     }
 
     /**
-     * @return DataContainer|\PHPUnit_Framework_MockObject_MockObject
+     * @return DataContainer|MockObject
      */
     private function mockDataContainer(): DataContainer
     {

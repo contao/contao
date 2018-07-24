@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGenerator as ParentUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -265,7 +266,7 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
-     * @return UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return UrlGeneratorInterface|MockObject
      */
     private function mockRouterWithContext(array $expectedParameters = [], string $expectedRoute = 'contao_frontend', int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): UrlGeneratorInterface
     {

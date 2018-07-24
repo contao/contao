@@ -23,6 +23,7 @@ use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\RequestToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -740,7 +741,7 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RouterInterface|MockObject
      */
     private function mockRouter(string $url): RouterInterface
     {

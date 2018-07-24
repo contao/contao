@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Config\Dumper;
 use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 
 class CombinedFileDumperTest extends TestCase
@@ -57,7 +58,7 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * @return Filesystem|\PHPUnit_Framework_MockObject_MockObject
+     * @return Filesystem|MockObject
      */
     private function mockFilesystem($expects): Filesystem
     {
@@ -72,7 +73,7 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * @return PhpFileLoader|\PHPUnit_Framework_MockObject_MockObject
+     * @return PhpFileLoader|MockObject
      */
     private function mockLoader(): PhpFileLoader
     {

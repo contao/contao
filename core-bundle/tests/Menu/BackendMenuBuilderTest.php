@@ -15,13 +15,14 @@ namespace Contao\CoreBundle\Tests\Menu;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BackendMenuBuilderTest extends TestCase
 {
     /**
-     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EventDispatcherInterface|MockObject
      */
     private $eventDispatcher;
 

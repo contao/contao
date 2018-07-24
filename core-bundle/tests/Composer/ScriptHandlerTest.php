@@ -20,6 +20,7 @@ use Composer\Package\PackageInterface;
 use Composer\Script\Event;
 use Contao\CoreBundle\Composer\ScriptHandler;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ScriptHandlerTest extends TestCase
 {
@@ -216,7 +217,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return Composer|\PHPUnit_Framework_MockObject_MockObject
+     * @return Composer|MockObject
      */
     private function mockComposer(PackageInterface $package): Composer
     {
@@ -240,7 +241,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return IOInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return IOInterface|MockObject
      */
     private function mockIO(string $method = null): IOInterface
     {
@@ -254,7 +255,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return PackageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return PackageInterface|MockObject
      */
     private function mockPackage(array $extras = []): PackageInterface
     {
