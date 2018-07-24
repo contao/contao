@@ -2,7 +2,7 @@
     "name": "contao/test-case",
     "type": "library",
     "description": "Contao 4 test case",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,8 +14,9 @@
     },
     "require-dev": {
         "contao/core-bundle": "^4.4",
-        "friendsofphp/php-cs-fixer": "^2.6",
-        "php-http/guzzle6-adapter": "^1.1"
+        "friendsofphp/php-cs-fixer": "^2.12",
+        "php-http/guzzle6-adapter": "^1.1",
+        "phpunit/phpunit": "^7.0"
     },
     "autoload": {
         "psr-4": {

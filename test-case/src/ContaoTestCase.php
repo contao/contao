@@ -5,9 +5,9 @@ declare(strict_types=1);
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * (c) Leo Feyer
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace Contao\TestCase;
@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\User;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -54,15 +55,13 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Returns the path to the temporary directory and creates it if it does not yet exist.
-     *
-     * @return string
      */
     protected static function getTempDir(): string
     {
         $key = basename(strtr(static::class, '\\', '/'));
 
         if (!isset(self::$tempDirs[$key])) {
-            self::$tempDirs[$key] = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid($key.'_', true);
+            self::$tempDirs[$key] = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid($key.'_', true);
 
             $fs = new Filesystem();
 
@@ -76,10 +75,6 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Mocks a Symfony container and loads the Contao core extension configuration.
-     *
-     * @param string $projectDir
-     *
-     * @return ContainerBuilder
      */
     protected function mockContainer(string $projectDir = ''): ContainerBuilder
     {
@@ -103,9 +98,7 @@ abstract class ContaoTestCase extends TestCase
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
      *
-     * @param array $adapters
-     *
-     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFrameworkInterface|MockObject
      */
     protected function mockContaoFramework(array $adapters = []): ContaoFrameworkInterface
     {
@@ -133,9 +126,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks an adapter with the given methods.
      *
-     * @param array $methods
-     *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
+     * @return Adapter|MockObject
      */
     protected function mockAdapter(array $methods): Adapter
     {
@@ -145,9 +136,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a configured adapter with the given methods and return values.
      *
-     * @param array $configuration
-     *
-     * @return Adapter|\PHPUnit_Framework_MockObject_MockObject
+     * @return Adapter|MockObject
      */
     protected function mockConfiguredAdapter(array $configuration): Adapter
     {
@@ -162,13 +151,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Mocks a class with magic properties.
-     *
-     * @param string $class
-     * @param array  $properties
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties): \PHPUnit_Framework_MockObject_MockObject
+    protected function mockClassWithProperties(string $class, array $properties): MockObject
     {
         $mock = $this->createMock($class);
 
@@ -187,11 +171,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a token storage with a Contao user.
      *
-     * @param string $class
-     *
      * @throws \Exception
-     *
-     * @return TokenStorageInterface
      */
     protected function mockTokenStorage(string $class): TokenStorageInterface
     {
@@ -225,8 +205,6 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Adds the Config adapter if not present.
-     *
-     * @param array $adapters
      */
     private function addConfigAdapter(array &$adapters): void
     {
