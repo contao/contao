@@ -20,6 +20,7 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Statement;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class InstallerTest extends TestCase
@@ -230,7 +231,7 @@ class InstallerTest extends TestCase
      * Mocks an installer.
      *
      *
-     * @return Installer|\PHPUnit_Framework_MockObject_MockObject
+     * @return Installer|MockObject
      */
     private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = []): Installer
     {
