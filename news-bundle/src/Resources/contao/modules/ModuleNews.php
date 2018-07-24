@@ -77,7 +77,6 @@ abstract class ModuleNews extends Module
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
-		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->news_template);
 		$objTemplate->setData($objArticle->row());
 
