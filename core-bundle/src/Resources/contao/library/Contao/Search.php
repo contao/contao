@@ -233,39 +233,13 @@ class Search
 
 		unset($arrSet);
 
-		// Remove special characters
-		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:+-]/u'), ' ', $strText);
-
 		// Split words
-		$arrWords = preg_split('/ +/', Utf8::strtolower($strText));
+		$arrWords = self::splitIntoWords(Utf8::strtolower($strText), $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
 		foreach ($arrWords as $strWord)
 		{
-			// Strip a leading plus (see #4497)
-			if (strncmp($strWord, '+', 1) === 0)
-			{
-				$strWord = substr($strWord, 1);
-			}
-
-			$strWord = trim($strWord);
-
-			if (!\strlen($strWord) || preg_match('/^[\.:,\'_-]+$/', $strWord))
-			{
-				continue;
-			}
-
-			if (preg_match('/^[\':,]/', $strWord))
-			{
-				$strWord = substr($strWord, 1);
-			}
-
-			if (preg_match('/[\':,.]$/', $strWord))
-			{
-				$strWord = substr($strWord, 0, -1);
-			}
-
 			if (isset($arrIndex[$strWord]))
 			{
 				$arrIndex[$strWord]++;
@@ -299,6 +273,27 @@ class Search
 	}
 
 	/**
+	 * @return string[]
+	 */
+	private function splitIntoWords(string $strText, string $strLocale)
+	{
+		$iterator = \IntlBreakIterator::createWordInstance($strLocale);
+		$iterator->setText($strText);
+
+		$words = array();
+
+		foreach ($iterator->getPartsIterator() as $part)
+		{
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
+			{
+				$words[] = $part;
+			}
+		}
+
+		return $words;
+	}
+
+	/**
 	 * Search the index and return the result object
 	 *
 	 * @param string  $strKeywords The keyword string
@@ -315,9 +310,8 @@ class Search
 	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
 	{
 		// Clean the keywords
-		$strKeywords = Utf8::strtolower($strKeywords);
 		$strKeywords = \StringUtil::decodeEntities($strKeywords);
-		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\' *+".:,-]/u'), ' ', $strKeywords);
+		$strKeywords = Utf8::strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
@@ -349,7 +343,7 @@ class Search
 				case '"':
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
-						$arrPhrases[] = '[[:<:]]' . str_replace(array(' ', '*'), array('[^[:alnum:]]+', ''), $strKeyword) . '[[:>:]]';
+						$arrPhrases[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
 					}
 					break;
 
@@ -357,7 +351,10 @@ class Search
 				case '+':
 					if ($strKeyword = trim(substr($strKeyword, 1)))
 					{
-						$arrIncluded[] = $strKeyword;
+						foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
+						{
+							$arrIncluded[] = $strWord;
+						}
 					}
 					break;
 
@@ -365,7 +362,10 @@ class Search
 				case '-':
 					if ($strKeyword = trim(substr($strKeyword, 1)))
 					{
-						$arrExcluded[] = $strKeyword;
+						foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
+						{
+							$arrExcluded[] = $strWord;
+						}
 					}
 					break;
 
@@ -379,7 +379,10 @@ class Search
 
 				// Normal keywords
 				default:
-					$arrKeywords[] = $strKeyword;
+					foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
+					{
+						$arrKeywords[] = $strWord;
+					}
 					break;
 			}
 		}
@@ -444,7 +447,7 @@ class Search
 		{
 			foreach ($arrPhrases as $strPhrase)
 			{
-				$arrWords = explode('[^[:alnum:]]+', Utf8::substr($strPhrase, 7, -7));
+				$arrWords = self::splitIntoWords(str_replace('[^[:alnum:]]+', ' ', $strPhrase), $GLOBALS['TL_LANGUAGE']);
 				$arrAllKeywords[] = implode(' OR ', array_fill(0, \count($arrWords), 'word=?'));
 				$arrValues = array_merge($arrValues, $arrWords);
 				$intKeywords += \count($arrWords);

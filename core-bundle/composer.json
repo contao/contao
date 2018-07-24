@@ -13,6 +13,7 @@
         "php": "^7.1",
         "ext-dom": "*",
         "ext-gd": "*",
+        "ext-intl": "*",
         "ext-pcre": "*",
         "ausi/slug-generator": "^1.0.1",
         "bacon/bacon-qr-code": "^2.0",
