@@ -302,8 +302,8 @@ class Newsletter extends Backend
 	/**
 	 * Generate the e-mail object and return it
 	 *
-	 * @param Database\Result|object $objNewsletter
-	 * @param array                  $arrAttachments
+	 * @param Database\Result $objNewsletter
+	 * @param array           $arrAttachments
 	 *
 	 * @return Email
 	 */
@@ -338,12 +338,12 @@ class Newsletter extends Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param Email                  $objEmail
-	 * @param Database\Result|object $objNewsletter
-	 * @param array                  $arrRecipient
-	 * @param string                 $text
-	 * @param string                 $html
-	 * @param string                 $css
+	 * @param Email           $objEmail
+	 * @param Database\Result $objNewsletter
+	 * @param array           $arrRecipient
+	 * @param string          $text
+	 * @param string          $html
+	 * @param string          $css
 	 */
 	protected function sendNewsletter(Email $objEmail, Database\Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
@@ -358,10 +358,8 @@ class Newsletter extends Backend
 				$objNewsletter->template = 'mail_default';
 			}
 
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate($objNewsletter->template);
 			$objTemplate->setData($objNewsletter->row());
-
 			$objTemplate->title = $objNewsletter->subject;
 			$objTemplate->body = \StringUtil::parseSimpleTokens($html, $arrRecipient);
 			$objTemplate->charset = \Config::get('characterSet');
@@ -686,9 +684,9 @@ class Newsletter extends Backend
 	/**
 	 * Synchronize newsletter subscription of existing users
 	 *
-	 * @param mixed              $varValue
-	 * @param MemberModel        $objUser
-	 * @param ModuleModel|object $objModule
+	 * @param mixed       $varValue
+	 * @param MemberModel $objUser
+	 * @param ModuleModel $objModule
 	 *
 	 * @return mixed
 	 */
@@ -888,7 +886,7 @@ class Newsletter extends Backend
 	/**
 	 * Get all editable newsletters and return them as array
 	 *
-	 * @param ModuleModel|object $objModule
+	 * @param ModuleModel $objModule
 	 *
 	 * @return array
 	 */
