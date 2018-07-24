@@ -214,14 +214,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         $attributes = $this->request->attributes;
 
-        try {
-            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
-        } catch (\Exception $e) {
+        if (!$attributes->has('_route')) {
             return null;
         }
 
-        // The Symfony router can return null even though the interface only allows strings
-        if (!\is_string($route)) {
+        try {
+            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
+        } catch (\Exception $e) {
             return null;
         }
 
