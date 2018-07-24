@@ -177,7 +177,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array<string,((int|null)[]|array<string,int>)[]
+     * @return array<string,((int|null)[]|array<string,int>)>[]
      */
     public function getComputeResizeDataWithoutImportantPart(): array
     {
@@ -592,7 +592,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @return array<string,(mixed[]|array<string,int>)[]
+     * @return array<string,(mixed[]|array<string,int>)>[]
      */
     public function getComputeResizeDataWithImportantPart(): array
     {
