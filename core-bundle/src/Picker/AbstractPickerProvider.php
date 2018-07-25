@@ -80,7 +80,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         );
     }
 
-    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {
         $this->tokenStorage = $tokenStorage;
     }
@@ -97,10 +97,8 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      * Returns the back end user object.
      *
      * @throws \RuntimeException
-     *
-     * @return BackendUser
      */
-    protected function getUser()
+    protected function getUser(): BackendUser
     {
         if (null === $this->tokenStorage) {
             throw new \RuntimeException('No token storage provided');

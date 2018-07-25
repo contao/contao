@@ -20,10 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractContentElementController extends AbstractFragmentController
 {
-    /**
-     * @return Response
-     */
-    public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null)
+    public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null): Response
     {
         $type = $this->getType();
         $template = $this->createTemplate($model, 'ce_'.$type);

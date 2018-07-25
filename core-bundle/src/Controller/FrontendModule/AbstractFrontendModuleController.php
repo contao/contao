@@ -21,10 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
-    /**
-     * @return Response
-     */
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null)
+    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
         if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
