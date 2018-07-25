@@ -90,13 +90,19 @@ class CsrfTokenCookieListenerTest extends TestCase
 
     public function testAddsTheTokenCookiesToTheResponse(): void
     {
+        $bag = new ParameterBag();
+        $bag->set('csrf_foo', '');
+
         $request = $this->createMock(Request::class);
+        $request->cookies = $bag;
+
         $request
             ->method('isSecure')
             ->willReturn(true)
         ;
 
         $response = $this->createMock(Response::class);
+
         $responseEvent = $this->createMock(FilterResponseEvent::class);
         $responseEvent
             ->method('isMasterRequest')
@@ -121,6 +127,7 @@ class CsrfTokenCookieListenerTest extends TestCase
                 function (Cookie $cookie) {
                     $this->assertSame('csrf_foo', $cookie->getName());
                     $this->assertSame('bar', $cookie->getValue());
+                    $this->assertSame(0, $cookie->getExpiresTime());
                     $this->assertSame('/', $cookie->getPath());
                     $this->assertTrue($cookie->isHttpOnly());
                     $this->assertTrue($cookie->isSecure());
@@ -129,6 +136,56 @@ class CsrfTokenCookieListenerTest extends TestCase
                     return true;
                 }
             ))
+        ;
+
+        $response->headers = $responseHeaders;
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getUsedTokens')
+            ->willReturn(['foo' => 'bar'])
+        ;
+
+        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    public function testDoesNotAddTheTokenCookiesToTheResponseIfTheyAlreadyExist(): void
+    {
+        $bag = new ParameterBag();
+        $bag->set('csrf_foo', 'bar');
+
+        $request = $this->createMock(Request::class);
+        $request->cookies = $bag;
+
+        $request
+            ->method('isSecure')
+            ->willReturn(true)
+        ;
+
+        $response = $this->createMock(Response::class);
+
+        $responseEvent = $this->createMock(FilterResponseEvent::class);
+        $responseEvent
+            ->method('isMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $responseEvent
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $responseEvent
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
+
+        $responseHeaders = $this->createMock(ResponseHeaderBag::class);
+        $responseHeaders
+            ->expects($this->never())
+            ->method('setCookie')
         ;
 
         $response->headers = $responseHeaders;
