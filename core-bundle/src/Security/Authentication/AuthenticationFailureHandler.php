@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -27,7 +27,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
      *
      * @throws \RuntimeException
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         if (null === $this->logger) {
             return parent::onAuthenticationFailure($request, $exception);

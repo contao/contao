@@ -41,15 +41,15 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $email
  * @property string  $language
  * @property string  $backendTheme
- * @property boolean $fullscreen
+ * @property string  $fullscreen
  * @property string  $uploader
- * @property boolean $showHelp
- * @property boolean $thumbnails
- * @property boolean $useRTE
- * @property boolean $useCE
+ * @property string  $showHelp
+ * @property string  $thumbnails
+ * @property string  $useRTE
+ * @property string  $useCE
  * @property string  $password
- * @property boolean $pwChange
- * @property boolean $admin
+ * @property string  $pwChange
+ * @property string  $admin
  * @property array   $groups
  * @property string  $inherit
  * @property string  $modules
@@ -61,7 +61,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $forms
  * @property string  $formp
  * @property array   $amg
- * @property boolean $disable
+ * @property string  $disable
  * @property string  $start
  * @property string  $stop
  * @property array   $session
@@ -84,8 +84,8 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $mobile
  * @property string  $fax
  * @property string  $website
- * @property boolean $login
- * @property boolean $assignDir
+ * @property string  $login
+ * @property string  $assignDir
  * @property string  $homeDir
  * @property integer $createdOn
  * @property string  $activation
@@ -94,7 +94,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property object  $objAuth
  * @property object  $objLogin
  * @property object  $objLogout
- * @property boolean $useTwoFactor
+ * @property string  $useTwoFactor
  * @property string  $secret
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -458,6 +458,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return User
 	 */
 	public static function loadUserByUsername($username)
 	{

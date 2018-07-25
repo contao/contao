@@ -95,7 +95,7 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
 
         $user = $this->createMock(BackendUser::class);
-        $user->imageSizes = serialize(['image_sizes' => '42']);
+        $user->imageSizes = ['image_sizes' => '42'];
         $user->isAdmin = true;
 
         $options = $this->imageSizes->getOptionsForUser($user);
@@ -113,7 +113,7 @@ class ImageSizesTest extends TestCase
         $user->isAdmin = false;
 
         // Allow only one image size
-        $user->imageSizes = serialize([42]);
+        $user->imageSizes = [42];
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayNotHasKey('relative', $options);
@@ -122,7 +122,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('42', $options['image_sizes']);
 
         // Allow only some TL_CROP options
-        $user->imageSizes = serialize(['proportional', 'box']);
+        $user->imageSizes = ['proportional', 'box'];
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayHasKey('relative', $options);
@@ -130,7 +130,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('image_sizes', $options);
 
         // Allow nothing
-        $user->imageSizes = serialize([]);
+        $user->imageSizes = [];
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertSame([], $options);

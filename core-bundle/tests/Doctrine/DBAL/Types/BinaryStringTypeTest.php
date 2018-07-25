@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 class BinaryStringTypeTest extends TestCase
 {
     /**
-     * @var BinaryStringType
+     * @var BinaryStringType|Type
      */
     private $type;
 

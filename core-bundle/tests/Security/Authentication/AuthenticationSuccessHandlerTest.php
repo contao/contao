@@ -189,7 +189,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
-        $user->groups = serialize([2, 3]);
+        $user->groups = [2, 3];
 
         $user
             ->expects($this->once())
@@ -228,7 +228,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
-        $user->groups = serialize([2, 3]);
+        $user->groups = [2, 3];
 
         $user
             ->expects($this->once())
@@ -266,7 +266,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
-        $user->groups = serialize([2, 3]);
+        $user->groups = [2, 3];
 
         $user
             ->expects($this->once())

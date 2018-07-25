@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Logout;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
@@ -21,7 +21,7 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
     /**
      * {@inheritdoc}
      */
-    public function onLogoutSuccess(Request $request): RedirectResponse
+    public function onLogoutSuccess(Request $request): Response
     {
         if ($targetUrl = $request->query->get('redirect')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);

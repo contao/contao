@@ -129,7 +129,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @return array<string,array<string,array<string,string>>>[]
+     * @return array<int,array<int,array<string,array<string,array<int|string,array<string,array<string,true>|bool|int|string>|string>>>>>
      */
     public function createSchemaProvider(): array
     {

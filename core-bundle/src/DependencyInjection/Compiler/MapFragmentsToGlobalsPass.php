@@ -46,7 +46,7 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
     }
 
     /**
-     * @return string[]
+     * @return array<string,array<int|string,array<int|string,string>>>
      */
     private function getGlobalsMap(array $tags, string $globalsKey, string $proxyClass): array
     {

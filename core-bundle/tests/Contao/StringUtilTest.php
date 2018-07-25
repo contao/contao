@@ -66,7 +66,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,array<string,string|int>|string>
+     * @return array<string,array<int,array<string,float|int|string>|string>>
      */
     public function parseSimpleTokensProvider(): array
     {
@@ -283,7 +283,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,array<string,string>|string>
+     * @return array<string,array<int,array<string,string>|string>>
      */
     public function parseSimpleTokensCorrectNewlines(): array
     {

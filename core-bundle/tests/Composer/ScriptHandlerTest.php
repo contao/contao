@@ -117,7 +117,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return (array<string,string>|string)[]
+     * @return (array<string,string>|string)[][]
      */
     public function binDirProvider(): array
     {
@@ -156,7 +156,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return (array<string,string>|string)[]
+     * @return (array<string,string>|string)[][]
      */
     public function webDirProvider(): array
     {

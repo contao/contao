@@ -99,7 +99,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return array<string,string>[][]
+     * @return array<int,array<int,array<string,string>>>
      */
     public function getOptions(): array
     {

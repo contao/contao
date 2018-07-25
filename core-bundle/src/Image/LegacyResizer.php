@@ -33,7 +33,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     use FrameworkAwareTrait;
 
     /**
-     * @var LegacyImage
+     * @var LegacyImage|null
      */
     private $legacyImage;
 
