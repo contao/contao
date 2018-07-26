@@ -311,6 +311,11 @@ class InstallationController implements ContainerAwareInterface
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
+        // Only warn the user if the connection fails and the env component is used
+        if (false !== getenv('DATABASE_URL')) {
+            return $this->render('misconfigured_database_url.html.twig');
+        }
+
         $parameters = [
             'parameters' => [
                 'database_host' => $this->getContainerParameter('database_host'),
