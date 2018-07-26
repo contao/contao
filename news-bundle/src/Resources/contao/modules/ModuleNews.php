@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use FOS\HttpCache\ResponseTagger;
+
 /**
  * Parent class for news modules.
  *
@@ -213,6 +215,15 @@ abstract class ModuleNews extends Module
 				$this->import($callback[0]);
 				$this->{$callback[0]}->{$callback[1]}($objTemplate, $objArticle->row(), $this);
 			}
+		}
+
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
+			$responseTagger->addTags(array('contao.db.tl_news_archive.' . $objArticle->pid));
 		}
 
 		return $objTemplate->parse();
