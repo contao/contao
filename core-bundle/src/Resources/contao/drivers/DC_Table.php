@@ -1544,7 +1544,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 								   ->limit(1)
 								   ->execute($v);
 
-					// Invalidate cache tags
+					// Invalidate cache tags (no need to invalidate the parent)
 					$this->invalidateCacheTags($this->getCacheTags($table, array($v)));
 				}
 			}
@@ -1753,7 +1753,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
 				// Invalidate cache tags
-				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id'])));
+				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id']), $this->ptable, $this->activeRecord->pid));
 			}
 		}
 
@@ -2156,7 +2156,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags
-			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id)));
+			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id), $this->ptable, $this->activeRecord->pid));
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -3308,7 +3308,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$ids = array_map('\intval', $new_records[$this->strTable]);
 				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
-				// Invalidate cache tags
+				// Invalidate cache tags (no need to invalidate the parent)
 				$this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
 
 				if ($objStmt->affectedRows > 0)
