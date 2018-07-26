@@ -105,7 +105,6 @@ abstract class ContaoTestCase extends TestCase
         $this->addConfigAdapter($adapters);
 
         $framework = $this->createMock(ContaoFrameworkInterface::class);
-
         $framework
             ->method('isInitialized')
             ->willReturn(true)
@@ -155,7 +154,6 @@ abstract class ContaoTestCase extends TestCase
     protected function mockClassWithProperties(string $class, array $properties): MockObject
     {
         $mock = $this->createMock($class);
-
         $mock
             ->method('__get')
             ->willReturnCallback(
@@ -180,21 +178,18 @@ abstract class ContaoTestCase extends TestCase
         }
 
         $user = $this->createPartialMock($class, ['hasAccess']);
-
         $user
             ->method('hasAccess')
             ->willReturn(true)
         ;
 
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
@@ -215,7 +210,6 @@ abstract class ContaoTestCase extends TestCase
         $this->loadDefaultConfiguration();
 
         $adapter = $this->mockAdapter(['isComplete', 'get']);
-
         $adapter
             ->method('isComplete')
             ->willReturn(true)
