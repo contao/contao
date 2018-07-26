@@ -46,6 +46,10 @@ class AddResourcesPathsPass implements CompilerPassInterface
             $paths[] = $rootDir.'/app/Resources/contao';
         }
 
+        if (is_dir($rootDir.'/src/Resources/contao')) {
+            $paths[] = $rootDir.'/src/Resources/contao';
+        }
+
         return $paths;
     }
 
