@@ -149,14 +149,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
 
-    contao.listener.session_listener:
-        class: Contao\CoreBundle\EventListener\SessionListener
-        decorates: session_listener
-        arguments:
-            - "@contao.listener.session_listener.inner"
-            - "@contao.framework"
-            - "@contao.routing.scope_matcher"
-
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
