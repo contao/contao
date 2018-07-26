@@ -37,6 +37,8 @@ class ModuleEventReader extends Events
 	/**
 	 * Display a wildcard in the back end
 	 *
+	 * @throws InternalServerErrorException
+	 *
 	 * @return string
 	 */
 	public function generate()
