@@ -28,6 +28,7 @@ use Contao\CoreBundle\Exception\ServiceUnavailableException as ContaoServiceUnav
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -61,7 +62,7 @@ class ExceptionConverterListener
             InsecureInstallationException::class => 'InternalServerErrorHttpException',
             InsufficientAuthenticationException::class => 'UnauthorizedHttpException',
             InternalServerErrorException::class => 'InternalServerErrorHttpException',
-            InvalidRequestTokenException::class => 'InternalServerErrorHttpException',
+            InvalidRequestTokenException::class => 'BadRequestHttpException',
             NoActivePageFoundException::class => 'InternalServerErrorHttpException',
             NoLayoutSpecifiedException::class => 'InternalServerErrorHttpException',
             NoRootPageFoundException::class => 'InternalServerErrorHttpException',
@@ -84,6 +85,9 @@ class ExceptionConverterListener
         switch ($target) {
             case 'AccessDeniedHttpException':
                 return new AccessDeniedHttpException($exception->getMessage(), $exception);
+
+            case 'BadRequestHttpException':
+                return new BadRequestHttpException($exception->getMessage(), $exception);
 
             case 'InternalServerErrorHttpException':
                 return new InternalServerErrorHttpException($exception->getMessage(), $exception);
