@@ -11,8 +11,7 @@ monolog:
             type: fingers_crossed
             action_level: error
             handler: nested
-            excluded_404s:
-                - ^/
+            excluded_http_codes: [400, 401, 403, 404]
         nested:
             type: rotating_file
             max_files: 10
