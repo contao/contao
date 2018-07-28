@@ -26,7 +26,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError404;
 use Contao\StringUtil;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -64,11 +63,6 @@ class PrettyErrorScreenListener
     private $scopeMatcher;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var array
      */
     private static $mapper = [
@@ -81,14 +75,13 @@ class PrettyErrorScreenListener
         NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
-    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->tokenStorage = $tokenStorage;
         $this->scopeMatcher = $scopeMatcher;
-        $this->logger = $logger;
     }
 
     /**
@@ -143,7 +136,6 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getException();
 
-        $this->logException($exception);
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
@@ -193,8 +185,6 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getException();
         $statusCode = $this->getStatusCodeForException($exception);
-
-        $this->logException($exception);
 
         // Look for a template
         do {
@@ -248,33 +238,6 @@ class PrettyErrorScreenListener
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getException()->getMessage(),
         ];
-    }
-
-    private function logException(\Exception $exception): void
-    {
-        if (null === $this->logger || !$this->isLoggable($exception)) {
-            return;
-        }
-
-        $this->logger->critical('An exception occurred.', ['exception' => $exception]);
-    }
-
-    /**
-     * Checks if an extension is loggable.
-     */
-    private function isLoggable(\Exception $exception): bool
-    {
-        do {
-            if ($exception instanceof ForwardPageNotFoundException) {
-                return true;
-            }
-
-            if (isset(self::$mapper[\get_class($exception)])) {
-                return false;
-            }
-        } while (null !== ($exception = $exception->getPrevious()));
-
-        return true;
     }
 
     private function isBackendUser(): bool

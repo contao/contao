@@ -25,7 +25,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -75,16 +74,10 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('critical')
-        ;
-
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->mockResponseEvent($exception);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher, $logger);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher);
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -113,16 +106,10 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('critical')
-        ;
-
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->mockResponseEvent($exception);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher, $logger);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher);
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -344,13 +331,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $tokenStorage = $this->mockTokenStorage($userClass);
         $scopeMatcher = $this->mockScopeMatcher();
 
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($expectLogging ? $this->once() : $this->never())
-            ->method('critical')
-        ;
-
-        return new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher, $logger);
+        return new PrettyErrorScreenListener(true, $twig, $framework, $tokenStorage, $scopeMatcher);
     }
 
     private function mockResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): GetResponseForExceptionEvent
