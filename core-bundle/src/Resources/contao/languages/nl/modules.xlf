@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.two-factor.0">
         <source>Two-factor authentication</source>
+        <target>Twee-traps authenticatie</target>
       </trans-unit>
       <trans-unit id="MOD.two-factor.1">
         <source>Configure two-factor authentication</source>
+        <target>Twee-traps authenticatie configureren</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>

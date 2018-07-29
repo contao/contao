@@ -568,6 +568,15 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>Bedankt voor uw registratie van ##domain##.
+
+Klik hier om uw registratie te voltooien en uw account te activeren:
+
+ ##link##. 
+
+De bevestigingslink is 24 uur geldig.
+
+Indien u geen account bij ons aanvroeg, gelieve deze e-mail te negeren.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -582,6 +591,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>U heeft een nieuw wachtwoord aangevraagd voor ##domain##.
+
+Klik hier om het nieuwe wachtwoord in te stellen:
+
+##link##
+
+Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de website contact op te nemen.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
