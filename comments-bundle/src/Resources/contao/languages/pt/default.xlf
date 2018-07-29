@@ -55,6 +55,8 @@
       <trans-unit id="MSC.com_message">
         <source>%s has created a new comment on your website:
 
+---
+
 %s
 
 ---
@@ -62,7 +64,6 @@
 Click here to view the comment:
 
 %s
-
 
 Click here to edit or answer the comment:
 
@@ -116,6 +117,8 @@ You can cancel your subscription at any time by clicking here:
 
 a new comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
@@ -133,6 +136,8 @@ Click here to cancel your subscription:
         <source>Hello %s,
 
 a new reply to a comment has been added on a page you have subscribed to:
+
+---
 
 %s
 

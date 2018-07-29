@@ -56,6 +56,8 @@
       <trans-unit id="MSC.com_message">
         <source>%s has created a new comment on your website:
 
+---
+
 %s
 
 ---
@@ -64,12 +66,13 @@ Click here to view the comment:
 
 %s
 
-
 Click here to edit or answer the comment:
 
 %s
 </source>
         <target>%s hat einen neuen Kommentar auf Ihrer Webseite erstellt.
+
+---
 
 %s
 
@@ -147,6 +150,8 @@ Sie können Ihr Abonnement jederzeit beenden, indem Sie hier klicken:
 
 a new comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
@@ -158,6 +163,8 @@ Click here to cancel your subscription:
         <target>Hallo %s,
 
 auf einer Seite, die Sie abonniert haben, wurde ein neuer Kommentar hinzugefügt:
+
+---
 
 %s
 
@@ -177,6 +184,8 @@ Klicken Sie hier, um Ihr Abonnement zu beenden:
 
 a new reply to a comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
@@ -188,6 +197,8 @@ Click here to cancel your subscription:
         <target>Hallo %s,
 
 auf einer Seite, die Sie abonniert haben, wurde ein neuer Kommentar hinzugefügt:
+
+---
 
 %s
 

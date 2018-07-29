@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>Stuur me een bericht per e-mail bij nieuwe reacties (u kunt uw abonnement op elk moment annuleren)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -30,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_login">
         <source>You need to be logged in to add comments.</source>
-        <target>Je moet ingelogd zijn om een reactie te plaatsen.</target>
+        <target>U moet ingelogd zijn om een reactie te plaatsen.</target>
       </trans-unit>
       <trans-unit id="MSC.com_by">
         <source>Comment by</source>
@@ -55,6 +56,8 @@
       <trans-unit id="MSC.com_message">
         <source>%s has created a new comment on your website:
 
+---
+
 %s
 
 ---
@@ -62,7 +65,6 @@
 Click here to view the comment:
 
 %s
-
 
 Click here to edit or answer the comment:
 
@@ -106,6 +108,21 @@ You can cancel your subscription at any time by clicking here:
 
 %s
 </source>
+        <target>Hallo %s,
+
+bevestig dat u op deze pagina per e-mail op de hoogte wilt worden gehouden van nieuwe reacties
+%s
+
+Klik hier om uw abonnement te bevestigen:
+
+%s
+
+De bevestigings-link is 24 uur geldig.
+
+U kunt uw abonnement elk moment beëindigen door hier te klikken:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -115,6 +132,8 @@ You can cancel your subscription at any time by clicking here:
         <source>Hello %s,
 
 a new comment has been added on a page you have subscribed to:
+
+---
 
 %s
 
@@ -133,6 +152,8 @@ Click here to cancel your subscription:
         <source>Hello %s,
 
 a new reply to a comment has been added on a page you have subscribed to:
+
+---
 
 %s
 

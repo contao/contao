@@ -56,6 +56,8 @@
       <trans-unit id="MSC.com_message">
         <source>%s has created a new comment on your website:
 
+---
+
 %s
 
 ---
@@ -64,12 +66,13 @@ Click here to view the comment:
 
 %s
 
-
 Click here to edit or answer the comment:
 
 %s
 </source>
-        <target>%s создал новый комментарий на веб-сайте:
+        <target>%s создал новый комментарий на вашем сайте:
+
+---
 
 %s
 
@@ -78,7 +81,6 @@ Click here to edit or answer the comment:
 Нажмите, чтобы посмотреть комментарий:
 
 %s
-
 
 Нажмите, чтобы отредактировать или ответить на комментарий:
 
@@ -128,7 +130,7 @@ You can cancel your subscription at any time by clicking here:
 
 %s
 
-Нажмите здесь, чтобы подтвердить свою подписку:
+Нажмите, чтобы подтвердить свою подписку:
 
 %s
 
@@ -148,6 +150,8 @@ You can cancel your subscription at any time by clicking here:
 
 a new comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
@@ -158,7 +162,9 @@ Click here to cancel your subscription:
 </source>
         <target>Здравствуйте %s,
 
-на страницу, на которую вы подписаны, добавлен новый комментарий:
+на странице, на которую вы подписаны, добавлен новый комментарий:
+
+---
 
 %s
 
@@ -178,6 +184,8 @@ Click here to cancel your subscription:
 
 a new reply to a comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
@@ -188,7 +196,9 @@ Click here to cancel your subscription:
 </source>
         <target>Здравствуйте %s,
 
-на страницу, на которую вы подписаны, добавлен новый комментарий:
+на странице, на которую вы подписаны, добавлен новый ответ на комментарий:
+
+---
 
 %s
 
