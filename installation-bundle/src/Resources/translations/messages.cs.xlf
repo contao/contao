@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao vyžaduje přinejmenším MySQL 5.5.7. Ale Vy máte %s. Prosím přejděte na nejnovější verzi. </target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -404,6 +403,10 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>Nastavenou databázi &lt;code&gt;%s&lt;/code&gt; nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou databázi v souboru &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

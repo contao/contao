@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contaoは少なくともMySQL 5.5.7を必要としますが、利用できるのはバージョン%sです。データベースのバージョンを更新ししてください。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -404,6 +403,10 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>構成したデータベースエンジン&lt;code&gt;%s&lt;/code&gt; をサーバーで利用できません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なるデータベースエンジンを設定してください。</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

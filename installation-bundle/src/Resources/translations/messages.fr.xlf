@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao nécessite au moins MySQL 5.5.7 mais vous avez la version %s. Veuillez mettre à jour votre version de base de données.</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -404,6 +403,10 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>Le moteur de la base de données &lt;code&gt;%s&lt;/code&gt; n'est pas disponible sur votre serveur. Merci de l'installer (recommandé) ou configurez un moteur de base de données différent dans le fichier &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

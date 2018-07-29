@@ -381,7 +381,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao zahteva najmanj MySQL 5.5.7, vi pa uporabljate %s. Prosimo, posodobite vaš MySQL strežnik.</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -398,6 +397,10 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

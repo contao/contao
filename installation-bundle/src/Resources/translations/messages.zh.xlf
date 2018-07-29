@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao至少需要MySQL 5.5.7，但是当前版本为 %s。请更新数据库版本。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -404,6 +403,10 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>配置的数据库引擎 &lt;code&gt;%s&lt;/code&gt; 在当前服务器中无效。请安装数据库引擎 (推荐) 或在文件&lt;code&gt;app/config/config.yml&lt;/code&gt; 中配置不同的数据库引擎.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

@@ -383,7 +383,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao требует как минимум MySQL 5.5.7, ваша версия %s. Обновите версию вашей базы данных.</target>
+        <target>Contao требует как минимум MySQL 5.1.0 ваша версия %s. Обновите версию вашей базы данных.</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -404,6 +404,11 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>Настроенное ядро базы данных &lt;code&gt;%s&lt;/code&gt; недоступно на этом сервере. Установите его (рекомендуется) или настройте другое ядро базы данных в файле &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
+        <target>Не удалось подключиться к базе данных с помощью URL-адреса подключения, найденного в переменной окружения &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>
