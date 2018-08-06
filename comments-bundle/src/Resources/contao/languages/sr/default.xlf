@@ -22,8 +22,7 @@
         <target>Коментар</target>
       </trans-unit>
       <trans-unit id="MSC.com_notify">
-        <source>Notify me of new comments by e-mail</source>
-        <target>Обавести ме о новим коментарима имејлом</target>
+        <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -54,7 +53,7 @@
         <target>Нови коментар на %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_message">
-        <source>%s has created a new comment on your website.
+        <source>%s has created a new comment on your website:
 
 ---
 
@@ -62,20 +61,14 @@
 
 ---
 
-View: %s
-Edit: %s
+Click here to view the comment:
+
+%s
+
+Click here to edit or answer the comment:
+
+%s
 </source>
-        <target>%s је додао/ла нови коментар на вашем сајту.
-
----
-
-%s
-
---
-
-Прегледај: %s
-Уреди: %s
-</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -104,22 +97,16 @@ please confirm that you want to be notified of new comments by e-mail on this pa
 
 %s
 
----
-
-Confirm: %s
-Cancel: %s
-</source>
-        <target>Здраво %s,
-
-молимо Вас потврдите да желите бити обавештавани о новим коментарима путем имејла на страници:
+Click here to confirm your subscription:
 
 %s
 
----
+The confirmation link is valid for 24 hours.
 
-Потврди: %s
-Откажи: %s
-</target>
+You can cancel your subscription at any time by clicking here:
+
+%s
+</source>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -130,24 +117,16 @@ Cancel: %s
 
 a new comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
 
-To cancel your subscription, please click here:
+Click here to cancel your subscription:
+
 %s
 </source>
-        <target>Здраво %s,
-
-нови коментар је додат на страници коју пратите:
-
-%s
-
----
-
-Да откажете праћење, кликните овде:
-%s
-</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -158,24 +137,16 @@ To cancel your subscription, please click here:
 
 a new reply to a comment has been added on a page you have subscribed to:
 
+---
+
 %s
 
 ---
 
-To cancel your subscription, please click here:
+Click here to cancel your subscription:
+
 %s
 </source>
-        <target>Здраво %s,
-
-додат је нови коментар на страници на коју сте се претплатили:
-
-%s
-
----
-
-Да откажете претплату, кликните овде:
-%s
-</target>
       </trans-unit>
     </body>
   </file>
