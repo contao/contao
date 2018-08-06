@@ -17,6 +17,14 @@
         <source>Please select one or more channels.</source>
         <target>Bitte wählen Sie einen oder mehrere Verteiler.</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+        <target>Eigener Text</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Hier können Sie z.B. einen Datenschutzhinweis eingeben, um die Anmeldung DSGVO-konform zu gestalten.</target>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>Verteilermenü ausblenden</target>
@@ -49,6 +57,10 @@
         <source>Here you can select the newsletter template.</source>
         <target>Hier können Sie das Newslettertemplate auswählen.</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+        <target>Eigener Text</target>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>Ihr Newsletter-Abonnement auf %s</target>
@@ -58,13 +70,25 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
 </source>
         <target>Sie haben folgende Verteiler auf ##domain## abonniert:
 
 ##channels##
 
-Bitte klicken Sie ##link## um Ihr Abonnement zu aktivieren. Falls Sie die Bestellung nicht selbst getätigt haben, bitte ignorieren Sie diese E-Mail.
+Bitte klicken Sie hier, um Ihr Abonnement zu aktivieren:
+
+##link##
+
+Der Bestätigungslink ist 24 Stunden gültig. Sie können Ihr Abonnement jederzeit beenden.
+
+Falls Sie die Verteiler nicht selbst abonniert haben, ignorieren Sie diese E-Mail bitte.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">

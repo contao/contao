@@ -17,6 +17,14 @@
         <source>Please select one or more channels.</source>
         <target>1つ以上のチャンネルを選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+        <target>独自のテキスト</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>例えばニュースレターの購読がGDPRに適合させるためのプライバシーの注意を入力できます。</target>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>チャンネルのメニューを非表示</target>
@@ -49,6 +57,10 @@
         <source>Here you can select the newsletter template.</source>
         <target>ニュースレターのテンプレートを選択します。</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+        <target>独自のテキスト</target>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>%sの購読</target>
@@ -58,15 +70,23 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
 </source>
         <target>##domain##で以下のチャンネルに登録を申し込みを受け付けました:
 
 ##channels##
 
-この登録は以下のURLをクリックすると有効になります。
+以下のURLをクリックすると、この登録を有効にします:
 
 ##link##
+
+承認のリンクは24時間有効です。いつでも登録を取り止められます。
 
 ご自身で申し込みをされた覚えがない場合は、このメールを無視してください。
 </target>

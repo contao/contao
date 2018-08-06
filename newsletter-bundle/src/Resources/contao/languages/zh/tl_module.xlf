@@ -17,6 +17,12 @@
         <source>Please select one or more channels.</source>
         <target>请选择一个或多个频道。</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>隐藏频道菜单</target>
@@ -49,6 +55,9 @@
         <source>Here you can select the newsletter template.</source>
         <target>您可以在这里选择新闻通讯模板。</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>您的订阅的 %s</target>
@@ -58,13 +67,14 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>您已在网站 ##domain##订阅以下频道:
-
-##channels##
-
-请点击##link##来激活您的订阅。如果您没有订阅，请忽略这封邮件。\n</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
