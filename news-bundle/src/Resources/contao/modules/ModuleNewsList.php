@@ -40,9 +40,7 @@ class ModuleNewsList extends ModuleNews
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newslist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -115,7 +113,7 @@ class ModuleNewsList extends ModuleNews
 
 			// Get the current page
 			$id = 'page_n' . $this->id;
-			$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
+			$page = \Input::get($id) ?? 1;
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))

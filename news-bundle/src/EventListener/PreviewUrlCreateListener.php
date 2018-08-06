@@ -30,10 +30,6 @@ class PreviewUrlCreateListener
      */
     private $framework;
 
-    /**
-     * @param RequestStack             $requestStack The request stack
-     * @param ContaoFrameworkInterface $framework    The Contao framework service
-     */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
     {
         $this->requestStack = $requestStack;
@@ -41,9 +37,7 @@ class PreviewUrlCreateListener
     }
 
     /**
-     * Adds a query to the front end preview URL.
-     *
-     * @param PreviewUrlCreateEvent $event The event object
+     * Adds the news ID to the front end preview URL.
      *
      * @throws \RuntimeException
      */
@@ -72,12 +66,7 @@ class PreviewUrlCreateListener
     }
 
     /**
-     * Returns the ID.
-     *
-     * @param PreviewUrlCreateEvent $event   The event object
-     * @param Request               $request The request object
-     *
-     * @return int|string The ID
+     * @return int|string
      */
     private function getId(PreviewUrlCreateEvent $event, Request $request)
     {
@@ -90,11 +79,7 @@ class PreviewUrlCreateListener
     }
 
     /**
-     * Returns the news model.
-     *
-     * @param int|string $id The ID
-     *
-     * @return NewsModel|null The news model or null
+     * @param int|string $id
      */
     private function getNewsModel($id): ?NewsModel
     {

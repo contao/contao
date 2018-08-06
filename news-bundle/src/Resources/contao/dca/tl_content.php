@@ -96,7 +96,7 @@ class tl_content_news extends Backend
 			case 'copy':
 				// Check access to the parent element if a content element is moved
 				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
-				// NO BREAK STATEMENT HERE
+				// no break;
 
 			default:
 				// Check access to the content element

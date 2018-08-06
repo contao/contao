@@ -28,9 +28,6 @@ class GeneratePageListener
      */
     private $framework;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -38,9 +35,6 @@ class GeneratePageListener
 
     /**
      * Adds the feeds to the page header.
-     *
-     * @param PageModel          $pageModel
-     * @param LayoutModel|object $layoutModel
      */
     public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel): void
     {
@@ -59,16 +53,6 @@ class GeneratePageListener
             return;
         }
 
-        $this->addFeedMarkupToPageHeader($feeds);
-    }
-
-    /**
-     * Adds the feed markup to the page header.
-     *
-     * @param Collection|NewsFeedModel[] $feeds
-     */
-    private function addFeedMarkupToPageHeader(Collection $feeds): void
-    {
         /** @var Template $template */
         $template = $this->framework->getAdapter(Template::class);
 
