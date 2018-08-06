@@ -103,11 +103,6 @@ class Version440Update extends AbstractVersionUpdate
         ");
     }
 
-    /**
-     * Enables the "overwrite meta" field.
-     *
-     * @param string $table
-     */
     private function enableOverwriteMeta(string $table): void
     {
         $this->connection->query("

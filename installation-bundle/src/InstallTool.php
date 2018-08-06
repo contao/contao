@@ -38,11 +38,6 @@ class InstallTool
      */
     private $logger;
 
-    /**
-     * @param Connection      $connection
-     * @param string          $rootDir
-     * @param LoggerInterface $logger
-     */
     public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger)
     {
         $this->connection = $connection;
@@ -50,11 +45,6 @@ class InstallTool
         $this->logger = $logger;
     }
 
-    /**
-     * Returns true if the install tool has been locked.
-     *
-     * @return bool
-     */
     public function isLocked(): bool
     {
         $file = $this->rootDir.'/var/install_lock';
@@ -68,29 +58,16 @@ class InstallTool
         return (int) $count >= 3;
     }
 
-    /**
-     * Returns true if the install tool can write files.
-     *
-     * @return bool
-     */
     public function canWriteFiles(): bool
     {
         return is_writable(__FILE__);
     }
 
-    /**
-     * Checks if the license has been accepted.
-     *
-     * @return bool
-     */
     public function shouldAcceptLicense(): bool
     {
         return !Config::get('licenseAccepted');
     }
 
-    /**
-     * Increases the login count.
-     */
     public function increaseLoginCount(): void
     {
         $count = 0;
@@ -104,33 +81,27 @@ class InstallTool
         $fs->dumpFile($file, (int) $count + 1);
     }
 
-    /**
-     * Resets the login count.
-     */
     public function resetLoginCount(): void
     {
         \File::putContent('system/tmp/login-count.txt', 0);
     }
 
-    /**
-     * Sets a database connection object.
-     *
-     * @param Connection $connection
-     */
     public function setConnection(Connection $connection): void
     {
         $this->connection = $connection;
     }
 
-    /**
-     * Checks if a database connection can be established.
-     *
-     * @param string|null $name
-     *
-     * @return bool
-     */
     public function canConnectToDatabase(?string $name): bool
     {
+        // Return if there is a working database connection already
+        try {
+            $this->connection->connect();
+            $this->connection->query('SHOW TABLES');
+
+            return true;
+        } catch (\Exception $e) {
+        }
+
         if (null === $name || null === $this->connection) {
             return false;
         }
@@ -156,23 +127,11 @@ class InstallTool
         return true;
     }
 
-    /**
-     * Checks if a table exists.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
     public function hasTable(string $name): bool
     {
         return $this->connection->getSchemaManager()->tablesExist([$name]);
     }
 
-    /**
-     * Checks if the installation is fresh.
-     *
-     * @return bool
-     */
     public function isFreshInstallation(): bool
     {
         if (!$this->hasTable('tl_page')) {
@@ -191,8 +150,6 @@ class InstallTool
 
     /**
      * Checks if the database is older than version 3.2.
-     *
-     * @return bool
      */
     public function hasOldDatabase(): bool
     {
@@ -212,10 +169,6 @@ class InstallTool
 
     /**
      * Checks the database configuration.
-     *
-     * @param array $context
-     *
-     * @return bool
      */
     public function hasConfigurationError(array &$context): bool
     {
@@ -227,7 +180,7 @@ class InstallTool
         [$version] = explode('-', $row->Version);
 
         // The database version is too old
-        if (version_compare($version, '5.5.7', '<')) {
+        if (version_compare($version, '5.1.0', '<')) {
             $context['errorCode'] = 1;
             $context['version'] = $version;
 
@@ -235,40 +188,44 @@ class InstallTool
         }
 
         $options = $this->connection->getParams()['defaultTableOptions'];
-        $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
 
-        // The configured collation is not installed
-        if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-            $context['errorCode'] = 2;
-            $context['collation'] = $options['collate'];
+        // Check the collation if the user has configured it
+        if (isset($options['collate'])) {
+            $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
 
-            return true;
-        }
+            // The configured collation is not installed
+            if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                $context['errorCode'] = 2;
+                $context['collation'] = $options['collate'];
 
-        $engineFound = false;
-        $statement = $this->connection->query('SHOW ENGINES');
-
-        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if ($options['engine'] === $row->Engine) {
-                $engineFound = true;
-                break;
+                return true;
             }
         }
 
-        // The configured engine is not available
-        if (!$engineFound) {
-            $context['errorCode'] = 3;
-            $context['engine'] = $options['engine'];
+        // Check the engine if the user has configured it
+        if (isset($options['engine'])) {
+            $engineFound = false;
+            $statement = $this->connection->query('SHOW ENGINES');
 
-            return true;
+            while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                if ($options['engine'] === $row->Engine) {
+                    $engineFound = true;
+                    break;
+                }
+            }
+
+            // The configured engine is not available
+            if (!$engineFound) {
+                $context['errorCode'] = 3;
+                $context['engine'] = $options['engine'];
+
+                return true;
+            }
         }
 
         return false;
     }
 
-    /**
-     * Handles executing the runonce files.
-     */
     public function handleRunOnce(): void
     {
         // Wait for the tables to be created (see #5061)
@@ -282,7 +239,7 @@ class InstallTool
     /**
      * Returns the available SQL templates.
      *
-     * @return array
+     * @return string[]
      */
     public function getTemplates(): array
     {
@@ -302,12 +259,6 @@ class InstallTool
         return $templates;
     }
 
-    /**
-     * Imports a template.
-     *
-     * @param string $template
-     * @param bool   $preserveData
-     */
     public function importTemplate(string $template, bool $preserveData = false): void
     {
         if (!$preserveData) {
@@ -327,11 +278,6 @@ class InstallTool
         }
     }
 
-    /**
-     * Checks if there is an admin user.
-     *
-     * @return bool
-     */
     public function hasAdminUser(): bool
     {
         try {
@@ -354,16 +300,7 @@ class InstallTool
         return false;
     }
 
-    /**
-     * Persists the admin user.
-     *
-     * @param string $username
-     * @param string $name
-     * @param string $email
-     * @param string $password
-     * @param string $language
-     */
-    public function persistAdminUser($username, string $name, string $email, string $password, string $language): void
+    public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
         $statement = $this->connection->prepare("
             INSERT INTO
@@ -408,10 +345,6 @@ class InstallTool
     }
 
     /**
-     * Returns a Contao parameter.
-     *
-     * @param string $key
-     *
      * @return mixed|null
      */
     public function getConfig(string $key)
@@ -419,23 +352,11 @@ class InstallTool
         return Config::get($key);
     }
 
-    /**
-     * Sets a Contao parameter.
-     *
-     * @param string $key
-     * @param mixed  $value
-     */
     public function setConfig(string $key, $value): void
     {
         Config::set($key, $value);
     }
 
-    /**
-     * Persists a Contao parameter.
-     *
-     * @param string $key
-     * @param mixed  $value
-     */
     public function persistConfig(string $key, $value): void
     {
         $config = Config::getInstance();
@@ -443,11 +364,6 @@ class InstallTool
         $config->save();
     }
 
-    /**
-     * Logs an exception in the current log file.
-     *
-     * @param \Exception $e
-     */
     public function logException(\Exception $e): void
     {
         $this->logger->critical('An exception occurred.', ['exception' => $e]);

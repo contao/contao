@@ -26,10 +26,6 @@ class LanguageResolver
      */
     private $translationsDir;
 
-    /**
-     * @param RequestStack $requestStack
-     * @param string       $translationsDir
-     */
     public function __construct(RequestStack $requestStack, string $translationsDir)
     {
         $this->requestStack = $requestStack;
@@ -38,8 +34,6 @@ class LanguageResolver
 
     /**
      * Returns the first available locale.
-     *
-     * @return string
      */
     public function getLocale(): string
     {
@@ -55,7 +49,7 @@ class LanguageResolver
     /**
      * Returns the first eight accepted locales.
      *
-     * @return array
+     * @return string[]
      */
     private function getAcceptedLocales(): array
     {

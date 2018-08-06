@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao requiere al menos MySQL 5.5.7 pero tiene una versión %s. Por favor, actualice su versión de la base de datos.</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -407,23 +406,7 @@
         
       </trans-unit>
       <trans-unit id="82">
-        <source>innodb_large_prefix</source>
-        <target>¡La opción innodb_large_prefix no está habilitada!</target>
-        
-      </trans-unit>
-      <trans-unit id="83">
-        <source>innodb_large_prefix_explain</source>
-        <target>La opción &lt;code&gt;innodb_large_prefix&lt;/code&gt; no está habilitada en su servidor. Habilítelo (recomendado) o configure un juego de caracteres y una intercalación diferentes en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
-        
-      </trans-unit>
-      <trans-unit id="84">
-        <source>innodb_additional</source>
-        <target>¡InnoDB no está configurado correctamente!</target>
-        
-      </trans-unit>
-      <trans-unit id="85">
-        <source>innodb_additional_explain</source>
-        <target>El uso de prefijos grandes en las versiones de MySQL anteriores a 5.7.7 y las versiones de MariaDB anteriores a la 10.2 requiere el formato de archivo Barracuda y la opción &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

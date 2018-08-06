@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao至少需要MySQL 5.5.7，但是当前版本为 %s。请更新数据库版本。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -407,23 +406,7 @@
         
       </trans-unit>
       <trans-unit id="82">
-        <source>innodb_large_prefix</source>
-        <target>innodb_large_prefix选项没有启用！</target>
-        
-      </trans-unit>
-      <trans-unit id="83">
-        <source>innodb_large_prefix_explain</source>
-        <target>服务器中没有启用 &lt;code&gt;innodb_large_prefix&lt;/code&gt; 选项。请启用该设置 (推荐) 或者在 &lt;code&gt;app/config/config.yml&lt;/code&gt; 文件中配置不同的字符集和collation。</target>
-        
-      </trans-unit>
-      <trans-unit id="84">
-        <source>innodb_additional</source>
-        <target>InnoDB配置不正确！</target>
-        
-      </trans-unit>
-      <trans-unit id="85">
-        <source>innodb_additional_explain</source>
-        <target>在MySQL 5.7.7 之前版本和MariaDB 10.2 之前版本中使用较大前缀需要Barracuda文件格式和 &lt;code&gt;innodb_file_per_table&lt;/code&gt; 选项。</target>
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

@@ -383,7 +383,6 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contaoは少なくともMySQL 5.5.7を必要としますが、利用できるのはバージョン%sです。データベースのバージョンを更新ししてください。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -407,23 +406,7 @@
         
       </trans-unit>
       <trans-unit id="82">
-        <source>innodb_large_prefix</source>
-        <target>innodb_large_prefix optionが有効ではありません!</target>
-        
-      </trans-unit>
-      <trans-unit id="83">
-        <source>innodb_large_prefix_explain</source>
-        <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt;オプションをサーバーで有効にしていません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="84">
-        <source>innodb_additional</source>
-        <target>InnoDBが適切に構成されていません!</target>
-        
-      </trans-unit>
-      <trans-unit id="85">
-        <source>innodb_additional_explain</source>
-        <target>MySQLバージョン5.7.7とMariaDBバージョン10.2より前では、large prefixesを使用するにはBarracudaファイル形式と&lt;code&gt;innodb_file_per_table&lt;/code&gt;オプションが必要です。</target>
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

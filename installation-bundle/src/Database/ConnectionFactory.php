@@ -20,10 +20,6 @@ class ConnectionFactory
 {
     /**
      * Returns the database connection object.
-     *
-     * @param array $parameters
-     *
-     * @return Connection|null
      */
     public static function create(array $parameters): ?Connection
     {

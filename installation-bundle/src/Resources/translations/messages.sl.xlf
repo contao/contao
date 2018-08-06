@@ -1,409 +1,402 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="sl">
     <body>
       <trans-unit id="1">
         <source>install_tool</source>
-        <target>Contao installatie programma</target>
+        <target>Contao namestitveno orodje</target>
         
       </trans-unit>
       <trans-unit id="2">
         <source>an_error_occurred</source>
-        <target>Er is een fout opgetreden</target>
+        <target>Prišlo je do napake</target>
         
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>Het installatie programma is geblokkeerd</target>
+        <target>Namestitveno orodje je bilo zakljenjeno!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, start &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; op de opdrachtregel.</target>
+        <target>Zaradi varnostnih razlogov je bilo namestitveno orodje zaklenjeno zaradi vnosa napačnega gesla več kot trikrat zapovrstjo. Za odklep v ukazni vrstici zaženite &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>Het is PHP niet toegestaan om bestanden te beschrijven!</target>
+        <target>PHP nima dovoljenja za pisanje datotek!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>Uw server ondersteunt geen toegang tot bestanden via PHP; hoogstwaarschijnlijk draait PHP als Apache module onder een andere gebruiker. Neem contact op met uw serverbeheerder en vraag hem om dit probleem op te lossen.</target>
+        <target>Strežnik ne podpira dostopa do datotek preko PHP; najverjetneje je PHP zagnan kot Apache modul kot drugi uporabnik. Prosimo kontaktirajte administratorja strežnika za pomoč pri odpravi problema.</target>
         
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;Ga dit niet oplossen door bestanden en mappen beschrijfbaar te maken voor iedereen!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;Ne poskušajte odpraviti napake sami, tako da dovolite pisanje datotek in direktorijev za vse!&lt;/strong&gt;</target>
         
       </trans-unit>
       <trans-unit id="8">
         <source>accept_license</source>
-        <target>Accepteer licentie</target>
+        <target>Sprejmi licenčne pogoje</target>
         
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>Installatie programma wachtwoord</target>
+        <target>Geslo namestitvenega orodja</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Voer een wachtwoord in om onbevoegde toegang te voorkomen!</target>
+        <target>Vpišite geslo, da bi preprečili neavtoriziran dostop.</target>
         
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
-        <target>Wachtwoord</target>
+        <target>Geslo</target>
         
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>Bevestiging</target>
+        <target>Ponovno vnesite geslo</target>
         
       </trans-unit>
       <trans-unit id="13">
         <source>save_password</source>
-        <target>Wachtwoord opslaan</target>
+        <target>Shrani geslo.</target>
         
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>Het wachtwoord komt niet overeen met de bevestiging!</target>
+        <target>Gesli se ne ujemata!</target>
         
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>Het wachtwoord dient minstens %d karakters lang te zijn!</target>
+        <target>Geslo mora vsebovati najmanj %d znakov!</target>
         
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
-        <target>Installatie programma login</target>
+        <target>Prijava v namestitveno orodje</target>
         
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>Geef het installatie programma wachtwoord op. Dit is niet hetzelfde als het Contao backend wachtwoord.</target>
+        <target>Vnesite geslo namestitvenega orodja. Namestitveno geslo NI enako geslu za vpis v Contao administracijo.</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>U dient cookies toe te staan om Contao te kunnen gebruiken.</target>
+        <target>Piškotki morajo biti omogočeni.</target>
         
       </trans-unit>
       <trans-unit id="19">
         <source>login</source>
-        <target>Inloggen</target>
+        <target>Prijava</target>
         
       </trans-unit>
       <trans-unit id="20">
         <source>invalid_password</source>
-        <target>Ongeldig wachtwoord!</target>
+        <target>Napačno geslo!</target>
         
       </trans-unit>
       <trans-unit id="21">
         <source>database_connection</source>
-        <target>Database verbinding</target>
+        <target>Povezava do podatkovne baze</target>
         
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>Database verbinding tot stand gebracht.</target>
+        <target>Povezava s podatkovno bazo je bila uspešna.</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
-        <target>De databasenaam mag geen punten bevatten!</target>
+        <target>Ime podatkovne baze ne sme vsebovati pik (.)!</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_could_not_connect</source>
-        <target>Geen verbinding met een database!</target>
+        <target>Povezava s podatkovno bazo ni bila mogoča.</target>
         
       </trans-unit>
       <trans-unit id="25">
         <source>database_connection_explain</source>
-        <target>Controleer uw gegevens om met de database te verbinden.</target>
+        <target>Prosimo, vnesite parametre za povezavo s podatkovno bazo.</target>
         
       </trans-unit>
       <trans-unit id="26">
         <source>database_host</source>
-        <target>Host</target>
+        <target>Gostitelj</target>
         
       </trans-unit>
       <trans-unit id="27">
         <source>database_port</source>
-        <target>Poortnummer</target>
+        <target>Številka vrat</target>
         
       </trans-unit>
       <trans-unit id="28">
         <source>database_user</source>
-        <target>Gebruikersnaam</target>
+        <target>Uporabniško ime</target>
         
       </trans-unit>
       <trans-unit id="29">
         <source>database_password</source>
-        <target>Wachtwoord</target>
+        <target>Geslo</target>
         
       </trans-unit>
       <trans-unit id="30">
         <source>database_name</source>
-        <target>Naam database</target>
+        <target>Naziv podatkovne baze</target>
         
       </trans-unit>
       <trans-unit id="31">
         <source>save_settings</source>
-        <target>Bewaar instellingen</target>
+        <target>Shranite nastavitve</target>
         
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables</source>
-        <target>Update de database</target>
+        <target>Posodobite podatkovno bazo</target>
         
       </trans-unit>
       <trans-unit id="33">
         <source>update_tables_explain</source>
-        <target>Houd er rekening mee dat de update-assistent alleen tabellen afhandelt welke met &lt;code&gt; tl _ &lt;/ code&gt; beginnen.</target>
+        <target>Pomočnik za posodobitev lahko upravlja le tabele, katera imena se začnejo z &lt;code&gt;tl_&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="34">
         <source>update_tables_confirm</source>
-        <target>De database is up-to-date!</target>
+        <target>Podatkovna baza je posodobljena.</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>update_save</source>
-        <target>Update database</target>
+        <target>Posodobi podatkovno bazo</target>
         
       </trans-unit>
       <trans-unit id="36">
         <source>CREATE</source>
-        <target>Maak tabellen</target>
+        <target>Ustvari tabele</target>
         
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_TABLE</source>
-        <target>Tabellen wijzigen</target>
+        <target>Spremeni tabele</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_ADD</source>
-        <target>Voeg kolommen toe</target>
+        <target>Dodaj stolpce</target>
         
       </trans-unit>
       <trans-unit id="39">
         <source>ALTER_CHANGE</source>
-        <target>Wijzig kolommen</target>
+        <target>Spremeni stolpce</target>
         
       </trans-unit>
       <trans-unit id="40">
         <source>ALTER_DROP</source>
-        <target>Dump kolommen</target>
+        <target>Odstrani stolpce</target>
         
       </trans-unit>
       <trans-unit id="41">
         <source>DROP</source>
-        <target>Dump tabellen</target>
+        <target>Odstrani tabelo</target>
         
       </trans-unit>
       <trans-unit id="42">
         <source>select_all</source>
-        <target>Selecteer alles</target>
+        <target>Izberi vse</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>template_import</source>
-        <target>Importeer een template</target>
+        <target>Uvozi predlogo</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>template_import_explain</source>
-        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren van de &lt;code&gt;templates&lt;/code&gt; directory. Bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruik dan de thema-manager in het Contao backend.</target>
+        <target>Tukaj lahko uvozite &lt;code&gt;.sql&lt;/code&gt; datoteko iz &lt;code&gt;templates&lt;/code&gt; direktorija. Vsi obstoječi podatki bodo odstranjeni. Če želite samo uvoziti prelogo, raje uporabite upravljalnik predlog v Contao administraciji.</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_exception</source>
-        <target>Importeren is mislukt! Is de database up-to-date en is het template bestand compatibel met uw Contao versie?</target>
+        <target>Uvoz je bil neuspešen. Preverite če je podatkovna baza posodobljena in če je predloga skladna z vašo Contao različico.</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>import_empty_source</source>
-        <target>Kies een template bestand!</target>
+        <target>Prosimo, izberite datoteko predloge!</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
-        <target>Alle bestaande gegevens worden verwijderd!</target>
+        <target>Vsi obstoječi podatki bodo izbrisani!</target>
         
       </trans-unit>
       <trans-unit id="48">
         <source>imported_on</source>
-        <target>Template geïmporteerd bij %s</target>
+        <target>Predloga uvožena na %s</target>
         
       </trans-unit>
       <trans-unit id="49">
         <source>templates</source>
-        <target>Templates</target>
+        <target>Predloge</target>
         
       </trans-unit>
       <trans-unit id="50">
         <source>do_not_truncate</source>
-        <target>Maak tabellen niet leeg</target>
+        <target>Ne izprazni tabel</target>
         
       </trans-unit>
       <trans-unit id="51">
         <source>import_confirm</source>
-        <target>Alle bestaande gegevens worden verwijderd! Wilt u werkelijk verder gaan?</target>
+        <target>Vsi obstoječi podatki bodo izbrisani! Res želite nadaljevati?</target>
         
       </trans-unit>
       <trans-unit id="52">
         <source>template_save</source>
-        <target>Importeer template</target>
+        <target>Uvozi predlogo</target>
         
       </trans-unit>
       <trans-unit id="53">
         <source>admin_create</source>
-        <target>Maak een admin gebruiker aan</target>
+        <target>Ustvari skrbniški račun</target>
         
       </trans-unit>
       <trans-unit id="54">
         <source>admin_create_explain</source>
-        <target>Maak hier een admin gebruiker aan welke kan inloggen in het Contao backend.</target>
+        <target>Tukaj lahko ustvarite skrbniški račun za prijavo v Contao administracijo.</target>
         
       </trans-unit>
       <trans-unit id="55">
         <source>admin_confirm</source>
-        <target>Een admin gebruiker is aangemaakt.</target>
+        <target>Skrbniški račun je bil ustvarjen.</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_username</source>
-        <target>Gebruikersnaam</target>
+        <target>Uporabniško ime</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_name</source>
-        <target>Naam</target>
+        <target>Naziv</target>
         
       </trans-unit>
       <trans-unit id="58">
         <source>admin_email</source>
-        <target>E-mail</target>
+        <target>E-poštni naslov</target>
         
       </trans-unit>
       <trans-unit id="59">
         <source>admin_save</source>
-        <target>Maak een admin gebruiker aan</target>
+        <target>Ustvari skrbniški račun</target>
         
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>Om veiligheidsredenen mag u de volgende karakters hier niet gebruiken: #()/&lt;=&gt;</target>
+        <target>Zaradi varnostnih razlogo ni mogoče uporabiti sledečih znakov: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_no_space</source>
-        <target>De gebruikersnaam mag geen spaties bevatten!</target>
+        <target>Uporabniško ime ne sme vsebovati presledkov.</target>
         
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_email</source>
-        <target>Geef een geldig e-mail adres op!</target>
+        <target>Prosimo vpišite veljaven e-poštni naslov!</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error_password_match</source>
-        <target>De opgegeven wachtwoorden zijn niet gelijk!</target>
+        <target>Gesli se ne ujemata!</target>
         
       </trans-unit>
       <trans-unit id="64">
         <source>admin_error_password_user</source>
-        <target>Uw gebruikersnaam en wachtwoord mogen niet gelijk zijn!</target>
+        <target>Uporabniško ime in geslo ne smeta biti enaka!</target>
         
       </trans-unit>
       <trans-unit id="65">
         <source>admin_error</source>
-        <target>Vul alle velden in om een admin gebruiker aan te maken!</target>
+        <target>Prosimo, izpolnite vsa polja za ustvarjanje skrbniškega računa!</target>
         
       </trans-unit>
       <trans-unit id="66">
         <source>congratulations</source>
-        <target>Gefeliciteerd!</target>
+        <target>Čestitamo!</target>
         
       </trans-unit>
       <trans-unit id="67">
         <source>congratulations_explain</source>
-        <target>Contao is met succes geïnstalleerd.</target>
+        <target>Contao je bil uspešno nameščen.</target>
         
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete</source>
-        <target>Installatie compleet</target>
+        <target>Namestitev končana</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>installation_complete_explain</source>
-        <target>Ga naar het Contao backend om de systeem instellingen te controleren.</target>
+        <target>Nadaljujte v Contao administracijo in preverite sistemske nastavitve.</target>
         
       </trans-unit>
       <trans-unit id="70">
         <source>back_end</source>
-        <target>Contao backend</target>
+        <target>Contao administracija</target>
         
       </trans-unit>
       <trans-unit id="71">
         <source>old_database</source>
-        <target>De database is te oud!</target>
+        <target>Podatkovna baza je prestara!</target>
         
       </trans-unit>
       <trans-unit id="72">
         <source>old_database_explanation</source>
-        <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
+        <target>Potrebujete najmanj Contao 3.2 za nadgradnjo v Contao 4.</target>
         
       </trans-unit>
       <trans-unit id="73">
         <source>console_explanation</source>
-        <target>Een installatie opdracht kan niet worden voltooid!</target>
+        <target>Naloge po zaključku namestitve ni bilo mogoče dokončati.</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicate_subscriptions</source>
-        <target>Er werden dubbele inschrijvingen voor de nieuwsbrief gevonden:</target>
         
       </trans-unit>
       <trans-unit id="75">
         <source>duplicates_purged</source>
-        <target>Dubbele invoeren zijn automatisch opgeschoond. Een back-up van de oorspronkelijke inschrijvingen zijn opgeslagen in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="76">
         <source>unsupported_version</source>
-        <target>Database versie wordt niet ondersteund!</target>
+        <target>Različica vaše podatkovne baze ni podprta!</target>
         
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao vereist tenminste MySQL 5.1.0 u heeft versie %s. Werk uw database versie bij.</target>
         
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
-        <target>De geconfigureerde sortering wordt niet ondersteund!</target>
         
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>De geconfigureerde vergelijking&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer dit (aanbevolen) of configureer een andere tekenset en sortering in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
         
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
-        <target>De geconfigureerde database-engine wordt niet ondersteund!</target>
         
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>De database-engine&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer deze (aanbevolen) of configureer een andere database-engine in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
         
       </trans-unit>
       <trans-unit id="82">

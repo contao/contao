@@ -1,409 +1,408 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="src/Resources/translations/messages.en.xlf" source-language="en" target-language="cs">
     <body>
       <trans-unit id="1">
         <source>install_tool</source>
-        <target>Contao installatie programma</target>
+        <target>Instalační nástroj Contaa</target>
         
       </trans-unit>
       <trans-unit id="2">
         <source>an_error_occurred</source>
-        <target>Er is een fout opgetreden</target>
+        <target>Došlo k chybě</target>
         
       </trans-unit>
       <trans-unit id="3">
         <source>locked_headline</source>
-        <target>Het installatie programma is geblokkeerd</target>
+        <target>Instalační nástroj byl zamčen!</target>
         
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, start &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; op de opdrachtregel.</target>
+        <target>Z bezpečnostních důvodů byl instalační nástroj zablokován, protože bylo zadáno více než třikrát špatné heslo. Pro odblokování spustěte na příkazovém řádku tento příkaz &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;</target>
         
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
-        <target>Het is PHP niet toegestaan om bestanden te beschrijven!</target>
+        <target>PHP není dovolené zapisovat soubory!</target>
         
       </trans-unit>
       <trans-unit id="6">
         <source>file_permissions_explanation</source>
-        <target>Uw server ondersteunt geen toegang tot bestanden via PHP; hoogstwaarschijnlijk draait PHP als Apache module onder een andere gebruiker. Neem contact op met uw serverbeheerder en vraag hem om dit probleem op te lossen.</target>
+        <target>Váš server nepodporuje přístup k souborům pomocí PHP; nejspíš běží PHP jako modul Apache pod jiným uživatelem. Prosím kontaktujte správce serveru a požádejte ho o odstranění tohoto problému.</target>
         
       </trans-unit>
       <trans-unit id="7">
         <source>file_permissions_warning</source>
-        <target>&lt;strong&gt;Ga dit niet oplossen door bestanden en mappen beschrijfbaar te maken voor iedereen!&lt;/strong&gt;</target>
+        <target>&lt;strong&gt;Nepokoušejte se to opravit sami tím, že povolíte všem zpracovávat soubory a složky!&lt;/strong&gt;</target>
         
       </trans-unit>
       <trans-unit id="8">
         <source>accept_license</source>
-        <target>Accepteer licentie</target>
+        <target>Souhlasím s licencí</target>
         
       </trans-unit>
       <trans-unit id="9">
         <source>set_password</source>
-        <target>Installatie programma wachtwoord</target>
+        <target>Heslo k instalačnímu modulu</target>
         
       </trans-unit>
       <trans-unit id="10">
         <source>set_password_hint</source>
-        <target>Voer een wachtwoord in om onbevoegde toegang te voorkomen!</target>
+        <target>Změňte prosím výchozí heslo, abyste zabránili neautorizovanému přístupu!</target>
         
       </trans-unit>
       <trans-unit id="11">
         <source>password</source>
-        <target>Wachtwoord</target>
+        <target>Heslo</target>
         
       </trans-unit>
       <trans-unit id="12">
         <source>confirmation</source>
-        <target>Bevestiging</target>
+        <target>Potvrzení</target>
         
       </trans-unit>
       <trans-unit id="13">
         <source>save_password</source>
-        <target>Wachtwoord opslaan</target>
+        <target>Uložit heslo</target>
         
       </trans-unit>
       <trans-unit id="14">
         <source>password_confirmation_mismatch</source>
-        <target>Het wachtwoord komt niet overeen met de bevestiging!</target>
+        <target>Hesla nesouhlasí!</target>
         
       </trans-unit>
       <trans-unit id="15">
         <source>password_too_short</source>
-        <target>Het wachtwoord dient minstens %d karakters lang te zijn!</target>
+        <target>Heslo musí mít nejméně %d znaků!</target>
         
       </trans-unit>
       <trans-unit id="16">
         <source>login</source>
-        <target>Installatie programma login</target>
+        <target>Přihlášení k instalačnímu nástroji</target>
         
       </trans-unit>
       <trans-unit id="17">
         <source>login_explanation</source>
-        <target>Geef het installatie programma wachtwoord op. Dit is niet hetzelfde als het Contao backend wachtwoord.</target>
+        <target>Vložte prosím heslo pro instalační nástroj. Heslo pro instalační nástroj je totožné s heslem pro vstup do administrace Contao.</target>
         
       </trans-unit>
       <trans-unit id="18">
         <source>allow_cookies</source>
-        <target>U dient cookies toe te staan om Contao te kunnen gebruiken.</target>
+        <target>Musíte povolit cookies, abyste mohli používat Contao.</target>
         
       </trans-unit>
       <trans-unit id="19">
         <source>login</source>
-        <target>Inloggen</target>
+        <target>Přihlásit se</target>
         
       </trans-unit>
       <trans-unit id="20">
         <source>invalid_password</source>
-        <target>Ongeldig wachtwoord!</target>
+        <target>Neplatné heslo!</target>
         
       </trans-unit>
       <trans-unit id="21">
         <source>database_connection</source>
-        <target>Database verbinding</target>
+        <target>Připojení k databázi</target>
         
       </trans-unit>
       <trans-unit id="22">
         <source>database_connected</source>
-        <target>Database verbinding tot stand gebracht.</target>
+        <target>Spojení s databází navázáno.</target>
         
       </trans-unit>
       <trans-unit id="23">
         <source>database_dot_in_dbname</source>
-        <target>De databasenaam mag geen punten bevatten!</target>
+        <target>Jméno databáze nesmí obsahovat tečky!</target>
         
       </trans-unit>
       <trans-unit id="24">
         <source>database_could_not_connect</source>
-        <target>Geen verbinding met een database!</target>
+        <target>Nepodařilo se navázat spojení s databází!</target>
         
       </trans-unit>
       <trans-unit id="25">
         <source>database_connection_explain</source>
-        <target>Controleer uw gegevens om met de database te verbinden.</target>
+        <target>Zadejte prosím nastavení připojení k databázi.</target>
         
       </trans-unit>
       <trans-unit id="26">
         <source>database_host</source>
-        <target>Host</target>
+        <target>Poskytovatel</target>
         
       </trans-unit>
       <trans-unit id="27">
         <source>database_port</source>
-        <target>Poortnummer</target>
+        <target>Číslo portu</target>
         
       </trans-unit>
       <trans-unit id="28">
         <source>database_user</source>
-        <target>Gebruikersnaam</target>
+        <target>Uživatelské jméno</target>
         
       </trans-unit>
       <trans-unit id="29">
         <source>database_password</source>
-        <target>Wachtwoord</target>
+        <target>Heslo</target>
         
       </trans-unit>
       <trans-unit id="30">
         <source>database_name</source>
-        <target>Naam database</target>
+        <target>Název databáze</target>
         
       </trans-unit>
       <trans-unit id="31">
         <source>save_settings</source>
-        <target>Bewaar instellingen</target>
+        <target>Uložit nastavení</target>
         
       </trans-unit>
       <trans-unit id="32">
         <source>update_tables</source>
-        <target>Update de database</target>
+        <target>Zaktualizovat databázi</target>
         
       </trans-unit>
       <trans-unit id="33">
         <source>update_tables_explain</source>
-        <target>Houd er rekening mee dat de update-assistent alleen tabellen afhandelt welke met &lt;code&gt; tl _ &lt;/ code&gt; beginnen.</target>
+        <target>Prosím mějte na paměti, že aktualizační asistent zpracovává pouze tabulky začínající &lt;code&gt;tl_&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="34">
         <source>update_tables_confirm</source>
-        <target>De database is up-to-date!</target>
+        <target>Databáze je aktuální.</target>
         
       </trans-unit>
       <trans-unit id="35">
         <source>update_save</source>
-        <target>Update database</target>
+        <target>Zaktualizovat databázi</target>
         
       </trans-unit>
       <trans-unit id="36">
         <source>CREATE</source>
-        <target>Maak tabellen</target>
+        <target>Vytvořit nové tabulky</target>
         
       </trans-unit>
       <trans-unit id="37">
         <source>ALTER_TABLE</source>
-        <target>Tabellen wijzigen</target>
+        <target>Změnit tabulky</target>
         
       </trans-unit>
       <trans-unit id="38">
         <source>ALTER_ADD</source>
-        <target>Voeg kolommen toe</target>
+        <target>Přidat sloupce</target>
         
       </trans-unit>
       <trans-unit id="39">
         <source>ALTER_CHANGE</source>
-        <target>Wijzig kolommen</target>
+        <target>Změnit sloupce</target>
         
       </trans-unit>
       <trans-unit id="40">
         <source>ALTER_DROP</source>
-        <target>Dump kolommen</target>
+        <target>Smazat existující sloupce</target>
         
       </trans-unit>
       <trans-unit id="41">
         <source>DROP</source>
-        <target>Dump tabellen</target>
+        <target>Smazat existující tabulky</target>
         
       </trans-unit>
       <trans-unit id="42">
         <source>select_all</source>
-        <target>Selecteer alles</target>
+        <target>Vybrat vše</target>
         
       </trans-unit>
       <trans-unit id="43">
         <source>template_import</source>
-        <target>Importeer een template</target>
+        <target>Import předlohy</target>
         
       </trans-unit>
       <trans-unit id="44">
         <source>template_import_explain</source>
-        <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren van de &lt;code&gt;templates&lt;/code&gt; directory. Bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruik dan de thema-manager in het Contao backend.</target>
+        <target>Vyberte prosím soubor končící na &lt;em&gt;.sql&lt;/em&gt; z adresáře &lt;em&gt;templates&lt;/em&gt;. Všechny stávající data budou smazána! Pokud pouze chcete importovat vzhled, prosím použijte Správce témat v backendu Contaa.</target>
         
       </trans-unit>
       <trans-unit id="45">
         <source>import_exception</source>
-        <target>Importeren is mislukt! Is de database up-to-date en is het template bestand compatibel met uw Contao versie?</target>
+        <target>Import selhal! Je databáze aktuální a soubor předlohy kompatabilní s touto verzí Contaa?</target>
         
       </trans-unit>
       <trans-unit id="46">
         <source>import_empty_source</source>
-        <target>Kies een template bestand!</target>
+        <target>Vyberte prosím předlohu!</target>
         
       </trans-unit>
       <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
-        <target>Alle bestaande gegevens worden verwijderd!</target>
+        <target>Všechna stávající data budou smazána.</target>
         
       </trans-unit>
       <trans-unit id="48">
         <source>imported_on</source>
-        <target>Template geïmporteerd bij %s</target>
+        <target>Předloha importována %s</target>
         
       </trans-unit>
       <trans-unit id="49">
         <source>templates</source>
-        <target>Templates</target>
+        <target>Předlohy</target>
         
       </trans-unit>
       <trans-unit id="50">
         <source>do_not_truncate</source>
-        <target>Maak tabellen niet leeg</target>
+        <target>Nevymazat tabulky</target>
         
       </trans-unit>
       <trans-unit id="51">
         <source>import_confirm</source>
-        <target>Alle bestaande gegevens worden verwijderd! Wilt u werkelijk verder gaan?</target>
+        <target>Všechny stávající data budou smazána! Chcete přesto pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="52">
         <source>template_save</source>
-        <target>Importeer template</target>
+        <target>Importovat předlohu</target>
         
       </trans-unit>
       <trans-unit id="53">
         <source>admin_create</source>
-        <target>Maak een admin gebruiker aan</target>
+        <target>Vytvoření účtu administrátora</target>
         
       </trans-unit>
       <trans-unit id="54">
         <source>admin_create_explain</source>
-        <target>Maak hier een admin gebruiker aan welke kan inloggen in het Contao backend.</target>
+        <target>Zde můžete vytvořit účet administrátora, s nímž se pak můžete přihlásit do backendu Contaa.</target>
         
       </trans-unit>
       <trans-unit id="55">
         <source>admin_confirm</source>
-        <target>Een admin gebruiker is aangemaakt.</target>
+        <target>Byl vytvořen účet administrátora.</target>
         
       </trans-unit>
       <trans-unit id="56">
         <source>admin_username</source>
-        <target>Gebruikersnaam</target>
+        <target>Uživatelské jméno</target>
         
       </trans-unit>
       <trans-unit id="57">
         <source>admin_name</source>
-        <target>Naam</target>
+        <target>Název</target>
         
       </trans-unit>
       <trans-unit id="58">
         <source>admin_email</source>
-        <target>E-mail</target>
+        <target>E-Mail</target>
         
       </trans-unit>
       <trans-unit id="59">
         <source>admin_save</source>
-        <target>Maak een admin gebruiker aan</target>
+        <target>Vytvořit účet administrátora</target>
         
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>Om veiligheidsredenen mag u de volgende karakters hier niet gebruiken: #()/&lt;=&gt;</target>
+        <target>Z bezpečnostních důvodů nemůžete použít následující znaky: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_no_space</source>
-        <target>De gebruikersnaam mag geen spaties bevatten!</target>
+        <target>Uživatelské jméno nesmí obsah žádné mezery!</target>
         
       </trans-unit>
       <trans-unit id="62">
         <source>admin_error_email</source>
-        <target>Geef een geldig e-mail adres op!</target>
+        <target>Prosím zadejte platnou emailovou adresu!</target>
         
       </trans-unit>
       <trans-unit id="63">
         <source>admin_error_password_match</source>
-        <target>De opgegeven wachtwoorden zijn niet gelijk!</target>
+        <target>Hesla nesouhlasí!</target>
         
       </trans-unit>
       <trans-unit id="64">
         <source>admin_error_password_user</source>
-        <target>Uw gebruikersnaam en wachtwoord mogen niet gelijk zijn!</target>
+        <target>Vaše uživatelské jméno a heslo se nesmí shodovat!</target>
         
       </trans-unit>
       <trans-unit id="65">
         <source>admin_error</source>
-        <target>Vul alle velden in om een admin gebruiker aan te maken!</target>
+        <target>Pro vytvoření účtu administrátora je třeba vyplnit všechna pole!</target>
         
       </trans-unit>
       <trans-unit id="66">
         <source>congratulations</source>
-        <target>Gefeliciteerd!</target>
+        <target>Blahopřejeme Vám!</target>
         
       </trans-unit>
       <trans-unit id="67">
         <source>congratulations_explain</source>
-        <target>Contao is met succes geïnstalleerd.</target>
+        <target>Úspěšně jste nainstalovali Contao.</target>
         
       </trans-unit>
       <trans-unit id="68">
         <source>installation_complete</source>
-        <target>Installatie compleet</target>
+        <target>Instalace je dokončená</target>
         
       </trans-unit>
       <trans-unit id="69">
         <source>installation_complete_explain</source>
-        <target>Ga naar het Contao backend om de systeem instellingen te controleren.</target>
+        <target>Nyní prosím přejděte do backendu Contaa a zkontrolujte nastavení systému.</target>
         
       </trans-unit>
       <trans-unit id="70">
         <source>back_end</source>
-        <target>Contao backend</target>
+        <target>Backend Contaa</target>
         
       </trans-unit>
       <trans-unit id="71">
         <source>old_database</source>
-        <target>De database is te oud!</target>
+        <target>Vaše databáze je zastaralá!</target>
         
       </trans-unit>
       <trans-unit id="72">
         <source>old_database_explanation</source>
-        <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
+        <target>Musíte mít přinejmenším Contao 3.2, abyste mohli aktualizovat na Contao 4.</target>
         
       </trans-unit>
       <trans-unit id="73">
         <source>console_explanation</source>
-        <target>Een installatie opdracht kan niet worden voltooid!</target>
+        <target>Bohužel nemohla být provedena jedna z instalačních úloh!</target>
         
       </trans-unit>
       <trans-unit id="74">
         <source>duplicate_subscriptions</source>
-        <target>Er werden dubbele inschrijvingen voor de nieuwsbrief gevonden:</target>
+        <target>Byly nalezeny následující duplikáty objednávek zpravodaje:</target>
         
       </trans-unit>
       <trans-unit id="75">
         <source>duplicates_purged</source>
-        <target>Dubbele invoeren zijn automatisch opgeschoond. Een back-up van de oorspronkelijke inschrijvingen zijn opgeslagen in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        <target>Duplikované položky byly automaticky odstraněné. Původní stav byl uložen jako záloha do &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="76">
         <source>unsupported_version</source>
-        <target>Database versie wordt niet ondersteund!</target>
+        <target>Verze Vaší databáze není podporovaná!</target>
         
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao vereist tenminste MySQL 5.1.0 u heeft versie %s. Werk uw database versie bij.</target>
         
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
-        <target>De geconfigureerde sortering wordt niet ondersteund!</target>
+        <target>Nastavená koalace není podporovaná!</target>
         
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>De geconfigureerde vergelijking&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer dit (aanbevolen) of configureer een andere tekenset en sortering in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        <target>Nastavenou koalaci &lt;code&gt;%s&lt;/code&gt;nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou znakovou sazbu a koalaci v souboru &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
-        <target>De geconfigureerde database-engine wordt niet ondersteund!</target>
+        <target>Nastavená databáze není podporovaná!</target>
         
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>De database-engine&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer deze (aanbevolen) of configureer een andere database-engine in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        <target>Nastavenou databázi &lt;code&gt;%s&lt;/code&gt; nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou databázi v souboru &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="82">

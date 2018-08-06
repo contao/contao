@@ -308,7 +308,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
-        <target>Contao requires at least MySQL 5.5.7 but you have version %s. Please update your database version.</target>
+        <target>Contao requires at least MySQL 5.1.0 but you have version %s. Please update your database version.</target>
       </trans-unit>
       <trans-unit id="78">
         <source>unsupported_collation</source>
@@ -325,6 +325,10 @@
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
         <target>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
+        <target>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</target>
       </trans-unit>
     </body>
   </file>

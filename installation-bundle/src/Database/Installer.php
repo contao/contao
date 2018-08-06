@@ -34,10 +34,6 @@ class Installer
      */
     private $schemaProvider;
 
-    /**
-     * @param Connection        $connection
-     * @param DcaSchemaProvider $schemaProvider
-     */
     public function __construct(Connection $connection, DcaSchemaProvider $schemaProvider)
     {
         $this->connection = $connection;
@@ -45,9 +41,7 @@ class Installer
     }
 
     /**
-     * Returns the commands as array.
-     *
-     * @return array
+     * @return string[]
      */
     public function getCommands(): array
     {
@@ -59,10 +53,6 @@ class Installer
     }
 
     /**
-     * Executes a command.
-     *
-     * @param string $hash
-     *
      * @throws \InvalidArgumentException
      */
     public function execCommand(string $hash): void
@@ -182,9 +172,6 @@ class Installer
 
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
-     *
-     * @param array  $sql
-     * @param Schema $toSchema
      */
     private function checkEngineAndCollation(array &$sql, Schema $toSchema): void
     {
@@ -234,8 +221,6 @@ class Installer
 
     /**
      * Adds the legacy table options to remain backwards compatibility with database.sql files.
-     *
-     * @param Table $table
      */
     private function setLegacyOptions(Table $table): void
     {
