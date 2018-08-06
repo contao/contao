@@ -28,10 +28,6 @@ class LocaleListener
      */
     private $availableLocales;
 
-    /**
-     * @param ScopeMatcher $scopeMatcher
-     * @param array        $availableLocales
-     */
     public function __construct(ScopeMatcher $scopeMatcher, array $availableLocales)
     {
         $this->scopeMatcher = $scopeMatcher;
@@ -40,8 +36,6 @@ class LocaleListener
 
     /**
      * Sets the default locale based on the request or session.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -55,10 +49,6 @@ class LocaleListener
 
     /**
      * Returns the locale from the request, the session or the HTTP header.
-     *
-     * @param Request $request
-     *
-     * @return string
      */
     private function getLocale(Request $request): string
     {
@@ -70,12 +60,6 @@ class LocaleListener
     }
 
     /**
-     * Formats a string to represent a locale ID.
-     *
-     * @param string $locale
-     *
-     * @return string
-     *
      * @throw \InvalidArgumentException
      */
     private function formatLocaleId(string $locale): string

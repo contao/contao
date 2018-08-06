@@ -310,8 +310,7 @@
         <target>Lightbox</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
-        <source>To trigger the lightbox, enter a &lt;em&gt;rel&lt;/em&gt; attribute here.</source>
-        <target>Aby włączyć lightbox, wprowadź atrybut &lt;em&gt;rel&lt;/em&gt;.</target>
+        <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -414,8 +413,7 @@
         <target>Vimeo ID</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
-        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
-        <target>Wprowadź ID video Vimeo (np. &lt;em&gt;1956745781&lt;/em&gt;).</target>
+        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -433,31 +431,48 @@
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
         <target>Szerokość i wysokość odtwarzacza mediów w pikselach (np. 640x480).</target>
       </trans-unit>
-      <trans-unit id="tl_content.autoplay.0">
-        <source>Autoplay</source>
-        <target>Autoodtwarzanie</target>
-      </trans-unit>
-      <trans-unit id="tl_content.autoplay.1">
-        <source>Automatically play the video when the page loads.</source>
-        <target>Automatycznie odtwórz video po załadowaniu strony.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.0">
+      <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.1">
+      <trans-unit id="tl_content.playerOptions.1">
         <source>Here you can select the player options.</source>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.0">
+      <trans-unit id="tl_content.playerPreload.0">
+        <source>Preloading</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerPreload.1">
+        <source>Here you can suggest how the browser shall preload the video.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.1">
+      <trans-unit id="tl_content.playerStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.0">
+      <trans-unit id="tl_content.playerStop.0">
         <source>Stop at</source>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.1">
+      <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.0">
+        <source>Caption</source>
+        <target>Opis</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.1">
+        <source>Here you can enter a caption.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.0">
+        <source>Aspect ratio</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.1">
+        <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.0">
+        <source>Controls color</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.1">
+        <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -632,12 +647,8 @@
         <target>Ustawienia odnośnika obrazka</target>
       </trans-unit>
       <trans-unit id="tl_content.source_legend">
-        <source>Files and folders</source>
-        <target>Pliki i foldery</target>
-      </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
-        <source>Download settings</source>
-        <target>Ustawienia pobierania</target>
+        <source>Source</source>
+        <target>Źródło</target>
       </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
@@ -707,6 +718,38 @@
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>Szablon &lt;em&gt;%s&lt;/em&gt; lub &lt;em&gt;%s&lt;/em&gt; musi zostać załączony w układzie strony.</target>
       </trans-unit>
+      <trans-unit id="tl_content.player_autoplay">
+        <source>Autoplay</source>
+        <target>Autoodtwarzanie</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_nocontrols">
+        <source>Hide the controls</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_loop">
+        <source>Play in a loop</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_muted">
+        <source>Mute the audio output</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_playsinline">
+        <source>Play inline (no fullscreen mode)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.auto">
+        <source>Auto (preload the entiry video)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.metadata">
+        <source>Metadata (preload the metadata only)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.none">
+        <source>None (do not preload anything)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_autoplay">
+        <source>Autoplay</source>
+        <target>Autoodtwarzanie</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_controls">
+        <source>Hide the controls</source>
+      </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
       </trans-unit>
@@ -727,6 +770,25 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_nocookie">
+        <source>Use the youtube-nocookie.com domain</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_autoplay">
+        <source>Autoplay</source>
+        <target>Autoodtwarzanie</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_loop">
+        <source>Play in a loop</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_portrait">
+        <source>Hide the profile image</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_title">
+        <source>Hide the title</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_byline">
+        <source>Hide the author</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

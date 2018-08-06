@@ -64,9 +64,6 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @param string $unix
-     * @param string $windows
-     *
      * @dataProvider getPaths
      */
     public function testResolvesThePaths(string $unix, string $windows): void
@@ -87,7 +84,7 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function getPaths(): array
     {
@@ -104,8 +101,6 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @param string $uploadPath
-     *
      * @dataProvider getInvalidUploadPaths
      */
     public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
@@ -123,7 +118,7 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function getInvalidUploadPaths(): array
     {

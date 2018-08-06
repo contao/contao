@@ -37,8 +37,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class BackendController extends Controller
 {
     /**
-     * @return Response
-     *
      * @Route("/contao", name="contao_backend")
      */
     public function mainAction(): Response
@@ -51,8 +49,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/login", name="contao_backend_login")
      */
     public function loginAction(): Response
@@ -79,8 +75,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/password", name="contao_backend_password")
      */
     public function passwordAction(): Response
@@ -93,8 +87,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/preview", name="contao_backend_preview")
      */
     public function previewAction(): Response
@@ -107,8 +99,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/confirm", name="contao_backend_confirm")
      */
     public function confirmAction(): Response
@@ -121,8 +111,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/file", name="contao_backend_file")
      */
     public function fileAction(): Response
@@ -135,8 +123,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/help", name="contao_backend_help")
      */
     public function helpAction(): Response
@@ -149,8 +135,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/page", name="contao_backend_page")
      */
     public function pageAction(): Response
@@ -163,8 +147,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/popup", name="contao_backend_popup")
      */
     public function popupAction(): Response
@@ -177,8 +159,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/switch", name="contao_backend_switch")
      */
     public function switchAction(): Response
@@ -191,8 +171,6 @@ class BackendController extends Controller
     }
 
     /**
-     * @return Response
-     *
      * @Route("/contao/alerts", name="contao_backend_alerts")
      */
     public function alertsAction(): Response
@@ -209,11 +187,7 @@ class BackendController extends Controller
      * It will determine the current provider URL based on the value, which is usually
      * read dynamically via JavaScript.
      *
-     * @param Request $request
-     *
      * @throws BadRequestHttpException
-     *
-     * @return RedirectResponse
      *
      * @Route("/contao/picker", name="contao_backend_picker")
      */
@@ -242,8 +216,6 @@ class BackendController extends Controller
     /**
      * Redirects the user to the Contao back end in case they manually call the
      * /contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
-     *
-     * @return Response
      *
      * @Route("/contao/two-factor", name="contao_backend_two_factor")
      */

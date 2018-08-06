@@ -75,10 +75,6 @@ class DoctrineMigrationsPassTest extends TestCase
 
     /**
      * Returns a container builder that loads the commands.yml file.
-     *
-     * @param array $bundles
-     *
-     * @return ContainerBuilder
      */
     private function getContainerBuilder(array $bundles = []): ContainerBuilder
     {

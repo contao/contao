@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
-        <target>Дозвољене групе чланова</target>
+        <target>Дозвољене групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg_legend">
         <source>Allowed member groups</source>
-        <target>Дозвољене групе чланова</target>
+        <target>Дозвољене групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -332,6 +332,9 @@
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
         <target>Подразумевани начин постављања фајлова</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

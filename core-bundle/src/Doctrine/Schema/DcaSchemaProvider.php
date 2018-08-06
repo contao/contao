@@ -35,21 +35,12 @@ class DcaSchemaProvider
      */
     private $doctrine;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param Registry                 $doctrine
-     */
     public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
     }
 
-    /**
-     * Creates a schema.
-     *
-     * @return Schema
-     */
     public function createSchema(): Schema
     {
         if (0 !== \count($this->doctrine->getManagerNames())) {
@@ -61,8 +52,6 @@ class DcaSchemaProvider
 
     /**
      * Adds the DCA data to the Doctrine schema.
-     *
-     * @param Schema $schema
      */
     public function appendToSchema(Schema $schema): void
     {
@@ -120,11 +109,6 @@ class DcaSchemaProvider
         }
     }
 
-    /**
-     * Creates a Schema instance from Doctrine ORM metadata.
-     *
-     * @return Schema
-     */
     private function createSchemaFromOrm(): Schema
     {
         /** @var EntityManagerInterface $manager */
@@ -151,11 +135,6 @@ class DcaSchemaProvider
         return $tool->getSchemaFromMetadata($metadata);
     }
 
-    /**
-     * Creates a Schema instance and adds DCA metadata.
-     *
-     * @return Schema
-     */
     private function createSchemaFromDca(): Schema
     {
         $config = new SchemaConfig();
@@ -172,13 +151,6 @@ class DcaSchemaProvider
         return $schema;
     }
 
-    /**
-     * Parses the column definition and adds it to the schema table.
-     *
-     * @param Table  $table
-     * @param string $columnName
-     * @param string $sql
-     */
     private function parseColumnSql(Table $table, string $columnName, string $sql): void
     {
         [$dbType, $def] = explode(' ', $sql, 2);
@@ -237,16 +209,6 @@ class DcaSchemaProvider
         $table->addColumn($columnName, $type, $options);
     }
 
-    /**
-     * Sets the length, scale, precision and fixed values by field type.
-     *
-     * @param string   $type
-     * @param string   $dbType
-     * @param int|null $length
-     * @param int|null $scale
-     * @param int|null $precision
-     * @param bool     $fixed
-     */
     private function setLengthAndPrecisionByType(string $type, string $dbType, ?int &$length, ?int &$scale, ?int &$precision, bool &$fixed): void
     {
         switch ($type) {
@@ -302,13 +264,6 @@ class DcaSchemaProvider
         }
     }
 
-    /**
-     * Parses the index definition and adds it to the schema table.
-     *
-     * @param Table  $table
-     * @param string $keyName
-     * @param string $sql
-     */
     private function parseIndexSql(Table $table, string $keyName, string $sql): void
     {
         if ('PRIMARY' === $keyName) {
@@ -354,7 +309,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array
+     * @return array<string,array<string,string[]>>
      */
     private function getSqlDefinitions(): array
     {
@@ -394,11 +349,6 @@ class DcaSchemaProvider
 
     /**
      * Returns the index length if the index needs to be shortened.
-     *
-     * @param Table  $table
-     * @param string $column
-     *
-     * @return int|null
      */
     private function getIndexLength(Table $table, string $column): ?int
     {
@@ -433,13 +383,6 @@ class DcaSchemaProvider
         return $indexLength;
     }
 
-    /**
-     * Returns the default index length of a table.
-     *
-     * @param Table $table
-     *
-     * @return int
-     */
     private function getDefaultIndexLength(Table $table): int
     {
         $engine = $table->getOption('engine');
@@ -475,13 +418,6 @@ class DcaSchemaProvider
         return 767;
     }
 
-    /**
-     * Checks if a field has the case-sensitive flag.
-     *
-     * @param array $config
-     *
-     * @return bool
-     */
     private function isCaseSensitive(array $config): bool
     {
         if (!isset($config['customSchemaOptions']['case_sensitive'])) {
@@ -493,10 +429,6 @@ class DcaSchemaProvider
 
     /**
      * Returns the binary collation depending on the charset.
-     *
-     * @param Table $table
-     *
-     * @return string|null
      */
     private function getBinaryCollation(Table $table): ?string
     {

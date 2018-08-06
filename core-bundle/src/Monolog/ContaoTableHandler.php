@@ -14,7 +14,8 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -34,21 +35,11 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      */
     private $statement;
 
-    /**
-     * Returns the service name for the database connection.
-     *
-     * @return string
-     */
     public function getDbalServiceName(): string
     {
         return $this->dbalServiceName;
     }
 
-    /**
-     * Sets the service name for the database connection.
-     *
-     * @param string $name
-     */
     public function setDbalServiceName(string $name): void
     {
         $this->dbalServiceName = $name;
@@ -128,7 +119,10 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
-        $this->statement = $this->container->get($this->dbalServiceName)->prepare('
+        /** @var Connection $connection */
+        $connection = $this->container->get($this->dbalServiceName);
+
+        $this->statement = $connection->prepare('
             INSERT INTO
                 tl_log
                     (tstamp, source, action, username, text, func, browser)
@@ -139,9 +133,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
     /**
      * Executes the legacy hook if the Contao framework is booted.
-     *
-     * @param string        $message
-     * @param ContaoContext $context
      */
     private function executeHook(string $message, ContaoContext $context): void
     {
@@ -169,11 +160,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         }
     }
 
-    /**
-     * Checks if the addLogEntry hook is set.
-     *
-     * @return bool
-     */
     private function hasAddLogEntryHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['addLogEntry']) && \is_array($GLOBALS['TL_HOOKS']['addLogEntry']);

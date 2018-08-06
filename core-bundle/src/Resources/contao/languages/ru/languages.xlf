@@ -771,7 +771,7 @@
       </trans-unit>
       <trans-unit id="LNG.na">
         <source>Nauru</source>
-        <target>Науруанский</target>
+        <target>Науру</target>
       </trans-unit>
       <trans-unit id="LNG.nb">
         <source>Norwegian Bokmål</source>
@@ -808,6 +808,10 @@
       <trans-unit id="LNG.nn">
         <source>Norwegian Nynorsk</source>
         <target>Нюношк (Норвегия)</target>
+      </trans-unit>
+      <trans-unit id="LNG.no">
+        <source>Norwegian</source>
+        <target>Норвежский</target>
       </trans-unit>
       <trans-unit id="LNG.nr">
         <source>South Ndebele</source>

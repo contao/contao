@@ -24,9 +24,6 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     private $connection;
 
-    /**
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -68,10 +65,6 @@ class WebsiteRootsConfigProvider implements ProviderInterface
 
     /**
      * Checks if the request has an Origin header.
-     *
-     * @param Request $request
-     *
-     * @return bool
      */
     private function isCorsRequest(Request $request): bool
     {
@@ -82,8 +75,6 @@ class WebsiteRootsConfigProvider implements ProviderInterface
 
     /**
      * Checks if a database connection can be established and the table exist.
-     *
-     * @return bool
      */
     private function canRunDbQuery(): bool
     {

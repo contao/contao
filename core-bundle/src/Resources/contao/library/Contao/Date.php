@@ -69,8 +69,8 @@ class Date
 	 */
 	public function __construct($strDate=null, $strFormat=null)
 	{
-		$this->strDate = ($strDate !== null) ? $strDate : time();
-		$this->strFormat = ($strFormat !== null) ? $strFormat : static::getNumericDateFormat();
+		$this->strDate = $strDate ?? time();
+		$this->strFormat = $strFormat ?? static::getNumericDateFormat();
 
 		if (!preg_match('/^-?[0-9]+$/', $this->strDate) || preg_match('/^[a-zA-Z]+$/', $this->strFormat))
 		{
@@ -245,7 +245,7 @@ class Date
 					'y' => '(?P<y>[0-9]{2})',
 				);
 
-				return isset($arrRegexp[$matches[0]]) ? $arrRegexp[$matches[0]] : $matches[0];
+				return $arrRegexp[$matches[0]] ?? $matches[0];
 			}, preg_quote($strFormat));
 	}
 
@@ -339,7 +339,7 @@ class Date
 
 		foreach ($arrCharacters as $strCharacter)
 		{
-			$var = isset($arrCharacterMapper[$strCharacter]) ? $arrCharacterMapper[$strCharacter] : 'dummy';
+			$var = $arrCharacterMapper[$strCharacter] ?? 'dummy';
 
 			switch ($strCharacter)
 			{

@@ -29,10 +29,6 @@ class Provider implements TwoFactorProviderInterface
      */
     private $formRenderer;
 
-    /**
-     * @param Authenticator                  $authenticator
-     * @param TwoFactorFormRendererInterface $formRenderer
-     */
     public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer)
     {
         $this->authenticator = $authenticator;

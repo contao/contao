@@ -120,21 +120,6 @@
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
         <target>اگر وب‌سایت شما از طریق سرور پروکسی SSL قابل دسترسی است، لطفا دامنه (برای نمونه &lt;em&gt;sslsites.de&lt;/em&gt;) آن را اینجا وارد نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-        <target>نشانی‌های آی‌پی ناشناس</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize all IP addresses that are stored in the database.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-        <target>گمنام کردن Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-        <target>گمنام کردن نشانی‌های IP که برای Google Analytics فرستاده می‌شود.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>عدم تغییر مسیر نشانی‌های وب خالی</target>
@@ -198,13 +183,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
         <target>اینجا می‌توانید فهرست جداشده با کاما از گونه‌های پرونده قالبی پشتیبانی شده را وارد نمایید.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-        <target>عرض بیشینه در بخش کاربری</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -349,10 +327,6 @@
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
         <target>پیکربندی پروکسی</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
-        <target>تنظیمات پنهان‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

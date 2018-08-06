@@ -54,6 +54,7 @@ class AddResourcesPathsPassTest extends TestCase
                 $path.'/Resources/contao',
                 $this->getFixturesDir().'/system/modules/foobar',
                 $this->getFixturesDir().'/app/Resources/contao',
+                $this->getFixturesDir().'/src/Resources/contao',
             ],
             $container->getParameter('contao.resources_paths')
         );

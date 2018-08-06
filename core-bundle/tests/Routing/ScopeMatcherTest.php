@@ -43,12 +43,6 @@ class ScopeMatcherTest extends TestCase
     }
 
     /**
-     * @param string|null $scope
-     * @param int         $requestType
-     * @param bool        $isMaster
-     * @param bool        $isFrontend
-     * @param bool        $isBackend
-     *
      * @dataProvider masterRequestProvider
      */
     public function testRecognizesTheContaoScopes(?string $scope, int $requestType, bool $isMaster, bool $isFrontend, bool $isBackend): void
@@ -66,7 +60,7 @@ class ScopeMatcherTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (string|bool|null)[][]
      */
     public function masterRequestProvider(): array
     {

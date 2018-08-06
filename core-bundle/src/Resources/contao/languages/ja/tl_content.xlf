@@ -310,8 +310,8 @@
         <target>ライトボックス</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
-        <source>To trigger the lightbox, enter a &lt;em&gt;rel&lt;/em&gt; attribute here.</source>
-        <target>ライトボックスを作動させるための&lt;em&gt;rel&lt;/em&gt;属性を入力してください。</target>
+        <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
+        <target>lightboxを起動するには、ここに&lt;em&gt;data-lightbox&lt;/em&gt;属性を入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -414,8 +414,8 @@
         <target>Vimeo ID</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
-        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
-        <target>Vimeoの動画のID(例えば、&lt;em&gt;j0sYj4wxyk0&lt;/em&gt;)を入力してください。</target>
+        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
+        <target>VimeoのビデオIDを入力してください。 (例: &lt;em&gt;275028611&lt;/em&gt;)</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -433,37 +433,61 @@
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
         <target>ピクセル単位のメディアプレーヤーの幅と高さです。(例: 640x480)</target>
       </trans-unit>
-      <trans-unit id="tl_content.autoplay.0">
-        <source>Autoplay</source>
-        <target>自動再生</target>
-      </trans-unit>
-      <trans-unit id="tl_content.autoplay.1">
-        <source>Automatically play the video when the page loads.</source>
-        <target>ページを読み込んだときに自動的に映像を再生します。</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.0">
+      <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
         <target>プレーヤーのオプション</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.1">
+      <trans-unit id="tl_content.playerOptions.1">
         <source>Here you can select the player options.</source>
         <target>プレーヤーのオプションを選択できます。</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.0">
+      <trans-unit id="tl_content.playerPreload.0">
+        <source>Preloading</source>
+        <target>先読み込み</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerPreload.1">
+        <source>Here you can suggest how the browser shall preload the video.</source>
+        <target>ブラウザーが動画を先読み込みするかどうかを推奨できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
         <target>開始秒</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.1">
+      <trans-unit id="tl_content.playerStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>指定した秒数から動画を再生します。0にすると動画を再生しません。</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.0">
+      <trans-unit id="tl_content.playerStop.0">
         <source>Stop at</source>
         <target>終了秒</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.1">
+      <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>指定した秒数で動画の再生を停止します。0にすると動画を停止しません。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.0">
+        <source>Caption</source>
+        <target>キャプション</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.1">
+        <source>Here you can enter a caption.</source>
+        <target>表題を入力できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.0">
+        <source>Aspect ratio</source>
+        <target>アスペクト比</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.1">
+        <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+        <target>動画のアスペクト比を選択してレスポンシブにできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.0">
+        <source>Controls color</source>
+        <target>動画制御の色</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.1">
+        <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
+        <target>動画制御に16進表記の色(例: ff0000)を指定できます。</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -639,12 +663,8 @@
         <target>画像のリンクの設定</target>
       </trans-unit>
       <trans-unit id="tl_content.source_legend">
-        <source>Files and folders</source>
-        <target>ファイルとフォルダー</target>
-      </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
-        <source>Download settings</source>
-        <target>ダウンロードの設定</target>
+        <source>Source</source>
+        <target>ソース</target>
       </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
@@ -714,6 +734,46 @@
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>ページレイアウトに&lt;em&gt;%s&lt;/em&gt;または&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
       </trans-unit>
+      <trans-unit id="tl_content.player_autoplay">
+        <source>Autoplay</source>
+        <target>自動再生</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_nocontrols">
+        <source>Hide the controls</source>
+        <target>動画制御を表示しない</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_loop">
+        <source>Play in a loop</source>
+        <target>繰り返し再生</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_muted">
+        <source>Mute the audio output</source>
+        <target>音声出力をミュート</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_playsinline">
+        <source>Play inline (no fullscreen mode)</source>
+        <target>インラインで再生(全画面モードにしない)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.auto">
+        <source>Auto (preload the entiry video)</source>
+        <target>自動(動画全体を先読み込み)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.metadata">
+        <source>Metadata (preload the metadata only)</source>
+        <target>メタデータ(メタデータだけ先読み込み)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.none">
+        <source>None (do not preload anything)</source>
+        <target>なし(何も先読み込みしない)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_autoplay">
+        <source>Autoplay</source>
+        <target>自動再生</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_controls">
+        <source>Hide the controls</source>
+        <target>動画制御を表示しない</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
         <target>初期状態で説明文を表示</target>
@@ -741,6 +801,30 @@
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
         <target>プレビューの最上部のバーを非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_nocookie">
+        <source>Use the youtube-nocookie.com domain</source>
+        <target>youtube-nocookie.comドメインを使用</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_autoplay">
+        <source>Autoplay</source>
+        <target>自動再生</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_loop">
+        <source>Play in a loop</source>
+        <target>繰り返し再生</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_portrait">
+        <source>Hide the profile image</source>
+        <target>プロファイル画像を表示しない</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_title">
+        <source>Hide the title</source>
+        <target>題名を表示しない</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_byline">
+        <source>Hide the author</source>
+        <target>作成者を表示しない</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

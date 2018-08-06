@@ -40,12 +40,6 @@ class ContaoContext implements ContextInterface
      */
     private $debug;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param RequestStack             $requestStack
-     * @param string                   $field
-     * @param bool                     $debug
-     */
     public function __construct(ContaoFrameworkInterface $framework, RequestStack $requestStack, string $field, bool $debug = false)
     {
         $this->framework = $framework;
@@ -65,7 +59,7 @@ class ContaoContext implements ContextInterface
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || '' === ($staticUrl = $this->getFieldValue($this->getPage()))) {
+        if (null === $request || '' === ($staticUrl = $this->getFieldValue($this->getPageModel()))) {
             return '';
         }
 
@@ -80,7 +74,7 @@ class ContaoContext implements ContextInterface
      */
     public function isSecure(): bool
     {
-        $page = $this->getPage();
+        $page = $this->getPageModel();
 
         if (null !== $page) {
             return (bool) $page->loadDetails()->rootUseSSL;
@@ -97,8 +91,6 @@ class ContaoContext implements ContextInterface
 
     /**
      * Returns the base path with a trailing slash if not empty.
-     *
-     * @return string
      */
     public function getStaticUrl(): string
     {
@@ -109,12 +101,7 @@ class ContaoContext implements ContextInterface
         return '';
     }
 
-    /**
-     * Gets the current page model.
-     *
-     * @return PageModel|null
-     */
-    private function getPage(): ?PageModel
+    private function getPageModel(): ?PageModel
     {
         if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
             return $GLOBALS['objPage'];
@@ -124,11 +111,7 @@ class ContaoContext implements ContextInterface
     }
 
     /**
-     * Gets field value from page model or global config.
-     *
-     * @param PageModel|null $page
-     *
-     * @return string
+     * Returns a field value from the page model or the global configuration.
      */
     private function getFieldValue(?PageModel $page): string
     {

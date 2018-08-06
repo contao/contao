@@ -62,7 +62,6 @@ class BackendConfirm extends Backend
 			$this->redirect($strUrl);
 		}
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_confirm');
 
 		// Prepare the URL

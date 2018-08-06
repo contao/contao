@@ -26,67 +26,31 @@ trait ScopeAwareTrait
 {
     use ContainerAwareTrait;
 
-    /**
-     * Checks whether the request is a Contao the master request.
-     *
-     * @param KernelEvent $event
-     *
-     * @return bool
-     */
     protected function isContaoMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isContaoScope();
     }
 
-    /**
-     * Checks whether the request is a Contao back end master request.
-     *
-     * @param KernelEvent $event
-     *
-     * @return bool
-     */
     protected function isBackendMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isBackendScope();
     }
 
-    /**
-     * Checks whether the request is a Contao front end master request.
-     *
-     * @param KernelEvent $event
-     *
-     * @return bool
-     */
     protected function isFrontendMasterRequest(KernelEvent $event): bool
     {
         return $event->isMasterRequest() && $this->isFrontendScope();
     }
 
-    /**
-     * Checks whether the request is a Contao request.
-     *
-     * @return bool
-     */
     protected function isContaoScope(): bool
     {
         return $this->isBackendScope() || $this->isFrontendScope();
     }
 
-    /**
-     * Checks whether the request is a Contao back end request.
-     *
-     * @return bool
-     */
     protected function isBackendScope(): bool
     {
         return $this->isScope(ContaoCoreBundle::SCOPE_BACKEND);
     }
 
-    /**
-     * Checks whether the request is a Contao front end request.
-     *
-     * @return bool
-     */
     protected function isFrontendScope(): bool
     {
         return $this->isScope(ContaoCoreBundle::SCOPE_FRONTEND);
@@ -94,10 +58,6 @@ trait ScopeAwareTrait
 
     /**
      * Checks whether the _scope attributes matches a scope.
-     *
-     * @param string $scope
-     *
-     * @return bool
      */
     private function isScope(string $scope): bool
     {

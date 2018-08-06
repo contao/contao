@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Input;
 use Contao\System;
 use Contao\Widget;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -55,11 +56,6 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $input
-     * @param mixed  $value
-     * @param string $expected
-     *
      * @dataProvider postProvider
      */
     public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void
@@ -85,7 +81,7 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (array<string,string>|string|null)[][]
      */
     public function postProvider(): array
     {
@@ -109,7 +105,7 @@ class WidgetTest extends TestCase
 
     public function testValidatesThePostData(): void
     {
-        /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
+        /** @var Widget|MockObject $widget */
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()

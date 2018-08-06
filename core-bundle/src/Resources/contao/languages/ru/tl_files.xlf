@@ -89,10 +89,6 @@
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
         <target>Вы можете отредактировать исходный файл. (Нажмите F11 для переключения в полноэкранный режим).</target>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
-        <source>Upload files</source>
-        <target>Загрузка файлов</target>
-      </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
         <target>Загрузить файлы и вернуться</target>
@@ -124,6 +120,14 @@
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
         <target>Нажмите или перетащите сюда файлы для загрузки</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Файл слишком большой ({{filesize}} МиБ). Максимальный размер файла {{maxFilesize}} МиБ.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>Файлы этого типа не могут быть загружены.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -216,6 +220,14 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
         <target>Редактировать файл &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Загрузка файлов</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.1">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Загрузить файл в каталог &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

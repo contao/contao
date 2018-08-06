@@ -49,7 +49,6 @@ use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
-use Contao\CoreBundle\EventListener\SessionListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
@@ -159,9 +158,6 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $class
-     *
      * @dataProvider getCommandTestData
      */
     public function testRegistersTheCommands(string $key, string $class): void
@@ -184,7 +180,7 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function getCommandTestData(): array
     {
@@ -458,7 +454,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
         $this->assertSame('security.token_storage', (string) $definition->getArgument(3));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(4));
-        $this->assertSame('logger', (string) $definition->getArgument(5));
 
         $tags = $definition->getTags();
 
@@ -502,19 +497,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(64, $tags['kernel.event_listener'][0]['priority']);
-    }
-
-    public function testRegistersTheSessionListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.session_listener'));
-
-        $definition = $this->container->getDefinition('contao.listener.session_listener');
-
-        $this->assertSame(SessionListener::class, $definition->getClass());
-        $this->assertSame('session_listener', $definition->getDecoratedService()[0]);
-        $this->assertSame('contao.listener.session_listener.inner', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheStoreRefererListener(): void
@@ -1523,7 +1505,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.slug.valid_characters');
 
         $this->assertSame(ValidCharacters::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('event_dispatcher', (string) $definition->getArgument(0));
         $this->assertSame('translator', (string) $definition->getArgument(1));
     }

@@ -47,19 +47,12 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
     }
 
     /**
-     * Executes the command.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
      * @return int
      */
     abstract protected function executeLocked(InputInterface $input, OutputInterface $output);
 
     /**
      * Creates an installation specific folder in the temporary directory and returns its path.
-     *
-     * @return string
      */
     private function getTempDir(): string
     {

@@ -264,13 +264,13 @@ class Request
 		switch ($uri['scheme'])
 		{
 			case 'http':
-				$port = isset($uri['port']) ? $uri['port'] : 80;
+				$port = $uri['port'] ?? 80;
 				$host = $uri['host'] . (($port != 80) ? ':' . $port : '');
 				$fp = @fsockopen($uri['host'], $port, $errno, $errstr, 10);
 				break;
 
 			case 'https':
-				$port = isset($uri['port']) ? $uri['port'] : 443;
+				$port = $uri['port'] ?? 443;
 				$host = $uri['host'] . (($port != 443) ? ':' . $port : '');
 				$fp = @fsockopen('ssl://' . $uri['host'], $port, $errno, $errstr, 15);
 				break;
@@ -289,7 +289,7 @@ class Request
 			return;
 		}
 
-		$path = isset($uri['path']) ? $uri['path'] : '/';
+		$path = $uri['path'] ?? '/';
 
 		if (isset($uri['query']))
 		{

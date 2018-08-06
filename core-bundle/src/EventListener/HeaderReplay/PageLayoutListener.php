@@ -29,10 +29,6 @@ class PageLayoutListener
      */
     private $framework;
 
-    /**
-     * @param ScopeMatcher             $scopeMatcher
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ScopeMatcher $scopeMatcher, ContaoFrameworkInterface $framework)
     {
         $this->scopeMatcher = $scopeMatcher;
@@ -44,8 +40,6 @@ class PageLayoutListener
      * or the current browser user agent string, so that the reverse proxy gains the ability to vary on
      * it. This is needed so that the reverse proxy generates two entries for the same URL when you are
      * using mobile and desktop page layouts.
-     *
-     * @param HeaderReplayEvent $event
      */
     public function onReplay(HeaderReplayEvent $event): void
     {

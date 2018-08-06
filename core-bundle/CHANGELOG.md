@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.6.0-RC1 (2018-07-16)
 
  * Add two factor authentication for the back end login (see #1545).
  * Add the "markAsCopy" config option to the DCA (see #586).

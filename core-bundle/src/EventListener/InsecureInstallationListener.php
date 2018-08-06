@@ -18,14 +18,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class InsecureInstallationListener
 {
     /**
-     * @var array
-     */
-    private static $localIps = ['127.0.0.1', 'fe80::1', '::1'];
-
-    /**
      * Throws an exception if the document root is insecure.
-     *
-     * @param GetResponseEvent $event
      *
      * @throws InsecureInstallationException
      */
@@ -34,7 +27,7 @@ class InsecureInstallationListener
         $request = $event->getRequest();
 
         // Skip the check on localhost
-        if (\in_array($request->getClientIp(), self::$localIps, true)) {
+        if (\in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1'], true)) {
             return;
         }
 

@@ -137,14 +137,6 @@
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>Przekieruj użytkownika do strony, ostatnio odwiedzonej przed logowaniem/wylogowaniem.</target>
       </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>Ilość kolumn</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>Wybierz ilość kolumn formularza.</target>
-      </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
         <target>Jedna kolumna</target>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>Automatycznie przekieruj do pierwszego artykułu jeśli żaden nie został wybrany.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>Szerokość i wysokość</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>Wprowadź w pikslach szerokość i wysokość.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>Transparentny klip Flash</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>Wybierz tę opcję by wprowadzić przezroczystość do klipu Flash (wmode = transparent). Pamiętaj, że przyciski i pola tekstowe, w klipie Flash z włączoną przezroczystością, w niektórych przeglądarkach internetowych mogą nie działać poprawnie.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>Zmienne Flash'a</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Tu możesz wprowadzić zmienne, które będą dołączone to klipu Flash (&lt;em&gt;zmienna1=wartość1&amp;zmienna2=wartość2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Wersja Flash i numer kompilacji.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Wpisz wymaganą wersję Flash playera i numer kompilacji (np. jeśli twój filmik lub animacja wymaga co najmniej Flash playera 6.0.12.0, wpisz 6 i 12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>Zawartość zastępcza</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>Wprowadź zastępczą zawartość, która zostanie wyświetlona jeśli z jakichś powodów klip Flash nie będzie mógł być załadowany. Tagi HTML są dozwolone.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>Źródło</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Wybierz źródło elementu.</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>Plik źródłowy</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Wpisz kompletny URL łącznie z http://.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>Interaktywny klip Flash</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Wybierz tę opcję jeśli twój klip Flash wchodzi w interakcję z przeglądarką za pomocą JavaScript i funkcji Flash &lt;em&gt;fscommand()&lt;/em&gt;.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>ID klipu Flash</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>Wprowadź unikalne ID dla klipu Flash.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>Wprowadź zawartość funkcji JavaScript &lt;em&gt;_DoFSCommand()&lt;/em&gt;. Zmienna zawiera komendę &lt;em&gt;command&lt;/em&gt;, oraz argument &lt;em&gt;args&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>Ustawienia załączania</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>Pliki i foldery</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>Interaktywny plik Flash</target>
+        <source>Source</source>
+        <target>Źródło</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,9 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
-        <target>Dziękujemy za rejestrację w serwisie ##domain##. Kliknij na ten link: ##link## aby dokończyć procedurę rejestracji i aktywować swoje konto. Jeśli nie zakładałeś konta w naszym serwisie, prosimy o zignorowanie tego maila.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -655,9 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
-        <target>Zgłaszałeś prośbę o nowe hasło do serwisu ##domain##. Kliknij ten link: ##link## i wpisz nowe hasło. Jeśli nie wysyłałeś takiej prośby, prosimy skontaktować sie z administratorem serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

@@ -58,10 +58,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param string $string
-     * @param array  $tokens
-     * @param string $expected
-     *
      * @dataProvider parseSimpleTokensProvider
      */
     public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
@@ -70,7 +66,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,array<int,array<string,float|int|string>|string>>
      */
     public function parseSimpleTokensProvider(): array
     {
@@ -279,10 +275,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param string $string
-     * @param array  $tokens
-     * @param string $expected
-     *
      * @dataProvider parseSimpleTokensCorrectNewlines
      */
     public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
@@ -291,7 +283,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,array<int,array<string,string>|string>>
      */
     public function parseSimpleTokensCorrectNewlines(): array
     {
@@ -330,8 +322,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param string $string
-     *
      * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
     public function testDoesNotExecutePhpCode(string $string): void
@@ -340,7 +330,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(string|bool)[]>
      */
     public function parseSimpleTokensDoesntExecutePhp(): array
     {
@@ -373,8 +363,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param array $tokens
-     *
      * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
     public function testDoesNotExecutePhpCodeInTokens(array $tokens): void
@@ -383,7 +371,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(string|bool)[]>
      */
     public function parseSimpleTokensDoesntExecutePhpInToken(): array
     {
@@ -430,8 +418,6 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param string $string
-     *
      * @dataProvider parseSimpleTokensInvalidComparison
      */
     public function testFailsIfTheComparisonOperatorIsInvalid(string $string): void
@@ -442,7 +428,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,string[]>
      */
     public function parseSimpleTokensInvalidComparison(): array
     {

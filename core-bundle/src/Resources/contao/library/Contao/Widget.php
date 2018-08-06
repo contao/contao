@@ -78,7 +78,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @property boolean       $doNotTrim         Do not trim the user input
  * @property string        $forAttribute      The "for" attribute
  * @property DataContainer $dataContainer     The data container object
- * @property Result|object $activeRecord      The active record
+ * @property Result        $activeRecord      The active record
  * @property string        $mandatoryField    The "mandatory field" label
  * @property string        $customTpl         A custom template name
  * @property string        $slabel            The submit button label
@@ -1366,7 +1366,7 @@ abstract class Widget extends Controller
 
 			if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple'])
 			{
-				$strLabel = isset($arrData['eval']['blankOptionLabel']) ? $arrData['eval']['blankOptionLabel'] : '-';
+				$strLabel = $arrData['eval']['blankOptionLabel'] ?? '-';
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
 			}
 

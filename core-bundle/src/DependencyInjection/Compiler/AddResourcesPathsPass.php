@@ -27,11 +27,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     }
 
     /**
-     * Returns the Contao resources paths as array.
-     *
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return string[]
      */
     private function getResourcesPaths(ContainerBuilder $container): array
     {
@@ -50,17 +46,14 @@ class AddResourcesPathsPass implements CompilerPassInterface
             $paths[] = $rootDir.'/app/Resources/contao';
         }
 
+        if (is_dir($rootDir.'/src/Resources/contao')) {
+            $paths[] = $rootDir.'/src/Resources/contao';
+        }
+
         return $paths;
     }
 
-    /**
-     * Returns the resources path from the class name.
-     *
-     * @param string $class
-     *
-     * @return string|null
-     */
-    private function getResourcesPathFromClassName($class): ?string
+    private function getResourcesPathFromClassName(string $class): ?string
     {
         $reflection = new \ReflectionClass($class);
 

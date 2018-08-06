@@ -29,10 +29,6 @@ class AddToSearchIndexListener
      */
     private $fragmentPath;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param string                   $fragmentPath
-     */
     public function __construct(ContaoFrameworkInterface $framework, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
@@ -41,8 +37,6 @@ class AddToSearchIndexListener
 
     /**
      * Checks if the request can be indexed and forwards it accordingly.
-     *
-     * @param PostResponseEvent $event
      */
     public function onKernelTerminate(PostResponseEvent $event): void
     {

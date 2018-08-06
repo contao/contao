@@ -19,22 +19,13 @@ trait FrameworkAwareTrait
      */
     protected $framework;
 
-    /**
-     * Sets the framework service.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     */
     public function setFramework(ContaoFrameworkInterface $framework = null): void
     {
         $this->framework = $framework;
     }
 
     /**
-     * Returns the framework service.
-     *
      * @throws \LogicException
-     *
-     * @return ContaoFrameworkInterface
      *
      * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0
      */

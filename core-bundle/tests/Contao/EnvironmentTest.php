@@ -51,9 +51,6 @@ class EnvironmentTest extends TestCase
         require __DIR__.'/../../src/Resources/contao/config/agents.php';
     }
 
-    /**
-     * @return string
-     */
     public function getRootDir(): string
     {
         return strtr(parent::getFixturesDir(), '\\', '/');
@@ -179,9 +176,6 @@ class EnvironmentTest extends TestCase
         $this->assertFalse(Environment::get('isAjaxRequest'));
     }
 
-    /**
-     * @param string $sapi
-     */
     private function setSapi(string $sapi): void
     {
         $reflection = new \ReflectionClass(Environment::class);

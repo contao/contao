@@ -56,7 +56,6 @@ class BackendPassword extends Backend
 		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_password');
 
 		if (\Input::post('FORM_SUBMIT') == 'tl_password')

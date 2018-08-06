@@ -30,6 +30,7 @@ use Contao\Image\ResizeConfigurationInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PictureFactoryTest extends TestCase
 {
@@ -131,6 +132,7 @@ class PictureFactoryTest extends TestCase
             'media' => '(max-width: 900px)',
         ];
 
+        /** @var ImageSizeItemModel|MockObject $imageSizeItemModel */
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $properties);
         $imageSizeItemModel
             ->method('__isset')
@@ -365,17 +367,10 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * Mocks a picture factory.
-     *
-     * @param PictureGenerator|null         $pictureGenerator
-     * @param ImageFactory|null             $imageFactory
-     * @param ContaoFrameworkInterface|null $framework
-     * @param bool                          $bypassCache
-     * @param array                         $imagineOptions
-     *
-     * @return PictureFactory
+     * @param PictureGenerator|MockObject|null $pictureGenerator
+     * @param ImageFactory|MockObject|null     $imageFactory
      */
-    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, $framework = null, $bypassCache = null, $imagineOptions = null): PictureFactory
+    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);

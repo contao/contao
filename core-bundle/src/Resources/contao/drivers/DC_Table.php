@@ -1544,7 +1544,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 								   ->limit(1)
 								   ->execute($v);
 
-					// Invalidate cache tags
+					// Invalidate cache tags (no need to invalidate the parent)
 					$this->invalidateCacheTags($this->getCacheTags($table, array($v)));
 				}
 			}
@@ -1753,7 +1753,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
 				// Invalidate cache tags
-				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id'])));
+				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id']), $this->ptable, $this->activeRecord->pid));
 			}
 		}
 
@@ -1877,7 +1877,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if (isset($legends[$k]))
 				{
 					list($key, $cls) = explode(':', $legends[$k]);
-					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . (isset($GLOBALS['TL_LANG'][$this->strTable][$key]) ? $GLOBALS['TL_LANG'][$this->strTable][$key] : $key) . '</legend>';
+					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
 				if (isset($fs[$this->strTable][$key]))
@@ -2139,9 +2139,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Show a warning if the record has been saved by another user (see #8412)
 			if ($intLatestVersion !== null && isset($_POST['VERSION_NUMBER']) && $intLatestVersion > \Input::post('VERSION_NUMBER'))
 			{
-				/** @var BackendTemplate|object $objTemplate */
 				$objTemplate = new \BackendTemplate('be_conflict');
-
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->theme = \Backend::getTheme();
@@ -2158,7 +2156,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags
-			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id)));
+			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id), $this->ptable, $this->activeRecord->pid));
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -3310,7 +3308,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$ids = array_map('\intval', $new_records[$this->strTable]);
 				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
-				// Invalidate cache tags
+				// Invalidate cache tags (no need to invalidate the parent)
 				$this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
 
 				if ($objStmt->affectedRows > 0)
@@ -3543,7 +3541,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '').((\Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
@@ -3753,8 +3751,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		static $session;
-
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
@@ -3865,7 +3861,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			elseif ($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'])
 			{
-				$args[$k] = ($objRow->$v != '') ? (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['label'][0]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['label'][0] : $v) : '';
+				$args[$k] = ($objRow->$v != '') ? ($GLOBALS['TL_DCA'][$table]['fields'][$v]['label'][0] ?? $v) : '';
 			}
 			else
 			{
@@ -4094,7 +4090,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_content_right">'.((\Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? '
 <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$objParent->id . (!$blnMultiboard ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>' : ((!$GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] && $this->User->canEditFieldsOf($this->ptable)) ? '
-<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(\Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.\StringUtil::specialchars(isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1]) ? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] : $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
+<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(\Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] ?? $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
 <a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]).'">'.$imagePasteNew.'</a>' : ''))) . '
 </div>';
 
@@ -4211,7 +4207,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 					else
 					{
-						$key = isset($GLOBALS['TL_LANG'][$this->ptable][$v][0]) ? $GLOBALS['TL_LANG'][$this->ptable][$v][0] : $v;
+						$key = $GLOBALS['TL_LANG'][$this->ptable][$v][0] ?? $v;
 					}
 
 					$add[$key] = $_v;

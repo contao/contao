@@ -18,8 +18,6 @@ class ClearFormDataListener
 {
     /**
      * Clear the Contao form data if not a POST request.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {

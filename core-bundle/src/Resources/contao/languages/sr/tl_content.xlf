@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.0">
         <source>Sort order</source>
-        <target>Начин сортирања</target>
+        <target>Редослед сортирања</target>
       </trans-unit>
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
@@ -275,7 +275,7 @@
       </trans-unit>
       <trans-unit id="tl_content.code.0">
         <source>Code</source>
-        <target>Кȏд</target>
+        <target>Код</target>
       </trans-unit>
       <trans-unit id="tl_content.code.1">
         <source>Note that the code will not be executed. Use F11 to toggle the fullscreen mode if you are using the code editor.</source>
@@ -310,8 +310,7 @@
         <target>Lightbox</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
-        <source>To trigger the lightbox, enter a &lt;em&gt;rel&lt;/em&gt; attribute here.</source>
-        <target>Да покренете lightbox, овде унесите атрибут &lt;em&gt;rel&lt;/em&gt;.</target>
+        <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -323,7 +322,7 @@
       </trans-unit>
       <trans-unit id="tl_content.multiSRC.0">
         <source>Source files</source>
-        <target>Изворни фајлови</target>
+        <target>Изворни фајл</target>
       </trans-unit>
       <trans-unit id="tl_content.multiSRC.1">
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
@@ -414,8 +413,7 @@
         <target>Vimeo ID</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
-        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;95674578&lt;/em&gt;).</source>
-        <target>Унесите ID Vimeo видео фајла  (нпр. &lt;em&gt;95674578&lt;/em&gt;).</target>
+        <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -433,37 +431,54 @@
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
         <target>Ширина и висина плејера у пикселима (нпр. 640х480).</target>
       </trans-unit>
-      <trans-unit id="tl_content.autoplay.0">
-        <source>Autoplay</source>
-        <target>Аутоматско покретање</target>
-      </trans-unit>
-      <trans-unit id="tl_content.autoplay.1">
-        <source>Automatically play the video when the page loads.</source>
-        <target>Аутоматски пусти видео када се страница учита.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.0">
+      <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
         <target>Опције плејера</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeOptions.1">
+      <trans-unit id="tl_content.playerOptions.1">
         <source>Here you can select the player options.</source>
         <target>Овде можете поставити опције плејера.</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.0">
+      <trans-unit id="tl_content.playerPreload.0">
+        <source>Preloading</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerPreload.1">
+        <source>Here you can suggest how the browser shall preload the video.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
         <target>Почни од</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStart.1">
+      <trans-unit id="tl_content.playerStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Поставите видео тако да почне да се емитује од одређене секунде. Поставите на 0 да онемогућите ову опцију.</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.0">
+      <trans-unit id="tl_content.playerStop.0">
         <source>Stop at</source>
         <target>Заустави на</target>
       </trans-unit>
-      <trans-unit id="tl_content.youtubeStop.1">
+      <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Зауставите видео на одређеној секунди. Поставите на 0 да онемогућите ову опцију.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.0">
+        <source>Caption</source>
+        <target>Заглавље</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.1">
+        <source>Here you can enter a caption.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.0">
+        <source>Aspect ratio</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.1">
+        <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.0">
+        <source>Controls color</source>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.1">
+        <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -547,7 +562,7 @@
       </trans-unit>
       <trans-unit id="tl_content.groups.0">
         <source>Allowed member groups</source>
-        <target>Дозвољене групе чланова</target>
+        <target>Дозвољене групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_content.groups.1">
         <source>These groups will be able to see the content element.</source>
@@ -571,7 +586,7 @@
       </trans-unit>
       <trans-unit id="tl_content.invisible.0">
         <source>Invisible</source>
-        <target>Скривен</target>
+        <target>Скривено</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible.1">
         <source>Hide the element on the website.</source>
@@ -638,12 +653,8 @@
         <target>Подешавања слике као линка</target>
       </trans-unit>
       <trans-unit id="tl_content.source_legend">
-        <source>Files and folders</source>
-        <target>Фајлови и фолдери</target>
-      </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
-        <source>Download settings</source>
-        <target>Подешавања преузимања</target>
+        <source>Source</source>
+        <target>Извор</target>
       </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
@@ -713,6 +724,38 @@
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>&lt;em&gt;%s&lt;/em&gt; или &lt;em&gt;%s&lt;/em&gt; шаблон мора бити придружен изгледу странице.</target>
       </trans-unit>
+      <trans-unit id="tl_content.player_autoplay">
+        <source>Autoplay</source>
+        <target>Аутоматско покретање</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_nocontrols">
+        <source>Hide the controls</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_loop">
+        <source>Play in a loop</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_muted">
+        <source>Mute the audio output</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_playsinline">
+        <source>Play inline (no fullscreen mode)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.auto">
+        <source>Auto (preload the entiry video)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.metadata">
+        <source>Metadata (preload the metadata only)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.none">
+        <source>None (do not preload anything)</source>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_autoplay">
+        <source>Autoplay</source>
+        <target>Аутоматско покретање</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_controls">
+        <source>Hide the controls</source>
+      </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
         <target>Прикажи титл као подразумевану опцију</target>
@@ -740,6 +783,25 @@
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
         <target>Сакриј горњу траку у прегледу</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_nocookie">
+        <source>Use the youtube-nocookie.com domain</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_autoplay">
+        <source>Autoplay</source>
+        <target>Аутоматско покретање</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_loop">
+        <source>Play in a loop</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_portrait">
+        <source>Hide the profile image</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_title">
+        <source>Hide the title</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_byline">
+        <source>Hide the author</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>
@@ -807,7 +869,7 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Add new at the top</source>
-        <target>Додај ново на врх</target>
+        <target>Додај нову на врх</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Add new after content element ID %s</source>

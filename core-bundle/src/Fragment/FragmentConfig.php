@@ -30,10 +30,6 @@ class FragmentConfig
     private $options;
 
     /**
-     * @param string $controller
-     * @param string $renderer
-     * @param array  $options
-     *
      * @see \Symfony\Component\HttpKernel\Fragment\FragmentHandler::render()
      */
     public function __construct(string $controller, string $renderer = 'forward', array $options = [])
@@ -43,23 +39,11 @@ class FragmentConfig
         $this->options = $options;
     }
 
-    /**
-     * Returns the controller.
-     *
-     * @return string
-     */
     public function getController(): string
     {
         return $this->controller;
     }
 
-    /**
-     * Sets the controller.
-     *
-     * @param string $controller
-     *
-     * @return FragmentConfig
-     */
     public function setController(string $controller): self
     {
         $this->controller = $controller;
@@ -67,23 +51,11 @@ class FragmentConfig
         return $this;
     }
 
-    /**
-     * Returns the renderer.
-     *
-     * @return string
-     */
     public function getRenderer(): string
     {
         return $this->renderer;
     }
 
-    /**
-     * Sets the renderer.
-     *
-     * @param string $renderer
-     *
-     * @return FragmentConfig
-     */
     public function setRenderer(string $renderer): self
     {
         $this->renderer = $renderer;
@@ -92,22 +64,13 @@ class FragmentConfig
     }
 
     /**
-     * Returns the options.
-     *
-     * @return array
+     * @return array<string,mixed>
      */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * Sets the options.
-     *
-     * @param array $options
-     *
-     * @return FragmentConfig
-     */
     public function setOptions(array $options): self
     {
         $this->options = $options;
@@ -115,26 +78,11 @@ class FragmentConfig
         return $this;
     }
 
-    /**
-     * Returns a single option.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
     public function getOption(string $name)
     {
         return $this->options[$name] ?? null;
     }
 
-    /**
-     * Sets a single option.
-     *
-     * @param string $name
-     * @param mixed  $option
-     *
-     * @return FragmentConfig
-     */
     public function setOption(string $name, $option): self
     {
         $this->options[$name] = $option;

@@ -32,8 +32,7 @@ interface ImageFactoryInterface
     /**
      * Returns the equivalent important part from a legacy resize mode.
      *
-     * @param ImageInterface $image
-     * @param string         $mode  One of left_top, center_top, right_top, left_center, center_center, right_center, left_bottom, center_bottom, right_bottom
+     * @param string $mode One of left_top, center_top, right_top, left_center, center_center, right_center, left_bottom, center_bottom, right_bottom
      *
      * @return ImportantPartInterface
      */

@@ -61,11 +61,6 @@ class InsecureInstallationListenerTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * Returns a request.
-     *
-     * @return Request
-     */
     private function getRequest(): Request
     {
         $request = new Request();
@@ -77,13 +72,6 @@ class InsecureInstallationListenerTest extends TestCase
         return $request;
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param Request|null $request
-     *
-     * @return GetResponseEvent
-     */
     private function mockResponseEvent(Request $request = null): GetResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

@@ -25,6 +25,7 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\Picture;
 use Contao\System;
 use Imagine\Gd\Imagine as ImagineGd;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -87,7 +88,7 @@ class PictureTest extends TestCase
             'path' => 'dummy.jpg',
         ];
 
-        /** @var File|\PHPUnit_Framework_MockObject_MockObject $fileMock */
+        /** @var File|MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -334,11 +335,6 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    /**
-     * Mocks a container with image services.
-     *
-     * @return ContainerBuilder
-     */
     private function mockContainerWithImageServices(): ContainerBuilder
     {
         $filesystem = new Filesystem();

@@ -18,6 +18,7 @@ use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -178,11 +179,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * Mocks a database connection.
-     *
-     * @param Statement $statement
-     *
-     * @return Connection|\PHPUnit_Framework_MockObject_MockObject
+     * @return Connection|MockObject
      */
     private function mockConnection(Statement $statement): Connection
     {

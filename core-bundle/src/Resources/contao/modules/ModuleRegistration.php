@@ -35,9 +35,7 @@ class ModuleRegistration extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -98,10 +96,7 @@ class ModuleRegistration extends Module
 
 		if ($this->memberTpl != '')
 		{
-			/** @var FrontendTemplate|object $objTemplate */
-			$objTemplate = new \FrontendTemplate($this->memberTpl);
-
-			$this->Template = $objTemplate;
+			$this->Template = new \FrontendTemplate($this->memberTpl);
 			$this->Template->setData($this->arrData);
 		}
 
@@ -518,10 +513,7 @@ class ModuleRegistration extends Module
 	{
 		$this->strTemplate = 'mod_message';
 
-		/** @var FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($this->strTemplate);
-
-		$this->Template = $objTemplate;
+		$this->Template = new \FrontendTemplate($this->strTemplate);
 
 		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
 
@@ -577,10 +569,7 @@ class ModuleRegistration extends Module
 
 		$this->strTemplate = 'mod_message';
 
-		/** @var FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($this->strTemplate);
-
-		$this->Template = $objTemplate;
+		$this->Template = new \FrontendTemplate($this->strTemplate);
 
 		$this->sendActivationMail($objMember->row());
 

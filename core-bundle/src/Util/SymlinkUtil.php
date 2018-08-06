@@ -21,10 +21,6 @@ class SymlinkUtil
      *
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
-     *
-     * @param string $target
-     * @param string $link
-     * @param string $rootDir
      */
     public static function symlink(string $target, string $link, string $rootDir): void
     {
@@ -49,10 +45,6 @@ class SymlinkUtil
 
     /**
      * Validates a symlink.
-     *
-     * @param string $target
-     * @param string $link
-     * @param string $rootDir
      *
      * @throws \InvalidArgumentException
      * @throws \LogicException

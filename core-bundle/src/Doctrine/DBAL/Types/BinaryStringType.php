@@ -39,8 +39,6 @@ class BinaryStringType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function getName(): string
     {

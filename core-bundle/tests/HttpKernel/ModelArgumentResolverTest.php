@@ -29,9 +29,6 @@ class ModelArgumentResolverTest extends TestCase
     }
 
     /**
-     * @param string $name
-     * @param string $class
-     *
      * @dataProvider getArguments
      */
     public function testResolvesTheModel(string $name, string $class): void
@@ -59,7 +56,7 @@ class ModelArgumentResolverTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function getArguments(): array
     {

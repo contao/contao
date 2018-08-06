@@ -331,6 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
         <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>Če ni uporabnik ni prijavljen, shrani v vrhnji mapi.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -418,6 +419,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
+        <target>Skrij polje na spletni strani.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
@@ -545,6 +547,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
+        <target>Uvozi možnosti iz datoteke CSV</target>
       </trans-unit>
     </body>
   </file>

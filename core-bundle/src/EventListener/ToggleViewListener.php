@@ -31,10 +31,6 @@ class ToggleViewListener
      */
     private $scopeMatcher;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
-     */
     public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->framework = $framework;
@@ -43,8 +39,6 @@ class ToggleViewListener
 
     /**
      * Toggles the TL_VIEW cookie and redirects back to the referring page.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -64,11 +58,6 @@ class ToggleViewListener
 
     /**
      * Generates the TL_VIEW cookie based on the toggle_view value.
-     *
-     * @param string $value
-     * @param string $basePath
-     *
-     * @return Cookie The cookie object
      */
     private function getCookie(string $value, string $basePath): Cookie
     {

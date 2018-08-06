@@ -26,11 +26,6 @@ class TranslationListenerTest extends TestCase
     }
 
     /**
-     * @param string      $id
-     * @param string      $result
-     * @param string|null $domain
-     * @param array       $parameters
-     *
      * @dataProvider insertTagsProvider
      */
     public function testReplacesInsertTagsWithTranslation(string $id, string $result, string $domain = null, array $parameters = []): void
@@ -57,7 +52,7 @@ class TranslationListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (string[]|string)[][]
      */
     public function insertTagsProvider(): array
     {

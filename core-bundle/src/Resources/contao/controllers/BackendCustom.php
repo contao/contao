@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Back end custom controller.
  *
- * @property BackendTemplate|object $Template
+ * @property BackendTemplate $Template
  *
  * @author Jim Schmid <https://github.com/sheeep>
  */
@@ -37,7 +37,7 @@ class BackendCustom extends BackendMain
 	/**
 	 * Return the template object
 	 *
-	 * @return BackendTemplate|object
+	 * @return BackendTemplate
 	 */
 	public function getTemplateObject()
 	{

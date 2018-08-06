@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
-        <target>Titulek</target>
+        <target>Název</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_module.headline.0">
         <source>Headline</source>
-        <target>Hlavička</target>
+        <target>Nadpis</target>
       </trans-unit>
       <trans-unit id="tl_module.headline.1">
         <source>Here you can add a headline to the module.</source>
-        <target>Pokud zadáte hlavičku, bude zobrazena nahoře modulu</target>
+        <target>Pokud zadáte nadpis, bude zobrazena nahoře modulu</target>
       </trans-unit>
       <trans-unit id="tl_module.type.0">
         <source>Module type</source>
@@ -136,14 +136,6 @@
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the user back to the last page visited instead of the redirect page.</source>
         <target>Přesměrovat uživatele na poslední navštívenou stránku místo na stránku určenou k přesměrování.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.0">
-        <source>Number of columns</source>
-        <target>Počet sloupců</target>
-      </trans-unit>
-      <trans-unit id="tl_module.cols.1">
-        <source>Please choose the number of columns of the form.</source>
-        <target>Zvolte prosím počet sloupců pro zobrazení formuláře v backendu.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -297,54 +289,6 @@
         <source>Automatically redirect to the first item if none is selected.</source>
         <target>Automaticky přesměrovat k prvnímu elementu, pokud není již vybraný nějaký jiný.</target>
       </trans-unit>
-      <trans-unit id="tl_module.size.0">
-        <source>Width and height</source>
-        <target>Šírka a výška</target>
-      </trans-unit>
-      <trans-unit id="tl_module.size.1">
-        <source>Please enter the width and height in pixel.</source>
-        <target>Zadejte prosím šířku a výšku v pixelech.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.0">
-        <source>Transparent movie</source>
-        <target>Průhlednost filmu</target>
-      </trans-unit>
-      <trans-unit id="tl_module.transparent.1">
-        <source>Make the Flash movie transparent (wmode = transparent).</source>
-        <target>nastavit míru průhlednosti flashového filmu (wmode = průhledný)</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.0">
-        <source>FlashVars</source>
-        <target>FlashVars</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashvars.1">
-        <source>Pass variables to the Flash movie (&lt;em&gt;var1=value1&amp;amp;var2=value2&lt;/em&gt;).</source>
-        <target>Předat flashi proměnlivé (&lt;em&gt;var1=value1&amp;var2=value2&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.0">
-        <source>Flash player version</source>
-        <target>Verze Flashového přehrávače</target>
-      </trans-unit>
-      <trans-unit id="tl_module.version.1">
-        <source>Please enter the required Flash player version (e.g. 6.0.12).</source>
-        <target>Zadejte prosím požadovanou verzi Flash player (např. 6.0.12).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.0">
-        <source>Alternate content</source>
-        <target>Alternativní obsah</target>
-      </trans-unit>
-      <trans-unit id="tl_module.altContent.1">
-        <source>The alternate content will be shown if the movie cannot be loaded. HTML tags are allowed.</source>
-        <target>Alternativní obsah se zobrazí místo flasha, pokud je flashový obsah zakázaný nebo pokud není nainstalované potřebné rozšíření.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.0">
-        <source>Source</source>
-        <target>Zdroj</target>
-      </trans-unit>
-      <trans-unit id="tl_module.source.1">
-        <source>Whether to use a file on the server or point to an external URL.</source>
-        <target>Použít soubor uložený na serveru nebo externí internetovou adresu.</target>
-      </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
         <target>Zdrojový soubor</target>
@@ -360,30 +304,6 @@
       <trans-unit id="tl_module.url.1">
         <source>Please enter the URL (http://…) of the Flash movie.</source>
         <target>Zadejte prosím internetovou adresu (http://...) daného flashového videa.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.0">
-        <source>Make interactive</source>
-        <target>Přidat interativní funkcionalitu</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interactive.1">
-        <source>Make the Flash movie interact with the browser (requires JavaScript).</source>
-        <target>Přidat snímku interaktivní funkcionalitu, kterou lze využít v prohlížeči (vyžaduje JavaScript).</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.0">
-        <source>Flash movie ID</source>
-        <target>Flashové video ID</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashID.1">
-        <source>Please enter a unique Flash movie ID.</source>
-        <target>Zadejte prosím jednoznačné ID flashového videa.</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.0">
-        <source>JavaScript _DoFSCommand(command, args) {</source>
-        <target>JavaScript _DoFSCommand(command, args) {</target>
-      </trans-unit>
-      <trans-unit id="tl_module.flashJS.1">
-        <source>Please enter the JavaScript code.</source>
-        <target>Zadejte prosím kód JavaScriptu.</target>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -610,12 +530,8 @@
         <target>Zahrnout nastavení</target>
       </trans-unit>
       <trans-unit id="tl_module.source_legend">
-        <source>Files and folders</source>
-        <target>Soubory a adresáře</target>
-      </trans-unit>
-      <trans-unit id="tl_module.interact_legend">
-        <source>Interactive Flash movie</source>
-        <target>Interaktivní flashová videa</target>
+        <source>Source</source>
+        <target>Zdroj</target>
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
@@ -644,9 +560,14 @@
       <trans-unit id="tl_module.emailText.1">
         <source>Thank you for your registration on ##domain##.
 
-Please click ##link## to complete your registration and to activate your account. If you did not request an account, please ignore this e-mail.
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
 </source>
-        <target>Děkujeme Vám za to, že jste se registrovali na naší ##domain## stránce. Pro dokončení registrace klikněte prosím na tento odkaz ##link##, aby se mohl zaktivovat Váš účet. Pokud tak nechcete učinit, ignorujte prosím tento mail.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -655,9 +576,12 @@ Please click ##link## to complete your registration and to activate your account
       <trans-unit id="tl_module.passwordText.1">
         <source>You have requested a new password for ##domain##.
 
-Please click ##link## to set the new password. If you did not request this e-mail, please contact the website administrator.
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
 </source>
-        <target>Požádali jste o zaslání nového hesla pro ##domain##. Pro odeslání nového hesla kliknětě prosím na následující odkaz ##link##. Nedostanete-li tento mail, obraťte se prosím na správce webu.</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

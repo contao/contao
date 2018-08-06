@@ -561,7 +561,7 @@ class tl_member extends Backend
 	/**
 	 * Store the date when the account has been added
 	 *
-	 * @param DataContainer $dc
+	 * @param DataContainer|FrontendUser $dc
 	 */
 	public function storeDateAdded($dc)
 	{
@@ -594,10 +594,16 @@ class tl_member extends Backend
 	/**
 	 * Remove the double opt-in token if an account is activated manually
 	 *
-	 * @param DataContainer $dc
+	 * @param DataContainer|FrontendUser $dc
 	 */
-	public function removeOptInToken(DataContainer $dc)
+	public function removeOptInToken($dc)
 	{
+		// Front end call
+		if (!$dc instanceof DataContainer)
+		{
+			return;
+		}
+
 		if ($dc->activeRecord && !$dc->activeRecord->disable && $dc->activeRecord->activation)
 		{
 			$this->Database->prepare("UPDATE tl_member SET activation='' WHERE id=?")

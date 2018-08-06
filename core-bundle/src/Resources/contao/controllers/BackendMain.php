@@ -36,7 +36,7 @@ class BackendMain extends Backend
 	protected $objAjax;
 
 	/**
-	 * @var BackendTemplate|object
+	 * @var BackendTemplate
 	 */
 	protected $Template;
 
@@ -167,7 +167,6 @@ class BackendMain extends Backend
 	{
 		\System::loadLanguageFile('explain');
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_welcome');
 		$objTemplate->messages = \Message::generateUnwrapped() . \Backend::getSystemMessages();
 		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];

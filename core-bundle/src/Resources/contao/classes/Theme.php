@@ -765,7 +765,7 @@ class Theme extends Backend
 	 *
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result|object        $objTheme
+	 * @param Result               $objTheme
 	 */
 	protected function addTableTlTheme(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
 	{
@@ -790,7 +790,7 @@ class Theme extends Backend
 	 *
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result|object        $objTheme
+	 * @param Result               $objTheme
 	 */
 	protected function addTableTlStyleSheet(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
 	{
@@ -850,7 +850,7 @@ class Theme extends Backend
 	 *
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result|object        $objTheme
+	 * @param Result               $objTheme
 	 */
 	protected function addTableTlModule(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
 	{
@@ -882,7 +882,7 @@ class Theme extends Backend
 	 *
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result|object        $objTheme
+	 * @param Result               $objTheme
 	 */
 	protected function addTableTlLayout(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
 	{
@@ -914,7 +914,7 @@ class Theme extends Backend
 	 *
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result|object        $objTheme
+	 * @param Result               $objTheme
 	 */
 	protected function addTableTlImageSize(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
 	{
@@ -952,7 +952,7 @@ class Theme extends Backend
 	 * Add the table tl_files to the XML and the files to the archive
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result|object        $objTheme
+	 * @param Result               $objTheme
 	 * @param ZipWriter            $objArchive
 	 */
 	protected function addTableTlFiles(\DOMDocument $xml, \DOMElement $tables, Result $objTheme, ZipWriter $objArchive)

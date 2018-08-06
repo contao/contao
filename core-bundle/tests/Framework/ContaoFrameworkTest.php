@@ -23,6 +23,7 @@ use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\RequestToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -479,14 +480,12 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @param string $route
-     *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      *
      * @dataProvider getInstallRoutes
      */
-    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool($route): void
+    public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
     {
         $request = new Request();
         $request->attributes->set('_route', $route);
@@ -520,7 +519,7 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,string[]>
      */
     public function getInstallRoutes(): array
     {
@@ -583,6 +582,8 @@ class ContaoFrameworkTest extends TestCase
     public function testCreatesAnObjectInstance(): void
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
+
+        /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
 
         $class = LegacyClass::class;
@@ -595,6 +596,8 @@ class ContaoFrameworkTest extends TestCase
     public function testCreateASingeltonObjectInstance(): void
     {
         $reflection = new \ReflectionClass(ContaoFramework::class);
+
+        /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
 
         $class = LegacySingletonClass::class;
@@ -609,6 +612,8 @@ class ContaoFrameworkTest extends TestCase
         $class = LegacyClass::class;
 
         $reflection = new \ReflectionClass(ContaoFramework::class);
+
+        /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
         $adapter = $framework->getAdapter($class);
 
@@ -736,11 +741,7 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Mocks a router.
-     *
-     * @param string $url
-     *
-     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RouterInterface|MockObject
      */
     private function mockRouter(string $url): RouterInterface
     {
@@ -755,11 +756,6 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * Mocks the Contao framework.
-     *
-     * @param RequestStack    $requestStack
-     * @param RouterInterface $router
-     *
-     * @return ContaoFramework
      */
     private function mockFramework(RequestStack $requestStack, RouterInterface $router): ContaoFramework
     {
@@ -784,13 +780,6 @@ class ContaoFrameworkTest extends TestCase
         return $framework;
     }
 
-    /**
-     * Mocks a config adapter.
-     *
-     * @param bool $complete
-     *
-     * @return Adapter
-     */
     private function mockConfigAdapter(bool $complete = true): Adapter
     {
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
@@ -813,13 +802,6 @@ class ContaoFrameworkTest extends TestCase
         return $config;
     }
 
-    /**
-     * Mocks a request token adapter.
-     *
-     * @param bool $valid
-     *
-     * @return Adapter
-     */
     private function mockRequestTokenAdapter(bool $valid = true): Adapter
     {
         $adapter = $this->mockAdapter(['get', 'validate']);

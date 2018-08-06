@@ -22,6 +22,7 @@ use Contao\FileUpload;
 use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -333,14 +334,6 @@ EOF;
         $this->assertSame(303, $response->getStatusCode());
     }
 
-    /**
-     * Mocks the Contao framework.
-     *
-     * @param array $files
-     * @param bool  $expectError
-     *
-     * @return ContaoFrameworkInterface
-     */
     private function mockFramework(array $files = [], bool $expectError = false): ContaoFrameworkInterface
     {
         $uploader = $this->createMock(FileUpload::class);
@@ -364,13 +357,6 @@ EOF;
         return $framework;
     }
 
-    /**
-     * Mocks a controller.
-     *
-     * @param Request|null $request
-     *
-     * @return BackendCsvImportController
-     */
     private function mockController(Request $request = null): BackendCsvImportController
     {
         $requestStack = new RequestStack();
@@ -394,9 +380,7 @@ EOF;
     }
 
     /**
-     * Mocks a data container.
-     *
-     * @return DataContainer|\PHPUnit_Framework_MockObject_MockObject
+     * @return DataContainer|MockObject
      */
     private function mockDataContainer(): DataContainer
     {

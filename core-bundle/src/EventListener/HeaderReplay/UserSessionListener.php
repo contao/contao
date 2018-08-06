@@ -30,10 +30,6 @@ class UserSessionListener
      */
     private $tokenChecker;
 
-    /**
-     * @param ScopeMatcher $scopeMatcher
-     * @param TokenChecker $tokenChecker
-     */
     public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker)
     {
         $this->scopeMatcher = $scopeMatcher;
@@ -43,8 +39,6 @@ class UserSessionListener
     /**
      * Sets the "force no cache" header on the replay response to disable reverse
      * proxy caching if a user is logged in (front end preview mode).
-     *
-     * @param HeaderReplayEvent $event
      */
     public function onReplay(HeaderReplayEvent $event): void
     {
@@ -57,13 +51,6 @@ class UserSessionListener
         $event->getHeaders()->set(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME, 'true');
     }
 
-    /**
-     * Checks if there is a Contao user.
-     *
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function hasContaoUser(Request $request): bool
     {
         if (!$request->hasSession()) {

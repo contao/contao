@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
-        <target>Шаблони</target>
+        <target>Шаблони - Templates</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Edit templates in the back end</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
-        <target>Корисничке групе</target>
+        <target>Групе корисника</target>
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end user groups)</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.0">
         <source>File manager</source>
-        <target>Управљање фајловима</target>
+        <target>Менаџер фајлова - File manager</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders or upload new files to the server</source>
@@ -120,6 +120,12 @@
       <trans-unit id="MOD.maintenance.1">
         <source>Maintain or update Contao</source>
         <target>Одржавање или ажурирање Contao система</target>
+      </trans-unit>
+      <trans-unit id="MOD.two-factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MOD.two-factor.1">
+        <source>Configure two-factor authentication</source>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
@@ -327,7 +333,7 @@
       </trans-unit>
       <trans-unit id="FMD.form.0">
         <source>Form</source>
-        <target>Форме и формулари</target>
+        <target>Формулар</target>
       </trans-unit>
       <trans-unit id="FMD.form.1">
         <source>Adds a form to the page</source>
@@ -352,14 +358,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>Разно</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Flash видео</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>Уметање flash видео фајла у страницу</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

@@ -36,10 +36,6 @@ class ValidCharacters
      */
     private $translator;
 
-    /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param TranslatorInterface      $translator
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -49,7 +45,7 @@ class ValidCharacters
     /**
      * Returns the options for the valid characters setting suitable for widgets.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function getOptions(): array
     {

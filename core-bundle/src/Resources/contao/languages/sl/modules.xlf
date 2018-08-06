@@ -121,6 +121,12 @@
         <source>Maintain or update Contao</source>
         <target>Modul vam omogoča vzdrževanje vaše TYPOlight instalacije.</target>
       </trans-unit>
+      <trans-unit id="MOD.two-factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MOD.two-factor.1">
+        <source>Configure two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
         <target>Razveljavi</target>
@@ -131,6 +137,7 @@
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
+        <target>Uporabniški profil</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
@@ -348,14 +355,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>Razno</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Flash datoteka</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>Vstavi Flash film v spletno stran.</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

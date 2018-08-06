@@ -49,29 +49,6 @@ class InstallCommand extends AbstractLockedCommand
     private $webDir;
 
     /**
-     * @var array
-     */
-    private static $emptyDirs = [
-        'system',
-        'system/config',
-        'templates',
-        '%s/system',
-    ];
-
-    /**
-     * @var array
-     */
-    private static $ignoredDirs = [
-        'assets/css',
-        'assets/js',
-        'system/cache',
-        'system/modules',
-        'system/themes',
-        'system/tmp',
-        '%s/share',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     protected function configure(): void
@@ -106,23 +83,22 @@ class InstallCommand extends AbstractLockedCommand
         return 0;
     }
 
-    /**
-     * Adds the empty directories.
-     */
     private function addEmptyDirs(): void
     {
-        foreach (self::$emptyDirs as $path) {
+        static $emptyDirs = [
+            'system',
+            'system/config',
+            'templates',
+            '%s/system',
+        ];
+
+        foreach ($emptyDirs as $path) {
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addEmptyDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.upload_path'));
     }
 
-    /**
-     * Adds an empty directory.
-     *
-     * @param string $path
-     */
     private function addEmptyDir(string $path): void
     {
         if ($this->fs->exists($path)) {
@@ -134,23 +110,25 @@ class InstallCommand extends AbstractLockedCommand
         $this->rows[] = str_replace($this->rootDir.'/', '', $path);
     }
 
-    /**
-     * Adds the ignored directories.
-     */
     private function addIgnoredDirs(): void
     {
-        foreach (self::$ignoredDirs as $path) {
+        static $ignoredDirs = [
+            'assets/css',
+            'assets/js',
+            'system/cache',
+            'system/modules',
+            'system/themes',
+            'system/tmp',
+            '%s/share',
+        ];
+
+        foreach ($ignoredDirs as $path) {
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addIgnoredDir($this->getContainer()->getParameter('contao.image.target_dir'));
     }
 
-    /**
-     * Adds a directory with a .gitignore file.
-     *
-     * @param string $path
-     */
     private function addIgnoredDir(string $path): void
     {
         $this->addEmptyDir($path);

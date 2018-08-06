@@ -21,12 +21,6 @@ class LockedException extends BaseLockedException
      */
     private $lockedSeconds;
 
-    /**
-     * @param int             $lockedSeconds
-     * @param string          $message
-     * @param int             $code
-     * @param \Throwable|null $previous
-     */
     public function __construct(int $lockedSeconds, string $message = '', int $code = 0, \Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
@@ -34,21 +28,11 @@ class LockedException extends BaseLockedException
         $this->lockedSeconds = $lockedSeconds;
     }
 
-    /**
-     * Gets the number of seconds of locking.
-     *
-     * @return int
-     */
     public function getLockedSeconds(): int
     {
         return $this->lockedSeconds;
     }
 
-    /**
-     * Gets the number of minutes of locking.
-     *
-     * @return int
-     */
     public function getLockedMinutes(): int
     {
         return (int) ceil($this->lockedSeconds / 60);

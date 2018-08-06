@@ -61,7 +61,6 @@ class BackendPage extends Backend
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_picker');
 		$objTemplate->main = '';
 

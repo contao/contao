@@ -35,9 +35,6 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     private $framework;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -81,12 +78,6 @@ class AutomatorCommand extends AbstractLockedCommand
         return 0;
     }
 
-    /**
-     * Runs the Automator.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
     private function runAutomator(InputInterface $input, OutputInterface $output): void
     {
         $task = $this->getTaskFromInput($input, $output);
@@ -96,9 +87,7 @@ class AutomatorCommand extends AbstractLockedCommand
     }
 
     /**
-     * Returns a list of available commands.
-     *
-     * @return array
+     * @return string[]
      */
     private function getCommands(): array
     {
@@ -110,9 +99,7 @@ class AutomatorCommand extends AbstractLockedCommand
     }
 
     /**
-     * Generates the command map from the Automator class.
-     *
-     * @return array
+     * @return string[]
      */
     private function generateCommandMap(): array
     {
@@ -135,11 +122,6 @@ class AutomatorCommand extends AbstractLockedCommand
 
     /**
      * Returns the task name from the argument list or via an interactive dialog.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return string
      */
     private function getTaskFromInput(InputInterface $input, OutputInterface $output): string
     {

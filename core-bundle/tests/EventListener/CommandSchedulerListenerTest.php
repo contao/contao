@@ -21,6 +21,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -217,9 +218,7 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Mocks a database connection.
-     *
-     * @return Connection|\PHPUnit_Framework_MockObject_MockObject
+     * @return Connection|MockObject
      */
     private function mockConnection()
     {
@@ -243,14 +242,7 @@ class CommandSchedulerListenerTest extends TestCase
         return $connection;
     }
 
-    /**
-     * Mocks a post response event.
-     *
-     * @param string|null $route
-     *
-     * @return PostResponseEvent
-     */
-    private function mockPostResponseEvent($route = null): PostResponseEvent
+    private function mockPostResponseEvent(string $route = null): PostResponseEvent
     {
         $request = new Request();
 

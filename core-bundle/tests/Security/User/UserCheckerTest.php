@@ -116,7 +116,7 @@ class UserCheckerTest extends TestCase
         $user->locked = 0;
         $user->disable = '';
         $user->login = '1';
-        $user->start = $time;
+        $user->start = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
         $message = sprintf('The account is not active yet (activation date: %s)', date('Y-m-d', $time));
@@ -137,7 +137,7 @@ class UserCheckerTest extends TestCase
         $user->disable = '';
         $user->login = '1';
         $user->start = '';
-        $user->stop = $time;
+        $user->stop = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
         $message = sprintf('The account is not active anymore (deactivation date: %s)', date('Y-m-d', $time));

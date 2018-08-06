@@ -290,12 +290,9 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * @param string $mode
-     * @param array  $expected
-     *
      * @dataProvider getCreateWithLegacyMode
      */
-    public function testCreatesAnImageObjectFromAnImagePathInLegacyMode($mode, array $expected): void
+    public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = $this->getFixturesDir().'/images/none.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
@@ -372,12 +369,9 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * @param string $mode
-     * @param string $expected
-     *
      * @dataProvider getCreateWithLegacyMode
      */
-    public function testReturnsTheImportantPartFromALegacyMode($mode, $expected): void
+    public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
         $dimensionsMock = $this->createMock(ImageDimensionsInterface::class);
         $dimensionsMock
@@ -400,7 +394,7 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(string|int[])[]>
      */
     public function getCreateWithLegacyMode(): array
     {
@@ -516,11 +510,6 @@ class ImageFactoryTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @param ContaoImage $imageObj
-     *
-     * @return string
-     */
     public static function executeResizeHookCallback(ContaoImage $imageObj): string
     {
         // Do not include $cacheName as it is dynamic (mtime)
@@ -603,18 +592,6 @@ class ImageFactoryTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @param string      $originalPath
-     * @param int         $targetWidth
-     * @param int         $targetHeight
-     * @param string      $resizeMode
-     * @param string      $cacheName
-     * @param File        $fileObj
-     * @param string      $targetPath
-     * @param ContaoImage $imageObj
-     *
-     * @return string
-     */
     public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, File $fileObj, string $targetPath, ContaoImage $imageObj): string
     {
         // Do not include $cacheName as it is dynamic (mtime)
@@ -688,17 +665,6 @@ class ImageFactoryTest extends TestCase
 
     /**
      * Mocks an image factory.
-     *
-     * @param ResizerInterface|null         $resizer
-     * @param ImagineInterface|null         $imagine
-     * @param ImagineInterface|null         $imagineSvg
-     * @param Filesystem|null               $filesystem
-     * @param ContaoFrameworkInterface|null $framework
-     * @param bool                          $bypassCache
-     * @param array                         $imagineOptions
-     * @param array|null                    $validExtensions
-     *
-     * @return ImageFactory
      */
     private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
     {
@@ -749,10 +715,6 @@ class ImageFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @param ImageInterface $imageA
-     * @param ImageInterface $imageB
-     */
     private function assertSameImage(ImageInterface $imageA, ImageInterface $imageB): void
     {
         $this->assertSame($imageA->getDimensions(), $imageB->getDimensions());
@@ -762,10 +724,6 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageA->getUrl($this->getFixturesDir()), $imageB->getUrl($this->getFixturesDir()));
     }
 
-    /**
-     * @param ImportantPartInterface $partA
-     * @param ImportantPartInterface $partB
-     */
     private function assertSameImportantPart(ImportantPartInterface $partA, ImportantPartInterface $partB): void
     {
         $this->assertSame($partA->getPosition()->getX(), $partB->getPosition()->getX());

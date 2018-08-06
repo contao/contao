@@ -40,12 +40,6 @@ class Configuration implements ConfigurationInterface
      */
     private $defaultLocale;
 
-    /**
-     * @param bool   $debug
-     * @param string $projectDir
-     * @param string $rootDir
-     * @param string $defaultLocale
-     */
     public function __construct(bool $debug, string $projectDir, string $rootDir, string $defaultLocale)
     {
         $this->debug = $debug;
@@ -54,11 +48,6 @@ class Configuration implements ConfigurationInterface
         $this->defaultLocale = $defaultLocale;
     }
 
-    /**
-     * Generates the configuration tree builder.
-     *
-     * @return TreeBuilder
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
@@ -185,10 +174,6 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Canonicalizes a path preserving the directory separators.
-     *
-     * @param string $value
-     *
-     * @return string
      */
     private function canonicalize(string $value): string
     {
@@ -227,9 +212,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Returns the Contao locales.
-     *
-     * @return array
+     * @return string[]
      */
     private function getLocales(): array
     {

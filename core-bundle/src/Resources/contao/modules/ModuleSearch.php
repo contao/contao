@@ -36,9 +36,7 @@ class ModuleSearch extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -233,7 +231,7 @@ class ModuleSearch extends Module
 			if ($this->perPage > 0)
 			{
 				$id = 'page_s' . $this->id;
-				$page = (\Input::get($id) !== null) ? \Input::get($id) : 1;
+				$page = \Input::get($id) ?? 1;
 				$per_page = \Input::get('per_page') ?: $this->perPage;
 
 				// Do not index or cache the page if the page number is outside the range
@@ -258,10 +256,8 @@ class ModuleSearch extends Module
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				/** @var FrontendTemplate|object $objTemplate */
 				$objTemplate = new \FrontendTemplate($this->searchTpl);
 				$objTemplate->setData($arrResult[$i]);
-
 				$objTemplate->href = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->url = \StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
@@ -277,7 +273,7 @@ class ModuleSearch extends Module
 				foreach ($arrMatches as $strWord)
 				{
 					$arrChunks = array();
-					preg_match_all('/(^|\b.{0,'.$this->contextLength.'}\PL)' . str_replace('+', '\\+', $strWord) . '(\PL.{0,'.$this->contextLength.'}\b|$)/ui', $strText, $arrChunks);
+					preg_match_all('/(^|\b.{0,'.$this->contextLength.'}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,'.$this->contextLength.'}\b|$)/ui', $strText, $arrChunks);
 
 					foreach ($arrChunks[0] as $strContext)
 					{
@@ -289,7 +285,7 @@ class ModuleSearch extends Module
 				if (!empty($arrContext))
 				{
 					$objTemplate->context = trim(\StringUtil::substrHtml(implode('…', $arrContext), $this->totalLength));
-					$objTemplate->context = preg_replace('/(?<=^|\PL)(' . implode('|', $arrMatches) . ')(?=\PL|$)/ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
+					$objTemplate->context = preg_replace('/(?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$)/ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
 				}

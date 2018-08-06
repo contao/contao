@@ -1,5 +1,17 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/oneup/phpstan-contao/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+
 parameters:
-    bootstrap: %currentWorkingDirectory%/tests/bootstrap.php
+    bootstrap: %currentWorkingDirectory%/vendor/autoload.php
+
+    contao:
+        services_yml_path: %currentWorkingDirectory%/src/Resources/config/services.yml
+
+    symfony:
+        container_xml_path: %currentWorkingDirectory%/vendor/oneup/phpstan-contao/var/cache/dev/appDevPHPStanProjectContainer.xml
 
     excludes_analyse:
         - %currentWorkingDirectory%/src/Resources/*
@@ -23,5 +35,11 @@ parameters:
         - '#Class Symfony\\Bundle\\MonologBundle\\MonologBundle not found\.#'
         - '#Class Nelmio\\SecurityBundle\\NelmioSecurityBundle not found\.#'
         - '#Class Contao\\ManagerBundle\\ContaoManagerBundle not found\.#'
+
+        # Ignore Symfony Configuration errors
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
+
+        # Ignore missing method test
+        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
 
     reportUnmatchedIgnoredErrors: false

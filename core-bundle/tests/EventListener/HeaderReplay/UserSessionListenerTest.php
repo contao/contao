@@ -32,8 +32,6 @@ class UserSessionListenerTest extends TestCase
 
     /**
      * @dataProvider getForceNoCacheHeaderData
-     *
-     * @param string $method
      */
     public function testAddsTheForceNoCacheHeader(string $method): void
     {
@@ -61,7 +59,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function getForceNoCacheHeaderData(): array
     {

@@ -59,13 +59,6 @@ class BackendCsvImportController
      */
     private $projectDir;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param Connection               $connection
-     * @param RequestStack             $requestStack
-     * @param TranslatorInterface      $translator
-     * @param string                   $projectDir
-     */
     public function __construct(ContaoFrameworkInterface $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
         $this->framework = $framework;
@@ -75,13 +68,6 @@ class BackendCsvImportController
         $this->projectDir = $projectDir;
     }
 
-    /**
-     * Imports CSV data in the list wizard.
-     *
-     * @param DataContainer $dc
-     *
-     * @return Response
-     */
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
@@ -96,13 +82,6 @@ class BackendCsvImportController
         );
     }
 
-    /**
-     * Imports CSV data in the table wizard.
-     *
-     * @param DataContainer $dc
-     *
-     * @return Response
-     */
     public function importTableWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
@@ -118,13 +97,6 @@ class BackendCsvImportController
         );
     }
 
-    /**
-     * Imports CSV data in the options wizard.
-     *
-     * @param DataContainer $dc
-     *
-     * @return Response
-     */
     public function importOptionWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
@@ -146,20 +118,9 @@ class BackendCsvImportController
     }
 
     /**
-     * Runs the default import routine with a Contao template.
-     *
-     * @param callable    $callback
-     * @param string      $table
-     * @param string      $field
-     * @param int         $id
-     * @param string|null $submitLabel
-     * @param bool        $allowLinebreak
-     *
      * @throws InternalServerErrorException
-     *
-     * @return Response
      */
-    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, $allowLinebreak = false): Response
+    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -179,7 +140,7 @@ class BackendCsvImportController
 
         if ($request->request->get('FORM_SUBMIT') === $this->getFormId($request)) {
             try {
-                $data = $this->fetchData($uploader, $request->request->get('separator'), $callback);
+                $data = $this->fetchData($uploader, $request->request->get('separator', ''), $callback);
             } catch (\RuntimeException $e) {
                 /** @var Message $message */
                 $message = $this->framework->getAdapter(Message::class);
@@ -203,18 +164,8 @@ class BackendCsvImportController
         return new Response($template->parse());
     }
 
-    /**
-     * Creates the CSV import template.
-     *
-     * @param Request    $request
-     * @param FileUpload $uploader
-     * @param bool       $allowLinebreak
-     *
-     * @return BackendTemplate|object
-     */
     private function prepareTemplate(Request $request, FileUpload $uploader, bool $allowLinebreak = false): BackendTemplate
     {
-        /** @var BackendTemplate|object $template */
         $template = new BackendTemplate('be_csv_import');
 
         /** @var Config $config */
@@ -238,15 +189,11 @@ class BackendCsvImportController
     }
 
     /**
-     * Returns an array of data from imported CSV files.
+     * Returns an array of data from the imported CSV files.
      *
-     * @param FileUpload $uploader
-     * @param string     $separator
-     * @param callable   $callback
-     *
-     * @return array
+     * @return string[]
      */
-    private function fetchData(FileUpload $uploader, $separator, callable $callback): array
+    private function fetchData(FileUpload $uploader, string $separator, callable $callback): array
     {
         $data = [];
         $files = $this->getFiles($uploader);
@@ -263,38 +210,20 @@ class BackendCsvImportController
         return $data;
     }
 
-    /**
-     * Returns the form ID for the template.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
     private function getFormId(Request $request): string
     {
         return 'tl_csv_import_'.$request->query->get('key');
     }
 
-    /**
-     * Returns the back button and redirect URL.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
     private function getBackUrl(Request $request): string
     {
         return str_replace('&key='.$request->query->get('key'), '', $request->getRequestUri());
     }
 
     /**
-     * Returns an array of separators for the template.
-     *
-     * @param bool $allowLinebreak
-     *
-     * @return array<string,array>
+     * @return array<string,array<string,string>>
      */
-    private function getSeparators($allowLinebreak = false): array
+    private function getSeparators(bool $allowLinebreak = false): array
     {
         $separators = [
             self::SEPARATOR_COMMA => [
@@ -326,15 +255,9 @@ class BackendCsvImportController
     }
 
     /**
-     * Converts a separator name/constant into a delimiter character.
-     *
-     * @param string $separator
-     *
      * @throws \RuntimeException
-     *
-     * @return string
      */
-    private function getDelimiter($separator): string
+    private function getDelimiter(string $separator): string
     {
         $separators = $this->getSeparators(true);
 
@@ -348,11 +271,9 @@ class BackendCsvImportController
     /**
      * Returns the uploaded files from a FileUpload instance.
      *
-     * @param FileUpload $uploader
-     *
      * @throws \RuntimeException
      *
-     * @return array
+     * @return string[]
      */
     private function getFiles(FileUpload $uploader): array
     {

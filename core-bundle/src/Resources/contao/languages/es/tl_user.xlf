@@ -333,6 +333,9 @@
         <source>Default uploader</source>
         <target>Cargador de archivos por defecto</target>
       </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>
         <target>Nuevo usuario</target>

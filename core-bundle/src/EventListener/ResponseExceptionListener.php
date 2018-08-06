@@ -19,8 +19,6 @@ class ResponseExceptionListener
 {
     /**
      * Sets the response from the exception.
-     *
-     * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {

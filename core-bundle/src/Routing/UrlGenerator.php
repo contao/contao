@@ -35,11 +35,6 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private $prependLocale;
 
-    /**
-     * @param UrlGeneratorInterface    $router
-     * @param ContaoFrameworkInterface $framework
-     * @param bool                     $prependLocale
-     */
     public function __construct(UrlGeneratorInterface $router, ContaoFrameworkInterface $framework, bool $prependLocale)
     {
         $this->router = $router;
@@ -64,13 +59,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * Generates a Contao URL.
-     *
-     * @param string $name
-     * @param array  $parameters
-     * @param int    $referenceType
-     *
-     * @return string|null
+     * {@inheritdoc}
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
     {
@@ -111,8 +100,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Removes the locale parameter if it is disabled.
-     *
-     * @param array $parameters
      */
     private function prepareLocale(array &$parameters): void
     {
@@ -123,9 +110,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Adds the parameters to the alias.
-     *
-     * @param string $alias
-     * @param array  $parameters
      *
      * @throws MissingMandatoryParametersException
      */
@@ -169,10 +153,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Forces the router to add the host if necessary.
-     *
-     * @param RequestContext $context
-     * @param array          $parameters
-     * @param int            $referenceType
      */
     private function prepareDomain(RequestContext $context, array &$parameters, int &$referenceType): void
     {
@@ -189,10 +169,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Sets the context from the domain.
-     *
-     * @param RequestContext $context
-     * @param array          $parameters
-     * @param int            $referenceType
      */
     private function addHostToContext(RequestContext $context, array $parameters, int &$referenceType): void
     {
@@ -219,9 +195,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Extracts host and port from the domain.
      *
-     * @param string $domain
-     *
-     * @return array
+     * @return (string|null)[]
      */
     private function getHostAndPort(string $domain): array
     {
@@ -235,9 +209,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Returns the auto_item key from the parameters or the global array.
      *
-     * @param array $parameters
-     *
-     * @return array
+     * @return string[]
      */
     private function getAutoItems(array $parameters): array
     {

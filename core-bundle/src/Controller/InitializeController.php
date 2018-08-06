@@ -29,8 +29,6 @@ class InitializeController extends Controller
      *
      * @throws \RuntimeException
      *
-     * @return InitializeControllerResponse
-     *
      * @Route("/_contao/initialize", name="contao_initialize")
      */
     public function indexAction(): InitializeControllerResponse

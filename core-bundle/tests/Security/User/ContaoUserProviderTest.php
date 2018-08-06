@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
@@ -63,7 +64,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testRefreshesTheUser(): void
     {
-        /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var UserInterface|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
         $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
@@ -75,7 +76,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testValidatesTheSessionLifetime(): void
     {
-        /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var UserInterface|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
 
@@ -127,7 +128,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testLogsOutUsersWhoHaveBeenInactiveForTooLong(): void
     {
-        /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var UserInterface|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
 
@@ -215,7 +216,7 @@ class ContaoUserProviderTest extends TestCase
      */
     public function testTriggersThePostAuthenticateHook(): void
     {
-        /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var UserInterface|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
 
         $listener = $this->createPartialMock(Controller::class, ['onPostAuthenticate']);
@@ -254,11 +255,6 @@ class ContaoUserProviderTest extends TestCase
 
     /**
      * Mocks a user provider.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     * @param string                        $userClass
-     *
-     * @return ContaoUserProvider
      */
     private function mockUserProvider(ContaoFrameworkInterface $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {

@@ -18,10 +18,6 @@ class ContentElementReference extends FragmentReference
 {
     public const TAG_NAME = 'contao.content_element';
 
-    /**
-     * @param ContentModel $model
-     * @param string       $section
-     */
     public function __construct(ContentModel $model, string $section = 'main')
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);

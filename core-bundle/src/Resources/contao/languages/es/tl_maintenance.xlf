@@ -29,14 +29,6 @@
         <source>Maintenance mode</source>
         <target>Modo mantenimiento</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceEnable">
-        <source>Enable</source>
-        <target>Habilitar</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceDisable">
-        <source>Disable</source>
-        <target>Desactivado</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Eliminar datos de sesión</target>

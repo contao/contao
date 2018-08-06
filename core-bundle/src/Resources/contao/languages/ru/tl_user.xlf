@@ -333,6 +333,10 @@
         <source>Default uploader</source>
         <target>Загрузчик файлов по умолчанию</target>
       </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>Использовать двухфакторную авторизацию</target>
+      </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>
         <target>Новый пользователь</target>

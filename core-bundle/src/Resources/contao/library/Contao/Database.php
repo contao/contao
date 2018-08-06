@@ -185,7 +185,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Result|object The Result object
+	 * @return Result The Result object
 	 */
 	public function execute($strQuery)
 	{
@@ -197,7 +197,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Result|object The Result object
+	 * @return Result The Result object
 	 */
 	public function query($strQuery)
 	{
@@ -719,7 +719,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Result|object The Result object
+	 * @return Result The Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.
@@ -736,7 +736,7 @@ class Database
 	 *
 	 * @param string $strQuery The query string
 	 *
-	 * @return Result|object The Result object
+	 * @return Result The Result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Database::execute() instead.

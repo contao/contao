@@ -26,31 +26,18 @@ class CsrfTokenCookieListener
     private $tokenStorage;
 
     /**
-     * @var int
-     */
-    private $cookieLifetime;
-
-    /**
      * @var string
      */
     private $cookiePrefix;
 
-    /**
-     * @param MemoryTokenStorage $tokenStorage
-     * @param int                $cookieLifetime
-     * @param string             $cookiePrefix
-     */
-    public function __construct(MemoryTokenStorage $tokenStorage, int $cookieLifetime = 86400, string $cookiePrefix = 'csrf_')
+    public function __construct(MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
     {
         $this->tokenStorage = $tokenStorage;
-        $this->cookieLifetime = $cookieLifetime;
         $this->cookiePrefix = $cookiePrefix;
     }
 
     /**
      * Reads the cookies from the request and injects them into the storage.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -63,8 +50,6 @@ class CsrfTokenCookieListener
 
     /**
      * Adds the token cookies to the response.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
@@ -74,33 +59,27 @@ class CsrfTokenCookieListener
 
         $request = $event->getRequest();
         $response = $event->getResponse();
-        $cookieLifetime = $this->cookieLifetime ? $this->cookieLifetime + time() : 0;
         $isSecure = $request->isSecure();
         $basePath = $request->getBasePath() ?: '/';
 
         foreach ($this->tokenStorage->getUsedTokens() as $key => $value) {
+            $cookieKey = $this->cookiePrefix.$key;
+
+            // The cookie already exists
+            if ($request->cookies->has($cookieKey) && $value === $request->cookies->get($cookieKey)) {
+                continue;
+            }
+
+            $expires = null === $value ? 1 : 0;
+
             $response->headers->setCookie(
-                new Cookie(
-                    $this->cookiePrefix.$key,
-                    $value,
-                    null === $value ? 1 : $cookieLifetime,
-                    $basePath,
-                    null,
-                    $isSecure,
-                    true,
-                    false,
-                    Cookie::SAMESITE_LAX
-                )
+                new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX)
             );
         }
     }
 
     /**
-     * Returns the tokens from the cookies.
-     *
-     * @param ParameterBag $cookies
-     *
-     * @return array
+     * @return array<string,string>
      */
     private function getTokensFromCookies(ParameterBag $cookies): array
     {

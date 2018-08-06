@@ -16,12 +16,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class InternalServerErrorHttpException extends HttpException
 {
-    /**
-     * @param string|null     $message
-     * @param \Exception|null $previous
-     * @param int             $code
-     */
-    public function __construct(string $message = null, \Exception $previous = null, $code = 0)
+    public function __construct(string $message = null, \Exception $previous = null, int $code = 0)
     {
         parent::__construct(500, $message, $previous, [], $code);
     }

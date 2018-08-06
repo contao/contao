@@ -27,11 +27,6 @@ trait UserAwareTrait
      */
     protected $tokenStorage;
 
-    /**
-     * Sets the token storage object.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {
         $this->tokenStorage = $tokenStorage;
@@ -39,8 +34,6 @@ trait UserAwareTrait
 
     /**
      * Checks if there is an authenticated user.
-     *
-     * @return bool
      */
     protected function hasUser(): bool
     {

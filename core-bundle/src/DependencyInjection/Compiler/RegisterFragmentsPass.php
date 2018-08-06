@@ -37,8 +37,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     /**
      * Adds the fragments to the registry.
-     *
-     * @param ContainerBuilder $container
      */
     public function process(ContainerBuilder $container): void
     {
@@ -51,11 +49,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
     }
 
     /**
-     * Registers the fragments.
-     *
-     * @param ContainerBuilder $container
-     * @param string           $tag
-     *
      * @throws InvalidConfigurationException
      */
     protected function registerFragments(ContainerBuilder $container, string $tag): void
@@ -90,15 +83,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addPreHandlers($container, $preHandlers);
     }
 
-    /**
-     * Returns the fragment configuration.
-     *
-     * @param ContainerBuilder $container
-     * @param Reference        $reference
-     * @param array            $attributes
-     *
-     * @return Reference
-     */
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
     {
         $definition = new Definition(
@@ -118,11 +102,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     /**
      * Returns the controller name from the service and method name.
-     *
-     * @param Reference $reference
-     * @param array     $attributes
-     *
-     * @return string
      */
     protected function getControllerName(Reference $reference, array $attributes): string
     {
@@ -137,11 +116,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
     }
 
     /**
-     * Adds additional factories to the pre_handlers service locator.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $handlers
-     *
      * @throws \RuntimeException
      */
     protected function addPreHandlers(ContainerBuilder $container, array $handlers): void
@@ -154,14 +128,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $definition->setArgument(0, array_merge($definition->getArgument(0), $handlers));
     }
 
-    /**
-     * Returns the fragment type.
-     *
-     * @param Definition $definition
-     * @param array      $attributes
-     *
-     * @return string
-     */
     protected function getFragmentType(Definition $definition, array $attributes): string
     {
         if (isset($attributes['type'])) {

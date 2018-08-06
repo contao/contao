@@ -27,12 +27,12 @@ use Symfony\Component\VarDumper\VarDumper;
  *     $template->name = 'Leo Feyer';
  *     $template->output();
  *
- * @property string $style
- * @property array  $cssID
- * @property string $class
- * @property string $inColumn
- * @property string $headline
- * @property array  $hl
+ * @property string       $style
+ * @property array|string $cssID
+ * @property string       $class
+ * @property string       $inColumn
+ * @property string       $headline
+ * @property array        $hl
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

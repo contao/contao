@@ -29,10 +29,6 @@ class XliffFileLoader extends Loader
      */
     private $addToGlobals;
 
-    /**
-     * @param string $rootDir
-     * @param bool   $addToGlobals
-     */
     public function __construct(string $rootDir, bool $addToGlobals = false)
     {
         $this->rootDir = $rootDir;
@@ -40,12 +36,7 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Reads the contents of a XLIFF file and returns the PHP code.
-     *
-     * @param mixed       $file
-     * @param string|null $type
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function load($file, $type = null): string
     {
@@ -60,14 +51,6 @@ class XliffFileLoader extends Loader
         return 'xlf' === pathinfo((string) $resource, PATHINFO_EXTENSION);
     }
 
-    /**
-     * Converts an XLIFF file into a PHP language file.
-     *
-     * @param string $name
-     * @param string $language
-     *
-     * @return string
-     */
     private function convertXlfToPhp(string $name, string $language): string
     {
         $xml = $this->getDomDocumentFromFile($name);
@@ -91,14 +74,6 @@ class XliffFileLoader extends Loader
         return $return;
     }
 
-    /**
-     * Converts an XLIFF file node into PHP code.
-     *
-     * @param \DOMElement $fileNode
-     * @param string      $tagName
-     *
-     * @return string
-     */
     private function getPhpFromFileNode(\DOMElement $fileNode, string $tagName): string
     {
         $return = '';
@@ -123,13 +98,6 @@ class XliffFileLoader extends Loader
         return $return;
     }
 
-    /**
-     * Returns a DOM document object.
-     *
-     * @param string $name
-     *
-     * @return \DOMDocument
-     */
     private function getDomDocumentFromFile(string $name): \DOMDocument
     {
         $xml = new \DOMDocument();
@@ -145,10 +113,6 @@ class XliffFileLoader extends Loader
 
     /**
      * Removes extra spaces in closing tags.
-     *
-     * @param \DOMNode $node
-     *
-     * @return string
      */
     private function fixClosingTags(\DOMNode $node): string
     {
@@ -157,10 +121,6 @@ class XliffFileLoader extends Loader
 
     /**
      * Splits the ID attribute and returns the chunks.
-     *
-     * @param \DOMElement $unit
-     *
-     * @return array
      */
     private function getChunksFromUnit(\DOMElement $unit): array
     {
@@ -177,12 +137,7 @@ class XliffFileLoader extends Loader
     /**
      * Returns a string representation of the global PHP language array.
      *
-     * @param array $chunks
-     * @param mixed $value
-     *
      * @throws \OutOfBoundsException
-     *
-     * @return string
      */
     private function getStringRepresentation(array $chunks, $value): string
     {
@@ -220,9 +175,6 @@ class XliffFileLoader extends Loader
 
     /**
      * Adds the labels to the global PHP language array.
-     *
-     * @param array $chunks
-     * @param mixed $value
      */
     private function addGlobal(array $chunks, $value): void
     {
@@ -244,10 +196,6 @@ class XliffFileLoader extends Loader
     }
 
     /**
-     * Quotes an array key to be used as PHP string.
-     *
-     * @param string $key
-     *
      * @return int|string
      */
     private function quoteKey(string $key)
@@ -263,13 +211,6 @@ class XliffFileLoader extends Loader
         return "'".str_replace("'", "\\'", $key)."'";
     }
 
-    /**
-     * Quotes a value to be used as PHP string.
-     *
-     * @param string $value
-     *
-     * @return string
-     */
     private function quoteValue(string $value): string
     {
         $value = str_replace("\n", '\n', $value);

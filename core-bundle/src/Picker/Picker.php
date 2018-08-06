@@ -38,9 +38,7 @@ class Picker implements PickerInterface
     private $menu;
 
     /**
-     * @param FactoryInterface          $menuFactory
      * @param PickerProviderInterface[] $providers
-     * @param PickerConfig              $config
      */
     public function __construct(FactoryInterface $menuFactory, array $providers, PickerConfig $config)
     {

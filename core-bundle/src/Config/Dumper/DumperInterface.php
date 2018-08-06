@@ -19,7 +19,6 @@ interface DumperInterface
      *
      * @param array|string $files
      * @param string       $cacheFile
-     * @param array        $options
      */
     public function dump($files, $cacheFile, array $options = []);
 }

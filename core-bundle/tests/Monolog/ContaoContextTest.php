@@ -45,7 +45,6 @@ class ContaoContextTest extends TestCase
             'func' => 'foo',
             'action' => 'action',
             'username' => 'username',
-            'ip' => '1.2.3.4',
             'browser' => 'Mozilla',
         ]);
 

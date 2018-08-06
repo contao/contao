@@ -311,7 +311,7 @@ class InsertTags extends Controller
 						}
 						elseif (\is_array($opts) && array_is_assoc($opts))
 						{
-							$arrCache[$strTag] = isset($opts[$value]) ? $opts[$value] : $value;
+							$arrCache[$strTag] = $opts[$value] ?? $value;
 						}
 						elseif (\is_array($rfrc))
 						{

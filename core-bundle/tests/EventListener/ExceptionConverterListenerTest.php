@@ -118,7 +118,7 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\InternalServerErrorHttpException', $exception);
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\BadRequestHttpException', $exception);
         $this->assertInstanceOf('Contao\CoreBundle\Exception\InvalidRequestTokenException', $exception->getPrevious());
     }
 
@@ -212,13 +212,6 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\Exception\PageNotFoundException', $exception->getPrevious());
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param \Exception $exception
-     *
-     * @return GetResponseForExceptionEvent
-     */
     private function mockResponseEvent(\Exception $exception): GetResponseForExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

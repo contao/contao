@@ -114,10 +114,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @param bool  $isAdmin
-     * @param mixed $amg
-     * @param bool  $isValid
-     *
      * @dataProvider getAccessPermissions
      */
     public function testChecksTheBackendUsersAccessPermissions(bool $isAdmin, $amg, bool $isValid): void
@@ -159,7 +155,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (string[]|string|bool|null)[][]
      */
     public function getAccessPermissions(): array
     {
@@ -217,11 +213,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @param bool  $isAdmin
-     * @param mixed $amg
-     * @param mixed $groups
-     * @param bool  $isValid
-     *
      * @dataProvider getFrontendGroupAccessPermissions
      */
     public function testChecksTheBackendUsersFrontendGroupAccess(bool $isAdmin, $amg, $groups, bool $isValid): void
@@ -270,7 +261,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (string[]|string|bool|null)[][]
      */
     public function getFrontendGroupAccessPermissions(): array
     {
@@ -542,16 +533,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
-    /**
-     * Mocks an authenticator.
-     *
-     * @param SessionInterface|null      $session
-     * @param TokenStorageInterface|null $tokenStorage
-     * @param UserProviderInterface|null $userProvider
-     * @param LoggerInterface|null       $logger
-     *
-     * @return FrontendPreviewAuthenticator
-     */
     private function mockAuthenticator(SessionInterface $session = null, TokenStorageInterface $tokenStorage = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
         if (null === $session) {

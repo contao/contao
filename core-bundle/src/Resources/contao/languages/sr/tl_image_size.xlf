@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.title_legend">
         <source>Image size settings</source>
-        <target>Подешавања величине слика</target>
+        <target>Подешавања величине слике</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>

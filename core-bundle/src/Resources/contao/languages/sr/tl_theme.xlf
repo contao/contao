@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.image_legend">
         <source>Image sizes</source>
-        <target>Величине слике</target>
+        <target>Величине слика</target>
       </trans-unit>
       <trans-unit id="tl_theme.vars_legend">
         <source>Global variables</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes.0">
         <source>Image sizes</source>
-        <target>Величине слике</target>
+        <target>Величине слика</target>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>

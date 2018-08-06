@@ -52,13 +52,6 @@ class UserSessionListener
      */
     private $eventDispatcher;
 
-    /**
-     * @param Connection                           $connection
-     * @param TokenStorageInterface                $tokenStorage
-     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver
-     * @param ScopeMatcher                         $scopeMatcher
-     * @param EventDispatcherInterface             $eventDispatcher
-     */
     public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
     {
         $this->connection = $connection;
@@ -70,8 +63,6 @@ class UserSessionListener
 
     /**
      * Replaces the current session data with the stored session data.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -94,7 +85,9 @@ class UserSessionListener
         $session = $user->session;
 
         if (\is_array($session)) {
-            $this->getSessionBag($event->getRequest())->replace($session);
+            /** @var AttributeBagInterface $sessionBag */
+            $sessionBag = $this->getSessionBag($event->getRequest());
+            $sessionBag->replace($session);
         }
 
         // Dynamically register the kernel.response listener (see #1293)
@@ -103,8 +96,6 @@ class UserSessionListener
 
     /**
      * Writes the current session data to the database.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
@@ -124,7 +115,9 @@ class UserSessionListener
             return;
         }
 
-        $data = $this->getSessionBag($event->getRequest())->all();
+        /** @var AttributeBagInterface $sessionBag */
+        $sessionBag = $this->getSessionBag($event->getRequest());
+        $data = $sessionBag->all();
 
         $this->connection->update($user->getTable(), ['session' => serialize($data)], ['id' => $user->id]);
     }
@@ -132,13 +125,9 @@ class UserSessionListener
     /**
      * Returns the session bag.
      *
-     * @param Request $request
-     *
      * @throws \RuntimeException
-     *
-     * @return AttributeBagInterface|SessionBagInterface
      */
-    private function getSessionBag(Request $request): AttributeBagInterface
+    private function getSessionBag(Request $request): SessionBagInterface
     {
         if (!$request->hasSession() || null === ($session = $request->getSession())) {
             throw new \RuntimeException('The request did not contain a session.');

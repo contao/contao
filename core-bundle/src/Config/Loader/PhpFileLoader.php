@@ -20,12 +20,7 @@ use Symfony\Component\Config\Loader\Loader;
 class PhpFileLoader extends Loader
 {
     /**
-     * Reads the contents of a PHP file stripping the opening and closing PHP tags.
-     *
-     * @param string      $file
-     * @param string|null $type
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function load($file, $type = null): string
     {
@@ -51,9 +46,7 @@ class PhpFileLoader extends Loader
     /**
      * Parses a file and returns the code and namespace.
      *
-     * @param string $file
-     *
-     * @return array
+     * @return string[]
      */
     private function parseFile(string $file): array
     {
@@ -100,13 +93,6 @@ class PhpFileLoader extends Loader
         return [$code, $namespace];
     }
 
-    /**
-     * Handles the declare() statement.
-     *
-     * @param string $code
-     *
-     * @return string
-     */
     private function handleDeclare(string $code): string
     {
         $code = preg_replace('/(,\s*)?strict_types\s*=\s*1(\s*,)?/', '', $code);
@@ -118,13 +104,6 @@ class PhpFileLoader extends Loader
         return str_replace(' ', '', $code);
     }
 
-    /**
-     * Strips the legacy check from the code.
-     *
-     * @param string $code
-     *
-     * @return string
-     */
     private function stripLegacyCheck(string $code): string
     {
         $code = str_replace(

@@ -81,9 +81,7 @@ class BackendPreview extends Backend
 			return new RedirectResponse($objRouter->generate('contao_backend_preview', $arrParameters));
 		}
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_preview');
-
 		$objTemplate->base = \Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);

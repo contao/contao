@@ -24,15 +24,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class ContaoCoreExtension extends ConfigurableExtension
 {
     /**
-     * @var array
-     */
-    private static $files = [
-        'commands.yml',
-        'listener.yml',
-        'services.yml',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     public function getAlias(): string
@@ -66,7 +57,13 @@ class ContaoCoreExtension extends ConfigurableExtension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        foreach (self::$files as $file) {
+        static $files = [
+            'commands.yml',
+            'listener.yml',
+            'services.yml',
+        ];
+
+        foreach ($files as $file) {
             $loader->load($file);
         }
 
@@ -101,9 +98,6 @@ class ContaoCoreExtension extends ConfigurableExtension
 
     /**
      * Configures the "contao.image.imagine" service.
-     *
-     * @param array            $mergedConfig
-     * @param ContainerBuilder $container
      */
     private function setImagineService(array $mergedConfig, ContainerBuilder $container): void
     {
@@ -117,15 +111,9 @@ class ContaoCoreExtension extends ConfigurableExtension
             $container->setDefinition($imagineServiceId, new Definition($class));
         }
 
-        $container->setAlias('contao.image.imagine', $imagineServiceId);
-        $container->findDefinition('contao.image.imagine')->setPublic(true);
+        $container->setAlias('contao.image.imagine', $imagineServiceId)->setPublic(true);
     }
 
-    /**
-     * Returns the best available Imagine implementation.
-     *
-     * @return string
-     */
     private function getImagineImplementation(): string
     {
         static $magicks = ['Gmagick', 'Imagick'];
@@ -148,9 +136,6 @@ class ContaoCoreExtension extends ConfigurableExtension
 
     /**
      * Reads the old contao.image.target_path parameter.
-     *
-     * @param array            $mergedConfig
-     * @param ContainerBuilder $container
      */
     private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container): void
     {

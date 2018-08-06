@@ -30,10 +30,6 @@ class BackendLocaleListener
      */
     private $translator;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param TranslatorInterface   $translator
-     */
     public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
         $this->tokenStorage = $tokenStorage;
@@ -42,8 +38,6 @@ class BackendLocaleListener
 
     /**
      * Sets the default locale based on the user language.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {

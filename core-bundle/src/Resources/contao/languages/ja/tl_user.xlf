@@ -333,6 +333,10 @@
         <source>Default uploader</source>
         <target>アップローダーの初期設定</target>
       </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>2ファクター認証を使用</target>
+      </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>
         <target>新しいユーザー</target>

@@ -27,10 +27,6 @@ class BypassMaintenanceListener
      */
     private $requestAttribute;
 
-    /**
-     * @param TokenChecker $tokenChecker
-     * @param string       $requestAttribute
-     */
     public function __construct(TokenChecker $tokenChecker, string $requestAttribute = '_bypass_maintenance')
     {
         $this->tokenChecker = $tokenChecker;
@@ -39,8 +35,6 @@ class BypassMaintenanceListener
 
     /**
      * Adds the request attribute to the request.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {

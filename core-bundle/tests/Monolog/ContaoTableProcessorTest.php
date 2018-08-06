@@ -42,9 +42,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @param int    $logLevel
-     * @param string $expectedAction
-     *
      * @dataProvider actionLevelProvider
      */
     public function testReturnsDifferentActionsForDifferentErrorLevels(int $logLevel, string $expectedAction): void
@@ -64,8 +61,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @param int $logLevel
-     *
      * @dataProvider actionLevelProvider
      */
     public function testDoesNotChangeAnExistingAction(int $logLevel): void
@@ -85,7 +80,7 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function actionLevelProvider(): array
     {
@@ -208,10 +203,6 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @param string|null $scope
-     * @param string|null $contextSource
-     * @param string      $expectedSource
-     *
      * @dataProvider sourceProvider
      */
     public function testAddsTheSource(?string $scope, ?string $contextSource, string $expectedSource): void
@@ -241,7 +232,7 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (string|null)[][]
      */
     public function sourceProvider(): array
     {
@@ -260,14 +251,6 @@ class ContaoTableProcessorTest extends TestCase
         ];
     }
 
-    /**
-     * Mocks a Contao table processor.
-     *
-     * @param RequestStack|null          $requestStack
-     * @param TokenStorageInterface|null $tokenStorage
-     *
-     * @return ContaoTableProcessor
-     */
     private function mockContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
     {
         if (null === $requestStack) {

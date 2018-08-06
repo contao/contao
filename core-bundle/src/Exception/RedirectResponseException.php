@@ -16,11 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RedirectResponseException extends ResponseException
 {
-    /**
-     * @param string          $location
-     * @param int             $status
-     * @param \Exception|null $previous
-     */
     public function __construct(string $location, int $status = 303, \Exception $previous = null)
     {
         parent::__construct(new RedirectResponse($location, $status), $previous);

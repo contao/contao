@@ -25,10 +25,6 @@ class GlobalsMapListenerTest extends TestCase
     }
 
     /**
-     * @param array $values
-     * @param array $globals
-     * @param array $expected
-     *
      * @dataProvider getValuesData
      *
      * @runInSeparateProcess
@@ -45,7 +41,7 @@ class GlobalsMapListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (array<string,array<string,string>|string>)[][]
      */
     public function getValuesData(): array
     {

@@ -38,8 +38,6 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
     /**
      * Adds every bundle with a public folder as assets package.
-     *
-     * @param ContainerBuilder $container
      */
     private function addBundles(ContainerBuilder $container): void
     {
@@ -80,8 +78,6 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
     /**
      * Adds the Contao components as assets packages.
-     *
-     * @param ContainerBuilder $container
      */
     private function addComponents(ContainerBuilder $container): void
     {
@@ -95,22 +91,13 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
             $serviceId = 'assets._package_'.$name;
             $basePath = 'assets/'.substr($name, 18);
-            $version = $this->createPackageVersion($container, $version, $name);
+            $version = $this->createVersionStrategy($container, $version, $name);
 
             $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
             $packages->addMethodCall('addPackage', [$name, new Reference($serviceId)]);
         }
     }
 
-    /**
-     * Creates an assets package definition.
-     *
-     * @param string    $basePath
-     * @param Reference $version
-     * @param Reference $context
-     *
-     * @return Definition
-     */
     private function createPackageDefinition(string $basePath, Reference $version, Reference $context): Definition
     {
         $package = new ChildDefinition('assets.path_package');
@@ -124,16 +111,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         return $package;
     }
 
-    /**
-     * Creates an asset package version strategy.
-     *
-     * @param ContainerBuilder $container
-     * @param string           $version
-     * @param string           $name
-     *
-     * @return Reference
-     */
-    private function createPackageVersion(ContainerBuilder $container, string $version, string $name): Reference
+    private function createVersionStrategy(ContainerBuilder $container, string $version, string $name): Reference
     {
         $def = new ChildDefinition('assets.static_version_strategy');
         $def->replaceArgument(0, PackageUtil::parseVersion($version));
@@ -146,10 +124,6 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
     /**
      * Returns a bundle package name emulating what a bundle extension would look like.
-     *
-     * @param string $className
-     *
-     * @return string
      */
     private function getBundlePackageName(string $className): string
     {

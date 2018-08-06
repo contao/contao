@@ -211,6 +211,7 @@
       </trans-unit>
       <trans-unit id="ERR.foldersOnly">
         <source>You can only select folders!</source>
+        <target>فقط می‌توانید فولدرها را انتخاب کنید!</target>
       </trans-unit>
       <trans-unit id="ERR.pathOnly">
         <source>You can only select files or folders within &quot;%s&quot;!</source>
@@ -227,14 +228,13 @@
         <target>برگه‌ی تغییر مسیر نامعتبر (مرجع دایره‌ای)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
+        <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
-        <source>You can only define one website root page per domain as language fallback.</source>
-        <target>شما می‌توانید تنها یک برگه ریشه وب‌سایت برای هر دامنه به عنوان زبان یدکی انتخاب نمایید.</target>
+        <source>You can only define one website root page per domain as the language fallback.</source>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -274,6 +274,12 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>لطفا فقط نویسه‌های پیرو را وارد نمایید: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.largeImage">
+        <source>Image exceeds the maximum dimensions of %sx%s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidTwoFactor">
+        <source>Invalid verification code!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -563,6 +569,12 @@
         <source>This type of page automatically logs out the user.</source>
         <target>این نوع صفحه کاربر را به صورت خودکار خارج می‌کند.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_401.0">
+        <source>401 Not authenticated</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_401.1">
+        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+      </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>۴۰۳ دسترسی ممنوع است</target>
@@ -649,45 +661,59 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>ق.ب.</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>ق.ب.</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
+        <target>DD</target>
       </trans-unit>
       <trans-unit id="DATE.j">
         <source>D</source>
+        <target>D</target>
       </trans-unit>
       <trans-unit id="DATE.m">
         <source>MM</source>
+        <target>MM</target>
       </trans-unit>
       <trans-unit id="DATE.n">
         <source>M</source>
+        <target>M</target>
       </trans-unit>
       <trans-unit id="DATE.y">
         <source>YY</source>
+        <target>YY</target>
       </trans-unit>
       <trans-unit id="DATE.Y">
         <source>YYYY</source>
+        <target>YYYY</target>
       </trans-unit>
       <trans-unit id="DATE.h">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.H">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.g">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.G">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.i">
         <source>mm</source>
+        <target>mm</target>
       </trans-unit>
       <trans-unit id="DATE.s">
         <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1364,32 +1390,6 @@
         <source>Expand or collapse all nodes</source>
         <target>بستن یا باز کردن همه گره‌ها</target>
       </trans-unit>
-      <trans-unit id="MSC.lockedAccount.0">
-        <source>A Contao account has been locked</source>
-        <target>یک حساب کاربری کانتائو قفل شده است</target>
-      </trans-unit>
-      <trans-unit id="MSC.lockedAccount.1">
-        <source>The following Contao account has been locked for security reasons.
-
-Username: %s
-Real name: %s
-Website: %s
-
-The account has been locked for %d minutes, because the user has entered an invalid password three times in a row. After this period of time, the account will be unlocked automatically.
-
-This e-mail has been generated by Contao. You can not reply to it directly.
-</source>
-        <target>حساب کاربری کانتائو ذیل به خاطر دلایل امنیتی قفل شده است.
-
-نام کاربری: %s
-نام واقعی: %s
-وب‌سایت: %s
-
-حساب کاربری به مدت %d دقیقه قفل شده است، زیرا کاربر سه بار پشت سر هم  گذرواژه را نامعتبر وارد کرده است. بعد از این دوره زمانی، حساب کاربری به صورت خودکار باز خواهد شد.
-
-این ایمیل توسط کانتائو ایجاد شده است. شما مستقیما نمی‌تواند به آن پاسخ دهید.
-</target>
-      </trans-unit>
       <trans-unit id="MSC.toggleMobile.0">
         <source>Mobile version</source>
         <target>نسخه موبایل</target>
@@ -1420,9 +1420,11 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.profile">
         <source>Profile</source>
+        <target>نمایه</target>
       </trans-unit>
       <trans-unit id="MSC.profileTitle">
         <source>User profile</source>
+        <target>نمایه‌ی کاربر</target>
       </trans-unit>
       <trans-unit id="MSC.feUser">
         <source>Member</source>
@@ -1856,6 +1858,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
+        <target>هشدارها</target>
       </trans-unit>
       <trans-unit id="MSC.noSystemMessages">
         <source>Currently there are no alerts.</source>
@@ -2155,8 +2158,8 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>بالا</target>
       </trans-unit>
       <trans-unit id="MSC.first">
-        <source>&amp;#171; First</source>
-        <target>« ابتدا</target>
+        <source>First</source>
+        <target>نخستین</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2167,8 +2170,8 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>بعدی</target>
       </trans-unit>
       <trans-unit id="MSC.last">
-        <source>Last &amp;#187;</source>
-        <target>انتها »</target>
+        <source>Last</source>
+        <target>آخرین</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2340,12 +2343,15 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>
+        <target>ناوربری اصلی</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
+        <target>ناوبری سربرگ</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
+        <target>منو صفحه‌بندی</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2362,6 +2368,38 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
         <target>ترتیب مرتب‌سازی</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorAuthentication">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerification">
+        <source>Verification code</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerificationHelp">
+        <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActivation">
+        <source>Activation</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorExplain">
+        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorScan">
+        <source>Please scan the QR code with your 2FA/TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActive">
+        <source>Two-factor authentication has been enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorEnforced">
+        <source>Please enable up two-factor authentication before you continue.</source>
+      </trans-unit>
+      <trans-unit id="MSC.enable">
+        <source>Enable</source>
+        <target>فعال</target>
+      </trans-unit>
+      <trans-unit id="MSC.disable">
+        <source>Disable</source>
+        <target>غیرفعال</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

@@ -47,14 +47,6 @@ class FragmentHandler extends BaseFragmentHandler
      */
     private $initialized = [];
 
-    /**
-     * @param ContainerInterface        $renderers
-     * @param BaseFragmentHandler       $fragmentHandler
-     * @param RequestStack              $requestStack
-     * @param FragmentRegistryInterface $fragmentRegistry
-     * @param ContainerInterface        $preHandlers
-     * @param bool                      $debug
-     */
     public function __construct(ContainerInterface $renderers, BaseFragmentHandler $fragmentHandler, RequestStack $requestStack, FragmentRegistryInterface $fragmentRegistry, ContainerInterface $preHandlers, bool $debug = false)
     {
         $this->renderers = $renderers;
@@ -106,9 +98,6 @@ class FragmentHandler extends BaseFragmentHandler
 
     /**
      * Adds generic attributes and query parameters before rendering.
-     *
-     * @param FragmentReference $uri
-     * @param FragmentConfig    $config
      */
     private function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
     {
@@ -123,11 +112,6 @@ class FragmentHandler extends BaseFragmentHandler
         }
     }
 
-    /**
-     * Checks if there is a global page object.
-     *
-     * @return bool
-     */
     private function hasGlobalPageObject(): bool
     {
         return isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel;

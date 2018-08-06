@@ -70,16 +70,6 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $validExtensions;
 
-    /**
-     * @param ResizerInterface         $resizer
-     * @param ImagineInterface         $imagine
-     * @param ImagineInterface         $imagineSvg
-     * @param Filesystem               $filesystem
-     * @param ContaoFrameworkInterface $framework
-     * @param bool                     $bypassCache
-     * @param array                    $imagineOptions
-     * @param array                    $validExtensions
-     */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
     {
         $this->resizer = $resizer;
@@ -187,10 +177,9 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * Creates a resize configuration object.
      *
-     * @param int|array|null $size  An image size or an array with width, height and resize mode
-     * @param ImageInterface $image
+     * @param int|array|null $size An image size or an array with width, height and resize mode
      *
-     * @return array
+     * @return (ResizeConfigurationInterface|ImportantPartInterface|null)[]
      */
     private function createConfig($size, ImageInterface $image): array
     {
@@ -239,10 +228,6 @@ class ImageFactory implements ImageFactoryInterface
 
     /**
      * Fetches the important part from the database.
-     *
-     * @param ImageInterface $image
-     *
-     * @return ImportantPart|null
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {

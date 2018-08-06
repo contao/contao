@@ -104,12 +104,6 @@ class UserPasswordCommand extends ContainerAwareCommand
 
     /**
      * Asks a question with the given label and hides the input.
-     *
-     * @param string          $label
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return string
      */
     private function askForPassword(string $label, InputInterface $input, OutputInterface $output): string
     {
@@ -124,13 +118,7 @@ class UserPasswordCommand extends ContainerAwareCommand
     }
 
     /**
-     * Validates the password length and creates the password hash.
-     *
-     * @param string $password
-     *
      * @throws InvalidArgumentException
-     *
-     * @return string
      */
     private function validateAndHashPassword(string $password): string
     {

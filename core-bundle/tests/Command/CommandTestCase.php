@@ -20,11 +20,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class CommandTestCase extends TestCase
 {
-    /**
-     * Mocks an application.
-     *
-     * @return Application
-     */
     protected function mockApplication(): Application
     {
         $container = new ContainerBuilder();

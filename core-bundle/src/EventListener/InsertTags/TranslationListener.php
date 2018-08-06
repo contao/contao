@@ -21,9 +21,6 @@ class TranslationListener
      */
     private $translator;
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -31,8 +28,6 @@ class TranslationListener
 
     /**
      * Replaces the "trans" insert tag.
-     *
-     * @param string $tag
      *
      * @return string|false
      */

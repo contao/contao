@@ -37,11 +37,6 @@ class CommandSchedulerListener
      */
     private $fragmentPath;
 
-    /**
-     * @param ContaoFrameworkInterface $framework
-     * @param Connection               $connection
-     * @param string                   $fragmentPath
-     */
     public function __construct(ContaoFrameworkInterface $framework, Connection $connection, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
@@ -51,8 +46,6 @@ class CommandSchedulerListener
 
     /**
      * Runs the command scheduler.
-     *
-     * @param PostResponseEvent $event
      */
     public function onKernelTerminate(PostResponseEvent $event): void
     {
@@ -65,13 +58,6 @@ class CommandSchedulerListener
         $controller->run();
     }
 
-    /**
-     * Checks whether the controller can be run.
-     *
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function canRunController(Request $request): bool
     {
         $pathInfo = $request->getPathInfo();
@@ -89,8 +75,6 @@ class CommandSchedulerListener
 
     /**
      * Checks if a database connection can be established and the table exist.
-     *
-     * @return bool
      */
     private function canRunDbQuery(): bool
     {

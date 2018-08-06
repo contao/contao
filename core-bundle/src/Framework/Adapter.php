@@ -25,11 +25,6 @@ class Adapter
      */
     private $class;
 
-    /**
-     * Constructor.
-     *
-     * @param string $class
-     */
     public function __construct(string $class)
     {
         $this->class = $class;
@@ -37,11 +32,6 @@ class Adapter
 
     /**
      * Calls a method of the adapted class.
-     *
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return mixed
      */
     public function __call(string $name, array $arguments = [])
     {

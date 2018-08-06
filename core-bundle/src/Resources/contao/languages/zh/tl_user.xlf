@@ -333,6 +333,9 @@
         <source>Default uploader</source>
         <target>默认的上载器</target>
       </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>
         <target>新建用户</target>

@@ -587,7 +587,7 @@ abstract class Controller extends System
 	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
-	 * @param PageModel|Result|object $objPage The page object
+	 * @param PageModel|Result $objPage The page object
 	 *
 	 * @return string The status icon name
 	 */
@@ -896,7 +896,7 @@ abstract class Controller extends System
 
 		$arrReplace['[[TL_HEAD]]'] = $strScripts;
 
-		return str_replace(array_keys($arrReplace), array_values($arrReplace), $strBuffer);
+		return str_replace(array_keys($arrReplace), $arrReplace, $strBuffer);
 	}
 
 	/**
@@ -1061,7 +1061,7 @@ abstract class Controller extends System
 			'contao/switch.php'    => $generate('contao_backend_switch')
 		);
 
-		return str_replace(array_keys($arrMapper), array_values($arrMapper), $strContext);
+		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);
 	}
 
 	/**

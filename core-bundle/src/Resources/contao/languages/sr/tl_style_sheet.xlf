@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.0">
         <source>Source files</source>
-        <target>Изворни фајлови</target>
+        <target>Изворни фајл</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.1">
         <source>Here you can upload one or more .css files to be imported.</source>

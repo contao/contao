@@ -230,16 +230,13 @@
         <target>Destinazione non valida</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting has the language fallback option set.</source>
-        <target>Nessuna delle pagine root del sito (che non ha una impostazione DNS esplicita) è impostata come Lingua predefinita</target>
+        <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; has the language fallback option set.</source>
-        <target>Nessuna delle pagine root sito &lt;strong&gt;%s &lt;/ strong&gt; ha impostata la lingua predefinita.</target>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
-        <source>You can only define one website root page per domain as language fallback.</source>
-        <target>E' possibile definire la lingua predefinita per una sola pagina root</target>
+        <source>You can only define one website root page per domain as the language fallback.</source>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -280,6 +277,12 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Inserire solo i seguenti caratteri: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.largeImage">
+        <source>Image exceeds the maximum dimensions of %sx%s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidTwoFactor">
+        <source>Invalid verification code!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -569,6 +572,12 @@
         <source>This type of page automatically logs out the user.</source>
         <target>Questo tipo di pagina disconnette automaticamente l'utente.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_401.0">
+        <source>401 Not authenticated</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_401.1">
+        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+      </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>Errore 403 (accesso vietato)</target>
@@ -655,45 +664,59 @@
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
+        <target>am</target>
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>AM</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
+        <target>DD</target>
       </trans-unit>
       <trans-unit id="DATE.j">
         <source>D</source>
+        <target>D</target>
       </trans-unit>
       <trans-unit id="DATE.m">
         <source>MM</source>
+        <target>MM</target>
       </trans-unit>
       <trans-unit id="DATE.n">
         <source>M</source>
+        <target>M</target>
       </trans-unit>
       <trans-unit id="DATE.y">
         <source>YY</source>
+        <target>YY</target>
       </trans-unit>
       <trans-unit id="DATE.Y">
         <source>YYYY</source>
+        <target>YYYY</target>
       </trans-unit>
       <trans-unit id="DATE.h">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.H">
         <source>hh</source>
+        <target>hh</target>
       </trans-unit>
       <trans-unit id="DATE.g">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.G">
         <source>h</source>
+        <target>h</target>
       </trans-unit>
       <trans-unit id="DATE.i">
         <source>mm</source>
+        <target>mm</target>
       </trans-unit>
       <trans-unit id="DATE.s">
         <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1371,32 +1394,6 @@
         <source>Expand or collapse all nodes</source>
         <target>Espandi o chiudi tutti i nodi</target>
       </trans-unit>
-      <trans-unit id="MSC.lockedAccount.0">
-        <source>A Contao account has been locked</source>
-        <target>Un account Contao è stato bloccato</target>
-      </trans-unit>
-      <trans-unit id="MSC.lockedAccount.1">
-        <source>The following Contao account has been locked for security reasons.
-
-Username: %s
-Real name: %s
-Website: %s
-
-The account has been locked for %d minutes, because the user has entered an invalid password three times in a row. After this period of time, the account will be unlocked automatically.
-
-This e-mail has been generated by Contao. You can not reply to it directly.
-</source>
-        <target>Il seguente account Contao è stato bloccato per motivi di sicurezza.
-
-Nome utente: %s
-Nome reale: %s
-Sito web: %s
-
-L'account è stato bloccato per %d minuti, perchè l'utente ha inserito una password errata per tre volte consecutive. Trascorso questo periodo di tempo, l'account verrà sbloccato e riattivato automaticamente.
-
-Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a questo messaggio.
-</target>
-      </trans-unit>
       <trans-unit id="MSC.toggleMobile.0">
         <source>Mobile version</source>
         <target>Versione mobile</target>
@@ -1479,6 +1476,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.switchBT">
         <source>Back to %s</source>
+        <target>Torna a %s</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1754,6 +1752,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Gestione della versione</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -2167,8 +2166,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Su</target>
       </trans-unit>
       <trans-unit id="MSC.first">
-        <source>&amp;#171; First</source>
-        <target>« Primo</target>
+        <source>First</source>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2179,8 +2177,7 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
         <target>Prossimo</target>
       </trans-unit>
       <trans-unit id="MSC.last">
-        <source>Last &amp;#187;</source>
-        <target>Ultimo »</target>
+        <source>Last</source>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2352,9 +2349,11 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
+        <target>Breadcrumb menu</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main navigation</source>
+        <target>Navigazione principale</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
@@ -2365,9 +2364,11 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
+        <target>Lettere minuscole e numero unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicode">
         <source>Unicode numbers and letters</source>
+        <target>Lettere e numeri unicode</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
@@ -2378,6 +2379,38 @@ Questa e-mail è stata generata dal sistema in modo automatico. Non rispondere a
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
         <target>Ordinamento</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorAuthentication">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerification">
+        <source>Verification code</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerificationHelp">
+        <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActivation">
+        <source>Activation</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorExplain">
+        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorScan">
+        <source>Please scan the QR code with your 2FA/TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActive">
+        <source>Two-factor authentication has been enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorEnforced">
+        <source>Please enable up two-factor authentication before you continue.</source>
+      </trans-unit>
+      <trans-unit id="MSC.enable">
+        <source>Enable</source>
+        <target>Abilita</target>
+      </trans-unit>
+      <trans-unit id="MSC.disable">
+        <source>Disable</source>
+        <target>Disabilita</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

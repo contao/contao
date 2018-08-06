@@ -89,10 +89,6 @@
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
         <target>ファイルのソースを編集します。(F11を押すと全画面モードと切り替え)</target>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
-        <source>Upload files</source>
-        <target>ファイルをアップロード</target>
-      </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
         <target>ファイルをアップロードして戻る</target>
@@ -124,6 +120,14 @@
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
         <target>クリック、またはファイルをドロップしてアップロード</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneFileTooBig">
+        <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>ファイルが大きすぎます({{filesize}} MiB)。最大のファイルの大きさは{{maxFilesize}}MiBです。</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dropzoneInvalidType">
+        <source>Files of this type cannot be uploaded.</source>
+        <target>この種類のファイルはアップロードできません。</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -216,6 +220,14 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit file &quot;%s&quot;</source>
         <target>&quot;%s&quot;というファイルを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>ファイルをアップロード</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.1">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というフォルダーにファイルをアップロード</target>
       </trans-unit>
       <trans-unit id="tl_files.protect.0">
         <source>Protect folder</source>

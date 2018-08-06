@@ -34,10 +34,6 @@ class RefererIdListener
      */
     private $token;
 
-    /**
-     * @param CsrfTokenManagerInterface $tokenManager
-     * @param ScopeMatcher              $scopeMatcher
-     */
     public function __construct(CsrfTokenManagerInterface $tokenManager, ScopeMatcher $scopeMatcher)
     {
         $this->tokenManager = $tokenManager;
@@ -46,8 +42,6 @@ class RefererIdListener
 
     /**
      * Adds the referer ID to the request.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {

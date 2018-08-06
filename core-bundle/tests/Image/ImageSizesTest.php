@@ -17,17 +17,18 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ImageSizesTest extends TestCase
 {
     /**
-     * @var Connection|\PHPUnit_Framework_MockObject_MockObject
+     * @var Connection|MockObject
      */
     private $connection;
 
     /**
-     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EventDispatcherInterface|MockObject
      */
     private $eventDispatcher;
 
@@ -93,9 +94,8 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|object $user */
         $user = $this->createMock(BackendUser::class);
-        $user->imageSizes = serialize(['image_sizes' => '42']);
+        $user->imageSizes = ['image_sizes' => '42'];
         $user->isAdmin = true;
 
         $options = $this->imageSizes->getOptionsForUser($user);
@@ -109,12 +109,11 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|object $user */
         $user = $this->createMock(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only one image size
-        $user->imageSizes = serialize([42]);
+        $user->imageSizes = [42];
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayNotHasKey('relative', $options);
@@ -123,7 +122,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('42', $options['image_sizes']);
 
         // Allow only some TL_CROP options
-        $user->imageSizes = serialize(['proportional', 'box']);
+        $user->imageSizes = ['proportional', 'box'];
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayHasKey('relative', $options);
@@ -131,7 +130,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('image_sizes', $options);
 
         // Allow nothing
-        $user->imageSizes = serialize([]);
+        $user->imageSizes = [];
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertSame([], $options);
@@ -139,10 +138,8 @@ class ImageSizesTest extends TestCase
 
     /**
      * Adds an expected method call to the event dispatcher mock object.
-     *
-     * @param string $event
      */
-    private function expectEvent($event): void
+    private function expectEvent(string $event): void
     {
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
@@ -153,8 +150,6 @@ class ImageSizesTest extends TestCase
 
     /**
      * Adds an expected method call to the database connection mock object.
-     *
-     * @param array $imageSizes
      */
     private function expectImageSizes(array $imageSizes): void
     {

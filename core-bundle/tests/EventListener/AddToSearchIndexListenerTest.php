@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Frontend;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
-     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ContaoFrameworkInterface|MockObject
      */
     private $framework;
 
@@ -107,14 +108,9 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Mocks a post response event.
-     *
-     * @param string|null $requestUri
-     * @param string      $requestMethod
-     *
-     * @return PostResponseEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return PostResponseEvent|MockObject
      */
-    private function mockPostResponseEvent($requestUri = null, $requestMethod = Request::METHOD_GET): PostResponseEvent
+    private function mockPostResponseEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): PostResponseEvent
     {
         $request = new Request();
         $request->setMethod($requestMethod);

@@ -270,6 +270,7 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
+        <target>یک آیتم لازم است</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
@@ -372,6 +373,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias_legend">
         <source>Alias settings</source>
+        <target>تنظیمات نام مستعار</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -580,6 +582,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
         <target>۳۰ روز</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
       </trans-unit>
     </body>
   </file>

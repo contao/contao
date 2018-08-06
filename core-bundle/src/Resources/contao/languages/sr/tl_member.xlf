@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_member.email.1">
         <source>Please enter a valid e-mail address.</source>
-        <target>Унесите исправну имејл адресу.</target>
+        <target>Унесите валидну имејл адресу.</target>
       </trans-unit>
       <trans-unit id="tl_member.website.0">
         <source>Website</source>

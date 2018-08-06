@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 class SwitchUserListener
@@ -29,10 +30,6 @@ class SwitchUserListener
      */
     private $logger;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param LoggerInterface       $logger
-     */
     public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger)
     {
         $this->tokenStorage = $tokenStorage;
@@ -41,8 +38,6 @@ class SwitchUserListener
 
     /**
      * Logs successful user impersonations.
-     *
-     * @param SwitchUserEvent $event
      *
      * @throws \RuntimeException
      */
@@ -54,8 +49,17 @@ class SwitchUserListener
             throw new \RuntimeException('The token storage did not contain a token.');
         }
 
-        $sourceUser = $token->getUser()->getUsername();
-        $targetUser = $event->getTargetUser()->getUsername();
+        $sourceUser = $token->getUser();
+
+        if ($sourceUser instanceof UserInterface) {
+            $sourceUser = $sourceUser->getUsername();
+        }
+
+        $targetUser = $event->getTargetUser();
+
+        if ($targetUser instanceof UserInterface) {
+            $targetUser = $targetUser->getUsername();
+        }
 
         $this->logger->info(
             sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser),

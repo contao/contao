@@ -18,9 +18,6 @@ interface FragmentPreHandlerInterface
 {
     /**
      * Allows to modify the fragment reference and configuration.
-     *
-     * @param FragmentReference $uri
-     * @param FragmentConfig    $config
      */
     public function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void;
 }

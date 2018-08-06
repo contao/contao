@@ -45,10 +45,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param string $scope
-     * @param string $userClass
-     * @param string $sessionBagName
-     *
      * @dataProvider scopeBagProvider
      */
     public function testReplacesTheSessionUponKernelRequest(string $scope, string $userClass, string $sessionBagName): void
@@ -95,7 +91,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function scopeBagProvider(): array
     {
@@ -106,13 +102,9 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param string $scope
-     * @param string $userClass
-     * @param string $userTable
-     *
      * @dataProvider scopeTableProvider
      */
-    public function testStoresTheSessionUponKernelResponse($scope, $userClass, $userTable): void
+    public function testStoresTheSessionUponKernelResponse(string $scope, string $userClass, string $userTable): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -147,7 +139,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function scopeTableProvider(): array
     {
@@ -158,8 +150,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $token
-     *
      * @dataProvider noUserProvider
      */
     public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
@@ -186,8 +176,6 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $token
-     *
      * @dataProvider noUserProvider
      */
     public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
@@ -220,7 +208,7 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (AnonymousToken|null)[][]
      */
     public function noUserProvider(): array
     {
@@ -419,12 +407,6 @@ class UserSessionListenerTest extends TestCase
 
     /**
      * Mocks a session listener.
-     *
-     * @param Connection|null               $connection
-     * @param TokenStorageInterface|null    $tokenStorage
-     * @param EventDispatcherInterface|null $eventDispatcher
-     *
-     * @return UserSessionListener
      */
     private function mockListener(Connection $connection = null, TokenStorageInterface $tokenStorage = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
     {
@@ -446,13 +428,6 @@ class UserSessionListenerTest extends TestCase
         return new UserSessionListener($connection, $tokenStorage, $trustResolver, $scopeMatcher, $eventDispatcher);
     }
 
-    /**
-     * Mocks a get response event.
-     *
-     * @param Request|null $request
-     *
-     * @return GetResponseEvent
-     */
     private function mockGetResponseEvent(Request $request = null): GetResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
@@ -464,13 +439,6 @@ class UserSessionListenerTest extends TestCase
         return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
-    /**
-     * Mocks a filter response event.
-     *
-     * @param Request|null $request
-     *
-     * @return FilterResponseEvent
-     */
     private function mockFilterResponseEvent(Request $request = null): FilterResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

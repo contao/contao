@@ -474,6 +474,7 @@ services:
         arguments:
             - "@event_dispatcher"
             - "@translator"
+        public: true
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator

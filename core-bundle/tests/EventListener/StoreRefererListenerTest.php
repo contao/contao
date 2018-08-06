@@ -37,10 +37,6 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param Request    $request
-     * @param array|null $currentReferer
-     * @param array|null $expectedReferer
-     *
      * @dataProvider refererStoredOnKernelResponseProvider
      */
     public function testStoresTheReferer(Request $request, ?array $currentReferer, ?array $expectedReferer): void
@@ -64,7 +60,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<string,(Request|array<string,array<string,string>>|null)[]>
      */
     public function refererStoredOnKernelResponseProvider(): array
     {
@@ -203,8 +199,6 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param AnonymousToken $noUserReturn
-     *
      * @dataProvider noUserProvider
      */
     public function testDoesNotStoreTheRefererIfThereIsNoUser(AnonymousToken $noUserReturn = null): void
@@ -231,7 +225,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return (AnonymousToken|null)[][]
      */
     public function noUserProvider(): array
     {
@@ -300,8 +294,6 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param string $scope
-     *
      * @dataProvider noSessionProvider
      */
     public function testFailsToStoreTheRefererIfThereIsNoSession(string $scope): void
@@ -326,7 +318,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[][]
      */
     public function noSessionProvider(): array
     {
@@ -336,13 +328,6 @@ class StoreRefererListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Mocks a session listener.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     *
-     * @return StoreRefererListener
-     */
     private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener
     {
         if (null === $tokenStorage) {
@@ -354,13 +339,6 @@ class StoreRefererListenerTest extends TestCase
         return new StoreRefererListener($tokenStorage, $trustResolver, $this->mockScopeMatcher());
     }
 
-    /**
-     * Mocks a response event.
-     *
-     * @param Request|null $request
-     *
-     * @return FilterResponseEvent
-     */
     private function mockResponseEvent(Request $request = null): FilterResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);

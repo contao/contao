@@ -42,12 +42,6 @@ class PersistentToken implements PersistentTokenInterface
     private $lastUsed;
 
     /**
-     * @param string    $class
-     * @param string    $username
-     * @param string    $series
-     * @param string    $tokenValue
-     * @param \DateTime $lastUsed
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(string $class, string $username, string $series, string $tokenValue, \DateTime $lastUsed)

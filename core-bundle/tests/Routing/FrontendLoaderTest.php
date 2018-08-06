@@ -155,14 +155,6 @@ class FrontendLoaderTest extends TestCase
         $router->generate('contao_index');
     }
 
-    /**
-     * Mocks a router using the given route collection.
-     *
-     * @param RouteCollection $collection
-     * @param string          $urlSuffix
-     *
-     * @return Router
-     */
     private function mockRouter(RouteCollection $collection, string $urlSuffix = '.html'): Router
     {
         $loader = $this->createMock(LoaderInterface::class);

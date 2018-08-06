@@ -40,20 +40,13 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
     }
 
-    /**
-     * Returns the Contao version and build number.
-     *
-     * @return string
-     */
     public function getContaoVersion(): string
     {
         return $this->data['contao_version'];
     }
 
     /**
-     * Returns the summary.
-     *
-     * @return array
+     * @return array<string,string|bool>
      */
     public function getSummary(): array
     {
@@ -61,9 +54,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the set classes.
-     *
-     * @return array
+     * @return string[]
      */
     public function getClassesSet(): array
     {
@@ -75,9 +66,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the aliased classes.
-     *
-     * @return array
+     * @return string[]
      */
     public function getClassesAliased(): array
     {
@@ -89,9 +78,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the composerized classes.
-     *
-     * @return array
+     * @return string[]
      */
     public function getClassesComposerized(): array
     {
@@ -103,9 +90,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the additional data added by unknown sources.
-     *
-     * @return array
+     * @return mixed[]
      */
     public function getAdditionalData(): array
     {
@@ -144,13 +129,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the debug data as array.
-     *
-     * @param string $key
-     *
-     * @return array
+     * @return array<string,string|bool>
      */
-    private function getData($key): array
+    private function getData(string $key): array
     {
         if (!isset($this->data[$key]) || !\is_array($this->data[$key])) {
             return [];
@@ -159,9 +140,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $this->data[$key];
     }
 
-    /**
-     * Adds the summary data.
-     */
     private function addSummaryData(): void
     {
         $framework = false;
@@ -183,11 +161,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         ];
     }
 
-    /**
-     * Returns the page layout name (front end only).
-     *
-     * @return string
-     */
     private function getLayoutName(): string
     {
         $layout = $this->getLayout();
@@ -199,11 +172,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return sprintf('%s (ID %s)', $layout->name, $layout->id);
     }
 
-    /**
-     * Returns the template name (front end only).
-     *
-     * @return string
-     */
     private function getTemplateName(): string
     {
         $layout = $this->getLayout();
@@ -215,11 +183,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $layout->template;
     }
 
-    /**
-     * Returns the layout model (front end only).
-     *
-     * @return LayoutModel|null
-     */
     private function getLayout(): ?LayoutModel
     {
         if (!isset($GLOBALS['objPage'])) {

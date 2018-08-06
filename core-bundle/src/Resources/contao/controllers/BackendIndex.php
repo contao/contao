@@ -78,7 +78,6 @@ class BackendIndex extends Backend
 
 		$router = $container->get('router');
 
-		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new \BackendTemplate('be_login');
 		$objTemplate->action = ampersand(\Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
