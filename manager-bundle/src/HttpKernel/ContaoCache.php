@@ -26,10 +26,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 
-    /**
-     * @param ContaoKernel $kernel
-     * @param string|null  $cacheDir
-     */
     public function __construct(ContaoKernel $kernel, string $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);

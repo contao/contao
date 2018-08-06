@@ -104,11 +104,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->getProjectDir().'/var/logs';
     }
 
-    /**
-     * Gets the plugin loader.
-     *
-     * @return PluginLoader
-     */
     public function getPluginLoader(): PluginLoader
     {
         if (null === $this->pluginLoader) {
@@ -126,21 +121,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->pluginLoader;
     }
 
-    /**
-     * Sets the plugin loader.
-     *
-     * @param PluginLoader $pluginLoader
-     */
     public function setPluginLoader(PluginLoader $pluginLoader): void
     {
         $this->pluginLoader = $pluginLoader;
     }
 
-    /**
-     * Gets the bundle loader.
-     *
-     * @return BundleLoader
-     */
     public function getBundleLoader(): BundleLoader
     {
         if (null === $this->bundleLoader) {
@@ -154,21 +139,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->bundleLoader;
     }
 
-    /**
-     * Sets the bundle loader.
-     *
-     * @param BundleLoader $bundleLoader
-     */
     public function setBundleLoader(BundleLoader $bundleLoader): void
     {
         $this->bundleLoader = $bundleLoader;
     }
 
-    /**
-     * Gets the manager config.
-     *
-     * @return ManagerConfig
-     */
     public function getManagerConfig(): ManagerConfig
     {
         if (null === $this->managerConfig) {
@@ -178,11 +153,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->managerConfig;
     }
 
-    /**
-     * Sets the manager config.
-     *
-     * @param ManagerConfig $managerConfig
-     */
     public function setManagerConfig(ManagerConfig $managerConfig): void
     {
         $this->managerConfig = $managerConfig;
@@ -221,8 +191,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     /**
      * Sets the project directory (the Contao kernel does not know its location).
-     *
-     * @param string $projectDir
      */
     public static function setProjectDir(string $projectDir): void
     {
@@ -255,11 +223,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->getContainer()->set('contao_manager.plugin_loader', $this->getPluginLoader());
     }
 
-    /**
-     * Adds bundles from plugins to the given array.
-     *
-     * @param array $bundles
-     */
     private function addBundlesFromPlugins(array &$bundles): void
     {
         $configs = $this->getBundleLoader()->getBundleConfigs(

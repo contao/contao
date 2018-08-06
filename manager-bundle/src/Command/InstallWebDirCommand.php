@@ -37,26 +37,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $io;
 
     /**
-     * Files that should not be copied if they exist in the web directory.
-     *
-     * @var array
-     */
-    private $optionalFiles = [
-        '.htaccess',
-        'favicon.ico',
-        'robots.txt',
-    ];
-
-    /**
-     * Files that should not be copied if the "no-dev" option is set.
-     *
-     * @var array
-     */
-    private $devFiles = [
-        'app_dev.php',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     protected function configure(): void
@@ -151,9 +131,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Adds files from Resources/skeleton/web to the application's web directory.
-     *
-     * @param string $webDir
-     * @param bool   $dev
      */
     private function addFiles(string $webDir, bool $dev = true): void
     {
@@ -165,7 +142,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
                 continue;
             }
 
-            if (!$dev && \in_array($file->getRelativePathname(), $this->devFiles, true)) {
+            if (!$dev && 'app_dev.php' === $file->getRelativePathname()) {
                 continue;
             }
 
@@ -176,8 +153,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Removes the install.php entry point leftover from Contao <4.4.
-     *
-     * @param string $webDir
      */
     private function removeInstallPhp(string $webDir): void
     {
@@ -191,9 +166,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Stores username and password in .env file in the project directory.
-     *
-     * @param InputInterface $input
-     * @param string         $projectDir
      */
     private function storeAppDevAccesskey(InputInterface $input, string $projectDir): void
     {
@@ -222,10 +194,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Appends value to the .env file, removing a line with the given key.
-     *
-     * @param string $projectDir
-     * @param string $key
-     * @param string $value
      */
     private function addToDotEnv(string $projectDir, string $key, string $value): void
     {
@@ -255,15 +223,16 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Checks if an optional file exists.
-     *
-     * @param SplFileInfo $file
-     * @param string      $webDir
-     *
-     * @return bool
      */
     private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
     {
-        if (!\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
+        static $optional = [
+            '.htaccess',
+            'favicon.ico',
+            'robots.txt',
+        ];
+
+        if (!\in_array($file->getRelativePathname(), $optional, true)) {
             return false;
         }
 

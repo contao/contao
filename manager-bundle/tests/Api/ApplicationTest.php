@@ -152,13 +152,6 @@ class ApplicationTest extends ContaoTestCase
         $application->all();
     }
 
-    /**
-     * Returns the application.
-     *
-     * @param string|null $path
-     *
-     * @return Application
-     */
     private function getApplication(string $path = null): Application
     {
         if (null === $path) {

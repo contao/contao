@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\Tests\HttpKernel;
 use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -110,12 +111,7 @@ class RouteLoaderTest extends TestCase
     }
 
     /**
-     * Mocks a route plugin.
-     *
-     * @param string $routeName
-     * @param string $routePath
-     *
-     * @return RoutingPluginInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RoutingPluginInterface|MockObject
      */
     private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface
     {

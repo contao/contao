@@ -35,11 +35,6 @@ class RouteLoader
      */
     private $kernel;
 
-    /**
-     * @param LoaderInterface $loader
-     * @param PluginLoader    $pluginLoader
-     * @param KernelInterface $kernel
-     */
     public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel)
     {
         $this->loader = $loader;
@@ -49,8 +44,6 @@ class RouteLoader
 
     /**
      * Returns a route collection build from all plugin routes.
-     *
-     * @return RouteCollection
      */
     public function loadFromPlugins(): RouteCollection
     {
@@ -68,6 +61,15 @@ class RouteLoader
             },
             new RouteCollection()
         );
+
+        // Load the app/config/routing.yml file if it exists
+        if (file_exists($configFile = $this->kernel->getRootDir().'/config/routing.yml')) {
+            $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
+        }
 
         // Make sure the Contao frontend routes are always loaded last
         foreach (['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'] as $name) {

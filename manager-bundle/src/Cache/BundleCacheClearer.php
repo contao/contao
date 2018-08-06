@@ -22,9 +22,6 @@ class BundleCacheClearer implements CacheClearerInterface
      */
     private $filesystem;
 
-    /**
-     * @param Filesystem $filesystem
-     */
     public function __construct(Filesystem $filesystem = null)
     {
         $this->filesystem = $filesystem ?: new Filesystem();

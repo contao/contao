@@ -60,8 +60,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
-     *
-     * @param string $modulePath
      */
     public static function autoloadModules(string $modulePath): void
     {
@@ -240,10 +238,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds backwards compatibility for the %prepend_locale% parameter.
      *
-     * @param array            $extensionConfigs
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return array<string,array<string,mixed>>
      */
     private function handlePrependLocale(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -252,17 +247,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['contao']['prepend_locale'])) {
+            if (isset($extensionConfig['prepend_locale'])) {
                 return $extensionConfigs;
             }
         }
 
-        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml or config_prod.yml instead.', E_USER_DEPRECATED);
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
 
         $extensionConfigs[] = [
-            'contao' => [
-                'prepend_locale' => '%prepend_locale%',
-            ],
+            'prepend_locale' => '%prepend_locale%',
         ];
 
         return $extensionConfigs;
@@ -271,10 +264,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds the database server version to the Doctrine DBAL configuration.
      *
-     * @param array            $extensionConfigs
-     * @param ContainerBuilder $container
-     *
-     * @return array
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
     private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
     {

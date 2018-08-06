@@ -228,9 +228,7 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('prepend_locale', true);
 
         $expect = [[
-            'contao' => [
-                'prepend_locale' => '%prepend_locale%',
-            ],
+            'prepend_locale' => '%prepend_locale%',
         ]];
 
         $extensionConfig = (new Plugin())->getExtensionConfig('contao', [], $container);

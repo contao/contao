@@ -23,9 +23,6 @@ class InstallCommandListener
      */
     private $projectDir;
 
-    /**
-     * @param string $projectDir
-     */
     public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir;
@@ -33,8 +30,6 @@ class InstallCommandListener
 
     /**
      * Adds the initialize.php file.
-     *
-     * @param ConsoleTerminateEvent $event
      */
     public function onConsoleTerminate(ConsoleTerminateEvent $event): void
     {

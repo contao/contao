@@ -32,10 +32,6 @@ class ManagerConfig
      */
     private $config;
 
-    /**
-     * @param string          $projectDir
-     * @param Filesystem|null $filesystem
-     */
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
         $projectDir = realpath($projectDir) ?: $projectDir;
@@ -45,7 +41,7 @@ class ManagerConfig
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function all(): array
     {
@@ -57,7 +53,7 @@ class ManagerConfig
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function read(): array
     {
@@ -70,9 +66,6 @@ class ManagerConfig
         return $this->config;
     }
 
-    /**
-     * @param array $config
-     */
     public function write(array $config): void
     {
         $this->config = $config;

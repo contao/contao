@@ -26,9 +26,6 @@ class SetDotEnvCommand extends Command
      */
     private $projectDir;
 
-    /**
-     * @param Application $application
-     */
     public function __construct(Application $application)
     {
         parent::__construct();

@@ -41,9 +41,6 @@ class Application extends BaseApplication
      */
     private $managerConfig;
 
-    /**
-     * @param string $projectDir
-     */
     public function __construct(string $projectDir)
     {
         $this->projectDir = realpath($projectDir) ?: $projectDir;
@@ -51,21 +48,11 @@ class Application extends BaseApplication
         parent::__construct('contao-api', self::VERSION);
     }
 
-    /**
-     * Gets the project directory (Contao root).
-     *
-     * @return string
-     */
     public function getProjectDir(): string
     {
         return $this->projectDir;
     }
 
-    /**
-     * Gets the plugin loader.
-     *
-     * @return PluginLoader
-     */
     public function getPluginLoader(): PluginLoader
     {
         if (null === $this->pluginLoader) {
@@ -83,21 +70,11 @@ class Application extends BaseApplication
         return $this->pluginLoader;
     }
 
-    /**
-     * Sets the plugin loader.
-     *
-     * @param PluginLoader $pluginLoader
-     */
     public function setPluginLoader(PluginLoader $pluginLoader): void
     {
         $this->pluginLoader = $pluginLoader;
     }
 
-    /**
-     * Gets the manager config.
-     *
-     * @return ManagerConfig
-     */
     public function getManagerConfig(): ManagerConfig
     {
         if (null === $this->managerConfig) {
@@ -107,11 +84,6 @@ class Application extends BaseApplication
         return $this->managerConfig;
     }
 
-    /**
-     * Sets the manager config.
-     *
-     * @param ManagerConfig $managerConfig
-     */
     public function setManagerConfig(ManagerConfig $managerConfig): void
     {
         $this->managerConfig = $managerConfig;
