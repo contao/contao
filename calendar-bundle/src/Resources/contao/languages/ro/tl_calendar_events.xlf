@@ -46,8 +46,7 @@
         <target>Moment de sfârşit</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Introduceţi momentul de sfârşit al evenimentului conform formatului global de timp.</target>
+        <source>Leave blank to create an open-ended event.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>

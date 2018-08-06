@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="contao/languages/languages/en/tl_module.php" source-language="en" target-language="pt-BR">
+  <file datatype="php" original="contao/languages/languages/en/tl_module.php" source-language="en" target-language="pt">
     <body>
       <trans-unit id="tl_module.cal_calendar.0">
         <source>Calendars</source>
@@ -7,46 +7,47 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_calendar.1">
         <source>Please select one or more calendars.</source>
-        <target>Por favor escolha um ou mais calendários.</target>
+        <target>Favor escolher um ou mais calendários.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.0">
         <source>Shortened view</source>
-        <target>Visão encurtada</target>
+        <target>Visão simplificada</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Mostrar eventos somente se eles durarem vários dias.</target>
+        <target>Mostra os eventos apenas uma vez mesmo que estes se estendam por vários dias.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
-        <target>Esconder eventos rodando</target>
+        <target>Esconder eventos a decorrer</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>
+        <target>Não mostrar eventos a decorrer actualmente na lista de eventos futuros.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
-        <target>Dia inicial da semana</target>
+        <target>Primeiro dia da Semana</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Aqui você pode escolher o dia inicial da semana.</target>
+        <target>Por favor escolha o primeiro dia da semana de sua preferência.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
-        <target>Formato da lista de eventos</target>
+        <target>Formato</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Aqui você pode escolher o formato da lista de eventos.</target>
+        <target>Por favor escolha um formato para a lista de eventos.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
-        <target>Ignorar parâmetros da URL</target>
+        <target>Ignorar parâmetros de URL</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.1">
         <source>Do not switch the time period based on the date/month/year URL parameters.</source>
-        <target>Não modifique o período de tempo baseado nos parâmetros de dia/mês/ano do URL.</target>
+        <target>Não ligue o período de tempo com base na data / mês / ano parâmetros de URL.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
@@ -58,11 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
-        <target>Modulo de leitura de eventos</target>
+        <target>Módulo do leitor dos eventos</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.1">
         <source>Automatically switch to the event reader if an event has been selected.</source>
-        <target>Modificar automaticamente para o leitor de eventos se um evento for selecionado.</target>
+        <target>Automaticamente mudar para leitor dos eventos se um evento foi selecionado.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.0">
         <source>Number of events</source>
@@ -70,15 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.1">
         <source>Here you can limit the number of events. Enter 0 to show all.</source>
-        <target>Aqui você pode limitar o número de eventos. Insira 0 para mostrar todos.</target>
+        <target>Por favor, informe o número máximo de eventos. Informe 0 para mostrar todos os eventos.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
-        <target>Modelo do evento</target>
+        <target>Modelo de evento</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select the event template.</source>
-        <target>Aqui você pode selecionar o modelo do evento.</target>
+        <target>Favor escolher um layout para lista de evento. Você pode adicionar layout personalizados de eventos na pasta&lt;em&gt;templates&lt;/em&gt;. Arquivos de modelos de eventos começam com &lt;em&gt;event_&lt;/em&gt; e devem ter a extensão de arquivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
@@ -86,19 +87,19 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
         <source>Here you can select the calendar template.</source>
-        <target>Aqui você pode escolher o modelo do calendário</target>
+        <target>Selecione o modelo de calendário.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
-        <target>Mostrar número de eventos</target>
+        <target>Exibir número de eventos</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.1">
         <source>Show the number of events of each month in the menu.</source>
-        <target>Mostra o número de eventos de cada mês no menu.</target>
+        <target>Mostrar o número de eventos de cada mês no menu.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
-        <target>Lista de Eventos</target>
+        <target>Lista de eventos</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_day">
         <source>Day</source>
@@ -122,31 +123,31 @@
       </trans-unit>
       <trans-unit id="tl_module.next_7">
         <source>+ 1 week</source>
-        <target>+1 semana</target>
+        <target>+ 1 semana</target>
       </trans-unit>
       <trans-unit id="tl_module.next_14">
         <source>+ 2 weeks</source>
-        <target>+2 semanas</target>
+        <target>+ 2 semanas</target>
       </trans-unit>
       <trans-unit id="tl_module.next_30">
         <source>+ 1 month</source>
-        <target>+1 mês</target>
+        <target>+ 1 mês</target>
       </trans-unit>
       <trans-unit id="tl_module.next_90">
         <source>+ 3 months</source>
-        <target>+3 meses</target>
+        <target>+ 3 meses</target>
       </trans-unit>
       <trans-unit id="tl_module.next_180">
         <source>+ 6 months</source>
-        <target>+6 meses</target>
+        <target>+ 6 meses</target>
       </trans-unit>
       <trans-unit id="tl_module.next_365">
         <source>+ 1 year</source>
-        <target>+1 ano</target>
+        <target>+ 1 ano</target>
       </trans-unit>
       <trans-unit id="tl_module.next_two">
         <source>+ 2 years</source>
-        <target>+2 anos</target>
+        <target>+ 2 anos</target>
       </trans-unit>
       <trans-unit id="tl_module.next_cur_month">
         <source>of the current month</source>
@@ -166,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_module.next_all">
         <source>All upcoming events</source>
-        <target>Todos os próximos eventos</target>
+        <target>Todos próximos eventos</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_past">
         <source>Past events</source>
@@ -174,31 +175,31 @@
       </trans-unit>
       <trans-unit id="tl_module.past_7">
         <source>- 1 week</source>
-        <target>-1 semana</target>
+        <target>- 1 semana</target>
       </trans-unit>
       <trans-unit id="tl_module.past_14">
         <source>- 2 weeks</source>
-        <target>-2 semanas</target>
+        <target>- 2 semanas</target>
       </trans-unit>
       <trans-unit id="tl_module.past_30">
         <source>- 1 month</source>
-        <target>-1 mês</target>
+        <target>- 1 mês</target>
       </trans-unit>
       <trans-unit id="tl_module.past_90">
         <source>- 3 months</source>
-        <target>-3 meses</target>
+        <target>- 3 meses</target>
       </trans-unit>
       <trans-unit id="tl_module.past_180">
         <source>- 6 months</source>
-        <target>-6 meses</target>
+        <target>- 6 meses</target>
       </trans-unit>
       <trans-unit id="tl_module.past_365">
         <source>- 1 year</source>
-        <target>-1 ano</target>
+        <target>- 1 ano</target>
       </trans-unit>
       <trans-unit id="tl_module.past_two">
         <source>- 2 years</source>
-        <target>-2 anos</target>
+        <target>- 2 anos</target>
       </trans-unit>
       <trans-unit id="tl_module.past_cur_month">
         <source>of the current month</source>
@@ -210,15 +211,15 @@
       </trans-unit>
       <trans-unit id="tl_module.past_prev_month">
         <source>of the previous month</source>
-        <target>do mês passado</target>
+        <target>do mês anterior</target>
       </trans-unit>
       <trans-unit id="tl_module.past_prev_year">
         <source>of the previous year</source>
-        <target>do ano passado</target>
+        <target>do ano anterior</target>
       </trans-unit>
       <trans-unit id="tl_module.past_all">
         <source>All past events</source>
-        <target>Todos os eventos passados</target>
+        <target>Todos eventos passados</target>
       </trans-unit>
     </body>
   </file>

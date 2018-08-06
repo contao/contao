@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
 /**
@@ -35,15 +37,15 @@ class ModuleEventReader extends Events
 	/**
 	 * Display a wildcard in the back end
 	 *
+	 * @throws InternalServerErrorException
+	 *
 	 * @return string
 	 */
 	public function generate()
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
 			$objTemplate = new \BackendTemplate('be_wildcard');
-
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -59,30 +61,17 @@ class ModuleEventReader extends Events
 			\Input::setGet('events', \Input::get('auto_item'));
 		}
 
-		// Do not index or cache the page if no event has been specified
+		// Return an empty string if "events" is not set (to combine list and reader on same page)
 		if (!\Input::get('events'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
 		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
 
-		// Do not index or cache the page if there are no calendars
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
-			return '';
+			throw new InternalServerErrorException('The event reader ID ' . $this->id . ' has no calendars specified.', $this->id);
 		}
 
 		return parent::generate();
@@ -185,10 +174,8 @@ class ModuleEventReader extends Events
 			}
 		}
 
-		/** @var FrontendTemplate|object $objTemplate */
 		$objTemplate = new \FrontendTemplate($this->cal_template);
 		$objTemplate->setData($objEvent->row());
-
 		$objTemplate->date = $strDate;
 		$objTemplate->time = $strTime;
 		$objTemplate->datetime = $objEvent->addTime ? date('Y-m-d\TH:i:sP', $intStartTime) : date('Y-m-d', $intStartTime);
@@ -202,6 +189,15 @@ class ModuleEventReader extends Events
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
+
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
+			$responseTagger->addTags(array('contao.db.tl_calendar.' . $objEvent->pid));
+		}
 
 		// Clean the RTE output
 		if ($objEvent->teaser != '')

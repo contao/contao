@@ -46,8 +46,8 @@
         <target>終了時刻</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>開始時刻と終了時刻に同じ値を使用すると、終了時刻を定めないイベントを作成します。</target>
+        <source>Leave blank to create an open-ended event.</source>
+        <target>空欄にすると終了日を定めないイベントを作成します。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>

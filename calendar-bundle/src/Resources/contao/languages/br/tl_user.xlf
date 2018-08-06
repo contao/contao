@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarp.1">
         <source>Here you can define the calendar permissions.</source>
-        <target>Gellout a rit termenañ an aotreoù deiziataer amañ.</target>
+        <target>Gellout a rit termenañ an aotreoù deiziataer.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
         <source>Allowed RSS feeds</source>
-        <target>Froudoù Rss aotreet</target>
+        <target>Froudoù RSS aotreet</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>

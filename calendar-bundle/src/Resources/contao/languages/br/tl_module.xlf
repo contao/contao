@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.0">
         <source>Shortened view</source>
-        <target>Gwel berraet </target>
+        <target>Gwel berraet</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>

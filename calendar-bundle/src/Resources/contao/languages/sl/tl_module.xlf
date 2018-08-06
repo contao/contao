@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
-        <target>Ne prikaži dogodkov v teku</target>
+        <target>Skrij dogodke v teku</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>

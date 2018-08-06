@@ -46,8 +46,7 @@
         <target>Eurvezh fin</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Grit gant ar memes talvoud hag an eurvezh loc'h hag eurvezh fin evit krouiñ un darvoud open-ended.</target>
+        <source>Leave blank to create an open-ended event.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -191,7 +190,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
-        <target>Pajenn adhentañ</target>
+        <target>Pajenn adhenchañ</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>

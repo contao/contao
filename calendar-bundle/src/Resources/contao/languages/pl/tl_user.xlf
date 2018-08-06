@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Events permissions</source>
-        <target>Uprawnienia wydrazeń</target>
+        <target>Uprawnienia wydarzeń</target>
       </trans-unit>
     </body>
   </file>
