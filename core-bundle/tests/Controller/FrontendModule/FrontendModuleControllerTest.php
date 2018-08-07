@@ -38,11 +38,20 @@ class FrontendModuleControllerTest extends TestCase
         $controller(new Request([], [], ['_scope' => 'frontend']), new ModuleModel(), 'main');
     }
 
-    public function testCreatesTheTemplateFromTheFragmentOptions(): void
+    public function testCreatesTheTemplateFromTheTypeFragmentOption(): void
     {
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_foo'));
         $controller->setFragmentOptions(['type' => 'foo']);
+
+        $controller(new Request(), new ModuleModel(), 'main');
+    }
+
+    public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
+    {
+        $controller = new TestController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_bar'));
+        $controller->setFragmentOptions(['template' => 'mod_bar']);
 
         $controller(new Request(), new ModuleModel(), 'main');
     }

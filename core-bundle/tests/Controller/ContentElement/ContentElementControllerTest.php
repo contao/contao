@@ -38,11 +38,20 @@ class ContentElementControllerTest extends TestCase
         $controller(new Request(), new ContentModel(), 'main');
     }
 
-    public function testCreatesTheTemplateFromTheFragmentOptions(): void
+    public function testCreatesTheTemplateFromTheTypeFragmentOptions(): void
     {
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_foo'));
         $controller->setFragmentOptions(['type' => 'foo']);
+
+        $controller(new Request(), new ContentModel(), 'main');
+    }
+
+    public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
+    {
+        $controller = new TestController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_bar'));
+        $controller->setFragmentOptions(['template' => 'ce_bar']);
 
         $controller(new Request(), new ContentModel(), 'main');
     }

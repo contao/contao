@@ -37,6 +37,10 @@ abstract class AbstractFragmentController extends Controller implements Fragment
      */
     protected function createTemplate(Model $model, string $templateName): Template
     {
+        if (isset($this->options['template'])) {
+            $templateName = $this->options['template'];
+        }
+
         if ($model->customTpl) {
             $templateName = $model->customTpl;
         }
