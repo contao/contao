@@ -34,6 +34,7 @@ class RegisterHookListenersPassTest extends TestCase
             'hook' => 'initializeSystem',
             'method' => 'onInitializeSystem',
             'priority' => 10,
+            'private' => false,
         ];
 
         $definition = new Definition('Test\HookListener');
@@ -55,6 +56,28 @@ class RegisterHookListenersPassTest extends TestCase
             ],
             $this->getHookListenersFromDefinition($container)[0]
         );
+    }
+
+    public function testMakesHookListenersPublic(): void
+    {
+        $attributes = [
+            'hook' => 'initializeSystem',
+            'method' => 'onInitializeSystem',
+        ];
+
+        $definition = new Definition('Test\HookListener');
+        $definition->addTag('contao.hook', $attributes);
+        $definition->setPublic(false);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $this->assertFalse($container->findDefinition('test.hook_listener')->isPublic());
+
+        $pass = new RegisterHookListenersPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->findDefinition('test.hook_listener')->isPublic());
     }
 
     public function testGeneratesMethodNameIfNoneGiven(): void

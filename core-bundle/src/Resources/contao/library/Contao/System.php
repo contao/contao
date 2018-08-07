@@ -19,6 +19,7 @@ use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -142,6 +143,8 @@ abstract class System
 	 * @param string  $strClass The class name
 	 * @param string  $strKey   An optional key to store the object under
 	 * @param boolean $blnForce If true, existing objects will be overridden
+	 *
+	 * @throws ServiceNotFoundException
 	 */
 	protected function import($strClass, $strKey=null, $blnForce=false)
 	{
@@ -164,6 +167,10 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
+			elseif (strpos($strClass, '.') !== false)
+			{
+				throw new ServiceNotFoundException($strClass, null, null, [], sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
 				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
@@ -181,6 +188,8 @@ abstract class System
 	 * @param string  $strClass The class name
 	 * @param string  $strKey   An optional key to store the object under
 	 * @param boolean $blnForce If true, existing objects will be overridden
+	 *
+	 * @throws ServiceNotFoundException
 	 *
 	 * @return object The imported object
 	 */
@@ -204,6 +213,10 @@ abstract class System
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
+			}
+			elseif (strpos($strClass, '.') !== false)
+			{
+				throw new ServiceNotFoundException($strClass, null, null, [], sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
