@@ -20,7 +20,6 @@ use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsBundle\Picker\NewsPickerProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -122,7 +121,6 @@ class ContaoNewsExtensionTest extends TestCase
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
 
         $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);
