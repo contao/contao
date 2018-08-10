@@ -1987,6 +1987,11 @@ fieldset.collapsed > legend {
 		font-size:.5rem;
 		padding:24px 0 8px;
 	}
+	#tmenu ul.level_2 .icon-two-factor {
+		background:url("icons/shield.svg") center 8px no-repeat;
+		font-size:.5rem;
+		padding:24px 0 8px;
+	}
 	#tmenu ul.level_2 .icon-logout {
 		background:url("icons/exit.svg") center 8px no-repeat;
 		font-size:.5rem;
