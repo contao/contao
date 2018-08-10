@@ -37,7 +37,7 @@ class ModuleTwoFactor extends BackendModule
 
 		$container = System::getContainer();
 		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$return = $container->get('router')->generate('contao_backend', array('do'=>'two-factor', 'ref'=>$ref));
+		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
 		$user = BackendUser::getInstance();
 
 		// Inform the user if 2FA is enforced
@@ -64,7 +64,7 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$this->Template->isEnabled = $this->User->useTwoFactor;
-		$this->Template->activation = $GLOBALS['TL_LANG']['MSC']['twoFactorActivation'];
+		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
 		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
 		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
