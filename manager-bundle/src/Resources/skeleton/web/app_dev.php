@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -76,5 +77,9 @@ ContaoKernel::setProjectDir(\dirname(__DIR__));
 // Handle the request
 $kernel = new ContaoKernel('dev', true);
 $response = $kernel->handle($request);
+
+// Remove the X-Cache-Tags header before sending the response
+$response->headers->remove(TagHeaderFormatter::DEFAULT_HEADER_NAME);
+
 $response->send();
 $kernel->terminate($request, $response);
