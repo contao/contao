@@ -169,7 +169,7 @@ abstract class System
 			}
 			elseif (strpos($strClass, '.') !== false)
 			{
-				throw new ServiceNotFoundException($strClass, null, null, [], sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
@@ -216,7 +216,7 @@ abstract class System
 			}
 			elseif (strpos($strClass, '.') !== false)
 			{
-				throw new ServiceNotFoundException($strClass, null, null, [], sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{

@@ -179,7 +179,6 @@ class ToggleViewListenerTest extends TestCase
      */
     private function getCookie(Response $response): ?Cookie
     {
-        /** @var Cookie[] $cookies */
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {

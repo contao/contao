@@ -90,7 +90,6 @@ class ContaoUserProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
-        /** @var User $user */
         $user = $this->loadUserByUsername($user->getUsername());
 
         $this->validateSessionLifetime($user);
