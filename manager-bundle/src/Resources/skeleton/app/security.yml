@@ -78,5 +78,5 @@ security:
                 success_handler: contao.security.logout_success_handler
 
     access_control:
-        - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/contao, roles: ROLE_USER }
+        - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao(/|$), roles: ROLE_USER }
