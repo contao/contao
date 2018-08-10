@@ -17,7 +17,6 @@ use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -74,7 +73,6 @@ class ContaoFaqExtensionTest extends TestCase
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
 
         $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);
