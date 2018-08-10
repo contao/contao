@@ -134,7 +134,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function addFiles(string $webDir, bool $dev = true): void
     {
-        /** @var Finder $finder */
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
