@@ -46,7 +46,6 @@ class Version440Update extends AbstractVersionUpdate
         ');
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            /** @var array $scripts */
             $scripts = StringUtil::deserialize($layout->scripts);
 
             if (!empty($scripts) && \is_array($scripts)) {
