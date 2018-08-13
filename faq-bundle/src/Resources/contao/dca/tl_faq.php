@@ -393,7 +393,7 @@ class tl_faq extends Backend
 				}
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->question), $slugOptions);
+			$varValue = StringUtil::generateSlug($dc->activeRecord->question, $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_faq WHERE alias=? AND id!=?")
