@@ -1,6 +1,6 @@
 # Contao manager bundle change log
 
-## DEV
+## 4.4.21 (2018-08-13)
 
  * Revert the intermediate maintenance mode fix (see #78)
 
