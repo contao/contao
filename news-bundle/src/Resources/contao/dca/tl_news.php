@@ -659,7 +659,7 @@ class tl_news extends Backend
 				}
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->headline), $slugOptions);
+			$varValue = StringUtil::generateSlug($dc->activeRecord->headline, $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_news WHERE alias=? AND id!=?")
