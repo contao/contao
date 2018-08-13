@@ -481,7 +481,7 @@ class tl_newsletter extends Backend
 				}
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->subject), $slugOptions);
+			$varValue = StringUtil::generateSlug($dc->activeRecord->subject, $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")
