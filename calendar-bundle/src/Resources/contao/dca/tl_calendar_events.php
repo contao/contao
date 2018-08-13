@@ -695,7 +695,7 @@ class tl_calendar_events extends Backend
 				}
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+			$varValue = StringUtil::generateSlug($dc->activeRecord->title, $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")
