@@ -454,7 +454,7 @@ class tl_form extends Backend
 				}
 			}
 
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+			$varValue = StringUtil::generateSlug($dc->activeRecord->title, $slugOptions);
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_form WHERE id=? OR alias=?")

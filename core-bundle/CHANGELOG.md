@@ -1,5 +1,11 @@
 # Contao core bundle change log
 
+## DEV
+
+ * Prefix numeric aliases with `id-` (see #1598).
+ * Correctly set the back end headline for custom actions (see contao/newsletter-bundle#23). 
+ * Remove support for deprecated user password hashes (see #1608).
+
 ## 4.5.10 (2018-06-26)
 
  * Make the session listener compatible with Symfony 3.4.12.
