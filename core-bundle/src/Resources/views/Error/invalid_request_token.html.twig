@@ -1,0 +1,14 @@
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ error.requestToken }}
+{% endblock %}
+{% block matter %}
+    <p>{{ error.invalidToken }}</p>
+{% endblock %}
+{% block howToFix %}
+    <p>{{ error.tokenRetry|raw }}</p>
+{% endblock %}
+{% block explain %}
+    <p>{{ error.tokenExplainOne|raw }}</p>
+    <p>{{ error.tokenExplainTwo|raw }}</p>
+{% endblock %}
