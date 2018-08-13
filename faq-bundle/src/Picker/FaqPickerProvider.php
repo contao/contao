@@ -63,6 +63,10 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     {
         $attributes = ['fieldType' => 'radio'];
 
+        if ($source = $config->getExtra('source')) {
+            $attributes['preserveRecord'] = $source;
+        }
+
         if ($this->supportsValue($config)) {
             $attributes['value'] = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
         }
