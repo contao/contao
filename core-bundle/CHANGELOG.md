@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.21 (2018-08-13)
 
  * Correctly set the back end headline for custom actions (see contao/newsletter-bundle#23). 
  * Remove support for deprecated user password hashes (see #1608).
