@@ -63,6 +63,10 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     {
         $attributes = ['fieldType' => 'radio'];
 
+        if ($source = $config->getExtra('source')) {
+            $attributes['preserveRecord'] = $source;
+        }
+
         if ($this->supportsValue($config)) {
             $attributes['value'] = str_replace(['{{news_url::', '}}'], '', $config->getValue());
         }
