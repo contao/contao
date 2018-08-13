@@ -14,9 +14,13 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\SessionListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
+use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
@@ -30,11 +34,53 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
 class SessionListenerTest extends TestCase
 {
     /**
+     * @var BaseSessionListener|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $inner;
+
+    /**
+     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $framework;
+
+    /**
+     * @var ScopeMatcher|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $scopeMatcher;
+
+    /**
+     * @var HeaderStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $headerStorage;
+
+    /**
+     * @var SessionListener
+     */
+    private $listener;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->inner = $this->createMock(BaseSessionListener::class);
+        $this->framework = $this->createMock(ContaoFrameworkInterface::class);
+        $this->scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $this->headerStorage = new MemoryHeaderStorage();
+
+        $this->listener = new SessionListener(
+            $this->inner,
+            $this->framework,
+            $this->scopeMatcher,
+            $this->headerStorage
+        );
+    }
+
+    /**
      * Tests the object instantiation.
      */
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $this->getListener());
+        $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $this->listener);
     }
 
     /**
@@ -43,16 +89,14 @@ class SessionListenerTest extends TestCase
     public function testForwardsTheOnKernelRequestCall(): void
     {
         $event = $this->createMock(GetResponseEvent::class);
-        $inner = $this->createMock(BaseSessionListener::class);
 
-        $inner
+        $this->inner
             ->expects($this->once())
             ->method('onKernelRequest')
             ->with($event)
         ;
 
-        $listener = $this->getListener($inner);
-        $listener->onKernelRequest($event);
+        $this->listener->onKernelRequest($event);
     }
 
     /**
@@ -65,16 +109,14 @@ class SessionListenerTest extends TestCase
         }
 
         $event = $this->createMock(FinishRequestEvent::class);
-        $inner = $this->createMock(BaseSessionListener::class);
 
-        $inner
+        $this->inner
             ->expects($this->once())
             ->method('onFinishRequest')
             ->with($event)
         ;
 
-        $listener = $this->getListener($inner);
-        $listener->onFinishRequest($event);
+        $this->listener->onFinishRequest($event);
     }
 
     /**
@@ -87,7 +129,6 @@ class SessionListenerTest extends TestCase
         }
 
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -103,37 +144,35 @@ class SessionListenerTest extends TestCase
         $request->setSession($session);
 
         $event = $this->createMock(FilterResponseEvent::class);
-
         $event
             ->expects($this->once())
             ->method('getRequest')
             ->willReturn($request)
         ;
 
-        $inner = $this->createMock(BaseSessionListener::class);
+        $event
+            ->expects($this->any())
+            ->method('getResponse')
+            ->willReturn(new Response())
+        ;
 
-        $inner
+        $this->inner
             ->expects($this->never())
             ->method('onKernelResponse')
             ->with($event)
         ;
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
+        $this->framework
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
-        $scopeMatcher
+        $this->scopeMatcher
             ->method('isFrontendMasterRequest')
             ->willReturn(true)
         ;
 
-        $listener = $this->getListener($inner, $framework, $scopeMatcher);
-        $listener->onKernelResponse($event);
+        $this->listener->onKernelResponse($event);
     }
 
     /**
@@ -146,36 +185,33 @@ class SessionListenerTest extends TestCase
         }
 
         $event = $this->createMock(FilterResponseEvent::class);
-
         $event
             ->expects($this->never())
             ->method('getRequest')
         ;
 
-        $inner = $this->createMock(BaseSessionListener::class);
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
 
-        $inner
+        $this->inner
             ->expects($this->once())
             ->method('onKernelResponse')
             ->with($event)
         ;
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
+        $this->framework
             ->method('isInitialized')
             ->willReturn(false)
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
-        $scopeMatcher
+        $this->scopeMatcher
             ->expects($this->never())
             ->method('isFrontendMasterRequest')
         ;
 
-        $listener = $this->getListener($inner, $framework, $scopeMatcher);
-        $listener->onKernelResponse($event);
+        $this->listener->onKernelResponse($event);
     }
 
     /**
@@ -188,37 +224,131 @@ class SessionListenerTest extends TestCase
         }
 
         $event = $this->createMock(FilterResponseEvent::class);
-
         $event
             ->expects($this->never())
             ->method('getRequest')
         ;
 
-        $inner = $this->createMock(BaseSessionListener::class);
+        $event
+            ->expects($this->never())
+            ->method('getResponse')
+        ;
 
-        $inner
+        $this->inner
             ->expects($this->once())
             ->method('onKernelResponse')
             ->with($event)
         ;
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
+        $this->framework
             ->method('isInitialized')
             ->willReturn(true)
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
-        $scopeMatcher
+        $this->scopeMatcher
             ->expects($this->once())
             ->method('isFrontendMasterRequest')
             ->willReturn(false)
         ;
 
-        $listener = $this->getListener($inner, $framework, $scopeMatcher);
-        $listener->onKernelResponse($event);
+        $this->listener->onKernelResponse($event);
+    }
+
+    /**
+     * Tests that the session cookie is moved from the Symfony response to the PHP headers.
+     */
+    public function testMovesTheSessionCookieFromTheSymfonyResponseToThePhpHeaders(): void
+    {
+        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
+            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.4.');
+        }
+
+        $request = new Request();
+        $request->setSession($this->createMock(SessionInterface::class));
+
+        $response = new Response();
+        $response->setSharedMaxAge(3600);
+        $response->headers->setCookie(new Cookie(session_name(), 'foobar'));
+
+        $event = $this->createMock(FilterResponseEvent::class);
+        $event
+            ->expects($this->any())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
+
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $this->scopeMatcher
+            ->method('isFrontendMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $this->assertEmpty($this->headerStorage->all());
+
+        $this->listener->onKernelResponse($event);
+
+        $this->assertTrue($response->isCacheable());
+        $this->assertEmpty($response->headers->getCookies());
+
+        $headers = $this->headerStorage->all();
+
+        $this->assertCount(1, $headers);
+        $this->assertStringStartsWith('Set-Cookie: PHPSESSID=foobar', $headers[0]);
+    }
+
+    public function testMakesResponsePrivateIfItHasNonSessionCookies(): void
+    {
+        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
+            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.4.');
+        }
+
+        $request = new Request();
+        $request->setSession($this->createMock(SessionInterface::class));
+
+        $response = new Response();
+        $response->setSharedMaxAge(3600);
+        $response->headers->setCookie(new Cookie('foo', 'bar'));
+
+        $event = $this->createMock(FilterResponseEvent::class);
+        $event
+            ->expects($this->any())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
+
+        $this->framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $this->scopeMatcher
+            ->method('isFrontendMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $this->assertTrue($response->isCacheable());
+
+        $this->listener->onKernelResponse($event);
+
+        $this->assertFalse($response->isCacheable());
+        $this->assertCount(1, $response->headers->getCookies());
+        $this->assertEmpty($this->headerStorage->all());
     }
 
     /**
@@ -228,33 +358,7 @@ class SessionListenerTest extends TestCase
     {
         $this->assertSame(
             AbstractSessionListener::getSubscribedEvents(),
-            $this->getListener()->getSubscribedEvents()
+            SessionListener::getSubscribedEvents()
         );
-    }
-
-    /**
-     * Returns the session listener object.
-     *
-     * @param BaseSessionListener|null      $inner
-     * @param ContaoFrameworkInterface|null $framework
-     * @param ScopeMatcher|null             $scopeMatcher
-     *
-     * @return SessionListener
-     */
-    private function getListener(BaseSessionListener $inner = null, ContaoFrameworkInterface $framework = null, ScopeMatcher $scopeMatcher = null): SessionListener
-    {
-        if (null === $inner) {
-            $inner = $this->createMock(BaseSessionListener::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFrameworkInterface::class);
-        }
-
-        if (null === $scopeMatcher) {
-            $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        }
-
-        return new SessionListener($inner, $framework, $scopeMatcher);
     }
 }

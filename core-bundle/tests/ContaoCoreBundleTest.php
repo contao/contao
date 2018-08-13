@@ -141,10 +141,10 @@ class ContaoCoreBundleTest extends TestCase
         $bundle->build($container);
 
         $classes = [];
+        $config = $container->getCompilerPassConfig();
 
-        foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
-            $reflection = new \ReflectionClass($pass);
-            $classes[] = $reflection->getName();
+        foreach ($config->getBeforeOptimizationPasses() as $pass) {
+            $classes[] = (new \ReflectionClass($pass))->getName();
         }
 
         $fragmentsPosition = array_search(RegisterFragmentsPass::class, $classes, true);

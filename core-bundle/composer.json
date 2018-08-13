@@ -86,7 +86,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
-        "contao/manager-plugin": "^2.0",
+        "contao/manager-plugin": "^2.2",
         "contao/test-case": "^1.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",

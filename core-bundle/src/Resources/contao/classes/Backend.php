@@ -439,22 +439,19 @@ abstract class Backend extends \Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && \in_array(\Input::get('table'), $arrTables) && \Input::get('table') != $arrTables[0])
+			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(\Input::get('table'), $arrTables) && \Input::get('table') != $arrTables[0])
 			{
-				if ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] != '')
-				{
-					$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=?")
-											 ->limit(1)
-											 ->execute(CURRENT_ID);
+				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
+										 ->limit(1)
+										 ->execute(\Input::get('id'));
 
-					if ($objRow->title != '')
-					{
-						$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
-					}
-					elseif ($objRow->name != '')
-					{
-						$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
-					}
+				if ($objRow->title != '')
+				{
+					$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
+				}
+				elseif ($objRow->name != '')
+				{
+					$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
 				}
 			}
 
