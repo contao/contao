@@ -255,9 +255,9 @@ class SessionListenerTest extends TestCase
     }
 
     /**
-     * @runInSeparateProcess
+     * Tests that the session cookie is moved from the Symfony response to the PHP headers.
      */
-    public function testRewritesTheSessionCookie()
+    public function testMovesTheSessionCookieFromTheSymfonyResponseToThePhpHeaders()
     {
         if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
             $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.4.');
