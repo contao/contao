@@ -62,6 +62,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be applied to the image tag.</source>
+        <target>کلاس‌های CSS به برچسب تصویر اعمال خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

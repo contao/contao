@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.5.11 (2018-08-13)
 
  * Prefix numeric aliases with `id-` (see #1598).
  * Correctly set the back end headline for custom actions (see contao/newsletter-bundle#23). 

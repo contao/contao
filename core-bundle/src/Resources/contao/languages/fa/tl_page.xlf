@@ -131,6 +131,7 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
+        <target>کاراکترهای اسم مستعار معتبر</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
