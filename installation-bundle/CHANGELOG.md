@@ -1,6 +1,6 @@
 # Contao installation bundle change log
 
-## DEV
+## 4.4.21 (2018-08-13)
 
  * Fix the MySQL 8 compatibility (see #93).
 
