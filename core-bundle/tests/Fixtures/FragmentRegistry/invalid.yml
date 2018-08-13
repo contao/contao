@@ -1,0 +1,4 @@
+services:
+    AppBundle\TestTrivialModule:
+        tags:
+            - { name: contao.fragment.frontend_module, category: navigationMenu }
