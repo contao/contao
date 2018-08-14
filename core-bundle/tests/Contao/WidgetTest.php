@@ -81,7 +81,7 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @return (array<string,string>|string|null)[][]
+     * @return (array<int|string,array<string,array<string,string>>|string>|string|null)[][]
      */
     public function postProvider(): array
     {

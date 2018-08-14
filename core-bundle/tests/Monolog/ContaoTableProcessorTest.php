@@ -80,7 +80,7 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return (int|string)[][]
      */
     public function actionLevelProvider(): array
     {
