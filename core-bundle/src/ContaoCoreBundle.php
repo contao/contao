@@ -68,7 +68,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
-        $container->addCompilerPass(new DoctrineMigrationsPass());
+        $container->addCompilerPass(new DoctrineMigrationsPass(), PassConfig::TYPE_BEFORE_REMOVING);
         $container->addCompilerPass(new PickerProviderPass());
         $container->addCompilerPass(new RegisterFragmentsPass());
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));

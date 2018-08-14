@@ -589,6 +589,12 @@ class tl_article extends Backend
 			}
 
 			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
+
+			// Prefix numeric aliases (see #1598)
+			if (is_numeric($varValue))
+			{
+				$varValue = 'id-' . $varValue;
+			}
 		}
 
 		// Add a prefix to reserved names (see #6066)
@@ -858,21 +864,21 @@ class tl_article extends Backend
 					continue;
 				}
 
-				// Set the new alias
 				$slugOptions = array();
 
 				// Read the slug options from the associated page
 				if (($objPage = PageModel::findWithDetails($objArticle->pid)) !== null)
 				{
-					$slugOptions['locale'] = $objPage->language;
-
-					if ($objPage->validAliasCharacters)
-					{
-						$slugOptions['validChars'] = $objPage->validAliasCharacters;
-					}
+					$slugOptions = $objPage->getSlugOptions();
 				}
 
-				$strAlias = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($objArticle->title), $slugOptions);
+				$strAlias = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($objArticle->title), $slugOptions);
+
+				// Prefix numeric aliases (see #1598)
+				if (is_numeric($strAlias))
+				{
+					$strAlias = 'id-' . $strAlias;
+				}
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)

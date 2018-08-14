@@ -15,7 +15,6 @@ namespace Contao;
  *
  * @property array   $allGroups
  * @property string  $loginPage
- * @property boolean $blnRecordExists
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

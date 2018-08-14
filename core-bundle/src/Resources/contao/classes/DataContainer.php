@@ -590,6 +590,7 @@ abstract class DataContainer extends Backend
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
+			$objTemplate->source = $this->strTable . '.' . $this->intId;
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$objTemplate->language = \Backend::getTinyMceLanguage();
