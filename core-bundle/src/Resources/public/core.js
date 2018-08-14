@@ -1471,6 +1471,7 @@ var Backend =
 
 					ds.stop();
 					clone.destroy();
+					window.removeEvent('keyup', onKeyup);
 					ul.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
 					ul.removeClass('tl_listing_dragging');
 				},
@@ -1480,6 +1481,7 @@ var Backend =
 
 					ds.stop();
 					clone.destroy();
+					window.removeEvent('keyup', onKeyup);
 					ul.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
 					ul.removeClass('tl_listing_dragging');
 
@@ -1509,6 +1511,14 @@ var Backend =
 			});
 
 			move.start(event);
+			window.addEvent('keyup', onKeyup);
+
+			function onKeyup(event) {
+				if (event.key === 'esc' && move && move.stop) {
+					move.droppables = $$([]);
+					move.stop();
+				}
+			}
 		});
 
 		function fixDroppable(droppable) {
