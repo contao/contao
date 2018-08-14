@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Exception;
+
+use Symfony\Component\HttpFoundation\Response;
+
+class NoContentResponseException extends ResponseException
+{
+    /**
+     * @param \Exception|null $previous
+     */
+    public function __construct(\Exception $previous = null)
+    {
+        parent::__construct(new Response('', 204), $previous);
+    }
+}
