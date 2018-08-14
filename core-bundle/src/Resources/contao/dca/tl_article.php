@@ -592,7 +592,13 @@ class tl_article extends Backend
 				}
 			}
 
-			$varValue = StringUtil::generateSlug($dc->activeRecord->title, $slugOptions);
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+
+			// Prefix numeric aliases (see #1598)
+			if (is_numeric($varValue))
+			{
+				$varValue = 'id-' . $varValue;
+			}
 		}
 
 		// Add a prefix to reserved names (see #6066)
@@ -876,7 +882,13 @@ class tl_article extends Backend
 					}
 				}
 
-				$strAlias = StringUtil::generateSlug($objArticle->title, $slugOptions);
+				$strAlias = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($objArticle->title), $slugOptions);
+
+				// Prefix numeric aliases (see #1598)
+				if (is_numeric($strAlias))
+				{
+					$strAlias = 'id-' . $strAlias;
+				}
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)

@@ -283,28 +283,6 @@ class StringUtil
 	}
 
 	/**
-	 * Generate a slug from a string
-	 *
-	 * @param string $string
-	 * @param array  $options
-	 *
-	 * @return string The alias
-	 */
-	public static function generateSlug($string, array $options)
-	{
-		$string = static::stripInsertTags($string);
-		$slug = System::getContainer()->get('contao.slug.generator')->generate($string, $options);
-
-		// Prefix numeric aliases (see #1598)
-		if (is_numeric($slug))
-		{
-			$slug = 'id-' . $slug;
-		}
-
-		return $slug;
-	}
-
-	/**
 	 * Censor a single word or an array of words within a string
 	 *
 	 * @param string $strString  The string to censor

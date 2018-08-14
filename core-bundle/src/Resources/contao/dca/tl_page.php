@@ -1041,7 +1041,13 @@ class tl_page extends Backend
 				$slugOptions['validChars'] = $objPage->validAliasCharacters;
 			}
 
-			$varValue = StringUtil::generateSlug($dc->activeRecord->title, $slugOptions);
+			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+
+			// Prefix numeric aliases (see #1598)
+			if (is_numeric($varValue))
+			{
+				$varValue = 'id-' . $varValue;
+			}
 
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl') && $objPage->folderUrl != '')
