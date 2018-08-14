@@ -178,19 +178,23 @@ class NewsPickerProviderTest extends ContaoTestCase
 
     public function testReturnsTheDcaAttributes(): void
     {
+        $extra = ['source' => 'tl_news.2'];
+
         $this->assertSame(
             [
                 'fieldType' => 'radio',
+                'preserveRecord' => 'tl_news.2',
                 'value' => '5',
             ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', [], '{{news_url::5}}'))
+            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{news_url::5}}'))
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
+                'preserveRecord' => 'tl_news.2',
             ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5}}'))
+            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
         );
     }
 
