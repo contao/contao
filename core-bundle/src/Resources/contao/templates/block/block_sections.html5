@@ -1,0 +1,6 @@
+
+<div class="custom">
+  <?php foreach ($this->matches as $section): ?>
+    <?php $this->insert($section['template'], array('id'=>$section['id'], 'content'=>$section['content'])); ?>
+  <?php endforeach; ?>
+</div>
