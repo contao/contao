@@ -148,12 +148,12 @@
             "core-bundle/src/Resources/functions/utf8_bootup.php"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config/",
-            "src/Resources/contao/dca/",
-            "src/Resources/contao/helper/",
-            "src/Resources/contao/languages/",
-            "src/Resources/contao/templates/",
-            "src/Resources/contao/themes/"
+            "*/src/Resources/contao/config/",
+            "*/src/Resources/contao/dca/",
+            "*/src/Resources/contao/helper/",
+            "*/src/Resources/contao/languages/",
+            "*/src/Resources/contao/templates/",
+            "*/src/Resources/contao/themes/"
         ]
     },
     "support": {
