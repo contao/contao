@@ -1,0 +1,9 @@
+{% trans_default_domain 'contao_exception' %}
+{% extends "@ContaoCore/Error/layout.html.twig" %}
+{% block title %}
+    {{ statusName }}
+{% endblock %}
+{% block main %}
+    <h2>{{ 'XPT.matter'|trans }}</h2>
+    <p>{{ exception }}</p>
+{% endblock %}
