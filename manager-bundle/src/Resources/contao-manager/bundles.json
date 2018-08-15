@@ -1,0 +1,26 @@
+[
+    "Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle",
+    "Symfony\\Bundle\\SecurityBundle\\SecurityBundle",
+    "Symfony\\Bundle\\TwigBundle\\TwigBundle",
+    "Symfony\\Bundle\\MonologBundle\\MonologBundle",
+    "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
+    "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
+    "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
+    "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
+    "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
+    "Nelmio\\CorsBundle\\NelmioCorsBundle",
+    "Nelmio\\SecurityBundle\\NelmioSecurityBundle",
+    "Contao\\ManagerBundle\\ContaoManagerBundle",
+    {
+        "bundle": "Symfony\\Bundle\\DebugBundle\\DebugBundle",
+        "development": true
+    },
+    {
+        "bundle": "Symfony\\Bundle\\WebProfilerBundle\\WebProfilerBundle",
+        "development": true
+    },
+    {
+        "bundle": "Sensio\\Bundle\\DistributionBundle\\SensioDistributionBundle",
+        "development": true
+    }
+]

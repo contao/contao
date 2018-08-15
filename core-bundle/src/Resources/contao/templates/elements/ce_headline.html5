@@ -1,0 +1,4 @@
+
+<<?= $this->hl ?> class="<?= $this->class ?>"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+  <?= $this->headline ?>
+</<?= $this->hl ?>>
