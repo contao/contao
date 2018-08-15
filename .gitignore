@@ -7,3 +7,6 @@
 
 # PhpUnit
 /phpunit.xml
+
+# Monorepo Tools
+/.monorepo-split-cache/
