@@ -156,6 +156,9 @@
             "*/src/Resources/contao/themes/"
         ]
     },
+    "bin": [
+        "manager-bundle/bin/contao-console"
+    ],
     "support": {
         "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
