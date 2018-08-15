@@ -1,3 +1,5 @@
+monorepo_url: 'git@github.com:contao/contao.git'
+
 repositories:
 
     calendar-bundle:
