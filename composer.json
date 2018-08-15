@@ -98,6 +98,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
+        "contao/monorepo-tools": "dev-master",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
         "friendsofphp/php-cs-fixer": "^2.12",
