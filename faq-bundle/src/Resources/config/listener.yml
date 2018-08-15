@@ -1,0 +1,6 @@
+services:
+    contao_faq.listener.insert_tags:
+        class: Contao\FaqBundle\EventListener\InsertTagsListener
+        arguments:
+            - "@contao.framework"
+        public: true
