@@ -20,6 +20,9 @@ set_time_limit(0);
 if (file_exists(__DIR__.'/../autoload.php')) {
     // Composer bin directory
     $projectDir = dirname(dirname(__DIR__));
+} elseif (file_exists(__DIR__.'/../../../../autoload.php')) {
+    // Package bin directory (monorepo)
+    $projectDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
 } else {
     // Package bin directory
     $projectDir = dirname(dirname(dirname(dirname(__DIR__))));
