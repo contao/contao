@@ -38,6 +38,7 @@
         "contao-components/tinymce4": "^4.7",
         "contao/image": "^0.3.5",
         "contao/imagine-svg": "^0.1.2 || ^0.2",
+        "contao/manager-plugin": "^2.6",
         "doctrine/dbal": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.3",
@@ -55,6 +56,7 @@
         "ocramius/package-versions": "^1.2",
         "oyejorge/less.php": "^1.7",
         "patchwork/utf8": "^1.2",
+        "php-http/guzzle6-adapter": "^1.1",
         "phpspec/php-diff": "^1.0",
         "phpunit/php-token-stream": "^1.4 || ^2.0 || ^3.0",
         "psr/log": "^1.0",
@@ -74,7 +76,7 @@
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
-        "contao/manager-plugin": "<2.6 || >=3.0",
+        "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/doctrine-migrations-bundle": "<1.1",
         "doctrine/orm": "<2.4",
         "lexik/maintenance-bundle": "2.1.4",
@@ -96,7 +98,6 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
-        "contao/manager-plugin": "^2.3",
         "contao/test-case": "^1.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
@@ -104,7 +105,6 @@
         "monolog/monolog": "^1.22",
         "ocramius/proxy-manager": "^2.0",
         "php-coveralls/php-coveralls": "^2.1",
-        "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^6.1",
         "symfony/phpunit-bridge": "^3.3"
@@ -150,14 +150,27 @@
             "core-bundle/src/Resources/functions/utf8_bootup.php"
         ],
         "exclude-from-classmap": [
-            "src/Resources/contao/config/",
-            "src/Resources/contao/dca/",
-            "src/Resources/contao/helper/",
-            "src/Resources/contao/languages/",
-            "src/Resources/contao/templates/",
-            "src/Resources/contao/themes/"
+            "*/src/Resources/contao/config/",
+            "*/src/Resources/contao/dca/",
+            "*/src/Resources/contao/helper/",
+            "*/src/Resources/contao/languages/",
+            "*/src/Resources/contao/templates/",
+            "*/src/Resources/contao/themes/"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
+            "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
+            "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
+            "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",
+            "Contao\\ManagerBundle\\Tests\\": "manager-bundle/tests/",
+            "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/"
+        }
+    },
+    "bin": [
+        "manager-bundle/bin/contao-console"
+    ],
     "support": {
         "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",

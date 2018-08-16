@@ -29,7 +29,7 @@ echo $container->get('contao.assets.files_context')->getStaticUrl();
 ## Image service
 
 The `Image` and `Picture` classes have been deprecated in favor of the image
-and picture services. Here are two examples of how to use the services:
+and picture services. Here are three examples of how to use the services:
 
 ### Image::get()
 

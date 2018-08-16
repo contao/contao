@@ -32,8 +32,8 @@ class ScriptHandlerTest extends TestCase
     {
         ScriptHandler::addAppDirectory();
 
-        $this->assertDirectoryExists(__DIR__.'/../../app');
+        $this->assertDirectoryExists(getcwd().'/app');
 
-        (new Filesystem())->remove(__DIR__.'/../../app');
+        (new Filesystem())->remove(getcwd().'/app');
     }
 }

@@ -21,7 +21,6 @@
     "require-dev": {
         "contao/manager-plugin": "^2.0",
         "contao/test-case": "^1.1",
-        "friendsofphp/php-cs-fixer": "^2.12",
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
