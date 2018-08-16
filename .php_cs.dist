@@ -10,7 +10,24 @@ EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('Resources')
-    ->in([__DIR__.'/src', __DIR__.'/tests'])
+    ->exclude('Fixtures')
+    ->in([
+        __DIR__.'/calendar-bundle/src',
+        __DIR__.'/calendar-bundle/tests',
+        __DIR__.'/comments-bundle/src',
+        __DIR__.'/core-bundle/src',
+        __DIR__.'/core-bundle/tests',
+        __DIR__.'/faq-bundle/src',
+        __DIR__.'/faq-bundle/tests',
+        __DIR__.'/installation-bundle/src',
+        __DIR__.'/installation-bundle/tests',
+        __DIR__.'/listing-bundle/src',
+        __DIR__.'/manager-bundle/src',
+        __DIR__.'/manager-bundle/tests',
+        __DIR__.'/news-bundle/src',
+        __DIR__.'/news-bundle/tests',
+        __DIR__.'/newsletter-bundle/src',
+    ])
 ;
 
 return PhpCsFixer\Config::create()
@@ -19,9 +36,11 @@ return PhpCsFixer\Config::create()
         '@Symfony:risky' => true,
         '@PHPUnit60Migration:risky' => true,
         'align_multiline_comment' => true,
+        'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
+        'comment_to_phpdoc' => true,
         'compact_nullable_typehint' => true,
         'general_phpdoc_annotation_remove' => [
             'expectedException',

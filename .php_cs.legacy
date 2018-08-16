@@ -4,7 +4,15 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('languages')
     ->exclude('templates')
     ->exclude('themes')
-    ->in(__DIR__)
+    ->in([
+        __DIR__.'/calendar-bundle/src/Resources/contao',
+        __DIR__.'/comments-bundle/src/Resources/contao',
+        __DIR__.'/core-bundle/src/Resources/contao',
+        __DIR__.'/faq-bundle/src/Resources/contao',
+        __DIR__.'/listing-bundle/src/Resources/contao',
+        __DIR__.'/news-bundle/src/Resources/contao',
+        __DIR__.'/newsletter-bundle/src/Resources/contao',
+    ])
 ;
 
 return PhpCsFixer\Config::create()
