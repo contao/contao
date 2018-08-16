@@ -18,7 +18,9 @@ matrix:
   include:
     # Latest dependencies with all PHP versions
     - php: 5.6
+      env: ADJUST_PLUGIN_VERSION=1
     - php: 7.0
+      env: ADJUST_PLUGIN_VERSION=1
     - php: 7.1
     - php: 7.2
 
@@ -28,7 +30,7 @@ matrix:
 
     # Lowest dependencies with the oldest and latest PHP versions
     - php: 5.6
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' ADJUST_PLUGIN_VERSION=1
     - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
   fast_finish: true
@@ -36,6 +38,7 @@ matrix:
 before_install:
   - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - if [[ $ADJUST_PLUGIN_VERSION ]]; then composer require contao/manager-plugin:^2.2; fi
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
