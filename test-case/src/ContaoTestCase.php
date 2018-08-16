@@ -235,6 +235,11 @@ abstract class ContaoTestCase extends TestCase
     private function loadDefaultConfiguration(): void
     {
         switch (true) {
+            // The core-bundle is in the vendor folder of the monorepo
+            case file_exists(__DIR__.'/../../../../core-bundle/src/Resources/contao/config/default.php'):
+                include __DIR__.'/../../../../core-bundle/src/Resources/contao/config/default.php';
+                break;
+
             // The core-bundle is in the vendor folder of the managed edition
             case file_exists(__DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php'):
                 include __DIR__.'/../../../../../core-bundle/src/Resources/contao/config/default.php';
