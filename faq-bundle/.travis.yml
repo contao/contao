@@ -22,10 +22,6 @@ matrix:
     - php: 7.1
     - php: 7.2
 
-    # Generate the coverage with the latest PHP version
-    - php: 7.2
-      env: COVERAGE='--exclude-group contao3 --coverage-clover build/logs/clover.xml'
-
     # Lowest dependencies with the oldest and latest PHP versions
     - php: 5.6
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
@@ -34,7 +30,7 @@ matrix:
   fast_finish: true
 
 before_install:
-  - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
+  - phpenv config-rm xdebug.ini
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install:
@@ -43,8 +39,4 @@ install:
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
-  - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
-  - php vendor/bin/phpunit $COVERAGE
-
-after_script:
-  - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls; fi
+  - php vendor/bin/phpunit
