@@ -44,6 +44,6 @@ class ScriptHandlerTest extends TestCase
     {
         ScriptHandler::addAppDirectory();
 
-        (new Filesystem())->remove(__DIR__.'/../../app');
+        (new Filesystem())->remove(getcwd().'/app');
     }
 }

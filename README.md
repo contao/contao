@@ -3,18 +3,15 @@
 This is a monorepo holding the official Contao 4 bundles. **Please do not use
 this package in production** but install the split packages instead:
 
-```bash
-composer require \
-    contao/calendar-bundle:^4.4 \
-    contao/comments-bundle:^4.4 \
-    contao/core-bundle:4.4.* \
-    contao/faq-bundle:^4.4 \
-    contao/installation-bundle:^4.4 \
-    contao/listing-bundle:^4.4 \
-    contao/manager-bundle:^4.4 \
-    contao/news-bundle:^4.4 \
-    contao/newsletter-bundle:^4.4
-```
+ * [CalendarBundle](https://github.com/contao/calendar-bundle)
+ * [CommentsBundle](https://github.com/contao/comments-bundle)
+ * [CoreBundle](https://github.com/contao/core-bundle)
+ * [FaqBundle](https://github.com/contao/faq-bundle)
+ * [InstallationBundle](https://github.com/contao/installation-bundle)
+ * [ListingBundle](https://github.com/contao/listing-bundle)
+ * [ManagerBundle](https://github.com/contao/manager-bundle)
+ * [NewsBundle](https://github.com/contao/news-bundle)
+ * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
 
 Contao is an Open Source PHP Content Management System for people who want a
 professional website that is easy to maintain. Visit the [project website][1]
