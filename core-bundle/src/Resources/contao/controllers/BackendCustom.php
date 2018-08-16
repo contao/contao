@@ -51,7 +51,11 @@ class BackendCustom extends BackendMain
 	 */
 	public function run()
 	{
-		$this->Template->version = PackageUtil::getVersion('contao/core-bundle');
+		try {
+			$this->Template->version = PackageUtil::getVersion('contao/core-bundle');
+		} catch (\OutOfBoundsException $e) {
+			$this->Template->version = PackageUtil::getVersion('contao/contao');
+		}
 
 		// Ajax request
 		if ($_POST && \Environment::get('isAjaxRequest'))

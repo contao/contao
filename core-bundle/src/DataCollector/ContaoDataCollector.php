@@ -31,7 +31,13 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
      */
     public function collect(Request $request, Response $response, \Exception $exception = null): void
     {
-        $this->data = ['contao_version' => PackageUtil::getVersion('contao/core-bundle')];
+        try {
+            $version = PackageUtil::getVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            $version = PackageUtil::getVersion('contao/contao');
+        }
+
+        $this->data = ['contao_version' => $version];
 
         $this->addSummaryData();
 
