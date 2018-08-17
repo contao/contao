@@ -58,6 +58,7 @@ script:
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c installation-bundle $COVERAGE --coverage-clover build/logs/installation-bundle.xml; else php vendor/bin/phpunit -c installation-bundle; fi
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
+  - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
   - if [[ $MONOREPO_SPLIT == true && $TRAVIS_EVENT_TYPE == "push" ]]; then composer require contao/monorepo-tools:dev-master; vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache; fi
 
 after_script:
