@@ -67,7 +67,7 @@ class ApplicationTest extends ContaoTestCase
             ->method('all')
             ->willReturn([
                 'contao_manager' => [
-                     'disabled_packages' => ['foo/bar'],
+                    'disabled_packages' => ['foo/bar'],
                 ],
             ])
         ;
@@ -119,7 +119,7 @@ class ApplicationTest extends ContaoTestCase
         $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
 
-        /* @var array $commands */
+        /** @var array $commands */
         $commands = $application->all();
 
         $this->assertCount(4, $commands);
