@@ -6,6 +6,7 @@ git:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.monorepo-split-cache
 
 sudo: false
 
@@ -23,6 +24,10 @@ matrix:
       env: ADJUST_PLUGIN_VERSION=1
     - php: 7.1
     - php: 7.2
+
+    # Split the monorepo
+    - php: 7.2
+      env: MONOREPO_SPLIT=true
 
     # Generate the coverage with the latest PHP version
     - php: 7.2
@@ -53,6 +58,7 @@ script:
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c installation-bundle $COVERAGE --coverage-clover build/logs/installation-bundle.xml; else php vendor/bin/phpunit -c installation-bundle; fi
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
+  - if [[ $MONOREPO_SPLIT == true && $TRAVIS_EVENT_TYPE == "push" ]]; then composer require contao/monorepo-tools:dev-master; vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache; fi
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls -x build/logs/calendar-bundle.xml -x build/logs/core-bundle.xml -x build/logs/faq-bundle.xml -x build/logs/installation-bundle.xml -x build/logs/manager-bundle.xml -x build/logs/news-bundle.xml; fi
