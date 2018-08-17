@@ -2,7 +2,7 @@
 
 Thank you for contributing to Contao.
 
-This repository a read-only copy of the news-bundle directory in the main Contao repository. It is used by Composer to allow developers to depend on specific Contao bundles.
+This repository is a read-only copy of the news-bundle directory in the main Contao repository. It is used by Composer to allow developers to depend on specific Contao bundles.
 
 Please open a pull request here instead: https://github.com/contao/contao
 
