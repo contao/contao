@@ -21,13 +21,22 @@ function phpunit() {
 }
 
 function php-cs-fixer() {
-  if [[ ! -e ./vendor/bin/phpunit ]]; then
+  if [[ ! -e ./vendor/bin/php-cs-fixer ]]; then
     echo "The vendor/bin/php-cs-fixer file is missing. Did you install the dependencies?"
     exit 1
   fi
 
   vendor/bin/php-cs-fixer fix -v
   vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy
+}
+
+function phpstan() {
+  if [[ ! -e ./vendor/bin/phpstan ]]; then
+    echo "The vendor/bin/phpstan file is missing. Did you install the dependencies?"
+    exit 1
+  fi
+
+  vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3
 }
 
 function tx-push() {
@@ -62,6 +71,7 @@ function usage() {
 Usage: ./run [task]
   phpunit       Run PhpUnit in each bundle
   php-cs-fixer  Run the PHP-CS-Fixer in each bundle
+  phpstan       Run PhpStan
   tx-push       Push the Transifex source files
 HEREDOC
 }
@@ -73,6 +83,10 @@ case "$1" in
   ;;
   php-cs-fixer)
     php-cs-fixer
+    exit 0
+  ;;
+  phpstan)
+    phpstan
     exit 0
   ;;
   tx-push)
