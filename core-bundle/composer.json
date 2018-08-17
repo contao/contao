@@ -126,7 +126,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\CoreBundle\\Tests\\": "tests/"
+            "Contao\\CoreBundle\\Tests\\": "tests/",
+            "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
     "support": {

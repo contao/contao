@@ -39,8 +39,6 @@ class AddResourcesPathsPassTest extends TestCase
      */
     public function testAddsTheResourcesPaths()
     {
-        include_once __DIR__.'/../../Fixtures/vendor/contao/test-bundle/ContaoTestBundle.php';
-
         $pass = new AddResourcesPathsPass();
 
         $container = new ContainerBuilder();
