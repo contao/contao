@@ -22,7 +22,7 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/monolog-bundle": "^2.8 || ^3.0",
         "symfony/swiftmailer-bundle": "^2.3",
-        "symfony/symfony": "^3.3",
+        "symfony/symfony": "^3.3.7",
         "terminal42/header-replay-bundle": "^1.4.2"
     },
     "require-dev": {
@@ -30,7 +30,6 @@
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^5.7.26",
-        "symfony/console": "^3.3.7",
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "extra": {
