@@ -35,7 +35,7 @@ class PageLayoutListenerTest extends TestCase
      *
      * @dataProvider onReplayProvider
      */
-    public function testAddsThePageLayoutHeader(bool $agentIsMobile, string $tlViewCookie = null, string $expectedHeaderValue): void
+    public function testAddsThePageLayoutHeader(bool $agentIsMobile, ?string $tlViewCookie, string $expectedHeaderValue): void
     {
         $adapter = $this->mockAdapter(['get']);
 

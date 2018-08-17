@@ -28,7 +28,7 @@ matrix:
   fast_finish: true
 
 before_install:
-  - phpenv config-rm xdebug.ini
+  - phpenv config-rm xdebug.ini || true
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355

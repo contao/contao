@@ -56,7 +56,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
 
         $application = new Application($this->container->get('kernel'));
 
-        $command = new AssetsInstallCommand();
+        $command = new AssetsInstallCommand($this->container->get('filesystem'));
         $command->setApplication($application);
 
         $input = new ArgvInput(['assets:install', '--relative', $webDir]);
