@@ -121,13 +121,13 @@
         <source>Maintain or update Contao</source>
         <target>Contaoの保守や更新</target>
       </trans-unit>
-      <trans-unit id="MOD.two-factor.0">
-        <source>Two-factor authentication</source>
-        <target>2ファクター認証</target>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+        <target>セキュリティ</target>
       </trans-unit>
-      <trans-unit id="MOD.two-factor.1">
-        <source>Configure two-factor authentication</source>
-        <target>2ファクター認証の構成</target>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+        <target>アカウントの安全な設定</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>

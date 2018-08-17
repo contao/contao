@@ -21,6 +21,10 @@
         <source>Currently there are no news items.</source>
         <target>目前没有新闻记录。</target>
       </trans-unit>
+      <trans-unit id="MSC.comments">
+        <source>Comments</source>
+        <target>评论</target>
+      </trans-unit>
       <trans-unit id="MSC.commentCount">
         <source>(comments: %s)</source>
         <target>(%s 条评论)</target>

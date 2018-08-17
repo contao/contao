@@ -527,7 +527,7 @@ class tl_user extends Backend
 			case 'copy':
 			case 'toggle':
 			default:
-				$objUser = $this->Database->prepare("SELECT admin FROM tl_user WHERE id=?")
+				$objUser = $this->Database->prepare("SELECT `admin` FROM tl_user WHERE id=?")
 										  ->limit(1)
 										  ->execute(Input::get('id'));
 
@@ -544,7 +544,7 @@ class tl_user extends Backend
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
-				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE admin=1");
+				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
 				$objSession->replace($session);
 				break;

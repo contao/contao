@@ -128,7 +128,6 @@ class Version460Update extends AbstractVersionUpdate
                     break;
 
                 case 'youtube':
-                    /** @var array $options */
                     $options = StringUtil::deserialize($element->youtubeOptions);
                     $options[] = 'youtube_autoplay';
 

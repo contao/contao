@@ -330,7 +330,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,(string|bool)[]>
+     * @return array<string,(bool|string)[]>
      */
     public function parseSimpleTokensDoesntExecutePhp(): array
     {
@@ -371,7 +371,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @return array<string,(string|bool)[]>
+     * @return array<string,(bool|array<string,string>)[]>
      */
     public function parseSimpleTokensDoesntExecutePhpInToken(): array
     {

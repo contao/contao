@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
+use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
+use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +35,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new HeaderReplaySubscriber(['ignore_cookies' => ['/^csrf_./']]));
+        $this->addSubscriber(new CleanupCacheTagsListener());
 
         $kernel->setHttpCache($this);
     }
@@ -52,7 +55,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         return new Psr6Store([
             'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
-            'cache_tags_header' => 'X-Cache-Tags',
+            'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
         ]);
     }
 }

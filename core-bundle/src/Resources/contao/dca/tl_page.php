@@ -1045,6 +1045,12 @@ class tl_page extends Backend
 
 			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
 
+			// Prefix numeric aliases (see #1598)
+			if (is_numeric($varValue))
+			{
+				$varValue = 'id-' . $varValue;
+			}
+
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl') && $objPage->folderUrl != '')
 			{

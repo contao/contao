@@ -140,7 +140,7 @@ class PageRegular extends Frontend
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
-				if (!$arrModule['enable'])
+				if (!$arrModule['enable'] && !BE_USER_LOGGED_IN)
 				{
 					continue;
 				}

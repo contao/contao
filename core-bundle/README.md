@@ -1,7 +1,6 @@
 # Contao 4 core bundle
 
 [![](https://img.shields.io/travis/contao/core-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/core-bundle/)
-[![](https://img.shields.io/coveralls/contao/core-bundle/master.svg?style=flat-square)](https://coveralls.io/github/contao/core-bundle)
 [![](https://img.shields.io/packagist/v/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
 [![](https://img.shields.io/packagist/dt/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
 
@@ -14,77 +13,47 @@ CMS functionality to any Symfony application. If you do not have an existing
 Symfony application yet, we recommend using the [Contao managed edition][3] as
 basis for your application.
 
+## Prerequisites
+
+The Contao core bundle has a recipe in the [symfony/recipes-contrib][6]
+repository. Be sure to either enable contrib recipes for your project by
+running the following command or follow the instructions to use the contrib
+recipe during the installation process.
+
+```
+composer config extra.symfony.allow-contrib true
+```
+
+Add the `contao-component-dir` to the `extra` section of your `composer.json`
+file.
+
+```
+composer config extra.contao-component-dir true
+```
+
 ## Installation
 
-Edit your `composer.json` file and add the following:
+Install Contao and all its dependencies by executing the following command:
 
-```json
-"require": {
-    "contao/core-bundle": "4.5.*",
-    "contao/installation-bundle": "^4.5",
-    "php-http/guzzle6-adapter": "^1.1"
-},
-"config": {
-    "component-dir": "assets"
-},
-"post-install-cmd": [
-    "Contao\\CoreBundle\\Composer\\ScriptHandler::addDirectories",
-    "Contao\\CoreBundle\\Composer\\ScriptHandler::generateSymlinks"
-],
-"post-update-cmd": [
-    "Contao\\CoreBundle\\Composer\\ScriptHandler::addDirectories",
-    "Contao\\CoreBundle\\Composer\\ScriptHandler::generateSymlinks"
-]
+```
+composer require \
+    contao/core-bundle:4.6.* \
+    contao/installation-bundle:^4.6 \
+    php-http/guzzle6-adapter:^1.1
 ```
 
-Then run `php composer.phar update` to install the vendor files.
-
-Note that you can exchange the `php-http/guzzle6-adapter` package with any other [HTTP client implementation][4]. If you already have an HTTP client implementation, you can omit the package entirely.
-
-## Activation
-
-Remove the `parameters.yml` import from your `app/config/config.yml` file:
-
-```yml
-imports:
-    - { resource: parameters.yml } # <-- remove this line
-    - { resource: security.yml }
-```
-
-Then adjust to your `app/AppKernel.php` file:
-
-```php
-// app/AppKernel.php
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = [
-            // ...
-            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Knp\Bundle\TimeBundle\KnpTimeBundle(),
-            new Nelmio\CorsBundle\NelmioCorsBundle(),
-            new Contao\CoreBundle\ContaoCoreBundle(),
-            new Contao\InstallationBundle\ContaoInstallationBundle(),
-        ];
-    }
-
-    public function registerContainerConfiguration(LoaderInterface $loader)
-    {
-        $rootDir = $this->getRootDir();
-
-        if (file_exists($rootDir.'/config/parameters.yml')) {
-            $loader->load($rootDir.'/config/parameters.yml');
-        }
-
-        $loader->load($rootDir.'/config/config_'.$this->getEnvironment().'.yml');
-    }
-}
-```
+Note that you can exchange the `php-http/guzzle6-adapter` package with any
+other [HTTP client implementation][4]. If you already have an HTTP client
+implementation, you can omit the package entirely.
 
 ## Configuration
 
-Add the Contao routes to your `app/config/routing.yml` file:
+Configure the `DATABASE_URL` in your environment, either using environment
+variables or by using the [Dotenv component][7].
+
+Add the Contao routes to your `config/routing.yaml` file, and be sure to load
+the `ContaoCoreBundle` at the very end, so the catch all route does not catch
+your application routes.
 
 ```yml
 ContaoInstallationBundle:
@@ -94,7 +63,8 @@ ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
-Edit your `app/config/security.yml` file:
+Edit your `app/config/security.yml` file and merge all the `providers`,
+`encoders`, `firewalls` and `access_control` sections:
 
 ```yml
 security:
@@ -165,7 +135,7 @@ security:
                 use_forward: true
 
             remember_me:
-                secret: '%secret%'
+                secret: '%kernel.secret%'
                 remember_me_parameter: autologin
                 token_provider: contao.security.database_token_provider
 
@@ -177,46 +147,20 @@ security:
                 success_handler: contao.security.logout_success_handler
 
     access_control:
-        - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/contao, roles: ROLE_USER }
+        - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao(/|$), roles: ROLE_USER }
 ```
 
-Edit your `app/config/config.yml` file and add the following:
+Enable ESI in the `config/packages/framework.yaml` file.
 
-```yml
-# Contao configuration (all parameters are optional)
-contao:
-    web_dir:                  "%kernel.project_dir%/web"
-    prepend_locale:           false
-    encryption_key:           "%kernel.secret%"
-    url_suffix:               .html
-    upload_path:              files
-    csrf_token_name:          contao_csrf_token
-    pretty_error_screens:     true
-    error_level:              8183 # E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED
-    image:
-        bypass_cache:         false
-        target_dir:           "%kernel.project_dir%/assets/images"
-        valid_extensions:     ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz']
-        imagine_service:      ~
-        imagine_options:
-            jpeg_quality:     80
-            interlace:        plane
-        reject_large_uploads: false
-    security:
-        two_factor:
-            enforce_backend:  false
+```yaml
+framework:
+    esi: true
 ```
 
-You can also overwrite any parameter stored in the `localconfig.php` file:
-
-```yml
-# Contao configuration
-contao:
-    localconfig:
-        adminEmail: foo@bar.com
-        dateFormat: Y-m-d
-```
+The Contao core-bundle as well as the installation-bundle are now installed and
+activated. Use the Contao install tool to complete the installation by opening
+the `/contao/install` route in your browser.
 
 ## License
 
@@ -231,3 +175,5 @@ Visit the [support page][5] to learn about the available support options.
 [3]: https://github.com/contao/managed-edition
 [4]: https://packagist.org/providers/php-http/client-implementation
 [5]: https://contao.org/en/support.html
+[6]: https://github.com/symfony/recipes-contrib
+[7]: http://symfony.com/doc/current/components/dotenv.html

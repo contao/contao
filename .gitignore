@@ -2,5 +2,11 @@
 /composer.lock
 /vendor/
 
+# Monorepo Tools
+/.monorepo-split-cache/
+
+# Node
+/node_modules/
+
 # PhpUnit
 /phpunit.xml

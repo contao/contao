@@ -21,7 +21,7 @@
         <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
         <div class="widget widget-text">
           <label for="username"><?= $this->username ?></label>
-          <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" required><br>
+          <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" required>
         </div>
         <div class="widget widget-password">
           <label for="password"><?= $this->password ?></label>

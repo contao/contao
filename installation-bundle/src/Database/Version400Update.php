@@ -133,7 +133,6 @@ class Version400Update extends AbstractVersionUpdate
         ");
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            /** @var array $mootools */
             $mootools = StringUtil::deserialize($layout->mootools);
 
             if (!empty($mootools) && \is_array($mootools)) {

@@ -47,7 +47,6 @@ class RouteLoader
      */
     public function loadFromPlugins(): RouteCollection
     {
-        /** @var RouteCollection $collection */
         $collection = array_reduce(
             $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
             function (RouteCollection $collection, RoutingPluginInterface $plugin): RouteCollection {

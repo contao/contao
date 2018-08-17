@@ -71,9 +71,9 @@ class BackendMain extends Backend
 		}
 
 		// Two-factor setup required
-		if (!$this->User->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && \Input::get('do') != 'two-factor')
+		if (!$this->User->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && \Input::get('do') != 'security')
 		{
-			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'two-factor')));
+			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 		}
 
 		// Front end redirect
@@ -108,8 +108,14 @@ class BackendMain extends Backend
 	 */
 	public function run()
 	{
+		try {
+			$version = PackageUtil::getVersion('contao/core-bundle');
+		} catch (\OutOfBoundsException $e) {
+			$version = PackageUtil::getVersion('contao/contao');
+		}
+
 		$this->Template = new \BackendTemplate('be_main');
-		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . PackageUtil::getVersion('contao/core-bundle');
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
 		$this->Template->main = '';
 
 		// Ajax request
@@ -242,7 +248,7 @@ class BackendMain extends Backend
 		$this->Template->previewTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
 		$this->Template->profileTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
-		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
+		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
 		$this->Template->pageOffset = (int) \Input::cookie('BE_PAGE_OFFSET');
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
 		$this->Template->logoutLink = \System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();

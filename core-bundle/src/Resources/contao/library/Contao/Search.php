@@ -275,7 +275,7 @@ class Search
 	/**
 	 * @return string[]
 	 */
-	private function splitIntoWords(string $strText, string $strLocale)
+	private static function splitIntoWords(string $strText, string $strLocale)
 	{
 		$iterator = \IntlBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);

@@ -287,7 +287,7 @@ class InstallTool
                 FROM
                     tl_user
                 WHERE
-                    admin = '1'
+                    `admin` = '1'
             ");
 
             if ($statement->fetch(\PDO::FETCH_OBJ)->count > 0) {
@@ -313,7 +313,7 @@ class InstallTool
                         password,
                         language,
                         backendTheme,
-                        admin,
+                        `admin`,
                         showHelp,
                         useRTE,
                         useCE,

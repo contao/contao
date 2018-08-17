@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\Tests\HttpKernel;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
+use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\Events;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
@@ -59,6 +60,9 @@ class ContaoCacheTest extends ContaoTestCase
         $preInvalidateListeners = $dispatcher->getListeners(Events::PRE_INVALIDATE);
         $this->assertInstanceOf(PurgeListener::class, $preInvalidateListeners[0][0]);
         $this->assertInstanceOf(PurgeTagsListener::class, $preInvalidateListeners[1][0]);
+
+        $postHandleListeners = $dispatcher->getListeners(Events::POST_HANDLE);
+        $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
     }
 
     public function testCreatesTheCacheStore(): void

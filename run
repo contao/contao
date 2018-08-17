@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+function phpunit() {
+  if [[ ! -e ./vendor/bin/phpunit ]]; then
+    echo "The vendor/bin/phpunit file is missing. Did you install the dependencies?"
+    exit 1
+  fi
+
+  local bundles=(
+    calendar-bundle
+    core-bundle
+    faq-bundle
+    installation-bundle
+    manager-bundle
+    news-bundle
+  )
+
+  for bundle in ${bundles[*]}; do
+    vendor/bin/phpunit -c ${bundle}
+  done
+}
+
+function php-cs-fixer() {
+  if [[ ! -e ./vendor/bin/php-cs-fixer ]]; then
+    echo "The vendor/bin/php-cs-fixer file is missing. Did you install the dependencies?"
+    exit 1
+  fi
+
+  vendor/bin/php-cs-fixer fix -v
+  vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy
+}
+
+function phpstan() {
+  if [[ ! -e ./vendor/bin/phpstan ]]; then
+    echo "The vendor/bin/phpstan file is missing. Did you install the dependencies?"
+    exit 1
+  fi
+
+  vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3
+}
+
+function tx-push() {
+  client=$(which tx)
+
+  if [[ ! -e ${client} ]]; then
+    echo "The Transifex client is not installed."
+    exit 1
+  fi
+
+  local bundles=(
+    calendar-bundle
+    comments-bundle
+    core-bundle
+    faq-bundle
+    installation-bundle
+    listing-bundle
+    manager-bundle
+    news-bundle
+    newsletter-bundle
+  )
+
+  for bundle in ${bundles[*]}; do
+    cd ${bundle}
+    ${client} push -s
+    cd -
+  done
+}
+
+function usage() {
+  cat <<HEREDOC
+Usage: ./run [task]
+  phpunit       Run PhpUnit in each bundle
+  php-cs-fixer  Run the PHP-CS-Fixer in each bundle
+  phpstan       Run PhpStan
+  tx-push       Push the Transifex source files
+HEREDOC
+}
+
+case "$1" in
+  phpunit)
+    phpunit
+    exit 0
+  ;;
+  php-cs-fixer)
+    php-cs-fixer
+    exit 0
+  ;;
+  phpstan)
+    phpstan
+    exit 0
+  ;;
+  tx-push)
+    tx-push
+    exit 0
+  ;;
+  *)
+    usage
+    exit 1
+  ;;
+esac

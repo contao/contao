@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\Database\Result;
 
 /**
  * Provide methods to handle versioning.

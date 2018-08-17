@@ -75,7 +75,7 @@ $GLOBALS['BE_MOD'] = array
 			'hideInNavigation'        => true,
 			'disablePermissionChecks' => true
 		),
-		'two-factor' => array
+		'security' => array
 		(
 			'callback'                => 'Contao\ModuleTwoFactor',
 			'hideInNavigation'        => true,

@@ -119,7 +119,6 @@ class BackendControllerTest extends TestCase
         $controller = new BackendController();
         $controller->setContainer($container);
 
-        /** @var RedirectResponse $response */
         $response = $controller->logoutAction();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);

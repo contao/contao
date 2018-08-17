@@ -46,7 +46,7 @@ class FrontendCron extends Frontend
 	 */
 	public function run()
 	{
-		$objResponse = new Response();
+		$objResponse = new Response('', 204);
 
 		// Do not run if there is POST data or the last execution was less than a minute ago
 		if (!empty($_POST) || $this->hasToWait())

@@ -50,7 +50,7 @@ class PluginTest extends TestCase
     {
         $plugin = new Plugin();
 
-        /** @var BundleConfig[] $bundles */
+        /** @var BundleConfig[]|array $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
         $this->assertCount(5, $bundles);

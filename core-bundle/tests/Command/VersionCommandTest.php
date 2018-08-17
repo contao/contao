@@ -34,7 +34,13 @@ class VersionCommandTest extends TestCase
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
+        try {
+            $version = PackageUtil::getVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            $version = PackageUtil::getVersion('contao/contao');
+        }
+
         $this->assertSame(0, $code);
-        $this->assertContains(PackageUtil::getVersion('contao/core-bundle'), $tester->getDisplay());
+        $this->assertContains($version, $tester->getDisplay());
     }
 }

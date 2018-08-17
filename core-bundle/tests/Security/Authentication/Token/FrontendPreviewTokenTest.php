@@ -37,7 +37,7 @@ class FrontendPreviewTokenTest extends TestCase
 
         $token = new FrontendPreviewToken($user, false);
 
-        /** @var Role[] $roles */
+        /** @var Role[]|array $roles */
         $roles = $token->getRoles();
 
         $this->assertTrue($token->isAuthenticated());
@@ -52,7 +52,6 @@ class FrontendPreviewTokenTest extends TestCase
     {
         $token = new FrontendPreviewToken(null, false);
 
-        /** @var Role[] $roles */
         $roles = $token->getRoles();
 
         $this->assertTrue($token->isAuthenticated());

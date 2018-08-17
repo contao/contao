@@ -157,7 +157,7 @@ body:not(.fullscreen) #header .inner {
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
 }
-#tmenu .icon-two-factor {
+#tmenu .icon-security {
 	background:url("icons/shield_dark.svg") 20px center no-repeat;
 }
 #tmenu .icon-logout {
@@ -1984,6 +1984,11 @@ fieldset.collapsed > legend {
 	}
 	#tmenu ul.level_2 .icon-profile {
 		background:url("icons/profile.svg") center 8px no-repeat;
+		font-size:.5rem;
+		padding:24px 0 8px;
+	}
+	#tmenu ul.level_2 .icon-security {
+		background:url("icons/shield.svg") center 8px no-repeat;
 		font-size:.5rem;
 		padding:24px 0 8px;
 	}

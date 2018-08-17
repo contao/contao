@@ -60,7 +60,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @return array<string,(Request|array<string,array<string,string>>|null)[]>
+     * @return array<string,(array<string,array<string,string>|string>|Request|null)[]>
      */
     public function refererStoredOnKernelResponseProvider(): array
     {

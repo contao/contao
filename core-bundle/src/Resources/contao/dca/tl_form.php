@@ -504,6 +504,12 @@ class tl_form extends Backend
 			}
 
 			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
+
+			// Prefix numeric aliases (see #1598)
+			if (is_numeric($varValue))
+			{
+				$varValue = 'id-' . $varValue;
+			}
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_form WHERE id=? OR alias=?")

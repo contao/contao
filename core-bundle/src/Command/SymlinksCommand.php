@@ -223,7 +223,6 @@ class SymlinksCommand extends AbstractLockedCommand
         $parents = [];
         $files = iterator_to_array($finder);
 
-        /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
             $path = rtrim(strtr($prepend.'/'.$file->getRelativePath(), '\\', '/'), '/');
 
