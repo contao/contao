@@ -44,6 +44,8 @@
  * Torsten Baldes (tobaco)
  * Jamie Devine (jamesdevine)
  * Adrián Granado (playmono)
+ * Physiklehrer
+ * John Brand (brandbrilliance)
  * Blair Winans (blairwinans)
  * Roland Schütz
  * Hendrik Obermayer (henobi)

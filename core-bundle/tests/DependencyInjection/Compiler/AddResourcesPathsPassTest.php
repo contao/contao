@@ -29,6 +29,8 @@ class AddResourcesPathsPassTest extends TestCase
 
     public function testAddsTheResourcesPaths(): void
     {
+        include_once __DIR__.'/../../Fixtures/vendor/contao/test-bundle/ContaoTestBundle.php';
+
         $bundles = [
             'FrameworkBundle' => FrameworkBundle::class,
             'ContaoTestBundle' => ContaoTestBundle::class,

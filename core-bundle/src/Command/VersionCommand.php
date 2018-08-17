@@ -39,7 +39,11 @@ class VersionCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln(PackageUtil::getVersion('contao/core-bundle'));
+        try {
+            $output->writeln(PackageUtil::getVersion('contao/core-bundle'));
+        } catch (\OutOfBoundsException $e) {
+            $output->writeln(PackageUtil::getVersion('contao/contao'));
+        }
 
         return 0;
     }

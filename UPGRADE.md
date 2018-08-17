@@ -211,15 +211,18 @@ into the following templates:
 The following templates have been renamed to match the content element or
 module key:
 
- * `ce_accordion`        -> `ce_accordionSingle`
- * `ce_accordion_start`  -> `ce_accordionStart`
- * `ce_accordion_stop`   -> `ce_accordionStop`
- * `ce_slider_start`     -> `ce_sliderStart`
- * `ce_slider_stop`      -> `ce_sliderStop`
- * `mod_article_list`    -> `mod_articlelist`
- * `mod_article_nav`     -> `mod_articlenav`
- * `mod_random_image`    -> `mod_randomImage`
- * `mod_change_password` -> `mod_changePassword`
+ * `ce_accordion`          -> `ce_accordionSingle`
+ * `ce_accordion_start`    -> `ce_accordionStart`
+ * `ce_accordion_stop`     -> `ce_accordionStop`
+ * `ce_slider_start`       -> `ce_sliderStart`
+ * `ce_slider_stop`        -> `ce_sliderStop`
+ * `mod_article_list`      -> `mod_articlelist`
+ * `mod_article_nav`       -> `mod_articlenav`
+ * `mod_random_image`      -> `mod_randomImage`
+ * `mod_change_password`   -> `mod_changePassword`
+ * `mod_event`             -> `mod_eventreader`
+ * `mod_newsletter_list`   -> `mod_newsletterlist`
+ * `mod_newsletter_reader` -> `mod_newsletterreader`
 
 The following templates have been consolidated:
 
@@ -232,6 +235,11 @@ The following templates have been consolidated:
  * `mod_logout_2cl`      -> `mod_login`
  * `mod_search_advanced` -> `mod_search`
  * `mod_search_simple`   -> `mod_search`
+ * `mod_eventmenu_year`  -> `mod_eventmenu`
+ * `mod_newsmenu_day`    -> `mod_newsmenu`
+ * `mod_newsmenu_year`   -> `mod_newsmenu`
+ * `nl_list`             -> `newsletterlist`
+ * `nl_reader`           -> `newsletterreader`
 
 Generally, we now require the template names to match the content element or
 module keys, so if your module has the key `taskList`, the corresponding

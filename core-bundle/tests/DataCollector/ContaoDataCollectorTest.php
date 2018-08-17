@@ -47,7 +47,7 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
         $this->assertSame(['ContentImage' => ContentImage::class], $collector->getClassesComposerized());
 
-        $version = PackageUtil::getVersion('contao/core-bundle');
+        $version = $this->getContaoVersion();
 
         $this->assertSame(
             [
@@ -84,15 +84,13 @@ class ContaoDataCollectorTest extends TestCase
 
         $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 2]);
 
-        $version = PackageUtil::getVersion('contao/core-bundle');
-
         $collector = new ContaoDataCollector();
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(
             [
-                'version' => $version,
+                'version' => $this->getContaoVersion(),
                 'framework' => false,
                 'models' => 0,
                 'frontend' => true,
@@ -126,5 +124,14 @@ class ContaoDataCollectorTest extends TestCase
         $method->setAccessible(true);
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
+    }
+
+    private function getContaoVersion(): string
+    {
+        try {
+            return PackageUtil::getVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            return PackageUtil::getVersion('contao/contao');
+        }
     }
 }
