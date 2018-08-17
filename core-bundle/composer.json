@@ -70,6 +70,7 @@
         "webmozart/path-util": "^2.0"
     },
     "conflict": {
+        "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/doctrine-migrations-bundle": "<1.1",

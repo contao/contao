@@ -31,7 +31,7 @@
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^5.7.26",
         "symfony/console": "^3.3.7",
-        "symfony/phpunit-bridge": "^3.2"
+        "symfony/phpunit-bridge": "^3.3.11"
     },
     "extra": {
         "branch-alias": {
