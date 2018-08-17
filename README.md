@@ -1,7 +1,17 @@
 # Contao 4 bundles
 
-This is a monorepo holding the official Contao 4 bundles. **Please do not use
-this package in production** but install the split packages instead:
+This is a monorepo holding the official Contao 4 bundles.
+
+Contao is an Open Source PHP Content Management System for people who want a
+professional website that is easy to maintain. Visit the [project website][1]
+for more information.
+
+## Purpose
+
+The purpose of this package is to develop the Contao 4 bundles. Use it if you
+e.g. want to create a pull request or if you want to report an issue.
+
+The monorepo is split into separate packages automatically:
 
  * [CalendarBundle](https://github.com/contao/calendar-bundle)
  * [CommentsBundle](https://github.com/contao/comments-bundle)
@@ -13,9 +23,17 @@ this package in production** but install the split packages instead:
  * [NewsBundle](https://github.com/contao/news-bundle)
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
 
-Contao is an Open Source PHP Content Management System for people who want a
-professional website that is easy to maintain. Visit the [project website][1]
-for more information.
+**Please do not use `contao/contao` in production** but use the split packages
+insteead.
+
+## Running scripts
+
+You can use the `run` command to run scripts in all bundles:
+
+```bash
+./run phpunit
+./run php-cs-fixer
+```
 
 ## License
 
