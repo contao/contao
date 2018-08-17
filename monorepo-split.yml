@@ -2,7 +2,6 @@ monorepo_url: 'git@github.com:contao/contao.git'
 branch_filter: '/^(master|\d+\.\d+)$/'
 
 repositories:
-
     calendar-bundle:
         url: 'git@github.com:contao/calendar-bundle.git'
         mapping:
