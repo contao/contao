@@ -33,8 +33,7 @@
         "ocramius/proxy-manager": "^2.0",
         "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^6.1",
-        "symfony/console": "^3.3.7",
-        "symfony/phpunit-bridge": "^3.3"
+        "symfony/phpunit-bridge": "^3.3.11"
     },
     "extra": {
         "branch-alias": {

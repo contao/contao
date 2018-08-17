@@ -73,6 +73,7 @@
         "twig/twig": "^1.26 || ^2.0"
     },
     "conflict": {
+        "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
         "contao/manager-bundle": "4.5.* <4.5.2",
         "contao/manager-plugin": "<2.0 || >=3.0",
@@ -130,7 +131,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Contao\\CoreBundle\\Tests\\": "tests/"
+            "Contao\\CoreBundle\\Tests\\": "tests/",
+            "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
     "support": {
