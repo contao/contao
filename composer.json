@@ -184,7 +184,7 @@
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
-            "Contao\\InstallationBundle\\Test\\": "installation-bundle/tests/",
+            "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",
             "Contao\\ManagerBundle\\Tests\\": "manager-bundle/tests/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"

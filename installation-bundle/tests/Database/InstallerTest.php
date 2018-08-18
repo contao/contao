@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Test\Database;
+namespace Contao\InstallationBundle\Tests\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
