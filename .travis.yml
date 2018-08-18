@@ -17,7 +17,7 @@ env:
 
 stages:
   - name: split
-    if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
+    if: 'type = push'
 
 jobs:
   include:
