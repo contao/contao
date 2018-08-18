@@ -45,7 +45,7 @@ jobs:
       install:
         # Project dependencies don’t need to be installed for the split script
         - rm composer.json
-        - composer require contao/monorepo-tools:dev-master#ab059e16bee36ca70941d13719c13719f3b34733 --no-interaction
+        - composer require contao/monorepo-tools:dev-master --no-interaction
       script: vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
 before_install:
