@@ -48,7 +48,7 @@ jobs:
 before_install:
   - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - if [[ $ADJUST_PLUGIN_VERSION ]]; then composer require contao/manager-plugin:^2.2; fi
+  - if [[ $ADJUST_PLUGIN_VERSION ]]; then php -r '$data = json_decode(file_get_contents(__DIR__."/composer.json"), true); $data["require"]["contao/manager-plugin"] = "^2.2"; file_put_contents(__DIR__."/composer.json", json_encode($data));'; fi
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
