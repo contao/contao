@@ -15,10 +15,6 @@ env:
     - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
 
-stages:
-  - name: split
-    if: 'type = push'
-
 jobs:
   include:
     # Latest dependencies with all PHP versions
@@ -41,6 +37,7 @@ jobs:
 
     # Split the monorepo
     - stage: split
+      if: 'type = push'
       php: 7.2
       install:
         # Project dependencies don’t need to be installed for the split script
