@@ -24,6 +24,7 @@ jobs:
       env: ADJUST_PLUGIN_VERSION=1
     - php: 7.1
     - php: 7.2
+      env: VALIDATE_COMPOSER_JSON=1
 
     # Generate the coverage with the latest PHP version
     - php: 7.2
@@ -63,6 +64,7 @@ script:
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c installation-bundle $COVERAGE --coverage-clover build/logs/installation-bundle.xml; else php vendor/bin/phpunit -c installation-bundle; fi
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
   - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
+  - if [[ $VALIDATE_COMPOSER_JSON ]]; then php vendor/bin/monorepo-tools composer-json --validate; fi
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls -x build/logs/calendar-bundle.xml -x build/logs/core-bundle.xml -x build/logs/faq-bundle.xml -x build/logs/installation-bundle.xml -x build/logs/manager-bundle.xml -x build/logs/news-bundle.xml; fi
