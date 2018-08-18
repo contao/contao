@@ -15,7 +15,7 @@ env:
     - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
 
-matrix:
+jobs:
   include:
     # Latest dependencies with all PHP versions
     - php: 5.6
@@ -34,10 +34,7 @@ matrix:
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' ADJUST_PLUGIN_VERSION=1
     - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-  fast_finish: true
 
-jobs:
-  include:
     # Split the monorepo
     - stage: split
       if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
