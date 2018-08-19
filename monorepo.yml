@@ -5,6 +5,7 @@ composer:
     require:
         'contao/manager-plugin': '^2.6.2'
     require-dev:
+        'contao/monorepo-tools': 'dev-master'
         'friendsofphp/php-cs-fixer': '^2.12'
 
 repositories:
