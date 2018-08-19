@@ -96,6 +96,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
+        "contao/monorepo-tools": "dev-master",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
         "friendsofphp/php-cs-fixer": "^2.12",
@@ -142,16 +143,40 @@
             "news-bundle/src/Resources/contao/",
             "newsletter-bundle/src/Resources/contao/"
         ],
+        "exclude-from-classmap": [
+            "calendar-bundle/src/Resources/contao/config/",
+            "calendar-bundle/src/Resources/contao/dca/",
+            "calendar-bundle/src/Resources/contao/languages/",
+            "calendar-bundle/src/Resources/contao/templates/",
+            "comments-bundle/src/Resources/contao/config/",
+            "comments-bundle/src/Resources/contao/dca/",
+            "comments-bundle/src/Resources/contao/languages/",
+            "comments-bundle/src/Resources/contao/templates/",
+            "core-bundle/src/Resources/contao/config/",
+            "core-bundle/src/Resources/contao/dca/",
+            "core-bundle/src/Resources/contao/helper/",
+            "core-bundle/src/Resources/contao/languages/",
+            "core-bundle/src/Resources/contao/templates/",
+            "core-bundle/src/Resources/contao/themes/",
+            "faq-bundle/src/Resources/contao/config/",
+            "faq-bundle/src/Resources/contao/dca/",
+            "faq-bundle/src/Resources/contao/languages/",
+            "faq-bundle/src/Resources/contao/templates/",
+            "listing-bundle/src/Resources/contao/config/",
+            "listing-bundle/src/Resources/contao/dca/",
+            "listing-bundle/src/Resources/contao/languages/",
+            "listing-bundle/src/Resources/contao/templates/",
+            "news-bundle/src/Resources/contao/config/",
+            "news-bundle/src/Resources/contao/dca/",
+            "news-bundle/src/Resources/contao/languages/",
+            "news-bundle/src/Resources/contao/templates/",
+            "newsletter-bundle/src/Resources/contao/config/",
+            "newsletter-bundle/src/Resources/contao/dca/",
+            "newsletter-bundle/src/Resources/contao/languages/",
+            "newsletter-bundle/src/Resources/contao/templates/"
+        ],
         "files": [
             "core-bundle/src/Resources/functions/utf8_bootup.php"
-        ],
-        "exclude-from-classmap": [
-            "*/src/Resources/contao/config/",
-            "*/src/Resources/contao/dca/",
-            "*/src/Resources/contao/helper/",
-            "*/src/Resources/contao/languages/",
-            "*/src/Resources/contao/templates/",
-            "*/src/Resources/contao/themes/"
         ]
     },
     "autoload-dev": {

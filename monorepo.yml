@@ -1,6 +1,13 @@
 monorepo_url: 'https://github.com/contao/contao.git'
 branch_filter: '/^(master|\d+\.\d+)$/'
 
+composer:
+    require:
+        'contao/manager-plugin': '^2.6.2'
+    require-dev:
+        'contao/monorepo-tools': 'dev-master'
+        'friendsofphp/php-cs-fixer': '^2.12'
+
 repositories:
     calendar-bundle:
         url: 'https://github.com/contao/calendar-bundle.git'
