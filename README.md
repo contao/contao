@@ -24,7 +24,7 @@ The monorepo is split into separate packages automatically:
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
 
 **Please do not use `contao/contao` in production** but use the split packages
-insteead.
+instead.
 
 ## Running scripts
 
