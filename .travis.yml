@@ -38,12 +38,12 @@ jobs:
 
     # Split the monorepo
     - stage: split
-      if: 'type = push'
+      if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
       php: 7.2
       install:
-        # Project dependencies don’t need to be installed for the split script
+        # Project dependencies do not need to be installed for the split script
         - rm composer.json
-        - composer require contao/monorepo-tools:dev-master --no-interaction
+        - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
       script: vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
 before_install:
