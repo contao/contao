@@ -95,6 +95,7 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
+        "contao/monorepo-tools": "dev-master",
         "composer/composer": "^1.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
