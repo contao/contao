@@ -5,7 +5,7 @@
 ### Anonymize Google Analytics
 
 The "Anonymize Google Analytics" flag in the back end settings has been
-removed. IP addresses are anonymized by default in the analytics_google.html5
+removed. IP addresses are anonymized by default in the `analytics_google.html5`
 template now.
 
 ### Anonymize IP addresses
