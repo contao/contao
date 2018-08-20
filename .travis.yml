@@ -39,9 +39,7 @@ jobs:
     - stage: split
       if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
       php: 7.2
-      # FIXME: re-enable the composer.json check
-      #script: php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
-      script: php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+      script: php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
   allow_failures:
     - php: nightly
