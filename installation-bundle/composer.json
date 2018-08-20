@@ -26,8 +26,8 @@
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message-factory": "^1.0.2",
-        "phpunit/phpunit": "^6.1",
-        "symfony/phpunit-bridge": "^3.3.11"
+        "phpunit/phpunit": "^6.5",
+        "symfony/phpunit-bridge": "^3.4"
     },
     "extra": {
         "branch-alias": {
