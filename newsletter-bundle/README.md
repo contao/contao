@@ -1,5 +1,8 @@
 # Contao 4 newsletter bundle
 
+[![](https://img.shields.io/packagist/v/contao/newsletter-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/newsletter-bundle)
+[![](https://img.shields.io/packagist/dt/contao/newsletter-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/newsletter-bundle)
+
 The newsletter bundle adds newsletter functionality to Contao 4.
 
 Contao is an Open Source PHP Content Management System for people who want a
