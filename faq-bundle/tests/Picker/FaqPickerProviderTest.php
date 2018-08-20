@@ -15,6 +15,8 @@ namespace Contao\FaqBundle\Tests\Picker;
 use Contao\BackendUser;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
+use Contao\FaqCategoryModel;
+use Contao\FaqModel;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -201,5 +203,78 @@ class FaqPickerProviderTest extends ContaoTestCase
     public function testConvertsTheDcaValue(): void
     {
         $this->assertSame('{{faq_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
+    }
+
+    public function testAddsTableAndIdIfThereIsAValue(): void
+    {
+        $faq = $this->createMock(FaqModel::class);
+        $faq
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn($this->mockClassWithProperties(FaqCategoryModel::class, ['id' => 1]))
+        ;
+
+        $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('faq', $params['do']);
+        $this->assertSame('tl_faq', $params['table']);
+        $this->assertSame(1, $params['id']);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoEventsModel(): void
+    {
+        $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('faq', $params['do']);
+        $this->assertArrayNotHasKey('tl_faq', $params);
+        $this->assertArrayNotHasKey('id', $params);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
+    {
+        $faq = $this->createMock(FaqModel::class);
+        $faq
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn(null)
+        ;
+
+        $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('faq', $params['do']);
+        $this->assertArrayNotHasKey('tl_faq', $params);
+        $this->assertArrayNotHasKey('id', $params);
     }
 }

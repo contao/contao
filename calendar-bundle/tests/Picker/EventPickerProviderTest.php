@@ -14,6 +14,8 @@ namespace Contao\CalendarBundle\Tests\Picker;
 
 use Contao\BackendUser;
 use Contao\CalendarBundle\Picker\EventPickerProvider;
+use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
@@ -201,5 +203,78 @@ class EventPickerProviderTest extends ContaoTestCase
     public function testConvertsTheDcaValue(): void
     {
         $this->assertSame('{{event_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
+    }
+
+    public function testAddsTableAndIdIfThereIsAValue(): void
+    {
+        $calendarEvents = $this->createMock(CalendarEventsModel::class);
+        $calendarEvents
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn($this->mockClassWithProperties(CalendarModel::class, ['id' => 1]))
+        ;
+
+        $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('calendar', $params['do']);
+        $this->assertSame('tl_calendar_events', $params['table']);
+        $this->assertSame(1, $params['id']);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoEventsModel(): void
+    {
+        $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('calendar', $params['do']);
+        $this->assertArrayNotHasKey('tl_calendar_events', $params);
+        $this->assertArrayNotHasKey('id', $params);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
+    {
+        $calendarEvents = $this->createMock(CalendarEventsModel::class);
+        $calendarEvents
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn(null)
+        ;
+
+        $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('calendar', $params['do']);
+        $this->assertArrayNotHasKey('tl_calendar_events', $params);
+        $this->assertArrayNotHasKey('id', $params);
     }
 }
