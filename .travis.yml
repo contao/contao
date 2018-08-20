@@ -39,11 +39,7 @@ jobs:
     - stage: split
       if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
       php: 7.2
-      install:
-        # Project dependencies do not need to be installed for the split script
-        - rm composer.json
-        - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
-      script: vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+      script: php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
   allow_failures:
     - php: nightly
@@ -73,9 +69,6 @@ script:
       php vendor/bin/phpunit -c manager-bundle
       php vendor/bin/phpunit -c news-bundle
     fi
-
-  # Check whether the composer.json files of the bundles are in sync with the root one
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]] && [[ ! $COMPOSER_FLAGS ]]; then php vendor/bin/monorepo-tools composer-json --validate; fi
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls -x build/logs/calendar-bundle.xml -x build/logs/core-bundle.xml -x build/logs/faq-bundle.xml -x build/logs/manager-bundle.xml -x build/logs/news-bundle.xml; fi
