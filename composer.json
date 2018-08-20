@@ -71,7 +71,7 @@
         "spomky-labs/otphp": "^9.1",
         "symfony/monolog-bundle": "^3.1",
         "symfony/swiftmailer-bundle": "^3.1.5",
-        "symfony/symfony": "3.4.* || 4.0.* || 4.1.*",
+        "symfony/symfony": "4.1.*",
         "tecnickcom/tcpdf": "^6.0",
         "terminal42/header-replay-bundle": "^1.4.2",
         "toflar/psr6-symfony-http-cache-store": "^1.0.2",
