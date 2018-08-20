@@ -1,7 +1,7 @@
 language: php
 
 git:
-  depth: 1
+  depth: 3
 
 cache:
   directories:
@@ -51,7 +51,6 @@ jobs:
       script: vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
   allow_failures:
     - php: nightly
-  fast_finish: true
 
 before_install:
   - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
