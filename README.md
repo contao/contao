@@ -3,7 +3,7 @@
 [![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.org/contao/contao/)
 [![](https://img.shields.io/coveralls/contao/contao/master.svg?style=flat-square)](https://coveralls.io/github/contao/contao)
 [![](https://img.shields.io/packagist/v/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
-[![](https://img.shields.io/packagist/dt/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
+[![](https://img.shields.io/packagist/dt/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
 
 This is a monorepo holding the official Contao 4 bundles.
 
