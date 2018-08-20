@@ -1,5 +1,8 @@
 # Contao 4 comments bundle
 
+[![](https://img.shields.io/packagist/v/contao/comments-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/comments-bundle)
+[![](https://img.shields.io/packagist/dt/contao/comments-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/comments-bundle)
+
 The comments bundle adds comments functionality to Contao 4.
 
 Contao is an Open Source PHP Content Management System for people who want a

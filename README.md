@@ -1,5 +1,10 @@
 # Contao 4 bundles
 
+[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.org/contao/contao/)
+[![](https://img.shields.io/coveralls/contao/contao/master.svg?style=flat-square)](https://coveralls.io/github/contao/contao)
+[![](https://img.shields.io/packagist/v/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
+[![](https://img.shields.io/packagist/dt/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
+
 This is a monorepo holding the official Contao 4 bundles.
 
 Contao is an Open Source PHP Content Management System for people who want a
@@ -24,7 +29,7 @@ The monorepo is split into separate packages automatically:
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)
 
 **Please do not use `contao/contao` in production** but use the split packages
-insteead.
+instead.
 
 ## Running scripts
 

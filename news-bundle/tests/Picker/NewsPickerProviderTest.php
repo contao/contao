@@ -14,7 +14,9 @@ namespace Contao\NewsBundle\Tests\Picker;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Picker\NewsPickerProvider;
+use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -201,5 +203,78 @@ class NewsPickerProviderTest extends ContaoTestCase
     public function testConvertsTheDcaValue(): void
     {
         $this->assertSame('{{news_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
+    }
+
+    public function testAddsTableAndIdIfThereIsAValue(): void
+    {
+        $news = $this->createMock(NewsModel::class);
+        $news
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn($this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 1]))
+        ;
+
+        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('news', $params['do']);
+        $this->assertSame('tl_news', $params['table']);
+        $this->assertSame(1, $params['id']);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoEventsModel(): void
+    {
+        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('news', $params['do']);
+        $this->assertArrayNotHasKey('tl_news', $params);
+        $this->assertArrayNotHasKey('id', $params);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
+    {
+        $news = $this->createMock(NewsModel::class);
+        $news
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn(null)
+        ;
+
+        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('news', $params['do']);
+        $this->assertArrayNotHasKey('tl_news', $params);
+        $this->assertArrayNotHasKey('id', $params);
     }
 }
