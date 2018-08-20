@@ -1,7 +1,7 @@
 language: php
 
 git:
-  depth: 3
+  depth: 5
 
 cache:
   directories:
@@ -19,12 +19,9 @@ jobs:
   include:
     # Latest dependencies with all PHP versions
     - php: 5.6
-      env: ADJUST_PLUGIN_VERSION=1
     - php: 7.0
-      env: ADJUST_PLUGIN_VERSION=1
     - php: 7.1
     - php: 7.2
-      env: VALIDATE_COMPOSER_JSON=1
 
     # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
@@ -36,7 +33,7 @@ jobs:
 
     # Lowest dependencies with the oldest and latest PHP versions
     - php: 5.6
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' ADJUST_PLUGIN_VERSION=1
+      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
     - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
@@ -49,13 +46,24 @@ jobs:
         - rm composer.json
         - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
       script: vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+
   allow_failures:
     - php: nightly
 
 before_install:
   - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - if [[ $ADJUST_PLUGIN_VERSION ]]; then php -r '$data = json_decode(file_get_contents(__DIR__."/composer.json"), true); $data["require"]["contao/manager-plugin"] = "^2.2"; unset($data["require-dev"]["contao/monorepo-tools"]); file_put_contents(__DIR__."/composer.json", json_encode($data));'; fi
+
+  # Adjust the dependencies for PHP <7.1
+  - |
+    if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]] || [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then
+      php -r '
+        $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+        $data["require"]["contao/manager-plugin"] = "^2.2";
+        unset($data["require-dev"]["contao/monorepo-tools"]);
+        file_put_contents(__DIR__."/composer.json", json_encode($data));
+      '
+    fi
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
@@ -63,14 +71,25 @@ install:
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
-  - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c calendar-bundle $COVERAGE --coverage-clover build/logs/calendar-bundle.xml; else php vendor/bin/phpunit -c calendar-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c core-bundle $COVERAGE --coverage-clover build/logs/core-bundle.xml; else php vendor/bin/phpunit -c core-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c faq-bundle $COVERAGE --coverage-clover build/logs/faq-bundle.xml; else php vendor/bin/phpunit -c faq-bundle; fi
-  - php vendor/bin/phpunit -c installation-bundle
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
-  - if [[ $VALIDATE_COMPOSER_JSON ]]; then php vendor/bin/monorepo-tools composer-json --validate; fi
+  - |
+    if [[ $COVERAGE ]]; then
+      mkdir -p build/logs
+      php vendor/bin/phpunit -c calendar-bundle $COVERAGE --coverage-clover build/logs/calendar-bundle.xml
+      php vendor/bin/phpunit -c core-bundle $COVERAGE --coverage-clover build/logs/core-bundle.xml
+      php vendor/bin/phpunit -c faq-bundle $COVERAGE --coverage-clover build/logs/faq-bundle.xml
+      php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml
+      php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml
+    else
+      php vendor/bin/phpunit -c calendar-bundle
+      php vendor/bin/phpunit -c core-bundle
+      php vendor/bin/phpunit -c faq-bundle
+      php vendor/bin/phpunit -c installation-bundle
+      php vendor/bin/phpunit -c manager-bundle
+      php vendor/bin/phpunit -c news-bundle
+    fi
+
+  # Check whether the composer.json files of the bundles are in sync with the root one
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then php vendor/bin/monorepo-tools composer-json --validate; fi
 
 after_script:
   - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls -x build/logs/calendar-bundle.xml -x build/logs/core-bundle.xml -x build/logs/faq-bundle.xml -x build/logs/manager-bundle.xml -x build/logs/news-bundle.xml; fi
