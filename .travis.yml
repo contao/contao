@@ -26,6 +26,10 @@ jobs:
     - php: 7.2
       env: VALIDATE_COMPOSER_JSON=1
 
+    # Ignore the platform requirements for the upcoming PHP version
+    - php: nightly
+      env: COMPOSER_FLAGS='--ignore-platform-reqs'
+
     # Generate the coverage with the latest PHP version
     - php: 7.2
       env: COVERAGE='--exclude-group contao3'
@@ -45,6 +49,9 @@ jobs:
         - rm composer.json
         - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
       script: vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+  allow_failures:
+    - php: nightly
+  fast_finish: true
 
 before_install:
   - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
