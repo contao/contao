@@ -38,7 +38,7 @@
         "contao-components/tinymce4": "^4.7",
         "contao/image": "^0.3.5",
         "contao/imagine-svg": "^0.1.2 || ^0.2",
-        "contao/manager-plugin": "^2.6",
+        "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.3",
@@ -73,6 +73,17 @@
         "twig/twig": "^1.26 || ^2.0",
         "webmozart/path-util": "^2.0"
     },
+    "replace": {
+        "contao/calendar-bundle": "self.version",
+        "contao/comments-bundle": "self.version",
+        "contao/core-bundle": "self.version",
+        "contao/faq-bundle": "self.version",
+        "contao/installation-bundle": "self.version",
+        "contao/listing-bundle": "self.version",
+        "contao/manager-bundle": "self.version",
+        "contao/news-bundle": "self.version",
+        "contao/newsletter-bundle": "self.version"
+    },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
@@ -84,20 +95,10 @@
         "symfony/security": "3.4.7 || 3.4.8 || 3.4.11",
         "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
     },
-    "provide": {
-        "contao/calendar-bundle": "self.version",
-        "contao/comments-bundle": "self.version",
-        "contao/core-bundle": "self.version",
-        "contao/faq-bundle": "self.version",
-        "contao/installation-bundle": "self.version",
-        "contao/listing-bundle": "self.version",
-        "contao/manager-bundle": "self.version",
-        "contao/news-bundle": "self.version",
-        "contao/newsletter-bundle": "self.version"
-    },
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
+        "contao/monorepo-tools": "dev-master",
         "contao/test-case": "^1.3",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
@@ -150,12 +151,36 @@
             "core-bundle/src/Resources/functions/utf8_bootup.php"
         ],
         "exclude-from-classmap": [
-            "*/src/Resources/contao/config/",
-            "*/src/Resources/contao/dca/",
-            "*/src/Resources/contao/helper/",
-            "*/src/Resources/contao/languages/",
-            "*/src/Resources/contao/templates/",
-            "*/src/Resources/contao/themes/"
+            "calendar-bundle/src/Resources/contao/config/",
+            "calendar-bundle/src/Resources/contao/dca/",
+            "calendar-bundle/src/Resources/contao/languages/",
+            "calendar-bundle/src/Resources/contao/templates/",
+            "comments-bundle/src/Resources/contao/config/",
+            "comments-bundle/src/Resources/contao/dca/",
+            "comments-bundle/src/Resources/contao/languages/",
+            "comments-bundle/src/Resources/contao/templates/",
+            "core-bundle/src/Resources/contao/config/",
+            "core-bundle/src/Resources/contao/dca/",
+            "core-bundle/src/Resources/contao/helper/",
+            "core-bundle/src/Resources/contao/languages/",
+            "core-bundle/src/Resources/contao/templates/",
+            "core-bundle/src/Resources/contao/themes/",
+            "faq-bundle/src/Resources/contao/config/",
+            "faq-bundle/src/Resources/contao/dca/",
+            "faq-bundle/src/Resources/contao/languages/",
+            "faq-bundle/src/Resources/contao/templates/",
+            "listing-bundle/src/Resources/contao/config/",
+            "listing-bundle/src/Resources/contao/dca/",
+            "listing-bundle/src/Resources/contao/languages/",
+            "listing-bundle/src/Resources/contao/templates/",
+            "news-bundle/src/Resources/contao/config/",
+            "news-bundle/src/Resources/contao/dca/",
+            "news-bundle/src/Resources/contao/languages/",
+            "news-bundle/src/Resources/contao/templates/",
+            "newsletter-bundle/src/Resources/contao/config/",
+            "newsletter-bundle/src/Resources/contao/dca/",
+            "newsletter-bundle/src/Resources/contao/languages/",
+            "newsletter-bundle/src/Resources/contao/templates/"
         ]
     },
     "autoload-dev": {
