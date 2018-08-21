@@ -110,7 +110,6 @@
         "monolog/monolog": "^1.22",
         "ocramius/proxy-manager": "^2.0",
         "oneup/phpstan-contao": "^0.2.1",
-        "php-coveralls/php-coveralls": "^2.1",
         "php-http/message-factory": "^1.0.2",
         "phpstan/phpstan-phpunit": "^0.10",
         "phpunit/phpunit": "^7.0",

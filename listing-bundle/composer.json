@@ -19,7 +19,8 @@
         "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0"
+        "contao/manager-plugin": "^2.0",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "extra": {
         "branch-alias": {
