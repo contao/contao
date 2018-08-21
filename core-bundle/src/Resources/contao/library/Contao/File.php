@@ -757,16 +757,17 @@ class File extends \System
 	 * Send the file to the browser
 	 *
 	 * @param string $filename An optional filename
+	 * @param string $disposition The optional disposition
 	 *
 	 * @throws ResponseException
 	 */
-	public function sendToBrowser($filename='')
+	public function sendToBrowser($filename='', $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT)
 	{
 		$response = new BinaryFileResponse(TL_ROOT . '/' . $this->strFile);
 
 		$response->setContentDisposition
 		(
-			ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+			$disposition,
 			$filename,
 			Utf8::toAscii($this->basename)
 		);

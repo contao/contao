@@ -57,7 +57,7 @@ class ContentDownload extends \ContentElement
 		// Send the file to the browser and do not send a 404 header (see #4632)
 		if ($file != '' && $file == $objFile->path)
 		{
-			\Controller::sendFileToBrowser($file);
+			\Controller::sendFileToBrowser($file, $this->disposition);
 		}
 
 		$this->singleSRC = $objFile->path;
