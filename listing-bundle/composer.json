@@ -12,6 +12,7 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
+        "patchwork/utf8": "^1.2",
         "symfony/http-kernel": "3.4.* || 4.1.*"
     },
     "conflict": {

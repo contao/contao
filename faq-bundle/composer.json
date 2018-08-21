@@ -12,9 +12,11 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
+        "patchwork/utf8": "^1.2",
         "symfony/config": "3.4.* || 4.1.*",
         "symfony/dependency-injection": "3.4.* || 4.1.*",
-        "symfony/http-kernel": "3.4.* || 4.1.*"
+        "symfony/http-kernel": "3.4.* || 4.1.*",
+        "symfony/yaml": "3.4.* || 4.1.*"
     },
     "conflict": {
         "contao/core": "*",
