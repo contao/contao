@@ -130,7 +130,7 @@
         "doctrine/orm": "^2.5",
         "friendsofphp/php-cs-fixer": "^2.12",
         "monolog/monolog": "^1.22",
-        "oneup/phpstan-contao": "^0.2.1",
+        "oneup/phpstan-contao": "^0.2.2",
         "phpstan/phpstan-phpunit": "^0.10",
         "phpunit/phpunit": "^7.0",
         "symfony/phpunit-bridge": "^3.4.5"
