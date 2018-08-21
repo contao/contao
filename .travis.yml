@@ -53,22 +53,13 @@ install:
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
-  - |
-    if [[ $COVERAGE ]]; then
-      mkdir -p build/logs
-      php vendor/bin/phpunit -c calendar-bundle $COVERAGE --coverage-clover build/logs/calendar-bundle.xml
-      php vendor/bin/phpunit -c core-bundle $COVERAGE --coverage-clover build/logs/core-bundle.xml
-      php vendor/bin/phpunit -c faq-bundle $COVERAGE --coverage-clover build/logs/faq-bundle.xml
-      php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml
-      php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml
-    else
-      php vendor/bin/phpunit -c calendar-bundle
-      php vendor/bin/phpunit -c core-bundle
-      php vendor/bin/phpunit -c faq-bundle
-      php vendor/bin/phpunit -c installation-bundle
-      php vendor/bin/phpunit -c manager-bundle
-      php vendor/bin/phpunit -c news-bundle
-    fi
+  - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
+  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c calendar-bundle $COVERAGE --coverage-clover build/logs/calendar-bundle.xml; else php vendor/bin/phpunit -c calendar-bundle; fi
+  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c core-bundle $COVERAGE --coverage-clover build/logs/core-bundle.xml; else php vendor/bin/phpunit -c core-bundle; fi
+  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c faq-bundle $COVERAGE --coverage-clover build/logs/faq-bundle.xml; else php vendor/bin/phpunit -c faq-bundle; fi
+  - php vendor/bin/phpunit -c installation-bundle
+  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
+  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
   - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
 after_script:
