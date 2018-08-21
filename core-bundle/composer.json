@@ -79,7 +79,6 @@
         "symfony/swiftmailer-bundle": "^3.1.5",
         "symfony/translation": "3.4.* || 4.1.*",
         "symfony/twig-bundle": "3.4.* || 4.1.*",
-        "symfony/yaml": "3.4.* || 4.1.*",
         "tecnickcom/tcpdf": "^6.0",
         "terminal42/header-replay-bundle": "^1.4",
         "true/punycode": "^2.1"
