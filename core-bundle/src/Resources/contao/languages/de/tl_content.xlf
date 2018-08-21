@@ -297,6 +297,14 @@
         <source>The link title is added as &lt;em&gt;title&lt;/em&gt; attribute in the HTML markup.</source>
         <target>Der Link-Titel wird als &lt;em&gt;title&lt;/em&gt;-Attribut im HTML-Markup eingefügt.</target>
       </trans-unit>
+      <trans-unit id="tl_content.disposition.0">
+        <source>Disposition</source>
+        <target>Auslieferung</target>
+      </trans-unit>
+      <trans-unit id="tl_content.disposition.1">
+        <source>Choose the disposition here.</source>
+        <target>Wählen Sie hier eine Art der Auslieferung aus.</target>
+      </trans-unit>
       <trans-unit id="tl_content.embed.0">
         <source>Embed the link</source>
         <target>Den Link einbetten</target>
