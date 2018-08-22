@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerSize,playerOptions,playerStart,playerStop,playerCaption,playerPreload;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,youtubeOptions,playerStart,playerStop,playerCaption,playerAspect;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},playerSize,vimeoOptions,playerStart,playerColor,playerCaption,playerAspect;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{dwnconfig_legend},linkTitle,titleText,disposition;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC,overwriteLink;{dwnconfig_legend},disposition;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC,sortBy,metaIgnore;{dwnconfig_legend},disposition;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'article'                     => '{type_legend},type;{include_legend},articleAlias;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
@@ -509,7 +509,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				\Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 				\Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_INLINE
 			],
-			'reference'               => &$GLOBALS['TL_LANG']['tl_']['reference'],
+			'reference'               => &$GLOBALS['TL_LANG']['MSC']['disposition'],
 			'eval'                    => ['tl_class' => 'w50'],
 			'sql'                     => "varchar(32) NOT NULL default '" . \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT . "'"
 		],
