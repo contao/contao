@@ -14,14 +14,12 @@ env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
-    - COVERAGE='--no-logging'
 
 jobs:
   include:
     # Latest dependencies with all PHP versions
     - php: 7.1
     - php: 7.2
-      env: COVERAGE='--exclude-group contao3'
 
     # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
@@ -37,28 +35,37 @@ jobs:
     - stage: split
       if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
       php: 7.2
-      script: php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+      script:
+        - php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+
+    # Generate the coverage report
+    - stage: coverage
+      php: 7.2
+      install:
+        - composer update --no-interaction --no-suggest
+      script:
+        - php vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
+        - php vendor/bin/phpunit -c core-bundle --exclude-group contao3 --coverage-clover=core-bundle.xml
+        - php vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml
+        - php vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml
+        - php vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml
+      after_script:
+        - php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle.xml -x core-bundle.xml -x faq-bundle.xml -x manager-bundle.xml -x news-bundle.xml
 
   allow_failures:
     - php: nightly
 
-before_install:
-  - if [[ "$COVERAGE" == "--no-logging" ]]; then phpenv config-rm xdebug.ini || true; fi
-
 install:
+  - phpenv config-rm xdebug.ini || true
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
   - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
-  - mkdir -p build/logs
-  - php vendor/bin/phpunit -c calendar-bundle $COVERAGE
-  - php vendor/bin/phpunit -c core-bundle $COVERAGE
-  - php vendor/bin/phpunit -c faq-bundle $COVERAGE
-  - php vendor/bin/phpunit -c installation-bundle $COVERAGE
-  - php vendor/bin/phpunit -c manager-bundle $COVERAGE
-  - php vendor/bin/phpunit -c news-bundle $COVERAGE
+  - php vendor/bin/phpunit -c calendar-bundle
+  - php vendor/bin/phpunit -c core-bundle
+  - php vendor/bin/phpunit -c faq-bundle
+  - php vendor/bin/phpunit -c installation-bundle
+  - php vendor/bin/phpunit -c manager-bundle
+  - php vendor/bin/phpunit -c news-bundle
   - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-
-after_script:
-  - if [[ -e core-bundle/coverage.xml ]]; then php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle/coverage.xml -x core-bundle/coverage.xml -x faq-bundle/coverage.xml -x manager-bundle/coverage.xml -x news-bundle/coverage.xml; fi
