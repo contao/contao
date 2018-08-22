@@ -8,6 +8,7 @@ composer:
         'contao/monorepo-tools': 'dev-master'
         'friendsofphp/php-cs-fixer': '^2.12'
         'oneup/phpstan-contao': '^0.2.2'
+        'php-coveralls/php-coveralls': '^2.1'
         'phpstan/phpstan-phpunit': '^0.10'
 
 repositories:

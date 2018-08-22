@@ -14,20 +14,18 @@ env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
+    - COVERAGE='--no-logging'
 
 jobs:
   include:
     # Latest dependencies with all PHP versions
     - php: 7.1
     - php: 7.2
+      env: COVERAGE='--exclude-group contao3'
 
     # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
       env: COMPOSER_FLAGS='--ignore-platform-reqs'
-
-    # Generate the coverage with the latest PHP version
-    - php: 7.2
-      env: COVERAGE='--exclude-group contao3'
 
     # Lowest dependencies with the oldest and latest PHP versions
     - php: 7.1
@@ -45,7 +43,7 @@ jobs:
     - php: nightly
 
 before_install:
-  - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
+  - if [[ "$COVERAGE" == "--no-logging" ]]; then phpenv config-rm xdebug.ini || true; fi
 
 install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
@@ -53,14 +51,14 @@ install:
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
-  - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c calendar-bundle $COVERAGE --coverage-clover build/logs/calendar-bundle.xml; else php vendor/bin/phpunit -c calendar-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c core-bundle $COVERAGE --coverage-clover build/logs/core-bundle.xml; else php vendor/bin/phpunit -c core-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c faq-bundle $COVERAGE --coverage-clover build/logs/faq-bundle.xml; else php vendor/bin/phpunit -c faq-bundle; fi
-  - php vendor/bin/phpunit -c installation-bundle
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
+  - mkdir -p build/logs
+  - php vendor/bin/phpunit -c calendar-bundle $COVERAGE
+  - php vendor/bin/phpunit -c core-bundle $COVERAGE
+  - php vendor/bin/phpunit -c faq-bundle $COVERAGE
+  - php vendor/bin/phpunit -c installation-bundle $COVERAGE
+  - php vendor/bin/phpunit -c manager-bundle $COVERAGE
+  - php vendor/bin/phpunit -c news-bundle $COVERAGE
   - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
 after_script:
-  - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls -x build/logs/calendar-bundle.xml -x build/logs/core-bundle.xml -x build/logs/faq-bundle.xml -x build/logs/manager-bundle.xml -x build/logs/news-bundle.xml; fi
+  - if [[ -e core-bundle/coverage.xml ]]; then php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle/coverage.xml -x core-bundle/coverage.xml -x faq-bundle/coverage.xml -x manager-bundle/coverage.xml -x news-bundle/coverage.xml; fi

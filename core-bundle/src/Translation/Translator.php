@@ -14,12 +14,14 @@ namespace Contao\CoreBundle\Translation;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class Translator implements TranslatorInterface
+class Translator implements TranslatorInterface, TranslatorBagInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|TranslatorBagInterface
      */
     private $translator;
 
@@ -85,6 +87,14 @@ class Translator implements TranslatorInterface
     public function getLocale(): string
     {
         return $this->translator->getLocale();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCatalogue($locale = null): MessageCatalogueInterface
+    {
+        return $this->translator->getCatalogue($locale);
     }
 
     /**
