@@ -30,6 +30,7 @@
         "symfony/debug-bundle": "3.4.* || 4.1.*",
         "symfony/dependency-injection": "3.4.* || 4.1.*",
         "symfony/dotenv": "3.4.* || 4.1.*",
+        "symfony/expression-language": "3.4.* || 4.1.*",
         "symfony/filesystem": "3.4.* || 4.1.*",
         "symfony/finder": "3.4.* || 4.1.*",
         "symfony/framework-bundle": "3.4.* || 4.1.*",
