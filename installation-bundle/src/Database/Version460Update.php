@@ -37,6 +37,16 @@ class Version460Update extends AbstractVersionUpdate
      */
     public function run(): void
     {
+        // Convert 403 pages to 401 pages so the login redirect does not break
+        $this->connection->query("
+            UPDATE
+                tl_page
+            SET
+                type = 'error_401'
+            WHERE
+                type = 'error_403'
+        ");
+
         // Adjust the search module settings (see contao/core-bundle#1462)
         $this->connection->query("
             UPDATE

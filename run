@@ -16,7 +16,7 @@ function phpunit() {
   )
 
   for bundle in ${bundles[*]}; do
-    vendor/bin/phpunit -c ${bundle}
+    vendor/bin/phpunit -c ${bundle} --no-logging
   done
 }
 
