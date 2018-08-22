@@ -31,6 +31,10 @@
         </whitelist>
     </filter>
 
+    <logging>
+        <log type="coverage-clover" target="coverage.xml" />
+    </logging>
+
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
