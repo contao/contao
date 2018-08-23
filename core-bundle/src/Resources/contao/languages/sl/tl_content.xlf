@@ -38,7 +38,7 @@
         <target>Prepiši meta podatke</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the image meta data from the file manager.</source>
+        <source>Overwrite the meta data from the file manager.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>

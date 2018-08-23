@@ -38,8 +38,8 @@
         <target>Napisz meta dane</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the image meta data from the file manager.</source>
-        <target>Nadpisz meta dane obrazka z menedżera plików.</target>
+        <source>Overwrite the meta data from the file manager.</source>
+        <target>Nadpisz meta dane z menedżera plików.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>

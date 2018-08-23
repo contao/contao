@@ -1,7 +1,7 @@
 language: php
 
 git:
-  depth: 1
+  depth: 5
 
 cache:
   directories:
@@ -14,7 +14,7 @@ env:
     - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
 
-matrix:
+jobs:
   include:
     # Latest dependencies with all PHP versions
     - php: 7.1
@@ -29,9 +29,9 @@ matrix:
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
     - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+
   allow_failures:
     - php: nightly
-  fast_finish: true
 
 before_install:
   - phpenv config-rm xdebug.ini || true

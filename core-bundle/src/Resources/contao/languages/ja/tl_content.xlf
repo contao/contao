@@ -38,8 +38,8 @@
         <target>メタデータを上書き</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the image meta data from the file manager.</source>
-        <target>ファイル管理による画像のメタデータを上書きします。</target>
+        <source>Overwrite the meta data from the file manager.</source>
+        <target>ファイル管理からのメタデータを上書きします。</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>

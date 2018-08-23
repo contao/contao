@@ -12,14 +12,16 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
-        "symfony/framework-bundle": "^3.4 || ^4.0"
+        "patchwork/utf8": "^1.2",
+        "symfony/http-kernel": "3.4.* || 4.1.*"
     },
     "conflict": {
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0"
+        "contao/manager-plugin": "^2.0",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "extra": {
         "branch-alias": {

@@ -8,6 +8,8 @@ services:
             calls:
                 - ["setContainer", ["@service_container"]]
 
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface: "@contao.framework"
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
