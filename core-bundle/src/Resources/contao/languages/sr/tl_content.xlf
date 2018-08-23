@@ -38,8 +38,7 @@
         <target>Препиши мета податке</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the image meta data from the file manager.</source>
-        <target>Препиши постојеће мета податке слике у менаџеру фајлова.</target>
+        <source>Overwrite the meta data from the file manager.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>

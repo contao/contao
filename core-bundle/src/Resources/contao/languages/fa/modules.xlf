@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>امنیت</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>حساب کاربری خود را امن کنید</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>

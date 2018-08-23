@@ -1,57 +1,57 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="nl">
+  <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="fa">
     <body>
       <trans-unit id="MSC.comments">
         <source>Comments</source>
-        <target>Reacties</target>
+        <target>دیدگاه‌ها</target>
       </trans-unit>
       <trans-unit id="MSC.com_name">
         <source>Name</source>
-        <target>Naam</target>
+        <target>نام</target>
       </trans-unit>
       <trans-unit id="MSC.com_email">
         <source>E-mail (not published)</source>
-        <target>E-mail (niet gepubliceerd)</target>
+        <target>ایمیل (منتشر نمی‌شود)</target>
       </trans-unit>
       <trans-unit id="MSC.com_website">
         <source>Website</source>
-        <target>Website</target>
+        <target>وب‌سایت</target>
       </trans-unit>
       <trans-unit id="MSC.com_comment">
         <source>Comment</source>
-        <target>Commentaar</target>
+        <target>دیدگاه</target>
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
-        <target>Stuur me een bericht per e-mail bij nieuwe reacties (u kunt uw abonnement op elk moment annuleren)</target>
+        <target>مرا از دیدگاه‌های جدید از طریق ایمیل مطلع کن (می‌توانید اشتراک خود را در هر زمانی لغو کنید)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
-        <target>Reactie indienen</target>
+        <target>ارسال دیدگاه</target>
       </trans-unit>
       <trans-unit id="MSC.com_login">
         <source>You need to be logged in to add comments.</source>
-        <target>U moet ingelogd zijn om een reactie te plaatsen.</target>
+        <target>شما برای افزودن دیدگاه باید وارد شوید.</target>
       </trans-unit>
       <trans-unit id="MSC.com_by">
         <source>Comment by</source>
-        <target>Reactie door</target>
+        <target>دیدگاه توسط</target>
       </trans-unit>
       <trans-unit id="MSC.com_reply">
         <source>Reply by</source>
-        <target>Beantwoorden door</target>
+        <target>پاسخ</target>
       </trans-unit>
       <trans-unit id="MSC.com_quote">
         <source>%s wrote:</source>
-        <target>%s schreef:</target>
+        <target>%s نوشت:</target>
       </trans-unit>
       <trans-unit id="MSC.com_code">
         <source>Code:</source>
-        <target>Code:</target>
+        <target>کد:</target>
       </trans-unit>
       <trans-unit id="MSC.com_subject">
         <source>New comment on %s</source>
-        <target>Nieuwe reactie op %s</target>
+        <target>دیدگاه جدید در %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_message">
         <source>%s has created a new comment on your website:
@@ -70,7 +70,7 @@ Click here to edit or answer the comment:
 
 %s
 </source>
-        <target>%s heeft een nieuwe reactie geplaatst op uw website:
+        <target>%s دیدگاه جدید در وب‌سایت شما ایجاد کرده است:
 
 ---
 
@@ -78,34 +78,34 @@ Click here to edit or answer the comment:
 
 ---
 
-Klik hier om de reactie te bekijken:
+برای مشاهده‌ی دیدگاه اینجا را کلیک کنید:
 
 %s
 
-Klik hier om de reactie te bewerken of te beantwoorden:
+برای ویرایش یا پاسخ اینجا را کلیک کنید:
 
 %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
-        <target>Reactie dient eerst goedgekeurd te worden voordat deze op de website verschijnt!</target>
+        <target>این دیدگاه در بخش مدیریت منتشر خواهد شد قبل از اینکه در وب‌سایت نمایش داده شود!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
-        <target>Uw reactie is toegevoegd en is in afwachting van goedkeuring.</target>
+        <target>دیدگاه شما اضافه شد و اکنون منتظر تایید می‌باشد.</target>
       </trans-unit>
       <trans-unit id="MSC.com_optInConfirm">
         <source>Your subscription has been activated</source>
-        <target>Uw aanmelding is geactiveerd</target>
+        <target>اشتراک شما فعال شده است</target>
       </trans-unit>
       <trans-unit id="MSC.com_optInCancel">
         <source>Your subscription has been cancelled</source>
-        <target>Uw aanmelding is geannuleerd</target>
+        <target>اشتراک شما لغو شده است</target>
       </trans-unit>
       <trans-unit id="MSC.com_optInSubject">
         <source>Your subscription on %s</source>
-        <target>Uw inschrijving voor nieuwsbrief %s</target>
+        <target>اشتراک شما در %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_optInMessage">
         <source>Hello %s,
@@ -124,25 +124,26 @@ You can cancel your subscription at any time by clicking here:
 
 %s
 </source>
-        <target>Hallo %s,
+        <target>سلام %s,
 
-bevestig dat u op deze pagina per e-mail op de hoogte wilt worden gehouden van nieuwe reacties
-%s
-
-Klik hier om uw abonnement te bevestigen:
+لطفا تایید کنید که می‌خواهید از دیدگاه‌های جدید در این صفحه با ایمیل مطلع شوید:
 
 %s
 
-De bevestigings-link is 24 uur geldig.
+اینجا را برای تایید اشتراک کلیک کنید:
 
-U kunt uw abonnement elk moment beëindigen door hier te klikken:
+%s
+
+لینک تایید برای ۲۴ ساعت معتبر می‌باشد.
+
+شما می‌توانید اشتراک‌تان را در هر زمانی از طریق کلیک کردن روی لینک زیر لغو کنید:
 
 %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
-        <target>Nieuwe reactie op %s</target>
+        <target>دیدگاه جدید در %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyMessage">
         <source>Hello %s,
@@ -159,9 +160,9 @@ Click here to cancel your subscription:
 
 %s
 </source>
-        <target>Hallo %s,
+        <target>سلام %s,
 
-een nieuwe reactie is toegevoegd aan een pagina waarop u bent aangemeld:
+دیدگاه جدیدی به صفحه‌ای که شما مشترک آن شده بودید اضافه شده است:
 
 ---
 
@@ -169,14 +170,14 @@ een nieuwe reactie is toegevoegd aan een pagina waarop u bent aangemeld:
 
 ---
 
-Klik hier om uw aanmelding op te zeggen:
+برای لغو اشتراک اینجا را کلیک کنید:
 
 %s
 </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
-        <target>Nieuw antwoord op reactie %s</target>
+        <target>پاسخ جدید به یک دیدگاه در %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplyMessage">
         <source>Hello %s,
@@ -193,9 +194,9 @@ Click here to cancel your subscription:
 
 %s
 </source>
-        <target>Hallo %s,
+        <target>سلام %s,
 
-een nieuw antwoord op een reactie is toegevoegd aan een pagina waarop u bent aangemeld:
+پاسخ جدیدی به یک دیدگاه در صفحه‌ای که شما عضو شده‌اید اضافه شده اس:
 
 ---
 
@@ -203,7 +204,7 @@ een nieuw antwoord op een reactie is toegevoegd aan een pagina waarop u bent aan
 
 ---
 
-Klik hier om uw aanmelding te beëindigen:
+اینجا را کلیک کنید تا عضویت شما لغو گردد:
 
 %s
 </target>
