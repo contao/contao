@@ -35,12 +35,15 @@ jobs:
     - stage: split
       if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
       php: 7.2
+      install:
+        - composer update --no-interaction --no-suggest
       script:
         - php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
     # Generate the coverage report
     - stage: coverage
       php: 7.2
+      before_install: true
       install:
         - composer update --no-interaction --no-suggest
       script:
@@ -55,8 +58,10 @@ jobs:
   allow_failures:
     - php: nightly
 
-install:
+before_install:
   - phpenv config-rm xdebug.ini || true
+
+install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
   - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest

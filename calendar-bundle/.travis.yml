@@ -33,8 +33,10 @@ jobs:
   allow_failures:
     - php: nightly
 
-install:
+before_install:
   - phpenv config-rm xdebug.ini || true
+
+install:
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
   - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
