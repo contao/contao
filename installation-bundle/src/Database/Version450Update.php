@@ -35,6 +35,13 @@ class Version450Update extends AbstractVersionUpdate
      */
     public function run(): void
     {
+        $this->connection->query('
+            ALTER TABLE
+                tl_content
+            ADD
+                youtubeOptions text NULL
+        ');
+
         $this->connection->query("
             UPDATE
                 tl_form_field

@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Add the `tl_content.youtubeOptions` field in the version 4.5 update (see #28).
+
 ## 4.6.0-RC1 (2018-07-16)
 
  * Add two factor authentication for the back end login (see contao/core-bundle#1545).
