@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Do not merge the session cookie header (see #11, #29).
+ * Update the list of countries (see #12).
  * Add the `tl_content.youtubeOptions` field in the version 4.5 update (see #28).
 
 ## 4.6.0-RC1 (2018-07-16)
