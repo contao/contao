@@ -120,13 +120,13 @@
         <source>Cocos (Keeling) Islands</source>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Congo - Kinshasa</source>
+        <source>Democratic Republic of the Congo</source>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Congo - Brazzaville</source>
+        <source>Republic of the Congo</source>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -148,9 +148,6 @@
       </trans-unit>
       <trans-unit id="CNT.co">
         <source>Colombia</source>
-      </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -175,9 +172,6 @@
       </trans-unit>
       <trans-unit id="CNT.de">
         <source>Germany</source>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
