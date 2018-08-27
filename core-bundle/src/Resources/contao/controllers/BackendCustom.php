@@ -52,7 +52,7 @@ class BackendCustom extends BackendMain
 	{
 		$packages = $this->getContainer()->getParameter('kernel.packages');
 
-		$this->Template->version = $packages['contao/core-bundle'];
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $packages['contao/core-bundle'];
 
 		// Ajax request
 		if ($_POST && \Environment::get('isAjaxRequest'))
