@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.maxItems.0">
         <source>Maximum number of items</source>
-        <target>بیشترین تعداد موردها</target>
+        <target>بیشترین تعداد آیتم‌ها</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.maxItems.1">
         <source>Here you can limit the number of feed items. Set to 0 to export all.</source>

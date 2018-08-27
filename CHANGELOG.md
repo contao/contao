@@ -1,5 +1,10 @@
 # Contao core bundle change log
 
+# 4.5.13 (2018-08-27)
+
+ * Do not merge the session cookie header (see #11, #29).
+ * Update the list of countries (see #12).
+
 ## 4.5.11 (2018-08-13)
 
  * Prefix numeric aliases with `id-` (see contao/core-bundle#1598).

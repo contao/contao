@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.1">
         <source>These groups will be able to see the news items in this archive.</source>
-        <target>این گروه‌ها قادر به دیدن موارد خبری در این بایگانی خواهند بود.</target>
+        <target>این گروه‌ها قادر به دیدن آیتم‌ها خبری در این بایگانی خواهند بود.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_author">
         <source>Author of the news item</source>
-        <target>نویسنده مورد خبر</target>
+        <target>نویسنده آیتم خبر</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.notify_both">
         <source>Author and system administrator</source>
