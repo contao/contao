@@ -22,7 +22,6 @@ jobs:
     - php: 7.0
     - php: 7.1
     - php: 7.2
-      env: COVERAGE='--exclude-group contao3'
 
     # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
@@ -38,13 +37,31 @@ jobs:
     - stage: split
       if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
       php: 7.2
-      script: php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+      install:
+        - composer update --no-interaction --no-suggest
+      script:
+        - php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+
+    # Generate the coverage report
+    - stage: coverage
+      php: 7.2
+      before_install: true
+      install:
+        - composer update --no-interaction --no-suggest
+      script:
+        - php vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
+        - php vendor/bin/phpunit -c core-bundle --exclude-group contao3 --coverage-clover=core-bundle.xml
+        - php vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml
+        - php vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml
+        - php vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml
+      after_script:
+        - php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle.xml -x core-bundle.xml -x faq-bundle.xml -x manager-bundle.xml -x news-bundle.xml
 
   allow_failures:
     - php: nightly
 
 before_install:
-  - if [[ ! $COVERAGE ]]; then phpenv config-rm xdebug.ini || true; fi
+  - phpenv config-rm xdebug.ini || true
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
   # Adjust the dependencies for PHP <7.1
@@ -64,13 +81,9 @@ install:
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
-  - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c calendar-bundle $COVERAGE --coverage-clover build/logs/calendar-bundle.xml; else php vendor/bin/phpunit -c calendar-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c core-bundle $COVERAGE --coverage-clover build/logs/core-bundle.xml; else php vendor/bin/phpunit -c core-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c faq-bundle $COVERAGE --coverage-clover build/logs/faq-bundle.xml; else php vendor/bin/phpunit -c faq-bundle; fi
+  - php vendor/bin/phpunit -c calendar-bundle
+  - php vendor/bin/phpunit -c core-bundle
+  - php vendor/bin/phpunit -c faq-bundle
   - php vendor/bin/phpunit -c installation-bundle
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c manager-bundle $COVERAGE --coverage-clover build/logs/manager-bundle.xml; else php vendor/bin/phpunit -c manager-bundle; fi
-  - if [[ $COVERAGE ]]; then php vendor/bin/phpunit -c news-bundle $COVERAGE --coverage-clover build/logs/news-bundle.xml; else php vendor/bin/phpunit -c news-bundle; fi
-
-after_script:
-  - if [[ $COVERAGE ]]; then php vendor/bin/php-coveralls -x build/logs/calendar-bundle.xml -x build/logs/core-bundle.xml -x build/logs/faq-bundle.xml -x build/logs/manager-bundle.xml -x build/logs/news-bundle.xml; fi
+  - php vendor/bin/phpunit -c manager-bundle
+  - php vendor/bin/phpunit -c news-bundle
