@@ -338,6 +338,7 @@ services:
         arguments:
             - "@contao.routing.backend_matcher"
             - "@contao.routing.frontend_matcher"
+        public: true
 
     contao.routing.backend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
