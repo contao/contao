@@ -11,12 +11,8 @@
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
-use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -34,8 +30,7 @@ use Symfony\Component\HttpKernel\EventListener\SessionListener as BaseSessionLis
  * Contao front end request.
  *
  * To prevent session cookies from being stored in the HTTP cache, we remove
- * them from the response and send them directly. Any other cookie makes the
- * response uncacheable.
+ * them from the response and send them directly.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -58,24 +53,17 @@ class SessionListener implements EventSubscriberInterface
     private $scopeMatcher;
 
     /**
-     * @var HeaderStorageInterface
-     */
-    private $headerStorage;
-
-    /**
      * Constructor.
      *
-     * @param BaseSessionListener         $inner
-     * @param ContaoFrameworkInterface    $framework
-     * @param ScopeMatcher                $scopeMatcher
-     * @param HeaderStorageInterface|null $headerStorage
+     * @param BaseSessionListener      $inner
+     * @param ContaoFrameworkInterface $framework
+     * @param ScopeMatcher             $scopeMatcher
      */
-    public function __construct(BaseSessionListener $inner, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher, HeaderStorageInterface $headerStorage = null)
+    public function __construct(BaseSessionListener $inner, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->inner = $inner;
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
-        $this->headerStorage = $headerStorage ?: new NativeHeaderStorage();
     }
 
     /**
@@ -107,8 +95,6 @@ class SessionListener implements EventSubscriberInterface
         if ($session && $session->isStarted()) {
             $session->save();
         }
-
-        $this->handleResponseCookies($event->getResponse());
     }
 
     /**
@@ -129,30 +115,5 @@ class SessionListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return AbstractSessionListener::getSubscribedEvents();
-    }
-
-    /**
-     * Mark the response as uncachable if it has a non-session cookie.
-     *
-     * @param Response $response
-     */
-    private function handleResponseCookies(Response $response)
-    {
-        // Move the session cookie from the Symfony response to PHP headers
-        foreach ($response->headers->getCookies() as $cookie) {
-            if (session_name() === $cookie->getName()) {
-                $response->headers->removeCookie($cookie->getName(), $cookie->getPath(), $cookie->getDomain());
-                $this->headerStorage->add('Set-Cookie: '.$cookie);
-                break;
-            }
-        }
-
-        if ($response->isCacheable() && !empty($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
-            $response
-                ->setPrivate()
-                ->setMaxAge(0)
-                ->headers->addCacheControlDirective('must-revalidate')
-            ;
-        }
     }
 }

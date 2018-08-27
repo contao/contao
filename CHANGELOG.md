@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not merge the session cookie header (see #11, #29).
  * Update the list of countries (see #12).
 
 ## 4.4.21 (2018-08-13)
