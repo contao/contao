@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Tests\Cors;
 
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Driver\Statement;
-use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,29 +123,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    public function testDoesNotProvideTheConfigurationIfTheDatabaseIsNotConnected(): void
-    {
-        $request = Request::create('https://foobar.com');
-        $request->headers->set('Origin', 'https://origin.com');
-
-        $connection = $this->createMock(Connection::class);
-
-        $connection
-            ->method('isConnected')
-            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
-        ;
-
-        $connection
-            ->expects($this->never())
-            ->method('prepare')
-        ;
-
-        $configProvider = new WebsiteRootsConfigProvider($connection);
-        $result = $configProvider->getOptions($request);
-
-        $this->assertCount(0, $result);
-    }
-
     public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist(): void
     {
         $request = Request::create('https://foobar.com');
@@ -162,11 +137,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
-        $connection
-            ->method('isConnected')
-            ->willReturn(true)
-        ;
 
         $connection
             ->method('getSchemaManager')
@@ -202,12 +172,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
-        $connection
-            ->expects($this->once())
-            ->method('isConnected')
-            ->willReturn(true)
-        ;
 
         $connection
             ->expects($this->once())

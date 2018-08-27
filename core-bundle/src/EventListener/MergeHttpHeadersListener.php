@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
 use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
@@ -144,6 +145,15 @@ class MergeHttpHeadersListener
             // Never merge cache-control headers (see #1246)
             if ('cache-control' === $uniqueKey) {
                 continue;
+            }
+
+            if ('set-cookie' === $uniqueKey) {
+                $cookie = Cookie::fromString($content);
+
+                if (session_name() === $cookie->getName()) {
+                    $this->headerStorage->add('Set-Cookie: '.$cookie, false);
+                    continue;
+                }
             }
 
             if (\in_array($uniqueKey, $this->multiHeaders, true)) {

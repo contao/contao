@@ -25,8 +25,9 @@ interface HeaderStorageInterface
      * Adds a header to the storage.
      *
      * @param string $header
+     * @param bool   $replace
      */
-    public function add(string $header): void;
+    public function add(string $header, bool $replace = true): void;
 
     /**
      * Clears the storage.

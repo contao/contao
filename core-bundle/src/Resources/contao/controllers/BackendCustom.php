@@ -52,10 +52,12 @@ class BackendCustom extends BackendMain
 	public function run()
 	{
 		try {
-			$this->Template->version = PackageUtil::getVersion('contao/core-bundle');
+			$version = PackageUtil::getVersion('contao/core-bundle');
 		} catch (\OutOfBoundsException $e) {
-			$this->Template->version = PackageUtil::getVersion('contao/contao');
+			$version = PackageUtil::getVersion('contao/contao');
 		}
+
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
 
 		// Ajax request
 		if ($_POST && \Environment::get('isAjaxRequest'))

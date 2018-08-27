@@ -18,7 +18,6 @@ use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -252,103 +251,6 @@ class SessionListenerTest extends TestCase
         ;
 
         $this->listener->onKernelResponse($event);
-    }
-
-    /**
-     * Tests that the session cookie is moved from the Symfony response to the PHP headers.
-     */
-    public function testMovesTheSessionCookieFromTheSymfonyResponseToThePhpHeaders(): void
-    {
-        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
-            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.4.');
-        }
-
-        $request = new Request();
-        $request->setSession($this->createMock(SessionInterface::class));
-
-        $response = new Response();
-        $response->setSharedMaxAge(3600);
-        $response->headers->setCookie(new Cookie(session_name(), 'foobar'));
-
-        $event = $this->createMock(FilterResponseEvent::class);
-        $event
-            ->expects($this->any())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-
-        $event
-            ->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($response)
-        ;
-
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $this->scopeMatcher
-            ->method('isFrontendMasterRequest')
-            ->willReturn(true)
-        ;
-
-        $this->assertEmpty($this->headerStorage->all());
-
-        $this->listener->onKernelResponse($event);
-
-        $this->assertTrue($response->isCacheable());
-        $this->assertEmpty($response->headers->getCookies());
-
-        $headers = $this->headerStorage->all();
-
-        $this->assertCount(1, $headers);
-        $this->assertStringStartsWith('Set-Cookie: PHPSESSID=foobar', $headers[0]);
-    }
-
-    public function testMakesResponsePrivateIfItHasNonSessionCookies(): void
-    {
-        if (!method_exists(BaseSessionListener::class, 'onKernelResponse')) {
-            $this->markTestSkipped('The onKernelResponse method has only been added in Symfony 3.4.4.');
-        }
-
-        $request = new Request();
-        $request->setSession($this->createMock(SessionInterface::class));
-
-        $response = new Response();
-        $response->setSharedMaxAge(3600);
-        $response->headers->setCookie(new Cookie('foo', 'bar'));
-
-        $event = $this->createMock(FilterResponseEvent::class);
-        $event
-            ->expects($this->any())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-
-        $event
-            ->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($response)
-        ;
-
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $this->scopeMatcher
-            ->method('isFrontendMasterRequest')
-            ->willReturn(true)
-        ;
-
-        $this->assertTrue($response->isCacheable());
-
-        $this->listener->onKernelResponse($event);
-
-        $this->assertFalse($response->isCacheable());
-        $this->assertCount(1, $response->headers->getCookies());
-        $this->assertEmpty($this->headerStorage->all());
     }
 
     /**

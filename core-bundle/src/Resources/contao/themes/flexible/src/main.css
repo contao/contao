@@ -1874,6 +1874,9 @@ fieldset.collapsed > legend {
 	#tmenu ul.level_2 li,#tmenu ul.level_2 li a {
 		display:inline-block;
 	}
+	#tmenu ul.level_2 li a:hover {
+		background-color:#e87600;
+	}
 	#tmenu ul.level_2 .info {
 		display:none;
 	}

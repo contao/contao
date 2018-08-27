@@ -151,6 +151,12 @@ class FrontendIndex extends \Frontend
 				$objNewPage = $arrLangs['*'];
 			}
 
+			// Throw an exception if there is no matching page (see #1522)
+			else
+			{
+				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			}
+
 			// Store the page object
 			if (\is_object($objNewPage))
 			{
