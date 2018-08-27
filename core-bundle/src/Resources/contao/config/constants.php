@@ -10,7 +10,7 @@
 
 // Core version
 \define('VERSION', '4.4');
-\define('BUILD', '21');
+\define('BUILD', '22');
 \define('LONG_TERM_SUPPORT', true);
 
 // Link constants

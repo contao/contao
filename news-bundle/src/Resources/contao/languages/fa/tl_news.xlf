@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
         <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
+        <target>نام مستعار یک مرجع یکتا به آیتم خبری است که می‌تواند به جای شناسه‌ی عددی فراخوانده شود.</target>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
@@ -54,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
         <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
+        <target>تیزر خبر می‌تواند در لیست اخبار به جای کل متن نمایش داده شود. لینک «بیشتر بخوانید ...» به صورت خودکار اضافه خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -133,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the news item.</source>
-        <target>لطفا برگه‌ای را که بازدیدکننده بعد از کلیک مورد خبری باید بازگردانده شود را انتخاب نمایید.</target>
+        <target>لطفا برگه‌ای را که بازدیدکننده بعد از کلیک آیتم خبری باید بازگردانده شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_news.articleId.0">
         <source>Article</source>
@@ -141,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
-        <target>مقاله‌ای که را بازدیدکننده بعداز کلیک مورد خبری باید به آن بازگردانده شود را انتخاب نمایید.</target>
+        <target>مقاله‌ای که را بازدیدکننده بعداز کلیک آیتم خبری باید به آن بازگردانده شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
@@ -161,15 +163,15 @@
       </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
-        <target>مورد ویژه</target>
+        <target>آیتم ویژه</target>
       </trans-unit>
       <trans-unit id="tl_news.featured.1">
         <source>Show the news item in a featured news list.</source>
-        <target>نشان دادن مورد خبری در فهرست خبرهای ویژه</target>
+        <target>نشان دادن آیتم خبری در فهرست خبرهای ویژه</target>
       </trans-unit>
       <trans-unit id="tl_news.published.0">
         <source>Publish item</source>
-        <target>انتشار مورد</target>
+        <target>انتشار آیتم</target>
       </trans-unit>
       <trans-unit id="tl_news.published.1">
         <source>Make the news item publicly visible on the website.</source>

@@ -11,11 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_featured.0">
         <source>Featured items</source>
-        <target>موارد ویژه</target>
+        <target>آیتم‌های ویژه</target>
       </trans-unit>
       <trans-unit id="tl_module.news_featured.1">
         <source>Here you can choose how featured items are handled.</source>
-        <target>اینجا می‌توانید نحوه به کار بردن موردهای ویژه را انتخاب نمایید.</target>
+        <target>اینجا می‌توانید نحوه به کار بردن آیتم‌های ویژه را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_jumpToCurrent.0">
         <source>No period selected</source>
@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_showQuantity.0">
         <source>Show number of items</source>
-        <target>نمایش تعداد موارد</target>
+        <target>نمایش تعداد آیتم‌ها</target>
       </trans-unit>
       <trans-unit id="tl_module.news_showQuantity.1">
         <source>Show the number of news items of each month.</source>
-        <target>نمایش تعداد موارد خبری هر ماه.</target>
+        <target>نمایش تعداد آیتم‌ها خبری هر ماه.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>
@@ -103,15 +103,15 @@
       </trans-unit>
       <trans-unit id="tl_module.all_items">
         <source>Show all news items</source>
-        <target>مشاهده تمامی موارد خبری</target>
+        <target>مشاهده تمامی آیتم‌ها خبری</target>
       </trans-unit>
       <trans-unit id="tl_module.featured">
         <source>Show featured news items only</source>
-        <target>فقط مشاهده موارد خبری ویژه</target>
+        <target>فقط مشاهده آیتم‌ها خبری ویژه</target>
       </trans-unit>
       <trans-unit id="tl_module.unfeatured">
         <source>Skip featured news items</source>
-        <target>رد کردن موارد خبری ویژه</target>
+        <target>رد کردن آیتم‌ها خبری ویژه</target>
       </trans-unit>
     </body>
   </file>

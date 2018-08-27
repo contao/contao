@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="FMD.newslist.1">
         <source>Adds a list of news items to the page</source>
-        <target>افزودن فهرست موارد خبری به برگه</target>
+        <target>افزودن فهرست آیتم‌ها خبری به برگه</target>
       </trans-unit>
       <trans-unit id="FMD.newsreader.0">
         <source>Newsreader</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="FMD.newsreader.1">
         <source>Shows the details of a news item</source>
-        <target>نمایش جزئیات یک مورد خبری.</target>
+        <target>نمایش جزئیات یک آیتم خبری.</target>
       </trans-unit>
       <trans-unit id="FMD.newsarchive.0">
         <source>News archive</source>
