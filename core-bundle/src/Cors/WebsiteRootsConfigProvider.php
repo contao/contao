@@ -86,14 +86,14 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     }
 
     /**
-     * Checks if a database connection can be established and the table exist.
+     * Checks if the tl_page table exists.
      *
      * @return bool
      */
     private function canRunDbQuery()
     {
         try {
-            return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_page']);
+            return $this->connection->getSchemaManager()->tablesExist(['tl_page']);
         } catch (DriverException $e) {
             return false;
         }

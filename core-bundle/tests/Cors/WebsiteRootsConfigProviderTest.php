@@ -143,32 +143,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * Tests that no configuration is provided if the database is not connected.
-     */
-    public function testDoesNotProvideTheConfigurationIfTheDatabaseIsNotConnected()
-    {
-        $request = Request::create('https://foobar.com');
-        $request->headers->set('Origin', 'https://origin.com');
-
-        $connection = $this->createMock(Connection::class);
-
-        $connection
-            ->method('isConnected')
-            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
-        ;
-
-        $connection
-            ->expects($this->never())
-            ->method('prepare')
-        ;
-
-        $configProvider = new WebsiteRootsConfigProvider($connection);
-        $result = $configProvider->getOptions($request);
-
-        $this->assertCount(0, $result);
-    }
-
-    /**
      * Tests that no configuration is provided if the table does not exist.
      */
     public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist()
@@ -185,11 +159,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
-        $connection
-            ->method('isConnected')
-            ->willReturn(true)
-        ;
 
         $connection
             ->method('getSchemaManager')
@@ -225,12 +194,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
-        $connection
-            ->expects($this->once())
-            ->method('isConnected')
-            ->willReturn(true)
-        ;
 
         $connection
             ->expects($this->once())
