@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -77,7 +78,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($this->once())
+            ->expects(Kernel::VERSION_ID >= 40100 ? $this->never() : $this->once())
             ->method('critical')
         ;
 
@@ -115,7 +116,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($this->once())
+            ->expects(Kernel::VERSION_ID >= 40100 ? $this->never() : $this->once())
             ->method('critical')
         ;
 
@@ -346,7 +347,10 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->expects($expectLogging ? $this->once() : $this->never())
+            ->expects(($expectLogging && Kernel::VERSION_ID < 40100)
+                ? $this->once()
+                : $this->never()
+            )
             ->method('critical')
         ;
 

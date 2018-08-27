@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PrettyErrorScreenListener
@@ -252,7 +253,7 @@ class PrettyErrorScreenListener
 
     private function logException(\Exception $exception): void
     {
-        if (null === $this->logger || !$this->isLoggable($exception)) {
+        if (Kernel::VERSION_ID >= 40100 || null === $this->logger || !$this->isLoggable($exception)) {
             return;
         }
 
