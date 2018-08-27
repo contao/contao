@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Update the list of countries (see #12).
+
 ## 4.4.21 (2018-08-13)
 
  * Correctly set the back end headline for custom actions (see contao/newsletter-bundle#23). 
