@@ -12,6 +12,14 @@ composer:
         'phpstan/phpstan-phpunit': '^0.10'
 
 repositories:
+    core-bundle:
+        url: 'https://github.com/contao/core-bundle.git'
+        mapping:
+            '6d2e3e62749b5a9b3afcf454d1b504805bb9c6e7': '9c24eead059a7f8548d208a84ecfb17fbe7056d5'
+            '123c6d40a3212b578317d6844da48dca89080793': '8d6437f626334f9cf59b0eb4b1afe8e1615aba43'
+            '6eb1458a692527d10fd32ed32374bc5098b568d8': '1aed32807fa1d93958ee4bf0f0a84a81dfb40726'
+            'fed3c7b4204d66533d463c98e8fea9d59d8c1b78': '0e6ace663e45bf4e120b164e9db1c8109d9087b7'
+
     calendar-bundle:
         url: 'https://github.com/contao/calendar-bundle.git'
         mapping:
@@ -27,14 +35,6 @@ repositories:
             'b98e069139b68500b4617c240b3c46b7a3e49cb4': '7af83e0a4b7607031d40821f976d218392ce7449'
             'cc5e6f9e10caeceeb49fc793e3b9925d9173854e': '29dd1f4c5d3fcb91b7c9349cfb97d9da6a9afbeb'
             '683ca80c95fea0ee2fbf6b6b5998e97b77724091': 'e539c80fd40b3a49283711774ece3998771e302d'
-
-    core-bundle:
-        url: 'https://github.com/contao/core-bundle.git'
-        mapping:
-            '6d2e3e62749b5a9b3afcf454d1b504805bb9c6e7': '9c24eead059a7f8548d208a84ecfb17fbe7056d5'
-            '123c6d40a3212b578317d6844da48dca89080793': '8d6437f626334f9cf59b0eb4b1afe8e1615aba43'
-            '6eb1458a692527d10fd32ed32374bc5098b568d8': '1aed32807fa1d93958ee4bf0f0a84a81dfb40726'
-            'fed3c7b4204d66533d463c98e8fea9d59d8c1b78': '0e6ace663e45bf4e120b164e9db1c8109d9087b7'
 
     faq-bundle:
         url: 'https://github.com/contao/faq-bundle.git'
