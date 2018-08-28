@@ -66,7 +66,7 @@ class ContentModule extends ContentElement
 		}
 
 		$objModule->cssID = $cssID;
-		
+
 		// Tag the response
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{

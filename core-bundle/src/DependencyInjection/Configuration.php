@@ -208,7 +208,7 @@ class Configuration implements ConfigurationInterface
             $resolved[] = $chunks[$i];
         }
 
-        return rtrim(implode($resolved), '\/');
+        return rtrim(implode('', $resolved), '\/');
     }
 
     /**

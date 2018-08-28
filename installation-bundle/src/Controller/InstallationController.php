@@ -405,7 +405,7 @@ class InstallationController implements ContainerAwareInterface
             }
         }
 
-        $this->context['sql_message'] = implode($messages);
+        $this->context['sql_message'] = implode('', $messages);
     }
 
     /**
