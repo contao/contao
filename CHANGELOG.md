@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.23 (2018-08-28)
 
  * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
 
