@@ -235,7 +235,9 @@ class PrettyErrorScreenListener
 
         // Look for a template
         do {
-            $template = $this->getTemplateForException($exception);
+            if ($exception instanceof \Exception) {
+                $template = $this->getTemplateForException($exception);
+            }
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
