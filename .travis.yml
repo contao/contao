@@ -33,7 +33,7 @@ jobs:
 
     # Split the monorepo
     - stage: split
-      if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
+      if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
       php: 7.2
       install:
         - rm composer.json
