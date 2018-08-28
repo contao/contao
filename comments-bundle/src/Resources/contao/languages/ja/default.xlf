@@ -70,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%sさんがウェブサイトで新しいコメントを作成しました:
+
+---
+
+%s
+
+---
+
+コメントを表示:
+
+%s
+
+コメントを編集または返信:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -144,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>こんにちは、%sさん、
+
+登録しているページに新しいコメントが追加されました:
+
+---
+
+%s
+
+---
+
+登録を取り消すには、次をクリックしてください:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -164,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>こんにちは、%sさん、
+
+登録しているページに新しい返信が追加されました:
+
+---
+
+%s
+
+---
+
+登録を取り消すには、次をクリックしてください:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

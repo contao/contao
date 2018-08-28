@@ -158,7 +158,7 @@
         <target>ココス諸島</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Congo - Kinshasa</source>
+        <source>Democratic Republic of the Congo</source>
         <target>コンゴ民主共和国</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
@@ -166,7 +166,7 @@
         <target>中央アフリカ</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Congo - Brazzaville</source>
+        <source>Republic of the Congo</source>
         <target>コンゴ共和国</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
@@ -196,10 +196,6 @@
       <trans-unit id="CNT.co">
         <source>Colombia</source>
         <target>コロンビア</target>
-      </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
-        <target>クリッパートン島</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -232,10 +228,6 @@
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>ドイツ</target>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
-        <target>ディエゴガルシア島</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>

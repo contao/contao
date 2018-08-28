@@ -383,6 +383,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contaoには少なくともMySQL 5.1.0が必要ですが、 バージョン%sをインストルしてあります。データベースのバージョンを更新してください。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -407,6 +408,7 @@
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>環境変数&lt;code&gt;DATABASE_URL&lt;/code&gt;による接続のURLを使用してデータベースに接続できませんでした。</target>
         
       </trans-unit>
     </body>

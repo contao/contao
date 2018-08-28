@@ -1,7 +1,8 @@
 # Change log
 
-## DEV
+## 4.6.1 (2018-08-28)
 
+ * Restore compatibility with `symfony/http-kernel` in version 3.4 (see #34).
  * Do not merge the session cookie header (see #11, #29).
  * Update the list of countries (see #12).
  * Add the `tl_content.youtubeOptions` field in the version 4.5 update (see #28).
