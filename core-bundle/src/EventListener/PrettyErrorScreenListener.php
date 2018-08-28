@@ -260,9 +260,6 @@ class PrettyErrorScreenListener
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 
-    /**
-     * Checks if an extension is loggable.
-     */
     private function isLoggable(\Exception $exception): bool
     {
         do {
