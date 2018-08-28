@@ -43,7 +43,7 @@ class MemoryHeaderStorage implements HeaderStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function add($header, $replace = true)
+    public function add($header)
     {
         $this->headers[] = $header;
     }

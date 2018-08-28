@@ -28,9 +28,9 @@ class NativeHeaderStorage implements HeaderStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function add($header, $replace = true)
+    public function add($header)
     {
-        header($header, $replace);
+        header($header);
     }
 
     /**

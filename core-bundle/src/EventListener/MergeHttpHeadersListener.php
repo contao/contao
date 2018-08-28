@@ -157,7 +157,7 @@ class MergeHttpHeadersListener
                 $cookie = Cookie::fromString($content);
 
                 if (session_name() === $cookie->getName()) {
-                    $this->headerStorage->add('Set-Cookie: '.$cookie, false);
+                    $this->headerStorage->add('Set-Cookie: '.$cookie);
                     continue;
                 }
             }

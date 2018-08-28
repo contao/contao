@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
+
 ## 4.4.22 (2018-08-27)
 
  * Do not merge the session cookie header (see #11, #29).
