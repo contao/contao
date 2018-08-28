@@ -1,6 +1,10 @@
 # Contao core bundle change log
 
-# 4.5.13 (2018-08-27)
+## DEV
+
+ * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
+
+## 4.5.13 (2018-08-27)
 
  * Do not merge the session cookie header (see #11, #29).
  * Update the list of countries (see #12).

@@ -33,12 +33,13 @@ jobs:
 
     # Split the monorepo
     - stage: split
-      if: 'type = push AND branch =~ /^(master|\d+\.\d+)$/'
+      if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
       php: 7.2
       install:
-        - composer update --no-interaction --no-suggest
+        - rm composer.json
+        - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
       script:
-        - php vendor/bin/monorepo-tools composer-json --validate && php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
+        - php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
     # Generate the coverage report
     - stage: coverage
@@ -73,3 +74,4 @@ script:
   - php vendor/bin/phpunit -c installation-bundle
   - php vendor/bin/phpunit -c manager-bundle
   - php vendor/bin/phpunit -c news-bundle
+  - php vendor/bin/monorepo-tools composer-json --validate
