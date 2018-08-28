@@ -1,6 +1,6 @@
 # Contao core bundle change log
 
-## DEV
+## 4.5.14 (2018-08-28)
 
  * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
 
