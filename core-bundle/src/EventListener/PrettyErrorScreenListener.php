@@ -194,6 +194,7 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getException();
         $statusCode = $this->getStatusCodeForException($exception);
+        $template = null;
 
         $this->logException($exception);
 
