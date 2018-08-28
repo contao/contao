@@ -1,5 +1,9 @@
 # Change log
 
+## 4.6.2 (2018-08-28)
+
+ * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
+
 ## 4.6.1 (2018-08-28)
 
  * Restore compatibility with `symfony/http-kernel` in version 3.4 (see #34).
