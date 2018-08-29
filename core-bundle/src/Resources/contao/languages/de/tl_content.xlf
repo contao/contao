@@ -302,7 +302,7 @@
         <target>Auslieferung</target>
       </trans-unit>
       <trans-unit id="tl_content.disposition.1">
-        <source>Choose whether the download should be disposed as a downloadable file or directly in the browser.</source>
+        <source>Choose whether the download should be provided as a downloadable file or directly in the browser.</source>
         <target>Wählen Sie hier aus, ob der Download nach einem Klick als Datei ausgespielt, oder direkt im Browser ausgegeben werden soll.</target>
       </trans-unit>
       <trans-unit id="tl_content.embed.0">
@@ -673,7 +673,7 @@
         <source>Source</source>
         <target>Quelle</target>
       </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
+      <trans-unit id="tl_content.download_legend">
         <source>Download settings</source>
         <target>Download-Einstellungen</target>
       </trans-unit>
@@ -944,3 +944,4 @@
     </body>
   </file>
 </xliff>
+

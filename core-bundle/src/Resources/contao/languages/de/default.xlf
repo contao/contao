@@ -1958,11 +1958,11 @@
         <target>absteigend</target>
       </trans-unit>
       <trans-unit id="MSC.disposition.attachment">
-        <source>Dispose as download</source>
+        <source>Provide as attachment (download)</source>
         <target>Als Download ausspielen</target>
       </trans-unit>
       <trans-unit id="MSC.disposition.inline">
-        <source>Dispose in browser</source>
+        <source>Provide inline (within Browser)</source>
         <target>Im Browser öffnen</target>
       </trans-unit>
       <trans-unit id="MSC.default">
@@ -2564,3 +2564,4 @@
     </body>
   </file>
 </xliff>
+
