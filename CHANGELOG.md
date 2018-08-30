@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Also add the `youtubeStart` and `youtubeStop` fields in the version 4.5 update (see #28).
+
 ## 4.6.2 (2018-08-28)
 
  * Replace the `Set-Cookie` header when merging HTTP headers (see #35).

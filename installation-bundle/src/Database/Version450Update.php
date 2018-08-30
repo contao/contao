@@ -43,6 +43,20 @@ class Version450Update extends AbstractVersionUpdate
         ');
 
         $this->connection->query("
+            ALTER TABLE
+                tl_content
+            ADD
+                youtubeStart text int(10) unsigned NOT NULL default '0'
+        ");
+
+        $this->connection->query("
+            ALTER TABLE
+                tl_content
+            ADD
+                youtubeStop text int(10) unsigned NOT NULL default '0'
+        ");
+
+        $this->connection->query("
             UPDATE
                 tl_form_field
             SET
