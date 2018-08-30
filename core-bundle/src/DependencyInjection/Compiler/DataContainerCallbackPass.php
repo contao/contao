@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DataContainerCallbackPass implements CompilerPassInterface
@@ -88,6 +89,13 @@ class DataContainerCallbackPass implements CompilerPassInterface
             return (string) $attributes['method'];
         }
 
-        return 'on'.ucfirst($attributes['hook']);
+        $keys = explode('.', $attributes['target']);
+        $callback = end($keys);
+
+        if (0 === strncmp($callback, 'on', 2)) {
+            $callback = substr($callback, 2);
+        }
+
+        return 'on'.Container::camelize($callback);
     }
 }
