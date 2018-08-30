@@ -14,34 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 class DataContainerCallbackListener
 {
-//    private const CALLBACKS = [
-//        'config.onload',
-//        'config.onsubmit',
-//        'config.oncreate_version',
-//        'config.onrestore_version',
-//        'config.oncreate',
-//        'config.oncut',
-//        'config.oncopy',
-//        'config.ondelete',
-//        'config.onundo',
-//        'panel.panel',
-//        'edit.buttons',
-//        'select.buttons',
-//        'list.sorting.paste_button',
-//        'list.sorting.child_record',
-//        'list.label.label',
-//        'list.label.header',
-//        'list.label.group',
-//        'operations.edit.button',
-//        'global_operations.edit.button',
-//        'field.title.options',
-//        'field.title.load',
-//        'field.title.save',
-//        'field.title.xlabel',
-//        'field.title.input_field',
-//        'field.title.wizard',
-//    ];
-
     private const SINGLETONS = [
         'panel_callback',
         'paste_button_callback',
@@ -109,11 +81,11 @@ class DataContainerCallbackListener
 
     private function getFirstByPriority(array $callbacks, ?callable $current): callable
     {
-        if (null !== $current && !isset($callbacks[0])) {
-            $callbacks[0] = $current;
+        if (null !== $current) {
+            $current = [$current];
         }
 
-        krsort($callbacks, SORT_NUMERIC);
+        $callbacks = $this->getMergedByPriority($callbacks, $current);
 
         return array_shift($callbacks);
     }
