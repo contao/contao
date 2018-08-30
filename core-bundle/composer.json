@@ -73,7 +73,7 @@
         "symfony/finder": "3.4.* || 4.1.*",
         "symfony/framework-bundle": "3.4.* || 4.1.*",
         "symfony/http-foundation": "3.4.* || 4.1.*",
-        "symfony/http-kernel": "4.1.*",
+        "symfony/http-kernel": "3.4.* || 4.1.*",
         "symfony/lock": "3.4.* || 4.1.*",
         "symfony/process": "3.4.* || 4.1.*",
         "symfony/routing": "3.4.* || 4.1.*",

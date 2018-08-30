@@ -454,6 +454,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
         $this->assertSame('security.token_storage', (string) $definition->getArgument(3));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(4));
+        $this->assertSame('logger', (string) $definition->getArgument(5));
 
         $tags = $definition->getTags();
 
@@ -1244,7 +1245,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.routing.scope_matcher');
 
         $this->assertSame(ScopeMatcher::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.routing.backend_matcher', (string) $definition->getArgument(0));
         $this->assertSame('contao.routing.frontend_matcher', (string) $definition->getArgument(1));
     }
