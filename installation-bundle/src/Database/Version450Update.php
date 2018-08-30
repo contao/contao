@@ -46,14 +46,14 @@ class Version450Update extends AbstractVersionUpdate
             ALTER TABLE
                 tl_content
             ADD
-                youtubeStart text int(10) unsigned NOT NULL default '0'
+                youtubeStart int(10) unsigned NOT NULL default '0'
         ");
 
         $this->connection->query("
             ALTER TABLE
                 tl_content
             ADD
-                youtubeStop text int(10) unsigned NOT NULL default '0'
+                youtubeStop int(10) unsigned NOT NULL default '0'
         ");
 
         $this->connection->query("
