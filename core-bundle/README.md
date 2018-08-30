@@ -28,7 +28,7 @@ Add the `contao-component-dir` to the `extra` section of your `composer.json`
 file.
 
 ```
-composer config extra.contao-component-dir true
+composer config extra.contao-component-dir assets
 ```
 
 ## Installation
