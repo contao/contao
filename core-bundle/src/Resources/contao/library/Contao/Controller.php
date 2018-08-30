@@ -1428,11 +1428,10 @@ abstract class Controller extends \System
 		}
 		catch (\Exception $e)
 		{
-			$objFile = new \stdClass();
-			$objFile->imageSize = false;
+			$objFile = null;
 		}
 
-		$imgSize = $objFile->imageSize;
+		$imgSize = $objFile ? $objFile->imageSize : false;
 		$size = \StringUtil::deserialize($arrItem['size']);
 
 		if (is_numeric($size))
@@ -1518,7 +1517,7 @@ abstract class Controller extends \System
 		}
 
 		// Image dimensions
-		if ($objFile->exists() && ($imgSize = $objFile->imageSize) !== false)
+		if ($objFile && $objFile->exists() && ($imgSize = $objFile->imageSize) !== false)
 		{
 			$objTemplate->arrSize = $imgSize;
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
