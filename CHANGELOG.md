@@ -1,5 +1,10 @@
 # Change log
 
+## DEV
+
+ * Allow SwiftMailer 5 and 6 (see contao/core-bundle#1613).
+ * Also add the `youtubeStart` and `youtubeStop` fields in the version 4.5 update (see #28).
+
 ## 4.6.2 (2018-08-28)
 
  * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
