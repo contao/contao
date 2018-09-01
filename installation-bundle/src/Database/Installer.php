@@ -197,7 +197,6 @@ class Installer
             }
 
             $engine = $table->getOption('engine');
-            $rowFormat = $table->getOption('row_format');
             $innodb = 'innodb' === strtolower($engine);
 
             if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
@@ -208,10 +207,14 @@ class Installer
                 }
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
-            } elseif ($innodb && $rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
-                $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+            } elseif ($innodb) {
+                $rowFormat = $table->getOption('row_format');
 
-                $sql['ALTER_TABLE'][md5($command)] = $command;
+                if ($rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    $sql['ALTER_TABLE'][md5($command)] = $command;
+                }
             }
 
             $collate = $table->getOption('collate');
