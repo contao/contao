@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Re-add the installation bundle commands (see #45).
  * Also check the row format when updating an InnoDB table.
  * Allow SwiftMailer 5 and 6 (see contao/core-bundle#1613).
  * Also add the `youtubeStart` and `youtubeStop` fields in the version 4.5 update (see #28).
