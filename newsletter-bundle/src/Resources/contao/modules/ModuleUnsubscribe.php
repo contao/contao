@@ -88,7 +88,7 @@ class ModuleUnsubscribe extends \Module
 		{
 			$arrField = array
 			(
-				'name' => 'unsubscribe',
+				'name' => 'unsubscribe_'.$this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true)

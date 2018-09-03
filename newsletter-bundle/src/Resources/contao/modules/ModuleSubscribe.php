@@ -96,7 +96,7 @@ class ModuleSubscribe extends \Module
 		{
 			$arrField = array
 			(
-				'name' => 'subscribe',
+				'name' => 'subscribe_'.$this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true)

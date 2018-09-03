@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Make the ID of the subscription modules unique (see #40).
+
 ## 4.4.23 (2018-08-28)
 
  * Replace the `Set-Cookie` header when merging HTTP headers (see #35).
