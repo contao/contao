@@ -92,6 +92,23 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame('esi', $arguments[1]);
     }
 
+    public function testMakesFragmentServicesPublic(): void
+    {
+        $contentController = new Definition('App\Fragments\Text');
+        $contentController->setPublic(false);
+        $contentController->addTag('contao.content_element');
+
+        $container = $this->mockContainer();
+        $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        $this->assertFalse($container->findDefinition('app.fragments.content_controller')->isPublic());
+
+        $pass = new RegisterFragmentsPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->findDefinition('app.fragments.content_controller')->isPublic());
+    }
+
     public function testRegistersThePreHandlers(): void
     {
         $contentController = new Definition(FragmentPreHandlerInterface::class);
