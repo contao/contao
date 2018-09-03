@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Show a hint in the install tool if there are old custom templates (see #21).
  * Make the ID of the subscription modules unique (see #40).
 
 ## 4.4.23 (2018-08-28)

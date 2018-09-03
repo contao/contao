@@ -220,5 +220,63 @@ class Version400Update extends AbstractVersionUpdate
             WHERE
                 type = 'headline'
         ");
+
+        $this->checkCustomTemplates();
+    }
+
+    private function checkCustomTemplates()
+    {
+        static $mapper = [
+            'tl_article' => [
+                'mod_article_plain' => 'mod_article',
+                'mod_article_teaser' => 'mod_article',
+            ],
+            'tl_content' => [
+                'ce_hyperlink_image' => 'ce_hyperlink',
+            ],
+            'tl_module' => [
+                'mod_login_1cl' => 'mod_login',
+                'mod_login_2cl' => 'mod_login',
+                'mod_logout_1cl' => 'mod_login',
+                'mod_logout_2cl' => 'mod_login',
+                'mod_search_advanced' => 'mod_search',
+                'mod_search_simple' => 'mod_search',
+                'mod_eventmenu_year' => 'mod_eventmenu',
+                'mod_newsmenu_day' => 'mod_newsmenu',
+                'mod_newsmenu_year' => 'mod_newsmenu',
+            ],
+        ];
+
+        foreach ($mapper as $table => $templates) {
+            $stmt = $this->connection->prepare("
+                SELECT
+                    *
+                FROM
+                    $table
+                WHERE
+                    customTpl = :template
+            ");
+
+            foreach ($templates as $old => $new) {
+                $stmt->bindValue(':template', $old);
+                $stmt->execute();
+
+                if (false !== ($row = $stmt->fetch(\PDO::FETCH_OBJ))) {
+                    $this->addMessage(sprintf('<li>%s.%s → %s</li>', $table, $row->id, $old));
+                }
+            }
+        }
+
+        if ($this->hasMessage()) {
+            $translator = $this->container->get('translator');
+
+            $this->prependMessage(sprintf(
+                '<h3>%s</h3><p>%s</p><ul>',
+                $translator->trans('old_templates'),
+                $translator->trans('old_templates_begin')
+            ));
+
+            $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('old_templates_end')));
+        }
     }
 }

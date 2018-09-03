@@ -292,11 +292,27 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
-        <target>Duplicate newsletter subscriptions found:</target>
+        <target>Duplicate subscriptions</target>
       </trans-unit>
       <trans-unit id="74">
-        <source>duplicates_purged</source>
+        <source>duplicate_subscriptions_begin</source>
+        <target>Duplicate newsletter subscriptions found:</target>
+      </trans-unit>
+      <trans-unit id="75">
+        <source>duplicate_subscriptions_end</source>
         <target>The duplicate entries have been purged automatically. A backup of the original subscriptions has been stored in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="76">
+        <source>old_templates</source>
+        <target>Old templates in use</target>
+      </trans-unit>
+      <trans-unit id="77">
+        <source>old_templates_begin</source>
+        <target>The following elements are using old custom templates:</target>
+      </trans-unit>
+      <trans-unit id="78">
+        <source>old_templates_end</source>
+        <target>Check out the &lt;a href="https://github.com/contao/contao/blob/master/UPGRADE.md#template-name-changes" target="_blank" rel="noopener noreferrer"&gt;template name changes&lt;/a&gt; and update your installation accordingly.</target>
       </trans-unit>
     </body>
   </file>
