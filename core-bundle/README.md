@@ -38,7 +38,9 @@ Edit your `composer.json` file and add the following:
 
 Then run `php composer.phar update` to install the vendor files.
 
-Note that you can exchange the `php-http/guzzle6-adapter` package with any other [HTTP client implementation][4]. If you already have an HTTP client implementation, you can omit the package entirely.
+Note that you can exchange the `php-http/guzzle6-adapter` package with any
+other [HTTP client implementation][4]. If you already have an HTTP client
+implementation, you can omit the package entirely.
 
 ## Activation
 
@@ -123,9 +125,17 @@ security:
                 authenticator: contao.security.authenticator
 ```
 
-Edit your `app/config/config.yml` file and add the following:
+Edit your `app/config/config.yml` file:
 
 ```yml
+parameters:
+    prepend_locale: false # Set to true if you like, just has to be set
+
+# Framework configuration
+framework:
+    esi: { enabled: true }
+    translator: { fallbacks: ['%locale%'] }
+
 # Contao configuration
 contao:
     # Required parameters
@@ -133,7 +143,7 @@ contao:
 
     # Optional parameters
     web_dir:              "%kernel.project_dir%/web"
-    encryption_key:       "%kernel.secret%"
+    encryption_key:       "%secret%"
     url_suffix:           .html
     upload_path:          files
     csrf_token_name:      contao_csrf_token
