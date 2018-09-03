@@ -35,6 +35,7 @@ class ContaoManagerExtensionTest extends TestCase
         parent::setUp();
 
         $this->container = new ContainerBuilder();
+        $this->container->setParameter('kernel.project_dir', '');
 
         $extension = new ContaoManagerExtension();
         $extension->load([], $this->container);

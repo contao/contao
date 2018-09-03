@@ -15,14 +15,30 @@ namespace Contao\ManagerBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class ContaoManagerExtension extends Extension
+class ContaoManagerExtension extends ConfigurableExtension
 {
+    /**
+     * @var array
+     */
+    private static $managerPaths = [
+        'contao-manager.phar.php',
+        'contao-manager.php'
+    ];
+
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container): void
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container->getParameter('kernel.project_dir'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader(
             $container,
@@ -32,5 +48,32 @@ class ContaoManagerExtension extends Extension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+
+        $this->configureManagerUrlParameter($mergedConfig, $container);
+    }
+
+    /**
+     * Configure the manager url porameter by checking configuration or default paths.
+     */
+    protected function configureManagerUrlParameter(array $mergedConfig, ContainerBuilder $container): void
+    {
+        $managerUrl = null;
+
+        if ($mergedConfig['manager_path']) {
+            $managerUrl = $mergedConfig['manager_path'];
+        } else {
+            $projectDir = $container->getParameter('kernel.project_dir');
+
+            foreach (static::$managerPaths as $path) {
+                if (!is_file($projectDir . '/web/' . $path)) {
+                    continue;
+                }
+
+                $managerUrl = $path;
+                break;
+            }
+        }
+
+        $container->setParameter('contao_manager.manager_path', $managerUrl);
     }
 }

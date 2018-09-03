@@ -12,3 +12,11 @@ services:
             - "%kernel.project_dir%"
         tags:
             - { name: kernel.event_listener, event: console.terminate }
+
+    contao_manager.listener.backend_menu_listener:
+        class: Contao\ManagerBundle\EventListener\BackendMenuListener
+        arguments:
+            - "@security.token_storage"
+            - "%contao_manager.manager_path%"
+        tags:
+            - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -10 }
