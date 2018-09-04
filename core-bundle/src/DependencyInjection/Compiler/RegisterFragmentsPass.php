@@ -58,6 +58,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $priority => $reference) {
             $definition = $container->findDefinition($reference);
+            $definition->setPublic(true);
+
             $tags = $definition->getTag($tag);
             $definition->clearTag($tag);
 

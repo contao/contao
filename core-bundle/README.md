@@ -51,14 +51,18 @@ implementation, you can omit the package entirely.
 Configure the `DATABASE_URL` in your environment, either using environment
 variables or by using the [Dotenv component][7].
 
+Enable ESI in the `config/packages/framework.yaml` file.
+
+```yaml
+framework:
+    esi: true
+```
+
 Add the Contao routes to your `config/routing.yaml` file, and be sure to load
 the `ContaoCoreBundle` at the very end, so the catch all route does not catch
 your application routes.
 
 ```yml
-ContaoInstallationBundle:
-    resource: "@ContaoInstallationBundle/Resources/config/routing.yml"
-
 ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
@@ -149,13 +153,6 @@ security:
     access_control:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao(/|$), roles: ROLE_USER }
-```
-
-Enable ESI in the `config/packages/framework.yaml` file.
-
-```yaml
-framework:
-    esi: true
 ```
 
 The Contao core-bundle as well as the installation-bundle are now installed and

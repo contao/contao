@@ -197,15 +197,24 @@ class Installer
             }
 
             $engine = $table->getOption('engine');
+            $innodb = 'innodb' === strtolower($engine);
 
-            if ($tableOptions->Engine !== $engine) {
-                if ('InnoDB' === $engine) {
+            if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
+                if ($innodb) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
                 } else {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
+            } elseif ($innodb) {
+                $rowFormat = $table->getOption('row_format');
+
+                if ($rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
+                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    $sql['ALTER_TABLE'][md5($command)] = $command;
+                }
             }
 
             $collate = $table->getOption('collate');

@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao.command.lock:
+        class: Contao\InstallationBundle\Command\LockCommand
+
+    contao.command.unlock:
+        class: Contao\InstallationBundle\Command\UnlockCommand
