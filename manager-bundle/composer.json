@@ -49,6 +49,9 @@
         "terminal42/header-replay-bundle": "^1.4.2",
         "toflar/psr6-symfony-http-cache-store": "^1.0.2"
     },
+    "conflict": {
+        "symfony/twig-bundle": "4.1.0"
+    },
     "require-dev": {
         "composer/composer": "^1.0",
         "contao/test-case": "^1.3",

@@ -95,7 +95,8 @@
         "doctrine/orm": "<2.4",
         "lexik/maintenance-bundle": "2.1.4",
         "symfony/finder": "3.4.7 || 4.0.7",
-        "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
+        "symfony/swiftmailer-bundle": "2.6.* <2.6.2",
+        "symfony/twig-bundle": "4.1.0"
     },
     "require-dev": {
         "ext-fileinfo": "*",
