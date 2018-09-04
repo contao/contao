@@ -183,7 +183,6 @@ class ModuleSubscribe extends \Module
 
 		$time = time();
 		$arrAdd = array();
-		$arrChannels = array();
 		$arrCids = array();
 
 		// Update the subscriptions
@@ -193,7 +192,6 @@ class ModuleSubscribe extends \Module
 			$objChannel = $objRecipient->getRelated('pid');
 
 			$arrAdd[] = $objRecipient->id;
-			$arrChannels[] = $objChannel->title;
 			$arrCids[] = $objChannel->id;
 
 			$objRecipient->active = 1;

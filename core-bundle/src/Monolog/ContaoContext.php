@@ -89,7 +89,7 @@ class ContaoContext
      */
     public function __toString()
     {
-        return json_encode([
+        return (string) json_encode([
             'func' => $this->func,
             'action' => $this->action,
             'username' => $this->username,

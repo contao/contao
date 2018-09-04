@@ -12,9 +12,7 @@ namespace Contao\CoreBundle\Tests\Cors;
 
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Driver\Statement;
-use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;

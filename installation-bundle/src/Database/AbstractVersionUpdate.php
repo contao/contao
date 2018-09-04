@@ -60,7 +60,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
      */
     public function getMessage()
     {
-        return implode($this->messages);
+        return implode('', $this->messages);
     }
 
     /**

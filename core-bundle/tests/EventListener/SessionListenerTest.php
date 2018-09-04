@@ -12,8 +12,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\SessionListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
-use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,11 +46,6 @@ class SessionListenerTest extends TestCase
     private $scopeMatcher;
 
     /**
-     * @var HeaderStorageInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $headerStorage;
-
-    /**
      * @var SessionListener
      */
     private $listener;
@@ -64,14 +57,7 @@ class SessionListenerTest extends TestCase
         $this->inner = $this->createMock(BaseSessionListener::class);
         $this->framework = $this->createMock(ContaoFrameworkInterface::class);
         $this->scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $this->headerStorage = new MemoryHeaderStorage();
-
-        $this->listener = new SessionListener(
-            $this->inner,
-            $this->framework,
-            $this->scopeMatcher,
-            $this->headerStorage
-        );
+        $this->listener = new SessionListener($this->inner, $this->framework, $this->scopeMatcher);
     }
 
     /**
