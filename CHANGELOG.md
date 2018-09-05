@@ -6,6 +6,9 @@
  * Also check the row format when updating an InnoDB table.
  * Allow SwiftMailer 5 and 6 (see contao/core-bundle#1613).
  * Also add the `youtubeStart` and `youtubeStop` fields in the version 4.5 update (see #28).
+ * Ignore the "uncached" insert tag flag in the unknown insert tags (see #48).
+ * Make the ID of the subscription modules unique (see #40).
+ * Use the correct table when handling root nodes in the picker (see #44).
 
 ## 4.6.2 (2018-08-28)
 
