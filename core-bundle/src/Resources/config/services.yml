@@ -63,6 +63,7 @@ services:
             - "@request_stack"
             - "@translator"
             - "%kernel.project_dir%"
+        public: true
 
     contao.controller.insert_tags:
         class: Contao\CoreBundle\Controller\InsertTagsController

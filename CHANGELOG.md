@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Make the `contao.controller.backend_csv_import` controller public (see #49).
  * Re-add the installation bundle commands (see #45).
  * Also check the row format when updating an InnoDB table.
  * Allow SwiftMailer 5 and 6 (see contao/core-bundle#1613).
