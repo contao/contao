@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Ignore the "uncached" insert tag flag in the unknown insert tags (see #48).
  * Make the ID of the subscription modules unique (see #40).
 
 ## 4.4.23 (2018-08-28)
