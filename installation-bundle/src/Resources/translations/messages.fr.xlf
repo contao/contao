@@ -363,11 +363,15 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
-        <target>Doublons d'abonnements au bulletin d'information trouvés :</target>
         
       </trans-unit>
       <trans-unit id="74">
-        <source>duplicates_purged</source>
+        <source>duplicate_subscriptions_begin</source>
+        <target>Doublons d'abonnements au bulletin d'information trouvés :</target>
+        
+      </trans-unit>
+      <trans-unit id="75">
+        <source>duplicate_subscriptions_end</source>
         <target>Les doublons ont été purgés automatiquement. Une copie de l'abonnement d'origine a été enregistrée dans &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;</target>
         
       </trans-unit>

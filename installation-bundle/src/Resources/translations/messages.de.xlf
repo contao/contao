@@ -363,11 +363,16 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
-        <target>Es wurden doppelte Newsletter-Abonnements gefunden:</target>
+        <target>Doppelte Abonnements</target>
         
       </trans-unit>
       <trans-unit id="74">
-        <source>duplicates_purged</source>
+        <source>duplicate_subscriptions_begin</source>
+        <target>Es wurden doppelte Newsletter-Abonnements gefunden:</target>
+        
+      </trans-unit>
+      <trans-unit id="75">
+        <source>duplicate_subscriptions_end</source>
         <target>Die doppelten Einträge wurden automatisch bereinigt. Eine Kopie der originalen Abonnements wurde in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt; gespeichert.</target>
         
       </trans-unit>

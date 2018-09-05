@@ -363,11 +363,15 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
-        <target>ニュースレターに登録した登録が見つかりました:</target>
         
       </trans-unit>
       <trans-unit id="74">
-        <source>duplicates_purged</source>
+        <source>duplicate_subscriptions_begin</source>
+        <target>ニュースレターに登録した登録が見つかりました:</target>
+        
+      </trans-unit>
+      <trans-unit id="75">
+        <source>duplicate_subscriptions_end</source>
         <target>重複した項目を自動的に除去しました。原本の登録は&lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;に保存しました。</target>
         
       </trans-unit>

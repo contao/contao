@@ -363,11 +363,15 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
-        <target>Se encontraron suscripciones a boletines duplicados:</target>
         
       </trans-unit>
       <trans-unit id="74">
-        <source>duplicates_purged</source>
+        <source>duplicate_subscriptions_begin</source>
+        <target>Se encontraron suscripciones a boletines duplicados:</target>
+        
+      </trans-unit>
+      <trans-unit id="75">
+        <source>duplicate_subscriptions_end</source>
         <target>Las entradas duplicadas se han purgado automáticamente. Se ha almacenado una copia de seguridad de las suscripciones originales en &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
         
       </trans-unit>
