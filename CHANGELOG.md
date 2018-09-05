@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.6.3 (2018-09-05)
 
  * Make the `contao.controller.backend_csv_import` controller public (see #49).
  * Re-add the installation bundle commands (see #45).
