@@ -6,7 +6,6 @@
     "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
     "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
     "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
-    "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
     "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
     "Nelmio\\CorsBundle\\NelmioCorsBundle",
     "Nelmio\\SecurityBundle\\NelmioSecurityBundle",

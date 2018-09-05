@@ -22,12 +22,12 @@ use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Handles the Contao back end routes.

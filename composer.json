@@ -59,7 +59,6 @@
         "phpunit/php-token-stream": "^1.4",
         "psr/log": "^1.0",
         "sensio/distribution-bundle": "^5.0",
-        "sensio/framework-extra-bundle": "^3.0.2",
         "sensiolabs/ansi-to-html": "^1.1",
         "simplepie/simplepie": "^1.3",
         "symfony/monolog-bundle": "^2.8 || ^3.0",
@@ -72,9 +71,9 @@
         "webmozart/path-util": "^2.0"
     },
     "replace": {
+        "contao/core-bundle": "self.version",
         "contao/calendar-bundle": "self.version",
         "contao/comments-bundle": "self.version",
-        "contao/core-bundle": "self.version",
         "contao/faq-bundle": "self.version",
         "contao/installation-bundle": "self.version",
         "contao/listing-bundle": "self.version",
@@ -111,9 +110,9 @@
             "dev-4.4": "4.4.x-dev"
         },
         "contao-manager-plugin": {
+            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
-            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
             "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
             "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",

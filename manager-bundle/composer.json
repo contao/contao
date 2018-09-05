@@ -19,7 +19,6 @@
         "lexik/maintenance-bundle": "^2.1.3",
         "nelmio/security-bundle": "^2.2",
         "php-http/guzzle6-adapter": "^1.1",
-        "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/monolog-bundle": "^2.8 || ^3.0",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/symfony": "^3.3.7",

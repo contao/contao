@@ -21,7 +21,6 @@ use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use PHPUnit\Framework\TestCase;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
@@ -89,7 +88,6 @@ class PluginTest extends TestCase
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
                 LexikMaintenanceBundle::class,
-                SensioFrameworkExtraBundle::class,
                 ContaoManagerBundle::class,
             ],
             $bundles[3]->getLoadAfter()
