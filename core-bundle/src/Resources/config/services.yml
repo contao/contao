@@ -380,6 +380,7 @@ services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider
         arguments:
             - "@database_connection"
+            - "%kernel.secret%"
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
