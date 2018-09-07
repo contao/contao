@@ -45,7 +45,7 @@ class DatabaseTokenProviderTest extends TestCase
         ';
 
         $values = [
-            'series' => 'series',
+            'series' => hash_hmac('sha256', 'series', 'secret'),
         ];
 
         $types = [
@@ -118,7 +118,7 @@ class DatabaseTokenProviderTest extends TestCase
         ';
 
         $values = [
-            'series' => 'series',
+            'series' => hash_hmac('sha256', 'series', 'secret'),
         ];
 
         $types = [
@@ -152,7 +152,7 @@ class DatabaseTokenProviderTest extends TestCase
         $values = [
             'value' => 'value',
             'lastUsed' => $dateTime,
-            'series' => 'series',
+            'series' => hash_hmac('sha256', 'series', 'secret'),
         ];
 
         $types = [
@@ -206,7 +206,7 @@ class DatabaseTokenProviderTest extends TestCase
         $values = [
             'class' => $token->getClass(),
             'username' => $token->getUsername(),
-            'series' => $token->getSeries(),
+            'series' => hash_hmac('sha256', $token->getSeries(), 'secret'),
             'value' => $token->getTokenValue(),
             'lastUsed' => $token->getLastUsed(),
         ];
