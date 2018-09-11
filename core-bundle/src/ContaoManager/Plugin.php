@@ -26,7 +26,6 @@ use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
@@ -65,7 +64,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         LexikMaintenanceBundle::class,
                         NelmioCorsBundle::class,
                         NelmioSecurityBundle::class,
-                        SensioFrameworkExtraBundle::class,
                         SchebTwoFactorBundle::class,
                         HeaderReplayBundle::class,
                         ContaoManagerBundle::class,

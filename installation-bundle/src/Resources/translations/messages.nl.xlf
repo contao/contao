@@ -408,6 +408,7 @@
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>Kon geen verbinding maken met de database via de URL in de &lt;code&gt;DATABASE_URL&lt;/code&gt;omgevingsvariabele.</target>
         
       </trans-unit>
     </body>

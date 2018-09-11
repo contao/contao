@@ -38,8 +38,8 @@
         <target>Overschrijf metadata</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the image meta data from the file manager.</source>
-        <target>Overschrijf de metadata afbeelding van de bestandsbeheerder.</target>
+        <source>Overwrite the meta data from the file manager.</source>
+        <target>Overschrijf de metadata van de bestandsbeheerder.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>

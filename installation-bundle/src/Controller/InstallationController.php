@@ -20,7 +20,6 @@ use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -28,6 +27,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
@@ -405,7 +405,7 @@ class InstallationController implements ContainerAwareInterface
             }
         }
 
-        $this->context['sql_message'] = implode($messages);
+        $this->context['sql_message'] = implode('', $messages);
     }
 
     /**

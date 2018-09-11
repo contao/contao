@@ -108,8 +108,13 @@ class Version447Update extends AbstractVersionUpdate
         if ($this->hasMessage()) {
             $translator = $this->container->get('translator');
 
-            $this->prependMessage(sprintf('<p>%s</p><ul>', $translator->trans('duplicate_subscriptions')));
-            $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('duplicates_purged')));
+            $this->prependMessage(sprintf(
+                '<h3>%s</h3><p>%s</p><ul>',
+                $translator->trans('duplicate_subscriptions'),
+                $translator->trans('duplicate_subscriptions_begin')
+            ));
+
+            $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('duplicate_subscriptions_end')));
         }
     }
 }

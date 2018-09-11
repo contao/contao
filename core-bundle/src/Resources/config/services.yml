@@ -8,6 +8,8 @@ services:
             calls:
                 - ["setContainer", ["@service_container"]]
 
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface: "@contao.framework"
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
@@ -61,6 +63,7 @@ services:
             - "@request_stack"
             - "@translator"
             - "%kernel.project_dir%"
+        public: true
 
     contao.controller.insert_tags:
         class: Contao\CoreBundle\Controller\InsertTagsController
@@ -336,6 +339,7 @@ services:
         arguments:
             - "@contao.routing.backend_matcher"
             - "@contao.routing.frontend_matcher"
+        public: true
 
     contao.routing.backend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher

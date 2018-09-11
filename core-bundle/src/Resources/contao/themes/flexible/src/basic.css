@@ -502,7 +502,8 @@ a.tl_submit {
 	background-color:#fffce1 !important;
 }
 
-@media (min-width:768px) {
+/* Split button */
+@media (min-width:1236px) {
 	#sbtog {
 		display:none;
 	}
@@ -520,26 +521,7 @@ a.tl_submit {
 	}
 }
 
-/* Handheld */
-@media (max-width:767px) {
-	.w50 {
-		float:none;
-		width:calc(100% - 30px);
-	}
-	.cbx {
-		height:32px;
-	}
-	.tip {
-		max-width:80vw;
-	}
-	.tl_checkbox_container .tl_checkbox {
-		margin-top:1px;
-		margin-bottom:1px;
-	}
-	.tl_checkbox_single_container label {
-		position:relative;
-		top:1px;
-	}
+@media (max-width:1235px) {
 	.split-button ul {
 		position:absolute;
 		right:0;
@@ -611,5 +593,27 @@ a.tl_submit {
 	}
 	.split-button > button[type="button"]:focus {
 		outline:none;
+	}
+}
+
+/* Handheld */
+@media (max-width:767px) {
+	.w50 {
+		float:none;
+		width:calc(100% - 30px);
+	}
+	.cbx {
+		height:32px;
+	}
+	.tip {
+		max-width:80vw;
+	}
+	.tl_checkbox_container .tl_checkbox {
+		margin-top:1px;
+		margin-bottom:1px;
+	}
+	.tl_checkbox_single_container label {
+		position:relative;
+		top:1px;
 	}
 }

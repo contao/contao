@@ -70,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s heeft een nieuwe reactie geplaatst op uw website:
+
+---
+
+%s
+
+---
+
+Klik hier om de reactie te bekijken:
+
+%s
+
+Klik hier om de reactie te bewerken of te beantwoorden:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -143,6 +159,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Hallo %s,
+
+een nieuwe reactie is toegevoegd aan een pagina waarop u bent aangemeld:
+
+---
+
+%s
+
+---
+
+Klik hier om uw aanmelding op te zeggen:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -163,6 +193,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Hallo %s,
+
+een nieuw antwoord op een reactie is toegevoegd aan een pagina waarop u bent aangemeld:
+
+---
+
+%s
+
+---
+
+Klik hier om uw aanmelding te beëindigen:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>
