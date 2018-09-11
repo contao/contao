@@ -4,6 +4,19 @@
   <meta http-equiv="Content-Type" content="text/html; charset=<?= $this->charset ?>">
   <title><?= $this->title ?> - Contao Open Source CMS</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+  <script>
+    (function(win) {
+      if (typeof(win.postMessage) !== 'function') {
+        return;
+      }
+      win.addEventListener('message', function(message) {
+        if (message.origin !== win.location.origin) {
+          return;
+        }
+        win.frames[0].postMessage(message.data, win.location.origin);
+      }, false);
+    })(window);
+  </script>
 </head>
 <frameset rows="41,*" frameborder="0" framespacing="0">
   <frame src="<?= $this->switchHref; ?>" name="switch" frameborder="0" scrolling="no" noresize="noresize">

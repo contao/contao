@@ -752,6 +752,24 @@ abstract class Controller extends System
 			}
 		}
 
+		// FE preview support
+		if (\System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
+		{
+			$strScripts .= "
+<script>
+  (function(win) {
+    if (!win.parent || typeof(win.parent.postMessage) !== 'function') {
+      return;
+    }
+    win.parent.postMessage({
+      'contao.preview': {
+        'title': win.document.title,
+        'uri': win.location.href
+      }}, win.location.origin);
+  })(window);
+</script>";
+		}
+
 		global $objPage;
 
 		$objLayout = \LayoutModel::findByPk($objPage->layoutId);
