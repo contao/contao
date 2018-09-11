@@ -90,7 +90,7 @@
         "symfony/proxy-manager-bridge": "3.4.* || 4.1.*",
         "symfony/routing": "3.4.* || 4.1.*",
         "symfony/security-bundle": "3.4.* || 4.1.*",
-        "symfony/swiftmailer-bundle": "^3.1.5",
+        "symfony/swiftmailer-bundle": "^2.6 || ^3.1.5",
         "symfony/translation": "3.4.* || 4.1.*",
         "symfony/twig-bundle": "3.4.* || 4.1.*",
         "symfony/web-profiler-bundle": "3.4.* || 4.1.*",
@@ -101,9 +101,9 @@
         "true/punycode": "^2.1"
     },
     "replace": {
+        "contao/core-bundle": "self.version",
         "contao/calendar-bundle": "self.version",
         "contao/comments-bundle": "self.version",
-        "contao/core-bundle": "self.version",
         "contao/faq-bundle": "self.version",
         "contao/installation-bundle": "self.version",
         "contao/listing-bundle": "self.version",
@@ -119,7 +119,8 @@
         "doctrine/orm": "<2.4",
         "lexik/maintenance-bundle": "2.1.4",
         "symfony/finder": "3.4.7 || 4.0.7",
-        "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
+        "symfony/swiftmailer-bundle": "2.6.* <2.6.2",
+        "symfony/twig-bundle": "4.1.0"
     },
     "require-dev": {
         "ext-fileinfo": "*",
@@ -142,9 +143,9 @@
             "dev-master": "4.7.x-dev"
         },
         "contao-manager-plugin": {
+            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
-            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
             "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
             "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",

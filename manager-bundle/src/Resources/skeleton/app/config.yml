@@ -53,12 +53,15 @@ doctrine:
 
 # SwiftMailer configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    host: "%mailer_host%"
-    username: "%mailer_user%"
-    password: "%mailer_password%"
-    port: "%mailer_port%"
-    encryption: "%mailer_encryption%"
+    default_mailer: default
+    mailers:
+        default:
+            transport: "%mailer_transport%"
+            host: "%mailer_host%"
+            username: "%mailer_user%"
+            password: "%mailer_password%"
+            port: "%mailer_port%"
+            encryption: "%mailer_encryption%"
 
 # Lexik configuration
 lexik_maintenance:

@@ -92,7 +92,7 @@ class ModuleSubscribe extends Module
 		{
 			$arrField = array
 			(
-				'name' => 'subscribe',
+				'name' => 'subscribe_'.$this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true)
@@ -177,7 +177,6 @@ class ModuleSubscribe extends Module
 
 		$time = time();
 		$arrAdd = array();
-		$arrChannels = array();
 		$arrCids = array();
 
 		// Update the subscriptions
@@ -187,7 +186,6 @@ class ModuleSubscribe extends Module
 			$objChannel = $objRecipient->getRelated('pid');
 
 			$arrAdd[] = $objRecipient->id;
-			$arrChannels[] = $objChannel->title;
 			$arrCids[] = $objChannel->id;
 
 			$objRecipient->active = 1;
