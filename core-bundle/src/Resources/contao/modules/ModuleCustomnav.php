@@ -77,7 +77,7 @@ class ModuleCustomnav extends Module
 		}
 
 		// Get all active pages
-		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
+		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>true));
 
 		// Return if there are no pages
 		if ($objPages === null)

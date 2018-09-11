@@ -612,7 +612,12 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+
+		if (empty($arrOptions['includeRoot']))
+		{
+			$arrColumns[] = "$t.type!='root'";
+		}
 
 		if (FE_USER_LOGGED_IN)
 		{
