@@ -69,7 +69,7 @@ class FormTextField extends Widget
 			// Treat minlength/minval as min for number type field (#1622)
 			case 'minlength':
 			case 'minval':
-				if ($this->type === 'number')
+				if ($this->type == 'number')
 				{
 					$this->min = $varValue;
 				}
@@ -84,11 +84,11 @@ class FormTextField extends Widget
 			case 'maxval':
 				if ($varValue > 0)
 				{
-					if ($this->type === 'number')
+					if ($this->type == 'number')
 					{
 						$this->max = $varValue;
 					}
-					elseif ($strKey === 'maxlength')
+					elseif ($strKey == 'maxlength')
 					{
 						$this->arrAttributes[$strKey] = $varValue;
 					}
@@ -207,21 +207,22 @@ class FormTextField extends Widget
 	}
 
 	/**
-	 * @inheritDoc
+	 * Re-add some attributes if the field type is a number
 	 */
 	public function addAttributes($arrAttributes)
 	{
 		parent::addAttributes($arrAttributes);
 
-		// Re-add some attributes if the field type is a number
-		if ($this->type === 'number')
+		if ($this->type != 'number')
 		{
-			foreach (['minlength', 'minval', 'maxlength', 'maxval'] as $name)
+			return;
+		}
+
+		foreach (['minlength', 'minval', 'maxlength', 'maxval'] as $name)
+		{
+			if (isset($arrAttributes[$name]))
 			{
-				if (isset($arrAttributes[$name]))
-				{
-					$this->$name = $arrAttributes[$name];
-				}
+				$this->$name = $arrAttributes[$name];
 			}
 		}
 	}
