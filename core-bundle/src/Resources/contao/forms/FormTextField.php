@@ -218,7 +218,7 @@ class FormTextField extends Widget
 			return;
 		}
 
-		foreach (['minlength', 'minval', 'maxlength', 'maxval'] as $name)
+		foreach (array('minlength', 'minval', 'maxlength', 'maxval') as $name)
 		{
 			if (isset($arrAttributes[$name]))
 			{
