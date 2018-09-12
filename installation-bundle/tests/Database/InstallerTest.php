@@ -230,7 +230,6 @@ class InstallerTest extends TestCase
     /**
      * Mocks an installer.
      *
-     *
      * @return Installer|MockObject
      */
     private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = []): Installer
