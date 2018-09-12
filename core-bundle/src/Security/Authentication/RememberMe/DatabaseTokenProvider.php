@@ -25,9 +25,15 @@ class DatabaseTokenProvider implements TokenProviderInterface
      */
     private $connection;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var string
+     */
+    private $secret;
+
+    public function __construct(Connection $connection, string $secret)
     {
         $this->connection = $connection;
+        $this->secret = $secret;
     }
 
     /**
@@ -45,7 +51,7 @@ class DatabaseTokenProvider implements TokenProviderInterface
         ';
 
         $values = [
-            'series' => $series,
+            'series' => hash_hmac('sha256', $series, $this->secret),
         ];
 
         $types = [
@@ -74,7 +80,7 @@ class DatabaseTokenProvider implements TokenProviderInterface
         ';
 
         $values = [
-            'series' => $series,
+            'series' => hash_hmac('sha256', $series, $this->secret),
         ];
 
         $types = [
@@ -101,7 +107,7 @@ class DatabaseTokenProvider implements TokenProviderInterface
         $values = [
             'value' => $tokenValue,
             'lastUsed' => $lastUsed,
-            'series' => $series,
+            'series' => hash_hmac('sha256', $series, $this->secret),
         ];
 
         $types = [
@@ -133,7 +139,7 @@ class DatabaseTokenProvider implements TokenProviderInterface
         $values = [
             'class' => $token->getClass(),
             'username' => $token->getUsername(),
-            'series' => $token->getSeries(),
+            'series' => hash_hmac('sha256', $token->getSeries(), $this->secret),
             'value' => $token->getTokenValue(),
             'lastUsed' => $token->getLastUsed(),
         ];
