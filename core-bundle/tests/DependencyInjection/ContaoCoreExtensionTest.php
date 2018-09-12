@@ -81,6 +81,7 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
+use Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
@@ -1320,6 +1321,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
         $this->assertSame('logger', (string) $definition->getArgument(2));
+    }
+
+    public function testRegistersTheSecurityDatabaseTokenProvider(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.database_token_provider'));
+
+        $definition = $this->container->getDefinition('contao.security.database_token_provider');
+
+        $this->assertSame(DatabaseTokenProvider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('database_connection', (string) $definition->getArgument(0));
+        $this->assertSame('%kernel.secret%', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheSecurityBackendUserProvider(): void
