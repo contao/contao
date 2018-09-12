@@ -13,6 +13,9 @@ html {
 }
 
 /* General */
+header,footer,nav,section,aside,main,article,figure,figcaption {
+	display:block;
+}
 body,button,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,figure,form,fieldset,legend,p,blockquote,table {
 	margin:0;
 	padding:0;
