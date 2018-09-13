@@ -68,6 +68,7 @@
         "terminal42/header-replay-bundle": "^1.4.2",
         "true/punycode": "^2.1",
         "twig/twig": "^1.26",
+        "typo3/phar-stream-wrapper": "^2.0",
         "webmozart/path-util": "^2.0"
     },
     "replace": {

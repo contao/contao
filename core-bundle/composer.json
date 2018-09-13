@@ -65,6 +65,7 @@
         "tecnickcom/tcpdf": "^6.0",
         "terminal42/header-replay-bundle": "^1.2",
         "true/punycode": "^2.1",
+        "typo3/phar-stream-wrapper": "^2.0",
         "twig/twig": "^1.26",
         "webmozart/path-util": "^2.0"
     },

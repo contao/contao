@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Prevent arbitrary code execution through .phar files.
+
 ## 4.4.24 (2018-09-05)
 
  * Ignore the "uncached" insert tag flag in the unknown insert tags (see #48).
