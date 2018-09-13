@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+  * Prevent arbitrary code execution through .phar files.
+
 ## 4.6.3 (2018-09-05)
 
  * Make the `contao.controller.backend_csv_import` controller public (see #49).
