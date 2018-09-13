@@ -185,8 +185,8 @@ class ValidatorTest extends TestCase
      */
     public function testExtractsEmailAddressesFromText()
     {
-        $text = <<<EOF
-This is a niceandsimple@example.com and this a very.common@example.com. Another little.lengthy.but.fine@dept.example.com and also a disposable.style.email.with+symbol@example.com or an other.email-with-dash@example.com. There are "very.unusual.@.unusual.com"@example.com and "very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com and even !#$%&'*+-/=?^_`{}|~@example.org or "()<>[]:,;@\\"!#$%&'*+-/=?^_`{}|~.a"@example.org but they are all valid.
+        $text = <<<'EOF'
+This is a niceandsimple@example.com and this a very.common@example.com. Another little.lengthy.but.fine@dept.example.com and also a disposable.style.email.with+symbol@example.com or an other.email-with-dash@example.com. There are "very.unusual.@.unusual.com"@example.com and "very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com and even !#$%&'*+-/=?^_`{}|~@example.org or "()<>[]:,;@\"!#$%&'*+-/=?^_`{}|~.a"@example.org but they are all valid.
 IP addresses as in user@[255.255.255.255], user@[IPv6:2001:db8:1ff::a0b:dbd0], user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344], user@[IPv6:2001::7344] or user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255] are valid, too.
 We also support IDNA domains as in test@exämple.com, test@ä-.xe, test@subexample.wizard, test@wähwähwäh.ümläüts.de or "tes@t"@wähwähwäh.ümläüts.de. And we support new TLDs as in test@example.photography or test@sub-domain.example.photography.
 And we support unicode characters in the local part (RFC 6531) as in niceändsimple@example.com, véry.çommon@example.com, a.lîttle.lengthy.but.fiñe@dept.example.com, dîsposable.style.émail.with+symbol@example.com, other.émail-with-dash@example.com, "verî.uñusual.@.uñusual.com"@example.com, "verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com, üñîçøðé@example.com, "üñîçøðé"@example.com or ǅǼ੧ఘⅧ⒇৪@example.com.

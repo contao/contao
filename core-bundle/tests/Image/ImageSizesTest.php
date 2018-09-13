@@ -171,7 +171,8 @@ class ImageSizesTest extends TestCase
         $this->connection
             ->expects($this->atLeastOnce())
             ->method('fetchAll')
-            ->willReturn($imageSizes);
+            ->willReturn($imageSizes)
+        ;
     }
 
     /**

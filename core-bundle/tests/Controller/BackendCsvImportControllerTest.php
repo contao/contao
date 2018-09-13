@@ -408,13 +408,11 @@ EOF;
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $controller = new BackendCsvImportController(
+        return new BackendCsvImportController(
             $this->mockContaoFramework(),
             $this->createMock(Connection::class),
             $requestStack,
             $this->getRootDir()
         );
-
-        return $controller;
     }
 }
