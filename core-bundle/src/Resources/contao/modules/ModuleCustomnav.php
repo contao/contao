@@ -137,8 +137,16 @@ class ModuleCustomnav extends Module
 						{
 							/** @var PageModel $objNext */
 							$href = $objNext->getFrontendUrl();
-							break;
 						}
+						else
+						{
+							$href = $objModel->getFrontendUrl();
+						}
+						break;
+
+					case 'root':
+						// Overwrite the alias to link to the empty URL or language URL (see #1641)
+						$objModel->alias = 'index';
 						// DO NOT ADD A break; STATEMENT
 
 					default:
