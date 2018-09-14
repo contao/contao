@@ -1,9 +1,5 @@
 # Change log
 
-## DEV
-
- * Use a TCPDF fork that is hardened against stream wrapper attacks.
-
 ## 4.4.24 (2018-09-05)
 
  * Ignore the "uncached" insert tag flag in the unknown insert tags (see #48).
