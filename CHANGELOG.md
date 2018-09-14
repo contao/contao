@@ -2,7 +2,8 @@
 
 ## DEV
 
-  * Prevent arbitrary code execution through .phar files.
+ * Check wether the database supports dynamic rows in the install tool (see #59).
+ * Prevent arbitrary code execution through .phar files.
 
 ## 4.6.3 (2018-09-05)
 
