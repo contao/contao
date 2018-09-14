@@ -62,7 +62,7 @@
         "symfony/security": "^3.3",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/yaml": "^3.3",
-        "tecnickcom/tcpdf": "^6.2.19",
+        "tecnickcom/tcpdf": "^6.2.22",
         "terminal42/header-replay-bundle": "^1.2",
         "true/punycode": "^2.1",
         "twig/twig": "^1.26",
