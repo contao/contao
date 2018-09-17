@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Optimize generating sitemaps (see contao/core#6830).
  * Use min-height for .w50 widgets in the back end (see contao/core#8864).
  * Prevent arbitrary code execution through .phar files (see CVE-2018-17057).
 
