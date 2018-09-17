@@ -30,6 +30,10 @@ class DataContainerCallbackPass implements CompilerPassInterface
 
         $callbacks = $this->getCallbacks($container);
 
+        if (empty($callbacks)) {
+            return;
+        }
+
         $definition = $container->getDefinition('contao.listener.data_container_callback');
         $definition->addMethodCall('setCallbacks', [$callbacks]);
     }
