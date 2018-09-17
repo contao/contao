@@ -60,6 +60,9 @@ class DataContainerCallbackListener
         $GLOBALS['TL_DCA'][$table] = array_replace_recursive($GLOBALS['TL_DCA'][$table], $replaces);
     }
 
+    /**
+     * @return array|\Closure|null
+     */
     private function getFromDCA(string $table, array $keys)
     {
         if (!isset($GLOBALS['TL_DCA'][$table])) {
