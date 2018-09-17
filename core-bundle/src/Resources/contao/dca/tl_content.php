@@ -511,7 +511,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			],
 			'reference'               => &$GLOBALS['TL_LANG']['MSC']['disposition'],
 			'eval'                    => ['tl_class' => 'w50'],
-			'sql'                     => "varchar(32) NOT NULL default '" . \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT . "'"
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		],
 		'embed' => array
 		(
