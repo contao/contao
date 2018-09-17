@@ -480,7 +480,7 @@ input[type=search]::-webkit-search-decoration {
 }
 .tl_help,.tl_help a {
 	margin-bottom:0;
-	padding:1px 0;
+	padding-top:1px;
 	line-height:1.25;
 	color:#808080;
 }
