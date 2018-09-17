@@ -1,5 +1,10 @@
 # Change log
 
+## DEV
+
+ * Use min-height for .w50 widgets in the back end (see contao/core#8864).
+ * Prevent arbitrary code execution through .phar files (see CVE-2018-17057).
+
 ## 4.4.24 (2018-09-05)
 
  * Ignore the "uncached" insert tag flag in the unknown insert tags (see #48).

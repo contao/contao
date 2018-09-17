@@ -496,7 +496,7 @@ a.tl_submit {
 .w50 {
 	width:calc(50% - 30px);
 	float:left;
-	height:80px;
+	min-height:80px;
 }
 .long {
 	width:calc(100% - 30px); /* see #6320 */
