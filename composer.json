@@ -98,8 +98,7 @@
         "tecnickcom/tcpdf": "^6.2.22",
         "terminal42/header-replay-bundle": "^1.4.2",
         "toflar/psr6-symfony-http-cache-store": "^1.0.2",
-        "true/punycode": "^2.1",
-        "typo3/phar-stream-wrapper": "^3.0"
+        "true/punycode": "^2.1"
     },
     "replace": {
         "contao/core-bundle": "self.version",

@@ -30,10 +30,6 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
-use TYPO3\PharStreamWrapper\Behavior;
-use TYPO3\PharStreamWrapper\Interceptor\PharExtensionInterceptor;
-use TYPO3\PharStreamWrapper\Manager;
-use TYPO3\PharStreamWrapper\PharStreamWrapper;
 
 class ContaoCoreBundle extends Bundle
 {
@@ -54,24 +50,6 @@ class ContaoCoreBundle extends Bundle
     public function registerCommands(Application $application): void
     {
         // disable automatic command registration
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function boot(): void
-    {
-        parent::boot();
-
-        if (!\in_array('phar', stream_get_wrappers(), true)) {
-            return;
-        }
-
-        // Destroy and re-initialize the Phar stream wrapper
-        Manager::destroy();
-        Manager::initialize((new Behavior())->withAssertion(new PharExtensionInterceptor()));
-        stream_wrapper_unregister('phar');
-        stream_wrapper_register('phar', PharStreamWrapper::class);
     }
 
     /**
