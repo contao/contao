@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.6.4 (2018-09-18)
 
  * Check wether the database supports dynamic rows in the install tool (see #59).
  * Correctly detect Chrome on iOS in the environment class (see #61).
