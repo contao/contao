@@ -25,16 +25,22 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'addBreadcrumb'),
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
-			array('tl_page', 'makeRedirectPageMandatory')
+			array('tl_page', 'makeRedirectPageMandatory'),
+			array('tl_page', 'generateSitemap')
 		),
-		'onsubmit_callback' => array
+		'oncut_callback' => array
 		(
-			array('tl_page', 'updateSitemap'),
-			array('tl_page', 'generateArticle')
+			array('tl_page', 'scheduleUpdate')
 		),
 		'ondelete_callback' => array
 		(
-			array('tl_page', 'purgeSearchIndex')
+			array('tl_page', 'purgeSearchIndex'),
+			array('tl_page', 'scheduleUpdate')
+		),
+		'onsubmit_callback' => array
+		(
+			array('tl_page', 'scheduleUpdate'),
+			array('tl_page', 'generateArticle')
 		),
 		'sql' => array
 		(
@@ -1018,6 +1024,61 @@ class tl_page extends Backend
 	}
 
 	/**
+	 * Check for modified pages and update the XML files if necessary
+	 */
+	public function generateSitemap()
+	{
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
+
+		$session = $objSession->get('sitemap_updater');
+
+		if (empty($session) || !\is_array($session))
+		{
+			return;
+		}
+
+		$this->import('Automator');
+
+		foreach ($session as $id)
+		{
+			$this->Automator->generateSitemap($id);
+		}
+
+		$objSession->set('sitemap_updater', null);
+	}
+
+	/**
+	 * Schedule a sitemap update
+	 *
+	 * This method is triggered when a single page or multiple pages are
+	 * modified (edit/editAll), moved (cut/cutAll) or deleted
+	 * (delete/deleteAll). Since duplicated pages are unpublished by default,
+	 * it is not necessary to schedule updates on copyAll as well.
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function scheduleUpdate(DataContainer $dc)
+	{
+		// Return if there is no ID
+		if (!$dc->activeRecord || !$dc->activeRecord->id || Input::get('act') == 'copy')
+		{
+			return;
+		}
+
+		$objPage = new PageModel($dc->activeRecord);
+		$objPage->loadDetails();
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
+
+		// Store the ID in the session
+		$session = $objSession->get('sitemap_updater');
+		$session[] = $objPage->rootId;
+		$objSession->set('sitemap_updater', array_unique($session));
+	}
+
+	/**
 	 * Auto-generate a page alias if it has not been set yet
 	 *
 	 * @param mixed         $varValue
@@ -1656,17 +1717,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Recursively add pages to a sitemap
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function updateSitemap(DataContainer $dc)
-	{
-		$this->import('Automator');
-		$this->Automator->generateSitemap($dc->id);
-	}
-
-	/**
 	 * Return the "toggle visibility" button
 	 *
 	 * @param array  $row
@@ -1813,5 +1863,8 @@ class tl_page extends Backend
 		}
 
 		$objVersions->create();
+
+		// The onsubmit_callback has triggered scheduleUpdate(), so run generateSitemap() now
+		$this->generateSitemap();
 	}
 }

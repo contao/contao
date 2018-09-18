@@ -107,9 +107,7 @@ class PictureFactory implements PictureFactoryInterface
             (new ResizeOptions())->setImagineOptions($this->imagineOptions)->setBypassCache($this->bypassCache)
         );
 
-        $picture = $this->addImageAttributes($picture, $attributes);
-
-        return $picture;
+        return $this->addImageAttributes($picture, $attributes);
     }
 
     /**
@@ -226,8 +224,6 @@ class PictureFactory implements PictureFactoryInterface
             $img[$attribute] = $value;
         }
 
-        $picture = new Picture($img, $picture->getSources());
-
-        return $picture;
+        return new Picture($img, $picture->getSources());
     }
 }

@@ -368,15 +368,13 @@ EOF;
             ->willReturnArgument(0)
         ;
 
-        $controller = new BackendCsvImportController(
+        return new BackendCsvImportController(
             $this->mockFramework(),
             $this->createMock(Connection::class),
             $requestStack,
             $translator,
             $this->getFixturesDir()
         );
-
-        return $controller;
     }
 
     /**

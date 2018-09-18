@@ -130,7 +130,8 @@ class VersionCommandTest extends TestCase
             ->willReturn([
                 'foo' => 'bar',
                 'bar' => 'baz',
-            ]);
+            ])
+        ;
 
         $this->application
             ->expects($this->once())

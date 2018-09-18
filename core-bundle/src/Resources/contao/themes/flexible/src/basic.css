@@ -169,6 +169,7 @@ p {
 	margin-right:3px;
 }
 .widget h3 img {
+	vertical-align:bottom;
 	margin-right:3px;
 }
 .widget-captcha {
@@ -356,10 +357,10 @@ select[multiple] {
 
 /* Radio table */
 .tl_radio_table {
-	margin:2px 0;
+	margin-top:3px;
 }
 .tl_radio_table td {
-	padding:0 24px 1px 0;
+	padding:0 24px 0 0;
 }
 
 /* Upload fields */
@@ -426,7 +427,7 @@ a.tl_submit {
 .w50 {
 	width:calc(50% - 30px);
 	float:left;
-	height:80px;
+	min-height:80px;
 }
 .long {
 	width:calc(100% - 30px); /* see #6320 */
@@ -450,7 +451,7 @@ a.tl_submit {
 	margin:16px 15px 8px;
 }
 .cbx {
-	height:56px;
+	min-height:56px;
 }
 .subpal {
 	clear:both;
@@ -606,7 +607,7 @@ a.tl_submit {
 		width:calc(100% - 30px);
 	}
 	.cbx {
-		height:32px;
+		min-height:32px;
 	}
 	.tip {
 		max-width:80vw;

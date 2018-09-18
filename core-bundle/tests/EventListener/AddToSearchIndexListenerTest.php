@@ -116,13 +116,11 @@ class AddToSearchIndexListenerTest extends TestCase
         $request->setMethod($requestMethod);
         $request->server->set('REQUEST_URI', $requestUri);
 
-        $event = $this
+        return $this
             ->getMockBuilder(PostResponseEvent::class)
             ->setConstructorArgs([$this->createMock(KernelInterface::class), $request, new Response()])
             ->setMethods(['getResponse'])
             ->getMock()
         ;
-
-        return $event;
     }
 }
