@@ -363,6 +363,7 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Дублирующие подписки</target>
         
       </trans-unit>
       <trans-unit id="74">

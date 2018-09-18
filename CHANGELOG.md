@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.25 (2018-09-18)
 
  * Correctly detect Chrome on iOS in the environment class (see #61).
  * Optimize generating sitemaps (see contao/core#6830).
