@@ -155,10 +155,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testAccesskeyFromArgument(): void
     {
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $this->markTestSkipped('This test is skipped on Windows');
-        }
-
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo', '--password' => 'bar']);
 
@@ -173,7 +169,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testAccesskeyFromInput(): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
-            $this->markTestSkipped('This test is skipped on Windows');
+            $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
         }
 
         $questionHelper = $this->createMock(QuestionHelper::class);
@@ -219,7 +215,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testAccesskeyWithUserFromInput(): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
-            $this->markTestSkipped('This test is skipped on Windows');
+            $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
         }
 
         $questionHelper = $this->createMock(QuestionHelper::class);
@@ -263,10 +259,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testAccesskeyAppendToDotEnv(): void
     {
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $this->markTestSkipped('This test is skipped on Windows');
-        }
-
         $this->filesystem->dumpFile($this->getTempDir().'/.env', 'FOO=bar');
 
         $commandTester = new CommandTester($this->command);
