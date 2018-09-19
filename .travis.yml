@@ -17,24 +17,72 @@ env:
 
 jobs:
   include:
-    # Lowest dependencies
-    - php: 7.2
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+    # PHP 5.6
+    - stage: test
+      php: 5.6
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+        - fix_dependencies
+        - composer update --no-interaction --no-suggest
+      script:
+        - run_tests
 
-    # Highest dependencies
-    - php: 5.6
-    - php: 7.0
-    - php: 7.1
-    - php: 7.2
+    # PHP 7.0
+    - stage: test
+      php: 7.0
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+        - fix_dependencies
+        - composer update --no-interaction --no-suggest
+      script:
+        - run_tests
+
+    # PHP 7.1
+    - stage: test
+      php: 7.1
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/monorepo-tools composer-json --validate
+
+    # PHP 7.2
+    - stage: test
+      php: 7.2
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/monorepo-tools composer-json --validate
+
+    # PHP 7.2 with lowest dependencies
+    - stage: test
+      php: 7.2
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+        - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/monorepo-tools composer-json --validate
 
     # Ignore the platform requirements for the upcoming PHP version
-    - php: nightly
-      env: COMPOSER_FLAGS='--ignore-platform-reqs'
+    - stage: test
+      php: nightly
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --ignore-platform-reqs --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/monorepo-tools composer-json --validate
 
     # Validate the split repos
-    - stage: validate
+    - stage: test
       php: 7.2
-      install: true
       script:
         - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
         - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
@@ -69,21 +117,6 @@ jobs:
   allow_failures:
     - php: nightly
 
-install:
-  - phpenv config-rm xdebug.ini || true
-  # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
-  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
-  - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
-
-script:
-  - php vendor/bin/phpunit -c calendar-bundle
-  - php vendor/bin/phpunit -c core-bundle
-  - php vendor/bin/phpunit -c faq-bundle
-  - php vendor/bin/phpunit -c installation-bundle
-  - php vendor/bin/phpunit -c manager-bundle
-  - php vendor/bin/phpunit -c news-bundle
-  - if [[ -e vendor/bin/monorepo-tools ]]; then php vendor/bin/monorepo-tools composer-json --validate; fi
-
 before_install:
   - |
     # Helper functions
@@ -94,6 +127,14 @@ before_install:
         unset($data["require-dev"]["contao/monorepo-tools"]);
         file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
       '
+    }
+    run_tests () {
+      php vendor/bin/phpunit -c calendar-bundle --colors=always
+      php vendor/bin/phpunit -c core-bundle --colors=always
+      php vendor/bin/phpunit -c faq-bundle --colors=always
+      php vendor/bin/phpunit -c installation-bundle --colors=always
+      php vendor/bin/phpunit -c manager-bundle --colors=always
+      php vendor/bin/phpunit -c news-bundle --colors=always
     }
     run_split_tests () {
       php -r '
@@ -111,5 +152,3 @@ before_install:
       composer update --no-interaction --no-suggest
       php vendor/bin/phpunit --colors=always
     }
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]] || [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then fix_dependencies; fi
