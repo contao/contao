@@ -101,7 +101,6 @@
         "friendsofphp/php-cs-fixer": "^2.12",
         "monolog/monolog": "^1.22",
         "php-coveralls/php-coveralls": "^2.1",
-        "php-http/message-factory": "^1.0.2",
         "phpunit/phpunit": "^5.7.26",
         "symfony/phpunit-bridge": "^3.3.11"
     },

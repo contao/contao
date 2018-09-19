@@ -182,6 +182,10 @@ class InstallWebDirCommandTest extends TestCase
      */
     public function testAccesskeyFromArgument()
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('This test is skipped on Windows');
+        }
+
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => 'bar']);
 
@@ -198,6 +202,10 @@ class InstallWebDirCommandTest extends TestCase
      */
     public function testAccesskeyFromInput()
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('This test is skipped on Windows');
+        }
+
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo', 'bar']);
         $commandTester->execute(['path' => $this->tmpdir, '--password' => null]);
@@ -218,6 +226,10 @@ class InstallWebDirCommandTest extends TestCase
      */
     public function testAccesskeyWithUserFromInput()
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('This test is skipped on Windows');
+        }
+
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['bar']);
         $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo']);
@@ -251,6 +263,10 @@ class InstallWebDirCommandTest extends TestCase
      */
     public function testAccesskeyAppendToDotEnv()
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('This test is skipped on Windows');
+        }
+
         $this->filesystem->dumpFile($this->tmpdir.'/.env', 'FOO=bar');
 
         $commandTester = new CommandTester($this->command);

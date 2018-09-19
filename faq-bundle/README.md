@@ -1,6 +1,5 @@
 # Contao 4 FAQ bundle
 
-[![](https://img.shields.io/travis/contao/faq-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/faq-bundle/)
 [![](https://img.shields.io/packagist/v/contao/faq-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/faq-bundle)
 [![](https://img.shields.io/packagist/dt/contao/faq-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/faq-bundle)
 

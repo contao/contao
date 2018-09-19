@@ -17,21 +17,18 @@ env:
 
 jobs:
   include:
-    # Latest dependencies with all PHP versions
+    # Highest dependencies
     - php: 5.6
-    - php: 7.0
     - php: 7.1
     - php: 7.2
+
+    # Lowest dependencies
+    - php: 7.2
+      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
     # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
       env: COMPOSER_FLAGS='--ignore-platform-reqs'
-
-    # Lowest dependencies with the oldest and latest PHP versions
-    - php: 5.6
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-    - php: 7.2
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
     # Split the monorepo
     - stage: split
