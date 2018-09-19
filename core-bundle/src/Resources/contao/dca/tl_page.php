@@ -1045,15 +1045,12 @@ class tl_page extends Backend
 			return;
 		}
 
-		$objPage = new PageModel($dc->activeRecord);
-		$objPage->loadDetails();
-
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('sitemap_updater');
-		$session[] = $objPage->rootId;
+		$session[] = PageModel::findWithDetails($dc->activeRecord->id)->rootId;
 		$objSession->set('sitemap_updater', array_unique($session));
 	}
 

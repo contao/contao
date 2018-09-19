@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Fix an error when creating new pages (see #63).
+
 ## 4.4.25 (2018-09-18)
 
  * Correctly detect Chrome on iOS in the environment class (see #61).
