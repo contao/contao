@@ -1,6 +1,5 @@
 # Contao 4 manager bundle
 
-[![](https://img.shields.io/travis/contao/manager-bundle/master.svg?style=flat-square)](https://travis-ci.org/contao/manager-bundle/)
 [![](https://img.shields.io/packagist/v/contao/manager-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/manager-bundle)
 [![](https://img.shields.io/packagist/dt/contao/manager-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/manager-bundle)
 

@@ -14,31 +14,10 @@ env:
     - COMPOSER_ALLOW_XDEBUG=0
     - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
 
-jobs:
-  include:
-    # Latest dependencies with all PHP versions
-    - php: 7.1
-    - php: 7.2
-
-    # Ignore the platform requirements for the upcoming PHP version
-    - php: nightly
-      env: COMPOSER_FLAGS='--ignore-platform-reqs'
-
-    # Lowest dependencies with the oldest and latest PHP versions
-    - php: 7.1
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-    - php: 7.2
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-
-  allow_failures:
-    - php: nightly
-
-before_install:
-  - phpenv config-rm xdebug.ini || true
+php: 7.2
 
 install:
-  # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
-  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
+  - phpenv config-rm xdebug.ini || true
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
 
 script:
