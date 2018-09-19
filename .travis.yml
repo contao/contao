@@ -17,17 +17,28 @@ env:
 
 jobs:
   include:
-    # Highest dependencies
-    - php: 7.1
-    - php: 7.2
-
     # Lowest dependencies
     - php: 7.2
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
 
+    # Highest dependencies
+    - php: 7.1
+    - php: 7.2
+
     # Ignore the platform requirements for the upcoming PHP version
     - php: nightly
       env: COMPOSER_FLAGS='--ignore-platform-reqs'
+
+    # Validate the split repos
+    - stage: validate
+      php: 7.2
+      install: true
+      script:
+        - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/faq-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/manager-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/news-bundle && run_split_tests
 
     # Split the monorepo
     - stage: split
@@ -42,7 +53,6 @@ jobs:
     # Generate the coverage report
     - stage: coverage
       php: 7.2
-      before_install: true
       install:
         - composer update --no-interaction --no-suggest
       script:
@@ -57,10 +67,8 @@ jobs:
   allow_failures:
     - php: nightly
 
-before_install:
-  - phpenv config-rm xdebug.ini || true
-
 install:
+  - phpenv config-rm xdebug.ini || true
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
   - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
@@ -74,3 +82,23 @@ script:
   - php vendor/bin/phpunit -c news-bundle
   - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
   - php vendor/bin/monorepo-tools composer-json --validate
+
+before_install:
+  - |
+    # Helper functions
+    run_split_tests () {
+      php -r '
+        $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+        if ("contao/core-bundle" !== $data["name"]) {
+          $data["repositories"][0]["type"] = "path";
+          $data["repositories"][0]["url"] = "../core-bundle";
+        }
+        if ("contao/installation-bundle" !== $data["name"]) {
+          $data["repositories"][1]["type"] = "path";
+          $data["repositories"][1]["url"] = "../installation-bundle";
+        }
+        file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+      '
+      composer update --no-interaction --no-suggest
+      php vendor/bin/phpunit --colors=always
+    }

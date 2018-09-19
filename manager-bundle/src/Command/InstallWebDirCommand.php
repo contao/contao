@@ -218,12 +218,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
             }
         }
 
-        // Escape the $ character as escapeshellarg() will use double quotes on Windows
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $value = addcslashes($value, '$');
-        }
-
         $fs->dumpFile($path, $content.$key.'='.escapeshellarg($value)."\n");
+        $fs->dumpFile($path, $content.$key."='".str_replace("'", "'\\''", $value)."'\n");
     }
 
     /**
