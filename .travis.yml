@@ -31,6 +31,17 @@ jobs:
     - php: nightly
       env: COMPOSER_FLAGS='--ignore-platform-reqs'
 
+    # Validate the split repos
+    - stage: validate
+      php: 7.2
+      install: true
+      script:
+        - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/faq-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/manager-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/news-bundle && run_split_tests
+
     # Split the monorepo
     - stage: split
       if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
@@ -44,7 +55,6 @@ jobs:
     # Generate the coverage report
     - stage: coverage
       php: 7.2
-      before_install: true
       install:
         - composer update --no-interaction --no-suggest
       script:
@@ -59,22 +69,8 @@ jobs:
   allow_failures:
     - php: nightly
 
-before_install:
-  - phpenv config-rm xdebug.ini || true
-  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-
-  # Adjust the dependencies for PHP <7.1
-  - |
-    if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]] || [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then
-      php -r '
-        $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
-        $data["require"]["contao/manager-plugin"] = "^2.2";
-        unset($data["require-dev"]["contao/monorepo-tools"]);
-        file_put_contents(__DIR__."/composer.json", json_encode($data));
-      '
-    fi
-
 install:
+  - phpenv config-rm xdebug.ini || true
   # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
   - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
   - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
@@ -87,3 +83,33 @@ script:
   - php vendor/bin/phpunit -c manager-bundle
   - php vendor/bin/phpunit -c news-bundle
   - if [[ -e vendor/bin/monorepo-tools ]]; then php vendor/bin/monorepo-tools composer-json --validate; fi
+
+before_install:
+  - |
+    # Helper functions
+    fix_dependencies () {
+      php -r '
+        $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+        $data["require"]["contao/manager-plugin"] = "^2.2";
+        unset($data["require-dev"]["contao/monorepo-tools"]);
+        file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+      '
+    }
+    run_split_tests () {
+      php -r '
+        $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+        if ("contao/core-bundle" !== $data["name"]) {
+          $data["repositories"][0]["type"] = "path";
+          $data["repositories"][0]["url"] = "../core-bundle";
+        }
+        if ("contao/installation-bundle" !== $data["name"]) {
+          $data["repositories"][1]["type"] = "path";
+          $data["repositories"][1]["url"] = "../installation-bundle";
+        }
+        file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+      '
+      composer update --no-interaction --no-suggest
+      php vendor/bin/phpunit --colors=always
+    }
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]] || [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then fix_dependencies; fi
