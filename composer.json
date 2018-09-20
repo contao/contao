@@ -56,7 +56,7 @@
         "patchwork/utf8": "^1.2",
         "php-http/guzzle6-adapter": "^1.1",
         "phpspec/php-diff": "^1.0",
-        "phpunit/php-token-stream": "^1.4",
+        "phpunit/php-token-stream": "^1.4 || ^2.0 || ^3.0",
         "psr/log": "^1.0",
         "sensio/distribution-bundle": "^5.0",
         "sensiolabs/ansi-to-html": "^1.1",
