@@ -110,8 +110,7 @@
         <target>Začátek nového cyklu odesílání</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>V případě, že dojde k přerušení odesílání, můžete zadat pořadové číslo, aby se pak odesílání pokračovalo s určitým příjemcem, s nímž je dané pořadové číslo spojené. Počet odeslaných mailů můžete najít v souboru &lt;em&gt;newsletter_%s.log&lt;/em&gt;. Např. pokud bylo odesláno 120 mailů, zadejte 121, aby došlo ke spuštění odesílání počínaje 121. příjemcem (počítání začne 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>

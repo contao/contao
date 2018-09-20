@@ -110,8 +110,7 @@
         <target>Índice numérico</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>No caso de o processo de envio ser interrompido, pode inserir um índice numérico aqui para continuar com um destinatário específico. Você pode verificar quantos e-mails foram enviados no sistema &lt;em&gt;sytem/logs /newsletter_1%s.log&lt;/em&gt; arquivo. Por exemplo, se 120 mails foram enviados, digite &quot;120&quot; para continuar com o receptor 121 (contagem inicia em 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>

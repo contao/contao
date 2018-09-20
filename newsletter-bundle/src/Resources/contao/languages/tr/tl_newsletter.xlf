@@ -110,8 +110,7 @@
         <target>Aralık/Mesafe</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Gönderme işlemi kesilirse, belirli bir alıcıyla devam etmek için burada sayısal bir boşluk girebilirsiniz. &lt;em&gt;newsletter_%s.log&lt;/em&gt; dosyasında kaç tane postanın gönderildiğini kontrol edebilirsiniz. Örneğin, 120 posta gönderildiğinde, 121. alıcıya devam etmek için &quot;120&quot; girin (sayım 0'dan başlar).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
