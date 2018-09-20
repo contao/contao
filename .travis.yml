@@ -17,19 +17,58 @@ env:
 
 jobs:
   include:
-    # Latest dependencies with all PHP versions
-    - php: 7.1
-    - php: 7.2
+    - stage: test
+      name: "Test installing the split repos"
+      php: 7.2
+      script:
+        - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/faq-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/manager-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/news-bundle && run_split_tests
+
+    - stage: test
+      name: "Test installing the lowest dependencies"
+      php: 7.2
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+        - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
+
+    - stage: test
+      php: 7.1
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
+
+    - stage: test
+      php: 7.2
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
 
     # Ignore the platform requirements for the upcoming PHP version
-    - php: nightly
-      env: COMPOSER_FLAGS='--ignore-platform-reqs'
-
-    # Lowest dependencies with the oldest and latest PHP versions
-    - php: 7.1
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
-    - php: 7.2
-      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+    - stage: test
+      php: nightly
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --ignore-platform-reqs --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
 
     # Split the monorepo
     - stage: split
@@ -44,7 +83,6 @@ jobs:
     # Generate the coverage report
     - stage: coverage
       php: 7.2
-      before_install: true
       install:
         - composer update --no-interaction --no-suggest
       script:
@@ -60,19 +98,29 @@ jobs:
     - php: nightly
 
 before_install:
-  - phpenv config-rm xdebug.ini || true
-
-install:
-  # To be removed when this is resolved: https://github.com/composer/composer/issues/5355
-  - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --no-interaction --no-suggest; fi
-  - composer update $COMPOSER_FLAGS --no-interaction --no-suggest
-
-script:
-  - php vendor/bin/phpunit -c calendar-bundle
-  - php vendor/bin/phpunit -c core-bundle
-  - php vendor/bin/phpunit -c faq-bundle
-  - php vendor/bin/phpunit -c installation-bundle
-  - php vendor/bin/phpunit -c manager-bundle
-  - php vendor/bin/phpunit -c news-bundle
-  - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-  - php vendor/bin/monorepo-tools composer-json --validate
+  - |
+    # Helper functions
+    run_tests () {
+      php vendor/bin/phpunit -c calendar-bundle --colors=always
+      php vendor/bin/phpunit -c core-bundle --colors=always
+      php vendor/bin/phpunit -c faq-bundle --colors=always
+      php vendor/bin/phpunit -c installation-bundle --colors=always
+      php vendor/bin/phpunit -c manager-bundle --colors=always
+      php vendor/bin/phpunit -c news-bundle --colors=always
+    }
+    run_split_tests () {
+      php -r '
+        $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+        if ("contao/core-bundle" !== $data["name"]) {
+          $data["repositories"][0]["type"] = "path";
+          $data["repositories"][0]["url"] = "../core-bundle";
+        }
+        if ("contao/installation-bundle" !== $data["name"]) {
+          $data["repositories"][1]["type"] = "path";
+          $data["repositories"][1]["url"] = "../installation-bundle";
+        }
+        file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+      '
+      composer update --no-interaction --no-suggest
+      php vendor/bin/phpunit --colors=always
+    }

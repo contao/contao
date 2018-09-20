@@ -176,6 +176,7 @@ class Installer
     private function checkEngineAndCollation(array &$sql, Schema $toSchema): void
     {
         $tables = $toSchema->getTables();
+        $dynamic = $this->hasDynamicRowFormat();
 
         foreach ($tables as $table) {
             $tableName = $table->getName();
@@ -200,14 +201,14 @@ class Installer
             $innodb = 'innodb' === strtolower($engine);
 
             if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
-                if ($innodb) {
+                if ($innodb && $dynamic) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
                 } else {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
 
                 $sql['ALTER_TABLE'][md5($command)] = $command;
-            } elseif ($innodb) {
+            } elseif ($innodb && $dynamic) {
                 $rowFormat = $table->getOption('row_format');
 
                 if ($rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
@@ -226,6 +227,32 @@ class Installer
                 $sql['ALTER_TABLE'][md5($command)] = $command;
             }
         }
+    }
+
+    private function hasDynamicRowFormat(): bool
+    {
+        $filePerTable = $this->connection
+            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        // Dynamic rows require innodb_file_per_table to be enabled
+        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+            return false;
+        }
+
+        $fileFormat = $this->connection
+            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        // MySQL 8 and MariaDB 10.3 no longer have the "innodb_file_format" setting
+        if (false === $fileFormat) {
+            return true;
+        }
+
+        // Dynamic rows require the Barracuda file format in MySQL <8 and MariaDB <10.3
+        return 'barracuda' === strtolower((string) $fileFormat->Value);
     }
 
     /**

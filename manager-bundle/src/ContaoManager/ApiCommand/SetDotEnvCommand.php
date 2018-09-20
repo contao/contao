@@ -76,8 +76,6 @@ class SetDotEnvCommand extends Command
             }
         }
 
-        $content .= $key.'='.escapeshellarg($value)."\n";
-
-        $fs->dumpFile($path, $content);
+        $fs->dumpFile($path, $content.$key."='".str_replace("'", "'\\''", $value)."'\n");
     }
 }

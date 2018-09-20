@@ -168,6 +168,10 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testAccesskeyFromInput(): void
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
+        }
+
         $questionHelper = $this->createMock(QuestionHelper::class);
         $questionHelper
             ->expects($this->exactly(2))
@@ -210,6 +214,10 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testAccesskeyWithUserFromInput(): void
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
+        }
+
         $questionHelper = $this->createMock(QuestionHelper::class);
         $questionHelper
             ->expects($this->once())

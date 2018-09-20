@@ -89,12 +89,12 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->assertFileNotExists($this->tempfile);
 
         $tester = new CommandTester($this->command);
-        $tester->execute(['key' => 'FOO', 'value' => 'BAR']);
+        $tester->execute(['key' => 'FOO', 'value' => '$BAR']);
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("FOO='BAR'\n", file_get_contents($this->tempfile));
+        $this->assertSame("FOO='\$BAR'\n", file_get_contents($this->tempfile));
     }
 
     public function testAppendsToDotEnvFileIfItExists(): void
@@ -102,12 +102,12 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->filesystem->dumpFile($this->tempfile, "BAR='FOO'\n");
 
         $tester = new CommandTester($this->command);
-        $tester->execute(['key' => 'FOO', 'value' => 'BAR']);
+        $tester->execute(['key' => 'FOO', 'value' => '$BAR']);
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("BAR='FOO'\nFOO='BAR'\n", file_get_contents($this->tempfile));
+        $this->assertSame("BAR='FOO'\nFOO='\$BAR'\n", file_get_contents($this->tempfile));
     }
 
     public function testOverwriteDotEnvIfKeyExists(): void
@@ -115,12 +115,12 @@ class SetDotEnvCommandTest extends ContaoTestCase
         $this->filesystem->dumpFile($this->tempfile, "BAR='FOO'\nFOO='FOO'\n");
 
         $tester = new CommandTester($this->command);
-        $tester->execute(['key' => 'FOO', 'value' => 'BAR']);
+        $tester->execute(['key' => 'FOO', 'value' => '$BAR']);
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
         $this->assertFileExists($this->tempfile);
-        $this->assertSame("BAR='FOO'\nFOO='BAR'\n", file_get_contents($this->tempfile));
+        $this->assertSame("BAR='FOO'\nFOO='\$BAR'\n", file_get_contents($this->tempfile));
     }
 
     public function testEscapesShellArguments(): void
