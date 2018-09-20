@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.26 (2018-09-20)
 
  * Fix an error when creating new pages (see #63).
 

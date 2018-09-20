@@ -110,8 +110,7 @@
         <target>Offset</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Nel caso in cui il processo di invio venga interrotto, puoi inserire il numero di invii rimanenti da eseguire indicando da quale destinatario riprendere. E' possibile verificare quante e-mail sono state inviate nel file &lt;em&gt;system/logs/newsletter_*.log&lt;/em&gt;. Ad esempio, se sono stare inviate 120 e-mail, digitando 120 l'applicazione riprenderà dall'email 121.</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
