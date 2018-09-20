@@ -57,7 +57,7 @@ class DataContainerCallbackListener
             $replaces[] = $value;
         }
 
-        $GLOBALS['TL_DCA'][$table] = array_replace_recursive($GLOBALS['TL_DCA'][$table], $replaces);
+        $GLOBALS['TL_DCA'][$table] = array_replace_recursive($GLOBALS['TL_DCA'][$table], ...$replaces);
     }
 
     /**
@@ -66,7 +66,7 @@ class DataContainerCallbackListener
     private function getFromDCA(string $table, array $keys)
     {
         if (!isset($GLOBALS['TL_DCA'][$table])) {
-            return null;
+            $GLOBALS['TL_DCA'][$table] = [];
         }
 
         $dca = $GLOBALS['TL_DCA'][$table];
@@ -82,7 +82,12 @@ class DataContainerCallbackListener
         return $dca;
     }
 
-    private function getFirstByPriority(array $callbacks, ?callable $current): callable
+    /**
+     * @param array|callable|null $current
+     *
+     * @return array|callable
+     */
+    private function getFirstByPriority(array $callbacks, $current)
     {
         if (null !== $current) {
             $current = [$current];

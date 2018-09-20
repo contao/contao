@@ -108,7 +108,7 @@ class DataContainerCallbackPassTest extends TestCase
                         10 => [
                             ['test.callback_listener', 'onLoadCallback'],
                         ],
-                    ]
+                    ],
                 ],
             ],
             $this->getCallbacksFromDefinition($container)[0]
@@ -139,7 +139,7 @@ class DataContainerCallbackPassTest extends TestCase
                         0 => [
                             ['test.callback_listener', 'onLoadPage'],
                         ],
-                    ]
+                    ],
                 ],
             ],
             $this->getCallbacksFromDefinition($container)[0]
@@ -171,7 +171,7 @@ class DataContainerCallbackPassTest extends TestCase
                         10 => [
                             ['test.callback_listener', 'onLoadPage'],
                         ],
-                    ]
+                    ],
                 ],
             ],
             $this->getCallbacksFromDefinition($container)[0]
