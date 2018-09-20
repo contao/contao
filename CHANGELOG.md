@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Fix an error when creating new pages (see #63).
+
 ## 4.6.4 (2018-09-18)
 
  * Check wether the database supports dynamic rows in the install tool (see #59).

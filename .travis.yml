@@ -17,7 +17,28 @@ env:
 
 jobs:
   include:
-    # PHP 7.1
+    - stage: test
+      name: "Test installing the split repos"
+      php: 7.2
+      script:
+        - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/faq-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/manager-bundle && run_split_tests
+        - cd $TRAVIS_BUILD_DIR/news-bundle && run_split_tests
+
+    - stage: test
+      name: "Test installing the lowest dependencies"
+      php: 7.2
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --no-interaction --no-suggest
+        - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
+
     - stage: test
       php: 7.1
       install:
@@ -28,24 +49,11 @@ jobs:
         - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
         - php vendor/bin/monorepo-tools composer-json --validate
 
-    # PHP 7.2
     - stage: test
       php: 7.2
       install:
         - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
-      script:
-        - run_tests
-        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-        - php vendor/bin/monorepo-tools composer-json --validate
-
-    # PHP 7.2 with lowest dependencies
-    - stage: test
-      php: 7.2
-      install:
-        - phpenv config-rm xdebug.ini || true
-        - composer update --no-interaction --no-suggest
-        - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
       script:
         - run_tests
         - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
@@ -61,16 +69,6 @@ jobs:
         - run_tests
         - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
         - php vendor/bin/monorepo-tools composer-json --validate
-
-    # Validate the split repos
-    - stage: test
-      php: 7.2
-      script:
-        - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
-        - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
-        - cd $TRAVIS_BUILD_DIR/faq-bundle && run_split_tests
-        - cd $TRAVIS_BUILD_DIR/manager-bundle && run_split_tests
-        - cd $TRAVIS_BUILD_DIR/news-bundle && run_split_tests
 
     # Split the monorepo
     - stage: split
