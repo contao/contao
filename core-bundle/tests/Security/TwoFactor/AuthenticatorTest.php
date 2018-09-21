@@ -30,7 +30,7 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCode(): void
     {
-        $secret = random_bytes(128);
+        $secret = bin2hex(random_bytes(128));
         $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
 
         $user = $this->createMock(BackendUser::class);
@@ -44,7 +44,7 @@ class AuthenticatorTest extends TestCase
 
     public function testGeneratesTheProvisionUri(): void
     {
-        $secret = random_bytes(128);
+        $secret = bin2hex(random_bytes(128));
 
         $user = $this->createMock(BackendUser::class);
         $user->secret = $secret;

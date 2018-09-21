@@ -110,7 +110,7 @@ class ModuleTwoFactor extends BackendModule
 		// Generate the secret
 		if (!$user->secret)
 		{
-			$user->secret = random_bytes(128);
+			$user->secret = bin2hex(random_bytes(128));
 			$user->save();
 		}
 
@@ -118,6 +118,8 @@ class ModuleTwoFactor extends BackendModule
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		$this->Template->enable = true;
+		$this->Template->secret = $user->secret;
+		$this->Template->textCode = $GLOBALS['TL_LANG']['MSC']['twoFactorTextCode'];
 		$this->Template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
 		$this->Template->scan = $GLOBALS['TL_LANG']['MSC']['twoFactorScan'];
 		$this->Template->verify = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
