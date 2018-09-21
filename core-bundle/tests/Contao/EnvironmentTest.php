@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @group contao3
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class EnvironmentTest extends TestCase
 {

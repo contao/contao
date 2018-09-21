@@ -25,6 +25,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @group contao3
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class RoutingTest extends ContaoTestCase
 {
@@ -41,19 +44,6 @@ class RoutingTest extends ContaoTestCase
         Config::set('useAutoItem', false);
 
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        Environment::reset();
-
-        $_GET = [];
-        unset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
     }
 
     public function testReturnsThePageIdFromTheUrl(): void
@@ -85,7 +75,7 @@ class RoutingTest extends ContaoTestCase
 
     public function testReturnsNullIfTheRequestIsEmpty(): void
     {
-        $_SERVER['REQUEST_URI'] = '';
+        $_SERVER['REQUEST_URI'] = '/';
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
