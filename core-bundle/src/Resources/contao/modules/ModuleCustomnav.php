@@ -77,7 +77,7 @@ class ModuleCustomnav extends Module
 		}
 
 		// Get all active pages
-		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
+		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>true));
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -137,8 +137,16 @@ class ModuleCustomnav extends Module
 						{
 							/** @var PageModel $objNext */
 							$href = $objNext->getFrontendUrl();
-							break;
 						}
+						else
+						{
+							$href = $objModel->getFrontendUrl();
+						}
+						break;
+
+					case 'root':
+						// Overwrite the alias to link to the empty URL or language URL (see #1641)
+						$objModel->alias = 'index';
 						// DO NOT ADD A break; STATEMENT
 
 					default:

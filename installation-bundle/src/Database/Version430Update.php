@@ -37,6 +37,13 @@ class Version430Update extends AbstractVersionUpdate
      */
     public function run(): void
     {
+        $this->connection->query('
+            ALTER TABLE 
+                tl_layout
+            CHANGE
+                sections sections blob NULL
+        ');
+
         $statement = $this->connection->query("
             SELECT
                 id, sections, sPosition

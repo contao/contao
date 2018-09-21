@@ -752,6 +752,24 @@ abstract class Controller extends System
 			}
 		}
 
+		// FE preview support
+		if (\System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
+		{
+			$strScripts .= "
+<script>
+  (function(win) {
+    if (!win.parent || typeof(win.parent.postMessage) !== 'function') {
+      return;
+    }
+    win.parent.postMessage({
+      'contao.preview': {
+        'title': win.document.title,
+        'uri': win.location.href
+      }}, win.location.origin);
+  })(window);
+</script>";
+		}
+
 		global $objPage;
 
 		$objLayout = \LayoutModel::findByPk($objPage->layoutId);
@@ -1432,11 +1450,10 @@ abstract class Controller extends System
 		}
 		catch (\Exception $e)
 		{
-			$objFile = new \stdClass();
-			$objFile->imageSize = false;
+			$objFile = null;
 		}
 
-		$imgSize = $objFile->imageSize;
+		$imgSize = $objFile ? $objFile->imageSize : false;
 		$size = \StringUtil::deserialize($arrItem['size']);
 
 		if (is_numeric($size))
@@ -1524,7 +1541,7 @@ abstract class Controller extends System
 		}
 
 		// Image dimensions
-		if ($objFile->exists() && ($imgSize = $objFile->imageSize) !== false)
+		if ($objFile && $objFile->exists() && ($imgSize = $objFile->imageSize) !== false)
 		{
 			$objTemplate->arrSize = $imgSize;
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';

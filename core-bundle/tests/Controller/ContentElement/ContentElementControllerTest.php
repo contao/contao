@@ -138,9 +138,9 @@ class ContentElementControllerTest extends TestCase
 
         $responseTagger = $this->createMock(ResponseTagger::class);
         $responseTagger
-                ->expects($this->once())
-                ->method('addTags')
-                ->with(['contao.db.tl_content.42'])
+            ->expects($this->once())
+            ->method('addTags')
+            ->with(['contao.db.tl_content.42'])
         ;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test');

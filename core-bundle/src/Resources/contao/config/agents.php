@@ -37,6 +37,7 @@ $GLOBALS['TL_CONFIG']['browser'] = array
 	'Edge'       => array('browser'=>'edge',         'shorty'=>'ed', 'engine'=>'edgehtml', 'version'=>'/^.*Edge\/(\d+(\.\d+)*).*$/'),
 	'Firefox'    => array('browser'=>'firefox',      'shorty'=>'fx', 'engine'=>'gecko',    'version'=>'/^.*Firefox\/(\d+(\.\d+)*).*$/'),
 	'Chrome'     => array('browser'=>'chrome',       'shorty'=>'ch', 'engine'=>'blink',    'version'=>'/^.*Chrome\/(\d+(\.\d+)*).*$/'),
+	'CriOS'      => array('browser'=>'chrome',       'shorty'=>'ch', 'engine'=>'webkit',   'version'=>'/^.*CriOS\/(\d+(\.\d+)*).*$/'),
 	'OmniWeb'    => array('browser'=>'omniweb',      'shorty'=>'ow', 'engine'=>'webkit',   'version'=>'/^.*Version\/(\d+(\.\d+)*).*$/'),
 	'Silk'       => array('browser'=>'silk',         'shorty'=>'si', 'engine'=>'blink',    'version'=>'/^.*Silk\/(\d+(\.\d+)*).*$/'),
 	'Safari'     => array('browser'=>'safari',       'shorty'=>'sf', 'engine'=>'webkit',   'version'=>'/^.*Version\/(\d+(\.\d+)*).*$/'),

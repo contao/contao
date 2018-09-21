@@ -5995,7 +5995,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Predefined node set (see #3563)
 		if (isset($attributes['rootNodes']))
 		{
-			$arrRoot = $this->eliminateNestedPages((array) $attributes['rootNodes']);
+			$blnHasSorting = $this->Database->fieldExists('sorting', $this->strTable);
+			$arrRoot = $this->eliminateNestedPages((array) $attributes['rootNodes'], $this->strTable, $blnHasSorting);
 
 			// Calculate the intersection of the root nodes with the mounted nodes (see #1001)
 			if (!empty($this->root) && $arrRoot != $this->root)
@@ -6005,7 +6006,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 						array_merge($arrRoot, $this->Database->getChildRecords($arrRoot, $this->strTable)),
 						array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable))
 					),
-					$this->strTable
+					$this->strTable,
+					$blnHasSorting
 				);
 			}
 

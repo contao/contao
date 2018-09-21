@@ -1064,6 +1064,11 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = implode(', ', $result);
 							break;
 
+						case 'refresh':
+						case 'uncached':
+							// ignore
+							break;
+
 						// HOOK: pass unknown flags to callback functions
 						default:
 							if (isset($GLOBALS['TL_HOOKS']['insertTagFlags']) && \is_array($GLOBALS['TL_HOOKS']['insertTagFlags']))

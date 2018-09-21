@@ -36,34 +36,94 @@ class InstallerTest extends TestCase
     {
         $fromSchema = new Schema();
         $fromSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addOption('engine', 'InnoDB')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
             ->addColumn('foo', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foobar']);
+        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
-        $this->assertArrayHasKey('ee29f009565bbcde0939a9dc4f293817', $commands['ALTER_TABLE']);
-        $this->assertArrayHasKey('54c731444c10507ebd29bd0b24d71616', $commands['ALTER_TABLE']);
+        $this->assertArrayHasKey('d21451588bc7442c256f8a0be02c3430', $commands['ALTER_TABLE']);
+        $this->assertArrayHasKey('fb9f8dee53c39b7be92194908d98731e', $commands['ALTER_TABLE']);
 
         $this->assertSame(
-            'ALTER TABLE tl_foobar ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
-            $commands['ALTER_TABLE']['ee29f009565bbcde0939a9dc4f293817']
+            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
+            $commands['ALTER_TABLE']['d21451588bc7442c256f8a0be02c3430']
         );
 
         $this->assertSame(
-            'ALTER TABLE tl_foobar CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
-            $commands['ALTER_TABLE']['54c731444c10507ebd29bd0b24d71616']
+            'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+            $commands['ALTER_TABLE']['fb9f8dee53c39b7be92194908d98731e']
+        );
+    }
+
+    public function testChangesTheRowFormatIfInnodbIsUsed(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_bar')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_bar')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('foo', 'string')
+        ;
+
+        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $commands = $installer->getCommands();
+
+        $this->assertArrayHasKey('ALTER_TABLE', $commands);
+        $this->assertArrayHasKey('754c11ae50c43c54456fcd31da3baccb', $commands['ALTER_TABLE']);
+
+        $this->assertSame(
+            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
+            $commands['ALTER_TABLE']['754c11ae50c43c54456fcd31da3baccb']
+        );
+    }
+
+    public function testDoesNotChangeTheRowFormatIfDynamicRowsAreNotSupported(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_foo')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('foo', 'string')
+        ;
+
+        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
+        $commands = $installer->getCommands();
+
+        $this->assertArrayHasKey('ALTER_TABLE', $commands);
+        $this->assertArrayHasKey('537747ae8a3a53e6277dfccf354bc7da', $commands['ALTER_TABLE']);
+
+        $this->assertSame(
+            'ALTER TABLE tl_foo ENGINE = InnoDB',
+            $commands['ALTER_TABLE']['537747ae8a3a53e6277dfccf354bc7da']
         );
     }
 
@@ -71,18 +131,18 @@ class InstallerTest extends TestCase
     {
         $fromSchema = new Schema();
         $fromSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string')
         ;
 
         $fromSchema
-            ->getTable('tl_foobar')
+            ->getTable('tl_foo')
             ->addColumn('bar', 'string')
         ;
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string')
         ;
 
@@ -90,25 +150,25 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_DROP', $commands);
-        $this->assertSame('ALTER TABLE tl_foobar DROP bar', reset($commands['ALTER_DROP']));
+        $this->assertSame('ALTER TABLE tl_foo DROP bar', reset($commands['ALTER_DROP']));
     }
 
     public function testReturnsTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
         $fromSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema
-            ->getTable('tl_foobar')
+            ->getTable('tl_foo')
             ->addColumn('bar', 'string')
         ;
 
@@ -119,17 +179,17 @@ class InstallerTest extends TestCase
 
         $commands = array_values($commands['ALTER_ADD']);
 
-        $this->assertSame('ALTER TABLE tl_foobar ADD bar VARCHAR(255) NOT NULL', $commands[0]);
+        $this->assertSame('ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL', $commands[0]);
     }
 
     public function testHandlesDecimalsInTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar');
+        $fromSchema->createTable('tl_foo');
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2])
         ;
 
@@ -140,17 +200,17 @@ class InstallerTest extends TestCase
 
         $commands = array_values($commands['ALTER_ADD']);
 
-        $this->assertSame('ALTER TABLE tl_foobar ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
+        $this->assertSame('ALTER TABLE tl_foo ADD foo NUMERIC(9,2) NOT NULL', $commands[0]);
     }
 
     public function testHandlesDefaultsInTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar');
+        $fromSchema->createTable('tl_foo');
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string', ['default' => ','])
         ;
 
@@ -161,32 +221,32 @@ class InstallerTest extends TestCase
 
         $commands = array_values($commands['ALTER_ADD']);
 
-        $this->assertSame("ALTER TABLE tl_foobar ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
+        $this->assertSame("ALTER TABLE tl_foo ADD foo VARCHAR(255) DEFAULT ',' NOT NULL", $commands[0]);
     }
 
     public function testHandlesMixedColumnsInTheAddColumnCommands(): void
     {
         $fromSchema = new Schema();
-        $fromSchema->createTable('tl_foobar');
+        $fromSchema->createTable('tl_foo');
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo1', 'string')
         ;
 
         $toSchema
-            ->getTable('tl_foobar')
+            ->getTable('tl_foo')
             ->addColumn('foo2', 'integer')
         ;
 
         $toSchema
-            ->getTable('tl_foobar')
+            ->getTable('tl_foo')
             ->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2])
         ;
 
         $toSchema
-            ->getTable('tl_foobar')
+            ->getTable('tl_foo')
             ->addColumn('foo4', 'string', ['default' => ','])
         ;
 
@@ -198,23 +258,23 @@ class InstallerTest extends TestCase
         $commands = array_values($commands['ALTER_ADD']);
 
         $this->assertCount(4, $commands);
-        $this->assertContains('ALTER TABLE tl_foobar ADD foo1 VARCHAR(255) NOT NULL', $commands);
-        $this->assertContains('ALTER TABLE tl_foobar ADD foo2 INT NOT NULL', $commands);
-        $this->assertContains('ALTER TABLE tl_foobar ADD foo3 NUMERIC(9,2) NOT NULL', $commands);
-        $this->assertContains("ALTER TABLE tl_foobar ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL", $commands);
+        $this->assertContains('ALTER TABLE tl_foo ADD foo1 VARCHAR(255) NOT NULL', $commands);
+        $this->assertContains('ALTER TABLE tl_foo ADD foo2 INT NOT NULL', $commands);
+        $this->assertContains('ALTER TABLE tl_foo ADD foo3 NUMERIC(9,2) NOT NULL', $commands);
+        $this->assertContains("ALTER TABLE tl_foo ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL", $commands);
     }
 
     public function testReturnsNoCommandsIfTheSchemasAreIdentical(): void
     {
         $fromSchema = new Schema();
         $fromSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addColumn('foo', 'string')
         ;
 
         $toSchema = new Schema();
         $toSchema
-            ->createTable('tl_foobar')
+            ->createTable('tl_foo')
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
@@ -230,10 +290,9 @@ class InstallerTest extends TestCase
     /**
      * Mocks an installer.
      *
-     *
      * @return Installer|MockObject
      */
-    private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = []): Installer
+    private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager
@@ -244,12 +303,6 @@ class InstallerTest extends TestCase
         $schemaManager
             ->method('listTableNames')
             ->willReturn($tables)
-        ;
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('fetch')
-            ->willReturn((object) ['Engine' => 'MyISAM', 'Collation' => 'utf8_unicode_ci'])
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -265,7 +318,56 @@ class InstallerTest extends TestCase
 
         $connection
             ->method('query')
-            ->willReturn($statement)
+            ->willReturnCallback(
+                function (string $query) use ($filePerTable): ?MockObject {
+                    switch ($query) {
+                        case "SHOW VARIABLES LIKE 'innodb_file_per_table'":
+                            $statement = $this->createMock(Statement::class);
+                            $statement
+                                ->method('fetch')
+                                ->willReturn((object) ['Value' => $filePerTable])
+                            ;
+
+                            return $statement;
+
+                        case "SHOW VARIABLES LIKE 'innodb_file_format'":
+                            $statement = $this->createMock(Statement::class);
+                            $statement
+                                ->method('fetch')
+                                ->willReturn((object) ['Value' => 'Barracuda'])
+                            ;
+
+                            return $statement;
+
+                        case "SHOW TABLE STATUS LIKE 'tl_foo'":
+                            $statement = $this->createMock(Statement::class);
+                            $statement
+                                ->method('fetch')
+                                ->willReturn((object) [
+                                    'Engine' => 'MyISAM',
+                                    'Collation' => 'utf8_unicode_ci',
+                                ])
+                            ;
+
+                            return $statement;
+
+                        case "SHOW TABLE STATUS LIKE 'tl_bar'":
+                            $statement = $this->createMock(Statement::class);
+                            $statement
+                                ->method('fetch')
+                                ->willReturn((object) [
+                                    'Engine' => 'InnoDB',
+                                    'Row_format' => 'COMPATCT',
+                                    'Collation' => 'utf8mb4_unicode_ci',
+                                ])
+                            ;
+
+                            return $statement;
+                    }
+
+                    return null;
+                }
+            )
         ;
 
         $connection

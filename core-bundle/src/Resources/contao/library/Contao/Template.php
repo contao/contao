@@ -537,7 +537,7 @@ abstract class Template extends Controller
 	public static function generateScriptTag($src, $async=false, $mtime=false)
 	{
 		// Add the filemtime if not given and not an external file
-		if ($mtime === null && !preg_match('@^https?://@', $src))
+		if ($mtime === false && !preg_match('@^https?://@', $src))
 		{
 			if (file_exists(TL_ROOT . '/' . $src))
 			{

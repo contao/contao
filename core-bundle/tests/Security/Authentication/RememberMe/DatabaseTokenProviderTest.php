@@ -25,7 +25,7 @@ class DatabaseTokenProviderTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $provider = new DatabaseTokenProvider($this->createMock(Connection::class));
+        $provider = new DatabaseTokenProvider($this->createMock(Connection::class), 'secret');
 
         $this->assertInstanceOf(
             'Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider',
@@ -45,7 +45,7 @@ class DatabaseTokenProviderTest extends TestCase
         ';
 
         $values = [
-            'series' => 'series',
+            'series' => hash_hmac('sha256', 'series', 'secret'),
         ];
 
         $types = [
@@ -74,7 +74,7 @@ class DatabaseTokenProviderTest extends TestCase
             ->willReturn($stmt)
         ;
 
-        $provider = new DatabaseTokenProvider($connection);
+        $provider = new DatabaseTokenProvider($connection, 'secret');
         $token = $provider->loadTokenBySeries('series');
 
         $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\RememberMe\PersistentToken', $token);
@@ -101,7 +101,7 @@ class DatabaseTokenProviderTest extends TestCase
             ->willReturn($stmt)
         ;
 
-        $provider = new DatabaseTokenProvider($connection);
+        $provider = new DatabaseTokenProvider($connection, 'secret');
 
         $this->expectException(TokenNotFoundException::class);
 
@@ -118,7 +118,7 @@ class DatabaseTokenProviderTest extends TestCase
         ';
 
         $values = [
-            'series' => 'series',
+            'series' => hash_hmac('sha256', 'series', 'secret'),
         ];
 
         $types = [
@@ -132,7 +132,7 @@ class DatabaseTokenProviderTest extends TestCase
             ->with($sql, $values, $types)
         ;
 
-        $provider = new DatabaseTokenProvider($connection);
+        $provider = new DatabaseTokenProvider($connection, 'secret');
         $provider->deleteTokenBySeries('series');
     }
 
@@ -152,7 +152,7 @@ class DatabaseTokenProviderTest extends TestCase
         $values = [
             'value' => 'value',
             'lastUsed' => $dateTime,
-            'series' => 'series',
+            'series' => hash_hmac('sha256', 'series', 'secret'),
         ];
 
         $types = [
@@ -169,7 +169,7 @@ class DatabaseTokenProviderTest extends TestCase
             ->willReturn(1)
         ;
 
-        $provider = new DatabaseTokenProvider($connection);
+        $provider = new DatabaseTokenProvider($connection, 'secret');
         $provider->updateToken('series', 'value', $dateTime);
 
         $this->addToAssertionCount(1); // does not throw an exception
@@ -184,7 +184,7 @@ class DatabaseTokenProviderTest extends TestCase
             ->willReturn(0)
         ;
 
-        $provider = new DatabaseTokenProvider($connection);
+        $provider = new DatabaseTokenProvider($connection, 'secret');
 
         $this->expectException(TokenNotFoundException::class);
 
@@ -206,7 +206,7 @@ class DatabaseTokenProviderTest extends TestCase
         $values = [
             'class' => $token->getClass(),
             'username' => $token->getUsername(),
-            'series' => $token->getSeries(),
+            'series' => hash_hmac('sha256', $token->getSeries(), 'secret'),
             'value' => $token->getTokenValue(),
             'lastUsed' => $token->getLastUsed(),
         ];
@@ -227,7 +227,7 @@ class DatabaseTokenProviderTest extends TestCase
             ->willReturn(1)
         ;
 
-        $provider = new DatabaseTokenProvider($connection);
+        $provider = new DatabaseTokenProvider($connection, 'secret');
         $provider->createNewToken($token);
     }
 }

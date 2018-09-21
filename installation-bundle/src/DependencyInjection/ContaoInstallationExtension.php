@@ -30,8 +30,15 @@ class ContaoInstallationExtension extends Extension implements PrependExtensionI
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        $loader->load('listener.yml');
-        $loader->load('services.yml');
+        static $files = [
+            'commands.yml',
+            'listener.yml',
+            'services.yml',
+        ];
+
+        foreach ($files as $file) {
+            $loader->load($file);
+        }
     }
 
     /**
