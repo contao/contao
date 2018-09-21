@@ -133,7 +133,7 @@ abstract class Frontend extends Controller
 			}
 
 			// Check if there are pages with a matching alias
-			$objPages = \PageModel::findByAliases($arrOptions);
+			$objPages = \System::getContainer()->get('contao.framework')->getAdapter(PageModel::class)->findByAliases($arrOptions);
 
 			if ($objPages !== null)
 			{
@@ -165,7 +165,7 @@ abstract class Frontend extends Controller
 				}
 				else
 				{
-					$arrLangs = $arrPages['*'] ?: array(); // empty domain
+					$arrLangs = $arrPages['*'] ?? array(); // empty domain
 				}
 
 				$arrAliases = array();
