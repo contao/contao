@@ -125,12 +125,14 @@ before_install:
       '
     }
     run_tests () {
-      php vendor/bin/phpunit -c calendar-bundle --colors=always
-      php vendor/bin/phpunit -c core-bundle --colors=always
-      php vendor/bin/phpunit -c faq-bundle --colors=always
-      php vendor/bin/phpunit -c installation-bundle --colors=always
-      php vendor/bin/phpunit -c manager-bundle --colors=always
-      php vendor/bin/phpunit -c news-bundle --colors=always
+      status=0
+      php vendor/bin/phpunit -c calendar-bundle --colors=always || status=1
+      php vendor/bin/phpunit -c core-bundle --colors=always || status=1
+      php vendor/bin/phpunit -c faq-bundle --colors=always || status=1
+      php vendor/bin/phpunit -c installation-bundle --colors=always || status=1
+      php vendor/bin/phpunit -c manager-bundle --colors=always || status=1
+      php vendor/bin/phpunit -c news-bundle --colors=always || status=1
+      exit $status
     }
     run_split_tests () {
       php -r '
