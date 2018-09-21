@@ -18,7 +18,7 @@
         </div>
         <div class="widget w50">
           <p><?= $this->textCode; ?></p>
-          <code style="overflow-wrap: break-word"><?= $this->secret; ?></code>
+          <code><?= $this->secret; ?></code>
         </div>
         <div class="widget clr w50">
           <h3><label for="verify"<?php if ($this->error) echo ' class="error"' ?>><?= $this->verify ?></label></h3>
