@@ -148,7 +148,7 @@ class FrontendLoaderTest extends TestCase
         $router->generate('contao_index');
     }
 
-    private function mockRouter(RouteCollection $collection, string $urlSuffix = '.html'): Router
+    private function mockRouter(RouteCollection $collection): Router
     {
         $loader = $this->createMock(LoaderInterface::class);
         $loader
@@ -157,7 +157,6 @@ class FrontendLoaderTest extends TestCase
         ;
 
         $container = $this->mockContainer();
-        $container->setParameter('contao.url_suffix', $urlSuffix);
         $container->set('routing.loader', $loader);
 
         return new Router($container, '');

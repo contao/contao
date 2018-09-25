@@ -29,7 +29,7 @@ class FrontendLoader extends Loader
      */
     private $urlSuffix;
 
-    public function __construct(bool $prependLocale, string $urlSuffix)
+    public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
         $this->prependLocale = $prependLocale;
         $this->urlSuffix = $urlSuffix;
