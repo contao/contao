@@ -59,6 +59,8 @@ abstract class Frontend extends Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
+		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
 		$strRequest = \Environment::get('relativeRequest');
 
 		if ($strRequest == '')
@@ -291,6 +293,8 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
+		@trigger_error('Using Frontend::getRootPageFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl']))
 		{

@@ -48,6 +48,8 @@ class FrontendIndex extends Frontend
 	 */
 	public function run()
 	{
+		@trigger_error('Using FrontendIndex::run() has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
 		$pageId = $this->getPageIdFromUrl();
 		$objRootPage = null;
 
@@ -98,6 +100,8 @@ class FrontendIndex extends Frontend
 		// Check the URL and language of each page if there are multiple results
 		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
 		{
+			@trigger_error('Using FrontendIndex::renderPage() with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
 			$objNewPage = null;
 			$arrPages = array();
 
