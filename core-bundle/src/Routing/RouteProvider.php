@@ -53,7 +53,7 @@ class RouteProvider implements RouteProviderInterface
         $this->database = $database;
 
         $this->pageAdapter = $framework->getAdapter(PageModel::class);
-        $this->configAdapter = $this->framework->getAdapter(Config::class);
+        $this->configAdapter = $framework->getAdapter(Config::class);
     }
 
     /**
@@ -263,7 +263,7 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             ['utf8' => true],
             $page->domain ?: null,
-            $page->rootUseSSL ? 'https' : null // TODO should we match SSL only if enabled in root?
+            null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
         );
 
         $this->addRoutesForRootPage($page, $routes);
@@ -296,7 +296,7 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             [],
             $page->domain ?: null,
-            $page->rootUseSSL ? 'https' : null // TODO should we match SSL only if enabled in root?
+            null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
         );
 
         if ($this->configAdapter->get('addLanguageToUrl') && $page->rootIsFallback) {
@@ -312,7 +312,7 @@ class RouteProvider implements RouteProviderInterface
                 [],
                 [],
                 $page->domain ?: null,
-                $page->rootUseSSL ? 'https' : null // TODO should we match SSL only if enabled in root?
+                null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
             );
         }
     }
