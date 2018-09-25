@@ -121,7 +121,7 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function createFragmentsFromPath(string $pathInfo)
     {
-        $fragments = explode('/', substr($pathInfo, 1));
+        $fragments = explode('/', $pathInfo);
 
         // Add the second fragment as auto_item if the number of fragments is even
         if ($this->configAdapter->get('useAutoItem') && 0 === \count($fragments) % 2) {
