@@ -585,7 +585,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(36, $tags['kernel.event_listener'][0]['priority']);
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][1]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
     }
