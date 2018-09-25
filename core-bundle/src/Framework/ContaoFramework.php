@@ -41,11 +41,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var RouterInterface
      */
     private $router;
@@ -80,9 +75,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(?RequestStack $requestStack /* removed in Contao 4.7 */, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
-        $this->requestStack = $requestStack;
         $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
