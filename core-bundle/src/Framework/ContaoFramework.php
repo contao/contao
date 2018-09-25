@@ -115,9 +115,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             throw new \LogicException('The service container has not been set.');
         }
 
-        // Set the current request
-        $this->request = $this->requestStack->getCurrentRequest();
-
         $this->setConstants();
         $this->initializeFramework();
     }
@@ -125,6 +122,25 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function setHookListeners(array $hookListeners): void
     {
         $this->hookListeners = $hookListeners;
+    }
+
+    public function setRequest(Request $request)
+    {
+        // Do not overwrite request from subrequests. Unfortunately, the master request might be cached,
+        // so the only request we have is a subrequest. Therefore we just hopefully assume the first one is a master.
+        if (null !== $this->request) {
+            return;
+        }
+
+        $this->request = $request;
+
+        if ($this->isInitialized()) {
+            $this->setConstants();
+            $this->initializeLegacySessionAccess();
+            $this->setDefaultLanguage();
+            $this->validateInstallation();
+            $this->handleRequestToken();
+        }
     }
 
     /**
@@ -158,26 +174,36 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function setConstants(): void
     {
-        if (!\defined('TL_MODE')) {
+        if (null !== $this->request && !\defined('TL_MODE')) {
             \define('TL_MODE', $this->getMode());
         }
 
-        \define('TL_START', microtime(true));
-        \define('TL_ROOT', $this->rootDir);
-        \define('TL_REFERER_ID', $this->getRefererId());
+        if (!\defined('TL_START')) {
+            \define('TL_START', microtime(true));
+        }
 
-        if (!\defined('TL_SCRIPT')) {
+        if (!\defined('TL_ROOT')) {
+            \define('TL_ROOT', $this->rootDir);
+        }
+
+        if (null !== $this->request && !\defined('TL_REFERER_ID')) {
+            \define('TL_REFERER_ID', $this->getRefererId());
+        }
+
+        if (null !== $this->request && !\defined('TL_SCRIPT')) {
             \define('TL_SCRIPT', $this->getRoute());
         }
 
         // Define the login status constants in the back end (see #4099, #5279)
-        if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
+        if (null !== $this->request && !$this->scopeMatcher->isFrontendRequest($this->request)) {
             \define('BE_USER_LOGGED_IN', false);
             \define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->getPath());
+        if (null !== $this->request && !\defined('TL_PATH')) {
+            \define('TL_PATH', $this->getPath());
+        }
     }
 
     private function getMode(): ?string
