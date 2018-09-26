@@ -85,10 +85,10 @@ class DataContainerCallbackListener
 
         krsort($callbacks, SORT_NUMERIC);
 
-        $preCallbacks = array_merge([], ...array_filter($callbacks, function($priority) {
+        $preCallbacks = array_merge([], ...array_filter($callbacks, function ($priority) {
             return $priority >= 0;
         }, ARRAY_FILTER_USE_KEY));
-        $postCallbacks = array_merge([], ...array_filter($callbacks, function($priority) {
+        $postCallbacks = array_merge([], ...array_filter($callbacks, function ($priority) {
             return $priority < 0;
         }, ARRAY_FILTER_USE_KEY));
 
