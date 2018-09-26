@@ -38,6 +38,7 @@ class DoctrineMigrationsPass implements CompilerPassInterface
         $command = new Definition(DoctrineMigrationsDiffCommand::class);
         $command->setArguments([$provider]);
         $command->addTag('console.command');
+        $command->setPublic(true);
 
         $container->setDefinition(DoctrineMigrationsDiffCommand::COMMAND_ID, $command);
 
