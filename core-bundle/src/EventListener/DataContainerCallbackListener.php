@@ -38,78 +38,65 @@ class DataContainerCallbackListener
             return;
         }
 
-        $replaces = [];
-
         foreach ($this->callbacks[$table] as $target => $callbacks) {
             $keys = explode('.', $target);
-            $current = $this->getFromDCA($table, $keys);
+            $dcaRef = &$this->getDcaReference($table, $keys);
 
             if (\in_array(end($keys), self::SINGLETONS, true)) {
-                $value = $this->getFirstByPriority($callbacks, $current);
+                $this->updateSingleton($dcaRef, $callbacks);
             } else {
-                $value = $this->getMergedByPriority($callbacks, $current);
+                $this->addCallbacks($dcaRef, $callbacks);
             }
-
-            foreach (array_reverse($keys) as $key) {
-                $value = [$key => $value];
-            }
-
-            $replaces[] = $value;
         }
-
-        $GLOBALS['TL_DCA'][$table] = array_replace_recursive($GLOBALS['TL_DCA'][$table], ...$replaces);
     }
 
     /**
-     * @return array|\Closure|null
+     * @return array|callable|null
      */
-    private function getFromDCA(string $table, array $keys)
+    private function &getDcaReference(string $table, array $keys)
     {
-        if (!isset($GLOBALS['TL_DCA'][$table])) {
-            $GLOBALS['TL_DCA'][$table] = [];
-        }
-
-        $dca = $GLOBALS['TL_DCA'][$table];
+        $dcaRef = &$GLOBALS['TL_DCA'][$table];
 
         foreach ($keys as $key) {
-            if (!isset($dca[$key])) {
-                return null;
-            }
-
-            $dca = $dca[$key];
+            $dcaRef = &$dcaRef[$key];
         }
 
-        return $dca;
+        return $dcaRef;
     }
 
     /**
-     * @param array|callable|null $current
-     *
-     * @return array|callable
+     * @param array|callable|null &$dcaRef
      */
-    private function getFirstByPriority(array $callbacks, $current)
+    private function updateSingleton(&$dcaRef, array $callbacks): void
     {
-        if (null !== $current) {
-            $current = [$current];
+        krsort($callbacks, SORT_NUMERIC);
+
+        if (empty($dcaRef) || array_keys($callbacks)[0] >= 0) {
+            $callbacks = array_shift($callbacks);
+            $dcaRef = array_shift($callbacks);
         }
-
-        $callbacks = $this->getMergedByPriority($callbacks, $current);
-
-        return array_shift($callbacks);
     }
 
-    private function getMergedByPriority(array $callbacks, ?array $current): array
+    private function addCallbacks(?array &$dcaRef, array $callbacks): void
     {
-        if (null !== $current) {
-            if (!isset($callbacks[0])) {
-                $callbacks[0] = [];
-            }
-
-            $callbacks[0] = array_merge($callbacks[0], $current);
+        if (null === $dcaRef) {
+            $dcaRef = [];
         }
 
         krsort($callbacks, SORT_NUMERIC);
 
-        return array_merge(...$callbacks);
+        $preCallbacks = array_merge([], ...array_filter($callbacks, function($priority) {
+            return $priority >= 0;
+        }, ARRAY_FILTER_USE_KEY));
+        $postCallbacks = array_merge([], ...array_filter($callbacks, function($priority) {
+            return $priority < 0;
+        }, ARRAY_FILTER_USE_KEY));
+
+        if (\count($preCallbacks)) {
+            array_unshift($dcaRef, ...$preCallbacks);
+        }
+        if (\count($postCallbacks)) {
+            array_push($dcaRef, ...$postCallbacks);
+        }
     }
 }
