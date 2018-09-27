@@ -772,7 +772,7 @@ class PageRegular extends Frontend
 			}
 		}
 
-		$arrJsAssets = \StringUtil::deserialize($objLayout->cssAssets);
+		$arrJsAssets = \StringUtil::deserialize($objLayout->jsAssets);
 
 		// External style sheets
 		if (!empty($arrJsAssets) && \is_array($arrJsAssets))

@@ -46,12 +46,12 @@ class LayoutAssets
 
         $this->load();
 
-        return array_filter(
+        return array_values(array_filter(
             $this->data,
             function ($file) use ($extension) {
                 return substr($file, strlen($extension) * -1) === $extension;
             }
-        );
+        ));
     }
 
     private function load()
