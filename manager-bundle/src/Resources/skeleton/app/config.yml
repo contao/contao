@@ -98,3 +98,4 @@ fos_http_cache:
         enabled: true
     tags:
         enabled: true
+        max_header_value_length: 2048
