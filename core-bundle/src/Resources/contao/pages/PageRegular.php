@@ -671,8 +671,9 @@ class PageRegular extends Frontend
 		// External style sheets
 		if (!empty($arrCssAssets) && \is_array($arrCssAssets))
 		{
+			$packages = \System::getContainer()->get('assets.packages');
+
 			foreach ($arrCssAssets as $file) {
-				$packages = \System::getContainer()->get('assets.packages');
 				$strStyleSheets .= \Template::generateStyleTag($packages->getUrl($file));
 			}
 		}
@@ -776,8 +777,9 @@ class PageRegular extends Frontend
 		// External style sheets
 		if (!empty($arrJsAssets) && \is_array($arrJsAssets))
 		{
+			$packages = \System::getContainer()->get('assets.packages');
+
 			foreach ($arrJsAssets as $file) {
-				$packages = \System::getContainer()->get('assets.packages');
 				$strScripts .= \Template::generateScriptTag($packages->getUrl($file));
 			}
 		}
