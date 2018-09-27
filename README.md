@@ -33,10 +33,12 @@ a running Contao 4 application it is easiest to use the [Contao Managed Edition]
 Start by installing it in your current directory running
 
 ```
-$ composer create-project contao/managed-edition .
+$ composer create-project --no-install contao/managed-edition <version> .
 ```
 
-Then replace the `require` section so that it does not require the individual bundles
+If you want to work on the latest version you can omit `<version>`, otherwise specify it (e.g. `4.4`).
+
+Then replace the `require` section in your `composer.json` so that it does not require the individual bundles
 but this monorepository instead:
 
 ```json
@@ -48,8 +50,7 @@ but this monorepository instead:
 
 Use `dev-master` for the latest version if you want to introduce new features. Use `dev-<lts-version>` (currently
 `dev-4.4`) if you want to contribute a bugfix.
-To make sure Composer installs the repository from source you might want to delete the `vendor` directory and then
-run
+Then install the dependencies using
 
 ```
 $ composer update
