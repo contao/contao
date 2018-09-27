@@ -26,6 +26,42 @@ The monorepo is split into separate packages automatically:
 **Please do not use `contao/contao` in production** but use the split packages
 instead.
 
+## Test setup
+
+To create a Pull Request to this monorepository and test your changes within
+a running Contao 4 application it is easiest to use the [Contao Managed Edition][3].
+Start by installing it in your current directory running
+
+```
+$ composer create-project contao/managed-edition .
+```
+
+Then replace the `require` section so that it does not require the individual bundles
+but this monorepository instead:
+
+```json
+"require": {
+  "php": "^7.1",
+  "contao/contao": "dev-master"
+},
+```
+
+Use `dev-master` for the latest version if you want to introduce new features. Use `dev-<lts-version>` (currently
+`dev-4.4`) if you want to contribute a bugfix.
+To make sure Composer installs the repository from source you might want to delete the `vendor` directory and then
+run
+
+```
+$ composer update
+```
+
+Because you required the monorepository `contao/contao` using the `dev-` prefix, Composer will always install the
+monorepository from `source` which means it will clone this git repository into `vendor/contao/contao`.
+
+You can now finish your setup by visiting `https://your-domain.local/contao/install` and start working with Contao 4.
+All the changes you make within `vendor/contao/contao` can now easily be tracked using git and you can submit your
+Pull Request directly from within your working application!
+
 ## Running scripts
 
 You can use the `run` command to run scripts in all bundles:
@@ -45,3 +81,4 @@ Visit the [support page][2] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://contao.org/en/support.html
+[3]: https://github.com/contao/managed-edition
