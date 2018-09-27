@@ -402,17 +402,26 @@ class DcaSchemaProvider
             return 3072;
         }
 
-        $fileFormat = $this->doctrine
+        $filePerTable = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        if (
-            'barracuda' === strtolower((string) $fileFormat->Value)
-            && \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)
-        ) {
-            return 3072;
+        // Check for innodb_file_format only if the innodb_file_per_table variable is enabled
+        if (\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+            $fileFormat = $this->doctrine
+                ->getConnection()
+                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            if (
+                'barracuda' === strtolower((string) $fileFormat->Value)
+                && \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)
+            ) {
+                return 3072;
+            }
         }
 
         return 767;
