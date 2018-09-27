@@ -14,6 +14,11 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
+// Disable the phar stream wrapper for security reasons (see #105)
+if (\in_array('phar', stream_get_wrappers(), true)) {
+    stream_wrapper_unregister('phar');
+}
+
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
