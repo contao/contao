@@ -180,6 +180,8 @@ class Installer
 
         foreach ($tables as $table) {
             $tableName = $table->getName();
+            $alterTables = [];
+            $deleteIndexes = false;
 
             if (0 !== strncmp($tableName, 'tl_', 3)) {
                 continue;
@@ -207,14 +209,18 @@ class Installer
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
 
-                $sql['ALTER_TABLE'][md5($command)] = $command;
+                $alterTables[md5($command)] = $command;
+
+                // As we are changing the engine, we delete all the indexes of that table because of the index size
+                // that might be too long and causing errors.
+                $deleteIndexes = true;
             } elseif ($innodb && $dynamic) {
                 $rowFormat = $table->getOption('row_format');
 
                 if ($rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
-                    $sql['ALTER_TABLE'][md5($command)] = $command;
+                    $alterTables[md5($command)] = $command;
                 }
             }
 
@@ -224,7 +230,29 @@ class Installer
                 $charset = $table->getOption('charset');
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
 
-                $sql['ALTER_TABLE'][md5($command)] = $command;
+                $alterTables[md5($command)] = $command;
+
+                // As we are changing the collation, we delete all the indexes of that table because of the index size
+                // that might be too long and causing errors.
+                $deleteIndexes = true;
+            }
+
+            // This means you will have to run the migration again
+            // afterwards to re-create the indexes with the correct length
+            // These commands are added to $sql['ALTER_TABLE'] directly so they happen before
+            // the other ALTER TABLE queries for either changing the engine or the collation
+            if ($deleteIndexes) {
+                $platform = $this->connection->getDatabasePlatform();
+                foreach ($table->getIndexes() as $index) {
+                    if ('primary' !== $index->getName()) {
+                        $indexCommand = $platform->getDropIndexSQL($index->getName(), $tableName);
+                        $sql['ALTER_TABLE'][md5($indexCommand)] = $indexCommand;
+                    }
+                }
+            }
+
+            foreach ($alterTables as $k => $alterTable) {
+                $sql['ALTER_TABLE'][$k] = $alterTable;
             }
         }
     }
