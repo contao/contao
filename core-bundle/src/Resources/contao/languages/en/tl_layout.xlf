@@ -170,6 +170,12 @@
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (recommended).</source>
       </trans-unit>
+      <trans-unit id="tl_layout.cssAssets.0">
+        <source>Asset style sheets</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.cssAssets.1">
+        <source>Select CSS assets from your manifest.json.</source>
+      </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
       </trans-unit>
@@ -277,6 +283,12 @@
       </trans-unit>
       <trans-unit id="tl_layout.scripts.1">
         <source>Here you can select one or more JavaScript templates.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.jsAssets.0">
+        <source>Asset JavaScripts</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.jsAssets.1">
+        <source>Select JavaScript assets files from your manifest.json</source>
       </trans-unit>
       <trans-unit id="tl_layout.analytics.0">
         <source>Analytics templates</source>

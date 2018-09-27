@@ -30,6 +30,7 @@ namespace Contao;
  * @property string  $orderExt
  * @property string  $loadingOrder
  * @property boolean $combineScripts
+ * @property string  $cssAssets
  * @property string  $modules
  * @property string  $template
  * @property string  $doctype
@@ -51,6 +52,7 @@ namespace Contao;
  * @property string  $orderExtJs
  * @property string  $script
  * @property string  $scripts
+ * @property string  $jsAssets
  * @property boolean $static
  * @property string  $width
  * @property string  $align

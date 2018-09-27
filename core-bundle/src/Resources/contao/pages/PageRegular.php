@@ -666,6 +666,17 @@ class PageRegular extends Frontend
 			}
 		}
 
+		$arrCssAssets = \StringUtil::deserialize($objLayout->cssAssets);
+
+		// External style sheets
+		if (!empty($arrCssAssets) && \is_array($arrCssAssets))
+		{
+			foreach ($arrCssAssets as $file) {
+				$packages = \System::getContainer()->get('assets.packages');
+				$strStyleSheets .= \Template::generateStyleTag($packages->getUrl($file));
+			}
+		}
+
 		// Add a placeholder for dynamic style sheets (see #4203)
 		$strStyleSheets .= '[[TL_CSS]]';
 
@@ -757,6 +768,17 @@ class PageRegular extends Frontend
 					$objTemplate = new \FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
 				}
+			}
+		}
+
+		$arrJsAssets = \StringUtil::deserialize($objLayout->cssAssets);
+
+		// External style sheets
+		if (!empty($arrJsAssets) && \is_array($arrJsAssets))
+		{
+			foreach ($arrJsAssets as $file) {
+				$packages = \System::getContainer()->get('assets.packages');
+				$strScripts .= \Template::generateScriptTag($packages->getUrl($file));
 			}
 		}
 

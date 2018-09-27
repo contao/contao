@@ -94,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,externalJs,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{webfonts_legend:hide},webfonts;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts,cssAssets;{picturefill_legend:hide},picturefill;{modules_legend},modules;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{script_legend},scripts,analytics,externalJs,jsAssets,script;{static_legend:hide},static;{expert_legend:hide},template,doctype,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -268,6 +268,15 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'cssAssets' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['cssAssets'],
+			'exclude'                 => true,
+			'inputType'               => 'checkboxWizard',
+			'options_callback'        => array('contao.listener.data_container.layout_assets', 'getCssAssets'),
+			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "blob NULL"
 		),
 		'modules' => array
 		(
@@ -456,6 +465,15 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'options_callback'        => array('tl_layout', 'getScriptTemplates'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
+		),
+		'jsAssets' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['jsAssets'],
+			'exclude'                 => true,
+			'inputType'               => 'checkboxWizard',
+			'options_callback'        => array('contao.listener.data_container.layout_assets', 'getJsAssets'),
+			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "blob NULL"
 		),
 		'script' => array
 		(
