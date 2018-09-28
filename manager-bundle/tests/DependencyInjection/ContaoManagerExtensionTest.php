@@ -17,10 +17,11 @@ use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Contao\ManagerBundle\EventListener\InitializeApplicationListener;
 use Contao\ManagerBundle\EventListener\InstallCommandListener;
 use Contao\ManagerBundle\Routing\RouteLoader;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 
-class ContaoManagerExtensionTest extends TestCase
+class ContaoManagerExtensionTest extends ContaoTestCase
 {
     /**
      * @var ContainerBuilder
@@ -35,7 +36,7 @@ class ContaoManagerExtensionTest extends TestCase
         parent::setUp();
 
         $this->container = new ContainerBuilder();
-        $this->container->setParameter('kernel.project_dir', '');
+        $this->container->setParameter('kernel.project_dir', $this->getTempDir());
 
         $extension = new ContaoManagerExtension();
         $extension->load([], $this->container);
@@ -109,5 +110,53 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertSame('contao_manager.plugin_loader', (string) $definition->getArgument(1));
         $this->assertSame('kernel', (string) $definition->getArgument(2));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
+    }
+
+    /**
+     * @dataProvider getDefaultManagerPaths
+     */
+    public function testDefaultContaoManagerPathIsRegisteredAutomatically(string $defaultPath): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->getTempDir());
+
+        $tmpDir = $this->getTempDir();
+        $fs = new Filesystem();
+        $fs->dumpFile($tmpDir . '/web/' . $defaultPath, '');
+
+        $extension = new ContaoManagerExtension();
+        $extension->load([], $container);
+
+        $this->assertFileExists($tmpDir . '/web/' . $defaultPath);
+        $this->assertSame($defaultPath, $container->getParameter('contao_manager.manager_path'));
+
+        $fs->remove($tmpDir . '/web/' . $defaultPath);
+    }
+
+    public function testCustomContaoManagerPathIsRegistered(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->getTempDir());
+
+        $tmpDir = $this->getTempDir();
+        $fs = new Filesystem();
+        $fs->dumpFile($tmpDir . '/web/custom.phar.php' , '');
+
+        $config    = ['manager_path' => 'custom.phar.php'];
+        $extension = new ContaoManagerExtension();
+        $extension->load([$config], $container);
+
+        $this->assertFileExists($tmpDir . '/web/custom.phar.php');
+        $this->assertSame('custom.phar.php', $container->getParameter('contao_manager.manager_path'));
+
+        $fs->remove($tmpDir . '/web/custom.phar.php');
+    }
+
+    public function getDefaultManagerPaths(): array
+    {
+        return [
+            ['contao-manager.phar.php'],
+            ['contao-manager.php']
+        ];
     }
 }
