@@ -774,7 +774,7 @@ class PageRegular extends Frontend
 
 		$arrJsAssets = \StringUtil::deserialize($objLayout->jsAssets);
 
-		// External style sheets
+		// External JavaScript
 		if (!empty($arrJsAssets) && \is_array($arrJsAssets))
 		{
 			$packages = \System::getContainer()->get('assets.packages');
