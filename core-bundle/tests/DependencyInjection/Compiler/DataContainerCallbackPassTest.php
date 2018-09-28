@@ -178,6 +178,38 @@ class DataContainerCallbackPassTest extends TestCase
         );
     }
 
+    public function testDoesNotAppendCallbackSuffixForWizard(): void
+    {
+        $attributes = [
+            'table' => 'tl_content',
+            'target' => 'fields.article.wizard',
+            'priority' => 10,
+            'method' => 'onArticleWizard',
+        ];
+
+        $definition = new Definition('Test\CallbackListener');
+        $definition->addTag('contao.callback', $attributes);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+        $pass->process($container);
+
+        $this->assertSame(
+            [
+                'tl_content' => [
+                    'fields.article.wizard' => [
+                        10 => [
+                            ['test.callback_listener', 'onArticleWizard'],
+                        ],
+                    ],
+                ],
+            ],
+            $this->getCallbacksFromDefinition($container)[0]
+        );
+    }
+
     public function testHandlesMultipleCallbacks(): void
     {
         $definition = new Definition('Test\CallbackListener');
