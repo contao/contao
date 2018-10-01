@@ -40,6 +40,7 @@ class DoctrineMigrationsPassTest extends TestCase
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition(DoctrineMigrationsDiffCommand::COMMAND_ID));
+        $this->assertTrue($container->getDefinition(DoctrineMigrationsDiffCommand::COMMAND_ID)->isPublic());
     }
 
     public function testDoesNotAddTheDefinitionIfTheMigrationsBundleIsNotInstalled(): void
