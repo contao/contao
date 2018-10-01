@@ -402,6 +402,17 @@ class DcaSchemaProvider
             return 3072;
         }
 
+        $filePerTable = $this->doctrine
+            ->getConnection()
+            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        // The innodb_file_per_table option is disabled
+        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+            return 767;
+        }
+
         $fileFormat = $this->doctrine
             ->getConnection()
             ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
