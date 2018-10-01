@@ -67,73 +67,93 @@ class InstallerTest extends TestCase
         );
     }
 
-    public function testDeletesAllIndexesWhenChangingDatabaseEngine(): void
+    public function testDeletesTheIndexesWhenChangingTheDatabaseEngine(): void
     {
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
             ->addOption('engine', 'MyISAM')
         ;
-        $fromSchema->getTable('tl_foo')->addColumn('foo', 'string');
-        $fromSchema->getTable('tl_foo')->addColumn('bar', 'string');
-        $fromSchema->getTable('tl_foo')->addIndex(['foo'], 'foo_idx');
-        $fromSchema->getTable('tl_foo')->addIndex(['bar'], 'bar_idx');
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
             ->addOption('engine', 'InnoDB')
         ;
-        $toSchema->getTable('tl_foo')->addColumn('foo', 'string');
-        $toSchema->getTable('tl_foo')->addColumn('bar', 'string');
-        $toSchema->getTable('tl_foo')->addIndex(['foo'], 'foo_idx');
-        $toSchema->getTable('tl_foo')->addIndex(['bar'], 'bar_idx');
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
 
         $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertSame([
-            'ALTER_TABLE' => [
-                'db24ce0a48761ea6f77d644a422a3fe0' => 'DROP INDEX foo_idx ON tl_foo',
-                '76a8c9d75bf565bd4b38df6457c53ca5' => 'DROP INDEX bar_idx ON tl_foo',
-                'd21451588bc7442c256f8a0be02c3430' => 'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
-                '40b5691fe5c5b0a1ad81149c1b31d1f0' => 'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci',
-            ],
-        ], $commands);
+        $this->assertSame(
+            'DROP INDEX foo_idx ON tl_foo',
+            $commands['ALTER_TABLE']['db24ce0a48761ea6f77d644a422a3fe0']
+        );
     }
 
-    public function testDeletesAllIndexesWhenChangingCollation(): void
+    public function testDeletesTheIndexesWhenChangingTheCollation(): void
     {
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo')
             ->addOption('collate', 'utf8_unicode_ci')
         ;
-        $fromSchema->getTable('tl_foo')->addColumn('foo', 'string');
-        $fromSchema->getTable('tl_foo')->addColumn('bar', 'string');
-        $fromSchema->getTable('tl_foo')->addIndex(['foo'], 'foo_idx');
-        $fromSchema->getTable('tl_foo')->addIndex(['bar'], 'bar_idx');
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addOption('collate', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
         ;
-        $toSchema->getTable('tl_foo')->addColumn('foo', 'string');
-        $toSchema->getTable('tl_foo')->addColumn('bar', 'string');
-        $toSchema->getTable('tl_foo')->addIndex(['foo'], 'foo_idx');
-        $toSchema->getTable('tl_foo')->addIndex(['bar'], 'bar_idx');
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
 
         $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertSame([
-            'ALTER_TABLE' => [
-                'db24ce0a48761ea6f77d644a422a3fe0' => 'DROP INDEX foo_idx ON tl_foo',
-                '76a8c9d75bf565bd4b38df6457c53ca5' => 'DROP INDEX bar_idx ON tl_foo',
-                '51eff8a244b2b6f0eb75937f4887bc2a' => 'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8 COLLATE utf8mb4',
-            ],
-        ], $commands);
+        $this->assertSame(
+            'DROP INDEX foo_idx ON tl_foo',
+            $commands['ALTER_TABLE']['db24ce0a48761ea6f77d644a422a3fe0']
+        );
     }
 
     public function testChangesTheRowFormatIfInnodbIsUsed(): void
