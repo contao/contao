@@ -1,5 +1,10 @@
 # Change log
 
+## 4.6.6 (2018-10-01)
+
+ * Drop indexes when changing engine or collation (see #106).
+ * Also check innodb_file_per_table in the DCA schema provider (see #103).
+
 ## 4.6.5 (2018-09-20)
 
  * Fix an error when creating new pages (see #63).
