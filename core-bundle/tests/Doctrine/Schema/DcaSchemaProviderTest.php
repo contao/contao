@@ -395,34 +395,18 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
             // Large prefixes ENABLED, file per table DISABLED
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'Off'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', 'Off'],
-
-            // Large prefixes ENABLED, file per table DISABLED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', '0'],
             [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0'],
 
             // Large prefixes ENABLED, file per table DISABLED, file system PROVIDED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', '0', 'barracuda'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0', 'barracuda'],
-
-            // Large prefixes ENABLED, file per table DISABLED, file system PROVIDED
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'Off', 'barracuda'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', 'Off', 'barracuda'],
+            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0', 'barracuda'],
 
             // Large prefixes ENABLED, file per table ENABLED
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', 'On'],
-
-            // Large prefixes ENABLED, file per table ENABLED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', '1'],
             [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1'],
 
             // Large prefixes ENABLED, file per table ENABLED, file system PROVIDED
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On', 'barracuda'],
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', 'On', 'barracuda'],
-
-            // Large prefixes ENABLED, file per table ENABLED, file system PROVIDED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', '1', 'barracuda'],
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1', 'barracuda'],
         ];
     }
