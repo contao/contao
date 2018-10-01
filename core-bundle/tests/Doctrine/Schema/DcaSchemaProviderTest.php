@@ -326,13 +326,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * @dataProvider getIndexes
      */
-    public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = '', string $fileSystem = 'antelope'): void
+    public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = '', string $filePerTable = '', string $fileSystem = 'antelope'): void
     {
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(
                 (object) ['Value' => $largePrefixes],
+                (object) ['Value' => $filePerTable],
                 (object) ['Value' => $fileSystem]
             )
         ;
@@ -380,14 +381,33 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function getIndexes(): array
     {
         return [
+            // Default
             [null, 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci'],
             [250, 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci'],
+
+            // Large prefixes DISABLED
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'Off'],
             [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '0'],
+
+            // Large prefixes ENABLED
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On'],
             [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1'],
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'barracuda'],
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1', 'barracuda'],
+
+            // Large prefixes ENABLED, file per table DISABLED
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'Off'],
+            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0'],
+
+            // Large prefixes ENABLED, file per table DISABLED, file system PROVIDED
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'Off', 'barracuda'],
+            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0', 'barracuda'],
+
+            // Large prefixes ENABLED, file per table ENABLED
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On'],
+            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1'],
+
+            // Large prefixes ENABLED, file per table ENABLED, file system PROVIDED
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On', 'barracuda'],
+            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1', 'barracuda'],
         ];
     }
 
