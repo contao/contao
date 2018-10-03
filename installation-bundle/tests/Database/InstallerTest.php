@@ -67,6 +67,95 @@ class InstallerTest extends TestCase
         );
     }
 
+    public function testDeletesTheIndexesWhenChangingTheDatabaseEngine(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_foo')
+            ->addOption('engine', 'MyISAM')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_foo')
+            ->addOption('engine', 'InnoDB')
+        ;
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
+
+        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $commands = $installer->getCommands();
+
+        $this->assertSame(
+            'DROP INDEX foo_idx ON tl_foo',
+            $commands['ALTER_TABLE']['db24ce0a48761ea6f77d644a422a3fe0']
+        );
+    }
+
+    public function testDeletesTheIndexesWhenChangingTheCollation(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_foo')
+            ->addOption('collate', 'utf8_unicode_ci')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $fromSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_foo')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+        ;
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addColumn('foo', 'string')
+        ;
+
+        $toSchema
+            ->getTable('tl_foo')
+            ->addIndex(['foo'], 'foo_idx')
+        ;
+
+
+        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $commands = $installer->getCommands();
+
+        $this->assertSame(
+            'DROP INDEX foo_idx ON tl_foo',
+            $commands['ALTER_TABLE']['db24ce0a48761ea6f77d644a422a3fe0']
+        );
+    }
+
     public function testChangesTheRowFormatIfInnodbIsUsed(): void
     {
         $fromSchema = new Schema();

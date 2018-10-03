@@ -180,6 +180,8 @@ class Installer
 
         foreach ($tables as $table) {
             $tableName = $table->getName();
+            $alterTables = [];
+            $deleteIndexes = false;
 
             if (0 !== strncmp($tableName, 'tl_', 3)) {
                 continue;
@@ -207,14 +209,14 @@ class Installer
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
 
-                $sql['ALTER_TABLE'][md5($command)] = $command;
+                $deleteIndexes = true;
+                $alterTables[md5($command)] = $command;
             } elseif ($innodb && $dynamic) {
                 $rowFormat = $table->getOption('row_format');
 
                 if ($rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
-
-                    $sql['ALTER_TABLE'][md5($command)] = $command;
+                    $alterTables[md5($command)] = $command;
                 }
             }
 
@@ -223,8 +225,27 @@ class Installer
             if ($tableOptions->Collation !== $collate) {
                 $charset = $table->getOption('charset');
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
+                $deleteIndexes = true;
+                $alterTables[md5($command)] = $command;
+            }
 
-                $sql['ALTER_TABLE'][md5($command)] = $command;
+
+            // Delete the indexes if the engine changes in case the existing
+            // indexes are too long. The migration then needs to be run muliple
+            // times to re-create the indexes with the correct length.
+            if ($deleteIndexes) {
+                $platform = $this->connection->getDatabasePlatform();
+
+                foreach ($table->getIndexes() as $index) {
+                    if ('primary' !== $index->getName()) {
+                        $indexCommand = $platform->getDropIndexSQL($index->getName(), $tableName);
+                        $sql['ALTER_TABLE'][md5($indexCommand)] = $indexCommand;
+                    }
+                }
+            }
+
+            foreach ($alterTables as $k => $alterTable) {
+                $sql['ALTER_TABLE'][$k] = $alterTable;
             }
         }
     }
