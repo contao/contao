@@ -177,9 +177,12 @@ abstract class System
 			}
 			else
 			{
-				try {
+				try
+				{
 					$this->arrObjects[$strKey] = new $strClass();
-				} catch (\ArgumentCountError $e) {
+				}
+				catch (\ArgumentCountError $e)
+				{
 					throw new \ArgumentCountError(
 						sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass),
 						$e->getCode(),
@@ -232,9 +235,12 @@ abstract class System
 			}
 			else
 			{
-				try {
+				try
+				{
 					static::$arrStaticObjects[$strKey] = new $strClass();
-				} catch (\ArgumentCountError $e) {
+				}
+				catch (\ArgumentCountError $e)
+				{
 					throw new \ArgumentCountError(
 						sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass),
 						$e->getCode(),
