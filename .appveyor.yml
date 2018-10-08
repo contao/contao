@@ -1,5 +1,5 @@
 build: off
-clone_depth: 5
+clone_depth: 50
 
 environment:
   # This sets the PHP version (from Chocolatey)
