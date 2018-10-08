@@ -40,5 +40,5 @@ monolog:
 
 # FOS HttpCache configuration
 fos_http_cache:
-    cache_manager:
+    invalidation:
         enabled: false
