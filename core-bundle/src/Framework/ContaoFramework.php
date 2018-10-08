@@ -269,9 +269,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        $basePath = $this->request->getBasePath() . '/';
+        $basePath = $this->request->getBasePath().'/';
 
-        if (strncmp($route, $basePath, \strlen($basePath)) !== 0) {
+        if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
             return null;
         }
 

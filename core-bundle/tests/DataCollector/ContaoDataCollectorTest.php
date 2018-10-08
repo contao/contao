@@ -94,7 +94,6 @@ class ContaoDataCollectorTest extends TestCase
         ;
 
         $adapter
-            ->expects($this->any())
             ->method('__call')
             ->willReturn($layout)
         ;

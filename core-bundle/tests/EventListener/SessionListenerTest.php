@@ -136,7 +136,6 @@ class SessionListenerTest extends TestCase
         ;
 
         $event
-            ->expects($this->any())
             ->method('getResponse')
             ->willReturn(new Response())
         ;

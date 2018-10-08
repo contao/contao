@@ -88,7 +88,7 @@ class ModuleBreadcrumb extends \Module
 				'href'     => (($objFirstPage !== null) ? $objFirstPage->getFrontendUrl() : \Environment::get('base')),
 				'title'    => \StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
-				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : []),
+				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
 				'class'    => ''
 			);
 
