@@ -197,11 +197,11 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * Tests initializing the framework with router not returning a string
+     * Tests initializing the framework with an empty route.
      *
      * @runInSeparateProcess
      */
-    public function testInitializesTheFrameworkWithRouterNotReturningAString()
+    public function testInitializesTheFrameworkWithAnEmptyRoute()
     {
         $request = new Request();
         $request->setLocale('de');
