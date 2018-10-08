@@ -1820,6 +1820,9 @@
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
       </trans-unit>

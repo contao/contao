@@ -17,6 +17,10 @@
           <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>">
         </div>
         <div class="widget w50">
+          <p><?= $this->textCode; ?></p>
+          <code><?= $this->secret; ?></code>
+        </div>
+        <div class="widget w50 clr">
           <h3><label for="verify"<?php if ($this->error) echo ' class="error"' ?>><?= $this->verify ?></label></h3>
           <input type="text" name="verify" id="verify" class="tl_text<?php if ($this->error) echo ' class="error"' ?>" value="" autocapitalize="off" autocomplete="off" required>
           <p class="<?= $this->error ? 'tl_error' : 'tl_help' ?> tl_tip"><?= $this->verifyHelp ?></p>
