@@ -28,40 +28,42 @@ instead.
 
 ## Test setup
 
-To create a Pull Request to this monorepository and test your changes within
-a running Contao 4 application it is easiest to use the [Contao Managed Edition][3].
-Start by installing it in your current directory running
+To create a pull request and to test your changes within a running Contao 4
+application, it is the easiest to use the [Contao managed edition][3]. Start by
+installing it in your current directory:
 
+```bash
+$ composer create-project --no-install contao/managed-edition <branch> .
 ```
-$ composer create-project --no-install contao/managed-edition <version> .
-```
 
-If you want to work on the latest version you can omit `<version>`, otherwise specify it (e.g. `4.4`).
+Replace `<branch>` with `dev-master` if you want to add a new feature or with
+`dev-<lts-version>` (currently `dev-4.4`) if you want to fix a bug.
 
-Then replace the `require` section in your `composer.json` so that it does not require the individual bundles
-but this monorepository instead:
+Then adjust the `require` section in your `composer.json` file so Composer loads
+the monorepo instead of the individual bundles:
 
 ```json
 "require": {
-  "php": "^7.1",
-  "contao/contao": "dev-master"
+    "php": "^7.1",
+    "contao/contao": "dev-master"
 },
 ```
 
-Use `dev-master` for the latest version if you want to introduce new features. Use `dev-<lts-version>` (currently
-`dev-4.4`) if you want to contribute a bugfix.
-Then install the dependencies using
+Again, replace `<branch>` with `dev-master` if you want to add a new feature or
+with `dev-<lts-version>` if you want to fix a bug.
+
+Then install the dependencies:
 
 ```
 $ composer update
 ```
 
-Because you required the monorepository `contao/contao` using the `dev-` prefix, Composer will always install the
-monorepository from `source` which means it will clone this git repository into `vendor/contao/contao`.
+Because we have required `contao/contao` with a `dev-` prefix, Composer will
+automatically clone the Git repo into the `vendor/contao/contao` folder. You can
+then finish your setup by visiting `https://your-domain.local/contao/install`.
 
-You can now finish your setup by visiting `https://your-domain.local/contao/install` and start working with Contao 4.
-All the changes you make within `vendor/contao/contao` can now easily be tracked using git and you can submit your
-Pull Request directly from within your working application!
+All the changes you make in `vendor/contao/contao` can be tracked via Git and
+you can submit your pull request directly from within your application.
 
 ## Running scripts
 
