@@ -25,6 +25,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
@@ -176,6 +177,41 @@ class ContaoFrameworkTest extends TestCase
         $container->set('routing.loader', $routingLoader);
 
         $framework = $this->mockContaoFramework($container->get('request_stack'), new Router($container, []));
+        $framework->setContainer($container);
+        $framework->initialize();
+
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
+        $this->assertNull(TL_MODE);
+        $this->assertSame($this->getRootDir(), TL_ROOT);
+        $this->assertSame('', TL_REFERER_ID);
+        $this->assertNull(TL_SCRIPT);
+        $this->assertSame('', TL_PATH);
+        $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
+    }
+
+    /**
+     * Tests initializing the framework with an empty route.
+     *
+     * @runInSeparateProcess
+     */
+    public function testInitializesTheFrameworkWithAnEmptyRoute()
+    {
+        $request = new Request();
+        $request->setLocale('de');
+
+        $container = $this->mockContainerWithContaoScopes();
+        $container->get('request_stack')->push($request);
+
+        $router = $this->createMock(RouterInterface::class);
+
+        $framework = $this->mockContaoFramework($container->get('request_stack'), $router);
         $framework->setContainer($container);
         $framework->initialize();
 

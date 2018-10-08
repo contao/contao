@@ -264,12 +264,18 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $attributes = $this->request->attributes;
 
         try {
-            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
+            $route = (string) $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
         } catch (\Exception $e) {
             return null;
         }
 
-        return substr($route, \strlen($this->request->getBasePath()) + 1);
+        $basePath = $this->request->getBasePath() . '/';
+
+        if (strncmp($route, $basePath, \strlen($basePath)) !== 0) {
+            return null;
+        }
+
+        return substr($route, \strlen($basePath));
     }
 
     /**
