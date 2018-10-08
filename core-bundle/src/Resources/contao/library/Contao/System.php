@@ -183,11 +183,7 @@ abstract class System
 				}
 				catch (\ArgumentCountError $e)
 				{
-					throw new \ArgumentCountError(
-						sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass),
-						$e->getCode(),
-						$e
-					);
+					throw new \ArgumentCountError(sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass), $e->getCode(), $e);
 				}
 			}
 		}
@@ -241,11 +237,7 @@ abstract class System
 				}
 				catch (\ArgumentCountError $e)
 				{
-					throw new \ArgumentCountError(
-						sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass),
-						$e->getCode(),
-						$e
-					);
+					throw new \ArgumentCountError(sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass), $e->getCode(), $e);
 				}
 			}
 		}
