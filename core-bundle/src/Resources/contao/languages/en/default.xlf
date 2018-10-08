@@ -1821,7 +1821,7 @@
         <source>Please enable up two-factor authentication before you continue.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
-        <source>If you can’t use the QR code, enter this text code instead.</source>
+        <source>If you cannot scan the QR code, enter this key instead:</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

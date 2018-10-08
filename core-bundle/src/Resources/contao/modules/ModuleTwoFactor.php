@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -110,7 +111,7 @@ class ModuleTwoFactor extends BackendModule
 		// Generate the secret
 		if (!$user->secret)
 		{
-			$user->secret = bin2hex(random_bytes(128));
+			$user->secret = random_bytes(128);
 			$user->save();
 		}
 
@@ -118,7 +119,7 @@ class ModuleTwoFactor extends BackendModule
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		$this->Template->enable = true;
-		$this->Template->secret = $user->secret;
+		$this->Template->secret = Base32::encodeUpperUnpadded($user->secret);
 		$this->Template->textCode = $GLOBALS['TL_LANG']['MSC']['twoFactorTextCode'];
 		$this->Template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
 		$this->Template->scan = $GLOBALS['TL_LANG']['MSC']['twoFactorScan'];

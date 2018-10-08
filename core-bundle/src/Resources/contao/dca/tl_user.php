@@ -443,7 +443,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'secret' => array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "binary(128) NULL default NULL"
 		),
 		'useTwoFactor' => array
 		(

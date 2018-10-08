@@ -597,7 +597,7 @@ input[type=search]::-webkit-search-decoration {
 	background-color:transparent;
 }
 .two-factor code {
-	overflow-wrap:break-word;
+	word-wrap:break-word;
 }
 
 /* Picker search */
