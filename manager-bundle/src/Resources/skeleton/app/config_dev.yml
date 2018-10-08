@@ -38,6 +38,7 @@ monolog:
                 VERBOSITY_DEBUG: DEBUG
             channels: ['doctrine']
 
+# FOS HttpCache configuration
 fos_http_cache:
     cache_manager:
         enabled: false
