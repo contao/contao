@@ -52,7 +52,7 @@ the monorepo instead of the individual bundles:
 Again, replace `<branch>` with `dev-master` if you want to add a new feature or
 with `dev-<lts-version>` if you want to fix a bug.
 
-Then install the dependencies:
+Next install the dependencies:
 
 ```
 $ composer update
@@ -60,7 +60,7 @@ $ composer update
 
 Because we have required `contao/contao` with a `dev-` prefix, Composer will
 automatically clone the Git repo into the `vendor/contao/contao` folder. You can
-then finish your setup by visiting `https://your-domain.local/contao/install`.
+finish your setup by visiting `https://your-domain.local/contao/install`.
 
 All the changes you make in `vendor/contao/contao` can be tracked via Git and
 you can submit your pull request directly from within your application.
