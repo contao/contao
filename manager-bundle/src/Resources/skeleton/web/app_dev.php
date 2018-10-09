@@ -78,8 +78,5 @@ ContaoKernel::setProjectDir(\dirname(__DIR__));
 $kernel = new ContaoKernel('dev', true);
 $response = $kernel->handle($request);
 
-// Remove the X-Cache-Tags header before sending the response
-$response->headers->remove(TagHeaderFormatter::DEFAULT_HEADER_NAME);
-
 $response->send();
 $kernel->terminate($request, $response);
