@@ -96,8 +96,8 @@ class DataContainerCallbackListener
                     return $priority >= 0;
                 },
                 ARRAY_FILTER_USE_KEY
-            ))
-        ;
+            )
+        );
 
         $postCallbacks = array_merge(
             [],

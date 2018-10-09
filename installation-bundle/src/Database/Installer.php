@@ -229,7 +229,6 @@ class Installer
                 $alterTables[md5($command)] = $command;
             }
 
-
             // Delete the indexes if the engine changes in case the existing
             // indexes are too long. The migration then needs to be run muliple
             // times to re-create the indexes with the correct length.

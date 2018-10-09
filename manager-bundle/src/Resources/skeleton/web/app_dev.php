@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\IpUtils;
