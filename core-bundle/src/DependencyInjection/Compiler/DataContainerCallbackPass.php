@@ -61,20 +61,17 @@ class DataContainerCallbackPass implements CompilerPassInterface
         return $callbacks;
     }
 
-    /**
-     * @throws InvalidConfigurationException
-     */
     private function addCallback(array &$callbacks, string $serviceId, array $attributes): void
     {
         if (!isset($attributes['table'])) {
             throw new InvalidConfigurationException(
-                sprintf('Missing table attribute in tagged callback service with service id "%s"', $serviceId)
+                sprintf('Missing table attribute in tagged callback service ID "%s"', $serviceId)
             );
         }
 
         if (!isset($attributes['target'])) {
             throw new InvalidConfigurationException(
-                sprintf('Missing target attribute in tagged callback service with service id "%s"', $serviceId)
+                sprintf('Missing target attribute in tagged callback service ID "%s"', $serviceId)
             );
         }
 
@@ -84,7 +81,10 @@ class DataContainerCallbackPass implements CompilerPassInterface
 
         $priority = (int) ($attributes['priority'] ?? 0);
 
-        $callbacks[$attributes['table']][$attributes['target']][$priority][] = [$serviceId, $this->getMethod($attributes)];
+        $callbacks[$attributes['table']][$attributes['target']][$priority][] = [
+            $serviceId,
+            $this->getMethod($attributes),
+        ];
     }
 
     private function getMethod(array $attributes): string

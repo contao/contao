@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\Environment;
 use Contao\Frontend;
 use Contao\Model\Collection;
 use Contao\PageModel;

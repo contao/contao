@@ -439,7 +439,11 @@ class DataContainerCallbackPassTest extends TestCase
     private function getContainerBuilder(): ContainerBuilder
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.listener.data_container_callback', new Definition(DataContainerCallbackListener::class, []));
+
+        $container->setDefinition(
+            'contao.listener.data_container_callback',
+            new Definition(DataContainerCallbackListener::class, [])
+        );
 
         return $container;
     }

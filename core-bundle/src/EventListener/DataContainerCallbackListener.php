@@ -25,6 +25,9 @@ class DataContainerCallbackListener
         'options_callback',
     ];
 
+    /**
+     * @var array
+     */
     private $callbacks = [];
 
     public function setCallbacks(array $callbacks): void
@@ -85,16 +88,32 @@ class DataContainerCallbackListener
 
         krsort($callbacks, SORT_NUMERIC);
 
-        $preCallbacks = array_merge([], ...array_filter($callbacks, function ($priority) {
-            return $priority >= 0;
-        }, ARRAY_FILTER_USE_KEY));
-        $postCallbacks = array_merge([], ...array_filter($callbacks, function ($priority) {
-            return $priority < 0;
-        }, ARRAY_FILTER_USE_KEY));
+        $preCallbacks = array_merge(
+            [],
+            ...array_filter(
+                $callbacks,
+                function ($priority) {
+                    return $priority >= 0;
+                },
+                ARRAY_FILTER_USE_KEY
+            ))
+        ;
+
+        $postCallbacks = array_merge(
+            [],
+            ...array_filter(
+                $callbacks,
+                function ($priority) {
+                    return $priority < 0;
+                },
+                ARRAY_FILTER_USE_KEY
+            )
+        );
 
         if (\count($preCallbacks)) {
             array_unshift($dcaRef, ...$preCallbacks);
         }
+
         if (\count($postCallbacks)) {
             array_push($dcaRef, ...$postCallbacks);
         }

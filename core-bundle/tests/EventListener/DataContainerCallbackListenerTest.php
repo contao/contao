@@ -26,7 +26,6 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        unset($GLOBALS['TL_DCA']);
         $GLOBALS['TL_DCA'] = [];
 
         $this->listener = new DataContainerCallbackListener();
@@ -58,6 +57,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'config' => [
@@ -96,6 +96,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'config' => [
@@ -136,6 +137,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'list' => [
@@ -178,6 +180,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'config' => [
@@ -222,6 +225,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'config' => [
@@ -264,6 +268,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'config' => [
@@ -304,6 +309,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'list' => [
@@ -341,6 +347,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'list' => [
@@ -378,6 +385,7 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+
         $this->assertSame(
             [
                 'list' => [
