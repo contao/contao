@@ -16,6 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
@@ -73,6 +74,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RegisterFragmentsPass());
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
         $container->addCompilerPass(new MapFragmentsToGlobalsPass());
+        $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
     }
 }

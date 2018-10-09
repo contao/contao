@@ -38,6 +38,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearFormDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
+use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener;
@@ -301,6 +302,22 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
+    }
+
+    public function testRegistersTheDataContainerCallbackListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.data_container_callback'));
+
+        $definition = $this->container->getDefinition('contao.listener.data_container_callback');
+
+        $this->assertSame(DataContainerCallbackListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEmpty($definition->getArguments());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertSame('loadDataContainer', $tags['contao.hook'][0]['hook']);
     }
 
     public function testRegistersTheDoctrineSchemaListener(): void
