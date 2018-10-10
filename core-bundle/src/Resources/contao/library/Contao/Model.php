@@ -110,9 +110,9 @@ abstract class Model
 	/**
 	 * Load the relations and optionally process a result set
 	 *
-	 * @param Result $objResult An optional database result
+	 * @param Result|array $objResult Optional database result or array data to initialize the model
 	 */
-	public function __construct(Result $objResult=null)
+	public function __construct($objResult=null)
 	{
 		$this->arrModified = array();
 
@@ -122,7 +122,15 @@ abstract class Model
 		if ($objResult !== null)
 		{
 			$arrRelated = array();
-			$arrData = $objResult->row();
+
+			if ($objResult instanceof Result)
+			{
+				$arrData = $objResult->row();
+			}
+			else
+			{
+				$arrData = (array) $objResult;
+			}
 
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
