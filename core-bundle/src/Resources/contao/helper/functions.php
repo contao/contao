@@ -235,16 +235,6 @@ function trimsplit($strPattern, $strString)
 {
 	@trigger_error('Using trimsplit() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::trimsplit() instead.', E_USER_DEPRECATED);
 
-	global $arrSplitCache;
-
-	$strKey = md5($strPattern.$strString);
-
-	// Load from cache
-	if (isset($arrSplitCache[$strKey]))
-	{
-		return $arrSplitCache[$strKey];
-	}
-
 	// Split
 	if (\strlen($strPattern) == 1)
 	{
@@ -260,8 +250,6 @@ function trimsplit($strPattern, $strString)
 	{
 		$arrFragments = array();
 	}
-
-	$arrSplitCache[$strKey] = $arrFragments;
 
 	return $arrFragments;
 }
