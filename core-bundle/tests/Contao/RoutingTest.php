@@ -399,7 +399,7 @@ class RoutingTest extends ContaoTestCase
     /**
      * @runInSeparateProcess
      */
-    public function _testHandlesFolderUrlsWithoutLanguage(): void
+    public function testHandlesFolderUrlsWithoutLanguage(): void
     {
         include_once __DIR__.'/../../src/Resources/contao/library/Contao/Model/Collection.php';
 
@@ -462,7 +462,7 @@ class RoutingTest extends ContaoTestCase
     /**
      * @runInSeparateProcess
      */
-    public function _testHandlesFolderUrlsWithLanguage(): void
+    public function testHandlesFolderUrlsWithLanguage(): void
     {
         include_once __DIR__.'/../../src/Resources/contao/library/Contao/Model/Collection.php';
 
