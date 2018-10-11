@@ -24,6 +24,11 @@ framework:
         handler_id: ~
     fragments: { path: /_fragment }
 
+# Framework extra configuration
+sensio_framework_extra:
+    router:
+        annotations: false
+
 # Twig configuration
 twig:
     debug: "%kernel.debug%"
