@@ -61,7 +61,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): ?string
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
     {
         $this->framework->initialize();
 
