@@ -1570,9 +1570,12 @@ class tl_page extends Backend
 			}
 
 			// Disable "paste after" button if there is no permission 2 (move) or 1 (create) for the parent page
-			if (!$disablePA && ($objPage = Model::getClassFromTable($table)::findById($row['pid'])) !== null)
+			if (!$disablePA)
 			{
-				if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row())))
+				/** @var PageModel $objModel */
+				$objModel = Model::getClassFromTable($table);
+
+				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))))
 				{
 					$disablePA = true;
 				}

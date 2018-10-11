@@ -132,8 +132,11 @@ abstract class Frontend extends Controller
 				$arrOptions[] = $strAlias;
 			}
 
+			/** @var PageModel $objPageModel */
+			$objPageModel = \System::getContainer()->get('contao.framework')->getAdapter(PageModel::class);
+
 			// Check if there are pages with a matching alias
-			$objPages = \System::getContainer()->get('contao.framework')->getAdapter(PageModel::class)->findByAliases($arrOptions);
+			$objPages = $objPageModel->findByAliases($arrOptions);
 
 			if ($objPages !== null)
 			{
