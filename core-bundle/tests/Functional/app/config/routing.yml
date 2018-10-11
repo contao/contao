@@ -1,0 +1,23 @@
+contao:
+    resource: "@ContaoCoreBundle/Controller"
+    type: annotation
+
+contao_frontend:
+    resource: .
+    type: contao_frontend
+
+contao_root:
+    path: /
+    defaults:
+        _scope: frontend
+        _token_check: true
+        _controller: Contao\CoreBundle\Controller\FrontendController::indexAction
+
+contao_catch_all:
+    path: /{_url_fragment}
+    defaults:
+        _scope: frontend
+        _token_check: true
+        _controller: Contao\CoreBundle\Controller\FrontendController::indexAction
+    requirements:
+        _url_fragment: .*

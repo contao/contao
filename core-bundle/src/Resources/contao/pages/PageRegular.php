@@ -63,8 +63,10 @@ class PageRegular extends Frontend
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
 		$locale = str_replace('-', '_', $objPage->language);
-		\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($locale);
-		\System::getContainer()->get('translator')->setLocale($locale);
+
+		$container = \System::getContainer();
+		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
+		$container->get('translator')->setLocale($locale);
 
 		\System::loadLanguageFile('default');
 
@@ -88,7 +90,7 @@ class PageRegular extends Frontend
 		$objTheme = $objLayout->getRelated('pid');
 
 		// Set the default image densities
-		\System::getContainer()->get('contao.image.picture_factory')->setDefaultDensities($objTheme->defaultImageDensities);
+		$container->get('contao.image.picture_factory')->setDefaultDensities($objTheme->defaultImageDensities);
 
 		// Store the layout ID
 		$objPage->layoutId = $objLayout->id;

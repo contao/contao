@@ -413,6 +413,14 @@ class Input
 	}
 
 	/**
+	 * Reset the unused GET parameters
+	 */
+	public static function resetUnusedGet()
+	{
+		static::$arrUnusedGet = array();
+	}
+
+	/**
 	 * Sanitize the variable names (thanks to Andreas Schempp)
 	 *
 	 * @param mixed $varValue A variable name or an array of variable names

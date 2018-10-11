@@ -27,6 +27,11 @@ class InsertTags extends Controller
 {
 
 	/**
+	 * @var array
+	 */
+	protected static $arrItCache = array();
+
+	/**
 	 * Make the constructor public
 	 */
 	public function __construct()
@@ -53,6 +58,14 @@ class InsertTags extends Controller
 		}
 
 		return $strBuffer;
+	}
+
+	/**
+	 * Reset the insert tag cache
+	 */
+	public static function reset()
+	{
+		static::$arrItCache = array();
 	}
 
 	/**
@@ -86,8 +99,7 @@ class InsertTags extends Controller
 		$container = \System::getContainer();
 
 		// Create one cache per cache setting (see #7700)
-		static $arrItCache;
-		$arrCache = &$arrItCache[$blnCache];
+		$arrCache = &static::$arrItCache[$blnCache];
 
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{

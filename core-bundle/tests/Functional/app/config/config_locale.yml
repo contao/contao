@@ -1,0 +1,5 @@
+imports:
+    - { resource: config_test.yml }
+
+contao:
+    prepend_locale: true
