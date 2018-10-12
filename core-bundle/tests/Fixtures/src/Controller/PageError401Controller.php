@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\CoreBundle\Tests\Fixtures\Controller;
+namespace Contao\CoreBundle\Fixtures\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Framework\Adapter;
 
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
+use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use PHPUnit\Framework\TestCase;
 
 class AdapterTest extends TestCase

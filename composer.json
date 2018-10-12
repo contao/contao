@@ -214,6 +214,7 @@
     "autoload-dev": {
         "psr-4": {
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
+            "Contao\\CoreBundle\\Fixtures\\": "core-bundle/tests/Fixtures/src/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",
