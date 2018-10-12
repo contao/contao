@@ -89,6 +89,12 @@ class ZipReader
 	protected $strFile;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * Current file index
 	 * @var integer
 	 */
@@ -128,14 +134,15 @@ class ZipReader
 		}
 
 		$this->strFile = $strFile;
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if file exists
-		if (!file_exists(TL_ROOT . '/' . $strFile))
+		if (!file_exists($this->strRootDir . '/' . $strFile))
 		{
 			throw new \Exception("Could not find file $strFile");
 		}
 
-		$this->resFile = @fopen(TL_ROOT . '/' . $strFile, 'rb');
+		$this->resFile = @fopen($this->strRootDir . '/' . $strFile, 'rb');
 
 		// Could not open file
 		if (!\is_resource($this->resFile))
@@ -433,7 +440,7 @@ class ZipReader
 
 		$intOffset = 0;
 		$pos = 0;
-		$intInterval = min(filesize(TL_ROOT . '/' . $this->strFile), 1024);
+		$intInterval = min(filesize($this->strRootDir . '/' . $this->strFile), 1024);
 		$strBuffer = '';
 
 		// Read to delimiter

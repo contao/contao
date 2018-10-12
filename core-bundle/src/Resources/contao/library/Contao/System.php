@@ -103,7 +103,7 @@ abstract class System
 	protected static $arrImageSizes = array();
 
 	/**
-	 * Import the Config and Session instances
+	 * Import the Config instance
 	 */
 	protected function __construct()
 	{
@@ -455,11 +455,13 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Local configuration file
-		if (file_exists(TL_ROOT . '/system/config/langconfig.php'))
+		if (file_exists($rootDir . '/system/config/langconfig.php'))
 		{
 			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in app/Resources/contao/languages instead.', E_USER_DEPRECATED);
-			include TL_ROOT . '/system/config/langconfig.php';
+			include $rootDir . '/system/config/langconfig.php';
 		}
 	}
 
@@ -474,7 +476,9 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			if (is_dir(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
+			$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
+			if (is_dir($rootDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
@@ -770,10 +774,12 @@ abstract class System
 	{
 		@trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Convert to absolute path
-		if (strpos($strName, TL_ROOT . '/') === false)
+		if (strpos($strName, $rootDir . '/') === false)
 		{
-			$strName = TL_ROOT . '/' . $strName;
+			$strName = $rootDir . '/' . $strName;
 		}
 
 		$loader = new PhpFileLoader();
@@ -797,10 +803,12 @@ abstract class System
 	{
 		@trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Convert to absolute path
-		if (strpos($strName, TL_ROOT . '/') === false)
+		if (strpos($strName, $rootDir . '/') === false)
 		{
-			$strName = TL_ROOT . '/' . $strName;
+			$strName = $rootDir . '/' . $strName;
 		}
 
 		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), $blnLoad);

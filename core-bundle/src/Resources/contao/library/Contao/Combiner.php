@@ -75,7 +75,13 @@ class Combiner extends System
 	protected $arrFiles = array();
 
 	/**
-	 * Web dir relative to TL_ROOT
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
+	 * Web dir relative to $this->strRootDir
 	 * @var string
 	 */
 	protected $strWebDir;
@@ -85,7 +91,10 @@ class Combiner extends System
 	 */
 	public function __construct()
 	{
-		$this->strWebDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+		$container = \System::getContainer();
+
+		$this->strRootDir = $container->getParameter('kernel.project_dir');
+		$this->strWebDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		parent::__construct();
 	}
@@ -123,10 +132,10 @@ class Combiner extends System
 		}
 
 		// Check the source file
-		if (!file_exists(TL_ROOT . '/' . $strFile))
+		if (!file_exists($this->strRootDir . '/' . $strFile))
 		{
 			// Handle public bundle resources in web/
-			if (file_exists(TL_ROOT . '/' . $this->strWebDir . '/' . $strFile))
+			if (file_exists($this->strRootDir . '/' . $this->strWebDir . '/' . $strFile))
 			{
 				$strFile = $this->strWebDir . '/' . $strFile;
 			}
@@ -145,7 +154,7 @@ class Combiner extends System
 		// Default version
 		if ($strVersion === null)
 		{
-			$strVersion = filemtime(TL_ROOT . '/' . $strFile);
+			$strVersion = filemtime($this->strRootDir . '/' . $strFile);
 		}
 
 		// Store the file
@@ -203,10 +212,10 @@ class Combiner extends System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if (\Config::get('debugMode') || !file_exists(TL_ROOT . '/' . $strPath))
+				if (\Config::get('debugMode') || !file_exists($this->strRootDir . '/' . $strPath))
 				{
 					$objFile = new \File($strPath);
-					$objFile->write($this->handleScssLess(file_get_contents(TL_ROOT . '/' . $arrFile['name']), $arrFile));
+					$objFile->write($this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile));
 					$objFile->close();
 				}
 
@@ -310,7 +319,7 @@ class Combiner extends System
 		$strKey = \StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
 
 		// Load the existing file
-		if (file_exists(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
+		if (file_exists($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
 		{
 			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 		}
@@ -321,7 +330,7 @@ class Combiner extends System
 
 		foreach ($this->arrFiles as $arrFile)
 		{
-			$content = file_get_contents(TL_ROOT . '/' . $arrFile['name']);
+			$content = file_get_contents($this->strRootDir . '/' . $arrFile['name']);
 
 			// Remove UTF-8 BOM
 			if (strncmp($content, "\xEF\xBB\xBF", 3) === 0)
@@ -357,7 +366,7 @@ class Combiner extends System
 		// Create a gzipped version
 		if (\Config::get('gzipScripts') && \function_exists('gzencode'))
 		{
-			\File::putContent('assets/' . $strTarget . '/' . $strKey . $this->strMode . '.gz', gzencode(file_get_contents(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode), 9));
+			\File::putContent('assets/' . $strTarget . '/' . $strKey . $this->strMode . '.gz', gzencode(file_get_contents($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode), 9));
 		}
 
 		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
@@ -400,8 +409,8 @@ class Combiner extends System
 
 			$objCompiler->setImportPaths(array
 			(
-				TL_ROOT . '/' . \dirname($arrFile['name']),
-				TL_ROOT . '/vendor/contao-components/compass/css'
+				$this->strRootDir . '/' . \dirname($arrFile['name']),
+				$this->strRootDir . '/vendor/contao-components/compass/css'
 			));
 
 			$objCompiler->setFormatter((\Config::get('debugMode') ? Expanded::class : Compressed::class));
@@ -416,7 +425,7 @@ class Combiner extends System
 			(
 				'strictMath' => true,
 				'compress' => !\Config::get('debugMode'),
-				'import_dirs' => array(TL_ROOT . '/' . $strPath => $strPath)
+				'import_dirs' => array($this->strRootDir . '/' . $strPath => $strPath)
 			);
 
 			$objParser = new \Less_Parser();
@@ -521,7 +530,7 @@ class Combiner extends System
 	protected function hasMediaTag($strFile)
 	{
 		$return = false;
-		$fh = fopen(TL_ROOT . '/' . $strFile, 'rb');
+		$fh = fopen($this->strRootDir . '/' . $strFile, 'rb');
 
 		while (($line = fgets($fh)) !== false)
 		{

@@ -165,7 +165,7 @@ abstract class ModuleNews extends Module
 		{
 			$objModel = \FilesModel::findByUuid($objArticle->singleSRC);
 
-			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				// Do not override the field now that we have a model registry (see #6303)
 				$arrArticle = $objArticle->row();

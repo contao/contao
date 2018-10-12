@@ -82,8 +82,10 @@ class Updater extends Controller
 						   ->execute(serialize($mootools), $objLayout->id);
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Update event reader
-		if (!file_exists(TL_ROOT . '/templates/event_default.tpl'))
+		if (!file_exists($rootDir . '/templates/event_default.tpl'))
 		{
 			$this->Database->execute("UPDATE tl_module SET cal_template='event_full' WHERE cal_template='event_default'");
 		}
@@ -647,7 +649,8 @@ class Updater extends Controller
 		$arrMapper = array();
 		$arrFolders = array();
 		$arrFiles = array();
-		$arrScan = scan(TL_ROOT . '/' . $strPath);
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$arrScan = scan($rootDir . '/' . $strPath);
 
 		foreach ($arrScan as $strFile)
 		{
@@ -656,7 +659,7 @@ class Updater extends Controller
 				continue;
 			}
 
-			if (is_dir(TL_ROOT . '/' . $strPath . '/' . $strFile))
+			if (is_dir($rootDir . '/' . $strPath . '/' . $strFile))
 			{
 				$arrFolders[] = $strPath . '/' . $strFile;
 			}
@@ -686,7 +689,7 @@ class Updater extends Controller
 			if (preg_match('/^meta(_([a-z]{2}))?\.txt$/', basename($strFile), $matches))
 			{
 				$key = $matches[2] ?: 'en';
-				$arrData = file(TL_ROOT . '/' . $strFile, FILE_IGNORE_NEW_LINES);
+				$arrData = file($rootDir . '/' . $strFile, FILE_IGNORE_NEW_LINES);
 
 				foreach ($arrData as $line)
 				{

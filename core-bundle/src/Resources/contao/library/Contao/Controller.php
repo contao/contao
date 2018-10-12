@@ -103,8 +103,9 @@ abstract class Controller extends System
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 		$strBrace = '{' . implode(',', \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')))) . '}';
-		$arrCustomized = self::braceGlob(TL_ROOT . '/templates/' . $strPrefix . '*.' . $strBrace);
+		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strPrefix . '*.' . $strBrace);
 
 		// Add the customized templates
 		if (\is_array($arrCustomized))
@@ -136,7 +137,7 @@ abstract class Controller extends System
 				{
 					if ($objTheme->templates != '')
 					{
-						$arrThemeTemplates = self::braceGlob(TL_ROOT . '/' . $objTheme->templates . '/' . $strPrefix . '*.' . $strBrace);
+						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strPrefix . '*.' . $strBrace);
 
 						if (\is_array($arrThemeTemplates))
 						{
@@ -1241,8 +1242,10 @@ abstract class Controller extends System
 			throw new PageNotFoundException('Invalid path');
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Check whether the file exists
-		if (!file_exists(TL_ROOT . '/' . $strFile))
+		if (!file_exists($rootDir . '/' . $strFile))
 		{
 			throw new PageNotFoundException('File not found');
 		}
@@ -1516,13 +1519,14 @@ abstract class Controller extends System
 		try
 		{
 			$container = \System::getContainer();
+			$rootDir = $container->getParameter('kernel.project_dir');
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$picture = $container->get('contao.image.picture_factory')->create(TL_ROOT . '/' . $arrItem['singleSRC'], $size);
+			$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
 			(
-				'img' => $picture->getImg(TL_ROOT, $staticUrl),
-				'sources' => $picture->getSources(TL_ROOT, $staticUrl)
+				'img' => $picture->getImg($rootDir, $staticUrl),
+				'sources' => $picture->getSources($rootDir, $staticUrl)
 			);
 
 			$src = $picture['img']['src'];
@@ -1733,7 +1737,9 @@ abstract class Controller extends System
 		{
 			if ($objFiles->type == 'file')
 			{
-				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file(TL_ROOT . '/' . $objFiles->path))
+				$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
+				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($rootDir . '/' . $objFiles->path))
 				{
 					continue;
 				}

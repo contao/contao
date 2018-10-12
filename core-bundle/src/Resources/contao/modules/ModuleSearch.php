@@ -148,7 +148,7 @@ class ModuleSearch extends Module
 			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
 			// Load the cached result
-			if (file_exists(TL_ROOT . '/' . $strCacheFile))
+			if (file_exists(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strCacheFile))
 			{
 				$objFile = new \File($strCacheFile);
 

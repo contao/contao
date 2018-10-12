@@ -204,7 +204,8 @@ class Picture
 	 */
 	public function getTemplateData()
 	{
-		$image = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $this->image->getOriginalPath());
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$image = \System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
 
 		$config = new PictureConfiguration();
 		$config->setSize($this->getConfigurationItem($this->imageSize));
@@ -243,8 +244,8 @@ class Picture
 
 		return array
 		(
-			'img' => $picture->getImg(TL_ROOT, $staticUrl),
-			'sources' => $picture->getSources(TL_ROOT, $staticUrl),
+			'img' => $picture->getImg($rootDir, $staticUrl),
+			'sources' => $picture->getSources($rootDir, $staticUrl),
 		);
 	}
 

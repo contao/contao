@@ -81,7 +81,7 @@ class GdImage
 			throw new \InvalidArgumentException('Image type "' . $file->extension . '" cannot be processed by GD');
 		}
 
-		$image = $function(TL_ROOT . '/' . $file->path);
+		$image = $function(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $file->path);
 
 		if ($image === false)
 		{
@@ -172,7 +172,7 @@ class GdImage
 		$folder = \StringUtil::stripRootDir($path);
 
 		// Create the parent folder
-		if (($dirname = \dirname($folder)) != '.' && !is_dir(TL_ROOT . '/' . $dirname))
+		if (($dirname = \dirname($folder)) != '.' && !is_dir(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $dirname))
 		{
 			new \Folder($dirname);
 		}

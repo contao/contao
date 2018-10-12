@@ -524,11 +524,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg'
         ;
 
-        if (!file_exists(\dirname(TL_ROOT.'/'.$path))) {
-            mkdir(\dirname(TL_ROOT.'/'.$path), 0777, true);
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+        if (!file_exists(\dirname($rootDir.'/'.$path))) {
+            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
         }
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents($rootDir.'/'.$path, '');
 
         return $path;
     }
@@ -607,11 +609,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg'
         ;
 
-        if (!file_exists(\dirname(TL_ROOT.'/'.$path))) {
-            mkdir(\dirname(TL_ROOT.'/'.$path), 0777, true);
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+        if (!file_exists(\dirname($rootDir.'/'.$path))) {
+            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
         }
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents($rootDir.'/'.$path, '');
 
         return $path;
     }

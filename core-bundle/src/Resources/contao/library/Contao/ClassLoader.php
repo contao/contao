@@ -153,6 +153,8 @@ class ClassLoader
 			return;
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// The class file is set in the mapper
 		if (isset(self::$classes[$class]))
 		{
@@ -161,7 +163,7 @@ class ClassLoader
 				$GLOBALS['TL_DEBUG']['classes_set'][$class] = $class;
 			}
 
-			include TL_ROOT . '/' . self::$classes[$class];
+			include $rootDir . '/' . self::$classes[$class];
 		}
 
 		// Find the class in the registered namespaces
@@ -174,7 +176,7 @@ class ClassLoader
 					$GLOBALS['TL_DEBUG']['classes_aliased'][$class] = $namespaced;
 				}
 
-				include TL_ROOT . '/' . self::$classes[$namespaced];
+				include $rootDir . '/' . self::$classes[$namespaced];
 			}
 
 			class_alias($namespaced, $class);

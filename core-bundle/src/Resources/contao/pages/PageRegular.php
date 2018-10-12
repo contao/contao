@@ -638,6 +638,7 @@ class PageRegular extends Frontend
 
 			// Get the file entries from the database
 			$objFiles = \FilesModel::findMultipleByUuids($arrExternal);
+			$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 			if ($objFiles !== null)
 			{
@@ -645,7 +646,7 @@ class PageRegular extends Frontend
 
 				while ($objFiles->next())
 				{
-					if (file_exists(TL_ROOT . '/' . $objFiles->path))
+					if (file_exists($rootDir . '/' . $objFiles->path))
 					{
 						$arrFiles[] = $objFiles->path . '|static';
 					}
@@ -801,12 +802,13 @@ class PageRegular extends Frontend
 
 		// Get the file entries from the database
 		$objFiles = \FilesModel::findMultipleByUuids($arrExternalJs);
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		if ($objFiles !== null)
 		{
 			while ($objFiles->next())
 			{
-				if (file_exists(TL_ROOT . '/' . $objFiles->path))
+				if (file_exists($rootDir . '/' . $objFiles->path))
 				{
 					$strScripts .= \Template::generateScriptTag($objFiles->path, false, $objFiles->tstamp);
 				}

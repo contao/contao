@@ -48,6 +48,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	protected $strExtension;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * Current filemounts
 	 * @var array
 	 */
@@ -177,6 +183,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'];
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check for valid file types
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'])
@@ -382,15 +389,15 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Call recursive function tree()
 		if (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 		{
-			$return .= $this->generateTree(TL_ROOT . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
+			$return .= $this->generateTree($this->strRootDir . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
 		}
 		else
 		{
 			for ($i=0, $c=\count($this->arrFilemounts); $i<$c; $i++)
 			{
-				if ($this->arrFilemounts[$i] != '' && is_dir(TL_ROOT . '/' . $this->arrFilemounts[$i]))
+				if ($this->arrFilemounts[$i] != '' && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
 				{
-					$return .= $this->generateTree(TL_ROOT . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
+					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
 			}
 		}
@@ -572,7 +579,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import('Files');
 		$strFolder = \Input::get('pid', true);
 
-		if ($strFolder == '' || !file_exists(TL_ROOT . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if ($strFolder == '' || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -614,12 +621,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		$this->isValid($source);
 
-		if (!file_exists(TL_ROOT . '/' . $source) || !$this->isMounted($source))
+		if (!file_exists($this->strRootDir . '/' . $source) || !$this->isMounted($source))
 		{
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
 
-		if (!file_exists(TL_ROOT . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if (!file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Parent folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -644,7 +651,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$destination = str_replace(\dirname($source), $strFolder, $source);
 
 		// Do not move if the target exists and would be overriden (not possible for folders anyway)
-		if (file_exists(TL_ROOT . '/' . $destination))
+		if (file_exists($this->strRootDir . '/' . $destination))
 		{
 			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetarget'], basename($source), \dirname($destination)));
 		}
@@ -766,12 +773,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->isValid($source);
 		$this->isValid($destination);
 
-		if (!file_exists(TL_ROOT . '/' . $source) || !$this->isMounted($source))
+		if (!file_exists($this->strRootDir . '/' . $source) || !$this->isMounted($source))
 		{
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
 
-		if (!file_exists(TL_ROOT . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if (!file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Parent folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -793,13 +800,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import('Files');
 
 		// Copy folders
-		if (is_dir(TL_ROOT . '/' . $source))
+		if (is_dir($this->strRootDir . '/' . $source))
 		{
 			$count = 1;
 			$new = $destination;
 
 			// Add a suffix if the folder exists
-			while (is_dir(TL_ROOT . '/' . $new) && $count < 12)
+			while (is_dir($this->strRootDir . '/' . $new) && $count < 12)
 			{
 				$new = $destination . '_' . $count++;
 			}
@@ -816,7 +823,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$ext = strtolower(substr($destination, strrpos($destination, '.') + 1));
 
 			// Add a suffix if the file exists
-			while (file_exists(TL_ROOT . '/' . $new) && $count < 12)
+			while (file_exists($this->strRootDir . '/' . $new) && $count < 12)
 			{
 				$new = str_replace('.' . $ext, '_' . $count++ . '.' . $ext, $destination);
 			}
@@ -865,7 +872,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		if (!$blnDoNotRedirect)
 		{
 			// Switch to edit mode
-			if (is_file(TL_ROOT . '/' . $destination))
+			if (is_file($this->strRootDir . '/' . $destination))
 			{
 				$this->redirect($this->switchToEdit($destination));
 			}
@@ -933,7 +940,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->isValid($source);
 
 		// Delete the file or folder
-		if (!file_exists(TL_ROOT . '/' . $source) || !$this->isMounted($source))
+		if (!file_exists($this->strRootDir . '/' . $source) || !$this->isMounted($source))
 		{
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
@@ -958,12 +965,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import('Files');
 
 		// Delete the folder or file
-		if (is_dir(TL_ROOT . '/' . $source))
+		if (is_dir($this->strRootDir . '/' . $source))
 		{
 			$this->Files->rrdir($source);
 
 			// Also delete the symlink (see #710)
-			if (is_link(TL_ROOT . '/web/' . $source))
+			if (is_link($this->strRootDir . '/web/' . $source))
 			{
 				$this->Files->delete('web/' . $source);
 			}
@@ -1043,7 +1050,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		$strFolder = \Input::get('pid', true);
 
-		if (!file_exists(TL_ROOT . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if (!file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -1231,7 +1238,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->noReload = false;
 		$this->isValid($this->intId);
 
-		if (!file_exists(TL_ROOT . '/' . $this->intId) || !$this->isMounted($this->intId))
+		if (!file_exists($this->strRootDir . '/' . $this->intId) || !$this->isMounted($this->intId))
 		{
 			throw new AccessDeniedException('File or folder "' . $this->intId . '" is not mounted or cannot be found.');
 		}
@@ -1326,7 +1333,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					// Load the current value
 					if ($vv == 'name')
 					{
-						$objFile = is_dir(TL_ROOT . '/' . $this->intId) ? new \Folder($this->intId) : new \File($this->intId);
+						$objFile = is_dir($this->strRootDir . '/' . $this->intId) ? new \Folder($this->intId) : new \File($this->intId);
 
 						$this->strPath = \StringUtil::stripRootDir($objFile->dirname);
 						$this->strExtension = ($objFile->origext != '') ? '.'.$objFile->origext : '';
@@ -1634,7 +1641,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					// Load the current value
 					if ($v == 'name')
 					{
-						$objFile = is_dir(TL_ROOT . '/' . $id) ? new \Folder($id) : new \File($id);
+						$objFile = is_dir($this->strRootDir . '/' . $id) ? new \Folder($id) : new \File($id);
 
 						$this->strPath = \StringUtil::stripRootDir($objFile->dirname);
 						$this->strExtension = ($objFile->origext != '') ? '.'.$objFile->origext : '';
@@ -1875,11 +1882,11 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		$this->isValid($this->intId);
 
-		if (is_dir(TL_ROOT .'/'. $this->intId))
+		if (is_dir($this->strRootDir .'/'. $this->intId))
 		{
 			throw new InternalServerErrorException('Folder "' . $this->intId . '" cannot be edited.');
 		}
-		elseif (!file_exists(TL_ROOT .'/'. $this->intId))
+		elseif (!file_exists($this->strRootDir .'/'. $this->intId))
 		{
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
@@ -2087,13 +2094,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	public function protect()
 	{
-		if (!is_dir(TL_ROOT . '/' . $this->intId))
+		if (!is_dir($this->strRootDir . '/' . $this->intId))
 		{
 			throw new InternalServerErrorException('Resource "' . $this->intId . '" is not a directory.');
 		}
 
 		// Protect or unprotect the folder
-		if (file_exists(TL_ROOT . '/' . $this->intId . '/.public'))
+		if (file_exists($this->strRootDir . '/' . $this->intId . '/.public'))
 		{
 			$objFolder = new \Folder($this->intId);
 			$objFolder->protect();
@@ -2136,7 +2143,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// File names
 		if ($this->strField == 'name')
 		{
-			if (!file_exists(TL_ROOT . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension) || !$this->isMounted($this->strPath . '/' . $this->varValue . $this->strExtension) || $this->varValue === $varValue)
+			if (!file_exists($this->strRootDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension) || !$this->isMounted($this->strPath . '/' . $this->varValue . $this->strExtension) || $this->varValue === $varValue)
 			{
 				return;
 			}
@@ -2161,7 +2168,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// The target exists
-			if (strcasecmp($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension) !== 0 && file_exists(TL_ROOT . '/' . $this->strPath . '/' . $varValue . $this->strExtension))
+			if (strcasecmp($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension) !== 0 && file_exists($this->strRootDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
 			}
@@ -2221,10 +2228,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$strWebDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
 
 			// Update the symlinks
-			if (is_link(TL_ROOT . '/' . $strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
+			if (is_link($this->strRootDir . '/' . $strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension))
 			{
 				$this->Files->delete($strWebDir . '/' . $this->strPath . '/' . $this->varValue . $this->strExtension);
-				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, $strWebDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension, TL_ROOT);
+				SymlinkUtil::symlink($this->strPath . '/' . $varValue . $this->strExtension, $strWebDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension, $this->strRootDir);
 			}
 
 			// Set the new value so the input field can show it
@@ -2375,7 +2382,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$arrCounts   = array('Added'=>0, 'Changed'=>0, 'Unchanged'=>0, 'Moved'=>0, 'Deleted'=>0);
 
 		// Read the log file
-		$fh = fopen(TL_ROOT . '/' . $strLog, 'rb');
+		$fh = fopen($this->strRootDir . '/' . $strLog, 'rb');
 
 		while (($buffer = fgets($fh)) !== false)
 		{
@@ -2484,7 +2491,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import('Files');
 		$this->import('BackendUser', 'User');
 
-		return $this->generateTree(TL_ROOT.'/'.$strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
+		return $this->generateTree($this->strRootDir.'/'.$strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
 	}
 
 	/**
@@ -2581,11 +2588,11 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				{
 					--$countFiles;
 				}
-				elseif (!$this->blnFiles && !$this->blnFilesOnly && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				elseif (!$this->blnFiles && !$this->blnFilesOnly && !is_dir($this->strRootDir . '/' . $currentFolder . '/' . $file))
 				{
 					--$countFiles;
 				}
-				elseif (!empty($this->arrValidFileTypes) && !is_dir(TL_ROOT . '/' . $currentFolder . '/' . $file))
+				elseif (!empty($this->arrValidFileTypes) && !is_dir($this->strRootDir . '/' . $currentFolder . '/' . $file))
 				{
 					$objFile =  new \File($currentFolder . '/' . $file);
 
@@ -2728,14 +2735,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						}
 						else
 						{
-							$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), array(400, 50, ResizeConfiguration::MODE_BOX))->getUrl(TL_ROOT), '', 'class="preview-image"');
+							$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(400, 50, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image"');
 						}
 
-						$importantPart = \System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded))->getImportantPart();
+						$importantPart = \System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 						if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
 						{
-							$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl(TL_ROOT), '', 'class="preview-important"');
+							$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important"');
 						}
 					}
 					catch (RuntimeException $e)
@@ -2912,7 +2919,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Check for valid file types
-		if (!empty($this->arrValidFileTypes) && is_file(TL_ROOT . '/' . $strFile))
+		if (!empty($this->arrValidFileTypes) && is_file($this->strRootDir . '/' . $strFile))
 		{
 			$fileinfo = preg_replace('/.*\.(.*)$/u', '$1', $strFile);
 
@@ -2959,14 +2966,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		$arrFiles = array();
 
-		foreach (scan(TL_ROOT . '/' . $strPath) as $strFile)
+		foreach (scan($this->strRootDir . '/' . $strPath) as $strFile)
 		{
-			if (!is_dir(TL_ROOT . '/' . $strPath . '/' . $strFile))
+			if (!is_dir($this->strRootDir . '/' . $strPath . '/' . $strFile))
 			{
 				continue;
 			}
 
-			$arrFiles[substr(md5(TL_ROOT . '/' . $strPath . '/' . $strFile), 0, 8)] = 1;
+			$arrFiles[substr(md5($this->strRootDir . '/' . $strPath . '/' . $strFile), 0, 8)] = 1;
 
 			// Do not use array_merge() here (see #8105)
 			foreach ($this->getMD5Folders($strPath . '/' . $strFile) as $k=>$v)
@@ -2989,7 +2996,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		do
 		{
-			if (file_exists(TL_ROOT . '/' . $path . '/.public'))
+			if (file_exists($this->strRootDir . '/' . $path . '/.public'))
 			{
 				return false;
 			}
@@ -3020,7 +3027,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			$strPath = (string) $attributes['path'];
 
-			if (\Validator::isInsecurePath($strPath) || !is_dir(TL_ROOT . '/' . $strPath))
+			if (\Validator::isInsecurePath($strPath) || !is_dir($this->strRootDir . '/' . $strPath))
 			{
 				throw new \RuntimeException('Invalid path ' . $strPath);
 			}

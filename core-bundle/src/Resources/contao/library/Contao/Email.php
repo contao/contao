@@ -385,7 +385,7 @@ class Email
 			{
 				if ($this->strImageDir == '')
 				{
-					$this->strImageDir = TL_ROOT . '/';
+					$this->strImageDir = \System::getContainer()->getParameter('kernel.project_dir') . '/';
 				}
 
 				$arrCid = array();

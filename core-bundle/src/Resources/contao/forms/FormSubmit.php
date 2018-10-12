@@ -101,7 +101,7 @@ class FormSubmit extends Widget
 		{
 			$objModel = \FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				$this->src = $objModel->path;
 			}

@@ -109,7 +109,7 @@ class FeedItem
 	 */
 	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure')
 	{
-		if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile))
+		if ($strFile == '' || !file_exists(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFile))
 		{
 			return;
 		}

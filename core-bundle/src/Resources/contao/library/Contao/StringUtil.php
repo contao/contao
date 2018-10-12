@@ -1129,12 +1129,14 @@ class StringUtil
 	{
 		static $length = null;
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		if ($length === null)
 		{
-			$length = \strlen(TL_ROOT);
+			$length = \strlen($rootDir);
 		}
 
-		if (strncmp($path, TL_ROOT, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
+		if (strncmp($path, $rootDir, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
 		{
 			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir', $path));
 		}

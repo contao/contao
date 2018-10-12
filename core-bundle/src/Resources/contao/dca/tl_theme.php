@@ -287,7 +287,8 @@ class tl_theme extends Backend
 
 			if ($objFile !== null)
 			{
-				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl(TL_ROOT), '', 'class="theme_preview"') . ' ' . $label;
+				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($rootDir), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 
@@ -346,10 +347,11 @@ class tl_theme extends Backend
 	protected function doGetTemplateFolders($path, $level=0)
 	{
 		$return = array();
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		foreach (scan(TL_ROOT . '/' . $path) as $file)
+		foreach (scan($rootDir . '/' . $path) as $file)
 		{
-			if (is_dir(TL_ROOT . '/' . $path . '/' . $file))
+			if (is_dir($rootDir . '/' . $path . '/' . $file))
 			{
 				$return[$path . '/' . $file] = str_repeat(' &nbsp; &nbsp; ', $level) . $file;
 				$return = array_merge($return, $this->doGetTemplateFolders($path . '/' . $file, $level+1));

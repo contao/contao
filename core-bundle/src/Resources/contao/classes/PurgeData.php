@@ -85,7 +85,9 @@ class PurgeData extends Backend implements \executable
 			}
 		}
 
-		$strCachePath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$container = \System::getContainer();
+		$rootDir = $container->getParameter('kernel.project_dir');
+		$strCachePath = \StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)
@@ -106,9 +108,9 @@ class PurgeData extends Backend implements \executable
 				$folder = sprintf($folder, $strCachePath);
 
 				// Only check existing folders
-				if (is_dir(TL_ROOT . '/' . $folder))
+				if (is_dir($rootDir . '/' . $folder))
 				{
-					$objFiles = Finder::create()->in(TL_ROOT . '/' . $folder)->files();
+					$objFiles = Finder::create()->in($rootDir . '/' . $folder)->files();
 					$total = iterator_count($objFiles);
 				}
 

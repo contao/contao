@@ -1425,7 +1425,7 @@ class ImageTest extends TestCase
             .'.jpg'
         ;
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
         return $path;
     }
@@ -1499,7 +1499,7 @@ class ImageTest extends TestCase
             .'.jpg'
         ;
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
         return $path;
     }
