@@ -101,10 +101,6 @@ TXT;
         );
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testLoadsXlfFilesIntoTheGlobalVariables(): void
     {
         $loader = new XliffFileLoader($this->getFixturesDir().'/app', true);

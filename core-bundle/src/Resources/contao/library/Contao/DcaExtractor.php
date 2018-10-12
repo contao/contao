@@ -497,7 +497,7 @@ class DcaExtractor extends Controller
 			return;
 		}
 
-		$params = \System::getContainer()->get('doctrine.dbal.default_connection')->getParams();
+		$params = \System::getContainer()->get('database_connection')->getParams();
 
 		// Add the default engine and charset if none is given
 		if (empty($sql['engine']))

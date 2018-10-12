@@ -65,25 +65,25 @@ class QueryBuilder
 		}
 
 		// Where condition
-		if ($arrOptions['column'] !== null)
+		if (isset($arrOptions['column']))
 		{
 			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . \Database::quoteIdentifier($arrOptions['column']) . "=?");
 		}
 
 		// Group by
-		if ($arrOptions['group'] !== null)
+		if (isset($arrOptions['group']))
 		{
 			$strQuery .= " GROUP BY " . $arrOptions['group'];
 		}
 
 		// Having (see #6446)
-		if ($arrOptions['having'] !== null)
+		if (isset($arrOptions['having']))
 		{
 			$strQuery .= " HAVING " . $arrOptions['having'];
 		}
 
 		// Order by
-		if ($arrOptions['order'] !== null)
+		if (isset($arrOptions['order']))
 		{
 			$strQuery .= " ORDER BY " . $arrOptions['order'];
 		}

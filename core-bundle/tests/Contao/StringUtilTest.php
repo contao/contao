@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class StringUtilTest extends TestCase
 {
@@ -33,10 +30,8 @@ class StringUtilTest extends TestCase
     {
         parent::setUp();
 
-        \define('TL_ERROR', 'ERROR');
-        \define('TL_ROOT', $this->getFixturesDir());
-
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->getFixturesDir());
         $container->set('monolog.logger.contao', new NullLogger());
 
         System::setContainer($container);

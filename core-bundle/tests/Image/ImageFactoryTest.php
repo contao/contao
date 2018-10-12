@@ -461,15 +461,13 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
+        System::setContainer($this->mockContainer($this->getFixturesDir()));
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -538,14 +536,10 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainer($this->getFixturesDir()));
@@ -623,14 +617,10 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainer($this->getFixturesDir()));

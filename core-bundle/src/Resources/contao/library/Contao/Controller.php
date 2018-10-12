@@ -67,7 +67,7 @@ abstract class Controller extends System
 		$strTemplate = basename($strTemplate);
 
 		// Check for a theme folder
-		if (TL_MODE == 'FE')
+		if (\defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			/** @var PageModel $objPage */
 			global $objPage;

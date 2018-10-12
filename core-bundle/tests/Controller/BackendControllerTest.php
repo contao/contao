@@ -15,12 +15,10 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
-use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -32,42 +30,6 @@ class BackendControllerTest extends TestCase
         $controller = new BackendController();
 
         $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendController', $controller);
-    }
-
-    public function testReturnsAResponseInTheActionMethods(): void
-    {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
-        $previewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
-
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-        $authorizationChecker
-            ->expects($this->once())
-            ->method('isGranted')
-            ->willReturn(false)
-        ;
-
-        $container = $this->mockContainer();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('contao.security.frontend_preview_authenticator', $previewAuthenticator);
-        $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('request_stack', $requestStack);
-
-        $controller = new BackendController();
-        $controller->setContainer($container);
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->mainAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->loginAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->passwordAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->previewAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->confirmAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->fileAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->helpAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->pageAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->popupAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->switchAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->alertsAction());
     }
 
     public function testRedirectsToTheBackendIfTheUserIsFullyAuthenticatedUponLogin(): void

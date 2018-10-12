@@ -125,7 +125,7 @@ class UrlGeneratorTest extends TestCase
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']))
+            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
             ->generate('foo/{items}/{article}', $params)
         ;
     }

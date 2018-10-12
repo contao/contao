@@ -22,6 +22,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Tests\Fixtures\Exception\PageErrorResponseException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
@@ -139,7 +140,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testRendersTheContaoPageHandler(int $type, \Exception $exception): void
     {
-        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
+        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\CoreBundle\Tests\Fixtures\Controller\PageError'.$type.'Controller';
 
         $event = $this->mockResponseEvent($exception);
 
@@ -170,7 +171,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void
     {
-        $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorResponseException';
+        $GLOBALS['TL_PTY']['error_403'] = PageErrorResponseException::class;
 
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->mockResponseEvent($exception);

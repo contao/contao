@@ -19,28 +19,25 @@ use Symfony\Component\Lock\Store\FlockStore;
 
 class AutomatorCommandTest extends CommandTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $command = new AutomatorCommand($this->mockContaoFramework());
+    /**
+     * @var AutomatorCommand
+     */
+    private $command;
 
-        $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $command);
-        $this->assertSame('contao:automator', $command->getName());
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->command = new AutomatorCommand($this->mockContaoFramework());
     }
 
-    public function testGeneratesTheTaskList(): void
+    public function testCanBeInstantiated(): void
     {
-        $command = new AutomatorCommand($this->mockContaoFramework());
-        $command->setApplication($this->mockApplication());
-
-        $tester = new CommandTester($command);
-        $tester->setInputs(["\n"]);
-
-        $code = $tester->execute(['command' => $command->getName()]);
-        $output = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertContains('Please select a task:', $output);
-        $this->assertContains('[10]', $output);
+        $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $this->command);
+        $this->assertSame('contao:automator', $this->command->getName());
     }
 
     public function testIsLockedWhileRunning(): void
@@ -50,13 +47,12 @@ class AutomatorCommandTest extends CommandTestCase
         $lock = $factory->createLock('contao:automator');
         $lock->acquire();
 
-        $command = new AutomatorCommand($this->mockContaoFramework());
-        $command->setApplication($this->mockApplication());
+        $this->command->setApplication($this->mockApplication());
 
-        $tester = new CommandTester($command);
+        $tester = new CommandTester($this->command);
         $tester->setInputs(["\n"]);
 
-        $code = $tester->execute(['command' => $command->getName()]);
+        $code = $tester->execute(['command' => $this->command->getName()]);
 
         $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
@@ -64,31 +60,14 @@ class AutomatorCommandTest extends CommandTestCase
         $lock->release();
     }
 
-    public function testTakesTheTaskNameAsArgument(): void
-    {
-        $command = new AutomatorCommand($this->mockContaoFramework());
-        $command->setApplication($this->mockApplication());
-
-        $input = [
-            'command' => $command->getName(),
-            'task' => 'purgeTempFolder',
-        ];
-
-        $tester = new CommandTester($command);
-        $code = $tester->execute($input);
-
-        $this->assertSame(0, $code);
-    }
-
     public function testHandlesAnInvalidSelection(): void
     {
-        $command = new AutomatorCommand($this->mockContaoFramework());
-        $command->setApplication($this->mockApplication());
+        $this->command->setApplication($this->mockApplication());
 
-        $tester = new CommandTester($command);
+        $tester = new CommandTester($this->command);
         $tester->setInputs(["4800\n"]);
 
-        $code = $tester->execute(['command' => $command->getName()]);
+        $code = $tester->execute(['command' => $this->command->getName()]);
 
         $this->assertSame(1, $code);
         $this->assertContains('Value "4800" is invalid (see help contao:automator)', $tester->getDisplay());
@@ -96,15 +75,14 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testHandlesAnInvalidTaskName(): void
     {
-        $command = new AutomatorCommand($this->mockContaoFramework());
-        $command->setApplication($this->mockApplication());
+        $this->command->setApplication($this->mockApplication());
 
         $input = [
-            'command' => $command->getName(),
+            'command' => $this->command->getName(),
             'task' => 'fooBar',
         ];
 
-        $tester = new CommandTester($command);
+        $tester = new CommandTester($this->command);
         $code = $tester->execute($input);
 
         $this->assertSame(1, $code);

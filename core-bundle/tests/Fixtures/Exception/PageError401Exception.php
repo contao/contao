@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\Fixtures;
+namespace Contao\CoreBundle\Tests\Fixtures\Exception;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 

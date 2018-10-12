@@ -17,6 +17,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,6 +44,7 @@ class LogoutHandlerTest extends TestCase
             ->with('User "foobar" has logged out')
         ;
 
+        /** @var BackendUser|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
 
         $token = $this->createMock(TokenInterface::class);
@@ -84,6 +86,7 @@ class LogoutHandlerTest extends TestCase
      */
     public function testTriggersThePostLogoutHook(): void
     {
+        /** @var BackendUser|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
 
         $listener = $this->createPartialMock(Controller::class, ['onPostLogout']);

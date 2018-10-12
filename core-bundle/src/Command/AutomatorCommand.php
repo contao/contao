@@ -136,7 +136,7 @@ class AutomatorCommand extends AbstractLockedCommand
             return $task;
         }
 
-        $question = new ChoiceQuestion('Please select a task:', $commands, 0);
+        $question = new ChoiceQuestion('Please select a task:', $commands);
         $question->setMaxAttempts(1);
 
         /** @var QuestionHelper $helper */

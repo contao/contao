@@ -48,10 +48,6 @@ class AddToSearchIndexListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testIndexesTheResponse(): void
     {
         $event = $this->mockPostResponseEvent();

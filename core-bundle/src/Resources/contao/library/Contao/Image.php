@@ -835,7 +835,7 @@ class Image
 		}
 		catch (\Exception $e)
 		{
-			\System::log('Image "' . $image . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+			\System::log('Image "' . $image . '" could not be processed: ' . $e->getMessage(), __METHOD__, 'ERROR');
 		}
 
 		return null;

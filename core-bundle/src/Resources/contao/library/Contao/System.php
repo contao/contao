@@ -263,9 +263,9 @@ abstract class System
 	 */
 	public static function log($strText, $strFunction, $strCategory)
 	{
-		@trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
+		@trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
 
-		$level = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
+		$level = 'ERROR' === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 		$logger = static::getContainer()->get('monolog.logger.contao');
 
 		$logger->log($level, $strText, array('contao' => new ContaoContext($strFunction, $strCategory)));
@@ -293,7 +293,7 @@ abstract class System
 		{
 			$session = $session[$ref];
 		}
-		elseif (TL_MODE == 'BE' && \is_array($session))
+		elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
 		{
 			$session = end($session);
 		}
@@ -328,7 +328,7 @@ abstract class System
 		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && TL_MODE == 'FE')
+		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			$return = \Environment::get('httpReferer');
 		}
@@ -336,11 +336,11 @@ abstract class System
 		// Fallback to the current URL if there is no referer
 		if ($return == '')
 		{
-			$return = (TL_MODE == 'BE') ? 'contao/main.php' : \Environment::get('url');
+			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : \Environment::get('url');
 		}
 
 		// Do not urldecode here!
-		return ampersand($return, $blnEncodeAmpersands);
+		return preg_replace('/&(amp;)?/i', ($blnEncodeAmpersands ? '&amp;' : '&'), $return);
 	}
 
 	/**

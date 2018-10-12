@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Fixtures\Controller\PageError401Controller;
+use Contao\CoreBundle\Tests\Fixtures\Exception\PageError401Exception;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\PageError401;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
@@ -26,19 +27,6 @@ class FrontendControllerTest extends TestCase
         $controller = new FrontendController();
 
         $this->assertInstanceOf('Contao\CoreBundle\Controller\FrontendController', $controller);
-    }
-
-    public function testReturnsAResponseInTheActionMethods(): void
-    {
-        $container = $this->mockContainer();
-        $container->set('contao.framework', $this->mockContaoFramework());
-
-        $controller = new FrontendController();
-        $controller->setContainer($container);
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->indexAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $controller->cronAction());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $controller->shareAction());
     }
 
     public function testThrowsAnExceptionUponLoginIfThereIsNoError401Page(): void
@@ -62,6 +50,7 @@ class FrontendControllerTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testRendersTheError401PageUponLogin(): void
     {
@@ -97,7 +86,7 @@ class FrontendControllerTest extends TestCase
         $controller = new FrontendController();
         $controller->setContainer($container);
 
-        $GLOBALS['TL_PTY']['error_401'] = PageError401::class;
+        $GLOBALS['TL_PTY']['error_401'] = PageError401Controller::class;
 
         $response = $controller->loginAction();
 
@@ -113,6 +102,7 @@ class FrontendControllerTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testThrowsAnExceptionUponLoginIfTheError401PageThrowsAnException(): void
     {
@@ -148,7 +138,7 @@ class FrontendControllerTest extends TestCase
         $controller = new FrontendController();
         $controller->setContainer($container);
 
-        $GLOBALS['TL_PTY']['error_401'] = 'Contao\PageError401Exception';
+        $GLOBALS['TL_PTY']['error_401'] = PageError401Exception::class;
 
         $this->expectException(UnauthorizedHttpException::class);
 

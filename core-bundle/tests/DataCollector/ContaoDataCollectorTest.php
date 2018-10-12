@@ -53,7 +53,7 @@ class ContaoDataCollectorTest extends TestCase
             [
                 'version' => $version,
                 'framework' => true,
-                'models' => 5,
+                'models' => 0,
                 'frontend' => false,
                 'preview' => false,
                 'layout' => '',

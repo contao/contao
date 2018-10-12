@@ -36,10 +36,6 @@ class CommandSchedulerListenerTest extends TestCase
         $this->assertInstanceOf('Contao\CoreBundle\EventListener\CommandSchedulerListener', $listener);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testRunsTheCommandScheduler(): void
     {
         $controller = $this->createMock(FrontendCron::class);
@@ -75,10 +71,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener->onKernelTerminate($this->mockPostResponseEvent('contao_backend'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotRunTheCommandSchedulerInTheInstallTool(): void
     {
         $framework = $this->mockContaoFramework();
@@ -102,10 +94,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotRunTheCommandSchedulerUponFragmentRequests(): void
     {
         $framework = $this->mockContaoFramework();
@@ -129,10 +117,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete(): void
     {
         $adapter = $this->mockAdapter(['isComplete', 'get']);
@@ -156,10 +140,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener->onKernelTerminate($this->mockPostResponseEvent('contao_backend'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled(): void
     {
         $adapter = $this->mockAdapter(['isComplete', 'get']);
@@ -184,10 +164,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener->onKernelTerminate($this->mockPostResponseEvent('contao_frontend'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void
     {
         $framework = $this->mockContaoFramework();
