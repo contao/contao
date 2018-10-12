@@ -13,15 +13,26 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
-use Contao\CoreBundle\Tests\Fixtures\Controller\ContentElement\TestController;
+use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
+use Contao\System;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContentElementControllerTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        System::setContainer($this->mockContainer());
+    }
+
     public function testCanBeInstantiated(): void
     {
         $controller = new TestController();

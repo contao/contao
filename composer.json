@@ -127,7 +127,7 @@
         "composer/composer": "^1.0",
         "contao/monorepo-tools": "dev-master",
         "contao/phpstan": "^0.3.2",
-        "contao/test-case": "^1.3",
+        "contao/test-case": "^1.4.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "doctrine/orm": "^2.5",
@@ -214,6 +214,7 @@
     "autoload-dev": {
         "psr-4": {
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
+            "Contao\\CoreBundle\\Fixtures\\": "core-bundle/tests/Fixtures/src/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",

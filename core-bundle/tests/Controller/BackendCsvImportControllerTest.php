@@ -29,10 +29,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class BackendCsvImportControllerTest extends TestCase
 {
     /**
@@ -41,9 +37,6 @@ class BackendCsvImportControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        \define('TL_MODE', 'BE');
-        \define('TL_ROOT', $this->getFixturesDir());
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 

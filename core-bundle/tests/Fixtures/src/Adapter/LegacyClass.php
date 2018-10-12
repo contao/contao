@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\CoreBundle\Tests\Fixtures\Adapter;
+namespace Contao\CoreBundle\Fixtures\Adapter;
 
 class LegacyClass
 {

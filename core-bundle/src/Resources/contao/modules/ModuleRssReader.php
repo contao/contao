@@ -65,7 +65,7 @@ class ModuleRssReader extends Module
 		}
 
 		$this->objFeed->set_output_encoding(\Config::get('characterSet'));
-		$this->objFeed->set_cache_location(TL_ROOT . '/system/tmp');
+		$this->objFeed->set_cache_location(\System::getContainer()->getParameter('kernel.project_dir') . '/system/tmp');
 		$this->objFeed->enable_cache(false);
 
 		if ($this->rss_cache > 0)

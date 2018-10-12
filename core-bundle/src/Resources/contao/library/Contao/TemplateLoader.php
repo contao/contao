@@ -93,19 +93,20 @@ class TemplateLoader
 	public static function getPath($template, $format, $custom='templates')
 	{
 		$file = $template . '.' . $format;
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check the theme folder first
-		if (file_exists(TL_ROOT . '/' . $custom . '/' . $file))
+		if (file_exists($rootDir . '/' . $custom . '/' . $file))
 		{
-			return TL_ROOT . '/' . $custom . '/' . $file;
+			return $rootDir . '/' . $custom . '/' . $file;
 		}
 
 		// Then check the global templates directory (see #5547)
 		if ($custom != 'templates')
 		{
-			if (file_exists(TL_ROOT . '/templates/' . $file))
+			if (file_exists($rootDir . '/templates/' . $file))
 			{
-				return TL_ROOT . '/templates/' . $file;
+				return $rootDir . '/templates/' . $file;
 			}
 		}
 
@@ -125,10 +126,12 @@ class TemplateLoader
 	public static function getDefaultPath($template, $format)
 	{
 		$file = $template . '.' . $format;
+		$container = \System::getContainer();
+		$rootDir = $container->getParameter('kernel.project_dir');
 
 		if (isset(self::$files[$template]))
 		{
-			return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
+			return $rootDir . '/' . self::$files[$template] . '/' . $file;
 		}
 
 		$strPath = null;
@@ -136,7 +139,7 @@ class TemplateLoader
 		try
 		{
 			// Search for the template if it is not in the lookup array (last match wins)
-			foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name($file) as $file)
+			foreach ($container->get('contao.resource_finder')->findIn('templates')->name($file) as $file)
 			{
 				/** @var SplFileInfo $file */
 				$strPath = $file->getPathname();
@@ -158,7 +161,8 @@ class TemplateLoader
 	public static function initialize()
 	{
 		$objFilesystem = new Filesystem();
-		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+		$container = \System::getContainer();
+		$strCacheDir = $container->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
 		if (file_exists($strCacheDir . '/contao/config/templates.php'))
@@ -172,7 +176,7 @@ class TemplateLoader
 				foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
 				{
 					/** @var SplFileInfo $file */
-					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), TL_ROOT), '/'));
+					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), $container->getParameter('kernel.project_dir')), '/'));
 				}
 			}
 			catch (\InvalidArgumentException $e) {}

@@ -23,6 +23,20 @@ class Theme extends Backend
 {
 
 	/**
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
+	 * Set the root directory
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+	}
+
+	/**
 	 * Import a theme
 	 *
 	 * @return string
@@ -52,7 +66,7 @@ class Theme extends Backend
 				foreach ($arrUploaded as $strFile)
 				{
 					// Skip folders
-					if (is_dir(TL_ROOT . '/' . $strFile))
+					if (is_dir($this->strRootDir . '/' . $strFile))
 					{
 						\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strFile)));
 						continue;
@@ -248,7 +262,7 @@ class Theme extends Backend
 					continue;
 				}
 
-				if (file_exists(TL_ROOT .'/'. $objArchive->file_name))
+				if (file_exists($this->strRootDir .'/'. $objArchive->file_name))
 				{
 					$blnTplExists = true;
 					$return .= "\n  " . '<p class="tl_red" style="margin:0">'. sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) .'</p>';
@@ -639,7 +653,7 @@ class Theme extends Backend
 					}
 
 					// Create the templates folder even if it is empty (see #4793)
-					if ($table == 'tl_theme' && isset($set['templates']) && strncmp($set['templates'], 'templates/', 10) === 0 && !is_dir(TL_ROOT . '/' . $set['templates']))
+					if ($table == 'tl_theme' && isset($set['templates']) && strncmp($set['templates'], 'templates/', 10) === 0 && !is_dir($this->strRootDir . '/' . $set['templates']))
 					{
 						new \Folder($set['templates']);
 					}
@@ -1096,13 +1110,13 @@ class Theme extends Backend
 		}
 
 		// Return if the folder does not exist
-		if (!is_dir(TL_ROOT .'/'. $strFolder))
+		if (!is_dir($this->strRootDir .'/'. $strFolder))
 		{
 			return;
 		}
 
 		// Recursively add the files and subfolders
-		foreach (scan(TL_ROOT .'/'. $strFolder) as $strFile)
+		foreach (scan($this->strRootDir .'/'. $strFolder) as $strFile)
 		{
 			// Skip hidden resources
 			if (strncmp($strFile, '.', 1) === 0)
@@ -1110,7 +1124,7 @@ class Theme extends Backend
 				continue;
 			}
 
-			if (is_dir(TL_ROOT .'/'. $strFolder .'/'. $strFile))
+			if (is_dir($this->strRootDir .'/'. $strFolder .'/'. $strFile))
 			{
 				$this->addFolderToArchive($objArchive, $strFolder .'/'. $strFile, $xml, $table, $arrOrder);
 			}
@@ -1170,7 +1184,7 @@ class Theme extends Backend
 		}
 
 		// Return if the folder does not exist
-		if (!is_dir(TL_ROOT .'/'. $strFolder))
+		if (!is_dir($this->strRootDir .'/'. $strFolder))
 		{
 			return;
 		}
@@ -1179,7 +1193,7 @@ class Theme extends Backend
 		$arrAllowed[] = 'sql'; // see #7048
 
 		// Add all template files to the archive
-		foreach (scan(TL_ROOT .'/'. $strFolder) as $strFile)
+		foreach (scan($this->strRootDir .'/'. $strFolder) as $strFile)
 		{
 			if (preg_match('/\.(' . implode('|', $arrAllowed) . ')$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
 			{

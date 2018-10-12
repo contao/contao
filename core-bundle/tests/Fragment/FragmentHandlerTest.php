@@ -19,9 +19,10 @@ use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Fragment\UnknownFragmentException;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,6 +32,16 @@ use Symfony\Component\HttpKernel\Fragment\FragmentRendererInterface;
 
 class FragmentHandlerTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        System::setContainer($this->mockContainer());
+    }
+
     public function testCanBeInstantiated(): void
     {
         $fragmentHandler = $this->mockFragmentHandler();
@@ -109,10 +120,6 @@ class FragmentHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testAddsThePageIdFromTheGlobalPageObject(): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -135,10 +142,6 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotOverrideAGivenPageId(): void
     {
         $uri = new FragmentReference('foo.bar', ['pageModel' => 99]);

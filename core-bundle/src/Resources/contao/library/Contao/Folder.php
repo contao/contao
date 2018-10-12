@@ -49,6 +49,12 @@ class Folder extends System
 	protected $objModel;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * Pathinfo
 	 * @var array
 	 */
@@ -71,8 +77,10 @@ class Folder extends System
 			$strFolder = '';
 		}
 
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Check whether it is a directory
-		if (is_file(TL_ROOT . '/' . $strFolder))
+		if (is_file($this->strRootDir . '/' . $strFolder))
 		{
 			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
 		}
@@ -81,7 +89,7 @@ class Folder extends System
 		$this->strFolder = $strFolder;
 
 		// Create the folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $this->strFolder))
+		if (!is_dir($this->strRootDir . '/' . $this->strFolder))
 		{
 			$strPath = '';
 			$arrChunks = explode('/', $this->strFolder);
@@ -146,15 +154,15 @@ class Folder extends System
 				break;
 
 			case 'ctime':
-				return filectime(TL_ROOT . '/' . $this->strFolder);
+				return filectime($this->strRootDir . '/' . $this->strFolder);
 				break;
 
 			case 'mtime':
-				return filemtime(TL_ROOT . '/' . $this->strFolder);
+				return filemtime($this->strRootDir . '/' . $this->strFolder);
 				break;
 
 			case 'atime':
-				return fileatime(TL_ROOT . '/' . $this->strFolder);
+				return fileatime($this->strRootDir . '/' . $this->strFolder);
 				break;
 
 			default:
@@ -170,7 +178,7 @@ class Folder extends System
 	 */
 	public function isEmpty()
 	{
-		return \count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1;
+		return \count(scan($this->strRootDir . '/' . $this->strFolder, true)) < 1;
 	}
 
 	/**
@@ -248,7 +256,7 @@ class Folder extends System
 		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
+		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
 			new \Folder($strParent);
 		}
@@ -294,7 +302,7 @@ class Folder extends System
 		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
+		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
 			new \Folder($strParent);
 		}
@@ -322,7 +330,7 @@ class Folder extends System
 	 */
 	public function protect()
 	{
-		if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
+		if (file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
 			$objFile = new \File($this->strFolder . '/.public');
 			$objFile->delete();
@@ -334,7 +342,7 @@ class Folder extends System
 	 */
 	public function unprotect()
 	{
-		if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
 			\File::putContent($this->strFolder . '/.public', '');
 		}
@@ -371,7 +379,7 @@ class Folder extends System
 		/** @var \SplFileInfo[] $it */
 		$it = new \RecursiveIteratorIterator(
 			new \RecursiveDirectoryIterator(
-				TL_ROOT . '/' . $this->strFolder,
+				$this->strRootDir . '/' . $this->strFolder,
 				\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 			), \RecursiveIteratorIterator::SELF_FIRST
 		);
@@ -380,7 +388,7 @@ class Folder extends System
 		{
 			if (strncmp($i->getFilename(), '.', 1) !== 0)
 			{
-				$arrFiles[] = substr($i->getPathname(), \strlen(TL_ROOT . '/' . $this->strFolder . '/'));
+				$arrFiles[] = substr($i->getPathname(), \strlen($this->strRootDir . '/' . $this->strFolder . '/'));
 			}
 		}
 
@@ -396,14 +404,14 @@ class Folder extends System
 	{
 		$intSize = 0;
 
-		foreach (scan(TL_ROOT . '/' . $this->strFolder, true) as $strFile)
+		foreach (scan($this->strRootDir . '/' . $this->strFolder, true) as $strFile)
 		{
 			if (strncmp($strFile, '.', 1) === 0)
 			{
 				continue;
 			}
 
-			if (is_dir(TL_ROOT . '/' . $this->strFolder . '/' . $strFile))
+			if (is_dir($this->strRootDir . '/' . $this->strFolder . '/' . $strFile))
 			{
 				$objFolder = new \Folder($this->strFolder . '/' . $strFile);
 				$intSize += $objFolder->size;
@@ -446,7 +454,7 @@ class Folder extends System
 
 		if (isset($matches[1]))
 		{
-			$return['dirname'] = TL_ROOT . '/' . $matches[1]; // see #8325
+			$return['dirname'] = $this->strRootDir . '/' . $matches[1]; // see #8325
 		}
 
 		if (isset($matches[2]))

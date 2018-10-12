@@ -47,6 +47,7 @@ class Dbafs
 	public static function addResource($strResource, $blnUpdateFolders=true)
 	{
 		$strUploadPath = \Config::get('uploadPath') . '/';
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Remove trailing slashes (see #5707)
 		if (substr($strResource, -1) == '/')
@@ -58,7 +59,7 @@ class Dbafs
 		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
-		if ($strResource == '' || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource))
+		if ($strResource == '' || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0 || !file_exists($rootDir . '/' . $strResource))
 		{
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
@@ -115,13 +116,13 @@ class Dbafs
 		$arrPaths = array_values($arrPaths);
 
 		// If the resource is a folder, also add its contents
-		if (is_dir(TL_ROOT . '/' . $strResource))
+		if (is_dir($rootDir . '/' . $strResource))
 		{
 			/** @var \SplFileInfo[] $objFiles */
 			$objFiles = new \RecursiveIteratorIterator(
 				new SyncExclude(
 					new \RecursiveDirectoryIterator(
-						TL_ROOT . '/' . $strResource,
+						$rootDir . '/' . $strResource,
 						\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 					)
 				), \RecursiveIteratorIterator::SELF_FIRST
@@ -165,7 +166,7 @@ class Dbafs
 			}
 
 			// Create the file or folder
-			if (is_file(TL_ROOT . '/' . $strPath))
+			if (is_file($rootDir . '/' . $strPath))
 			{
 				$objFile = new \File($strPath);
 
@@ -209,7 +210,7 @@ class Dbafs
 		// Update the folder hashes from bottom up after all file hashes are set
 		foreach (array_reverse($arrPaths) as $strPath)
 		{
-			if (is_dir(TL_ROOT . '/' . $strPath))
+			if (is_dir($rootDir . '/' . $strPath))
 			{
 				$objModel = \FilesModel::findByPath($strPath);
 				$objModel->hash = static::getFolderHash($strPath);
@@ -426,13 +427,15 @@ class Dbafs
 			$varResource = array($varResource);
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		foreach ($varResource as $strResource)
 		{
 			$arrChunks = explode('/', $strResource);
 			$strPath   = array_shift($arrChunks);
 
 			// Do not check files
-			if (is_file(TL_ROOT . '/' . $strResource))
+			if (is_file($rootDir . '/' . $strResource))
 			{
 				array_pop($arrChunks);
 			}
@@ -497,11 +500,13 @@ class Dbafs
 		// Reset the "found" flag
 		$objDatabase->query("UPDATE tl_files SET found=''");
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		/** @var \SplFileInfo[] $objFiles */
 		$objFiles = new \RecursiveIteratorIterator(
 			new SyncExclude(
 				new \RecursiveDirectoryIterator(
-					TL_ROOT . '/' . \Config::get('uploadPath'),
+					$rootDir . '/' . \Config::get('uploadPath'),
 					\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 				)
 			), \RecursiveIteratorIterator::SELF_FIRST
@@ -573,7 +578,7 @@ class Dbafs
 				}
 
 				// Create the file or folder
-				if (is_file(TL_ROOT . '/' . $strRelpath))
+				if (is_file($rootDir . '/' . $strRelpath))
 				{
 					$objFile = new \File($strRelpath);
 
@@ -816,7 +821,9 @@ class Dbafs
 			return true;
 		}
 
-		if (is_file(TL_ROOT . '/' . $strPath))
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
+		if (is_file($rootDir . '/' . $strPath))
 		{
 			$strPath = \dirname($strPath);
 		}

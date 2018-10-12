@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\Environment;
 use Contao\Frontend;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -24,9 +25,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class RoutingTest extends ContaoTestCase
 {
@@ -42,6 +40,9 @@ class RoutingTest extends ContaoTestCase
         Config::set('addLanguageToUrl', false);
         Config::set('useAutoItem', false);
 
+        Environment::reset();
+
+        $_GET = [];
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
     }
 
@@ -248,6 +249,12 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * Needs to run in a separate process because it includes the functions.php file.
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testAddsTheAutoItemFragment(): void
     {
         include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
@@ -396,13 +403,8 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testHandlesFolderUrlsWithoutLanguage(): void
     {
-        include_once __DIR__.'/../../src/Resources/contao/library/Contao/Model/Collection.php';
-
         $_SERVER['REQUEST_URI'] = 'foo/bar/home.html';
         $_SERVER['HTTP_HOST'] = 'domain.com';
 
@@ -459,13 +461,8 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testHandlesFolderUrlsWithLanguage(): void
     {
-        include_once __DIR__.'/../../src/Resources/contao/library/Contao/Model/Collection.php';
-
         $_SERVER['REQUEST_URI'] = 'en/foo/bar/home/news/test.html';
         $_SERVER['HTTP_HOST'] = 'domain.com';
 
@@ -532,13 +529,8 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en', 'news' => 'test'], $_GET);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testReturnsFalseIfThereAreNoAliases(): void
     {
-        include_once __DIR__.'/../../src/Resources/contao/library/Contao/Model/Collection.php';
-
         $_SERVER['REQUEST_URI'] = 'foo/bar/home.html';
         $_SERVER['HTTP_HOST'] = 'domain.com';
 

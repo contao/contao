@@ -98,10 +98,12 @@ class Automator extends System
 	 */
 	public function purgeImageCache()
 	{
-		$strTargetPath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir'));
+		$container = \System::getContainer();
+		$strTargetPath = \StringUtil::stripRootDir($container->getParameter('contao.image.target_dir'));
+		$strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Walk through the subfolders
-		foreach (scan(TL_ROOT . '/' . $strTargetPath) as $dir)
+		foreach (scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
 			if (strncmp($dir, '.', 1) !== 0)
 			{
@@ -452,7 +454,8 @@ class Automator extends System
 	{
 		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
 
-		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$arrFiles = preg_grep('/\.log$/', scan($rootDir . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{
@@ -469,7 +472,7 @@ class Automator extends System
 			{
 				$strGzName = 'system/logs/' . $strFile . '.' . $i;
 
-				if (file_exists(TL_ROOT . '/' . $strGzName))
+				if (file_exists($rootDir . '/' . $strGzName))
 				{
 					$objFile = new \File($strGzName);
 					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));

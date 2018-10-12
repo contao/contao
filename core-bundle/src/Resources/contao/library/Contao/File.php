@@ -94,6 +94,12 @@ class File extends System
 	protected $objModel;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * Pathinfo
 	 * @var array
 	 */
@@ -134,8 +140,10 @@ class File extends System
 			$strFile = '';
 		}
 
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Make sure we are not pointing to a directory
-		if (is_dir(TL_ROOT . '/' . $strFile))
+		if (is_dir($this->strRootDir . '/' . $strFile))
 		{
 			throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
 		}
@@ -169,7 +177,7 @@ class File extends System
 		{
 			case 'size':
 			case 'filesize':
-				return filesize(TL_ROOT . '/' . $this->strFile);
+				return filesize($this->strRootDir . '/' . $this->strFile);
 				break;
 
 			case 'name':
@@ -227,15 +235,15 @@ class File extends System
 				break;
 
 			case 'ctime':
-				return filectime(TL_ROOT . '/' . $this->strFile);
+				return filectime($this->strRootDir . '/' . $this->strFile);
 				break;
 
 			case 'mtime':
-				return filemtime(TL_ROOT . '/' . $this->strFile);
+				return filemtime($this->strRootDir . '/' . $this->strFile);
 				break;
 
 			case 'atime':
-				return fileatime(TL_ROOT . '/' . $this->strFile);
+				return fileatime($this->strRootDir . '/' . $this->strFile);
 				break;
 
 			case 'icon':
@@ -264,13 +272,13 @@ class File extends System
 					}
 					elseif ($this->isGdImage)
 					{
-						$this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
+						$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
 					}
 					elseif ($this->isSvgImage)
 					{
 						try
 						{
-							$dimensions = (new ContaoImage(TL_ROOT . '/' . $this->strFile, System::getContainer()->get('contao.image.imagine_svg')))->getDimensions();
+							$dimensions = (new ContaoImage($this->strRootDir . '/' . $this->strFile, System::getContainer()->get('contao.image.imagine_svg')))->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -331,7 +339,7 @@ class File extends System
 							$dimensions = new ImageDimensions(
 								System::getContainer()
 									->get('contao.image.imagine_svg')
-									->open(TL_ROOT . '/' . $this->strFile)
+									->open($this->strRootDir . '/' . $this->strFile)
 									->getSize()
 							);
 
@@ -395,7 +403,7 @@ class File extends System
 			case 'handle':
 				if (!\is_resource($this->resFile))
 				{
-					$this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
+					$this->resFile = fopen($this->strRootDir . '/' . $this->strFile, 'rb');
 				}
 
 				return $this->resFile;
@@ -415,7 +423,7 @@ class File extends System
 	protected function createIfNotExists()
 	{
 		// The file exists
-		if (file_exists(TL_ROOT . '/' . $this->strFile))
+		if (file_exists($this->strRootDir . '/' . $this->strFile))
 		{
 			return;
 		}
@@ -427,7 +435,7 @@ class File extends System
 		}
 
 		// Create the folder
-		if (!is_dir(TL_ROOT . '/' . $strFolder))
+		if (!is_dir($this->strRootDir . '/' . $strFolder))
 		{
 			new \Folder($strFolder);
 		}
@@ -446,7 +454,7 @@ class File extends System
 	 */
 	public function exists()
 	{
-		return file_exists(TL_ROOT . '/' . $this->strFile);
+		return file_exists($this->strRootDir . '/' . $this->strFile);
 	}
 
 	/**
@@ -546,7 +554,7 @@ class File extends System
 		}
 
 		// Create the file path
-		if (!file_exists(TL_ROOT . '/' . $this->strFile))
+		if (!file_exists($this->strRootDir . '/' . $this->strFile))
 		{
 			// Handle open_basedir restrictions
 			if (($strFolder = \dirname($this->strFile)) == '.')
@@ -555,7 +563,7 @@ class File extends System
 			}
 
 			// Create the parent folder
-			if (!is_dir(TL_ROOT . '/' . $strFolder))
+			if (!is_dir($this->strRootDir . '/' . $strFolder))
 			{
 				new \Folder($strFolder);
 			}
@@ -596,7 +604,7 @@ class File extends System
 	 */
 	public function getContent()
 	{
-		$strContent = file_get_contents(TL_ROOT . '/' . ($this->strTmp ?: $this->strFile));
+		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 
 		// Remove BOMs (see #4469)
 		if (strncmp($strContent, "\xEF\xBB\xBF", 3) === 0)
@@ -635,7 +643,7 @@ class File extends System
 	 */
 	public function getContentAsArray()
 	{
-		return array_map('rtrim', file(TL_ROOT . '/' . $this->strFile));
+		return array_map('rtrim', file($this->strRootDir . '/' . $this->strFile));
 	}
 
 	/**
@@ -650,7 +658,7 @@ class File extends System
 		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
+		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
 			new \Folder($strParent);
 		}
@@ -698,7 +706,7 @@ class File extends System
 		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
+		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
 			new \Folder($strParent);
 		}
@@ -740,8 +748,8 @@ class File extends System
 
 		$return = \System::getContainer()
 			->get('contao.image.image_factory')
-			->create(TL_ROOT . '/' . $this->strFile, array($width, $height, $mode), TL_ROOT . '/' . $this->strFile)
-			->getUrl(TL_ROOT)
+			->create($this->strRootDir . '/' . $this->strFile, array($width, $height, $mode), $this->strRootDir . '/' . $this->strFile)
+			->getUrl($this->strRootDir)
 		;
 
 		if ($return)
@@ -762,7 +770,7 @@ class File extends System
 	 */
 	public function sendToBrowser($filename='')
 	{
-		$response = new BinaryFileResponse(TL_ROOT . '/' . $this->strFile);
+		$response = new BinaryFileResponse($this->strRootDir . '/' . $this->strFile);
 
 		$response->setContentDisposition
 		(
@@ -795,7 +803,7 @@ class File extends System
 			$this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
 
 			// Copy the contents of the original file to append data
-			if (strncmp($strMode, 'a', 1) === 0 && file_exists(TL_ROOT . '/' . $this->strFile))
+			if (strncmp($strMode, 'a', 1) === 0 && file_exists($this->strRootDir . '/' . $this->strFile))
 			{
 				$this->Files->copy($this->strFile, $this->strTmp);
 			}
@@ -865,7 +873,7 @@ class File extends System
 		}
 		else
 		{
-			return md5_file(TL_ROOT . '/' . $this->strFile);
+			return md5_file($this->strRootDir . '/' . $this->strFile);
 		}
 	}
 
@@ -885,7 +893,7 @@ class File extends System
 
 		if (isset($matches[1]))
 		{
-			$return['dirname'] = TL_ROOT . '/' . $matches[1]; // see #8325
+			$return['dirname'] = $this->strRootDir . '/' . $matches[1]; // see #8325
 		}
 
 		if (isset($matches[2]))

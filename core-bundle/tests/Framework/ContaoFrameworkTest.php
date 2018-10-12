@@ -15,12 +15,12 @@ namespace Contao\CoreBundle\Tests\Framework;
 use Contao\Config;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
+use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
+use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
-use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacyClass;
-use Contao\CoreBundle\Tests\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -237,9 +237,6 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainer();
         $container->setParameter('contao.csrf_token_name', 'dummy_token');
 
-        // Ensure to use the fixtures class
-        Config::preload();
-
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
@@ -259,10 +256,6 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testOverridesTheErrorLevel(): void
     {
         $request = new Request();
@@ -291,10 +284,6 @@ class ContaoFrameworkTest extends TestCase
         error_reporting($errorReporting);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testValidatesTheRequestToken(): void
     {
         $request = new Request();
@@ -353,10 +342,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
     {
         $request = new Request();
@@ -393,10 +378,6 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
     {
         $request = new Request();
@@ -480,9 +461,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @dataProvider getInstallRoutes
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void

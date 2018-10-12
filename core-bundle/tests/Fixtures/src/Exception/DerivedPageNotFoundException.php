@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\CoreBundle\Tests\Fixtures\Exception;
+namespace Contao\CoreBundle\Fixtures\Exception;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 

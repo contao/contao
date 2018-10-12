@@ -489,18 +489,21 @@ abstract class Template extends Controller
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $href))
 		{
-			if (file_exists(TL_ROOT . '/' . $href))
+			$container = \System::getContainer();
+			$rootDir = $container->getParameter('kernel.project_dir');
+
+			if (file_exists($rootDir . '/' . $href))
 			{
-				$mtime = filemtime(TL_ROOT . '/' . $href);
+				$mtime = filemtime($rootDir . '/' . $href);
 			}
 			else
 			{
-				$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+				$webDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists(TL_ROOT . '/' . $webDir . '/' . $href))
+				if (file_exists($rootDir . '/' . $webDir . '/' . $href))
 				{
-					$mtime = filemtime(TL_ROOT . '/' . $webDir . '/' . $href);
+					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $href);
 				}
 			}
 		}
@@ -539,18 +542,21 @@ abstract class Template extends Controller
 		// Add the filemtime if not given and not an external file
 		if ($mtime === false && !preg_match('@^https?://@', $src))
 		{
-			if (file_exists(TL_ROOT . '/' . $src))
+			$container = \System::getContainer();
+			$rootDir = $container->getParameter('kernel.project_dir');
+
+			if (file_exists($rootDir . '/' . $src))
 			{
-				$mtime = filemtime(TL_ROOT . '/' . $src);
+				$mtime = filemtime($rootDir . '/' . $src);
 			}
 			else
 			{
-				$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+				$webDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists(TL_ROOT . '/' . $webDir . '/' . $src))
+				if (file_exists($rootDir . '/' . $webDir . '/' . $src))
 				{
-					$mtime = filemtime(TL_ROOT . '/' . $webDir . '/' . $src);
+					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $src);
 				}
 			}
 		}

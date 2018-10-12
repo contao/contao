@@ -253,9 +253,11 @@ class FilesModel extends Model
 	 */
 	public static function findByPath($path, array $arrOptions=array())
 	{
-		if (strncmp($path, TL_ROOT . '/', \strlen(TL_ROOT) + 1) === 0)
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
+		if (strncmp($path, $rootDir . '/', \strlen($rootDir) + 1) === 0)
 		{
-			$path = substr($path, \strlen(TL_ROOT) + 1);
+			$path = substr($path, \strlen($rootDir) + 1);
 		}
 
 		return static::findOneBy('path', $path, $arrOptions);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Contao\Fixtures;
+namespace Contao\CoreBundle\Fixtures\Exception;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\Response;

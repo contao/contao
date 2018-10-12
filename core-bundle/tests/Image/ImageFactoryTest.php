@@ -461,15 +461,13 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
+        System::setContainer($this->mockContainer($this->getFixturesDir()));
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -524,11 +522,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg'
         ;
 
-        if (!file_exists(\dirname(TL_ROOT.'/'.$path))) {
-            mkdir(\dirname(TL_ROOT.'/'.$path), 0777, true);
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+        if (!file_exists(\dirname($rootDir.'/'.$path))) {
+            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
         }
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents($rootDir.'/'.$path, '');
 
         return $path;
     }
@@ -536,14 +536,10 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainer($this->getFixturesDir()));
@@ -607,11 +603,13 @@ class ImageFactoryTest extends TestCase
             .'.jpg'
         ;
 
-        if (!file_exists(\dirname(TL_ROOT.'/'.$path))) {
-            mkdir(\dirname(TL_ROOT.'/'.$path), 0777, true);
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+        if (!file_exists(\dirname($rootDir.'/'.$path))) {
+            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
         }
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents($rootDir.'/'.$path, '');
 
         return $path;
     }
@@ -619,14 +617,10 @@ class ImageFactoryTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainer($this->getFixturesDir()));

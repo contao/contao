@@ -77,9 +77,11 @@ class Newsletter extends Backend
 
 				if ($objFiles !== null)
 				{
+					$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 					while ($objFiles->next())
 					{
-						if (is_file(TL_ROOT . '/' . $objFiles->path))
+						if (is_file($rootDir . '/' . $objFiles->path))
 						{
 							$arrAttachments[] = $objFiles->path;
 						}
@@ -326,9 +328,11 @@ class Newsletter extends Backend
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
 		{
+			$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 			foreach ($arrAttachments as $strAttachment)
 			{
-				$objEmail->attachFile(TL_ROOT . '/' . $strAttachment);
+				$objEmail->attachFile($rootDir . '/' . $strAttachment);
 			}
 		}
 
@@ -370,7 +374,7 @@ class Newsletter extends Backend
 
 			// Parse template
 			$objEmail->html = $objTemplate->parse();
-			$objEmail->imageDir = TL_ROOT . '/';
+			$objEmail->imageDir = \System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
 		// Deactivate invalid addresses

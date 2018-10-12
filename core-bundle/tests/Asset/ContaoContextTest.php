@@ -16,8 +16,8 @@ use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Model\Registry;
 use Contao\PageModel;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -203,8 +203,7 @@ class ContaoContextTest extends TestCase
 
     private function mockPageWithDetails(): PageModel
     {
-        // Ensure to use the fixtures class
-        Registry::getInstance();
+        System::setContainer($this->mockContainer());
 
         $page = new PageModel();
         $page->type = 'root';

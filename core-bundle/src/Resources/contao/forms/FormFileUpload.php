@@ -222,18 +222,19 @@ class FormFileUpload extends Widget implements \uploadable
 				}
 
 				$strUploadFolder = $objUploadFolder->path;
+				$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 				// Store the file if the upload folder exists
-				if ($strUploadFolder != '' && is_dir(TL_ROOT . '/' . $strUploadFolder))
+				if ($strUploadFolder != '' && is_dir($rootDir . '/' . $strUploadFolder))
 				{
 					$this->import('Files');
 
 					// Do not overwrite existing files
-					if ($this->doNotOverwrite && file_exists(TL_ROOT . '/' . $strUploadFolder . '/' . $file['name']))
+					if ($this->doNotOverwrite && file_exists($rootDir . '/' . $strUploadFolder . '/' . $file['name']))
 					{
 						$offset = 1;
 
-						$arrAll = scan(TL_ROOT . '/' . $strUploadFolder);
+						$arrAll = scan($rootDir . '/' . $strUploadFolder);
 						$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
 
 						foreach ($arrFiles as $strFile)
@@ -278,7 +279,7 @@ class FormFileUpload extends Widget implements \uploadable
 					(
 						'name'     => $file['name'],
 						'type'     => $file['type'],
-						'tmp_name' => TL_ROOT . '/' . $strFile,
+						'tmp_name' => $rootDir . '/' . $strFile,
 						'error'    => $file['error'],
 						'size'     => $file['size'],
 						'uploaded' => true,

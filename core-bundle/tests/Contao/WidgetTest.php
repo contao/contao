@@ -22,32 +22,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class WidgetTest extends TestCase
 {
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        if (!\function_exists('utf8_decode_entities')) {
-            include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setUp(): void
     {
         parent::setUp();
-
-        \define('TL_MODE', 'FE');
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
@@ -70,7 +53,7 @@ class WidgetTest extends TestCase
         $method = $class->getMethod('getPost');
         $method->setAccessible(true);
 
-        $_POST[$input] = $value;
+        $_POST = [$input => $value];
         Input::resetCache();
         Input::initialize();
 

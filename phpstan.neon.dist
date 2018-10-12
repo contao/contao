@@ -19,7 +19,6 @@ parameters:
 
     ignoreErrors:
         # Missing constants that are defined at runtime
-        - '#Constant TL_ROOT not found\.#'
         - '#Constant TL_MODE not found\.#'
         - '#Constant TL_REFERER_ID not found\.#'
         - '#Constant TL_PATH not found\.#'

@@ -37,7 +37,7 @@ function log_message($strMessage, $strLog=null)
 
 	if (!$strLogsDir)
 	{
-		$strLogsDir = TL_ROOT . '/var/logs';
+		$strLogsDir = $container->getParameter('kernel.project_dir') . '/var/logs';
 	}
 
 	error_log(sprintf("[%s] %s\n", date('d-M-Y H:i:s'), $strMessage), 3, $strLogsDir . '/' . $strLog);

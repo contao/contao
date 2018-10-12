@@ -73,6 +73,12 @@ class ZipWriter
 	protected $strCentralDir;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * File count
 	 * @var integer
 	 */
@@ -88,9 +94,10 @@ class ZipWriter
 	public function __construct($strFile)
 	{
 		$this->strFile = $strFile;
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Create temporary file
-		if (!$this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER, 'zip'))
+		if (!$this->strTemp = tempnam($this->strRootDir . '/' . self::TEMPORARY_FOLDER, 'zip'))
 		{
 			throw new \Exception("Cannot create temporary file");
 		}
@@ -128,7 +135,7 @@ class ZipWriter
 	 */
 	public function addFile($strFile, $strName=null)
 	{
-		if (!file_exists(TL_ROOT . '/' . $strFile))
+		if (!file_exists($this->strRootDir . '/' . $strFile))
 		{
 			throw new \Exception("File $strFile does not exist");
 		}
@@ -139,7 +146,7 @@ class ZipWriter
 			$strName = substr($strName, 1);
 		}
 
-		$this->addString(file_get_contents(TL_ROOT . '/' . $strFile), $strName ?: $strFile, filemtime(TL_ROOT . '/' . $strFile));
+		$this->addString(file_get_contents($this->strRootDir . '/' . $strFile), $strName ?: $strFile, filemtime($this->strRootDir . '/' . $strFile));
 	}
 
 	/**
@@ -234,7 +241,7 @@ class ZipWriter
 		fclose($this->resFile);
 
 		// Check if target file exists
-		if (!file_exists(TL_ROOT . '/' . $this->strFile))
+		if (!file_exists($this->strRootDir . '/' . $this->strFile))
 		{
 			// Handle open_basedir restrictions
 			if (($strFolder = \dirname($this->strFile)) == '.')
@@ -243,7 +250,7 @@ class ZipWriter
 			}
 
 			// Create folder
-			if (!is_dir(TL_ROOT . '/' . $strFolder))
+			if (!is_dir($this->strRootDir . '/' . $strFolder))
 			{
 				new \Folder($strFolder);
 			}

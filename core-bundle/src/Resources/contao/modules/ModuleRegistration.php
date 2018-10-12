@@ -403,7 +403,7 @@ class ModuleRegistration extends Module
 				$strUserDir = \StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
 
 				// Add the user ID if the directory exists
-				while (is_dir(TL_ROOT . '/' . $objHomeDir->path . '/' . $strUserDir))
+				while (is_dir(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objHomeDir->path . '/' . $strUserDir))
 				{
 					$strUserDir .= '_' . $objNewUser->id;
 				}

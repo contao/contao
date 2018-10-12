@@ -19,14 +19,12 @@ use Contao\Image;
 use Contao\Image\ResizeCalculator;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class ImageTest extends TestCase
 {
@@ -62,9 +60,6 @@ class ImageTest extends TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
-
-        \define('TL_ERROR', 'ERROR');
-        \define('TL_ROOT', $this->getTempDir());
 
         System::setContainer($this->mockContainerWithImageServices());
     }
@@ -1125,7 +1120,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImages(): void
     {
         file_put_contents(
-            $this->getTempDir().'/dummy.svg',
+            $this->getTempDir().'/dummy1.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1137,7 +1132,7 @@ class ImageTest extends TestCase
             ></svg>'
         );
 
-        $file = new File('dummy.svg');
+        $file = new File('dummy1.svg');
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
@@ -1169,7 +1164,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithPercentageDimensions(): void
     {
         file_put_contents(
-            $this->getTempDir().'/dummy.svg',
+            $this->getTempDir().'/dummy2.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1181,7 +1176,7 @@ class ImageTest extends TestCase
             ></svg>'
         );
 
-        $file = new File('dummy.svg');
+        $file = new File('dummy2.svg');
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
@@ -1213,7 +1208,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithoutDimensions(): void
     {
         file_put_contents(
-            $this->getTempDir().'/dummy.svg',
+            $this->getTempDir().'/dummy3.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1223,7 +1218,7 @@ class ImageTest extends TestCase
             ></svg>'
         );
 
-        $file = new File('dummy.svg');
+        $file = new File('dummy3.svg');
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
@@ -1255,7 +1250,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithoutViewBox(): void
     {
         file_put_contents(
-            $this->getTempDir().'/dummy.svg',
+            $this->getTempDir().'/dummy4.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1266,7 +1261,7 @@ class ImageTest extends TestCase
             ></svg>'
         );
 
-        $file = new File('dummy.svg');
+        $file = new File('dummy4.svg');
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
@@ -1298,7 +1293,7 @@ class ImageTest extends TestCase
     public function testResizesSvgImagesWithoutViewBoxAndDimensions(): void
     {
         file_put_contents(
-            $this->getTempDir().'/dummy.svg',
+            $this->getTempDir().'/dummy5.svg',
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1307,7 +1302,7 @@ class ImageTest extends TestCase
             ></svg>'
         );
 
-        $file = new File('dummy.svg');
+        $file = new File('dummy5.svg');
 
         $imageObj = new Image($file);
         $imageObj->setTargetWidth(100)->setTargetHeight(100);
@@ -1425,7 +1420,7 @@ class ImageTest extends TestCase
             .'.jpg'
         ;
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
         return $path;
     }
@@ -1449,11 +1444,11 @@ class ImageTest extends TestCase
         ];
 
         $imageObj = new Image($file);
-        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->setTargetWidth(120)->setTargetHeight(120);
         $imageObj->executeResize();
 
         $this->assertSame(
-            'assets/dummy.jpg%26getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            'assets/dummy.jpg%26getImage_120_120_crop_Contao-File__Contao-Image.jpg',
             $imageObj->getResizedPath()
         );
 
@@ -1499,7 +1494,7 @@ class ImageTest extends TestCase
             .'.jpg'
         ;
 
-        file_put_contents(TL_ROOT.'/'.$path, '');
+        file_put_contents(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
 
         return $path;
     }
@@ -1545,6 +1540,7 @@ class ImageTest extends TestCase
 
         $container->set('contao.image.resizer', $resizer);
         $container->set('filesystem', new Filesystem());
+        $container->set('monolog.logger.contao', new NullLogger());
 
         return $container;
     }

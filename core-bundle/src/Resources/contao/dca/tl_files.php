@@ -309,8 +309,9 @@ class tl_files extends Backend
 			$GLOBALS['TL_DCA']['tl_files']['config']['notDeletable'] = true;
 		}
 
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$container = System::getContainer();
+		$rootDir = $container->getParameter('kernel.project_dir');
+		$objSession = $container->get('session');
 
 		$session = $objSession->all();
 
@@ -333,11 +334,11 @@ class tl_files extends Backend
 
 				foreach ($session['CURRENT']['IDS'] as $id)
 				{
-					if (is_dir(TL_ROOT . '/' . $id))
+					if (is_dir($rootDir . '/' . $id))
 					{
 						$folders[] = $id;
 
-						if ($canDeleteRecursive || ($canDeleteOne && \count(scan(TL_ROOT . '/' . $id)) < 1))
+						if ($canDeleteRecursive || ($canDeleteOne && \count(scan($rootDir . '/' . $id)) < 1))
 						{
 							$delete_all[] = $id;
 						}
@@ -391,9 +392,9 @@ class tl_files extends Backend
 				case 'delete':
 					$strFile = Input::get('id', true);
 
-					if (is_dir(TL_ROOT . '/' . $strFile))
+					if (is_dir($rootDir . '/' . $strFile))
 					{
-						$finder = Symfony\Component\Finder\Finder::create()->in(TL_ROOT . '/' . $strFile);
+						$finder = Symfony\Component\Finder\Finder::create()->in($rootDir . '/' . $strFile);
 
 						if ($finder->count() > 0 && !$canDeleteRecursive)
 						{
@@ -440,7 +441,9 @@ class tl_files extends Backend
 			return;
 		}
 
-		if (is_dir(TL_ROOT . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')))))
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		if (is_dir($rootDir . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')))))
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
 		}
@@ -619,7 +622,8 @@ class tl_files extends Backend
 	 */
 	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		$path = TL_ROOT . '/' . urldecode($row['id']);
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$path = $rootDir . '/' . urldecode($row['id']);
 
 		if (!is_dir($path))
 		{
@@ -656,8 +660,9 @@ class tl_files extends Backend
 		}
 
 		$strDecoded = rawurldecode($row['id']);
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if (is_dir(TL_ROOT . '/' . $strDecoded))
+		if (is_dir($rootDir . '/' . $strDecoded))
 		{
 			return '';
 		}
@@ -708,6 +713,7 @@ class tl_files extends Backend
 	public function protectFolder(DataContainer $dc)
 	{
 		$strPath = $dc->id;
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if the folder has been renamed (see #6432, #934)
 		if (Input::post('name'))
@@ -720,14 +726,14 @@ class tl_files extends Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if (($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && $count > 0 && is_dir(TL_ROOT . '/' . $strNewPath))
+			if (($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
 		}
 
 		// Only show for folders (see #5660)
-		if (!is_dir(TL_ROOT . '/' . $strPath))
+		if (!is_dir($rootDir . '/' . $strPath))
 		{
 			return '';
 		}
@@ -739,7 +745,7 @@ class tl_files extends Backend
 		// Check if a parent folder is public
 		while ($strCheck != '.' && !$blnPublic)
 		{
-			if (!$blnPublic = file_exists(TL_ROOT . '/' . $strCheck . '/.public'))
+			if (!$blnPublic = file_exists($rootDir . '/' . $strCheck . '/.public'))
 			{
 				$strCheck = \dirname($strCheck);
 			}

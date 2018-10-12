@@ -31,9 +31,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class PictureTest extends TestCase
 {
@@ -69,9 +66,6 @@ class PictureTest extends TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
-
-        \define('TL_ERROR', 'ERROR');
-        \define('TL_ROOT', $this->getTempDir());
 
         System::setContainer($this->mockContainerWithImageServices());
     }

@@ -94,10 +94,13 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->createMock(BackendUser::class);
-        $user->imageSizes = ['image_sizes' => '42'];
-        $user->isAdmin = true;
+        $properties = [
+            'isAdmin' => true,
+            'imageSizes' => ['image_sizes' => '42'],
+        ];
 
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, $properties);
         $options = $this->imageSizes->getOptionsForUser($user);
 
         // TL_CROP would not be returned if the admin check was not done (because it's not in the allowed imageSizes)
@@ -109,11 +112,13 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->createMock(BackendUser::class);
-        $user->isAdmin = false;
-
         // Allow only one image size
-        $user->imageSizes = [42];
+        $properties = [
+            'imageSizes' => [42],
+        ];
+
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, $properties);
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayNotHasKey('relative', $options);
@@ -122,7 +127,12 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('42', $options['image_sizes']);
 
         // Allow only some TL_CROP options
-        $user->imageSizes = ['proportional', 'box'];
+        $properties = [
+            'imageSizes' => ['proportional', 'box'],
+        ];
+
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, $properties);
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayHasKey('relative', $options);
@@ -130,7 +140,12 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('image_sizes', $options);
 
         // Allow nothing
-        $user->imageSizes = [];
+        $properties = [
+            'imageSizes' => [],
+        ];
+
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, $properties);
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertSame([], $options);

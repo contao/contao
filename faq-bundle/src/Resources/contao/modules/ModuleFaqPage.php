@@ -76,6 +76,7 @@ class ModuleFaqPage extends Module
 		global $objPage;
 
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add FAQs
 		while ($objFaq->next())
@@ -94,7 +95,7 @@ class ModuleFaqPage extends Module
 			{
 				$objModel = \FilesModel::findByUuid($objFaq->singleSRC);
 
-				if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
+				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
 				{
 					// Do not override the field now that we have a model registry (see #6303)
 					$arrFaq = $objFaq->row();

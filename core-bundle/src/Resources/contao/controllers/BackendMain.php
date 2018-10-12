@@ -108,14 +108,23 @@ class BackendMain extends Backend
 	 */
 	public function run()
 	{
-		try {
+		try
+		{
 			$version = PackageUtil::getVersion('contao/core-bundle');
-		} catch (\OutOfBoundsException $e) {
+		}
+		catch (\OutOfBoundsException $e)
+		{
 			$version = PackageUtil::getVersion('contao/contao');
 		}
 
 		$this->Template = new \BackendTemplate('be_main');
-		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
+		$this->Template->version = $version;
+
+		if (isset($GLOBALS['TL_LANG']['MSC']['version']))
+		{
+			$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
+		}
+
 		$this->Template->main = '';
 
 		// Ajax request

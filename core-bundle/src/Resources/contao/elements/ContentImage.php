@@ -44,7 +44,7 @@ class ContentImage extends ContentElement
 
 		$objFile = \FilesModel::findByUuid($this->singleSRC);
 
-		if ($objFile === null || !is_file(TL_ROOT . '/' . $objFile->path))
+		if ($objFile === null || !is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path))
 		{
 			return '';
 		}

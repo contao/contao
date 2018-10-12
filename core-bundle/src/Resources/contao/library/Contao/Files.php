@@ -39,9 +39,18 @@ class Files
 	protected static $objInstance;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
@@ -74,12 +83,12 @@ class Files
 	{
 		$this->validate($strDirectory);
 
-		if (file_exists(TL_ROOT . '/' . $strDirectory))
+		if (file_exists($this->strRootDir . '/' . $strDirectory))
 		{
 			return true;
 		}
 
-		return mkdir(TL_ROOT . '/' . $strDirectory);
+		return mkdir($this->strRootDir . '/' . $strDirectory);
 	}
 
 	/**
@@ -93,12 +102,12 @@ class Files
 	{
 		$this->validate($strDirectory);
 
-		if (!file_exists(TL_ROOT . '/' . $strDirectory))
+		if (!file_exists($this->strRootDir . '/' . $strDirectory))
 		{
 			return true;
 		}
 
-		return rmdir(TL_ROOT. '/' . $strDirectory);
+		return rmdir($this->strRootDir. '/' . $strDirectory);
 	}
 
 	/**
@@ -110,15 +119,15 @@ class Files
 	public function rrdir($strFolder, $blnPreserveRoot=false)
 	{
 		$this->validate($strFolder);
-		$arrFiles = scan(TL_ROOT . '/' . $strFolder, true);
+		$arrFiles = scan($this->strRootDir . '/' . $strFolder, true);
 
 		foreach ($arrFiles as $strFile)
 		{
-			if (is_link(TL_ROOT . '/' . $strFolder . '/' . $strFile))
+			if (is_link($this->strRootDir . '/' . $strFolder . '/' . $strFile))
 			{
 				$this->delete($strFolder . '/' . $strFile);
 			}
-			elseif (is_dir(TL_ROOT . '/' . $strFolder . '/' . $strFile))
+			elseif (is_dir($this->strRootDir . '/' . $strFolder . '/' . $strFile))
 			{
 				$this->rrdir($strFolder . '/' . $strFile);
 			}
@@ -146,7 +155,7 @@ class Files
 	{
 		$this->validate($strFile);
 
-		return fopen(TL_ROOT . '/' . $strFile, $strMode);
+		return fopen($this->strRootDir . '/' . $strFile, $strMode);
 	}
 
 	/**
@@ -191,7 +200,7 @@ class Files
 		$this->validate($strOldName, $strNewName);
 
 		// Windows fix: delete the target file
-		if (\defined('PHP_WINDOWS_VERSION_BUILD') && file_exists(TL_ROOT . '/' . $strNewName) && strcasecmp($strOldName, $strNewName) !== 0)
+		if (\defined('PHP_WINDOWS_VERSION_BUILD') && file_exists($this->strRootDir . '/' . $strNewName) && strcasecmp($strOldName, $strNewName) !== 0)
 		{
 			$this->delete($strNewName);
 		}
@@ -199,11 +208,11 @@ class Files
 		// Unix fix: rename case sensitively
 		if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0)
 		{
-			rename(TL_ROOT . '/' . $strOldName, TL_ROOT . '/' . $strOldName . '__');
+			rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strOldName . '__');
 			$strOldName .= '__';
 		}
 
-		return rename(TL_ROOT . '/' . $strOldName, TL_ROOT . '/' . $strNewName);
+		return rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strNewName);
 	}
 
 	/**
@@ -218,7 +227,7 @@ class Files
 	{
 		$this->validate($strSource, $strDestination);
 
-		return copy(TL_ROOT . '/' . $strSource, TL_ROOT . '/' . $strDestination);
+		return copy($this->strRootDir . '/' . $strSource, $this->strRootDir . '/' . $strDestination);
 	}
 
 	/**
@@ -232,11 +241,11 @@ class Files
 		$this->validate($strSource, $strDestination);
 
 		$this->mkdir($strDestination);
-		$arrFiles = scan(TL_ROOT . '/' . $strSource, true);
+		$arrFiles = scan($this->strRootDir . '/' . $strSource, true);
 
 		foreach ($arrFiles as $strFile)
 		{
-			if (is_dir(TL_ROOT . '/' . $strSource . '/' . $strFile))
+			if (is_dir($this->strRootDir . '/' . $strSource . '/' . $strFile))
 			{
 				$this->rcopy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
 			}
@@ -258,7 +267,7 @@ class Files
 	{
 		$this->validate($strFile);
 
-		return unlink(TL_ROOT . '/' . $strFile);
+		return unlink($this->strRootDir . '/' . $strFile);
 	}
 
 	/**
@@ -273,7 +282,7 @@ class Files
 	{
 		$this->validate($strFile);
 
-		return chmod(TL_ROOT . '/' . $strFile, $varMode);
+		return chmod($this->strRootDir . '/' . $strFile, $varMode);
 	}
 
 	/**
@@ -287,7 +296,7 @@ class Files
 	{
 		$this->validate($strFile);
 
-		return is_writable(TL_ROOT . '/' . $strFile);
+		return is_writable($this->strRootDir . '/' . $strFile);
 	}
 
 	/**
@@ -302,7 +311,7 @@ class Files
 	{
 		$this->validate($strSource, $strDestination);
 
-		return move_uploaded_file($strSource, TL_ROOT . '/' . $strDestination);
+		return move_uploaded_file($strSource, $this->strRootDir . '/' . $strDestination);
 	}
 
 	/**
