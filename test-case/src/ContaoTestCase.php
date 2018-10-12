@@ -163,6 +163,15 @@ abstract class ContaoTestCase extends TestCase
             )
         ;
 
+        $mock
+            ->method('__isset')
+            ->willReturnCallback(
+                function (string $key) use ($properties) {
+                    return isset($properties[$key]);
+                }
+            )
+        ;
+
         return $mock;
     }
 
