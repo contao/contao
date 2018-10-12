@@ -86,7 +86,13 @@ class SymlinksCommandTest extends TestCase
 
     public function testIsLockedWhileRunning(): void
     {
-        $factory = new Factory(new FlockStore(sys_get_temp_dir().'/'.md5($this->getFixturesDir())));
+        $tmpDir = sys_get_temp_dir().'/'.md5($this->getFixturesDir());
+
+        if (!is_dir($tmpDir)) {
+            (new Filesystem())->mkdir($tmpDir);
+        }
+
+        $factory = new Factory(new FlockStore($tmpDir));
 
         $lock = $factory->createLock('contao:symlinks');
         $lock->acquire();

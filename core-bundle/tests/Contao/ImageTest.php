@@ -1428,9 +1428,6 @@ class ImageTest extends TestCase
     /**
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
@@ -1447,11 +1444,11 @@ class ImageTest extends TestCase
         ];
 
         $imageObj = new Image($file);
-        $imageObj->setTargetWidth(100)->setTargetHeight(100);
+        $imageObj->setTargetWidth(120)->setTargetHeight(120);
         $imageObj->executeResize();
 
         $this->assertSame(
-            'assets/dummy.jpg%26getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            'assets/dummy.jpg%26getImage_120_120_crop_Contao-File__Contao-Image.jpg',
             $imageObj->getResizedPath()
         );
 
