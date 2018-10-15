@@ -17,9 +17,6 @@ use Contao\File;
 use Contao\GdImage;
 use Contao\System;
 
-/**
- * @group contao3
- */
 class GdImageTest extends TestCase
 {
     /**

@@ -16,9 +16,6 @@ use Contao\Controller;
 use Contao\System;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group contao3
- */
 class ControllerTest extends TestCase
 {
     public function testReturnsTheTimeZones(): void

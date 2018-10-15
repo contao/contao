@@ -20,9 +20,6 @@ use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @group contao3
- */
 class TemplateTest extends TestCase
 {
     /**

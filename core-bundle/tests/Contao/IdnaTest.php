@@ -16,9 +16,6 @@ use Contao\Idna;
 use PHPUnit\Framework\TestCase;
 use TrueBV\Exception\DomainOutOfBoundsException;
 
-/**
- * @group contao3
- */
 class IdnaTest extends TestCase
 {
     public function testEncodesUnicodeDomain(): void

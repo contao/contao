@@ -20,9 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @group contao3
- */
 class CombinerTest extends ContaoTestCase
 {
     /**

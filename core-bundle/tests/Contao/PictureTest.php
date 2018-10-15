@@ -29,9 +29,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @group contao3
- */
 class PictureTest extends TestCase
 {
     /**

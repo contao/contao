@@ -17,9 +17,6 @@ use Contao\StringUtil;
 use Contao\Validator;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group contao3
- */
 class ValidatorTest extends TestCase
 {
     /**

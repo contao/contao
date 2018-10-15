@@ -15,9 +15,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\System;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group contao3
- */
 class SystemTest extends TestCase
 {
     public function testFormatsANumber(): void

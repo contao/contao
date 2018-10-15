@@ -20,9 +20,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @group contao3
- */
 class WidgetTest extends TestCase
 {
     /**

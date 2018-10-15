@@ -23,9 +23,6 @@ use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @group contao3
- */
 class ImageTest extends TestCase
 {
     /**

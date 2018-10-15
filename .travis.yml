@@ -54,7 +54,7 @@ jobs:
         - composer update --no-interaction --no-suggest
       script:
         - phpdbg -qrr vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
-        - phpdbg -qrr vendor/bin/phpunit -c core-bundle --exclude-group=contao3 --coverage-clover=core-bundle.xml
+        - phpdbg -qrr vendor/bin/phpunit -c core-bundle --testsuite=coverage --coverage-clover=core-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml

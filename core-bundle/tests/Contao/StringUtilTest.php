@@ -18,9 +18,6 @@ use Contao\System;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * @group contao3
- */
 class StringUtilTest extends TestCase
 {
     /**
