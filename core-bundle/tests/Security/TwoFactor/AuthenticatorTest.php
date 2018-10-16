@@ -22,13 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $authenticator = new Authenticator();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\TwoFactor\Authenticator', $authenticator);
-    }
-
     public function testValidatesTheCode(): void
     {
         $secret = random_bytes(128);

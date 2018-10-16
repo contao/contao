@@ -40,13 +40,6 @@ class ContaoManagerExtensionTest extends TestCase
         $extension->load([], $this->container);
     }
 
-    public function testInstantiation(): void
-    {
-        $extension = new ContaoManagerExtension();
-
-        $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension', $extension);
-    }
-
     public function testRegistersTheInitializeApplicationListener(): void
     {
         $this->assertTrue($this->container->has('contao_manager.listener.initialize_application'));

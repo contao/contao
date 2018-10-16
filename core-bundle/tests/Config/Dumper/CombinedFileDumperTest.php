@@ -20,15 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class CombinedFileDumperTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $filesystem = $this->createMock(Filesystem::class);
-        $loader = $this->createMock(PhpFileLoader::class);
-        $dumper = new CombinedFileDumper($filesystem, $loader, $this->getTempDir());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Config\Dumper\CombinedFileDumper', $dumper);
-    }
-
     public function testDumpsTheDataIntoAFile(): void
     {
         $filesystem = $this->mockFilesystem("<?php\n\necho 'test';\n");

@@ -20,14 +20,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class LazySessionAccessTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $session = new Session(new MockNativeSessionStorage());
-        $accessor = new LazySessionAccess($session);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Session\LazySessionAccess', $accessor);
-    }
-
     /**
      * @group legacy
      *

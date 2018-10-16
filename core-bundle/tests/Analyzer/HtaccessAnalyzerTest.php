@@ -18,19 +18,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class HtaccessAnalyzerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $file = new SplFileInfo(
-            $this->getFixturesDir().'/system/modules/foobar/assets/.htaccess',
-            'system/modules/foobar/assets',
-            'system/modules/foobar/assets/.htaccess'
-        );
-
-        $htaccess = new HtaccessAnalyzer($file);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Analyzer\HtaccessAnalyzer', $htaccess);
-    }
-
     public function testReadsTheAccessConfigurationFromTheHtaccesFile(): void
     {
         $file = new SplFileInfo(

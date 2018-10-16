@@ -49,11 +49,6 @@ class GetConfigCommandTest extends TestCase
         $this->command = new GetConfigCommand($application);
     }
 
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand', $this->command);
-    }
-
     public function testHasCorrectName(): void
     {
         $this->assertSame('config:get', $this->command->getName());

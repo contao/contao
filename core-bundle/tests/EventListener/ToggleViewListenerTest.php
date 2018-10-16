@@ -39,13 +39,6 @@ class ToggleViewListenerTest extends TestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ToggleViewListener', $listener);
-    }
-
     public function testRedirectsToDesktopView(): void
     {
         $kernel = $this->createMock(KernelInterface::class);

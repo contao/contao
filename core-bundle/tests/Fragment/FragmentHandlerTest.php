@@ -42,14 +42,6 @@ class FragmentHandlerTest extends TestCase
         System::setContainer($this->mockContainer());
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $fragmentHandler = $this->mockFragmentHandler();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FragmentHandler', $fragmentHandler);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Fragment\FragmentHandler', $fragmentHandler);
-    }
-
     public function testThrowsAnExceptionIfTheFragmentNameIsInvalid(): void
     {
         $fragmentHandler = $this->mockFragmentHandler();

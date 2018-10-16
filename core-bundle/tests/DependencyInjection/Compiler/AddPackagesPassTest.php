@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AddPackagesPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new AddPackagesPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $pass);
-    }
-
     public function testAddsThePackages(): void
     {
         $container = new ContainerBuilder();

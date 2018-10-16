@@ -18,14 +18,6 @@ use PHPUnit\Framework\TestCase;
 
 class FragmentRegistryTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $registry = new FragmentRegistry();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FragmentRegistry', $registry);
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FragmentRegistryInterface', $registry);
-    }
-
     public function testReadsAndWritesTheFragmentConfiguration(): void
     {
         $registry = new FragmentRegistry();

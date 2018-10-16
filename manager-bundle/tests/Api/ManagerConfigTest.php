@@ -62,11 +62,6 @@ class ManagerConfigTest extends ContaoTestCase
         $this->filesystem->remove($this->tempdir);
     }
 
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\ManagerConfig', $this->config);
-    }
-
     public function testWritesConfigToFile(): void
     {
         $this->config->write(['foo' => 'bar']);

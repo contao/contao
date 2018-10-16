@@ -75,11 +75,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $this->provider = new NewsPickerProvider($menuFactory, $router, $translator);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\NewsBundle\Picker\NewsPickerProvider', $this->provider);
-    }
-
     public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([

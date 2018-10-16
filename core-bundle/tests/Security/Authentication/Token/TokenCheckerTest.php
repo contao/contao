@@ -29,16 +29,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TokenCheckerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $tokenChecker = new TokenChecker(
-            $this->createMock(SessionInterface::class),
-            $this->createMock(AuthenticationTrustResolverInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\Token\TokenChecker', $tokenChecker);
-    }
-
     /**
      * @dataProvider getFrontendUserData
      */

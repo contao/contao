@@ -34,14 +34,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class PictureFactoryTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pictureFactory = $this->mockPictureFactory();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Image\PictureFactory', $pictureFactory);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\PictureFactoryInterface', $pictureFactory);
-    }
-
     public function testCreatesAPictureObjectFromAnImagePath(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';

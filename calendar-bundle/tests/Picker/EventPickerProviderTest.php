@@ -75,11 +75,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $this->provider = new EventPickerProvider($menuFactory, $router, $translator);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CalendarBundle\Picker\EventPickerProvider', $this->provider);
-    }
-
     public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([

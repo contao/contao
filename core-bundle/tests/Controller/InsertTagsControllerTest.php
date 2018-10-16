@@ -18,13 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class InsertTagsControllerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $controller = new InsertTagsController($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\InsertTagsController', $controller);
-    }
-
     public function testRendersNonCacheableInsertTag(): void
     {
         $framework = $this->mockContaoFramework();
@@ -40,7 +33,6 @@ class InsertTagsControllerTest extends TestCase
         $controller = new InsertTagsController($framework);
         $response = $controller->renderAction(new Request(), '{{request_token}}');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
         $this->assertNull($response->getMaxAge());
         $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
@@ -51,7 +43,6 @@ class InsertTagsControllerTest extends TestCase
         $controller = new InsertTagsController($framework);
         $response = $controller->renderAction($request, '{{request_token}}');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
         $this->assertSame(300, $response->getMaxAge());
         $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());

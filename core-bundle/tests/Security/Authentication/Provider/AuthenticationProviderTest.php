@@ -30,13 +30,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AuthenticationProviderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $provider = $this->mockProvider();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider', $provider);
-    }
-
     public function testHandlesContaoUsers(): void
     {
         /** @var FrontendUser|MockObject $user */

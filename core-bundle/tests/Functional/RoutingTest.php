@@ -25,7 +25,7 @@ class RoutingTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
@@ -36,7 +36,7 @@ class RoutingTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

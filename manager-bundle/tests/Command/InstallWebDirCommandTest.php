@@ -73,11 +73,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->filesystem->remove($this->getTempDir().'/web');
     }
 
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Command\InstallWebDirCommand', $this->command);
-    }
-
     public function testNameAndArguments(): void
     {
         $this->assertSame('contao:install-web-dir', $this->command->getName());

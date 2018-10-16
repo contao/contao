@@ -28,16 +28,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $authenticator = $this->mockAuthenticator();
-
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator',
-            $authenticator
-        );
-    }
-
     public function testDoesNotAuthenticateIfTheSessionIsNotStarted(): void
     {
         $session = $this->createMock(SessionInterface::class);

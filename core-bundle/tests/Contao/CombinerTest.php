@@ -61,11 +61,6 @@ class CombinerTest extends ContaoTestCase
         System::setContainer($this->container);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\Combiner', new Combiner());
-    }
-
     public function testCombinesCssFiles(): void
     {
         file_put_contents($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');

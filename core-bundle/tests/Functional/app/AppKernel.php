@@ -64,12 +64,12 @@ class AppKernel extends Kernel
         return __DIR__.'/../var/logs';
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->environment.'.yml');
     }
 
-    protected function build(ContainerBuilder $container)
+    protected function build(ContainerBuilder $container): void
     {
         $container->register('monolog.logger.contao', NullLogger::class);
     }

@@ -19,15 +19,6 @@ use PHPUnit\Framework\TestCase;
 
 class BackendMenuEventTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $factory = $this->createMock(FactoryInterface::class);
-        $tree = $this->createMock(ItemInterface::class);
-        $event = new MenuEvent($factory, $tree);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Event\MenuEvent', $event);
-    }
-
     public function testReturnsTheMenuItemFactory(): void
     {
         $factory = $this->createMock(FactoryInterface::class);

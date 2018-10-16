@@ -23,16 +23,6 @@ use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 class DatabaseTokenProviderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $provider = new DatabaseTokenProvider($this->createMock(Connection::class), 'secret');
-
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider',
-            $provider
-        );
-    }
-
     public function testLoadsATokenByItsSeries(): void
     {
         $sql = '
@@ -77,7 +67,6 @@ class DatabaseTokenProviderTest extends TestCase
         $provider = new DatabaseTokenProvider($connection, 'secret');
         $token = $provider->loadTokenBySeries('series');
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\RememberMe\PersistentToken', $token);
         $this->assertSame(FrontendUser::class, $token->getClass());
         $this->assertSame('foobar', $token->getUsername());
         $this->assertSame('series', $token->getSeries());

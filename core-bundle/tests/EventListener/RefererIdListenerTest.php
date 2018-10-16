@@ -25,13 +25,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RefererIdListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\RefererIdListener', $listener);
-    }
-
     public function testAddsTheTokenToTheRequest(): void
     {
         $request = new Request();

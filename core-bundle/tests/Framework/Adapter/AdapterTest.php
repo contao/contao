@@ -12,19 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Framework\Adapter;
 
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
+use Contao\CoreBundle\Framework\Adapter;
 use PHPUnit\Framework\TestCase;
 
 class AdapterTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $adapter = new Adapter('Dummy');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
-    }
-
     public function testImplementsTheMagicCallMethod(): void
     {
         /** @var LegacyClass $adapter */

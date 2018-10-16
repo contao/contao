@@ -22,13 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\NewsBundle\EventListener\PreviewUrlCreateListener', $listener);
-    }
-
     public function testCreatesThePreviewUrl(): void
     {
         $requestStack = new RequestStack();

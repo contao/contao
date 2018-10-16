@@ -25,13 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContaoDataCollectorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $collector = new ContaoDataCollector();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DataCollector\ContaoDataCollector', $collector);
-    }
-
     public function testCollectsDataInBackEnd(): void
     {
         $GLOBALS['TL_DEBUG'] = [

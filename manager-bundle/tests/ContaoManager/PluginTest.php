@@ -29,18 +29,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PluginTest extends ContaoTestCase
 {
-    public function testInstantiation(): void
-    {
-        $plugin = new Plugin();
-
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Plugin', $plugin);
-        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\BundlePluginInterface', $plugin);
-        $this->assertInstanceOf('Contao\ManagerPlugin\Config\ConfigPluginInterface', $plugin);
-        $this->assertInstanceOf('Contao\ManagerPlugin\Routing\RoutingPluginInterface', $plugin);
-        $this->assertInstanceOf('Contao\ManagerPlugin\Api\ApiPluginInterface', $plugin);
-        $this->assertTrue(method_exists($plugin, 'autoloadModules'));
-    }
-
     public function testGetBundles(): void
     {
         $fs = new Filesystem();

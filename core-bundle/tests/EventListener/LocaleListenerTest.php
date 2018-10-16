@@ -23,13 +23,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class LocaleListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\LocaleListener', $listener);
-    }
-
     /**
      * @dataProvider getLocaleRequestData
      */

@@ -18,13 +18,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ContaoCacheClearerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $clearer = new ContaoCacheClearer(new Filesystem());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheClearer', $clearer);
-    }
-
     public function testRemovesTheCacheFolder(): void
     {
         $fs = new Filesystem();

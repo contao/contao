@@ -26,13 +26,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class LogoutHandlerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $handler = new LogoutHandler($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Logout\LogoutHandler', $handler);
-    }
-
     public function testAddsTheLogEntry(): void
     {
         $framework = $this->mockContaoFramework();

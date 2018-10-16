@@ -18,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SwiftMailerPassTest extends TestCase
 {
-    public function testInstantiation(): void
-    {
-        $pass = new SwiftMailerPass();
-
-        $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\Compiler\SwiftMailerPass', $pass);
-    }
-
     public function testUpdatesTheMailerTransport(): void
     {
         $container = new ContainerBuilder();

@@ -29,13 +29,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CommandSchedulerListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new CommandSchedulerListener($this->mockContaoFramework(), $this->mockConnection());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\CommandSchedulerListener', $listener);
-    }
-
     public function testRunsTheCommandScheduler(): void
     {
         $controller = $this->createMock(FrontendCron::class);

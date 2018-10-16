@@ -45,11 +45,6 @@ class PickerBuilderTest extends ContaoTestCase
         $this->builder = new PickerBuilder(new MenuFactory(), $router);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerBuilder', $this->builder);
-    }
-
     public function testCreatesAPickerObject(): void
     {
         $factory = new MenuFactory();
@@ -69,7 +64,6 @@ class PickerBuilderTest extends ContaoTestCase
         $picker = $this->builder->create($config);
 
         $this->assertNotNull($picker);
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerInterface', $picker);
 
         $config = $picker->getConfig();
 
@@ -95,7 +89,6 @@ class PickerBuilderTest extends ContaoTestCase
         $picker = $this->builder->createFromData('H4sIAAAAAAAAA6tWSs7PK0mtKFGyUsrJzMtW0lECcooSi5WsomN1lJJLi4pS80CSBYnpqQGZydmpRUAlZYk5palAQaVaAN/dCYtAAAAA');
 
         $this->assertNotNull($picker);
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerInterface', $picker);
         $this->assertSame('link', $picker->getConfig()->getContext());
     }
 

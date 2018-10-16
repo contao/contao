@@ -21,16 +21,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationEntryPointTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $entryPoint = new AuthenticationEntryPoint(
-            $this->createMock(HttpUtils::class),
-            $this->createMock(RouterInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint', $entryPoint);
-    }
-
     public function testAddsTheRefererToTheRedirectUrl(): void
     {
         $request = new Request();
@@ -61,7 +51,7 @@ class AuthenticationEntryPointTest extends TestCase
         $entryPoint = new AuthenticationEntryPoint($httpUtils, $router);
         $response = $entryPoint->start($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame($url, $response->getTargetUrl());
     }
 
@@ -86,7 +76,7 @@ class AuthenticationEntryPointTest extends TestCase
         $entryPoint = new AuthenticationEntryPoint($httpUtils, $router);
         $response = $entryPoint->start($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/contao/login', $response->getTargetUrl());
     }
 }

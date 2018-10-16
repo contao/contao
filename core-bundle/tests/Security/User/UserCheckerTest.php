@@ -24,13 +24,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserCheckerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $userChecker = new UserChecker($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\User\UserChecker', $userChecker);
-    }
-
     public function testChecksAContaoUser(): void
     {
         $adapter = $this->mockConfiguredAdapter(['dateFormat' => 'Y-m-d']);

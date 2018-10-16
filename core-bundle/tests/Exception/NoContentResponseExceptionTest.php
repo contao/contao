@@ -17,19 +17,12 @@ use PHPUnit\Framework\TestCase;
 
 class NoContentResponseExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new NoContentResponseException();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\NoContentResponseException', $exception);
-    }
-
     public function testSetsTheResponseStatusCode(): void
     {
         $exception = new NoContentResponseException();
+        $response = $exception->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertSame(204, $exception->getResponse()->getStatusCode());
-        $this->assertSame('', $exception->getResponse()->getContent());
+        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame('', $response->getContent());
     }
 }

@@ -50,11 +50,6 @@ class ContaoCacheWarmerTest extends TestCase
         $fs->remove($this->getFixturesDir().'/var/cache/contao');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheWarmer', $this->warmer);
-    }
-
     public function testCreatesTheCacheFolder(): void
     {
         $container = $this->mockContainer($this->getFixturesDir());
