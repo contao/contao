@@ -20,6 +20,15 @@ function phpunit() {
   done
 }
 
+function functional() {
+  if [[ ! -e ./vendor/bin/phpunit ]]; then
+    echo "The vendor/bin/phpunit file is missing. Did you install the dependencies?"
+    exit 1
+  fi
+
+  vendor/bin/phpunit -c core-bundle --testsuite=core-functional
+}
+
 function php-cs-fixer() {
   if [[ ! -e ./vendor/bin/php-cs-fixer ]]; then
     echo "The vendor/bin/php-cs-fixer file is missing. Did you install the dependencies?"
@@ -69,7 +78,8 @@ function tx-push() {
 function usage() {
   cat <<HEREDOC
 Usage: ./run [task]
-  phpunit       Run PhpUnit in each bundle
+  phpunit       Run the unit tests in each bundle
+  functional    Run the functional tests in each bundle
   php-cs-fixer  Run the PHP-CS-Fixer in each bundle
   phpstan       Run PhpStan
   tx-push       Push the Transifex source files
@@ -79,6 +89,10 @@ HEREDOC
 case "$1" in
   phpunit)
     phpunit
+    exit 0
+  ;;
+  functional)
+    functional
     exit 0
   ;;
   php-cs-fixer)

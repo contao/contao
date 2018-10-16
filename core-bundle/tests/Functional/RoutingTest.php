@@ -288,7 +288,7 @@ class RoutingTest extends WebTestCase
     }
 
     /**
-     * @return array<int,array<string,string>|bool|int|string>>
+     * @return array<string,array<int,array<string,string>|bool|int|string>>
      */
     public function getAliasesWithLocale(): array
     {
@@ -668,6 +668,152 @@ class RoutingTest extends WebTestCase
                 'root-with-folder-urls.local',
                 true,
                 true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getRootAliases
+     */
+    public function testResolvesTheRootPage(string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
+    {
+        Config::set('addLanguageToUrl', false);
+
+        $client = $this->createClient();
+        System::setContainer($client->getContainer());
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($pageTitle, $title);
+    }
+
+    /**
+     * @return array<string,array<int,array<string,string>|bool|int|string>>
+     */
+    public function getRootAliases(): array
+    {
+        return [
+            'Renders the root page if one of the accept languages matches' => [
+                '/',
+                200,
+                'Index - Root with index page',
+                'en,de',
+                'root-with-index.local',
+            ],
+            'Renders the fallback page if none of the accept languages matches' => [
+                '/',
+                200,
+                'Index - Root with index page',
+                'de,fr',
+                'root-with-index.local',
+            ],
+            'Throws a "no root page found" exception if no language matches' => [
+                '/',
+                500,
+                'No root page found (500 Internal Server Error)',
+                'de,fr',
+                'root-without-fallback-language.local',
+            ],
+            'Redirects to the first language root if the accept languages matches' => [
+                '/',
+                302,
+                'Redirecting to http://same-domain-root.local/english-site.html',
+                'en',
+                'same-domain-root.local',
+            ],
+            'Redirects to the second language root if the accept languages matches' => [
+                '/',
+                302,
+                'Redirecting to http://same-domain-root.local/german-site.html',
+                'de',
+                'same-domain-root.local',
+            ],
+            'Redirects to the fallback root if none of the accept languages matches' => [
+                '/',
+                302,
+                'Redirecting to http://same-domain-root.local/english-site.html',
+                'fr',
+                'same-domain-root.local',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getRootAliasesWithLocale
+     */
+    public function testResolvesTheRootPageWithLocale(string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
+    {
+        Config::set('addLanguageToUrl', true);
+
+        $client = $this->createClient(['environment' => 'locale']);
+        System::setContainer($client->getContainer());
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($pageTitle, $title);
+    }
+
+    /**
+     * @return array<string,array<int,array<string,string>|bool|int|string>>
+     */
+    public function getRootAliasesWithLocale(): array
+    {
+        return [
+            'Redirects to the language root if one of the accept languages matches' => [
+                '/',
+                301,
+                'Redirecting to en/',
+                'en,de',
+                'root-with-index.local',
+            ],
+            'Redirects to the language fallback if none of the accept languages matches' => [
+                '/',
+                301,
+                'Redirecting to en/',
+                'de,fr',
+                'root-with-index.local',
+            ],
+            'Throws a "no root page found" exception if none of the accept languages matches' => [
+                '/',
+                500,
+                'No root page found (500 Internal Server Error)',
+                'de,fr',
+                'root-without-fallback-language.local',
+            ],
+            'Renders the root page if the locale matches' => [
+                '/en/',
+                200,
+                'Index - Root with index page',
+                'en,de',
+                'root-with-index.local',
+            ],
+            'Renders the 404 page if the locale does not match' => [
+                '/de/',
+                404,
+                'Page not found: http://root-with-index.local/de/ (404 Not Found)',
+                'de,fr',
+                'root-with-index.local',
+            ],
+            'Throws a "no root page found" exception if the locale does not match' => [
+                '/fr/',
+                500,
+                'No root page found (500 Internal Server Error)',
+                'de,fr',
+                'root-without-fallback-language.local',
             ],
         ];
     }

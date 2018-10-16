@@ -57,7 +57,7 @@
         "nelmio/cors-bundle": "^1.5.3",
         "nelmio/security-bundle": "^2.2",
         "ocramius/package-versions": "^1.2",
-        "ocramius/proxy-manager": "^2.0",
+        "ocramius/proxy-manager": "^2.1",
         "oyejorge/less.php": "^1.7",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
