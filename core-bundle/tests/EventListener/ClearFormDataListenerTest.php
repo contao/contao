@@ -23,13 +23,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ClearFormDataListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new ClearFormDataListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ClearFormDataListener', $listener);
-    }
-
     public function testClearsTheFormData(): void
     {
         $session = $this->createMock(Session::class);

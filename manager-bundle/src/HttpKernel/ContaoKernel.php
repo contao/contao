@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use AppBundle\AppBundle;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\ConfigResolverFactory;
@@ -239,7 +240,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // Autoload AppBundle for convenience
-        $appBundle = 'AppBundle\AppBundle';
+        $appBundle = AppBundle::class;
 
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();

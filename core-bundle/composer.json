@@ -109,6 +109,7 @@
         "monolog/monolog": "^1.22",
         "php-http/guzzle6-adapter": "^1.1",
         "phpunit/phpunit": "^7.0",
+        "symfony/browser-kit": "3.4.* || 4.1.*",
         "symfony/phpunit-bridge": "^3.4.5"
     },
     "suggest": {

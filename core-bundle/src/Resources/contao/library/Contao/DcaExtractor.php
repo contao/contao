@@ -373,8 +373,8 @@ class DcaExtractor extends Controller
 			$this->loadDataContainer($this->strTable);
 		}
 
-		// Return if there is no DC type
-		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer']))
+		// Return if the table is not defined
+		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 		{
 			return;
 		}

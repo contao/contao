@@ -53,14 +53,6 @@ class ImageFactoryTest extends TestCase
         }
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $imageFactory = $this->mockImageFactory();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactory', $imageFactory);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactoryInterface', $imageFactory);
-    }
-
     public function testCreatesAnImageObjectFromAnImagePath(): void
     {
         $path = $this->getFixturesDir().'/images/dummy.jpg';

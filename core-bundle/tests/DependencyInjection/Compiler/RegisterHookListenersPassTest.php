@@ -21,13 +21,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class RegisterHookListenersPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new RegisterHookListenersPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass', $pass);
-    }
-
     public function testRegistersTheHookListeners(): void
     {
         $attributes = [

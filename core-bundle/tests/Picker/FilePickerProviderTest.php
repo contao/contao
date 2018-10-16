@@ -96,11 +96,6 @@ class FilePickerProviderTest extends ContaoTestCase
         $this->provider->setFramework($framwork);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\FilePickerProvider', $this->provider);
-    }
-
     public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([

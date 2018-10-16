@@ -37,14 +37,6 @@ class SymlinksCommandTest extends TestCase
         $fs->remove($this->getFixturesDir().'/web');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $command = new SymlinksCommand('contao:symlinks');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Command\SymlinksCommand', $command);
-        $this->assertSame('contao:symlinks', $command->getName());
-    }
-
     public function testSymlinksTheContaoFolders(): void
     {
         $fs = new Filesystem();

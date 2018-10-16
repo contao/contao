@@ -17,14 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class MemoryHeaderStorageTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $storage = new MemoryHeaderStorage();
-
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage', $storage);
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface', $storage);
-    }
-
     public function testReturnsAllHeaders(): void
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);

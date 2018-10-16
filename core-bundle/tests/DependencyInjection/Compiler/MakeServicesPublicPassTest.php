@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class MakeServicesPublicPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new MakeServicesPublicPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass', $pass);
-    }
-
     public function testMakesTheServicesPublic(): void
     {
         $container = new ContainerBuilder();

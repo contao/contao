@@ -17,19 +17,12 @@ use PHPUnit\Framework\TestCase;
 
 class RedirectResponseExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new RedirectResponseException('http://example.org');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\RedirectResponseException', $exception);
-    }
-
     public function testSetsTheResponseStatusCodeAndLocation(): void
     {
         $exception = new RedirectResponseException('http://example.org');
+        $response = $exception->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertSame(303, $exception->getResponse()->getStatusCode());
-        $this->assertSame('http://example.org', $exception->getResponse()->headers->get('Location'));
+        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame('http://example.org', $response->headers->get('Location'));
     }
 }

@@ -66,28 +66,6 @@ class ImageTest extends TestCase
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testCanBeInstantiated(): void
-    {
-        $properties = [
-            'extension' => 'jpg',
-            'path' => 'dummy.jpg',
-        ];
-
-        /** @var File|MockObject $fileMock */
-        $fileMock = $this->mockClassWithProperties(File::class, $properties);
-        $fileMock
-            ->method('exists')
-            ->willReturn(true)
-        ;
-
-        $this->assertInstanceOf('Contao\Image', new Image($fileMock));
-    }
-
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
-     */
     public function testFailsIfTheFileDoesNotExist(): void
     {
         $fileMock = $this->createMock(File::class);

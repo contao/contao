@@ -32,11 +32,6 @@ class PhpFileLoaderTest extends TestCase
         $this->loader = new PhpFileLoader();
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
-    }
-
     public function testSupportsPhpFiles(): void
     {
         $this->assertTrue(

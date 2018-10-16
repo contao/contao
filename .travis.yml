@@ -3,6 +3,9 @@ language: php
 dist: trusty
 sudo: false
 
+services:
+  - mysql
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -54,7 +57,7 @@ jobs:
         - composer update --no-interaction --no-suggest
       script:
         - phpdbg -qrr vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
-        - phpdbg -qrr vendor/bin/phpunit -c core-bundle --testsuite=coverage --coverage-clover=core-bundle.xml
+        - phpdbg -qrr vendor/bin/phpunit -c core-bundle --testsuite=core-coverage --coverage-clover=core-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml
@@ -90,6 +93,7 @@ jobs:
       name: "Split the monorepo"
       if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
       php: 7.2
+      before_install: true
       install:
         - phpenv config-rm xdebug.ini || true
         - rm composer.json
@@ -104,14 +108,15 @@ before_install:
   - |
     # Helper functions
     run_tests () {
-      status=0
+      local status=0
       php vendor/bin/phpunit -c calendar-bundle --colors=always || status=1
       php vendor/bin/phpunit -c core-bundle --colors=always || status=1
+      php vendor/bin/phpunit -c core-bundle --testsuite=core-functional --colors=always || status=1
       php vendor/bin/phpunit -c faq-bundle --colors=always || status=1
       php vendor/bin/phpunit -c installation-bundle --colors=always || status=1
       php vendor/bin/phpunit -c manager-bundle --colors=always || status=1
       php vendor/bin/phpunit -c news-bundle --colors=always || status=1
-      exit $status
+      return $status
     }
     run_split_tests () {
       php -r '
@@ -129,3 +134,5 @@ before_install:
       composer update --no-interaction --no-suggest
       php vendor/bin/phpunit --colors=always
     }
+  - mysql -e "CREATE database contao_test"
+  - mysql contao_test < core-bundle/tests/Functional/app/Resources/contao_test.sql

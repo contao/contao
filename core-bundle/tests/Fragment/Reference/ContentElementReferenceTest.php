@@ -18,15 +18,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class ContentElementReferenceTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $reference = new ContentElementReference(new ContentModel());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\Reference\ContentElementReference', $reference);
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\Reference\FragmentReference', $reference);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Controller\ControllerReference', $reference);
-    }
-
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
         $model = new ContentModel();

@@ -17,18 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class PersistentTokenTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $lastUsed = new \DateTime();
-        $token = new PersistentToken('class', 'username', 'series', 'value', $lastUsed);
-
-        $this->assertSame('class', $token->getClass());
-        $this->assertSame('username', $token->getUsername());
-        $this->assertSame('series', $token->getSeries());
-        $this->assertSame('value', $token->getTokenValue());
-        $this->assertSame($lastUsed, $token->getLastUsed());
-    }
-
     public function testFailsIfTheClassIsEmpty(): void
     {
         $this->expectException('InvalidArgumentException');

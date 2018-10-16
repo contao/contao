@@ -23,13 +23,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContaoContextTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $context = $this->mockContaoContext('staticPlugins');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Asset\ContaoContext', $context);
-    }
-
     public function testReturnsAnEmptyBasePathInDebugMode(): void
     {
         $context = new ContaoContext($this->mockContaoFramework(), new RequestStack(), 'staticPlugins', true);

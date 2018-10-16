@@ -35,12 +35,6 @@ class AutomatorCommandTest extends CommandTestCase
         $this->command = new AutomatorCommand($this->mockContaoFramework());
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $this->command);
-        $this->assertSame('contao:automator', $this->command->getName());
-    }
-
     public function testIsLockedWhileRunning(): void
     {
         $tmpDir = sys_get_temp_dir().'/'.md5($this->getFixturesDir());

@@ -43,14 +43,6 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getTempDir().'/web/system');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $command = new InstallCommand('contao:install');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Command\InstallCommand', $command);
-        $this->assertSame('contao:install', $command->getName());
-    }
-
     public function testCreatesTheContaoFolders(): void
     {
         $container = $this->mockContainer($this->getTempDir());

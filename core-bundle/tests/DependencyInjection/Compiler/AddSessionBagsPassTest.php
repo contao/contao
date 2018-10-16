@@ -17,17 +17,11 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AddSessionBagsPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new AddSessionBagsPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass', $pass);
-    }
-
     public function testAddsTheSessionBags(): void
     {
         $container = new ContainerBuilder();
@@ -43,8 +37,8 @@ class AddSessionBagsPassTest extends TestCase
         $this->assertCount(2, $methodCalls);
         $this->assertSame('registerBag', $methodCalls[0][0]);
         $this->assertSame('registerBag', $methodCalls[1][0]);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[0][1][0]);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[1][1][0]);
+        $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
+        $this->assertInstanceOf(Reference::class, $methodCalls[1][1][0]);
         $this->assertSame('contao.session.contao_backend', (string) $methodCalls[0][1][0]);
         $this->assertSame('contao.session.contao_frontend', (string) $methodCalls[1][1][0]);
     }

@@ -33,14 +33,6 @@ class ContentElementControllerTest extends TestCase
         System::setContainer($this->mockContainer());
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $controller = new TestController();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController', $controller);
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\AbstractFragmentController', $controller);
-    }
-
     public function testCreatesTheTemplateFromTheClassName(): void
     {
         $controller = new TestController();

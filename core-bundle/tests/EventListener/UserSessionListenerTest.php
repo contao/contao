@@ -37,13 +37,6 @@ use Symfony\Component\Security\Core\User\User;
 
 class UserSessionListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = $this->mockListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $listener);
-    }
-
     /**
      * @dataProvider scopeBagProvider
      */

@@ -21,15 +21,6 @@ use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
 class UserSessionListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $scopeMatcher = $this->mockScopeMatcher();
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $listener = new UserSessionListener($scopeMatcher, $tokenChecker);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener', $listener);
-    }
-
     /**
      * @dataProvider getForceNoCacheHeaderData
      */

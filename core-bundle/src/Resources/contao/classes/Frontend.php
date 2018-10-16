@@ -11,6 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -303,6 +306,7 @@ abstract class Frontend extends Controller
 		}
 
 		$host = \Environment::get('host');
+		$logger = System::getContainer()->get('monolog.logger.contao');
 
 		// The language is set in the URL
 		if (!empty($_GET['language']) && \Config::get('addLanguageToUrl'))
@@ -312,7 +316,12 @@ abstract class Frontend extends Controller
 			// No matching root page found
 			if ($objRootPage === null)
 			{
-				\System::log('No root page found (host "' . $host . '", language "'. \Input::get('language') .'")', __METHOD__, TL_ERROR);
+				$logger->log(
+					LogLevel::ERROR,
+					'No root page found (host "' . $host . '", language "'. \Input::get('language') .'")',
+					array('contao' => new ContaoContext(__METHOD__, 'ERROR'))
+				);
+
 				throw new NoRootPageFoundException('No root page found');
 			}
 		}
@@ -334,7 +343,12 @@ abstract class Frontend extends Controller
 			// No matching root page found
 			if ($objRootPage === null)
 			{
-				\System::log('No root page found (host "' . \Environment::get('host') . '", languages "'.implode(', ', \Environment::get('httpAcceptLanguage')).'")', __METHOD__, TL_ERROR);
+				$logger->log(
+					LogLevel::ERROR,
+					'No root page found (host "' . \Environment::get('host') . '", languages "'.implode(', ', \Environment::get('httpAcceptLanguage')).'")',
+					array('contao' => new ContaoContext(__METHOD__, 'ERROR'))
+				);
+
 				throw new NoRootPageFoundException('No root page found');
 			}
 
@@ -348,13 +362,13 @@ abstract class Frontend extends Controller
 					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
 					$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 
-					static::redirect($strUrl, 301);
+					throw new RedirectResponseException($strUrl, 301);
 				}
 
 				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
 				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
 				{
-					static::redirect($objPage->getFrontendUrl(), 302);
+					throw new RedirectResponseException($objPage->getAbsoluteUrl(), 302);
 				}
 			}
 		}

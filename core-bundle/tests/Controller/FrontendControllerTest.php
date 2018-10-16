@@ -22,13 +22,6 @@ use Symfony\Component\Security\Core\Exception\LogoutException;
 
 class FrontendControllerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $controller = new FrontendController();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\FrontendController', $controller);
-    }
-
     public function testThrowsAnExceptionUponLoginIfThereIsNoError401Page(): void
     {
         $framework = $this->mockContaoFramework();
@@ -90,7 +83,6 @@ class FrontendControllerTest extends TestCase
 
         $response = $controller->loginAction();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame(401, $response->getStatusCode());
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(FE_USER_LOGGED_IN);

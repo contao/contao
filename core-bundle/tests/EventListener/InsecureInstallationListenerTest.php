@@ -22,13 +22,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class InsecureInstallationListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new InsecureInstallationListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InsecureInstallationListener', $listener);
-    }
-
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void
     {
         $listener = new InsecureInstallationListener();

@@ -70,11 +70,6 @@ class GetDotEnvCommandTest extends ContaoTestCase
         $this->filesystem->remove($this->tempdir);
     }
 
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand', $this->command);
-    }
-
     public function testHasCorrectNameAndArguments(): void
     {
         $this->assertSame('dot-env:get', $this->command->getName());

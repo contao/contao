@@ -33,14 +33,6 @@ class FrontendModuleControllerTest extends TestCase
         System::setContainer($this->mockContainer());
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $controller = new TestController();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController', $controller);
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\AbstractFragmentController', $controller);
-    }
-
     public function testCreatesTheTemplateFromTheClassName(): void
     {
         $controller = new TestController();

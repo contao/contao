@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Image;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
@@ -59,11 +60,6 @@ class ImageSizesTest extends TestCase
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework());
-    }
-
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageSizes', $this->imageSizes);
     }
 
     public function testReturnsAllOptionsWithImageSizes(): void
@@ -159,7 +155,7 @@ class ImageSizesTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($event, $this->isInstanceOf('Contao\CoreBundle\Event\ImageSizesEvent'))
+            ->with($event, $this->isInstanceOf(ImageSizesEvent::class))
         ;
     }
 

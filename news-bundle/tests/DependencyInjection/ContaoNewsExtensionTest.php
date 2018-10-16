@@ -43,13 +43,6 @@ class ContaoNewsExtensionTest extends TestCase
         $extension->load([], $this->container);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $extension = new ContaoNewsExtension();
-
-        $this->assertInstanceOf('Contao\NewsBundle\DependencyInjection\ContaoNewsExtension', $extension);
-    }
-
     public function testRegistersTheGeneratePageListener(): void
     {
         $this->assertTrue($this->container->has('contao_news.listener.generate_page'));

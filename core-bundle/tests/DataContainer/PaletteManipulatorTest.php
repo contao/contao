@@ -17,13 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class PaletteManipulatorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pm = PaletteManipulator::create();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
-    }
-
     public function testPrependsAFieldToAPalette(): void
     {
         $pm = PaletteManipulator::create()

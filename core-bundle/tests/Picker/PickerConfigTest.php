@@ -32,11 +32,6 @@ class PickerConfigTest extends TestCase
         $this->config = new PickerConfig('link', ['fieldType' => 'radio'], 'foo', 'alias');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $this->config);
-    }
-
     public function testCanReadValues(): void
     {
         $this->assertSame('link', $this->config->getContext());
@@ -110,7 +105,6 @@ class PickerConfigTest extends TestCase
 
         $config = $this->config->urlDecode(base64_encode(strtr($data, '-_,', '+/=')));
 
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $config);
         $this->assertSame('link', $config->getContext());
         $this->assertSame(['fieldType' => 'radio'], $config->getExtras());
         $this->assertSame('alias', $config->getCurrent());

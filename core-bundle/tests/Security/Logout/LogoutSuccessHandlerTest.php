@@ -20,13 +20,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutSuccessHandlerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $handler = new LogoutSuccessHandler($this->createMock(HttpUtils::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Logout\LogoutSuccessHandler', $handler);
-    }
-
     public function testRedirectsToAGivenUrl(): void
     {
         $request = new Request();
@@ -45,7 +38,7 @@ class LogoutSuccessHandlerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $handler->onLogoutSuccess($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
     }
 
@@ -67,7 +60,7 @@ class LogoutSuccessHandlerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $handler->onLogoutSuccess($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
     }
 
@@ -87,7 +80,7 @@ class LogoutSuccessHandlerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $handler->onLogoutSuccess($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost', $response->getTargetUrl());
     }
 }

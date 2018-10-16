@@ -31,11 +31,6 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener = new DataContainerCallbackListener();
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\DataContainerCallbackListener', $this->listener);
-    }
-
     public function testRegistersCallbacks(): void
     {
         $GLOBALS['TL_DCA']['tl_page'] = [];

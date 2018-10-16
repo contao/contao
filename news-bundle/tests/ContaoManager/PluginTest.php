@@ -21,13 +21,6 @@ use PHPUnit\Framework\TestCase;
 
 class PluginTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $plugin = new Plugin();
-
-        $this->assertInstanceOf('Contao\NewsBundle\ContaoManager\Plugin', $plugin);
-    }
-
     public function testReturnsTheBundles(): void
     {
         $parser = $this->createMock(ParserInterface::class);
@@ -35,7 +28,7 @@ class PluginTest extends TestCase
         /** @var BundleConfig $config */
         $config = (new Plugin())->getBundles($parser)[0];
 
-        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
+        $this->assertInstanceOf(BundleConfig::class, $config);
         $this->assertSame(ContaoNewsBundle::class, $config->getName());
         $this->assertSame([ContaoCoreBundle::class], $config->getLoadAfter());
         $this->assertSame(['news'], $config->getReplace());

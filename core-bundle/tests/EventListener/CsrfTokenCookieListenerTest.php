@@ -26,13 +26,6 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
 class CsrfTokenCookieListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new CsrfTokenCookieListener($this->createMock(MemoryTokenStorage::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\CsrfTokenCookieListener', $listener);
-    }
-
     public function testInitializesTheStorage(): void
     {
         $request = $this->createMock(Request::class);

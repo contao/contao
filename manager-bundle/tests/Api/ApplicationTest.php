@@ -22,11 +22,6 @@ use Contao\TestCase\ContaoTestCase;
 
 class ApplicationTest extends ContaoTestCase
 {
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\Application', $this->getApplication());
-    }
-
     public function testReturnsCorrectApplicationNameAndVersion(): void
     {
         $application = $this->getApplication();
@@ -40,13 +35,6 @@ class ApplicationTest extends ContaoTestCase
         $application = $this->getApplication('/foo/bar');
 
         $this->assertSame('/foo/bar', $application->getProjectDir());
-    }
-
-    public function testReturnsNewInstanceOfPluginLoader(): void
-    {
-        $application = $this->getApplication();
-
-        $this->assertInstanceOf('Contao\ManagerPlugin\PluginLoader', $application->getPluginLoader());
     }
 
     public function testReturnsConfiguredPluginLoader(): void
@@ -85,7 +73,6 @@ class ApplicationTest extends ContaoTestCase
         $application = $this->getApplication(__DIR__.'/../Fixtures/Api');
         $managerConfig = $application->getManagerConfig();
 
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\ManagerConfig', $managerConfig);
         $this->assertSame(['foo' => 'bar'], $managerConfig->all());
     }
 

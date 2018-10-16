@@ -21,13 +21,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class DataContainerCallbackPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new DataContainerCallbackPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass', $pass);
-    }
-
     public function testRegistersTheHookListeners(): void
     {
         $attributes = [

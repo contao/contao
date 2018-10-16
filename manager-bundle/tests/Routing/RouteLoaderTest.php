@@ -25,17 +25,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteLoaderTest extends TestCase
 {
-    public function testInstantiation(): void
-    {
-        $routeLoader = new RouteLoader(
-            $this->createMock(LoaderInterface::class),
-            $this->createMock(PluginLoader::class),
-            $this->createMock(KernelInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\ManagerBundle\Routing\RouteLoader', $routeLoader);
-    }
-
     public function testLoadFromPlugins(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);

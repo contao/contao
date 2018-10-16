@@ -42,13 +42,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = $this->mockListener(FrontendUser::class);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $listener);
-    }
-
     public function testRendersBackEndExceptions(): void
     {
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
@@ -58,11 +51,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
     public function testDoesNotRenderBackEndExceptionsIfThereIsNoToken(): void
@@ -90,11 +79,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
     public function testDoesNotRenderBackEndExceptionsIfThereIsNoUser(): void
@@ -128,11 +113,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
     /**
@@ -148,11 +129,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame($type, $response->getStatusCode());
+        $this->assertSame($type, $event->getResponse()->getStatusCode());
 
         unset($GLOBALS['TL_PTY']);
     }
@@ -180,7 +157,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $event->getResponse());
 
         unset($GLOBALS['TL_PTY']);
     }
@@ -209,11 +185,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(503, $response->getStatusCode());
+        $this->assertSame(503, $event->getResponse()->getStatusCode());
     }
 
     public function testDoesNotRenderExceptionsIfDisabled(): void
@@ -261,11 +233,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(409, $response->getStatusCode());
+        $this->assertSame(409, $event->getResponse()->getStatusCode());
     }
 
     public function testRendersTheErrorScreen(): void
@@ -288,11 +256,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
     public function testDoesNothingIfTheFormatIsNotHtml(): void
@@ -329,11 +293,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
-
-        $response = $event->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
     private function mockListener(string $userClass, bool $expectLogging = false, \Twig_Environment $twig = null): PrettyErrorScreenListener

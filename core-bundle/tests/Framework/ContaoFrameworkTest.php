@@ -20,6 +20,7 @@ use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\RequestToken;
@@ -34,14 +35,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $framework = $this->mockFramework(new RequestStack(), $this->mockRouter('/'));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFramework', $framework);
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFrameworkInterface', $framework);
-    }
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -85,8 +78,8 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('', TL_PATH);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['BE_DATA']);
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['FE_DATA']);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     /**
@@ -552,9 +545,9 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->mockContainer());
         $framework->initialize();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Session\LazySessionAccess', $_SESSION);
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['BE_DATA']);
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $_SESSION['FE_DATA']);
+        $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     public function testCreatesAnObjectInstance(): void
@@ -594,8 +587,6 @@ class ContaoFrameworkTest extends TestCase
         /** @var ContaoFramework $framework */
         $framework = $reflection->newInstanceWithoutConstructor();
         $adapter = $framework->getAdapter($class);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
 
         $ref = new \ReflectionClass($adapter);
         $prop = $ref->getProperty('class');

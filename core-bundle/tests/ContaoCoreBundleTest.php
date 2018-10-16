@@ -32,20 +32,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $bundle = new ContaoCoreBundle();
-
-        $this->assertInstanceOf('Contao\CoreBundle\ContaoCoreBundle', $bundle);
-    }
-
-    public function testReturnsTheContainerExtension(): void
-    {
-        $extension = (new ContaoCoreBundle())->getContainerExtension();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $extension);
-    }
-
     public function testDoesNotRegisterAnyCommands(): void
     {
         $application = new Application();

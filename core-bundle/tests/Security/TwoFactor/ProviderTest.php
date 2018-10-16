@@ -22,27 +22,6 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 
 class ProviderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $authenticator = $this->createMock(Authenticator::class);
-        $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\TwoFactor\Provider', $provider);
-    }
-
-    public function testReturnsTheFormRenderer(): void
-    {
-        $authenticator = $this->createMock(Authenticator::class);
-        $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer);
-
-        $this->assertInstanceOf(
-            'Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface',
-            $provider->getFormRenderer()
-        );
-    }
-
     public function testDoesNotBeginAuthenticationWithAnInvalidUser(): void
     {
         $authenticator = $this->createMock(Authenticator::class);

@@ -27,16 +27,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class BackendLocaleListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new BackendLocaleListener(
-            $this->createMock(TokenStorageInterface::class),
-            $this->createMock(TranslatorInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\BackendLocaleListener', $listener);
-    }
-
     public function testSetsTheLocale(): void
     {
         /** @var BackendUser|MockObject $user */

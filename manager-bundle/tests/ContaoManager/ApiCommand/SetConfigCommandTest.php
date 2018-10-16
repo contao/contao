@@ -49,11 +49,6 @@ class SetConfigCommandTest extends TestCase
         $this->command = new SetConfigCommand($application);
     }
 
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\ApiCommand\SetConfigCommand', $this->command);
-    }
-
     public function testHasCorrectNameAndArguments(): void
     {
         $this->assertSame('config:set', $this->command->getName());

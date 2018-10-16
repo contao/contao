@@ -19,13 +19,6 @@ use Symfony\Component\Security\Core\Role\Role;
 
 class FrontendPreviewTokenTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $token = new FrontendPreviewToken(null, false);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken', $token);
-    }
-
     public function testAuthenticatesUsers(): void
     {
         $user = $this->createMock(FrontendUser::class);

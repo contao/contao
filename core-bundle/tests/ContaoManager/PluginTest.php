@@ -38,13 +38,6 @@ use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 class PluginTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $plugin = new Plugin();
-
-        $this->assertInstanceOf('Contao\CoreBundle\ContaoManager\Plugin', $plugin);
-    }
-
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();

@@ -22,13 +22,6 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolverTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $resolver = new ModelArgumentResolver($this->mockContaoFramework(), $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\ModelArgumentResolver', $resolver);
-    }
-
     /**
      * @dataProvider getArguments
      */
@@ -50,8 +43,6 @@ class ModelArgumentResolverTest extends TestCase
 
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
         $generator = $resolver->resolve($request, $metadata);
-
-        $this->assertInstanceOf('Generator', $generator);
 
         foreach ($generator as $resolved) {
             $this->assertSame($pageModel, $resolved);
