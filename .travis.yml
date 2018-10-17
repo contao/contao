@@ -14,7 +14,6 @@ cache:
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - SYMFONY_DEPRECATIONS_HELPER='weak_vendors'
 
 jobs:
   include:

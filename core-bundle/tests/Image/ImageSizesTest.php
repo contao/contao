@@ -91,8 +91,8 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
 
         $properties = [
-            'isAdmin' => true,
             'imageSizes' => ['image_sizes' => '42'],
+            'isAdmin' => true,
         ];
 
         /** @var BackendUser|MockObject $user */
@@ -111,6 +111,7 @@ class ImageSizesTest extends TestCase
         // Allow only one image size
         $properties = [
             'imageSizes' => [42],
+            'isAdmin' => false,
         ];
 
         /** @var BackendUser|MockObject $user */
@@ -125,6 +126,7 @@ class ImageSizesTest extends TestCase
         // Allow only some TL_CROP options
         $properties = [
             'imageSizes' => ['proportional', 'box'],
+            'isAdmin' => false,
         ];
 
         /** @var BackendUser|MockObject $user */
@@ -138,6 +140,7 @@ class ImageSizesTest extends TestCase
         // Allow nothing
         $properties = [
             'imageSizes' => [],
+            'isAdmin' => false,
         ];
 
         /** @var BackendUser|MockObject $user */

@@ -46,6 +46,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testRegistersAppBundle(): void
     {

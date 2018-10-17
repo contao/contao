@@ -128,9 +128,6 @@ class BackendLocaleListenerTest extends TestCase
 
     public function testDoesNotSetTheLocaleIfNoUserLanguage(): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user->language = '';
-
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())

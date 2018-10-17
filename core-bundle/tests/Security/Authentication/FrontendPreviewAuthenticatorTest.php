@@ -207,10 +207,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
      */
     public function testChecksTheBackendUsersFrontendGroupAccess(bool $isAdmin, $amg, $groups, bool $isValid): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser|MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
 
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser|MockObject $frontendUser */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, compact('groups'));
         $frontendUser
             ->method('getRoles')
@@ -266,7 +266,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsHidden(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser|MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
@@ -292,6 +292,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $session->start();
 
+        /** @var FrontendUser|MockObject $frontendUser */
         $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
         $frontendUser
             ->method('getRoles')
@@ -318,7 +319,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsVisible(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser|MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
@@ -344,6 +345,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $session->start();
 
+        /** @var FrontendUser|MockObject $frontendUser */
         $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
         $frontendUser
             ->method('getRoles')

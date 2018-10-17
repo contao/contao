@@ -266,15 +266,15 @@ class FileUpload extends Backend
 		// Convert the value to bytes
 		if (stripos($upload_max_filesize, 'K') !== false)
 		{
-			$upload_max_filesize = round($upload_max_filesize * 1024);
+			$upload_max_filesize = round(str_replace('K', '', $upload_max_filesize) * 1024);
 		}
 		elseif (stripos($upload_max_filesize, 'M') !== false)
 		{
-			$upload_max_filesize = round($upload_max_filesize * 1024 * 1024);
+			$upload_max_filesize = round(str_replace('M', '', $upload_max_filesize) * 1024 * 1024);
 		}
 		elseif (stripos($upload_max_filesize, 'G') !== false)
 		{
-			$upload_max_filesize = round($upload_max_filesize * 1024 * 1024 * 1024);
+			$upload_max_filesize = round(str_replace('G', '', $upload_max_filesize) * 1024 * 1024 * 1024);
 		}
 
 		return min($upload_max_filesize, \Config::get('maxFileSize'));

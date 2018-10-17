@@ -16,7 +16,7 @@ function phpunit() {
   )
 
   for bundle in ${bundles[*]}; do
-    vendor/bin/phpunit -c ${bundle}
+    vendor/bin/phpunit -c ${bundle} "$@"
   done
 }
 
@@ -35,8 +35,8 @@ function php-cs-fixer() {
     exit 1
   fi
 
-  vendor/bin/php-cs-fixer fix -v
-  vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy
+  vendor/bin/php-cs-fixer fix -v "$@"
+  vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy "$@"
 }
 
 function phpstan() {
@@ -88,7 +88,7 @@ HEREDOC
 
 case "$1" in
   phpunit)
-    phpunit
+    phpunit "${@:2}"
     exit 0
   ;;
   functional)
@@ -96,7 +96,7 @@ case "$1" in
     exit 0
   ;;
   php-cs-fixer)
-    php-cs-fixer
+    php-cs-fixer "${@:2}"
     exit 0
   ;;
   phpstan)

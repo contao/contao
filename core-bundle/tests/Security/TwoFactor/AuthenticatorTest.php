@@ -42,7 +42,6 @@ class AuthenticatorTest extends TestCase
 
         /** @var BackendUser|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['secret' => $secret]);
-
         $user
             ->expects($this->exactly(2))
             ->method('getUsername')
@@ -84,7 +83,6 @@ SVG;
 
         /** @var BackendUser|MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['secret' => 'foobar']);
-
         $user
             ->expects($this->once())
             ->method('getUsername')
