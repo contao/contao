@@ -24,6 +24,7 @@ use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -42,6 +43,7 @@ class AppKernel extends Kernel
             new SchebTwoFactorBundle(),
             new KnpTimeBundle(),
             new KnpMenuBundle(),
+            new CmfRoutingBundle(),
             new ContaoCoreBundle(),
             new ContaoNewsBundle(),
         ];
