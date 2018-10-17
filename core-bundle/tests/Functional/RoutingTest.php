@@ -68,8 +68,8 @@ class RoutingTest extends WebTestCase
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
-        $this->assertSame($query, $_GET);
         $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
         $this->assertContains($pageTitle, $title);
     }
 
@@ -282,8 +282,8 @@ class RoutingTest extends WebTestCase
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
-        $this->assertSame($query, $_GET);
         $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
         $this->assertContains($pageTitle, $title);
     }
 
@@ -487,8 +487,8 @@ class RoutingTest extends WebTestCase
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
-        $this->assertSame($query, $_GET);
         $this->assertSame($statusCode, $response->getStatusCode());
+        $this->assertSame($query, $_GET);
         $this->assertContains($pageTitle, $title);
     }
 
