@@ -62,7 +62,7 @@ class RouteProvider implements RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request)
     {
         $this->framework->initialize();
-        $pathInfo = $request->getPathInfo();
+        $pathInfo = rawurldecode($request->getPathInfo());
 
         // The request string must not contain "auto_item" (see #4012)
         if (false !== strpos($pathInfo, '/auto_item/')) {
@@ -253,7 +253,6 @@ class RouteProvider implements RouteProviderInterface
 
         if ($this->configAdapter->get('addLanguageToUrl')) {
             $path = '/{_locale}'.$path;
-//            $requirements['_locale'] = '[a-z]{2}(\-[A-Z]{2})?';
             $requirements['_locale'] = $page->rootLanguage;
         }
 
