@@ -58,11 +58,11 @@ class RoutingTest extends WebTestCase
         Config::set('urlSuffix', '.html');
         Config::set('addLanguageToUrl', false);
 
-        $client = $this->createClient();
-        System::setContainer($client->getContainer());
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -272,11 +272,11 @@ class RoutingTest extends WebTestCase
         Config::set('urlSuffix', '.html');
         Config::set('addLanguageToUrl', true);
 
-        $client = $this->createClient(['environment' => 'locale']);
-        System::setContainer($client->getContainer());
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -477,11 +477,11 @@ class RoutingTest extends WebTestCase
         Config::set('urlSuffix', '');
         Config::set('addLanguageToUrl', false);
 
-        $client = $this->createClient(['environment' => 'suffix']);
-        System::setContainer($client->getContainer());
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+
+        $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
+        System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -679,12 +679,12 @@ class RoutingTest extends WebTestCase
     {
         Config::set('addLanguageToUrl', false);
 
-        $client = $this->createClient();
-        System::setContainer($client->getContainer());
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -752,12 +752,12 @@ class RoutingTest extends WebTestCase
     {
         Config::set('addLanguageToUrl', true);
 
-        $client = $this->createClient(['environment' => 'locale']);
-        System::setContainer($client->getContainer());
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
