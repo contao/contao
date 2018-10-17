@@ -386,7 +386,7 @@ abstract class System
 		$strCacheKey = $strLanguage;
 
 		// Make sure the language exists
-        if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
+		if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
 		{
 			$strShortLang = substr($strLanguage, 0, 2);
 

@@ -109,7 +109,7 @@ class ImageSizesTest extends TestCase
 
         // Allow only one image size
         $properties = [
-            'imageSizes' => ['image_sizes' => '42'],
+            'imageSizes' => [42],
             'isAdmin' => false,
         ];
 
