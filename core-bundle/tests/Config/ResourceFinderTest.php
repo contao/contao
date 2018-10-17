@@ -17,13 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class ResourceFinderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $finder = new ResourceFinder([]);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Config\ResourceFinder', $finder);
-    }
-
     public function testReturnsAFinderObject(): void
     {
         $finder = new ResourceFinder([]);

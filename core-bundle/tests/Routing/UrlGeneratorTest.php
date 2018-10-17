@@ -24,14 +24,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class UrlGeneratorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $router = $this->createMock(UrlGeneratorInterface::class);
-        $generator = new UrlGenerator($router, $this->mockContaoFramework(), false);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Routing\UrlGenerator', $generator);
-    }
-
     public function testCanWriteTheContext(): void
     {
         $router = new ParentUrlGenerator(new RouteCollection(), new RequestContext());

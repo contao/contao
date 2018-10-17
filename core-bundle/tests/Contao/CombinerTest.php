@@ -17,7 +17,6 @@ use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -63,16 +62,11 @@ class CombinerTest extends ContaoTestCase
             ->willReturn('')
         ;
 
-        $this->container = new ContainerBuilder();
+        $this->container = $this->mockContainer($this->getTempDir());
         $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');
         $this->container->set('contao.assets.assets_context', $context);
 
         System::setContainer($this->container);
-    }
-
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\Combiner', new Combiner());
     }
 
     public function testCombinesCssFiles(): void

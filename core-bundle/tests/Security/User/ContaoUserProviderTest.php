@@ -30,13 +30,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ContaoUserProviderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $userProvider = $this->mockUserProvider();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\User\ContaoUserProvider', $userProvider);
-    }
-
     public function testLoadsUsersByUsername(): void
     {
         $user = $this->createMock(BackendUser::class);

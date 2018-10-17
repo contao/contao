@@ -18,11 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoManagerBundleTest extends TestCase
 {
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManagerBundle', new ContaoManagerBundle());
-    }
-
     public function testBuild(): void
     {
         $container = new ContainerBuilder();

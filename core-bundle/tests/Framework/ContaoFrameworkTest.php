@@ -34,14 +34,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $framework = $this->mockFramework(new RequestStack(), $this->mockRouter('/'));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFramework', $framework);
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFrameworkInterface', $framework);
-    }
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -237,9 +229,6 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainer();
         $container->setParameter('contao.csrf_token_name', 'dummy_token');
 
-        // Ensure to use the fixtures class
-        Config::preload();
-
         $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
@@ -291,10 +280,6 @@ class ContaoFrameworkTest extends TestCase
         error_reporting($errorReporting);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testValidatesTheRequestToken(): void
     {
         $request = new Request();
@@ -353,10 +338,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
     {
         $request = new Request();
@@ -393,10 +374,6 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
     {
         $request = new Request();
@@ -480,9 +457,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @dataProvider getInstallRoutes
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void

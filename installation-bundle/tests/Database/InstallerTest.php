@@ -25,13 +25,6 @@ use PHPUnit\Framework\TestCase;
 
 class InstallerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $installer = $this->mockInstaller();
-
-        $this->assertInstanceOf('Contao\InstallationBundle\Database\Installer', $installer);
-    }
-
     public function testReturnsTheAlterTableCommands(): void
     {
         $fromSchema = new Schema();

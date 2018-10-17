@@ -18,15 +18,6 @@ use Contao\ModuleModel;
 
 class FrontendModuleReferenceTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $reference = new FrontendModuleReference(new ModuleModel());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\Reference\FrontendModuleReference', $reference);
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\Reference\FragmentReference', $reference);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Controller\ControllerReference', $reference);
-    }
-
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
         $model = new ModuleModel();

@@ -86,11 +86,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $this->provider = new ArticlePickerProvider($menuFactory, $router);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\ArticlePickerProvider', $this->provider);
-    }
-
     /**
      * @group legacy
      *

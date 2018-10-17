@@ -22,8 +22,11 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Tests\Fixtures\Exception\PageErrorResponseException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\System;
+use Doctrine\DBAL\Connection;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,13 +44,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = $this->mockListener(FrontendUser::class);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $listener);
-    }
-
     public function testRendersBackEndExceptions(): void
     {
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
@@ -139,7 +135,12 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testRendersTheContaoPageHandler(int $type, \Exception $exception): void
     {
-        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
+        $container = $this->mockContainer();
+        $container->set('database_connection', $this->createMock(Connection::class));
+
+        System::setContainer($container);
+
+        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\CoreBundle\Tests\Fixtures\Controller\PageError'.$type.'Controller';
 
         $event = $this->mockResponseEvent($exception);
 
@@ -170,7 +171,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void
     {
-        $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorResponseException';
+        $GLOBALS['TL_PTY']['error_403'] = PageErrorResponseException::class;
 
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->mockResponseEvent($exception);

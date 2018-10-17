@@ -421,10 +421,12 @@ class Config
 		include __DIR__ . '/../../config/agents.php';
 		include __DIR__ . '/../../config/mimetypes.php';
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Include the local configuration file
-		if (($blnHasLcf = file_exists(TL_ROOT . '/system/config/localconfig.php')) === true)
+		if (($blnHasLcf = file_exists($rootDir . '/system/config/localconfig.php')) === true)
 		{
-			include TL_ROOT . '/system/config/localconfig.php';
+			include $rootDir . '/system/config/localconfig.php';
 		}
 
 		static::loadParameters();

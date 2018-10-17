@@ -18,14 +18,6 @@ use Symfony\Component\Security\Csrf\Exception\TokenNotFoundException;
 
 class MemoryTokenStorageTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $memoryTokenStorage = new MemoryTokenStorage();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Csrf\MemoryTokenStorage', $memoryTokenStorage);
-        $this->assertInstanceOf('Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface', $memoryTokenStorage);
-    }
-
     public function testStoresAndRemovesTokens(): void
     {
         $memoryTokenStorage = new MemoryTokenStorage();

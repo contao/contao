@@ -32,11 +32,6 @@ class PhpFileLoaderTest extends TestCase
         $this->loader = new PhpFileLoader();
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileLoader', $this->loader);
-    }
-
     public function testSupportsPhpFiles(): void
     {
         $this->assertTrue(
@@ -69,7 +64,7 @@ EOF;
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'DC_Table',
+        'dataContainer' => 'Table',
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -96,7 +91,7 @@ EOF;
         $expects = <<<'EOF'
 
 namespace Foo\Bar {
-$GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = 'DC_Table';
+$GLOBALS['TL_DCA']['tl_test']['config']['dataContainer'] = 'Table';
 }
 
 EOF;
@@ -151,7 +146,7 @@ EOF;
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'DC_Table',
+        'dataContainer' => 'Table',
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -190,7 +185,7 @@ EOF;
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'DC_Table',
+        'dataContainer' => 'Table',
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -236,7 +231,7 @@ declare(ticks=1);
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'DC_Table',
+        'dataContainer' => 'Table',
         'sql' => [
             'keys' => [
                 'id' => 'primary',

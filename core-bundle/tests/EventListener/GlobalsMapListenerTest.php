@@ -17,13 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class GlobalsMapListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new GlobalsMapListener([]);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\GlobalsMapListener', $listener);
-    }
-
     /**
      * @dataProvider getValuesData
      *

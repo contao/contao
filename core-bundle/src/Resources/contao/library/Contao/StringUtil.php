@@ -1127,12 +1127,7 @@ class StringUtil
 	 */
 	public static function stripRootDir($path)
 	{
-		static $length = null;
-
-		if ($length === null)
-		{
-			$length = \strlen(TL_ROOT);
-		}
+		$length = \strlen(TL_ROOT);
 
 		if (strncmp($path, TL_ROOT, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
 		{

@@ -41,11 +41,6 @@ class BackendMenuRendererTest extends TestCase
         $this->renderer = new BackendMenuRenderer($this->templating);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Menu\BackendMenuRenderer', $this->renderer);
-    }
-
     public function testRendersTheBackendMenuTemplate(): void
     {
         $tree = $this->createMock(ItemInterface::class);

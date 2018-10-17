@@ -73,11 +73,6 @@ class PagePickerProviderTest extends ContaoTestCase
         $this->provider = new PagePickerProvider($menuFactory, $router, $translator);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PagePickerProvider', $this->provider);
-    }
-
     public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([

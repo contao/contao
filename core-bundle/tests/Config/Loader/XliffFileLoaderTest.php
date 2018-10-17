@@ -32,11 +32,6 @@ class XliffFileLoaderTest extends TestCase
         $this->loader = new XliffFileLoader($this->getFixturesDir());
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\XliffFileLoader', $this->loader);
-    }
-
     public function testSupportsXlfFiles(): void
     {
         $this->assertTrue(

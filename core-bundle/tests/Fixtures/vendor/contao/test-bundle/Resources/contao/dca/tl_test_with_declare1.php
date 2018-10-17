@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'DC_Table',
+        'dataContainer' => 'Table',
         'sql' => [
             'keys' => [
                 'id' => 'primary',

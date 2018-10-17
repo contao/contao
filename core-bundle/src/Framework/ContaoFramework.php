@@ -229,7 +229,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        return substr($route, \strlen($this->request->getBasePath()) + 1);
+        $basePath = $this->request->getBasePath().'/';
+
+        if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
+            return null;
+        }
+
+        return substr($route, \strlen($basePath));
     }
 
     private function getPath(): ?string

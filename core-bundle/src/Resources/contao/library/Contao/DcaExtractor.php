@@ -373,6 +373,12 @@ class DcaExtractor extends Controller
 			$this->loadDataContainer($this->strTable);
 		}
 
+		// Return if the table is not defined
+		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
+		{
+			return;
+		}
+
 		// Return if the DC type is "File"
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File')
 		{
@@ -414,8 +420,8 @@ class DcaExtractor extends Controller
 			}
 		}
 
-		$sql = $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] ?: array();
-		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?: array();
+		$sql = $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] ?? array();
+		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($blnFromFile)
@@ -491,7 +497,7 @@ class DcaExtractor extends Controller
 			return;
 		}
 
-		$params = \System::getContainer()->get('doctrine.dbal.default_connection')->getParams();
+		$params = \System::getContainer()->get('database_connection')->getParams();
 
 		// Add the default engine and charset if none is given
 		if (empty($sql['engine']))

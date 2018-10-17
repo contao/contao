@@ -16,6 +16,7 @@ use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Symfony\Component\Config\FileLocator;
@@ -49,13 +50,13 @@ class ContaoCacheWarmerTest extends TestCase
         $fs->remove($this->getFixturesDir().'/var/cache/contao');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheWarmer', $this->warmer);
-    }
-
     public function testCreatesTheCacheFolder(): void
     {
+        $container = $this->mockContainer($this->getFixturesDir());
+        $container->set('database_connection', $this->createMock(Connection::class));
+
+        System::setContainer($container);
+
         $class1 = new \stdClass();
         $class1->language = 'en-US';
 

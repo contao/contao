@@ -34,15 +34,6 @@ class ConfigurationTest extends TestCase
         $this->configuration = new Configuration(false, $this->getTempDir(), $this->getTempDir().'/app', 'en');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Configuration', $this->configuration);
-
-        $treeBuilder = $this->configuration->getConfigTreeBuilder();
-
-        $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $treeBuilder);
-    }
-
     public function testAddsTheImagineService(): void
     {
         $params = [];

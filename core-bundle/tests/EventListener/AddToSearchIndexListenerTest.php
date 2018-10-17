@@ -41,13 +41,6 @@ class AddToSearchIndexListenerTest extends TestCase
         $this->framework = $this->mockContaoFramework([Frontend::class => $adapter]);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new AddToSearchIndexListener($this->framework);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
-    }
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled

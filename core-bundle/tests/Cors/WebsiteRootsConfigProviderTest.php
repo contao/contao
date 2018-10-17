@@ -22,13 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteRootsConfigProviderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $configProvider = new WebsiteRootsConfigProvider($this->createMock(Connection::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Cors\WebsiteRootsConfigProvider', $configProvider);
-    }
-
     public function testProvidesTheConfigurationIfTheHostMatches(): void
     {
         $request = Request::create('https://foobar.com');

@@ -17,13 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class LockedExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new LockedException(300);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Exception\LockedException', $exception);
-    }
-
     public function testReturnsTheLockedSecondsAndMinutes(): void
     {
         $exception = new LockedException(300);
@@ -57,6 +50,6 @@ class LockedExceptionTest extends TestCase
      */
     private function getSerializedException(): string
     {
-        return serialize([300, serialize([null, serialize([null, 0, 'foobar', __FILE__, 37])])]);
+        return serialize([300, serialize([null, serialize([null, 0, 'foobar', __FILE__, 30])])]);
     }
 }

@@ -45,11 +45,6 @@ class BinaryStringTypeTest extends TestCase
         $this->type = Type::getType(BinaryStringType::NAME);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType', $this->type);
-    }
-
     public function testReturnsABinaryDefinitionForAFixedLengthField(): void
     {
         $fieldDefinition = ['fixed' => true];

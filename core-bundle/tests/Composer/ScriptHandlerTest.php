@@ -39,11 +39,6 @@ class ScriptHandlerTest extends TestCase
         $this->handler = new ScriptHandler();
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Composer\ScriptHandler', $this->handler);
-    }
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled

@@ -17,13 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class FragmentConfigTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $config = new FragmentConfig('');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FragmentConfig', $config);
-    }
-
     public function testReadsAndWritesTheController(): void
     {
         $config = new FragmentConfig('foo');

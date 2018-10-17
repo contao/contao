@@ -18,14 +18,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class FragmentReferenceTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $reference = new FragmentReference('');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\Reference\FragmentReference', $reference);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Controller\ControllerReference', $reference);
-    }
-
     public function testSetsTheDefaultScope(): void
     {
         $reference = new FragmentReference('');

@@ -19,17 +19,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $translator = new Translator(
-            $this->createMock(TranslatorInterface::class),
-            $this->mockContaoFramework()
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Translation\Translator', $translator);
-        $this->assertInstanceOf('Symfony\Component\Translation\TranslatorInterface', $translator);
-    }
-
     public function testForwardsTheMethodCallsToTheDecoratedTranslator(): void
     {
         $originalTranslator = $this->createMock(TranslatorInterface::class);

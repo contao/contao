@@ -75,11 +75,6 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->provider = new FaqPickerProvider($menuFactory, $router, $translator);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\FaqBundle\Picker\FaqPickerProvider', $this->provider);
-    }
-
     public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([

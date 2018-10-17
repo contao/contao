@@ -22,13 +22,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class FrontendLoaderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $loader = new FrontendLoader(false);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Routing\FrontendLoader', $loader);
-    }
-
     public function testSupportsTheContaoFrontEndRoute(): void
     {
         $loader = new FrontendLoader(false);

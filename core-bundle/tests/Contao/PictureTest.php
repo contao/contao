@@ -25,7 +25,6 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\Picture;
 use Contao\System;
 use Imagine\Gd\Imagine as ImagineGd;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -74,28 +73,6 @@ class PictureTest extends TestCase
         \define('TL_ROOT', $this->getTempDir());
 
         System::setContainer($this->mockContainerWithImageServices());
-    }
-
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
-     */
-    public function testCanBeInstantiated(): void
-    {
-        $properties = [
-            'extension' => 'jpg',
-            'path' => 'dummy.jpg',
-        ];
-
-        /** @var File|MockObject $fileMock */
-        $fileMock = $this->mockClassWithProperties(File::class, $properties);
-        $fileMock
-            ->method('exists')
-            ->willReturn(true)
-        ;
-
-        $this->assertInstanceOf('Contao\Picture', new Picture($fileMock));
     }
 
     /**

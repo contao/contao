@@ -37,11 +37,6 @@ class ScopeMatcherTest extends TestCase
         $this->matcher = $this->mockScopeMatcher();
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Routing\ScopeMatcher', $this->matcher);
-    }
-
     /**
      * @dataProvider masterRequestProvider
      */

@@ -16,23 +16,19 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolverTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $resolver = new ModelArgumentResolver($this->mockContaoFramework(), $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\ModelArgumentResolver', $resolver);
-    }
-
     /**
      * @dataProvider getArguments
      */
     public function testResolvesTheModel(string $name, string $class): void
     {
+        System::setContainer($this->mockContainer());
+
         $pageModel = new PageModel();
         $pageModel->setRow(['id' => 42]);
 

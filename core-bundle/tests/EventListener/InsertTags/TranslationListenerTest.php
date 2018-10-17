@@ -18,13 +18,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslationListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new TranslationListener($this->createMock(TranslatorInterface::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InsertTags\TranslationListener', $listener);
-    }
-
     /**
      * @dataProvider insertTagsProvider
      */

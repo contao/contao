@@ -25,13 +25,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class DoctrineMigrationsPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new DoctrineMigrationsPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass', $pass);
-    }
-
     public function testAddsTheDefinitionIfTheMigrationsBundleIsInstalled(): void
     {
         $container = $this->getContainerBuilder([DoctrineMigrationsBundle::class]);

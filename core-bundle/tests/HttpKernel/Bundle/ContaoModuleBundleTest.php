@@ -32,11 +32,6 @@ class ContaoModuleBundleTest extends TestCase
         $this->bundle = new ContaoModuleBundle('foobar', $this->getFixturesDir().'/app');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle', $this->bundle);
-    }
-
     public function testReturnsTheModulePath(): void
     {
         $this->assertSame($this->getFixturesDir().'/system/modules/foobar', $this->bundle->getPath());

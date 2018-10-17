@@ -17,13 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class SlugValidCharactersEventTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $event = new SlugValidCharactersEvent([]);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Event\SlugValidCharactersEvent', $event);
-    }
-
     public function testReadsAndWritesTheOptions(): void
     {
         $event = new SlugValidCharactersEvent(['a-z' => 'ASCII']);

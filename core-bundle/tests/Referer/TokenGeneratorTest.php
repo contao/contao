@@ -17,13 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class TokenGeneratorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $generator = new TokenGenerator(1000);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Referer\TokenGenerator', $generator);
-    }
-
     public function testGeneratesAnEightCharacterToken(): void
     {
         $generator = new TokenGenerator(1000);

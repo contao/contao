@@ -23,13 +23,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class BackendMenuListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new BackendMenuListener($this->createMock(TokenStorageInterface::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\BackendMenuListener', $listener);
-    }
-
     public function testCreatesANodeListFromTheBackendUserMenuArray(): void
     {
         $user = $this->createPartialMock(BackendUser::class, ['hasAccess', 'navigation']);

@@ -17,13 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class AjaxRedirectResponseExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new AjaxRedirectResponseException('http://example.org');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\AjaxRedirectResponseException', $exception);
-    }
-
     public function testSetsTheResponseStatusCodeAndAjaxLocation(): void
     {
         $exception = new AjaxRedirectResponseException('http://example.org');

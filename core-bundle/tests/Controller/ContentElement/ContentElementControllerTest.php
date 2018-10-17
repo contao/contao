@@ -16,18 +16,21 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Tests\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
+use Contao\System;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContentElementControllerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
     {
-        $controller = new TestController();
+        parent::setUp();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController', $controller);
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\AbstractFragmentController', $controller);
+        System::setContainer($this->mockContainer());
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void

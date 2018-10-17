@@ -19,9 +19,10 @@ use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Fragment\UnknownFragmentException;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,12 +32,14 @@ use Symfony\Component\HttpKernel\Fragment\FragmentRendererInterface;
 
 class FragmentHandlerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
     {
-        $fragmentHandler = $this->mockFragmentHandler();
+        parent::setUp();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Fragment\FragmentHandler', $fragmentHandler);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Fragment\FragmentHandler', $fragmentHandler);
+        System::setContainer($this->mockContainer());
     }
 
     public function testThrowsAnExceptionIfTheFragmentNameIsInvalid(): void

@@ -19,13 +19,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class BackendFormRendererTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $renderer = new BackendFormRenderer($this->createMock(RouterInterface::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer', $renderer);
-    }
-
     public function testRedirectsOnRenderFormCall(): void
     {
         $router = $this->createMock(RouterInterface::class);

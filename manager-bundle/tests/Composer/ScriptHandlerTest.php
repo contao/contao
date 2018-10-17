@@ -18,11 +18,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ScriptHandlerTest extends TestCase
 {
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Composer\ScriptHandler', new ScriptHandler());
-    }
-
     public function testInitializeApplicationMethodExists(): void
     {
         $this->assertTrue(method_exists(ScriptHandler::class, 'initializeApplication'));

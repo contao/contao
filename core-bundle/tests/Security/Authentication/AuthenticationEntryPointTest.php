@@ -21,16 +21,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationEntryPointTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $entryPoint = new AuthenticationEntryPoint(
-            $this->createMock(HttpUtils::class),
-            $this->createMock(RouterInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint', $entryPoint);
-    }
-
     public function testAddsTheRefererToTheRedirectUrl(): void
     {
         $request = new Request();

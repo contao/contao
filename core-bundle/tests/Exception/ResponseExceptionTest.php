@@ -18,13 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new ResponseException(new Response('Hello world'));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\ResponseException', $exception);
-    }
-
     public function testSetsTheResponseStatusCodeAndContent(): void
     {
         $exception = new ResponseException(new Response('Hello world'));

@@ -17,13 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class NoContentResponseExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new NoContentResponseException();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\NoContentResponseException', $exception);
-    }
-
     public function testSetsTheResponseStatusCode(): void
     {
         $exception = new NoContentResponseException();

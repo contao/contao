@@ -53,14 +53,6 @@ class ImageFactoryTest extends TestCase
         }
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $imageFactory = $this->mockImageFactory();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactory', $imageFactory);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactoryInterface', $imageFactory);
-    }
-
     public function testCreatesAnImageObjectFromAnImagePath(): void
     {
         $path = $this->getFixturesDir().'/images/dummy.jpg';
@@ -468,8 +460,11 @@ class ImageFactoryTest extends TestCase
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
+        \define('TL_ROOT', $this->getFixturesDir());
+
+        System::setContainer($this->mockContainer($this->getFixturesDir()));
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -543,8 +538,9 @@ class ImageFactoryTest extends TestCase
      */
     public function testExecutesTheGetImageHook(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
+        \define('TL_ROOT', $this->getFixturesDir());
 
         System::setContainer($this->mockContainer($this->getFixturesDir()));
 
@@ -626,8 +622,9 @@ class ImageFactoryTest extends TestCase
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
-        \define('TL_ROOT', $this->getFixturesDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
+        \define('TL_ROOT', $this->getFixturesDir());
 
         System::setContainer($this->mockContainer($this->getFixturesDir()));
 

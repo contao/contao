@@ -18,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoLoginFactoryTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $factory = new ContaoLoginFactory();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory', $factory);
-    }
-
     public function testReturnsTheCorrectKey(): void
     {
         $factory = new ContaoLoginFactory();

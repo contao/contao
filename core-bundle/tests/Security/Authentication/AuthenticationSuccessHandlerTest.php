@@ -30,13 +30,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $handler = $this->mockSuccessHandler();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler', $handler);
-    }
-
     public function testUpdatesTheUser(): void
     {
         $logger = $this->createMock(LoggerInterface::class);

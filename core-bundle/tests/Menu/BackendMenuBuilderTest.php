@@ -42,11 +42,6 @@ class BackendMenuBuilderTest extends TestCase
         $this->builder = new BackendMenuBuilder(new MenuFactory(), $this->eventDispatcher);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Menu\BackendMenuBuilder', $this->builder);
-    }
-
     public function testCreatesTheRootNode(): void
     {
         $tree = $this->builder->create();

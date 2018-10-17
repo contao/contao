@@ -20,13 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\NewsBundle\EventListener\InsertTagsListener', $listener);
-    }
-
     public function testReplacesTheNewsFeedTag(): void
     {
         $properties = [

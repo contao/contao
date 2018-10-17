@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -27,16 +28,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $authenticator = $this->mockAuthenticator();
-
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator',
-            $authenticator
-        );
-    }
-
     public function testDoesNotAuthenticateIfTheSessionIsNotStarted(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -118,9 +109,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
      */
     public function testChecksTheBackendUsersAccessPermissions(bool $isAdmin, $amg, bool $isValid): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user->isAdmin = $isAdmin;
-        $user->amg = $amg;
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -170,8 +160,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     public function testDoesNotAuthenticateIfThereIsNotFrontendUser(): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user->isAdmin = true;
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -217,13 +207,11 @@ class FrontendPreviewAuthenticatorTest extends TestCase
      */
     public function testChecksTheBackendUsersFrontendGroupAccess(bool $isAdmin, $amg, $groups, bool $isValid): void
     {
-        $backendUser = $this->createMock(BackendUser::class);
-        $backendUser->isAdmin = $isAdmin;
-        $backendUser->amg = $amg;
+        /** @var BackendUser|MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
 
-        $frontendUser = $this->createMock(FrontendUser::class);
-        $frontendUser->groups = $groups;
-
+        /** @var FrontendUser|MockObject $frontendUser */
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, compact('groups'));
         $frontendUser
             ->method('getRoles')
             ->willReturn([])
@@ -278,14 +266,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsHidden(): void
     {
-        $backendUser = $this->createMock(BackendUser::class);
-        $backendUser->isAdmin = true;
-
-        $frontendUser = $this->createMock(FrontendUser::class);
-        $frontendUser
-            ->method('getRoles')
-            ->willReturn([])
-        ;
+        /** @var BackendUser|MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -309,6 +291,13 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $session = $this->mockSession();
         $session->start();
+
+        /** @var FrontendUser|MockObject $frontendUser */
+        $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
+        $frontendUser
+            ->method('getRoles')
+            ->willReturn([])
+        ;
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
@@ -330,14 +319,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsVisible(): void
     {
-        $backendUser = $this->createMock(BackendUser::class);
-        $backendUser->isAdmin = true;
-
-        $frontendUser = $this->createMock(FrontendUser::class);
-        $frontendUser
-            ->method('getRoles')
-            ->willReturn([])
-        ;
+        /** @var BackendUser|MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -361,6 +344,13 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $session = $this->mockSession();
         $session->start();
+
+        /** @var FrontendUser|MockObject $frontendUser */
+        $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
+        $frontendUser
+            ->method('getRoles')
+            ->willReturn([])
+        ;
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider

@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -26,20 +27,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class BackendLocaleListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new BackendLocaleListener(
-            $this->createMock(TokenStorageInterface::class),
-            $this->createMock(TranslatorInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\BackendLocaleListener', $listener);
-    }
-
     public function testSetsTheLocale(): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user->language = 'de';
+        /** @var BackendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['language' => 'de']);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -137,9 +128,6 @@ class BackendLocaleListenerTest extends TestCase
 
     public function testDoesNotSetTheLocaleIfNoUserLanguage(): void
     {
-        $user = $this->createMock(BackendUser::class);
-        $user->language = '';
-
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())

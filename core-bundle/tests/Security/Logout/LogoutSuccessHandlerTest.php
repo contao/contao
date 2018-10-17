@@ -20,13 +20,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutSuccessHandlerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $handler = new LogoutSuccessHandler($this->createMock(HttpUtils::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Logout\LogoutSuccessHandler', $handler);
-    }
-
     public function testRedirectsToAGivenUrl(): void
     {
         $request = new Request();

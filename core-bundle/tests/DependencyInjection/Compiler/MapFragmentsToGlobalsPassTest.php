@@ -22,13 +22,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class MapFragmentsToGlobalsPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new MapFragmentsToGlobalsPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass', $pass);
-    }
-
     public function testMapsFragmentsToTheGlobalsArray(): void
     {
         $contentElement = new Definition();

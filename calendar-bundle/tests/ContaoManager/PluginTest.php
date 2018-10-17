@@ -21,13 +21,6 @@ use PHPUnit\Framework\TestCase;
 
 class PluginTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $plugin = new Plugin();
-
-        $this->assertInstanceOf('Contao\CalendarBundle\ContaoManager\Plugin', $plugin);
-    }
-
     public function testReturnsTheBundles(): void
     {
         $parser = $this->createMock(ParserInterface::class);

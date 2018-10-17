@@ -33,13 +33,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ExceptionConverterListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new ExceptionConverterListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ExceptionConverterListener', $listener);
-    }
-
     public function testConvertsAccessDeniedExceptions(): void
     {
         $event = $this->mockResponseEvent(new AccessDeniedException());

@@ -22,11 +22,6 @@ use Contao\TestCase\ContaoTestCase;
 
 class ApplicationTest extends ContaoTestCase
 {
-    public function testInstantiation(): void
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\Application', $this->getApplication());
-    }
-
     public function testReturnsCorrectApplicationNameAndVersion(): void
     {
         $application = $this->getApplication();

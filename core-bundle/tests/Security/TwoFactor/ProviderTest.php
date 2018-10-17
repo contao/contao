@@ -17,31 +17,11 @@ use Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
+use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 
 class ProviderTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $authenticator = $this->createMock(Authenticator::class);
-        $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\TwoFactor\Provider', $provider);
-    }
-
-    public function testReturnsTheFormRenderer(): void
-    {
-        $authenticator = $this->createMock(Authenticator::class);
-        $renderer = $this->createMock(BackendFormRenderer::class);
-        $provider = new Provider($authenticator, $renderer);
-
-        $this->assertInstanceOf(
-            'Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface',
-            $provider->getFormRenderer()
-        );
-    }
-
     public function testDoesNotBeginAuthenticationWithAnInvalidUser(): void
     {
         $authenticator = $this->createMock(Authenticator::class);
@@ -64,8 +44,8 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
 
-        $user = $this->createMock(User::class);
-        $user->useTwoFactor = '';
+        /** @var User|MockObject $user */
+        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '']);
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -84,8 +64,8 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
         $renderer = $this->createMock(BackendFormRenderer::class);
 
-        $user = $this->createMock(User::class);
-        $user->useTwoFactor = '1';
+        /** @var User|MockObject $user */
+        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -128,8 +108,8 @@ class ProviderTest extends TestCase
 
     public function testValidatesTheAuthenticationCode(): void
     {
-        $user = $this->createMock(User::class);
-        $user->useTwoFactor = '1';
+        /** @var User|MockObject $user */
+        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
 
         $renderer = $this->createMock(BackendFormRenderer::class);
 

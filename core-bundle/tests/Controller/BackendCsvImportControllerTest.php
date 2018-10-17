@@ -54,13 +54,6 @@ class BackendCsvImportControllerTest extends TestCase
         System::setContainer($container);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $controller = $this->mockController();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $controller);
-    }
-
     public function testRendersTheListWizardMarkup(): void
     {
         $request = new Request();
@@ -101,7 +94,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockFramework(['files/data.csv']),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
@@ -154,7 +147,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockFramework(['files/data.csv']),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
@@ -211,7 +204,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockFramework(['files/data.csv']),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
@@ -260,7 +253,7 @@ EOF;
         $connection = $this->createMock(Connection::class);
 
         $controller = new BackendCsvImportController(
-            $this->mockFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
@@ -369,7 +362,7 @@ EOF;
         ;
 
         return new BackendCsvImportController(
-            $this->mockFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $this->createMock(Connection::class),
             $requestStack,
             $translator,
@@ -388,5 +381,27 @@ EOF;
         ];
 
         return $this->mockClassWithProperties(DataContainer::class, $properties);
+    }
+
+    /**
+     * Mocks a Contao framework with a file uploader.
+     *
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockContaoFrameworkWithUploader(): ContaoFrameworkInterface
+    {
+        $uploader = $this->createMock(FileUpload::class);
+        $uploader
+            ->method('uploadTo')
+            ->willReturn(['files/data.csv'])
+        ;
+
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->method('createInstance')
+            ->willReturn($uploader)
+        ;
+
+        return $framework;
     }
 }

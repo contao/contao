@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class PickerProviderPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new PickerProviderPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass', $pass);
-    }
-
     public function testAddsTheProvidersToThePickerBuilder(): void
     {
         $container = new ContainerBuilder();

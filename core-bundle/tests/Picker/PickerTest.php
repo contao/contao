@@ -48,11 +48,6 @@ class PickerTest extends TestCase
         $this->picker = new Picker($factory, [$provider], $config);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\Picker', $this->picker);
-    }
-
     public function testReturnsTheConfiguration(): void
     {
         $config = $this->picker->getConfig();

@@ -144,13 +144,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $this->container);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $extension = new ContaoCoreExtension();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $extension);
-    }
-
     public function testReturnsTheCorrectAlias(): void
     {
         $extension = new ContaoCoreExtension();

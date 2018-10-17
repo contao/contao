@@ -21,16 +21,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ValidCharactersTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $validCharacters = new ValidCharacters(
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TranslatorInterface::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Slug\ValidCharacters', $validCharacters);
-    }
-
     public function testReadsTheOptionsFromTheDispatchedEvent(): void
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);

@@ -1,10 +1,10 @@
 <?php
 
-namespace Contao\Fixtures;
+namespace Contao\CoreBundle\Tests\Fixtures\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class PageError403
+class PageError403Controller
 {
     public function getResponse()
     {

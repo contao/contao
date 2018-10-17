@@ -21,13 +21,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class AddSessionBagsPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new AddSessionBagsPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass', $pass);
-    }
-
     public function testAddsTheSessionBags(): void
     {
         $container = new ContainerBuilder();

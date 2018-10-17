@@ -24,14 +24,6 @@ use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCacheTest extends ContaoTestCase
 {
-    public function testInstantiation(): void
-    {
-        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
-
-        $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoCache', $cache);
-        $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache', $cache);
-    }
-
     public function testAddsTheEventSubscribers(): void
     {
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());

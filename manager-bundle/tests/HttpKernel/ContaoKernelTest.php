@@ -26,15 +26,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class ContaoKernelTest extends ContaoTestCase
 {
-    public function testInstantiation(): void
-    {
-        $kernel = $this->mockKernel($this->getTempDir());
-
-        $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoKernel', $kernel);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Kernel', $kernel);
-        $this->assertInstanceOf('FOS\HttpCache\SymfonyCache\HttpCacheProvider', $kernel);
-    }
-
     public function testRegisterBundles(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
@@ -55,6 +46,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testRegistersAppBundle(): void
     {

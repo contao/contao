@@ -25,13 +25,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ContaoTableProcessorTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $processor = $this->mockContaoTableProcessor();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $processor);
-    }
-
     public function testCanBeInvoked(): void
     {
         $processor = $this->mockContaoTableProcessor();

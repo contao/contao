@@ -18,13 +18,6 @@ use PHPUnit\Framework\TestCase;
 
 class ImageSizesEventTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $event = new ImageSizesEvent([1]);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Event\ImageSizesEvent', $event);
-    }
-
     public function testSupportsReadingAndWritingImageSizes(): void
     {
         $event = new ImageSizesEvent([1]);

@@ -15,8 +15,10 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -27,18 +29,17 @@ class ToggleViewListenerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        $container = $this->mockContainer();
+        $container->set('session', $this->mockSession());
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
 
         $_SERVER['HTTP_HOST'] = 'localhost';
-    }
-
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ToggleViewListener', $listener);
     }
 
     public function testRedirectsToDesktopView(): void

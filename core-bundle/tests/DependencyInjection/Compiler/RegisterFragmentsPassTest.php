@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class RegisterFragmentsPassTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new RegisterFragmentsPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass', $pass);
-    }
-
     public function testRegistersTheFragments(): void
     {
         $contentController = new Definition('App\Fragments\Text');

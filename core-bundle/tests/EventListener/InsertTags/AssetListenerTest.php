@@ -18,13 +18,6 @@ use Symfony\Component\Asset\Packages;
 
 class AssetListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new AssetListener(new Packages());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InsertTags\AssetListener', $listener);
-    }
-
     public function testReplacesInsertTagsWithPackageName(): void
     {
         $packages = $this->createMock(Packages::class);

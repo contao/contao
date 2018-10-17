@@ -28,13 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class DoctrineSchemaListenerTest extends DoctrineTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new DoctrineSchemaListener($this->createMock(DcaSchemaProvider::class));
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\DoctrineSchemaListener', $listener);
-    }
-
     public function testAppendsToAnExistingSchema(): void
     {
         $framework = $this->mockContaoFrameworkWithInstaller(

@@ -36,13 +36,6 @@ class AddAssetsPackagesPassTest extends TestCase
         $fs->mkdir(static::getTempDir().'/FooBarPackage/Resources/public');
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $pass = new AddAssetsPackagesPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass', $pass);
-    }
-
     public function testAbortsIfTheAssetsPackagesServiceDoesNotExist(): void
     {
         $container = $this->createMock(ContainerBuilder::class);

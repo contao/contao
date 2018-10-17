@@ -26,16 +26,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationFailureHandlerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $handler = new AuthenticationFailureHandler(
-            $this->createMock(HttpKernel::class),
-            $this->createMock(HttpUtils::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler', $handler);
-    }
-
     public function testDoesNotLogAnythingIfNoLogger(): void
     {
         $exception = $this->createMock(AccountStatusException::class);

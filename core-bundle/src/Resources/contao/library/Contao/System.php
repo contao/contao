@@ -307,7 +307,7 @@ abstract class System
 		{
 			$session = $session[$ref];
 		}
-		elseif (TL_MODE == 'BE' && \is_array($session))
+		elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
 		{
 			$session = end($session);
 		}
@@ -342,7 +342,7 @@ abstract class System
 		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && TL_MODE == 'FE')
+		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			$return = \Environment::get('httpReferer');
 		}
@@ -350,11 +350,11 @@ abstract class System
 		// Fallback to the current URL if there is no referer
 		if ($return == '')
 		{
-			$return = (TL_MODE == 'BE') ? 'contao/main.php' : \Environment::get('url');
+			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : \Environment::get('url');
 		}
 
 		// Do not urldecode here!
-		return ampersand($return, $blnEncodeAmpersands);
+		return preg_replace('/&(amp;)?/i', ($blnEncodeAmpersands ? '&amp;' : '&'), $return);
 	}
 
 	/**
@@ -368,7 +368,7 @@ abstract class System
 	{
 		if ($strLanguage === null)
 		{
-			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
+			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE'] ?? 'en');
 		}
 
 		// Fall back to English
@@ -386,7 +386,7 @@ abstract class System
 		$strCacheKey = $strLanguage;
 
 		// Make sure the language exists
-		if (!static::isInstalledLanguage($strLanguage))
+        if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
 		{
 			$strShortLang = substr($strLanguage, 0, 2);
 
@@ -464,16 +464,18 @@ abstract class System
 		}
 
 		// Handle single quotes in the deleteConfirm message
-		if ($strName == 'default')
+		if ($strName == 'default' && isset($GLOBALS['TL_LANG']['MSC']['deleteConfirm']))
 		{
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 
+		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
 		// Local configuration file
-		if (file_exists(TL_ROOT . '/system/config/langconfig.php'))
+		if (file_exists($rootDir . '/system/config/langconfig.php'))
 		{
 			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in app/Resources/contao/languages instead.', E_USER_DEPRECATED);
-			include TL_ROOT . '/system/config/langconfig.php';
+			include $rootDir . '/system/config/langconfig.php';
 		}
 	}
 

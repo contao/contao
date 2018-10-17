@@ -18,13 +18,6 @@ use PHPUnit\Framework\TestCase;
 
 class AdapterTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $adapter = new Adapter('Dummy');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
-    }
-
     public function testImplementsTheMagicCallMethod(): void
     {
         /** @var LegacyClass $adapter */

@@ -26,13 +26,6 @@ use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 class SwitchUserListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new SwitchUserListener($this->mockTokenStorage(), $this->mockLogger());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\SwitchUserListener', $listener);
-    }
-
     public function testAddsALogEntryIfAUserSwitchesToAnotherUser(): void
     {
         $logger = $this->mockLogger('User "user1" has switched to user "user2"');

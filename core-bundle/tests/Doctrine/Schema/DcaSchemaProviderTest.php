@@ -20,11 +20,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $this->getProvider());
-    }
-
     public function testHasAnEmptySchema(): void
     {
         $this->assertCount(0, $this->getProvider()->createSchema()->getTableNames());

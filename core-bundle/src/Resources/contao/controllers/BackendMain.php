@@ -108,9 +108,12 @@ class BackendMain extends Backend
 	 */
 	public function run()
 	{
-		try {
+		try
+		{
 			$version = PackageUtil::getVersion('contao/core-bundle');
-		} catch (\OutOfBoundsException $e) {
+		}
+		catch (\OutOfBoundsException $e)
+		{
 			$version = PackageUtil::getVersion('contao/contao');
 		}
 

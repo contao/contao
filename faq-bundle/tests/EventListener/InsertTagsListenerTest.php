@@ -20,13 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\FaqBundle\EventListener\InsertTagsListener', $listener);
-    }
-
     public function testReplacesTheFaqTags(): void
     {
         $page = $this->createMock(PageModel::class);

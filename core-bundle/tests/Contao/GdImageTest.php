@@ -42,12 +42,11 @@ class GdImageTest extends TestCase
      *
      * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
      */
-    public function testCanBeInstantiated(): void
+    public function testCreatesImagesFromResources(): void
     {
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);
 
-        $this->assertInstanceOf('Contao\GdImage', $image);
         $this->assertSame($resource, $image->getResource());
     }
 

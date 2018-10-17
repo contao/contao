@@ -19,6 +19,7 @@ use Contao\Image;
 use Contao\Image\ResizeCalculator;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -67,28 +68,6 @@ class ImageTest extends TestCase
         \define('TL_ROOT', $this->getTempDir());
 
         System::setContainer($this->mockContainerWithImageServices());
-    }
-
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
-     */
-    public function testCanBeInstantiated(): void
-    {
-        $properties = [
-            'extension' => 'jpg',
-            'path' => 'dummy.jpg',
-        ];
-
-        /** @var File|MockObject $fileMock */
-        $fileMock = $this->mockClassWithProperties(File::class, $properties);
-        $fileMock
-            ->method('exists')
-            ->willReturn(true)
-        ;
-
-        $this->assertInstanceOf('Contao\Image', new Image($fileMock));
     }
 
     /**
@@ -1545,6 +1524,7 @@ class ImageTest extends TestCase
 
         $container->set('contao.image.resizer', $resizer);
         $container->set('filesystem', new Filesystem());
+        $container->set('monolog.logger.contao', new NullLogger());
 
         return $container;
     }

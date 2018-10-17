@@ -18,13 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class InsertTagsControllerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $controller = new InsertTagsController($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\InsertTagsController', $controller);
-    }
-
     public function testRendersNonCacheableInsertTag(): void
     {
         $framework = $this->mockContaoFramework();

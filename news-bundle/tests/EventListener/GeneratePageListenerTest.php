@@ -24,13 +24,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new GeneratePageListener($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\NewsBundle\EventListener\GeneratePageListener', $listener);
-    }
-
     public function testAddsTheNewsFeedLink(): void
     {
         $GLOBALS['TL_HEAD'] = [];

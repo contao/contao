@@ -29,13 +29,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class StoreRefererListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = $this->mockListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $listener);
-    }
-
     /**
      * @dataProvider refererStoredOnKernelResponseProvider
      */

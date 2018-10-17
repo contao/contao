@@ -17,13 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class RedirectResponseExceptionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $exception = new RedirectResponseException('http://example.org');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\RedirectResponseException', $exception);
-    }
-
     public function testSetsTheResponseStatusCodeAndLocation(): void
     {
         $exception = new RedirectResponseException('http://example.org');

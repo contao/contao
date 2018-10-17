@@ -21,13 +21,6 @@ use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
 class PageLayoutListenerTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
-    {
-        $listener = new PageLayoutListener($this->mockScopeMatcher(), $this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener', $listener);
-    }
-
     /**
      * @dataProvider onReplayProvider
      */

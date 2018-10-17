@@ -45,11 +45,6 @@ class PickerBuilderTest extends ContaoTestCase
         $this->builder = new PickerBuilder(new MenuFactory(), $router);
     }
 
-    public function testCanBeInstantiated(): void
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerBuilder', $this->builder);
-    }
-
     public function testCreatesAPickerObject(): void
     {
         $factory = new MenuFactory();
