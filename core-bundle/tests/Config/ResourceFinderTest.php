@@ -22,16 +22,6 @@ use Symfony\Component\Finder\Finder;
 class ResourceFinderTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $finder = new ResourceFinder();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Config\ResourceFinder', $finder);
-    }
-
-    /**
      * Tests that the find() and findIn() methods return a finder object.
      */
     public function testReturnsAFinderObject()

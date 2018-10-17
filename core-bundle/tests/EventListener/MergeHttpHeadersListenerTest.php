@@ -27,17 +27,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class MergeHttpHeadersListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-        $listener = new MergeHttpHeadersListener($framework);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\MergeHttpHeadersListener', $listener);
-    }
-
-    /**
      * Tests that the headers are merged into the response object.
      */
     public function testMergesTheHeadersSent()

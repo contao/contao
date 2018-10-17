@@ -12,9 +12,11 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\LanguageHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\FileUpload;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +34,8 @@ class BackendCsvImportControllerTest extends TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         $GLOBALS['TL_LANG']['MSC'] = new LanguageHelper();
     }
 
@@ -40,15 +44,9 @@ class BackendCsvImportControllerTest extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        unset($GLOBALS['TL_LANG']['MSC']);
-    }
+        parent::tearDownAfterClass();
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\BackendCsvImportController', $this->getController());
+        unset($GLOBALS['TL_LANG']['MSC']);
     }
 
     /**
@@ -128,7 +126,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
             $this->getRootDir()
@@ -217,7 +215,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
             $this->getRootDir()
@@ -310,7 +308,7 @@ EOF;
         $requestStack->push($request);
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
             $this->getRootDir()
@@ -379,7 +377,7 @@ EOF;
         ;
 
         $controller = new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $this->createMock(Connection::class),
             new RequestStack(),
             $this->getRootDir()
@@ -409,10 +407,27 @@ EOF;
         $requestStack->push($request);
 
         return new BackendCsvImportController(
-            $this->mockContaoFramework(),
+            $this->mockContaoFrameworkWithUploader(),
             $this->createMock(Connection::class),
             $requestStack,
             $this->getRootDir()
         );
+    }
+
+    /**
+     * Mocks a Contao framework with a file uploader.
+     *
+     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockContaoFrameworkWithUploader()
+    {
+        $uploader = $this->createMock(FileUpload::class);
+
+        $uploader
+            ->method('uploadTo')
+            ->willReturn(['files/data.csv'])
+        ;
+
+        return $this->mockContaoFramework(null, null, [], [FileUpload::class => $uploader]);
     }
 }

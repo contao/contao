@@ -42,15 +42,6 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Plugin', $this->plugin);
-        $this->assertTrue(method_exists($this->plugin, 'autoloadModules'));
-    }
-
-    /**
      * Tests the getBundles() method.
      */
     public function testGetBundles()

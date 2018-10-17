@@ -28,16 +28,6 @@ use PHPUnit\Framework\TestCase;
 class GeneratePageListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new GeneratePageListener($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CalendarBundle\EventListener\GeneratePageListener', $listener);
-    }
-
-    /**
      * Tests that the listener returns a replacement string for a calendar feed.
      */
     public function testAddsTheCalendarFeedLink()

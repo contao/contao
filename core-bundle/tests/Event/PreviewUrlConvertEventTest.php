@@ -21,16 +21,6 @@ use PHPUnit\Framework\TestCase;
 class PreviewUrlConvertEventTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $event = new PreviewUrlConvertEvent();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Event\PreviewUrlConvertEvent', $event);
-    }
-
-    /**
      * Tests the URL getter and setter.
      */
     public function testSupportsReadingAndWritingTheUrl()

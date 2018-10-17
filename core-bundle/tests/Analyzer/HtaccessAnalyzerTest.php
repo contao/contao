@@ -22,22 +22,6 @@ use Symfony\Component\Finder\SplFileInfo;
 class HtaccessAnalyzerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $file = new SplFileInfo(
-            $this->getRootDir().'/system/modules/foobar/assets/.htaccess',
-            'system/modules/foobar/assets',
-            'system/modules/foobar/assets/.htaccess'
-        );
-
-        $htaccess = new HtaccessAnalyzer($file);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Analyzer\HtaccessAnalyzer', $htaccess);
-    }
-
-    /**
      * Tests reading the access configuration.
      */
     public function testReadsTheAccessConfigurationFromTheHtaccesFile()

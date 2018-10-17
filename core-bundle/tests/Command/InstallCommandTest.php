@@ -64,17 +64,6 @@ class InstallCommandTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $command = new InstallCommand('contao:install');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Command\InstallCommand', $command);
-        $this->assertSame('contao:install', $command->getName());
-    }
-
-    /**
      * Tests creating the the Contao folders.
      */
     public function testCreatesTheContaoFolders()

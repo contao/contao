@@ -28,16 +28,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ContaoDataCollectorTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $collector = new ContaoDataCollector([]);
-
-        $this->assertInstanceOf('Contao\CoreBundle\DataCollector\ContaoDataCollector', $collector);
-    }
-
-    /**
      * Tests collecting data in the back end.
      */
     public function testCollectsDataInBackEnd()
@@ -59,7 +49,7 @@ class ContaoDataCollectorTest extends TestCase
             [
                 'version' => '4.0.0',
                 'framework' => true,
-                'models' => 5,
+                'models' => 0,
                 'frontend' => false,
                 'preview' => false,
                 'layout' => '',

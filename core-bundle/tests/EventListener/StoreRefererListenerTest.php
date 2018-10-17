@@ -32,14 +32,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class StoreRefererListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\StoreRefererListener', $this->getListener());
-    }
-
-    /**
      * Tests that the referer is stored upon kernel.response.
      *
      * @param Request $request

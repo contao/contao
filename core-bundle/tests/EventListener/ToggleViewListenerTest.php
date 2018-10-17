@@ -52,16 +52,6 @@ class ToggleViewListenerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ToggleViewListener', $listener);
-    }
-
-    /**
      * Tests that there is a repsonse with a correct cookie for the desktop view.
      */
     public function testRedirectsToDesktopView()

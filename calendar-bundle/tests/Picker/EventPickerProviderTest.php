@@ -72,14 +72,6 @@ class EventPickerProviderTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CalendarBundle\Picker\EventPickerProvider', $this->provider);
-    }
-
-    /**
      * Tests the createMenuItem() method.
      */
     public function testCreatesTheMenuItem()

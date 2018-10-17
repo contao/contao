@@ -39,17 +39,6 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Routing\UrlGenerator',
-            new UrlGenerator($this->mockRouter('foo'), $this->mockContaoFramework(), false)
-        );
-    }
-
-    /**
      * Tests the setContext() method.
      */
     public function testCanWriteTheContext()

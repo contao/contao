@@ -22,14 +22,6 @@ use Symfony\Component\Filesystem\Filesystem;
 class ScriptHandlerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Composer\ScriptHandler', new ScriptHandler());
-    }
-
-    /**
      * Tests that the initializeApplication() method exists.
      */
     public function testInitializeApplicationMethodExists()

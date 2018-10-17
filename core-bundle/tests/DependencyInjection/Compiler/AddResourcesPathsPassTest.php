@@ -25,16 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AddResourcesPathsPassTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $pass = new AddResourcesPathsPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass', $pass);
-    }
-
-    /**
      * Tests adding the resources paths.
      */
     public function testAddsTheResourcesPaths()

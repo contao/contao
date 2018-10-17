@@ -114,16 +114,6 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $extension = new ContaoCoreExtension();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\ContaoCoreExtension', $extension);
-    }
-
-    /**
      * Tests the getAlias() method.
      */
     public function testReturnsTheCorrectAlias()

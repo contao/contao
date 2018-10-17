@@ -29,17 +29,6 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 class DoctrineSchemaListenerTest extends DoctrineTestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $provider = $this->createMock(DcaSchemaProvider::class);
-        $listener = new DoctrineSchemaListener($provider);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\DoctrineSchemaListener', $listener);
-    }
-
-    /**
      * Tests appending to an existing scheme.
      */
     public function testAppendsToAnExistingSchema()

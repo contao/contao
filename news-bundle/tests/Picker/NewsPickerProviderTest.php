@@ -72,14 +72,6 @@ class NewsPickerProviderTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\NewsBundle\Picker\NewsPickerProvider', $this->provider);
-    }
-
-    /**
      * Tests the createMenuItem() method.
      */
     public function testCreatesTheMenuItem()

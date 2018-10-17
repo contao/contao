@@ -21,17 +21,6 @@ use Contao\CoreBundle\Tests\TestCase;
 class XliffFileLoaderTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf(
-            'Contao\CoreBundle\Config\Loader\XliffFileLoader',
-            new XliffFileLoader($this->getRootDir().'/app')
-        );
-    }
-
-    /**
      * Tests that only XLF files are supported.
      */
     public function testSupportsXlfFiles()

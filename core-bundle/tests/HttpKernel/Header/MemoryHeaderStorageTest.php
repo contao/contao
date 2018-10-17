@@ -19,17 +19,6 @@ use Contao\CoreBundle\Tests\TestCase;
 class MemoryHeaderStorageTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $storage = new MemoryHeaderStorage();
-
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage', $storage);
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface', $storage);
-    }
-
-    /**
      * Tests that all headers are returned.
      */
     public function testReturnsAllHeaders()

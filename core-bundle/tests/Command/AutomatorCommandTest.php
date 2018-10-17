@@ -26,37 +26,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class AutomatorCommandTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $command = new AutomatorCommand('contao:automator');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Command\AutomatorCommand', $command);
-        $this->assertSame('contao:automator', $command->getName());
-    }
-
-    /**
-     * Tests generating the task list.
-     */
-    public function testGeneratesTheTaskList()
-    {
-        $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
-
-        $tester = new CommandTester($command);
-        $tester->setInputs(["\n"]);
-
-        $code = $tester->execute(['command' => $command->getName()]);
-        $output = $tester->getDisplay();
-
-        $this->assertSame(0, $code);
-        $this->assertContains('Please select a task:', $output);
-        $this->assertContains('[10]', $output);
-    }
-
-    /**
      * Tests that the object can be converted to a string.
      */
     public function testCanBeConvertedToString()
@@ -88,25 +57,6 @@ class AutomatorCommandTest extends TestCase
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
 
         $lock->release();
-    }
-
-    /**
-     * Tests that the task name can be passed as argument.
-     */
-    public function testTakesTheTaskNameAsArgument()
-    {
-        $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
-
-        $tester = new CommandTester($command);
-
-        $code = $tester->execute([
-            'command' => $command->getName(),
-            'task' => 'purgeTempFolder',
-        ]);
-
-        $this->assertSame(0, $code);
     }
 
     /**

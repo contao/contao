@@ -45,16 +45,6 @@ class ContaoFaqExtensionTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $extension = new ContaoFaqExtension();
-
-        $this->assertInstanceOf('Contao\FaqBundle\DependencyInjection\ContaoFaqExtension', $extension);
-    }
-
-    /**
      * Tests the contao_faq.listener.insert_tags service.
      */
     public function testRegistersTheInsertTagsListener()

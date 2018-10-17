@@ -28,16 +28,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class PreviewUrlConverterListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new PreviewUrlConvertListener(new RequestStack(), $this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\NewsBundle\EventListener\PreviewUrlConvertListener', $listener);
-    }
-
-    /**
      * Tests the onPreviewUrlConvert() method.
      */
     public function testConvertsThePreviewUrl()

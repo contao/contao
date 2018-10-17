@@ -27,16 +27,6 @@ use PHPUnit\Framework\TestCase;
 class InstallerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $installer = $this->getInstaller();
-
-        $this->assertInstanceOf('Contao\InstallationBundle\Database\Installer', $installer);
-    }
-
-    /**
      * Tests dropping a column.
      */
     public function testReturnsTheAlterTableDropCommand()

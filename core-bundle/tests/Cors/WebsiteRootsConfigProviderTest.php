@@ -25,17 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 class WebsiteRootsConfigProviderTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $connection = $this->createMock(Connection::class);
-        $configProvider = new WebsiteRootsConfigProvider($connection);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Cors\WebsiteRootsConfigProvider', $configProvider);
-    }
-
-    /**
      * Tests that a configuration is provided if the host matches.
      */
     public function testProvidesTheConfigurationIfTheHostMatches()

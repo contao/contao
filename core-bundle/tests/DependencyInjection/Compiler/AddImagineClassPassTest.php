@@ -23,16 +23,6 @@ use Symfony\Component\DependencyInjection\Definition;
 class AddImagineClassPassTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $pass = new AddImagineClassPass();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddImagineClassPass', $pass);
-    }
-
-    /**
      * Tests adding the Imagine class.
      */
     public function testAddsTheImagineClass()

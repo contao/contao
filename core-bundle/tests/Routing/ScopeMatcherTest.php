@@ -39,14 +39,6 @@ class ScopeMatcherTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Routing\ScopeMatcher', $this->matcher);
-    }
-
-    /**
      * Tests the request methods.
      *
      * @param string $scope

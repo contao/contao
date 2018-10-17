@@ -36,14 +36,6 @@ class PickerConfigTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $this->config);
-    }
-
-    /**
      * Tests the getter methods.
      */
     public function testCanReadValues()

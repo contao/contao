@@ -20,6 +20,8 @@ use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\System;
+use Doctrine\DBAL\Connection;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,14 +76,6 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\PrettyErrorScreenListener', $this->listener);
-    }
-
-    /**
      * Tests rendering a back end exception.
      */
     public function testRendersBackEndExceptions()
@@ -128,7 +122,12 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testRendersTheContaoPageHandler($type, \Exception $exception)
     {
-        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\PageError'.$type;
+        $container = $this->mockContainerWithContaoScopes();
+        $container->set('database_connection', $this->createMock(Connection::class));
+
+        System::setContainer($container);
+
+        $GLOBALS['TL_PTY']['error_'.$type] = 'Contao\CoreBundle\Tests\Fixtures\Controller\PageError'.$type.'Controller';
 
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');

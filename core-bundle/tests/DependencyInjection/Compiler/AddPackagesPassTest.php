@@ -22,16 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AddPackagesPassTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
-
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass', $pass);
-    }
-
-    /**
      * Tests adding the packages.
      */
     public function testAddsThePackages()

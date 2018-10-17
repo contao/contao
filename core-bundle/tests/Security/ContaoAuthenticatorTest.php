@@ -31,16 +31,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class ContaoAuthenticatorTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $authenticator = new ContaoAuthenticator($this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\ContaoAuthenticator', $authenticator);
-    }
-
-    /**
      * Tests creating an authentication token.
      */
     public function testCreatesTheToken()
@@ -158,7 +148,7 @@ class ContaoAuthenticatorTest extends TestCase
             ->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->setMethods(['authenticate'])
-            ->getMock()
+            ->getMockForAbstractClass()
         ;
 
         $user

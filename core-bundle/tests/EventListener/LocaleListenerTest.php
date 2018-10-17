@@ -25,16 +25,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class LocaleListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\LocaleListener', $listener);
-    }
-
-    /**
      * Tests the onKernelRequest() method with a request attribute.
      *
      * @param string $locale

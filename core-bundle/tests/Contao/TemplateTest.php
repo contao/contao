@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\System;
 use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -39,6 +40,8 @@ class TemplateTest extends TestCase
 
         \define('TL_ROOT', $this->getRootDir());
         \define('TL_MODE', 'BE');
+
+        System::setContainer($this->mockContainerWithContaoScopes());
     }
 
     /**

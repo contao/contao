@@ -21,14 +21,6 @@ use Contao\CoreBundle\Tests\TestCase;
 class ContaoContextTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoContext', new ContaoContext('foo'));
-    }
-
-    /**
      * Tests the setter and getter methods.
      */
     public function testSupportsReadingAndWritingValues()

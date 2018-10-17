@@ -37,15 +37,6 @@ class ContaoManagerExtensionTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension', $this->extension);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\DependencyInjection\Extension', $this->extension);
-    }
-
-    /**
      * Tests the load() method.
      */
     public function testLoad()

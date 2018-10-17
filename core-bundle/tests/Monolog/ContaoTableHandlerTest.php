@@ -28,14 +28,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ContaoTableHandlerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableHandler', new ContaoTableHandler());
-    }
-
-    /**
      * Tests setting and retrieving the DBAL service name.
      */
     public function testSupportsReadingAndWritingTheDbalServiceName()

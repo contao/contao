@@ -22,16 +22,6 @@ use PHPUnit\Framework\TestCase;
 class AdapterTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $adapter = new Adapter('Dummy');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
-    }
-
-    /**
      * Tests the __call method.
      */
     public function testImplementsTheMagicCallMethod()

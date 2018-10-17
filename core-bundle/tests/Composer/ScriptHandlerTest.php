@@ -42,17 +42,10 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Composer\ScriptHandler', $this->handler);
-    }
-
-    /**
      * Tests generating a random secret.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testGeneratesARandomSecretIfTheConfigurationFileDoesNotExist()
     {

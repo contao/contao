@@ -26,16 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ContaoCoreBundleTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $bundle = new ContaoCoreBundle();
-
-        $this->assertInstanceOf('Contao\CoreBundle\ContaoCoreBundle', $bundle);
-    }
-
-    /**
      * Tests the getContainerExtension() method.
      */
     public function testReturnsTheContainerExtension()

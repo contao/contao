@@ -61,14 +61,6 @@ class SessionListenerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\SessionListener', $this->listener);
-    }
-
-    /**
      * Tests that the onKernelRequest call is forwarded.
      */
     public function testForwardsTheOnKernelRequestCall()

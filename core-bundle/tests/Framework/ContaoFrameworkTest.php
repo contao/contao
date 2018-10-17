@@ -41,23 +41,10 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
 class ContaoFrameworkTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $framework = $this->mockContaoFramework(
-            new RequestStack(),
-            $this->mockRouter('/')
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFramework', $framework);
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\ContaoFrameworkInterface', $framework);
-    }
-
-    /**
      * Tests initializing the framework with a front end request.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testInitializesTheFrameworkWithAFrontEndRequest()
     {
@@ -94,6 +81,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with a back end request.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testInitializesTheFrameworkWithABackEndRequest()
     {
@@ -130,6 +118,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework without a request.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testInitializesTheFrameworkWithoutARequest()
     {
@@ -159,6 +148,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with request but without route.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testInitializesTheFrameworkWithoutARoute()
     {
@@ -200,6 +190,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an empty route.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testInitializesTheFrameworkWithAnEmptyRoute()
     {
@@ -235,6 +226,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework without a scope.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testInitializesTheFrameworkWithoutAScope()
     {
@@ -268,9 +260,12 @@ class ContaoFrameworkTest extends TestCase
      * Tests that the framework is not initialized twice.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testDoesNotInitializeTheFrameworkTwice()
     {
+        \define('TL_ROOT', $this->getRootDir());
+
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'foobar');
 
@@ -306,6 +301,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests that the error level will get updated when configured.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testOverridesTheErrorLevel()
     {
@@ -337,8 +333,6 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * Tests initializing the framework with a valid request token.
-     *
-     * @runInSeparateProcess
      */
     public function testValidatesTheRequestToken()
     {
@@ -366,6 +360,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an invalid request token.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testFailsIfTheRequestTokenIsInvalid()
     {
@@ -404,8 +399,6 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * Tests if the request token check is skipped upon an Ajax request.
-     *
-     * @runInSeparateProcess
      */
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests()
     {
@@ -444,8 +437,6 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * Tests if the request token check is skipped if the attribute is false.
-     *
-     * @runInSeparateProcess
      */
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse()
     {
@@ -489,6 +480,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with an incomplete installation.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testFailsIfTheInstallationIsIncomplete()
     {
@@ -543,7 +535,6 @@ class ContaoFrameworkTest extends TestCase
      *
      * @param string $route
      *
-     * @runInSeparateProcess
      * @dataProvider getInstallRoutes
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool($route)
@@ -611,6 +602,7 @@ class ContaoFrameworkTest extends TestCase
      * Tests initializing the framework with a valid request token.
      *
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testFailsIfTheContainerIsNotSet()
     {

@@ -83,14 +83,6 @@ class CombinerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\Combiner', new Combiner());
-    }
-
-    /**
      * Tests the CSS combiner.
      */
     public function testCombinesCssFiles()

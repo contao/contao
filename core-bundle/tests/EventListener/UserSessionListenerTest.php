@@ -38,14 +38,6 @@ use Symfony\Component\Security\Core\User\User;
 class UserSessionListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\UserSessionListener', $this->getListener());
-    }
-
-    /**
      * Tests replacing the session upon kernel.request.
      *
      * @param string $scope
@@ -74,6 +66,7 @@ class UserSessionListenerTest extends TestCase
 
         $user = $this
             ->getMockBuilder($userClass)
+            ->disableOriginalConstructor()
             ->setMethods(['__get'])
             ->getMock()
         ;
@@ -150,6 +143,7 @@ class UserSessionListenerTest extends TestCase
 
         $user = $this
             ->getMockBuilder($userClass)
+            ->disableOriginalConstructor()
             ->setMethods(['__get', 'getTable'])
             ->getMock()
         ;

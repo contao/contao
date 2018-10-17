@@ -40,16 +40,6 @@ use Terminal42\HeaderReplay\HeaderReplayBundle;
 class PluginTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $plugin = new Plugin();
-
-        $this->assertInstanceOf('Contao\CoreBundle\ContaoManager\Plugin', $plugin);
-    }
-
-    /**
      * Tests returning the bundles.
      */
     public function testReturnsTheBundles()

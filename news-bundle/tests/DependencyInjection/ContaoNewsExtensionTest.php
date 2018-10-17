@@ -48,16 +48,6 @@ class ContaoNewsExtensionTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $extension = new ContaoNewsExtension();
-
-        $this->assertInstanceOf('Contao\NewsBundle\DependencyInjection\ContaoNewsExtension', $extension);
-    }
-
-    /**
      * Tests the contao_news.listener.generate_page service.
      */
     public function testRegistersTheGeneratePageListener()

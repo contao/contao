@@ -59,20 +59,7 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new AddToSearchIndexListener($this->framework);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\AddToSearchIndexListener', $listener);
-    }
-
-    /**
      * Tests that the listener does use the response if the Contao framework is booted.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testIndexesTheResponse()
     {

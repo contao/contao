@@ -83,14 +83,6 @@ class InstallWebDirCommandTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
-    {
-        $this->assertInstanceOf('Contao\ManagerBundle\Command\InstallWebDirCommand', $this->command);
-    }
-
-    /**
      * Tests the command name.
      */
     public function testNameAndArguments()

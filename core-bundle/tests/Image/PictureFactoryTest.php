@@ -38,17 +38,6 @@ use Contao\Model\Collection;
 class PictureFactoryTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $pictureFactory = $this->getPictureFactory();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Image\PictureFactory', $pictureFactory);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\PictureFactoryInterface', $pictureFactory);
-    }
-
-    /**
      * Tests the create() method.
      */
     public function testCreatesAPictureObjectFromAnImagePath()

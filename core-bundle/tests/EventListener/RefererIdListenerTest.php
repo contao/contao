@@ -27,16 +27,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class RefererIdListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\RefererIdListener', $listener);
-    }
-
-    /**
      * Tests adding the token to the request.
      */
     public function testAddsTheTokenToTheRequest()

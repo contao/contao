@@ -33,18 +33,6 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\DependencyInjection\Configuration', $this->configuration);
-
-        $treeBuilder = $this->configuration->getConfigTreeBuilder();
-
-        $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $treeBuilder);
-    }
-
-    /**
      * Tests resolving the paths.
      */
     public function testResolvesThePaths()

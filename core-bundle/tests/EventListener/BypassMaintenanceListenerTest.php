@@ -25,16 +25,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class BypassMaintenanceListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new BypassMaintenanceListener($this->mockSession(), new RequestStack(), false);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\BypassMaintenanceListener', $listener);
-    }
-
-    /**
      * Tests adding the request attribute.
      */
     public function testAddsTheRequestAttribute()

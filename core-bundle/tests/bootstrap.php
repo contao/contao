@@ -40,13 +40,6 @@ $fixtureLoader = function ($class) {
         $class = substr($class, 7);
     }
 
-    $file = strtr($class, '\\', '/');
-
-    if (file_exists(__DIR__.'/Fixtures/library/'.$file.'.php')) {
-        include_once __DIR__.'/Fixtures/library/'.$file.'.php';
-        class_alias('Contao\Fixtures\\'.$class, 'Contao\\'.$class);
-    }
-
     $namespaced = 'Contao\\'.$class;
 
     if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced)) {

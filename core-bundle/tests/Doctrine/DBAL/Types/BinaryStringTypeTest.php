@@ -44,14 +44,6 @@ class BinaryStringTypeTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType', $this->type);
-    }
-
-    /**
      * Tests that getSqlDeclaration() returns a binary definition for fixed length fields.
      */
     public function testReturnsABinaryDefinitionForAFixedLengthField()

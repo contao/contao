@@ -54,17 +54,6 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $imageFactory = $this->getImageFactory();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactory', $imageFactory);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageFactoryInterface', $imageFactory);
-    }
-
-    /**
      * Tests the create() method.
      */
     public function testCreatesAnImageObjectFromAnImagePath()
@@ -621,15 +610,13 @@ class ImageFactoryTest extends TestCase
      *
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook()
     {
-        \define('TL_ROOT', $this->getRootDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
+
+        System::setContainer($this->mockContainerWithContaoScopes());
 
         $path = $this->getRootDir().'/images/dummy.jpg';
 
@@ -722,14 +709,10 @@ class ImageFactoryTest extends TestCase
      *
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook()
     {
-        \define('TL_ROOT', $this->getRootDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainerWithContaoScopes());
@@ -838,14 +821,10 @@ class ImageFactoryTest extends TestCase
      *
      * @group legacy
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue()
     {
-        \define('TL_ROOT', $this->getRootDir());
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
         System::setContainer($this->mockContainerWithContaoScopes());

@@ -26,16 +26,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class ResponseExceptionListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new ResponseExceptionListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ResponseExceptionListener', $listener);
-    }
-
-    /**
      * Tests passing a response exception.
      */
     public function testAddsAResponseToTheEvent()

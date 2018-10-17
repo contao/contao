@@ -22,16 +22,6 @@ use PHPUnit\Framework\TestCase;
 class ImageSizesEventTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $event = new ImageSizesEvent([1]);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Event\ImageSizesEvent', $event);
-    }
-
-    /**
      * Tests the image sizes setter and getter.
      */
     public function testSupportsReadingAndWritingImageSizes()

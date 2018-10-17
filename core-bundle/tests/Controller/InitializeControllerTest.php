@@ -25,16 +25,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class InitializeControllerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $controller = new InitializeController();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\InitializeController', $controller);
-    }
-
-    /**
      * Tests the indexAction() method.
      *
      * @group legacy

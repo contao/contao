@@ -55,15 +55,6 @@ class UserPasswordCommandTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Command\UserPasswordCommand', $this->command);
-        $this->assertSame('contao:user:password', $this->command->getName());
-    }
-
-    /**
      * Tests that the command defines username and password.
      */
     public function testDefinesUsernameAndPassword()

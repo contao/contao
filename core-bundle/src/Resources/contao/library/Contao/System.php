@@ -339,7 +339,7 @@ abstract class System
 	{
 		if ($strLanguage === null)
 		{
-			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
+			$strLanguage = str_replace('-', '_', isset($GLOBALS['TL_LANGUAGE']) ? $GLOBALS['TL_LANGUAGE'] : 'en');
 		}
 
 		// Fall back to English
@@ -357,7 +357,7 @@ abstract class System
 		$strCacheKey = $strLanguage;
 
 		// Make sure the language exists
-		if (!static::isInstalledLanguage($strLanguage))
+        if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
 		{
 			$strShortLang = substr($strLanguage, 0, 2);
 
@@ -435,7 +435,7 @@ abstract class System
 		}
 
 		// Handle single quotes in the deleteConfirm message
-		if ($strName == 'default')
+		if ($strName == 'default' && isset($GLOBALS['TL_LANG']['MSC']['deleteConfirm']))
 		{
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}

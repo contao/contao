@@ -15,6 +15,8 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\System;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\User;
@@ -43,39 +45,33 @@ class ContaoUserProviderTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\User\ContaoUserProvider', $provider);
-    }
-
-    /**
      * Tests loading the user "backend".
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testProvidesTheBackEndUser()
     {
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
+        $container->set('database_connection', $this->createMock(Connection::class));
+
+        System::setContainer($container);
+
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND));
+        $provider->setContainer($container);
 
         $this->assertInstanceOf('Contao\BackendUser', $provider->loadUserByUsername('backend'));
     }
 
     /**
      * Tests loading the user "frontend".
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testProvidesTheFrontEndUser()
     {
+        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND);
+        $container->set('database_connection', $this->createMock(Connection::class));
+
+        System::setContainer($container);
+
         $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $provider->setContainer($container);
 
         $this->assertInstanceOf('Contao\FrontendUser', $provider->loadUserByUsername('frontend'));
     }

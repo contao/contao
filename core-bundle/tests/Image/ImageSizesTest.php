@@ -58,14 +58,6 @@ class ImageSizesTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImageSizes', $this->imageSizes);
-    }
-
-    /**
      * Tests getting all options with image sizes.
      */
     public function testReturnsAllOptionsWithImageSizes()
@@ -103,8 +95,23 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
 
         $user = $this->createMock(BackendUser::class);
-        $user->imageSizes = serialize(['image_sizes' => '42']);
-        $user->isAdmin = true;
+
+        $user
+            ->method('__get')
+            ->willReturnCallback(
+                function ($key) {
+                    if ('isAdmin' === $key) {
+                        return true;
+                    }
+
+                    if ('imageSizes' === $key) {
+                        return serialize(['image_sizes' => '42']);
+                    }
+
+                    return null;
+                }
+            )
+        ;
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
@@ -121,10 +128,25 @@ class ImageSizesTest extends TestCase
         $this->expectExampleImageSizes();
 
         $user = $this->createMock(BackendUser::class);
-        $user->isAdmin = false;
 
-        // Allow only one image size
-        $user->imageSizes = serialize([42]);
+        $user
+            ->method('__get')
+            ->willReturnCallback(
+                function ($key) {
+                    if ('isAdmin' === $key) {
+                        return false;
+                    }
+
+                    // Allow only one image size
+                    if ('imageSizes' === $key) {
+                        return serialize([42]);
+                    }
+
+                    return null;
+                }
+            )
+        ;
+
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayNotHasKey('relative', $options);
@@ -132,16 +154,52 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('image_sizes', $options);
         $this->assertArrayHasKey('42', $options['image_sizes']);
 
-        // Allow only some TL_CROP options
-        $user->imageSizes = serialize(['proportional', 'box']);
+        $user = $this->createMock(BackendUser::class);
+
+        $user
+            ->method('__get')
+            ->willReturnCallback(
+                function ($key) {
+                    if ('isAdmin' === $key) {
+                        return false;
+                    }
+
+                    // Allow only some TL_CROP options
+                    if ('imageSizes' === $key) {
+                        return serialize(['proportional', 'box']);
+                    }
+
+                    return null;
+                }
+            )
+        ;
+
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertArrayHasKey('relative', $options);
         $this->assertArrayNotHasKey('exact', $options);
         $this->assertArrayNotHasKey('image_sizes', $options);
 
-        // Allow nothing
-        $user->imageSizes = serialize([]);
+        $user = $this->createMock(BackendUser::class);
+
+        $user
+            ->method('__get')
+            ->willReturnCallback(
+                function ($key) {
+                    if ('isAdmin' === $key) {
+                        return false;
+                    }
+
+                    // Allow nothing
+                    if ('imageSizes' === $key) {
+                        return serialize([]);
+                    }
+
+                    return null;
+                }
+            )
+        ;
+
         $options = $this->imageSizes->getOptionsForUser($user);
 
         $this->assertSame([], $options);

@@ -11,9 +11,7 @@
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\DoctrineTestCase;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -24,19 +22,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $provider = new DcaSchemaProvider(
-            $this->createMock(ContaoFrameworkInterface::class),
-            $this->createMock(Registry::class)
-        );
-
-        $this->assertInstanceOf('Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider', $provider);
-    }
-
     /**
      * Tests that the schema is empty.
      */

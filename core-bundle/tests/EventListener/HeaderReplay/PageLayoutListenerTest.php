@@ -26,16 +26,6 @@ use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 class PageLayoutListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new PageLayoutListener($this->mockScopeMatcher(), $this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener', $listener);
-    }
-
-    /**
      * Tests all combinations of user agent result, TL_VIEW cookie value and checks if the
      * header value is set correctly.
      *

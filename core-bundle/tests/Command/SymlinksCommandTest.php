@@ -34,20 +34,8 @@ class SymlinksCommandTest extends TestCase
 
         $fs->remove($this->getRootDir().'/system/logs');
         $fs->remove($this->getRootDir().'/system/themes');
-        $fs->remove($this->getRootDir().'/var/cache');
-        $fs->remove($this->getRootDir().'/web/assets');
-        $fs->remove($this->getRootDir().'/web/system');
-    }
-
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $command = new SymlinksCommand('contao:symlinks');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Command\SymlinksCommand', $command);
-        $this->assertSame('contao:symlinks', $command->getName());
+        $fs->remove($this->getRootDir().'/var');
+        $fs->remove($this->getRootDir().'/web');
     }
 
     /**

@@ -52,20 +52,7 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new CommandSchedulerListener($this->framework, $this->mockConnection());
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\CommandSchedulerListener', $listener);
-    }
-
-    /**
      * Tests that the listener does use the response if the Contao framework is booted.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testRunsTheCommandScheduler()
     {
@@ -116,9 +103,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     /**
      * Tests that the listener does nothing in the install tool.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testDoesNotRunTheCommandSchedulerInTheInstallTool()
     {
@@ -149,9 +133,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     /**
      * Tests that the listener does nothing upon a fragment URL.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testDoesNotRunTheCommandSchedulerUponFragmentRequests()
     {
@@ -182,9 +163,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     /**
      * Tests that the listener does nothing if the installation is incomplete.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete()
     {
@@ -228,9 +206,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     /**
      * Tests that the listener does nothing if the command scheduler has been disabled.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled()
     {
@@ -274,9 +249,6 @@ class CommandSchedulerListenerTest extends TestCase
 
     /**
      * Tests that the listener does nothing if the database connection fails.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError()
     {

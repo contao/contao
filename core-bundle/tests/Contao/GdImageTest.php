@@ -66,22 +66,6 @@ class GdImageTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     *
-     * @group legacy
-     *
-     * @expectedDeprecation Using the Contao\GdImage class has been deprecated %s.
-     */
-    public function testCanBeInstantiated()
-    {
-        $resource = imagecreate(1, 1);
-        $image = new GdImage($resource);
-
-        $this->assertInstanceOf('Contao\GdImage', $image);
-        $this->assertSame($resource, $image->getResource());
-    }
-
-    /**
      * Tests creating an image from dimensions.
      *
      * @group legacy

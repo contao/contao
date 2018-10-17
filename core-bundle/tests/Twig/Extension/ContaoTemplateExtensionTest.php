@@ -26,14 +26,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ContaoTemplateExtensionTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension', $this->getExtension());
-    }
-
-    /**
      * Tests the renderContaoBackendTemplate() method.
      */
     public function testRendersTheContaoBackendTemplate()

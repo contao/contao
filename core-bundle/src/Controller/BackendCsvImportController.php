@@ -167,7 +167,8 @@ class BackendCsvImportController
 
         $this->framework->initialize();
 
-        $uploader = new FileUpload();
+        /** @var FileUpload $uploader */
+        $uploader = $this->framework->createInstance(FileUpload::class);
         $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
         if (null !== $submitLabel) {

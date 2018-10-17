@@ -22,16 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ResponseExceptionTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $exception = new ResponseException(new Response('Hello world'));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Exception\ResponseException', $exception);
-    }
-
-    /**
      * Tests the getResponse() method.
      */
     public function testSetsTheResponseStatusCodeAndContent()

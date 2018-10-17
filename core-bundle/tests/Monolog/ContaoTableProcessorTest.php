@@ -29,14 +29,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ContaoTableProcessorTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Monolog\ContaoTableProcessor', $this->createContaoTableProcessor());
-    }
-
-    /**
      * Tests the __invoke() method.
      */
     public function testCanBeInvoked()

@@ -31,16 +31,6 @@ class ContaoCacheClearerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $clearer = new ContaoCacheClearer(new Filesystem());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheClearer', $clearer);
-    }
-
-    /**
      * Tests removing the cache folder.
      */
     public function testRemovesTheCacheFolder()

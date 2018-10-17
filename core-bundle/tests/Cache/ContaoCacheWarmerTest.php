@@ -58,14 +58,6 @@ class ContaoCacheWarmerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Cache\ContaoCacheWarmer', $this->warmer);
-    }
-
-    /**
      * Tests creating the cache folder.
      */
     public function testCreatesTheCacheFolder()

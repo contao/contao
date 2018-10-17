@@ -36,14 +36,6 @@ class ContaoModuleBundleTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle', $this->bundle);
-    }
-
-    /**
      * Tests returning the module path.
      */
     public function testReturnsTheModulePath()

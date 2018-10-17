@@ -21,16 +21,6 @@ use Contao\CoreBundle\Tests\TestCase;
 class PaletteManipulatorTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $pm = PaletteManipulator::create();
-
-        $this->assertInstanceOf('Contao\CoreBundle\DataContainer\PaletteManipulator', $pm);
-    }
-
-    /**
      * Tests prepending a field.
      */
     public function testPrependsAFieldToAPalette()

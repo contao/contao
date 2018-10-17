@@ -35,16 +35,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class ExceptionConverterListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new ExceptionConverterListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\ExceptionConverterListener', $listener);
-    }
-
-    /**
      * Tests converting an AccessDeniedException exception.
      */
     public function testConvertsAccessDeniedExceptions()

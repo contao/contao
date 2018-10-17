@@ -22,16 +22,6 @@ use Symfony\Component\Filesystem\Filesystem;
 class BundleCacheClearerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
-    {
-        $clearer = new BundleCacheClearer();
-
-        $this->assertInstanceOf('Contao\ManagerBundle\Cache\BundleCacheClearer', $clearer);
-    }
-
-    /**
      * Tests the clear() method.
      */
     public function testClear()

@@ -58,14 +58,6 @@ class PickerTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\Picker', $this->picker);
-    }
-
-    /**
      * Tests returning the configuration.
      */
     public function testReturnsTheConfiguration()

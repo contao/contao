@@ -27,16 +27,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class PreviewUrlCreateListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CalendarBundle\EventListener\PreviewUrlCreateListener', $listener);
-    }
-
-    /**
      * Tests the onPreviewUrlCreate() method.
      */
     public function testCreatesThePreviewUrl()

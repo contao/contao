@@ -29,17 +29,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ContaoKernelTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
-    {
-        $kernel = $this->getKernel(__DIR__);
-
-        $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoKernel', $kernel);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Kernel', $kernel);
-    }
-
-    /**
      * Tests the registerBundles() method.
      */
     public function testRegisterBundles()

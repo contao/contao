@@ -48,16 +48,6 @@ class ContaoCalendarExtensionTest extends TestCase
     }
 
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $extension = new ContaoCalendarExtension();
-
-        $this->assertInstanceOf('Contao\CalendarBundle\DependencyInjection\ContaoCalendarExtension', $extension);
-    }
-
-    /**
      * Tests the contao_calendar.listener.generate_page service.
      */
     public function testRegistersTheGeneratePageListener()

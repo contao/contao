@@ -21,16 +21,6 @@ use PHPUnit\Framework\TestCase;
 class PreviewUrlCreateEventTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $event = new PreviewUrlCreateEvent('news', 12);
-
-        $this->assertInstanceOf('Contao\CoreBundle\Event\PreviewUrlCreateEvent', $event);
-    }
-
-    /**
      * Tests the getId() method.
      */
     public function testSupportsReadingTheId()

@@ -12,8 +12,8 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\ContaoToken;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleInterface;
@@ -26,27 +26,18 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 class ContaoTokenTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testCanBeInstantiated()
-    {
-        $token = new ContaoToken(FrontendUser::getInstance());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\ContaoToken', $token);
-    }
-
-    /**
      * Tests a front end user.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testHandlesFrontEndUsers()
     {
-        $token = new ContaoToken(FrontendUser::getInstance());
+        $user = $this->createMock(FrontendUser::class);
+
+        $user
+            ->method('authenticate')
+            ->willReturn(true)
+        ;
+
+        $token = new ContaoToken($user);
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame('', $token->getCredentials());
@@ -60,13 +51,23 @@ class ContaoTokenTest extends TestCase
 
     /**
      * Tests a back end user.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testHandlesBackEndUsers()
     {
-        $token = new ContaoToken(BackendUser::getInstance());
+        $user = $this->createMock(BackendUser::class);
+
+        $user
+            ->method('__get')
+            ->with('isAdmin')
+            ->willReturn(true)
+        ;
+
+        $user
+            ->method('authenticate')
+            ->willReturn(true)
+        ;
+
+        $token = new ContaoToken($user);
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame('', $token->getCredentials());
@@ -81,15 +82,15 @@ class ContaoTokenTest extends TestCase
 
     /**
      * Tests an unauthenticated user.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testFailsIfTheUserIsNotAuthenticated()
     {
-        /** @var FrontendUser|object $user */
-        $user = FrontendUser::getInstance();
-        $user->authenticated = false;
+        $user = $this->createMock(FrontendUser::class);
+
+        $user
+            ->method('authenticate')
+            ->willReturn(false)
+        ;
 
         $this->expectException(UsernameNotFoundException::class);
 

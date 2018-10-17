@@ -24,16 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 class InsertTagsControllerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $controller = new InsertTagsController($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\CoreBundle\Controller\InsertTagsController', $controller);
-    }
-
-    /**
      * Tests rendering non-cacheable insert tags.
      */
     public function testRendersNonCacheableInsertTag()

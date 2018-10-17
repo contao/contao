@@ -27,16 +27,6 @@ use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 class UserSessionListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new UserSessionListener($this->mockScopeMatcher(), false);
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener', $listener);
-    }
-
-    /**
      * Tests adding the T42-Force-No-Cache header.
      *
      * @param string $cookie

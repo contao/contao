@@ -23,17 +23,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 class ArrayAttributeBagTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $adapter = new ArrayAttributeBag(new AttributeBag('foobar_storageKey'));
-
-        $this->assertInstanceOf('Contao\CoreBundle\Session\Attribute\ArrayAttributeBag', $adapter);
-        $this->assertInstanceOf('ArrayAccess', $adapter);
-    }
-
-    /**
      * Tests the offsetSet() method.
      */
     public function testCanWriteTheOffset()

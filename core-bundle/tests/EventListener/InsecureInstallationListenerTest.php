@@ -26,16 +26,6 @@ use Symfony\Component\HttpKernel\Kernel;
 class InsecureInstallationListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new InsecureInstallationListener();
-
-        $this->assertInstanceOf('Contao\CoreBundle\EventListener\InsecureInstallationListener', $listener);
-    }
-
-    /**
      * Tests throwing the exception if the document root is insecure.
      */
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure()

@@ -23,17 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class VersionCommandTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $command = new VersionCommand('contao:version');
-
-        $this->assertInstanceOf('Contao\CoreBundle\Command\VersionCommand', $command);
-        $this->assertSame('contao:version', $command->getName());
-    }
-
-    /**
      * Tests printing the version number.
      */
     public function testOutputsTheVersionNumber()

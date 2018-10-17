@@ -26,16 +26,6 @@ use PHPUnit\Framework\TestCase;
 class InsertTagsListenerTest extends TestCase
 {
     /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
-    {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
-
-        $this->assertInstanceOf('Contao\NewsBundle\EventListener\InsertTagsListener', $listener);
-    }
-
-    /**
      * Tests that the listener returns a replacement string for a news feed.
      */
     public function testReplacesTheNewsFeedTag()
