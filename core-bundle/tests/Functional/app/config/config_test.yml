@@ -36,10 +36,10 @@ doctrine:
         connections:
             default:
                 driver: pdo_mysql
-                host: localhost
+                host: '%env(DB_HOST)%'
                 user: '%env(DB_USER)%'
                 password: '%env(DB_PASS)%'
-                dbname: contao_test
+                dbname: '%env(DB_NAME)%'
                 charset: utf8mb4
                 default_table_options:
                     charset: utf8mb4

@@ -10,6 +10,10 @@
         <ini name="error_reporting" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendors" />
         <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel" />
+        <env name="DB_HOST" value="localhost" />
+        <env name="DB_USER" value="root" />
+        <env name="DB_PASS" value="" />
+        <env name="DB_NAME" value="contao_test" />
     </php>
 
     <testsuites>

@@ -10,8 +10,6 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-use Symfony\Component\Dotenv\Dotenv;
-
 error_reporting(E_ALL);
 
 $include = function ($file) {
@@ -28,14 +26,6 @@ if (
         .'php composer.phar install'.PHP_EOL;
 
     exit(1);
-}
-
-// Load the DB credentials
-if (file_exists(__DIR__.'/../.env')) {
-    (new Dotenv())->load(__DIR__.'/../.env');
-} else {
-    $_SERVER['DB_USER'] = 'root';
-    $_SERVER['DB_PASS'] = '';
 }
 
 // Autoload the fixture classes

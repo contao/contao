@@ -26,7 +26,7 @@ function functional() {
     exit 1
   fi
 
-  vendor/bin/phpunit -c core-bundle --testsuite=core-functional
+  vendor/bin/phpunit -c core-bundle --testsuite=core-functional  "$@"
 }
 
 function php-cs-fixer() {
