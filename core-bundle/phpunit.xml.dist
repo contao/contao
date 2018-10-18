@@ -22,11 +22,11 @@
             <exclude>./tests/Fixtures</exclude>
             <exclude>./tests/Functional</exclude>
         </testsuite>
-        <testsuite name="core-functional">
+        <testsuite name="functional">
             <directory>./tests/Functional</directory>
             <exclude>./tests/Functional/app</exclude>
         </testsuite>
-        <testsuite name="core-coverage">
+        <testsuite name="coverage">
             <directory>./tests</directory>
             <exclude>./tests/Contao</exclude>
             <exclude>./tests/Fixtures</exclude>
