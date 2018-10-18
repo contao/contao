@@ -1229,6 +1229,23 @@ abstract class DataContainer extends Backend
 			$tags[] = $ns . $parentTable . '.' . $parentId;
 		}
 
+		// Trigger the oncachetags_callback
+		if (\is_array($GLOBALS['TL_DCA'][$table]['config']['oncachetags_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$table]['config']['oncachetags_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($ids, $tags);
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback($ids, $tags);
+				}
+			}
+		}
+
 		return array_unique($tags);
 	}
 
