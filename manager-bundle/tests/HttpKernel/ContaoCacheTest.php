@@ -54,7 +54,7 @@ class ContaoCacheTest extends ContaoTestCase
         $this->assertInstanceOf(PurgeTagsListener::class, $preInvalidateListeners[1][0]);
 
         $postHandleListeners = $dispatcher->getListeners(Events::POST_HANDLE);
-        $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
+        $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[1][0]);
     }
 
     public function testCreatesTheCacheStore(): void
