@@ -109,6 +109,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             throw new \LogicException('The service container has not been set.');
         }
 
+        \define('TL_ROOT', $this->rootDir);
+
         $this->setConstants();
         $this->initializeFramework();
     }
@@ -168,71 +170,40 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function setConstants(): void
     {
-        if (null !== $this->request && !\defined('TL_MODE')) {
-            \define('TL_MODE', $this->getMode());
+        if (null === $this->request) {
+            return;
         }
 
-        if (!\defined('TL_START')) {
-            \define('TL_START', microtime(true));
-        }
-
-        if (!\defined('TL_ROOT')) {
-            \define('TL_ROOT', $this->rootDir);
-        }
-
-        if (null !== $this->request && !\defined('TL_REFERER_ID')) {
-            \define('TL_REFERER_ID', $this->getRefererId());
-        }
-
-        if (null !== $this->request && !\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', $this->getRoute());
-        }
+        \define('TL_MODE', $this->getMode($this->request));
+        \define('TL_REFERER_ID', $this->request->attributes->get('_contao_referer_id', ''));
+        \define('TL_SCRIPT', $this->getRoute($this->request));
 
         // Define the login status constants in the back end (see #4099, #5279)
-        if (null !== $this->request && !$this->scopeMatcher->isFrontendRequest($this->request)) {
+        if (!$this->scopeMatcher->isFrontendRequest($this->request)) {
             \define('BE_USER_LOGGED_IN', false);
             \define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        if (null !== $this->request && !\defined('TL_PATH')) {
-            \define('TL_PATH', $this->getPath());
-        }
+        \define('TL_PATH', $this->request->getBasePath());
     }
 
-    private function getMode(): ?string
+    private function getMode(Request $request): ?string
     {
-        if (null === $this->request) {
-            return null;
-        }
-
-        if ($this->scopeMatcher->isBackendRequest($this->request)) {
+        if ($this->scopeMatcher->isBackendRequest($request)) {
             return 'BE';
         }
 
-        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
+        if ($this->scopeMatcher->isFrontendRequest($request)) {
             return 'FE';
         }
 
         return null;
     }
 
-    private function getRefererId(): ?string
+    private function getRoute(Request $request): ?string
     {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->attributes->get('_contao_referer_id', '');
-    }
-
-    private function getRoute(): ?string
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        $attributes = $this->request->attributes;
+        $attributes = $request->attributes;
 
         if (!$attributes->has('_route')) {
             return null;
@@ -249,22 +220,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        $basePath = $this->request->getBasePath().'/';
+        $basePath = $request->getBasePath().'/';
 
         if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
             return null;
         }
 
         return substr($route, \strlen($basePath));
-    }
-
-    private function getPath(): ?string
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->getBasePath();
     }
 
     private function initializeFramework(): void
