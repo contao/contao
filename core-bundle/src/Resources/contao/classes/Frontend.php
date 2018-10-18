@@ -362,13 +362,13 @@ abstract class Frontend extends Controller
 					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
 					$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
 
-					throw new RedirectResponseException($strUrl, 301);
+					static::redirect($strUrl, 301);
 				}
 
 				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
 				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
 				{
-					throw new RedirectResponseException($objPage->getAbsoluteUrl(), 302);
+					static::redirect($objPage->getAbsoluteUrl(), 302);
 				}
 			}
 		}

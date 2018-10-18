@@ -1027,11 +1027,6 @@ abstract class Controller extends System
 	 */
 	public static function redirect($strLocation, $intStatus=303)
 	{
-		if (headers_sent())
-		{
-			exit;
-		}
-
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 		$strLocation = static::replaceOldBePaths($strLocation);
 
