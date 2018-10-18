@@ -808,7 +808,7 @@ class PageRegular extends Frontend
 			{
 				if (file_exists(TL_ROOT . '/' . $objFiles->path))
 				{
-					$strScripts .= \Template::generateScriptTag($objFiles->path, false, $objFiles->tstamp);
+					$strScripts .= \Template::generateScriptTag($objFiles->path, false);
 				}
 			}
 		}
