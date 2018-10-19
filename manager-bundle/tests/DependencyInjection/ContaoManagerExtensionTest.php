@@ -112,11 +112,9 @@ class ContaoManagerExtensionTest extends ContaoTestCase
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
     }
 
-    /**
-     * @dataProvider getDefaultManagerPaths
-     */
-    public function testDefaultContaoManagerPathIsRegisteredAutomatically(string $defaultPath): void
+    public function testDefaultContaoManagerPathIsRegisteredAutomatically(): void
     {
+        $defaultPath = 'contao-manager.phar.php';
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getTempDir());
 
@@ -150,13 +148,5 @@ class ContaoManagerExtensionTest extends ContaoTestCase
         $this->assertSame('custom.phar.php', $container->getParameter('contao_manager.manager_path'));
 
         $fs->remove($tmpDir . '/web/custom.phar.php');
-    }
-
-    public function getDefaultManagerPaths(): array
-    {
-        return [
-            ['contao-manager.phar.php'],
-            ['contao-manager.php']
-        ];
     }
 }

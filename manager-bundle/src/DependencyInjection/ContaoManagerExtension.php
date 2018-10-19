@@ -20,14 +20,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class ContaoManagerExtension extends ConfigurableExtension
 {
     /**
-     * @var array
-     */
-    private static $managerPaths = [
-        'contao-manager.phar.php',
-        'contao-manager.php'
-    ];
-
-    /**
      * {@inheritdoc}
      */
     public function getConfiguration(array $config, ContainerBuilder $container)
@@ -57,23 +49,18 @@ class ContaoManagerExtension extends ConfigurableExtension
      */
     protected function configureManagerUrlParameter(array $mergedConfig, ContainerBuilder $container): void
     {
-        $managerUrl = null;
+        $managerPath = null;
 
         if ($mergedConfig['manager_path']) {
-            $managerUrl = $mergedConfig['manager_path'];
+            $managerPath = $mergedConfig['manager_path'];
         } else {
             $projectDir = $container->getParameter('kernel.project_dir');
 
-            foreach (static::$managerPaths as $path) {
-                if (!is_file($projectDir . '/web/' . $path)) {
-                    continue;
-                }
-
-                $managerUrl = $path;
-                break;
+            if (is_file($projectDir . '/web/contao-manager.phar.php')) {
+                $managerPath = 'contao-manager.phar.php';
             }
         }
 
-        $container->setParameter('contao_manager.manager_path', $managerUrl);
+        $container->setParameter('contao_manager.manager_path', $managerPath);
     }
 }
