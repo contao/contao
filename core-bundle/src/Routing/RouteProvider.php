@@ -76,7 +76,7 @@ class RouteProvider implements RouteProviderInterface
 
             $this->addRoutesForRootPages($this->findRootPages(), $routes);
 
-            return $this->createCollectionForRoutes($routes);
+            return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
 
         $pathInfo = $this->removeSuffixAndLanguage($pathInfo);
@@ -91,7 +91,7 @@ class RouteProvider implements RouteProviderInterface
 
         $this->addRoutesForPages($pages, $routes);
 
-        return $this->createCollectionForRoutes($routes);
+        return $this->createCollectionForRoutes($routes, $request->getLanguages());
     }
 
     /**
@@ -228,9 +228,9 @@ class RouteProvider implements RouteProviderInterface
         }
     }
 
-    private function createCollectionForRoutes(array $routes): RouteCollection
+    private function createCollectionForRoutes(array $routes, array $languages): RouteCollection
     {
-        $this->sortRoutes($routes);
+        $this->sortRoutes($routes, $languages);
 
         $collection = new RouteCollection();
 
@@ -270,15 +270,11 @@ class RouteProvider implements RouteProviderInterface
 
     private function addRoutesForRootPage(PageModel $page, array &$routes): void
     {
-        if ('root' !== $page->type && 'index' !== $page->alias) {
+        if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
 
         $page->loadDetails();
-
-        if (!$this->configAdapter->get('addLanguageToUrl') && 'index' !== $page->alias && !$page->rootIsFallback) {
-            return;
-        }
 
         $path = '/';
         $requirements = [];
@@ -346,13 +342,17 @@ class RouteProvider implements RouteProviderInterface
 
     /**
      * Sorts routes so that the FinalMatcher will correctly resolve them.
-     * 1. The ones with hostname should come first so the empty ones are only taken if no hostname matches
+     * 1. The ones with hostname should come first so the ones with empty host are only taken if no hostname matches
      * 2. Root pages come last so non-root page with index alias (= identical path) matches first
-     * 3. Pages with longer alias (folder page) must come first to match if applicable.
+     * 3. Root/Index pages must be sorted by accept language and fallback so the best language matches first
+     * 4. Pages with longer alias (folder page) must come first to match if applicable.
      */
-    private function sortRoutes(array &$routes): void
+    private function sortRoutes(array &$routes, array $languages = null): void
     {
-        uasort($routes, function (Route $a, Route $b) {
+        // Convert languages array so key is language and value is priority
+        $languages = array_flip(array_values($languages));
+
+        uasort($routes, function (Route $a, Route $b) use ($languages) {
             if ('' !== $a->getHost() && '' === $b->getHost()) {
                 return -1;
             }
@@ -374,6 +374,25 @@ class RouteProvider implements RouteProviderInterface
 
             if ('root' === $pageA->type && 'root' !== $pageB->type) {
                 return 1;
+            }
+
+            if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
+                $langA = $languages[$pageA->rootLanguage] ?? null;
+                $langB = $languages[$pageB->rootLanguage] ?? null;
+
+                if (null === $langA && null === $langB) {
+                    return $pageA->rootIsFallback ? -1 : ($pageB->rootIsFallback ? -1 : 0);
+                }
+
+                if (null === $langA && null !== $langB) {
+                    return 1;
+                }
+
+                if (null !== $langA && null === $langB) {
+                    return -1;
+                }
+
+                return $langA < $langB ? -1 : 1;
             }
 
             return strnatcasecmp($pageB->alias, $pageA->alias);
