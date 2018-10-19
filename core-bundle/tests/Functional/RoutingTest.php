@@ -810,6 +810,27 @@ class RoutingTest extends WebTestCase
                 'en,de',
                 'root-with-index.local',
             ],
+            'Renders the first language root if the locale matches' => [
+                '/en/',
+                200,
+                'English site - Same domain root English with index',
+                'en,de',
+                'same-domain-root-with-index.local',
+            ],
+            'Renders the second language root if the locale matches' => [
+                '/de/',
+                200,
+                'German site - Same domain root German with index',
+                'de,en',
+                'same-domain-root-with-index.local',
+            ],
+            'Renders the second language root if the locale matches regardless of accept language' => [
+                '/de/',
+                200,
+                'German site - Same domain root German with index',
+                'fr',
+                'same-domain-root-with-index.local',
+            ],
             'Renders the 404 page if the locale does not match' => [
                 '/de/',
                 404,
