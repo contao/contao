@@ -12,7 +12,6 @@ namespace Contao\CoreBundle\Tests\Session\Attribute;
 
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
  * Tests the ArrayAttributeBag class.

@@ -213,8 +213,12 @@ class ContaoKernel extends Kernel
     {
         parent::initializeContainer();
 
-        // Set plugin loader again so it's available at runtime (synthetic service)
-        $this->getContainer()->set('contao_manager.plugin_loader', $this->getPluginLoader());
+        if (null === ($container = $this->getContainer())) {
+            return;
+        }
+
+        // Set the plugin loader again so it is available at runtime (synthetic service)
+        $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
     }
 
     /**

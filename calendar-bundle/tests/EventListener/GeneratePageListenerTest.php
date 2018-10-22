@@ -38,13 +38,11 @@ class GeneratePageListenerTest extends TestCase
         $layoutModel
             ->method('__get')
             ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'calendarfeeds':
-                        return 'a:1:{i:0;i:3;}';
-
-                    default:
-                        return null;
+                if ('calendarfeeds' === $key) {
+                    return 'a:1:{i:0;i:3;}';
                 }
+
+                return null;
             })
         ;
 
@@ -72,13 +70,11 @@ class GeneratePageListenerTest extends TestCase
         $layoutModel
             ->method('__get')
             ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'calendarfeeds':
-                        return '';
-
-                    default:
-                        return null;
+                if ('calendarfeeds' === $key) {
+                    return '';
                 }
+
+                return null;
             })
         ;
 
@@ -101,13 +97,11 @@ class GeneratePageListenerTest extends TestCase
         $layoutModel
             ->method('__get')
             ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'calendarfeeds':
-                        return 'a:1:{i:0;i:3;}';
-
-                    default:
-                        return null;
+                if ('calendarfeeds' === $key) {
+                    return 'a:1:{i:0;i:3;}';
                 }
+
+                return null;
             })
         ;
 

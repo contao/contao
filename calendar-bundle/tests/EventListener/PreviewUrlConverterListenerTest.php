@@ -140,13 +140,11 @@ class PreviewUrlConverterListenerTest extends TestCase
         $eventsModelAdapter
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
-
-                    default:
-                        return [];
+                if (null === $id) {
+                    return null;
                 }
+
+                return [];
             })
         ;
 

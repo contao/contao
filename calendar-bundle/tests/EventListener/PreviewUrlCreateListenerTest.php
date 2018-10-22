@@ -154,26 +154,22 @@ class PreviewUrlCreateListenerTest extends TestCase
         $eventsModelAdapter
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
-
-                    default:
-                        return (object) ['id' => $id];
+                if (null === $id) {
+                    return null;
                 }
+
+                return (object)['id' => $id];
             })
         ;
 
         $framework
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($eventsModelAdapter) {
-                switch ($key) {
-                    case CalendarEventsModel::class:
-                        return $eventsModelAdapter;
-
-                    default:
-                        return null;
+                if (CalendarEventsModel::class === $key) {
+                    return $eventsModelAdapter;
                 }
+
+                return null;
             })
         ;
 

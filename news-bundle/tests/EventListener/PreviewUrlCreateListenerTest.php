@@ -14,6 +14,7 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
+use Contao\NewsModel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -153,26 +154,22 @@ class PreviewUrlCreateListenerTest extends TestCase
         $newsModelAdapter
             ->method('findByPk')
             ->willReturnCallback(function ($id) {
-                switch ($id) {
-                    case null:
-                        return null;
-
-                    default:
-                        return (object) ['id' => $id];
+                if (null === $id) {
+                    return null;
                 }
+
+                return (object)['id' => $id];
             })
         ;
 
         $framework
             ->method('getAdapter')
             ->willReturnCallback(function ($key) use ($newsModelAdapter) {
-                switch ($key) {
-                    case 'Contao\NewsModel':
-                        return $newsModelAdapter;
-
-                    default:
-                        return null;
+                if (NewsModel::class === $key) {
+                    return $newsModelAdapter;
                 }
+
+                return null;
             })
         ;
 
