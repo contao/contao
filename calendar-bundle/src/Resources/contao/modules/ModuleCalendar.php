@@ -239,6 +239,9 @@ class ModuleCalendar extends Events
 			$strClass = ($intCurrentDay < 2) ? ' weekend' : '';
 			$strClass .= ($i == 1 || $i == 8 || $i == 15 || $i == 22 || $i == 29 || $i == 36) ? ' col_first' : '';
 			$strClass .= ($i == 7 || $i == 14 || $i == 21 || $i == 28 || $i == 35 || $i == 42) ? ' col_last' : '';
+			
+			// Add timestamp to all cells
+			$arrDays[$strWeekClass][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
 
 			// Empty cell
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
