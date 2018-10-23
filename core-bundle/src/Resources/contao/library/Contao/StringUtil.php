@@ -28,12 +28,6 @@ class StringUtil
 {
 
 	/**
-	 * Trimsplit cache
-	 * @var array
-	 */
-	protected static $arrSplitCache = array();
-
-	/**
 	 * Shorten a string to a given number of characters
 	 *
 	 * The function preserves words, so the result might be a bit shorter or
@@ -1065,14 +1059,6 @@ class StringUtil
 	 */
 	public static function trimsplit($strPattern, $strString)
 	{
-		$strKey = md5($strPattern.$strString);
-
-		// Load from cache
-		if (isset(static::$arrSplitCache[$strKey]))
-		{
-			return static::$arrSplitCache[$strKey];
-		}
-
 		// Split
 		if (\strlen($strPattern) == 1)
 		{
@@ -1088,8 +1074,6 @@ class StringUtil
 		{
 			$arrFragments = array();
 		}
-
-		static::$arrSplitCache[$strKey] = $arrFragments;
 
 		return $arrFragments;
 	}

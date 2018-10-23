@@ -543,4 +543,57 @@ class StringUtilTest extends TestCase
 
         StringUtil::stripRootDir($this->getRootDir());
     }
+
+    /**
+     * Tests splitting and trimming a string.
+     *
+     * @param string $pattern
+     * @param string $string
+     * @param array  $expected
+     *
+     * @dataProvider trimsplitProvider
+     */
+    public function testTrimsplit($pattern, $string, array $expected)
+    {
+        $this->assertSame($expected, StringUtil::trimsplit($pattern, $string));
+    }
+
+    /**
+     * @return array
+     */
+    public function trimsplitProvider()
+    {
+        return [
+            'Test regular split' => [
+                ',',
+                'foo,bar',
+                ['foo', 'bar'],
+            ],
+            'Test split with trim' => [
+                ',',
+                " \n \r \t foo \n \r \t , \n \r \t bar \n \r \t ",
+                ['foo', 'bar'],
+            ],
+            'Test regex split' => [
+                '[,;]',
+                'foo,bar;baz',
+                ['foo', 'bar', 'baz'],
+            ],
+            'Test regex split with trim' => [
+                '[,;]',
+                " \n \r \t foo \n \r \t , \n \r \t bar \n \r \t ; \n \r \t baz \n \r \t ",
+                ['foo', 'bar', 'baz'],
+            ],
+            'Test split cache bug 1' => [
+                ',',
+                ',foo,,bar',
+                ['', 'foo', '', 'bar'],
+            ],
+            'Test split cache bug 2' => [
+                ',,',
+                'foo,,bar',
+                ['foo', 'bar'],
+            ],
+        ];
+    }
 }
