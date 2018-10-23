@@ -545,6 +545,8 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * Tests splitting and trimming a string.
+     *
      * @param string $pattern
      * @param string $string
      * @param array  $expected
