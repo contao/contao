@@ -43,6 +43,9 @@ class SymlinksCommandTest extends TestCase
      */
     public function testSymlinksTheContaoFolders()
     {
+        $fs = new Filesystem();
+        $fs->mkdir($this->getRootDir().'/var/logs');
+
         $container = new ContainerBuilder();
         $container->setParameter('kernel.logs_dir', $this->getRootDir().'/var/logs');
         $container->setParameter('kernel.project_dir', $this->getRootDir());
