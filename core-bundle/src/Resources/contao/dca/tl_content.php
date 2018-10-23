@@ -1678,7 +1678,7 @@ class tl_content extends Backend
 	 */
 	public function extractYouTubeId($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord->singleSRC != $varValue)
+		if ($dc->activeRecord->youtube != $varValue)
 		{
 			$matches = array();
 
@@ -1701,7 +1701,7 @@ class tl_content extends Backend
 	 */
 	public function extractVimeoId($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord->singleSRC != $varValue)
+		if ($dc->activeRecord->vimeo != $varValue)
 		{
 			$matches = array();
 
