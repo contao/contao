@@ -41,6 +41,7 @@ class SymlinksCommandTest extends TestCase
     {
         $fs = new Filesystem();
         $fs->mkdir($this->getFixturesDir().'/system/themes/default');
+        $fs->mkdir($this->getFixturesDir().'/var/logs');
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
