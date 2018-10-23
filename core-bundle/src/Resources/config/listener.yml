@@ -62,7 +62,7 @@ services:
             - { name: contao.hook, hook: loadDataContainer }
 
     contao.listener.data_container.layout_assets:
-        class: Contao\CoreBundle\EventListener\DataContainer\LayoutAssets
+        class: Contao\CoreBundle\EventListener\DataContainer\LayoutAssetsListener
         public: true # TODO tag the service as DCA callback
         arguments:
             - ~ # Will be replaced by the LayoutAssetsPass

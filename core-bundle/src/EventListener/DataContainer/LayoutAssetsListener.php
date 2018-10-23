@@ -4,7 +4,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-class LayoutAssets
+class LayoutAssetsListener
 {
 
     /**
@@ -38,7 +38,7 @@ class LayoutAssets
         return $this->getFilesWithExtension('.js');
     }
 
-    private function getFilesWithExtension(string $extension)
+    private function getFilesWithExtension(string $extension): array
     {
         if (!$this->filesystem->exists($this->jsonManifestPath)) {
             return [];
@@ -54,7 +54,7 @@ class LayoutAssets
         ));
     }
 
-    private function load()
+    private function load(): void
     {
         if (null !== $this->data) {
             return;
