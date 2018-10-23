@@ -563,7 +563,7 @@ class PageRegular extends Frontend
 
 							if ($objFile !== null)
 							{
-								$strStyleSheet = \Template::generateStyleTag(\Controller::addFilesUrlTo($objFile->path), $media, $objFile->tstamp);
+								$strStyleSheet = \Template::generateStyleTag(\Controller::addFilesUrlTo($objFile->path), $media, null);
 							}
 						}
 						else
@@ -808,7 +808,7 @@ class PageRegular extends Frontend
 			{
 				if (file_exists(TL_ROOT . '/' . $objFiles->path))
 				{
-					$strScripts .= \Template::generateScriptTag($objFiles->path, false, $objFiles->tstamp);
+					$strScripts .= \Template::generateScriptTag($objFiles->path, false, null);
 				}
 			}
 		}
