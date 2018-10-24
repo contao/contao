@@ -274,7 +274,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['cssAssets'],
 			'exclude'                 => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('contao.listener.data_container.layout_assets', 'getCssAssets'),
+			// options_callback from tagges service
 			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "blob NULL"
 		),
@@ -471,7 +471,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['jsAssets'],
 			'exclude'                 => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('contao.listener.data_container.layout_assets', 'getJsAssets'),
+			// options_callback from tagges service
 			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "blob NULL"
 		),

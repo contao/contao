@@ -66,6 +66,9 @@ services:
         public: true # TODO tag the service as DCA callback
         arguments:
             - ~ # Will be replaced by the LayoutAssetsPass
+        tags:
+            - { name: contao.callback, table: tl_layout, target: fields.jsAssets.options, method: getJsAssets }
+            - { name: contao.callback, table: tl_layout, target: fields.cssAssets.options, method: getCssAssets }
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
