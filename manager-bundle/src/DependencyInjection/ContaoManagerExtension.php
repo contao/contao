@@ -54,9 +54,9 @@ class ContaoManagerExtension extends ConfigurableExtension
         if ($mergedConfig['manager_path']) {
             $managerPath = $mergedConfig['manager_path'];
         } else {
-            $projectDir = $container->getParameter('kernel.project_dir');
+            $webDir = $container->getParameter('contao.web_dir');
 
-            if (is_file($projectDir . '/web/contao-manager.phar.php')) {
+            if (is_file($webDir . '/contao-manager.phar.php')) {
                 $managerPath = 'contao-manager.phar.php';
             }
         }
