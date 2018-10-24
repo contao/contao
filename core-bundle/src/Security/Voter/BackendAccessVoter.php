@@ -5,7 +5,6 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\BackendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class BackendAccessVoter extends Voter
 {
@@ -14,7 +13,7 @@ class BackendAccessVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        return 0 === strpos($attribute, 'contao_user.') && (\is_scalar($subject) || \is_array($subject));
+        return 0 === strpos($attribute, 'contao_user.');
     }
 
     /**
@@ -23,12 +22,12 @@ class BackendAccessVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
-        [$table, $field] = explode('.', $attribute, 2);
+        [,$field] = explode('.', $attribute, 2);
 
-        if (!$user instanceof BackendUser || 'contao_user' !== $table) {
-            return VoterInterface::ACCESS_ABSTAIN;
+        if (!$user instanceof BackendUser || (!\is_scalar($subject) && !\is_array($subject))) {
+            return false;
         }
 
-        return $user->hasAccess($subject, $field) ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        return $user->hasAccess($subject, $field);
     }
 }
