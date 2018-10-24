@@ -38,6 +38,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearFormDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
+use Contao\CoreBundle\EventListener\DataContainer\LayoutAssetsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -311,6 +312,29 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey('contao.hook', $tags);
         $this->assertSame('loadDataContainer', $tags['contao.hook'][0]['hook']);
+    }
+
+    public function testRegistersTheLayoutAssetsListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.data_container.layout_assets'));
+
+        $definition = $this->container->getDefinition('contao.listener.data_container.layout_assets');
+
+        $this->assertSame(LayoutAssetsListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertCount(1, $definition->getArguments());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.callback', $tags);
+
+        $this->assertSame('tl_layout', $tags['contao.callback'][0]['table']);
+        $this->assertSame('fields.jsAssets.options', $tags['contao.callback'][0]['target']);
+        $this->assertSame('getJsAssets', $tags['contao.callback'][0]['method']);
+
+        $this->assertSame('tl_layout', $tags['contao.callback'][1]['table']);
+        $this->assertSame('fields.cssAssets.options', $tags['contao.callback'][1]['target']);
+        $this->assertSame('getCssAssets', $tags['contao.callback'][1]['method']);
     }
 
     public function testRegistersTheDoctrineSchemaListener(): void

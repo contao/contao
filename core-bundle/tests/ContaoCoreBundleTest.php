@@ -19,6 +19,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DoctrineMigrationsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\LayoutAssetsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
@@ -52,6 +53,7 @@ class ContaoCoreBundleTest extends TestCase
             AddSessionBagsPass::class,
             AddResourcesPathsPass::class,
             DoctrineMigrationsPass::class,
+            LayoutAssetsPass::class,
             PickerProviderPass::class,
             RegisterFragmentsPass::class,
             FragmentRendererPass::class,
