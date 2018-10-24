@@ -24,6 +24,7 @@ abstract class CommandTestCase extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
+        $container->setParameter('contao.tmp_dir', self::getTempDir() . '/tmp');
         $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(KernelInterface::class);

@@ -273,6 +273,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', 'foobar');
+        $container->setParameter('contao.tmp_dir', self::getTempDir() . '/tmp');
         $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(ContaoKernel::class);

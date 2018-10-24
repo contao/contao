@@ -66,6 +66,17 @@ class Configuration implements ConfigurationInterface
                         )
                     ->end()
                 ->end()
+                ->scalarNode('tmp_dir')
+                    ->cannotBeEmpty()
+                    ->defaultValue(\sys_get_temp_dir())
+                    ->validate()
+                        ->always(
+                            function (string $value): string {
+                                return $this->canonicalize($value);
+                            }
+                        )
+                    ->end()
+                ->end()
                 ->booleanNode('prepend_locale')
                     ->defaultFalse()
                 ->end()

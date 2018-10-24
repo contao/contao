@@ -37,7 +37,9 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testIsLockedWhileRunning(): void
     {
-        $tmpDir = sys_get_temp_dir().'/'.md5($this->getFixturesDir());
+        $application = $this->mockApplication();
+        $contaoTmpDir = $application->getKernel()->getContainer()->getParameter('contao.tmp_dir');
+        $tmpDir = $contaoTmpDir.'/'.md5($this->getFixturesDir());
 
         if (!is_dir($tmpDir)) {
             (new Filesystem())->mkdir($tmpDir);
@@ -48,7 +50,7 @@ class AutomatorCommandTest extends CommandTestCase
         $lock = $factory->createLock('contao:automator');
         $lock->acquire();
 
-        $this->command->setApplication($this->mockApplication());
+        $this->command->setApplication($application);
 
         $tester = new CommandTester($this->command);
         $tester->setInputs(["\n"]);
