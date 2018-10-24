@@ -40,7 +40,7 @@ class LayoutAssetsListener
 
     private function getFilesWithExtension(string $extension): array
     {
-        if (!$this->filesystem->exists($this->jsonManifestPath)) {
+        if (null === $this->jsonManifestPath || !$this->filesystem->exists($this->jsonManifestPath)) {
             return [];
         }
 

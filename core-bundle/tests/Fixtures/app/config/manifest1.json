@@ -1,0 +1,5 @@
+{
+    "foo.css": "path/to/foo.css",
+    "bar.js": "path/to/bar.js",
+    "baz.svg": "just/another/file.svg"
+}
