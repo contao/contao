@@ -26,12 +26,17 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
+use Contao\ManagerPlugin\HttpCache\FOSHttpCacheSubscriberPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
+use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
+use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
+use FOS\HttpCache\SymfonyCache\PurgeListener;
+use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
@@ -52,7 +57,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
+class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface, FOSHttpCacheSubscriberPluginInterface
 {
     /**
      * @var string|null
@@ -73,6 +78,19 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getPackageDependencies()
     {
         return ['contao/core-bundle'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubscribers()
+    {
+        return [
+            new PurgeListener(),
+            new PurgeTagsListener(),
+            new HeaderReplaySubscriber(['ignore_cookies' => ['/^csrf_./']]),
+            new CleanupCacheTagsListener(),
+        ];
     }
 
     /**

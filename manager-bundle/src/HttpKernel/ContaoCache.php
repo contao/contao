@@ -12,11 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use Contao\ManagerPlugin\HttpCache\FOSHttpCacheSubscriberPluginInterface;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
-use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
-use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
-use FOS\HttpCache\SymfonyCache\PurgeListener;
-use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,10 +29,12 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
-        $this->addSubscriber(new PurgeListener());
-        $this->addSubscriber(new PurgeTagsListener());
-        $this->addSubscriber(new HeaderReplaySubscriber(['ignore_cookies' => ['/^csrf_./']]));
-        $this->addSubscriber(new CleanupCacheTagsListener());
+        /** @var FOSHttpCacheSubscriberPluginInterface $plugin */
+        foreach ($kernel->getPluginLoader()->getInstancesOf(FOSHttpCacheSubscriberPluginInterface::class, true) as $plugin) {
+            foreach ($plugin->getSubscribers() as $subscriber) {
+                $this->addSubscriber($subscriber);
+            }
+        }
 
         $kernel->setHttpCache($this);
     }
