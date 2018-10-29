@@ -205,9 +205,9 @@ class Search
 			}
 		}
 
-		$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=? AND pid=?")
+		$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
 								->limit(1)
-								->execute($arrSet['url'], $arrSet['pid']);
+								->execute($arrSet['url']);
 
 		// Add the page to the tl_search table
 		if ($objIndex->numRows)
