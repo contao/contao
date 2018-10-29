@@ -62,6 +62,8 @@ class InsertTagsController extends Controller
 
         if ($clientCache = $request->query->getInt('clientCache')) {
             $response->setMaxAge($clientCache);
+        } else {
+            $response->headers->addCacheControlDirective('no-store');
         }
 
         return $response;
