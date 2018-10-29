@@ -42,11 +42,11 @@ class VersionCommand extends ContainerAwareCommand
     {
         $packages = $this->getContainer()->getParameter('kernel.packages');
 
-        if (!isset($packages['contao/core-bundle'])) {
-            return 1;
+        if (isset($packages['contao/core-bundle'])) {
+            $output->writeln($packages['contao/core-bundle']);
+        } else {
+            $output->writeln($packages['contao/contao']);
         }
-
-        $output->writeln($packages['contao/core-bundle']);
 
         return 0;
     }

@@ -93,13 +93,13 @@ class ContaoDataCollectorTest extends TestCase
         $objPage = new \stdClass();
         $objPage->layoutId = 2;
 
-        $collector = new ContaoDataCollector([]);
+        $collector = new ContaoDataCollector(['contao/core-bundle' => 'dev-master']);
         $collector->setFramework($this->mockContaoFramework(null, null, [LayoutModel::class => $adapter]));
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(
             [
-                'version' => '',
+                'version' => 'dev-master',
                 'framework' => false,
                 'models' => 0,
                 'frontend' => true,

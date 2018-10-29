@@ -39,22 +39,4 @@ class VersionCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertContains('4.0.2', $tester->getDisplay());
     }
-
-    /**
-     * Tests that an empty string is printed if the version is not set.
-     */
-    public function testOutputsAnEmptyStringIfTheVersionIsNotSet()
-    {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.packages', []);
-
-        $command = new VersionCommand('contao:version');
-        $command->setContainer($container);
-
-        $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-
-        $this->assertSame(1, $code);
-        $this->assertSame('', $tester->getDisplay());
-    }
 }

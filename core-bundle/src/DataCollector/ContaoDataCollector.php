@@ -48,8 +48,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         if (isset($this->packages['contao/core-bundle'])) {
-            $this->data = ['contao_version' => $this->packages['contao/core-bundle']];
+            $version = $this->packages['contao/core-bundle'];
+        } else {
+            $version = $this->packages['contao/contao'];
         }
+
+        $this->data = ['contao_version' => $version];
 
         $this->addSummaryData();
 
