@@ -117,10 +117,17 @@ class InsertTags extends \Controller
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = \System::getContainer()->get('fragment.handler');
-					$strBuffer .= $fragmentHandler->render(new ControllerReference('contao.controller.insert_tags:renderAction',
-						array('insertTag' => '{{' . $strTag . '}}'),
-						array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
-					), 'esi');
+
+					$strBuffer .= $fragmentHandler->render(
+						new ControllerReference(
+							'contao.controller.insert_tags:renderAction',
+							array('insertTag' => '{{' . $strTag . '}}'),
+							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
+						),
+						'esi',
+						array('ignore_errors'=>false) // see #48
+					);
+
 					continue;
 				}
 			}
@@ -1030,6 +1037,7 @@ class InsertTags extends \Controller
 							$arrCache[$strTag] = implode(', ', $result);
 							break;
 
+						case 'refresh':
 						case 'uncached':
 							// ignore
 							break;
