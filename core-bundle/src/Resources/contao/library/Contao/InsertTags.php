@@ -378,6 +378,12 @@ class InsertTags extends \Controller
 
 						if ($objNextPage === null)
 						{
+							// Prevent broken markup with link_open and link_close (see #92)
+							if (strtolower($elements[0]) == 'link_open')
+							{
+								$arrCache[$strTag] = '<a>';
+							}
+
 							break;
 						}
 
