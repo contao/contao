@@ -41,16 +41,16 @@ Plugin::autoloadModules(__DIR__.'/../system/modules');
 ContaoKernel::setProjectDir(\dirname(__DIR__));
 
 $kernel = new ContaoKernel('prod', false);
+Request::enableHttpMethodParameterOverride();
+$request = Request::createFromGlobals();
 
-// Enable the Symfony reverse proxy
-if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? false)) {
-    $kernel = new ContaoCache($kernel);
+// Enable the Symfony reverse proxy if request has no surrogate capability
+$cache = new ContaoCache($kernel);
+if (null !== $cache->getSurrogate() && !$cache->getSurrogate()->hasSurrogateCapability($request)) {
+    $kernel = $cache;
 }
 
-Request::enableHttpMethodParameterOverride();
-
 // Handle the request
-$request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
