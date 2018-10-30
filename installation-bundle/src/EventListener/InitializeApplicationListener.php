@@ -84,7 +84,16 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
-        if (null === ($output = $this->runCommand(new InstallCommand()))) {
+        $command = new InstallCommand(
+            $projectDir,
+            $this->container->getParameter('contao.upload_path'),
+            $this->container->getParameter('contao.image.target_dir')
+        );
+
+        $webDir = $this->container->getParameter('contao.web_dir');
+        $input = new ArgvInput(['contao:install', '--target='.$webDir]);
+
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
@@ -104,7 +113,16 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
-        if (null === ($output = $this->runCommand(new SymlinksCommand()))) {
+        $command = new SymlinksCommand(
+            $this->container->getParameter('kernel.project_dir'),
+            $this->container->getParameter('contao.upload_path'),
+            $this->container->getParameter('kernel.logs_dir'),
+            $this->container->get('contao.resource_finder')
+        );
+
+        $input = new ArgvInput(['contao:symlinks', '--target='.$webDir]);
+
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
@@ -115,16 +133,12 @@ class InitializeApplicationListener implements ContainerAwareInterface
      * Runs a command and returns the error (if any).
      *
      * @param ContainerAwareCommand $command
-     * @param InputInterface|null   $input
+     * @param InputInterface        $input
      *
      * @return string|null
      */
-    private function runCommand(ContainerAwareCommand $command, InputInterface $input = null)
+    private function runCommand(ContainerAwareCommand $command, InputInterface $input)
     {
-        if (null === $input) {
-            $input = new ArgvInput([]);
-        }
-
         $command->setContainer($this->container);
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
