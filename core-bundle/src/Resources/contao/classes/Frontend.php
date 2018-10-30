@@ -76,23 +76,6 @@ abstract class Frontend extends \Controller
 			return false;
 		}
 
-		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest != '' && (!\Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
-		{
-			$intSuffixLength = \strlen(\Config::get('urlSuffix'));
-
-			// Return false if the URL suffix does not match (see #2864)
-			if ($intSuffixLength > 0)
-			{
-				if (substr($strRequest, -$intSuffixLength) != \Config::get('urlSuffix'))
-				{
-					return false;
-				}
-
-				$strRequest = substr($strRequest, 0, -$intSuffixLength);
-			}
-		}
-
 		// Extract the language
 		if (\Config::get('addLanguageToUrl'))
 		{
@@ -114,6 +97,23 @@ abstract class Frontend extends \Controller
 			else
 			{
 				return false; // Language not provided
+			}
+		}
+
+		// Remove the URL suffix if not just a language root (e.g. en/) is requested
+		if ($strRequest != '' && (!\Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
+		{
+			$intSuffixLength = \strlen(\Config::get('urlSuffix'));
+
+			// Return false if the URL suffix does not match (see #2864)
+			if ($intSuffixLength > 0)
+			{
+				if (substr($strRequest, -$intSuffixLength) != \Config::get('urlSuffix'))
+				{
+					return false;
+				}
+
+				$strRequest = substr($strRequest, 0, -$intSuffixLength);
 			}
 		}
 
