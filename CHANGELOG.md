@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly render the back end forms in Firefox (see #79).
  * Show the info messages in the DropZone uploader (see #83).
 
 ## 4.4.26 (2018-09-20)
