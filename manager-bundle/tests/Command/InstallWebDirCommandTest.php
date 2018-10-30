@@ -148,7 +148,7 @@ class InstallWebDirCommandTest extends TestCase
     }
 
     /**
-     * Tests that the install.php is removed from web directory.
+     * Tests that the app_dev.php is installed by default.
      */
     public function testInstallsAppDevByDefault()
     {
@@ -156,6 +156,17 @@ class InstallWebDirCommandTest extends TestCase
         $commandTester->execute(['path' => $this->tmpdir]);
 
         $this->assertFileExists($this->tmpdir.'/web/app_dev.php');
+    }
+
+    /**
+     * Tests that a custom target directory is used.
+     */
+    public function testUsesACustomTargetDirectory()
+    {
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['path' => $this->tmpdir, 'target' => 'public']);
+
+        $this->assertFileExists($this->tmpdir.'/public/app.php');
     }
 
     /**
