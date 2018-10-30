@@ -61,7 +61,7 @@ class InstallWebDirCommandTest extends TestCase
     {
         parent::setUp();
 
-        $this->command = new InstallWebDirCommand();
+        $this->command = new InstallWebDirCommand('foobar');
         $this->command->setApplication($this->mockApplication());
 
         $this->filesystem = new Filesystem();

@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Patchwork\Utf8;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -30,6 +31,23 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class UserPasswordCommand extends ContainerAwareCommand
 {
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    /**
+     * Constructor.
+     *
+     * @param ContaoFrameworkInterface $framework
+     */
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -134,11 +152,10 @@ class UserPasswordCommand extends ContainerAwareCommand
      */
     private function validateAndHashPassword($password)
     {
-        $framework = $this->getContainer()->get('contao.framework');
-        $framework->initialize();
+        $this->framework->initialize();
 
-        /** @var Config $confirm */
-        $config = $framework->getAdapter(Config::class);
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
         $passwordLength = $config->get('minPasswordLength') ?: 8;
 
         if (Utf8::strlen($password) < $passwordLength) {

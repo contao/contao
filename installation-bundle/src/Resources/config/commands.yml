@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao_installation.command.lock:
+        class: Contao\InstallationBundle\Command\LockCommand
+        arguments:
+            - '%kernel.project_dir%/var/install_lock'
+
+    contao_installation.command.unlock:
+        class: Contao\InstallationBundle\Command\UnlockCommand
+        arguments:
+            - '%kernel.project_dir%/var/install_lock'

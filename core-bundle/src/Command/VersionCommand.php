@@ -25,6 +25,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 class VersionCommand extends ContainerAwareCommand
 {
     /**
+     * @var array
+     */
+    private $packages;
+
+    /**
+     * Constructor.
+     *
+     * @param array $packages
+     */
+    public function __construct(array $packages)
+    {
+        $this->packages = $packages;
+
+        parent::__construct();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -40,12 +57,10 @@ class VersionCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $packages = $this->getContainer()->getParameter('kernel.packages');
-
-        if (isset($packages['contao/core-bundle'])) {
-            $output->writeln($packages['contao/core-bundle']);
+        if (isset($this->packages['contao/core-bundle'])) {
+            $output->writeln($this->packages['contao/core-bundle']);
         } else {
-            $output->writeln($packages['contao/contao']);
+            $output->writeln($this->packages['contao/contao']);
         }
 
         return 0;

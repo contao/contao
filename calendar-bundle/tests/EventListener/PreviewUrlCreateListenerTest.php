@@ -158,7 +158,7 @@ class PreviewUrlCreateListenerTest extends TestCase
                     return null;
                 }
 
-                return (object)['id' => $id];
+                return (object) ['id' => $id];
             })
         ;
 

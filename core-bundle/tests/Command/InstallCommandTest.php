@@ -56,6 +56,7 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getRootDir().'/system/config');
         $fs->remove($this->getRootDir().'/system/initialize.php');
         $fs->remove($this->getRootDir().'/system/modules/.gitignore');
+        $fs->remove($this->getRootDir().'/system/themes');
         $fs->remove($this->getRootDir().'/system/tmp');
         $fs->remove($this->getRootDir().'/templates');
         $fs->remove($this->getRootDir().'/web/share');
@@ -70,11 +71,8 @@ class InstallCommandTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getRootDir());
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
-        $container->setParameter('contao.upload_path', 'files');
-        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images');
 
-        $command = new InstallCommand('contao:install');
+        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images');
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
@@ -99,11 +97,8 @@ class InstallCommandTest extends TestCase
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getRootDir());
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
-        $container->setParameter('contao.upload_path', 'files_test');
-        $container->setParameter('contao.image.target_dir', $this->getRootDir().'/assets/images_test');
 
-        $command = new InstallCommand('contao:install');
+        $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test');
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
@@ -126,7 +121,7 @@ class InstallCommandTest extends TestCase
         $lock = new LockHandler('contao:install', sys_get_temp_dir().'/'.md5('foobar'));
         $lock->lock();
 
-        $command = new InstallCommand('contao:install');
+        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images');
         $command->setContainer($container);
 
         $tester = new CommandTester($command);

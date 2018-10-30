@@ -44,7 +44,7 @@ class ContaoCoreBundleTest extends TestCase
     public function testAddsTheCompilerPaths()
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
+        $container->setParameter('kernel.project_dir', $this->getRootDir());
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);

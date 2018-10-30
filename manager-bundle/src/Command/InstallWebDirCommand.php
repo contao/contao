@@ -138,7 +138,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this->io = new SymfonyStyle($input, $output);
 
         $projectDir = $input->getArgument('path');
-        $webDir = rtrim($projectDir, '/').'/'.$input->getArgument('target');
+        $webDir = rtrim($projectDir, '/').'/'.rtrim($input->getArgument('target'), '/');
 
         $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);

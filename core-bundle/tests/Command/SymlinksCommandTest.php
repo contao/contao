@@ -47,17 +47,15 @@ class SymlinksCommandTest extends TestCase
         $fs->mkdir($this->getRootDir().'/var/logs');
 
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.logs_dir', $this->getRootDir().'/var/logs');
         $container->setParameter('kernel.project_dir', $this->getRootDir());
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
-        $container->setParameter('contao.upload_path', 'app');
 
-        $container->set(
-            'contao.resource_finder',
+        $command = new SymlinksCommand(
+            $this->getRootDir(),
+            'files',
+            $this->getRootDir().'/var/logs',
             new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
 
-        $command = new SymlinksCommand('contao:symlinks');
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
@@ -92,7 +90,13 @@ class SymlinksCommandTest extends TestCase
         $lock = new LockHandler('contao:symlinks', sys_get_temp_dir().'/'.md5('foobar'));
         $lock->lock();
 
-        $command = new SymlinksCommand('contao:symlinks');
+        $command = new SymlinksCommand(
+            $this->getRootDir(),
+            'files',
+            $this->getRootDir().'/var/logs',
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
+        );
+
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
@@ -110,7 +114,12 @@ class SymlinksCommandTest extends TestCase
      */
     public function testConvertsAbsolutePathsToRelativePaths()
     {
-        $command = new SymlinksCommand('contao:symlinks');
+        $command = new SymlinksCommand(
+            $this->getRootDir(),
+            'files',
+            $this->getRootDir().'/var/logs',
+            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
+        );
 
         // Use \ as directory separator in $rootDir
         $rootDir = new \ReflectionProperty(SymlinksCommand::class, 'rootDir');

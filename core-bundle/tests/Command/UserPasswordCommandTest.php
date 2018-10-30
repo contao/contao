@@ -46,10 +46,9 @@ class UserPasswordCommandTest extends TestCase
         $connection = $this->createMock(Connection::class);
 
         $this->container = $this->mockContainerWithContaoScopes();
-        $this->container->set('contao.framework', $this->mockContaoFramework());
         $this->container->set('database_connection', $connection);
 
-        $this->command = new UserPasswordCommand();
+        $this->command = new UserPasswordCommand($this->mockContaoFramework());
         $this->command->setContainer($this->container);
         $this->command->setApplication(new Application());
     }
@@ -182,9 +181,8 @@ class UserPasswordCommandTest extends TestCase
         );
 
         $container = $this->mockContainerWithContaoScopes();
-        $container->set('contao.framework', $framework);
 
-        $command = new UserPasswordCommand();
+        $command = new UserPasswordCommand($framework);
         $command->setContainer($container);
         $command->setApplication(new Application());
 

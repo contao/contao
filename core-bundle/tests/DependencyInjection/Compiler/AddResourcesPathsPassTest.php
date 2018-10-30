@@ -33,7 +33,6 @@ class AddResourcesPathsPassTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getRootDir());
-        $container->setParameter('kernel.root_dir', $this->getRootDir().'/app');
 
         $container->setParameter('kernel.bundles', [
             'FrameworkBundle' => FrameworkBundle::class,
