@@ -167,6 +167,14 @@ class Newsletter extends \Backend
 
 				while ($objRecipients->next())
 				{
+					// Skip the recipient if the member is not active (see #8812)
+					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > time()) || ($objRecipients->stop != '' && $objRecipients->stop < time())))
+					{
+						--$intTotal;
+						echo 'Skipping <strong>' . \Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
+						continue;
+					}
+
 					$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
 					$this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html);
 

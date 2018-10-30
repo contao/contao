@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Check the member status when sending newsletters (see contao/core#8812).
  * Fix the schema.org markup of the breadcrumb menu (see contao/core-bundle#1561).
  * Allow to set the target directory when installing the web directory (see #142).
  * Correctly render the back end forms in Firefox (see #79).
