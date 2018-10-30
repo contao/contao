@@ -10,6 +10,7 @@
 
 namespace Contao\ManagerBundle;
 
+use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -19,4 +20,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class ContaoManagerBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function registerCommands(Application $application)
+    {
+        // disable automatic command registration
+    }
 }

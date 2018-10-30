@@ -39,6 +39,11 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $io;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * Files that should not be copied if they exist in the web directory.
      *
      * @var array
@@ -57,6 +62,18 @@ class InstallWebDirCommand extends AbstractLockedCommand
     ];
 
     /**
+     * Constructor.
+     *
+     * @param string $rootDir
+     */
+    public function __construct($rootDir)
+    {
+        $this->rootDir = $rootDir;
+
+        parent::__construct();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -65,7 +82,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
             ->setName('contao:install-web-dir')
             ->setDefinition([
                 new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-                new InputArgument('path', InputArgument::OPTIONAL, 'The installation root path', getcwd()),
+                new InputArgument('path', InputArgument::OPTIONAL, 'The installation root path', $this->rootDir),
                 new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Do not install the app_dev.php entry point'),
                 new InputOption('user', 'u', InputOption::VALUE_REQUIRED, 'Set a username for app_dev.php', false),
                 new InputOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Set a password for app_dev.php', false),
