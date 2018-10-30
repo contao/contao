@@ -82,7 +82,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
             ->setName('contao:install-web-dir')
             ->setDefinition([
                 new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-                new InputArgument('path', InputArgument::OPTIONAL, 'The installation root path', $this->rootDir),
                 new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Do not install the app_dev.php entry point'),
                 new InputOption('user', 'u', InputOption::VALUE_REQUIRED, 'Set a username for app_dev.php', false),
                 new InputOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Set a password for app_dev.php', false),
@@ -137,12 +136,11 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $projectDir = $input->getArgument('path');
-        $webDir = rtrim($projectDir, '/').'/'.rtrim($input->getArgument('target'), '/');
+        $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
 
         $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);
-        $this->storeAppDevAccesskey($input, $projectDir);
+        $this->storeAppDevAccesskey($input, $this->rootDir);
 
         return 0;
     }

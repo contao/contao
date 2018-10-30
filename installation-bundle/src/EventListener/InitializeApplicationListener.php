@@ -84,14 +84,15 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
+        $webDir = $this->container->getParameter('contao.web_dir');
+
         $command = new InstallCommand(
             $projectDir,
             $this->container->getParameter('contao.upload_path'),
             $this->container->getParameter('contao.image.target_dir')
         );
 
-        $webDir = $this->container->getParameter('contao.web_dir');
-        $input = new ArgvInput(['contao:install', '--target='.$webDir]);
+        $input = new ArgvInput(['contao:install', substr($webDir, \strlen($projectDir) + 1)]);
 
         if (null === ($output = $this->runCommand($command, $input))) {
             return;
@@ -113,14 +114,16 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
+        $projectDir = $this->container->getParameter('kernel.project_dir');
+
         $command = new SymlinksCommand(
-            $this->container->getParameter('kernel.project_dir'),
+            $projectDir,
             $this->container->getParameter('contao.upload_path'),
             $this->container->getParameter('kernel.logs_dir'),
             $this->container->get('contao.resource_finder')
         );
 
-        $input = new ArgvInput(['contao:symlinks', '--target='.$webDir]);
+        $input = new ArgvInput(['contao:symlinks', substr($webDir, \strlen($projectDir) + 1)]);
 
         if (null === ($output = $this->runCommand($command, $input))) {
             return;
