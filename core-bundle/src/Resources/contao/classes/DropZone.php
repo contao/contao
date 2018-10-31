@@ -61,6 +61,16 @@ class DropZone extends FileUpload
         dictInvalidFileType: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '
       }).on("addedfile", function() {
         $$(".dz-message").setStyle("display", "none");
+      }).on("success", function(file, message) {
+        if (!message) return;
+        var container = $("tl_message");
+        if (!container) {
+          container = new Element("div", {
+            "id": "tl_message",
+            "class": "tl_message"
+          }).inject($("tl_buttons"), "before");
+        }
+        container.appendHTML(message);
       });
       $$("div.tl_formbody_submit").setStyle("display", "none");
     });

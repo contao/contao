@@ -969,10 +969,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			$this->Files->rrdir($source);
 
+			$strWebDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+
 			// Also delete the symlink (see #710)
-			if (is_link($this->strRootDir . '/web/' . $source))
+			if (is_link($this->strRootDir . '/' . $strWebDir . '/' . $source))
 			{
-				$this->Files->delete('web/' . $source);
+				$this->Files->delete($strWebDir. '/' . $source);
 			}
 		}
 		else
@@ -1143,7 +1145,22 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				if ($blnIsAjax)
 				{
-					throw new ResponseException(new Response(\Message::generateUnwrapped(TL_MODE, true), 201));
+					/** @var SessionInterface $objSession */
+					$objSession = \System::getContainer()->get('session');
+
+					if ($objSession->isStarted())
+					{
+						// Get the info messages only
+						$arrMessages = $objSession->getFlashBag()->get('contao.' . TL_MODE . '.info');
+						\Message::reset();
+
+						if (!empty($arrMessages))
+						{
+							throw new ResponseException(new Response('<p class="tl_info">' . implode('</p><p class="tl_info">', $arrMessages) . '</p>', 201));
+						}
+					}
+
+					throw new ResponseException(new Response('', 201));
 				}
 
 				// Do not purge the html folder (see #2898)

@@ -288,8 +288,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         require __DIR__.'/../Resources/contao/helper/functions.php';
         require __DIR__.'/../Resources/contao/config/constants.php';
-        require __DIR__.'/../Resources/contao/helper/interface.php';
-        require __DIR__.'/../Resources/contao/helper/exception.php';
     }
 
     /**

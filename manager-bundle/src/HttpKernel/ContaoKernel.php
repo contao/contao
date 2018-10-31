@@ -22,7 +22,6 @@ use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
-use FOS\HttpCache\SymfonyCache\HttpCacheAware;
 use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
@@ -31,8 +30,6 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
-    use HttpCacheAware;
-
     /**
      * @var string
      */
@@ -52,6 +49,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      * @var ManagerConfig
      */
     private $managerConfig;
+
+    /**
+     * @var ContaoCache
+     */
+    private $httpCache;
 
     /**
      * {@inheritdoc}
@@ -196,6 +198,18 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     public static function setProjectDir(string $projectDir): void
     {
         self::$projectDir = realpath($projectDir) ?: $projectDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHttpCache()
+    {
+        if (null !== $this->httpCache) {
+            return $this->httpCache;
+        }
+
+        return $this->httpCache = new ContaoCache($this, $this->getProjectDir().'/var/cache/prod/http_cache');
     }
 
     /**

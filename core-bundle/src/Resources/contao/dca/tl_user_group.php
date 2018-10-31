@@ -305,7 +305,16 @@ class tl_user_group extends Backend
 		{
 			if (!empty($v))
 			{
-				unset($v['undo']);
+				if ($k == 'accounts')
+				{
+					unset($v['login']);
+				}
+
+				if ($k == 'system')
+				{
+					unset($v['undo']);
+				}
+
 				$arrModules[$k] = array_keys($v);
 			}
 		}

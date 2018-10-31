@@ -36,8 +36,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new HeaderReplaySubscriber(['ignore_cookies' => ['/^csrf_./']]));
         $this->addSubscriber(new CleanupCacheTagsListener());
-
-        $kernel->setHttpCache($this);
     }
 
     /**
