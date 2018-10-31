@@ -36,11 +36,14 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getTempDir().'/files_test');
         $fs->remove($this->getTempDir().'/system/cache');
         $fs->remove($this->getTempDir().'/system/config');
+        $fs->remove($this->getTempDir().'/system/initialize.php');
         $fs->remove($this->getTempDir().'/system/modules/.gitignore');
+        $fs->remove($this->getTempDir().'/system/themes');
         $fs->remove($this->getTempDir().'/system/tmp');
         $fs->remove($this->getTempDir().'/templates');
         $fs->remove($this->getTempDir().'/web/share');
         $fs->remove($this->getTempDir().'/web/system');
+        $fs->remove($this->getTempDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
     }
 
     public function testCreatesTheContaoFolders(): void
