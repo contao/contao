@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly rebuild the symlinks in the maintenance module (see #150).
  * Hide members without login in the "rebuild search index" drop-down (see #91).
  * Check the member status when sending newsletters (see contao/core#8812).
  * Fix the schema.org markup of the breadcrumb menu (see contao/core-bundle#1561).
