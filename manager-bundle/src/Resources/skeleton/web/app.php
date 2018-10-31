@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
-use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +43,7 @@ $kernel = new ContaoKernel('prod', false);
 
 // Enable the Symfony reverse proxy
 if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? false)) {
-    $kernel = new ContaoCache($kernel);
+    $kernel = $kernel->getHttpCache();
 }
 
 Request::enableHttpMethodParameterOverride();
