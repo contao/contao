@@ -57,7 +57,7 @@ class RebuildIndex extends Backend implements \executable
 		// Get the active front end users
 		if ($this->User->isAdmin)
 		{
-			$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+			$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
 		}
 		else
 		{
@@ -65,7 +65,7 @@ class RebuildIndex extends Backend implements \executable
 
 			if (!empty($amg) && \is_array($amg))
 			{
-				$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+				$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
 			}
 		}
 
