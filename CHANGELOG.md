@@ -1,5 +1,9 @@
 # Change log
 
+## 4.4.28 (2018-10-31)
+
+ * Correctly rebuild the symlinks in the maintenance module (see #150).
+
 ## 4.4.27 (2018-10-31)
 
  * Check the member status when sending newsletters (see contao/core#8812).
