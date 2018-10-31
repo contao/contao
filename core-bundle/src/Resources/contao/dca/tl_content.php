@@ -531,7 +531,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['multiSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'mandatory'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true),
 			'sql'                     => "blob NULL",
 			'load_callback' => array
 			(
@@ -1763,7 +1763,7 @@ class tl_content extends Backend
 	 */
 	public function extractYouTubeId($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord->singleSRC != $varValue)
+		if ($dc->activeRecord->youtube != $varValue)
 		{
 			$matches = array();
 
@@ -1786,7 +1786,7 @@ class tl_content extends Backend
 	 */
 	public function extractVimeoId($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord->singleSRC != $varValue)
+		if ($dc->activeRecord->vimeo != $varValue)
 		{
 			$matches = array();
 

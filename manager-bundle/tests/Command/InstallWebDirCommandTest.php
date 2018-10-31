@@ -51,7 +51,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     {
         parent::setUp();
 
-        $this->command = new InstallWebDirCommand();
+        $this->command = new InstallWebDirCommand($this->getTempDir());
         $this->command->setApplication($this->mockApplication());
 
         $this->filesystem = new Filesystem();
@@ -76,7 +76,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testNameAndArguments(): void
     {
         $this->assertSame('contao:install-web-dir', $this->command->getName());
-        $this->assertTrue($this->command->getDefinition()->hasArgument('path'));
+        $this->assertTrue($this->command->getDefinition()->hasArgument('target'));
     }
 
     public function testCommandRegular(): void
@@ -86,7 +86,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         }
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir()]);
+        $commandTester->execute([]);
 
         foreach ($this->webFiles as $file) {
             $this->assertFileExists($this->getTempDir().'/web/'.$file->getRelativePathname());
@@ -111,7 +111,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         ];
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir()]);
+        $commandTester->execute([]);
 
         foreach ($this->webFiles as $file) {
             if (\in_array($file->getRelativePathname(), $optional, true)) {
@@ -127,7 +127,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->filesystem->dumpFile($this->getTempDir().'/web/install.php', 'foobar-content');
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir()]);
+        $commandTester->execute([]);
 
         $this->assertFileNotExists($this->getTempDir().'/web/install.php');
     }
@@ -135,7 +135,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testInstallsAppDevByDefault(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir()]);
+        $commandTester->execute([]);
 
         $this->assertFileExists($this->getTempDir().'/web/app_dev.php');
     }
@@ -143,15 +143,23 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testNotInstallsAppDevOnProd(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir(), '--no-dev' => true]);
+        $commandTester->execute(['--no-dev' => true]);
 
         $this->assertFileNotExists($this->getTempDir().'/web/app_dev.php');
+    }
+
+    public function testUsesACustomTargetDirectory(): void
+    {
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['target' => 'public']);
+
+        $this->assertFileExists($this->getTempDir().'/public/app.php');
     }
 
     public function testAccesskeyFromArgument(): void
     {
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo', '--password' => 'bar']);
+        $commandTester->execute(['--user' => 'foo', '--password' => 'bar']);
 
         $this->assertFileExists($this->getTempDir().'/.env');
 
@@ -197,7 +205,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->command->getHelperSet()->set($questionHelper, 'question');
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir(), '--password' => null]);
+        $commandTester->execute(['--password' => null]);
 
         $this->assertFileExists($this->getTempDir().'/.env');
 
@@ -232,7 +240,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->command->getHelperSet()->set($questionHelper, 'question');
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo']);
+        $commandTester->execute(['--user' => 'foo']);
 
         $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
@@ -249,7 +257,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
         $commandTester = new CommandTester($this->command);
         $commandTester->setInputs(['foo']);
-        $commandTester->execute(['path' => $this->getTempDir(), '--password' => 'bar']);
+        $commandTester->execute(['--password' => 'bar']);
     }
 
     public function testAccesskeyAppendToDotEnv(): void
@@ -257,7 +265,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->filesystem->dumpFile($this->getTempDir().'/.env', 'FOO=bar');
 
         $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['path' => $this->getTempDir(), '--user' => 'foo', '--password' => 'bar']);
+        $commandTester->execute(['--user' => 'foo', '--password' => 'bar']);
 
         $this->assertFileExists($this->getTempDir().'/.env');
 
@@ -272,7 +280,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     private function mockApplication(ManagerConfig $config = null): Application
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
+        $container->setParameter('kernel.project_dir', $this->getTempDir());
         $container->set('filesystem', new Filesystem());
 
         $kernel = $this->createMock(ContaoKernel::class);

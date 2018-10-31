@@ -23,6 +23,18 @@ use Symfony\Component\Filesystem\Filesystem;
 class UnlockCommand extends ContainerAwareCommand
 {
     /**
+     * @var string
+     */
+    private $lockFile;
+
+    public function __construct(string $lockFile)
+    {
+        $this->lockFile = $lockFile;
+
+        parent::__construct();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure(): void
@@ -38,16 +50,14 @@ class UnlockCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $file = $this->getContainer()->getParameter('kernel.project_dir').'/var/install_lock';
-
-        if (!file_exists($file)) {
+        if (!file_exists($this->lockFile)) {
             $output->writeln('<comment>The install tool was not locked.</comment>');
 
             return 1;
         }
 
         $fs = new Filesystem();
-        $fs->remove($file);
+        $fs->remove($this->lockFile);
 
         $output->writeln('<info>The install tool has been unlocked.</info>');
 

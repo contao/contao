@@ -94,7 +94,6 @@ class InstallerTest extends TestCase
             ->addIndex(['foo'], 'foo_idx')
         ;
 
-
         $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
@@ -122,7 +121,6 @@ class InstallerTest extends TestCase
             ->addIndex(['foo'], 'foo_idx')
         ;
 
-
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
@@ -138,7 +136,6 @@ class InstallerTest extends TestCase
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
         ;
-
 
         $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();

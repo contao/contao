@@ -189,7 +189,7 @@
             "comments-bundle/src/Resources/contao/templates/",
             "core-bundle/src/Resources/contao/config/",
             "core-bundle/src/Resources/contao/dca/",
-            "core-bundle/src/Resources/contao/helper/",
+            "core-bundle/src/Resources/contao/helper/functions.php",
             "core-bundle/src/Resources/contao/languages/",
             "core-bundle/src/Resources/contao/templates/",
             "core-bundle/src/Resources/contao/themes/",

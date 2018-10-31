@@ -94,7 +94,6 @@ class ContaoCoreBundleTest extends TestCase
     public function testAddsPackagesPassBeforeAssetsPackagesPass(): void
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.root_dir', $this->getFixturesDir().'/app');
         $container->registerExtension(new SecurityExtension());
 
         $bundle = new ContaoCoreBundle();

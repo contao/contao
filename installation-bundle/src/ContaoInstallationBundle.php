@@ -12,8 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle;
 
+use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoInstallationBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function registerCommands(Application $application): void
+    {
+        // disable automatic command registration
+    }
 }

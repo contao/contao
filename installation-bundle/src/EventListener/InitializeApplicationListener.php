@@ -70,7 +70,17 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
-        if (null === ($output = $this->runCommand(new InstallCommand()))) {
+        $webDir = $this->container->getParameter('contao.web_dir');
+
+        $command = new InstallCommand(
+            $projectDir,
+            $this->container->getParameter('contao.upload_path'),
+            $this->container->getParameter('contao.image.target_dir')
+        );
+
+        $input = new ArgvInput(['contao:install', substr($webDir, \strlen($projectDir) + 1)]);
+
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
@@ -85,7 +95,18 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
-        if (null === ($output = $this->runCommand(new SymlinksCommand()))) {
+        $projectDir = $this->container->getParameter('kernel.project_dir');
+
+        $command = new SymlinksCommand(
+            $projectDir,
+            $this->container->getParameter('contao.upload_path'),
+            $this->container->getParameter('kernel.logs_dir'),
+            $this->container->get('contao.resource_finder')
+        );
+
+        $input = new ArgvInput(['contao:symlinks', substr($webDir, \strlen($projectDir) + 1)]);
+
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
@@ -95,12 +116,8 @@ class InitializeApplicationListener implements ContainerAwareInterface
     /**
      * Runs a command and returns the error (if any).
      */
-    private function runCommand(Command $command, InputInterface $input = null): ?string
+    private function runCommand(Command $command, InputInterface $input): ?string
     {
-        if (null === $input) {
-            $input = new ArgvInput([]);
-        }
-
         if ($command instanceof ContainerAwareCommand) {
             $command->setContainer($this->container);
         }

@@ -219,8 +219,12 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         parent::initializeContainer();
 
+        if (null === ($container = $this->getContainer())) {
+            return;
+        }
+
         // Set the plugin loader again so it is available at runtime (synthetic service)
-        $this->getContainer()->set('contao_manager.plugin_loader', $this->getPluginLoader());
+        $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
     }
 
     private function addBundlesFromPlugins(array &$bundles): void
