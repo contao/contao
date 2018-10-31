@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\Tests\HttpKernel;
 use AppBundle\AppBundle;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManagerBundle;
+use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -66,6 +67,20 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertArrayHasKey(ContaoManagerBundle::class, $bundles);
         $this->assertArrayHasKey(AppBundle::class, $bundles);
+    }
+
+    public function testGetProjectDir(): void
+    {
+        $kernel = $this->mockKernel($this->getTempDir());
+
+        $this->assertSame($kernel->getProjectDir(), $kernel->getProjectDir());
+    }
+
+    public function testGetRootDir(): void
+    {
+        $kernel = $this->mockKernel($this->getTempDir());
+
+        $this->assertSame($kernel->getProjectDir().'/app', $kernel->getRootDir());
     }
 
     public function testGetCacheDir(): void
@@ -176,6 +191,13 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->mockKernel($this->getTempDir());
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
+    }
+
+    public function testGetHttpCache(): void
+    {
+        $kernel = $this->mockKernel($this->getTempDir());
+
+        $this->assertInstanceOf(ContaoCache::class, $kernel->getHttpCache());
     }
 
     /**

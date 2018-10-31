@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.6.7 (2018-10-31)
 
  * Correctly rebuild the symlinks in the maintenance module (see #150).
  * Hide members without login in the "rebuild search index" drop-down (see #91).
