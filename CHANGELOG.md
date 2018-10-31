@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.27 (2018-10-31)
 
  * Check the member status when sending newsletters (see contao/core#8812).
  * Fix the schema.org markup of the breadcrumb menu (see contao/core-bundle#1561).

@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addImage.0">
         <source>Add an image</source>
-        <target>Resim ekleyin</target>
+        <target>Görsel ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.addImage.1">
         <source>Add an image to the FAQ.</source>
@@ -147,11 +147,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.0">
         <source>Publish/unpublish question</source>
-        <target>Soruyu yayınla / yayından kaldır</target>
+        <target>Soruyu yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Publish/unpublish question ID %s</source>
-        <target>%s kodlu soruyu yayınla / yayından kaldır</target>
+        <target>%s kodlu soruyu yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_faq.editheader.0">
         <source>Edit category</source>

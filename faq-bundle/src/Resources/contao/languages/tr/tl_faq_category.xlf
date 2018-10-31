@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.jumpTo.1">
         <source>Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.</source>
-        <target>Lütfen ziyaretçiler bir sık sorulan soruya tıkladığında yönlendirilecekleri sık sorulan soru sayfasını seçin.</target>
+        <target>Lütfen ziyaretçilerin bir sık sorulan soruya tıkladığında yönlendirileceği sık sorulan soru sayfasını seçin.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.allowComments.0">
         <source>Enable comments</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.notify.1">
         <source>Please choose who to notify when comments are added.</source>
-        <target>Yorum yapıldığında bildirilecek kişiyi seçin.</target>
+        <target>Yorum yapıldığında bildirim gönderilecek kişiyi seçin.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.sortOrder.0">
         <source>Sort order</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.0">
         <source>Comments per page</source>
-        <target>Sayfadaki yorum sayısı</target>
+        <target>Bir sayfadaki yorum sayısı</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
@@ -59,11 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.0">
         <source>Moderate comments</source>
-        <target>Yorumları yönet</target>
+        <target>Yorum onayı kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yorumlar web sitesinde yayınlanmadan önce onaylanmasu gerekir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, web sitesinde yayınlanmadan önce yorumların onaylanması gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.bbcode.0">
         <source>Allow BBCode</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Yorum yapmak için oturum açılmalı</target>
+        <target>Oturum açmadan yorum yapılamasın</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>

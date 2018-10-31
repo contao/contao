@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.faq_readerModule.1">
         <source>Automatically switch to the FAQ reader if an item has been selected.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bir öge seçildiğinde kendiliğinden SSS okuyucuya geçilir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, bir öge seçildiğinde otomatik olarak SSS okuyucuya geçilir.</target>
       </trans-unit>
     </body>
   </file>
