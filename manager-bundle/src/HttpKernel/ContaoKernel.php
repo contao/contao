@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\HttpKernel;
 
 use AppBundle\AppBundle;
 use Contao\ManagerBundle\Api\ManagerConfig;
+use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\ConfigResolverFactory;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
@@ -26,6 +27,10 @@ use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Debug\Debug;
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
@@ -195,11 +200,17 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     }
 
     /**
-     * Sets the project directory (the Contao kernel does not know its location).
+     * Gets the kernel to handle http requests.
      */
-    public static function setProjectDir(string $projectDir): void
+    public function getHttpKernel(): HttpKernelInterface
     {
-        self::$projectDir = realpath($projectDir) ?: $projectDir;
+        // TODO handle JWT token to know if cache should be disabled
+
+        if ($this->isDebug()) {
+            return $this;
+        }
+
+        return $this->getHttpCache();
     }
 
     /**
@@ -212,6 +223,49 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         return $this->httpCache = new ContaoCache($this, $this->getProjectDir().'/var/cache/prod/http_cache');
+    }
+
+    public static function create(string $projectDir, bool $debug = null)
+    {
+        if (file_exists($projectDir.'/.env')) {
+            (new Dotenv())->load($projectDir.'/.env');
+        }
+
+        if (null == $debug) {
+            // TODO parse JWT token to know debug mode
+            $debug = false;
+        }
+
+        // TODO use manager config to load settings
+        // $this->getKernel()->getManagerConfig()
+
+        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
+            Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
+        }
+
+        if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
+            Request::setTrustedHosts(explode(',', $trustedHosts));
+        }
+
+        Request::enableHttpMethodParameterOverride();
+
+        Plugin::autoloadModules($projectDir.'/system/modules');
+        static::setProjectDir($projectDir);
+
+        if ($debug) {
+            Debug::enable();
+        }
+
+        return new static($debug ? 'dev' : 'prod', $debug);
+    }
+
+    /**
+     * Sets the project directory (the Contao kernel does not know its location).
+     */
+    public static function setProjectDir(string $projectDir): void
+    {
+        self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
     /**
