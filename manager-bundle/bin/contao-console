@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\ManagerBundle\HttpKernel\JwtBag;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 
@@ -35,6 +36,9 @@ if ('dev' !== $env && 'prod' !== $env) {
     die('The Contao Managed Edition only supports "dev" and "prod" environment.');
 }
 
-$kernel = ContaoKernel::create($projectDir, 'prod' !== $env);
+$kernelConfig = JwtBag::create($projectDir);
+$kernelConfig->set('debug', 'prod' !== $env);
+
+$kernel = ContaoKernel::create($projectDir, $kernelConfig);
 $application = new Application($kernel);
 $application->run($input);

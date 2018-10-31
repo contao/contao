@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\ManagerBundle\HttpKernel\JwtBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
@@ -21,9 +22,9 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 // Handle the request
-$kernel = ContaoKernel::create(\dirname(__DIR__))->getHttpKernel();
+$kernel = ContaoKernel::create(\dirname(__DIR__), JwtBag::create(\dirname(__DIR__), $_COOKIE));
 $request = Request::createFromGlobals();
-$response = $kernel->handle($request);
+$response = $kernel->getHttpKernel()->handle($request);
 $response->send();
 
 if ($kernel instanceof TerminableInterface) {

@@ -56,6 +56,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private $managerConfig;
 
     /**
+     * @var JwtBag|null
+     */
+    private $kernelConfig;
+
+    /**
      * @var ContaoCache
      */
     private $httpCache;
@@ -168,6 +173,20 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->managerConfig = $managerConfig;
     }
 
+    public function getKernelConfig(): JwtBag
+    {
+        if (null === $this->kernelConfig) {
+            $this->kernelConfig = JwtBag::create($this->getProjectDir());
+        }
+
+        return $this->kernelConfig;
+    }
+
+    public function setKernelConfig(JwtBag $kernelConfig): void
+    {
+        $this->kernelConfig = $kernelConfig;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -204,9 +223,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function getHttpKernel(): HttpKernelInterface
     {
-        // TODO handle JWT token to know if cache should be disabled
-
-        if ($this->isDebug()) {
+        if ($this->getKernelConfig()->get('bypass_cache', false)) {
             return $this;
         }
 
@@ -225,16 +242,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $this->httpCache = new ContaoCache($this, $this->getProjectDir().'/var/cache/prod/http_cache');
     }
 
-    public static function create(string $projectDir, bool $debug = null)
+    public static function create(string $projectDir, JwtBag $kernelConfig)
     {
         if (file_exists($projectDir.'/.env')) {
             (new Dotenv())->load($projectDir.'/.env');
         }
 
-        if (null == $debug) {
-            // TODO parse JWT token to know debug mode
-            $debug = false;
-        }
+        $debug = $kernelConfig->get('debug', false);
 
         // TODO use manager config to load settings
         // $this->getKernel()->getManagerConfig()
@@ -257,7 +271,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Debug::enable();
         }
 
-        return new static($debug ? 'dev' : 'prod', $debug);
+        $kernel = new static($debug ? 'dev' : 'prod', $debug);
+        $kernel->setKernelConfig($kernelConfig);
+
+        return $kernel;
     }
 
     /**
