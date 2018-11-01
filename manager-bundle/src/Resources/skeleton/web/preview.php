@@ -23,7 +23,11 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 // Handle the request
 $kernel = ContaoKernel::create(\dirname(__DIR__));
 $request = Request::createFromGlobals();
-$response = $kernel->getHttpCache()->handle($request);
+$response = $kernel->handle($request);
+
+// Force no-cache on all responses in the preview front controller
+$response->headers->set('Cache-Control', 'no-store');
+
 $response->send();
 
 if ($kernel instanceof TerminableInterface) {
