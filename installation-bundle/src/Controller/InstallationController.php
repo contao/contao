@@ -361,7 +361,7 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $dumper = new ParameterDumper($this->getContainerParameter('kernel.root_dir'));
+        $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
         $dumper->setParameters($parameters);
         $dumper->dump();
 

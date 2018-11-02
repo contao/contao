@@ -33,18 +33,12 @@ class Configuration implements ConfigurationInterface
     /**
      * @var string
      */
-    private $rootDir;
-
-    /**
-     * @var string
-     */
     private $defaultLocale;
 
-    public function __construct(bool $debug, string $projectDir, string $rootDir, string $defaultLocale)
+    public function __construct(bool $debug, string $projectDir, string $defaultLocale)
     {
         $this->debug = $debug;
         $this->projectDir = $projectDir;
-        $this->rootDir = $rootDir;
         $this->defaultLocale = $defaultLocale;
     }
 
@@ -219,8 +213,8 @@ class Configuration implements ConfigurationInterface
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
         // app/Resources/contao/languages
-        if (is_dir($this->rootDir.'/Resources/contao/languages')) {
-            $dirs[] = $this->rootDir.'/Resources/contao/languages';
+        if (is_dir($this->projectDir.'/Resources/contao/languages')) {
+            $dirs[] = $this->projectDir.'/Resources/contao/languages';
         }
 
         // The default locale must be the first supported language (see contao/core#6533)

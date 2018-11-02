@@ -129,7 +129,6 @@ class ContaoCoreExtensionTest extends TestCase
             new ParameterBag([
                 'kernel.debug' => false,
                 'kernel.project_dir' => $this->getTempDir(),
-                'kernel.root_dir' => $this->getTempDir().'/app',
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -1575,7 +1574,6 @@ class ContaoCoreExtensionTest extends TestCase
             new ParameterBag([
                 'kernel.debug' => false,
                 'kernel.project_dir' => $this->getTempDir(),
-                'kernel.root_dir' => $this->getTempDir().'/app',
                 'kernel.default_locale' => 'en',
             ])
         );

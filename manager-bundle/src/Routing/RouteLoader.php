@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Routing;
 
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -31,7 +32,7 @@ class RouteLoader
     private $pluginLoader;
 
     /**
-     * @var KernelInterface
+     * @var KernelInterface|ContaoKernel
      */
     private $kernel;
 
@@ -62,7 +63,7 @@ class RouteLoader
         );
 
         // Load the app/config/routing.yml file if it exists
-        if (file_exists($configFile = $this->kernel->getRootDir().'/config/routing.yml')) {
+        if (file_exists($configFile = $this->kernel->getProjectDir().'/app/config/routing.yml')) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 
             if ($routes instanceof RouteCollection) {

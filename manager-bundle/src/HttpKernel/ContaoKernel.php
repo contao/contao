@@ -166,10 +166,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $rootDir = $this->getRootDir();
+        $configDir = $this->getProjectDir().'/app/config';
 
-        if (file_exists($rootDir.'/config/parameters.yml')) {
-            $loader->load($rootDir.'/config/parameters.yml');
+        if (file_exists($configDir.'/parameters.yml')) {
+            $loader->load($configDir.'/parameters.yml');
         }
 
         $config = $this->getManagerConfig()->all();
@@ -181,14 +181,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // Reload the parameters.yml file
-        if (file_exists($rootDir.'/config/parameters.yml')) {
-            $loader->load($rootDir.'/config/parameters.yml');
+        if (file_exists($configDir.'/parameters.yml')) {
+            $loader->load($configDir.'/parameters.yml');
         }
 
-        if (file_exists($rootDir.'/config/config_'.$this->getEnvironment().'.yml')) {
-            $loader->load($rootDir.'/config/config_'.$this->getEnvironment().'.yml');
-        } elseif (file_exists($rootDir.'/config/config.yml')) {
-            $loader->load($rootDir.'/config/config.yml');
+        if (file_exists($configDir.'/config_'.$this->getEnvironment().'.yml')) {
+            $loader->load($configDir.'/config_'.$this->getEnvironment().'.yml');
+        } elseif (file_exists($configDir.'/config.yml')) {
+            $loader->load($configDir.'/config.yml');
         }
     }
 

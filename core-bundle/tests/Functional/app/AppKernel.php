@@ -49,6 +49,11 @@ class AppKernel extends Kernel
         ];
     }
 
+    public function getProjectDir()
+    {
+        return \dirname(__DIR__);
+    }
+
     public function getRootDir()
     {
         return __DIR__;
@@ -56,17 +61,17 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return __DIR__.'/../var/cache/'.$this->environment;
+        return \dirname(__DIR__).'/var/cache/'.$this->environment;
     }
 
     public function getLogDir()
     {
-        return __DIR__.'/../var/logs';
+        return \dirname(__DIR__).'/var/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load($this->getRootDir().'/config/config_'.$this->environment.'.yml');
+        $loader->load(__DIR__.'/config/config_'.$this->environment.'.yml');
     }
 
     protected function build(ContainerBuilder $container): void
