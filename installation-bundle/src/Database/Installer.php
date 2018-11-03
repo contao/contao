@@ -156,7 +156,7 @@ class Installer
             }
         }
 
-        $this->checkEngineAndCollation($return, $toSchema);
+        $this->checkEngineAndCollation($return, $fromSchema, $toSchema);
 
         $return = array_filter($return);
 
@@ -173,7 +173,7 @@ class Installer
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
      */
-    private function checkEngineAndCollation(array &$sql, Schema $toSchema): void
+    private function checkEngineAndCollation(array &$sql, Schema $fromSchema, Schema $toSchema): void
     {
         $tables = $toSchema->getTables();
         $dynamic = $this->hasDynamicRowFormat();
@@ -235,7 +235,11 @@ class Installer
             if ($deleteIndexes) {
                 $platform = $this->connection->getDatabasePlatform();
 
-                foreach ($table->getIndexes() as $index) {
+                if (!$fromSchema->hasTable($tableName)) {
+                    continue;
+                }
+
+                foreach ($fromSchema->getTable($tableName)->getIndexes() as $index) {
                     if ('primary' !== $index->getName()) {
                         $indexCommand = $platform->getDropIndexSQL($index->getName(), $tableName);
                         $sql['ALTER_TABLE'][md5($indexCommand)] = $indexCommand;
