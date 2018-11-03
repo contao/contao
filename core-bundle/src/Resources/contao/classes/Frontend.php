@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Response;

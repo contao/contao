@@ -809,7 +809,7 @@ abstract class DataContainer extends Backend
 				{
 					if (!empty($v['route']))
 					{
-						$href = \System::getContainer()->get('router')->generate($v['route'], ['id' => $arrRow['id'], 'popup' => '1']);
+						$href = \System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
 					}
 					else
 					{
@@ -822,7 +822,7 @@ abstract class DataContainer extends Backend
 				{
 					if (!empty($v['route']))
 					{
-						$href = \System::getContainer()->get('router')->generate($v['route'], ['id' => $arrRow['id']]);
+						$href = \System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
 					}
 					else
 					{
@@ -1005,7 +1005,7 @@ abstract class DataContainer extends Backend
 			{
 				if (!empty($v['route']))
 				{
-					$href = \System::getContainer()->get('router')->generate($v['route'], ['id' => $arrRow['id'], 'popup' => '1']);
+					$href = \System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
 				}
 				else
 				{
@@ -1018,7 +1018,7 @@ abstract class DataContainer extends Backend
 			{
 				if (!empty($v['route']))
 				{
-					$href = \System::getContainer()->get('router')->generate($v['route'], ['id' => $arrRow['id']]);
+					$href = \System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
 				}
 				else
 				{
