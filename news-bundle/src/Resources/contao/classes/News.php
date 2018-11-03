@@ -503,12 +503,14 @@ class News extends Frontend
 	 */
 	public function setMetaData(PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular)
     {
-        if (!\Input::get('items'))
+        $items = \Input::get('items');
+
+        if (empty($items))
         {
             return; // no news
         }
 
-        $news = \NewsModel::findOneBy(array('alias=?', 'published=?'), array($this->Input->get('items'), 1));
+        $news = \NewsModel::findOneBy(array('alias=?', 'published=?'), array($items, 1));
 
         if (null === $news)
         {
