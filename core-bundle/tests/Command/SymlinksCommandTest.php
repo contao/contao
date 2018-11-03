@@ -46,12 +46,14 @@ class SymlinksCommandTest extends TestCase
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
         $container = $this->mockContainer($this->getFixturesDir());
+        $this->setBundlesOnContainer($container);
         $container->setParameter('kernel.logs_dir', $this->getFixturesDir().'/var/logs');
         $container->set('contao.resource_finder', $finder);
 
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
+            $container->getParameter('kernel.bundles'),
             $this->getFixturesDir().'/var/logs',
             new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
         );
@@ -91,7 +93,13 @@ class SymlinksCommandTest extends TestCase
             (new Filesystem())->mkdir($tmpDir);
         }
 
+        $bundles = [
+            'ContaoCoreBundle' => 'Contao\CoreBundle'
+        ];
+
         $factory = new Factory(new FlockStore($tmpDir));
+        $container = $this->mockContainer($this->getFixturesDir());
+        $this->setBundlesOnContainer($container);
 
         $lock = $factory->createLock('contao:symlinks');
         $lock->acquire();
@@ -99,6 +107,7 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
+            $container->getParameter('kernel.bundles'),
             $this->getFixturesDir().'/var/logs',
             new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
         );
@@ -116,9 +125,13 @@ class SymlinksCommandTest extends TestCase
 
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
+        $container = $this->mockContainer($this->getFixturesDir());
+        $this->setBundlesOnContainer($container);
+
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
+            $container->getParameter('kernel.bundles'),
             $this->getFixturesDir().'/var/logs',
             new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
         );
@@ -135,5 +148,14 @@ class SymlinksCommandTest extends TestCase
 
         // The path should be normalized and shortened
         $this->assertSame('var/logs', $relativePath);
+    }
+
+    private function setBundlesOnContainer($container): void
+    {
+        $bundles = [
+            'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle'
+        ];
+
+        $container->setParameter('kernel.bundles', $bundles);
     }
 }
