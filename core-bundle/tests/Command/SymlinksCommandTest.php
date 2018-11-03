@@ -53,9 +53,9 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
-            $container->getParameter('kernel.bundles'),
             $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $container->getParameter('kernel.bundles')
         );
 
         $command->setContainer($container);
@@ -107,9 +107,9 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
-            $container->getParameter('kernel.bundles'),
             $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $container->getParameter('kernel.bundles')
         );
 
         $command->setContainer($this->mockContainer($this->getFixturesDir()));
@@ -131,9 +131,9 @@ class SymlinksCommandTest extends TestCase
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
-            $container->getParameter('kernel.bundles'),
             $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $container->getParameter('kernel.bundles')
         );
 
         // Use \ as directory separator in $rootDir

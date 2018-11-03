@@ -68,13 +68,13 @@ class SymlinksCommand extends AbstractLockedCommand
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, array $bundles, string $logsDir, ResourceFinderInterface $resourceFinder)
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, array $bundles)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
-        $this->bundles = $bundles;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
+        $this->bundles = $bundles;
 
         parent::__construct();
     }
