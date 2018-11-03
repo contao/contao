@@ -1,6 +1,6 @@
 # Contao 4 bundles
 
-[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.org/contao/contao/)
+[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.com/contao/contao/)
 [![](https://img.shields.io/coveralls/contao/contao/master.svg?style=flat-square)](https://coveralls.io/github/contao/contao)
 [![](https://img.shields.io/packagist/v/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
 
