@@ -40,8 +40,8 @@ installing it in your current directory:
 $ composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
-Replace `<branch>` with the directory you want to install the managed edition
-to (use `.` for the current one) and `<branch>` with `dev-master` if you want to
+Replace `<directory>` with the directory you want to install the managed edition
+in (use `.` for the current one) and `<branch>` with `dev-master` if you want to
 add a new feature or with `<lts-version>.x-dev` (currently `4.4.x-dev`) if you
 want to fix a bug.
 
