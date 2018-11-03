@@ -64,6 +64,12 @@ class SymlinksCommand extends AbstractLockedCommand
     private $webDir;
 
     /**
+     * @var array
+     */
+    private $bundles;
+
+
+    /**
      * @var int
      */
     private $statusCode = 0;
