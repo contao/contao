@@ -113,6 +113,7 @@
         "symfony/phpunit-bridge": "^3.4.5"
     },
     "suggest": {
+        "contao/tcpdf-bundle": "To export articles as PDF files",
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "extra": {
