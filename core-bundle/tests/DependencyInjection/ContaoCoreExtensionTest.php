@@ -180,7 +180,7 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return array<int,array<int,string|true>>
      */
     public function getCommandTestData(): array
     {
