@@ -129,17 +129,35 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
+            $targetPath = $webDir.'/'.$file->getRelativePathname();
+
             if ($this->isExistingOptionalFile($file, $webDir)) {
+                // Update .htaccess if necessary
+                if ('.htaccess' === $file->getRelativePathname()) {
+                    $this->appendHtaccessIfApplicable($targetPath, $file);
+                }
+
                 continue;
             }
 
             if (!$dev && 'app_dev.php' === $file->getRelativePathname()) {
                 continue;
             }
-
-            $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
+            $this->fs->copy($file->getPathname(), $targetPath, true);
             $this->io->text(sprintf('Added/updated the <comment>web/%s</comment> file.', $file->getFilename()));
         }
+    }
+
+    private function appendHtaccessIfApplicable(string $targetPath, SplFileInfo $file): void
+    {
+        $existingContent = file_get_contents($targetPath);
+        $skeletonContent = $file->getContents();
+
+        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+            return;
+        }
+
+        $this->fs->dumpFile($targetPath, $existingContent . "\n\n" . $skeletonContent);
     }
 
     /**
