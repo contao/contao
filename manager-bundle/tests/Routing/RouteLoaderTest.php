@@ -16,14 +16,14 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class RouteLoaderTest extends TestCase
+class RouteLoaderTest extends ContaoTestCase
 {
     public function testLoadFromPlugins(): void
     {
@@ -50,7 +50,8 @@ class RouteLoaderTest extends TestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(ContaoKernel::class)
+            $this->createMock(ContaoKernel::class),
+            $this->getTempDir()
         );
 
         $collection = $routeLoader->loadFromPlugins();
@@ -89,7 +90,8 @@ class RouteLoaderTest extends TestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(ContaoKernel::class)
+            $this->createMock(ContaoKernel::class),
+            $this->getTempDir()
         );
 
         $routes = $routeLoader->loadFromPlugins()->all();

@@ -29,7 +29,7 @@ class ContaoModuleBundleTest extends TestCase
     {
         parent::setUp();
 
-        $this->bundle = new ContaoModuleBundle('foobar', $this->getFixturesDir());
+        $this->bundle = new ContaoModuleBundle('foobar', $this->getFixturesDir().'/app');
     }
 
     public function testReturnsTheModulePath(): void
@@ -41,6 +41,6 @@ class ContaoModuleBundleTest extends TestCase
     {
         $this->expectException('LogicException');
 
-        $this->bundle = new ContaoModuleBundle('invalid', $this->getFixturesDir());
+        $this->bundle = new ContaoModuleBundle('invalid', $this->getFixturesDir().'/app');
     }
 }

@@ -213,8 +213,8 @@ class Configuration implements ConfigurationInterface
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
         // app/Resources/contao/languages
-        if (is_dir($this->projectDir.'/Resources/contao/languages')) {
-            $dirs[] = $this->projectDir.'/Resources/contao/languages';
+        if (is_dir($this->projectDir.'/app/Resources/contao/languages')) {
+            $dirs[] = $this->projectDir.'/app/Resources/contao/languages';
         }
 
         // The default locale must be the first supported language (see contao/core#6533)

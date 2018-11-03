@@ -16,4 +16,5 @@ services:
             - "@routing.loader"
             - "@contao_manager.plugin_loader"
             - "@kernel"
+            - "%kernel.project_dir%"
         public: true
