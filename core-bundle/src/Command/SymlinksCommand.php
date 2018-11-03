@@ -135,8 +135,7 @@ class SymlinksCommand extends AbstractLockedCommand
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
 
         // Symlink the TCPDF config file
-        $coreBundle = new \ReflectionClass($this->bundles['ContaoCoreBundle']);
-        $this->symlink(dirname($coreBundle->getFileName()) . '/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
+        $this->symlinkTcpdf();
     }
 
     private function symlinkFiles(string $uploadPath): void
@@ -173,6 +172,12 @@ class SymlinksCommand extends AbstractLockedCommand
 
             $this->symlink($path, 'system/themes/'.basename($path));
         }
+    }
+
+    private function symlinkTcpdf(): void
+    {
+        $coreBundle = new \ReflectionClass($this->bundles['ContaoCoreBundle']);
+        $this->symlink($this->getRelativePath(dirname($coreBundle->getFileName())) . '/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
     }
 
     private function createSymlinksFromFinder(Finder $finder, string $prepend): void
