@@ -61,7 +61,11 @@ class JwtManager
             }
         }
 
-        throw new RedirectResponseException('/preview.php/contao/login');
+        if ($request->getRequestUri() === '/admin.php/contao/login') {
+            return ['debug' => true];
+        }
+
+        throw new RedirectResponseException('/admin.php/contao/login');
     }
 
     /**
