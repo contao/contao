@@ -116,7 +116,6 @@ class SymlinksCommand extends AbstractLockedCommand
     private function generateSymlinks(): void
     {
         $fs = new Filesystem();
-        $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
         $bundles = $this->getContainer()->getParameter('kernel.bundles');
 
         // Remove the base folders in the document root
