@@ -40,7 +40,7 @@ class JwtManager
             $this->secret = file_get_contents($secretFile);
         }
 
-        if (!\is_string($this->secret) || \strlen($this->secret) === 64) {
+        if (!\is_string($this->secret) || \strlen($this->secret) !== 64) {
             $this->secret = bin2hex(random_bytes(32));
             $filesystem->dumpFile($secretFile, $this->secret);
         }
@@ -49,20 +49,20 @@ class JwtManager
     /**
      * @throws ResponseException
      */
-    public function parseRequest(Request $request): array
+    public function parseRequest(Request $request): ?array
     {
         $request->attributes->set(self::ATTRIBUTE, $this);
 
-        if ($request->query->has(self::JWT_KEY)) {
+        if ($request->cookies->has(self::JWT_KEY)) {
             try {
-                return $this->decodeJwt((string) $request->cookies->get(self::KEY));
+                return $this->decodeJwt((string) $request->cookies->get(self::JWT_KEY));
             } catch (\Exception $e) {
                 // Do nothing
             }
         }
 
         if ($request->getRequestUri() === '/admin.php/contao/login') {
-            return ['debug' => true];
+            return null;
         }
 
         throw new RedirectResponseException('/admin.php/contao/login');
@@ -82,7 +82,9 @@ class JwtManager
 
         $cookie = new Cookie(
             self::JWT_KEY,
-            JWT::encode($payload, $this->secret, 'HS256')
+            JWT::encode($payload, $this->secret, 'HS256'),
+            0,
+            '/'
         );
 
         $response->headers->setCookie($cookie);
