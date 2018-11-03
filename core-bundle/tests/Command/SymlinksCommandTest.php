@@ -82,7 +82,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains(' system/logs ', $display);
         $this->assertContains(' var/logs ', $display);
         $this->assertContains(' system/config/tcpdf.php ', $display);
-        $this->assertContains(' vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php ', $display);
+        $this->assertContains('core-bundle/src/Resources/contao/config/tcpdf.php ', $display);
     }
 
     public function testIsLockedWhileRunning(): void
