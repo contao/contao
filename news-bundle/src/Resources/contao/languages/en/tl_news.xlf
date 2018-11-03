@@ -20,6 +20,18 @@
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
       </trans-unit>
+      <trans-unit id="tl_news.metatitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_news.metatitle.1">
+        <source>Replaces the automatically assigned meta-title with an individual.</source>
+      </trans-unit>
+      <trans-unit id="tl_news.metadescription.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_news.metadescription.1">
+        <source>Replaces the automatically assigned meta-description with an individual.</source>
+      </trans-unit>
       <trans-unit id="tl_news.date.0">
         <source>Date</source>
       </trans-unit>
