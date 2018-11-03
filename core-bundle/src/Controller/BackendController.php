@@ -24,7 +24,7 @@ use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +34,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route(defaults={"_scope" = "backend", "_token_check" = true})
  */
-class BackendController extends Controller
+class BackendController extends AbstractController
 {
     /**
      * @Route("/contao", name="contao_backend")

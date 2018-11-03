@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\InsertTags;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Symfony fragment URI signer. If you use it directly, make sure to add a
  * permission check, because insert tags can contain arbitrary data!
  */
-class InsertTagsController extends Controller
+class InsertTagsController extends AbstractController
 {
     /**
      * @var ContaoFrameworkInterface

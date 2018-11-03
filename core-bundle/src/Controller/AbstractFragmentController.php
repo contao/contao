@@ -17,10 +17,10 @@ use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
 
-abstract class AbstractFragmentController extends Controller implements FragmentOptionsAwareInterface
+abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     /**
      * @var array
