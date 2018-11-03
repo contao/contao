@@ -23,7 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JwtManager
 {
-    private const KEY = '_contao_preview';
+    public const ATTRIBUTE = '_jwtManager';
+    private const JWT_KEY = '_contao_preview';
 
     /**
      * @var string
@@ -33,7 +34,7 @@ class JwtManager
     public function __construct(string $projectDir)
     {
         $filesystem = new Filesystem();
-        $secretFile = $projectDir.'/var/cache/jwt-secret';
+        $secretFile = $projectDir.'/var/jwt_secret';
 
         if ($filesystem->exists($secretFile)) {
             $this->secret = file_get_contents($secretFile);
@@ -50,7 +51,9 @@ class JwtManager
      */
     public function parseRequest(Request $request): array
     {
-        if ($request->cookies->has(self::KEY)) {
+        $request->attributes->set(self::ATTRIBUTE, $this);
+
+        if ($request->query->has(self::JWT_KEY)) {
             try {
                 return $this->decodeJwt((string) $request->cookies->get(self::KEY));
             } catch (\Exception $e) {
@@ -74,7 +77,7 @@ class JwtManager
         $payload['exp'] = strtotime('+30 minutes');
 
         $cookie = new Cookie(
-            self::KEY,
+            self::JWT_KEY,
             JWT::encode($payload, $this->secret, 'HS256')
         );
 
@@ -84,9 +87,11 @@ class JwtManager
     /**
      * Clears the JWT cookie in the response.
      */
-    public function clearResponseCookie(Response $response): void
+    public function clearResponseCookie(Response $response): Response
     {
-        $response->headers->clearCookie(self::KEY);
+        $response->headers->clearCookie(self::JWT_KEY);
+
+        return $response;
     }
 
     /**
@@ -98,7 +103,7 @@ class JwtManager
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {
-            if ($cookie->getName() === self::KEY) {
+            if ($cookie->getName() === self::JWT_KEY) {
                 return true;
             }
         }
