@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
