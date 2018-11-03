@@ -883,7 +883,7 @@ class InsertTags extends Controller
 					}
 
 					// Use image alt or label if insert tag alt is not set
-					if(!$alt)
+					if (!$alt)
 					{
 						$objFiles = \FilesModel::findByPath($strFile);
 						$arrMeta = \Frontend::getMetaData($objFiles->meta, $objPage->language);
