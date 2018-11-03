@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
+use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -153,6 +154,58 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($container);
 
         $controller(new Request(), $model, 'main');
+    }
+
+    public function testDoesNotExpire(): void
+    {
+        $model = new ContentModel();
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+
+        $controller = new TestSharedMaxAgeController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertNull($response->getMaxAge());
+    }
+
+    public function testSetsSharedMaxAgeWithElementExpiring(): void
+    {
+        $time = time();
+        $stop = strtotime('+2 weeks', $time);
+        $expires = $stop - $time;
+
+        $model = new ContentModel();
+        $model->stop = (string) $stop;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+
+        $controller = new TestSharedMaxAgeController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame($expires, $response->getMaxAge());
+    }
+
+    public function testSetsSharedMaxAgeWithElementForthcoming(): void
+    {
+        $time = time();
+        $start = strtotime('+2 weeks', $time);
+        $expires = $start - $time;
+
+        $model = new ContentModel();
+        $model->start = (string) $start;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+
+        $controller = new TestSharedMaxAgeController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame($expires, $response->getMaxAge());
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
