@@ -35,7 +35,7 @@ class ScriptHandler
         static::executeCommand(sprintf('contao:install %s', $webDir), $event);
         static::executeCommand(sprintf('contao:symlinks %s', $webDir), $event);
 
-        $event->getIO()->write('<info>Done! Please open the install tool and make sure the database is up-to-date.</info>');
+        $event->getIO()->write('<info>Done! Please open the Contao install tool and make sure the database is up-to-date.</info>');
     }
 
     public static function purgeCacheFolder(): void
