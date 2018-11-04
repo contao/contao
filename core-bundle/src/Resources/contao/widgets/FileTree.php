@@ -215,6 +215,7 @@ class FileTree extends Widget
 	{
 		$arrSet = array();
 		$arrValues = array();
+		$arrClass = array();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 
 		if (!empty($this->varValue)) // Can be an array
@@ -232,6 +233,8 @@ class FileTree extends Widget
 					{
 						continue;
 					}
+
+                    $arrClass[$objFiles->uuid] = 'type_' . $objFiles->type . (!$this->isUnprotected($objFiles->path) ? ' protected' : '');
 
 					$arrSet[$objFiles->id] = $objFiles->uuid;
 
@@ -364,7 +367,7 @@ class FileTree extends Widget
 
 		foreach ($arrValues as $k=>$v)
 		{
-			$return .= '<li data-id="'.\StringUtil::binToUuid($k).'">'.$v.'</li>';
+            $return .= '<li class="' . $arrClass[$k]. '" data-id="' . \StringUtil::binToUuid($k) . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -463,6 +466,22 @@ class FileTree extends Widget
 
 		return \Image::getHtml($image, '', 'class="' . $strClass . '" title="' . \StringUtil::specialchars($strInfo) . '"');
 	}
+
+    // todo: replace with Folder::isUnprotected from #1601
+    private function isUnprotected(string $path): bool
+    {
+        $rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+
+        do {
+            if (file_exists($rootDir. '/' . $path . '/.public')) {
+                return true;
+            }
+            $path = \dirname($path);
+        } while ('.' !== $path);
+
+        return false;
+    }
+
 }
 
 class_alias(FileTree::class, 'FileTree');

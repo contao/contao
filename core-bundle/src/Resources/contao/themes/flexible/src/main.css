@@ -1114,6 +1114,44 @@ ul.sgallery li {
 	justify-content:center;
 }
 
+.selector_container .type_folder.protected {
+	display: flex;
+}
+
+.selector_container .type_folder.protected:before,
+.selector_container .type_file.protected:after {
+	background: url("icons/unpublished.svg") no-repeat;
+	background-size: cover;
+	width: 20px;
+	height: 20px;
+	content: '';
+}
+
+.selector_container .type_file.protected:after {
+	position: absolute;
+}
+
+.selector_container .type_file.protected {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 75px;
+}
+
+.selector_container .type_file.protected:before {
+	background: rgba(255,255,255,0.8);
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	content: '';
+	position: absolute;
+}
+
+.selector_container .type_folder.protected:before {
+	margin-right: 6px;
+	content: '';
+}
+
 /* Welcome screen */
 .popup #tl_soverview {
 	margin-top:15px;
