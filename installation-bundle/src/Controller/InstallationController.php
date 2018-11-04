@@ -434,9 +434,7 @@ class InstallationController implements ContainerAwareInterface
         $sql = $request->request->get('sql');
 
         if (!empty($sql) && \is_array($sql)) {
-            foreach ($sql as $hash) {
-                $installer->execCommand($hash);
-            }
+            $installer->execCommands($sql);
         }
 
         return $this->getRedirectResponse();

@@ -30,6 +30,11 @@ class Installer
     private $commands;
 
     /**
+     * @var array
+     */
+    private $commandOrder;
+
+    /**
      * @var DcaSchemaProvider
      */
     private $schemaProvider;
@@ -54,22 +59,22 @@ class Installer
 
     /**
      * @throws \InvalidArgumentException
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function execCommand(string $hash): void
+    public function execCommands(array $hashes): void
     {
         if (null === $this->commands) {
             $this->compileCommands();
         }
 
-        foreach ($this->commands as $commands) {
-            if (isset($commands[$hash])) {
-                $this->connection->query($commands[$hash]);
+        $commands = [];
+        array_map(function ($c) use (&$commands): void {
+            $commands += $c;
+        }, $this->commands);
 
-                return;
-            }
+        foreach (array_intersect($this->commandOrder, $hashes) as $hash) {
+            $this->connection->query($commands[$hash]);
         }
-
-        throw new \InvalidArgumentException(sprintf('Invalid hash: %s', $hash));
     }
 
     /**
@@ -85,6 +90,7 @@ class Installer
             'DROP' => [],
             'ALTER_DROP' => [],
         ];
+        $order = [];
 
         $config = $this->connection->getConfiguration();
 
@@ -102,6 +108,8 @@ class Installer
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
+            $order[] = md5($sql);
+
             switch (true) {
                 case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
@@ -165,9 +173,19 @@ class Installer
             foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
                 $return = \System::importStatic($callback[0])->{$callback[1]}($return);
             }
+
+            // make sure commands added via the hook are also appended to the command order
+            foreach ($return as $commandSet) {
+                foreach ($commandSet as $hash => $sql) {
+                    if (!isset($order[$hash])) {
+                        $order[] = $hash;
+                    }
+                }
+            }
         }
 
         $this->commands = $return;
+        $this->commandOrder = $order;
     }
 
     /**
