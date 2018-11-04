@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
@@ -45,8 +47,7 @@ class SymlinksCommandTest extends TestCase
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $container = $this->mockContainer($this->getFixturesDir());
-        $this->setBundlesOnContainer($container);
+        $container = $this->mockContainerWithBundles();
         $container->setParameter('kernel.logs_dir', $this->getFixturesDir().'/var/logs');
         $container->set('contao.resource_finder', $finder);
 
@@ -93,13 +94,8 @@ class SymlinksCommandTest extends TestCase
             (new Filesystem())->mkdir($tmpDir);
         }
 
-        $bundles = [
-            'ContaoCoreBundle' => 'Contao\CoreBundle'
-        ];
-
         $factory = new Factory(new FlockStore($tmpDir));
-        $container = $this->mockContainer($this->getFixturesDir());
-        $this->setBundlesOnContainer($container);
+        $container = $this->mockContainerWithBundles();
 
         $lock = $factory->createLock('contao:symlinks');
         $lock->acquire();
@@ -125,8 +121,7 @@ class SymlinksCommandTest extends TestCase
 
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
-        $container = $this->mockContainer($this->getFixturesDir());
-        $this->setBundlesOnContainer($container);
+        $container = $this->mockContainerWithBundles();
 
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
@@ -150,12 +145,11 @@ class SymlinksCommandTest extends TestCase
         $this->assertSame('var/logs', $relativePath);
     }
 
-    private function setBundlesOnContainer($container): void
+    private function mockContainerWithBundles(): ContainerBuilder
     {
-        $bundles = [
-            'ContaoCoreBundle' => 'Contao\CoreBundle\ContaoCoreBundle'
-        ];
+        $container = $this->mockContainer($this->getFixturesDir());
+        $container->setParameter('kernel.bundles', ['ContaoCoreBundle' => ContaoCoreBundle::class]);
 
-        $container->setParameter('kernel.bundles', $bundles);
+        return $container;
     }
 }
