@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
@@ -45,7 +47,7 @@ class SymlinksCommandTest extends TestCase
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $container = $this->mockContainer($this->getFixturesDir());
+        $container = $this->mockContainerWithBundles();
         $container->setParameter('kernel.logs_dir', $this->getFixturesDir().'/var/logs');
         $container->set('contao.resource_finder', $finder);
 
@@ -53,7 +55,8 @@ class SymlinksCommandTest extends TestCase
             $this->getFixturesDir(),
             'files',
             $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $container->getParameter('kernel.bundles')
         );
 
         $command->setContainer($container);
@@ -80,7 +83,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertContains(' system/logs ', $display);
         $this->assertContains(' var/logs ', $display);
         $this->assertContains(' system/config/tcpdf.php ', $display);
-        $this->assertContains(' vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php ', $display);
+        $this->assertContains('core-bundle/src/Resources/contao/config/tcpdf.php ', $display);
     }
 
     public function testIsLockedWhileRunning(): void
@@ -92,6 +95,7 @@ class SymlinksCommandTest extends TestCase
         }
 
         $factory = new Factory(new FlockStore($tmpDir));
+        $container = $this->mockContainerWithBundles();
 
         $lock = $factory->createLock('contao:symlinks');
         $lock->acquire();
@@ -100,7 +104,8 @@ class SymlinksCommandTest extends TestCase
             $this->getFixturesDir(),
             'files',
             $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $container->getParameter('kernel.bundles')
         );
 
         $command->setContainer($this->mockContainer($this->getFixturesDir()));
@@ -116,11 +121,14 @@ class SymlinksCommandTest extends TestCase
 
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
+        $container = $this->mockContainerWithBundles();
+
         $command = new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
             $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao')
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $container->getParameter('kernel.bundles')
         );
 
         // Use \ as directory separator in $rootDir
@@ -135,5 +143,13 @@ class SymlinksCommandTest extends TestCase
 
         // The path should be normalized and shortened
         $this->assertSame('var/logs', $relativePath);
+    }
+
+    private function mockContainerWithBundles(): ContainerBuilder
+    {
+        $container = $this->mockContainer($this->getFixturesDir());
+        $container->setParameter('kernel.bundles', ['ContaoCoreBundle' => ContaoCoreBundle::class]);
+
+        return $container;
     }
 }
