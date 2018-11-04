@@ -367,7 +367,7 @@ class FileTree extends Widget
 
 		foreach ($arrValues as $k=>$v)
 		{
-		    $return .= '<li class="' . $arrClass[$k]. '" data-id="' . \StringUtil::binToUuid($k) . '">' . $v . '</li>';
+			$return .= '<li class="' . $arrClass[$k] . '" data-id="' . \StringUtil::binToUuid($k) . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -468,19 +468,19 @@ class FileTree extends Widget
 	}
 
 	// todo: replace with Folder::isUnprotected from #1601
-    private function isUnprotected(string $path): bool
-    {
+	private function isUnprotected(string $path): bool
+	{
 		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		do {
-		    if (file_exists($rootDir. '/' . $path . '/.public')) {
+			if (file_exists($rootDir . '/' . $path . '/.public')) {
 				return true;
-		    }
-		    $path = \dirname($path);
+			}
+			$path = \dirname($path);
 		} while ('.' !== $path);
 
 		return false;
-    }
+	}
 
 }
 
