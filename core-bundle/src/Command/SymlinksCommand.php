@@ -64,16 +64,22 @@ class SymlinksCommand extends AbstractLockedCommand
     private $webDir;
 
     /**
+     * @var array
+     */
+    private $bundles;
+
+    /**
      * @var int
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder)
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, array $bundles)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
+        $this->bundles = $bundles;
 
         parent::__construct();
     }
@@ -134,7 +140,7 @@ class SymlinksCommand extends AbstractLockedCommand
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
 
         // Symlink the TCPDF config file
-        $this->symlink('vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
+        $this->symlinkTcpdfConfig();
     }
 
     private function symlinkFiles(string $uploadPath): void
@@ -171,6 +177,14 @@ class SymlinksCommand extends AbstractLockedCommand
 
             $this->symlink($path, 'system/themes/'.basename($path));
         }
+    }
+
+    private function symlinkTcpdfConfig(): void
+    {
+        $coreBundle = new \ReflectionClass($this->bundles['ContaoCoreBundle']);
+        $relPath = $this->getRelativePath(\dirname($coreBundle->getFileName()));
+
+        $this->symlink($relPath.'/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
     }
 
     private function createSymlinksFromFinder(Finder $finder, string $prepend): void
