@@ -297,14 +297,6 @@
         <source>The link title is added as &lt;em&gt;title&lt;/em&gt; attribute in the HTML markup.</source>
         <target>Der Link-Titel wird als &lt;em&gt;title&lt;/em&gt;-Attribut im HTML-Markup eingefügt.</target>
       </trans-unit>
-      <trans-unit id="tl_content.disposition.0">
-        <source>Disposition</source>
-        <target>Auslieferung</target>
-      </trans-unit>
-      <trans-unit id="tl_content.disposition.1">
-        <source>Choose whether the download should be provided as a downloadable file or directly in the browser.</source>
-        <target>Wählen Sie hier aus, ob der Download nach einem Klick als Datei ausgespielt, oder direkt im Browser ausgegeben werden soll.</target>
-      </trans-unit>
       <trans-unit id="tl_content.embed.0">
         <source>Embed the link</source>
         <target>Den Link einbetten</target>
