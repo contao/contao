@@ -1469,6 +1469,12 @@
       <trans-unit id="MSC.descending">
         <source>descending</source>
       </trans-unit>
+      <trans-unit id="MSC.disposition.attachment">
+        <source>Provide as attachment (download)</source>
+      </trans-unit>
+      <trans-unit id="MSC.disposition.inline">
+        <source>Provide inline (within Browser)</source>
+      </trans-unit>
       <trans-unit id="MSC.default">
         <source>Default</source>
       </trans-unit>
