@@ -88,10 +88,7 @@ class ModuleLogout extends Module
 	/**
 	 * Generate the module
 	 */
-	protected function compile()
-	{
-		return;
-	}
+	protected function compile() {}
 }
 
 class_alias(ModuleLogout::class, 'ModuleLogout');
