@@ -117,9 +117,11 @@ class ModuleCloseAccount extends Module
 					$this->log('User account ID ' . $this->User->id . ' (' . \Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, TL_ACCESS);
 				}
 
-				// Logging user out.
-				Controller::getContainer()->get('security.token_storage')->setToken(null);
-				Controller::getContainer()->get('session')->invalidate();
+				$container = \System::getContainer();
+
+				// Log out the user (see #93)
+				$container->get('security.token_storage')->setToken(null);
+				$container->get('session')->invalidate();
 
 				// Check whether there is a jumpTo page
 				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
