@@ -1,5 +1,10 @@
 # Change log
 
+## 4.6.8 (2018-11-12)
+
+ * Correctly redirect in the "close account" module (see #93).
+ * Correctly rebuild the symlinks in the maintenance module (see #150).
+
 ## 4.6.7 (2018-10-31)
 
  * Correctly rebuild the symlinks in the maintenance module (see #150).
