@@ -66,7 +66,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $handler = $this->mockSuccessHandler(null, $logger);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
@@ -88,7 +87,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $handler = $this->mockSuccessHandler();
         $response = $handler->onAuthenticationSuccess($request, $token);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
@@ -198,7 +196,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $handler = $this->mockSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
     }
 
@@ -237,7 +234,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $handler = $this->mockSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
@@ -275,7 +271,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $handler = $this->mockSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 

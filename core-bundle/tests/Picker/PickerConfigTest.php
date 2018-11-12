@@ -105,7 +105,6 @@ class PickerConfigTest extends TestCase
 
         $config = $this->config->urlDecode(base64_encode(strtr($data, '-_,', '+/=')));
 
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $config);
         $this->assertSame('link', $config->getContext());
         $this->assertSame(['fieldType' => 'radio'], $config->getExtras());
         $this->assertSame('alias', $config->getCurrent());

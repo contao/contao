@@ -21,7 +21,6 @@ class RedirectResponseExceptionTest extends TestCase
     {
         $exception = new RedirectResponseException('http://example.org');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
         $this->assertSame(303, $exception->getResponse()->getStatusCode());
         $this->assertSame('http://example.org', $exception->getResponse()->headers->get('Location'));
     }

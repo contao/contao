@@ -38,7 +38,7 @@ class LogoutSuccessHandlerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $handler->onLogoutSuccess($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
     }
 
@@ -60,7 +60,7 @@ class LogoutSuccessHandlerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $handler->onLogoutSuccess($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
     }
 
@@ -80,7 +80,7 @@ class LogoutSuccessHandlerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $handler->onLogoutSuccess($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost', $response->getTargetUrl());
     }
 }

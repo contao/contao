@@ -44,8 +44,6 @@ class ModelArgumentResolverTest extends TestCase
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
         $generator = $resolver->resolve($request, $metadata);
 
-        $this->assertInstanceOf('Generator', $generator);
-
         foreach ($generator as $resolved) {
             $this->assertSame($pageModel, $resolved);
         }

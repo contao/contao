@@ -21,7 +21,6 @@ class NoContentResponseExceptionTest extends TestCase
     {
         $exception = new NoContentResponseException();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
         $this->assertSame(204, $exception->getResponse()->getStatusCode());
         $this->assertSame('', $exception->getResponse()->getContent());
     }

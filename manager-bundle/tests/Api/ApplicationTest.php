@@ -37,13 +37,6 @@ class ApplicationTest extends ContaoTestCase
         $this->assertSame('/foo/bar', $application->getProjectDir());
     }
 
-    public function testReturnsNewInstanceOfPluginLoader(): void
-    {
-        $application = $this->getApplication();
-
-        $this->assertInstanceOf('Contao\ManagerPlugin\PluginLoader', $application->getPluginLoader());
-    }
-
     public function testReturnsConfiguredPluginLoader(): void
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
@@ -80,7 +73,6 @@ class ApplicationTest extends ContaoTestCase
         $application = $this->getApplication(__DIR__.'/../Fixtures/Api');
         $managerConfig = $application->getManagerConfig();
 
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\ManagerConfig', $managerConfig);
         $this->assertSame(['foo' => 'bar'], $managerConfig->all());
     }
 

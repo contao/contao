@@ -50,17 +50,13 @@ class PickerTest extends TestCase
 
     public function testReturnsTheConfiguration(): void
     {
-        $config = $this->picker->getConfig();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $config);
-        $this->assertSame('page', $config->getContext());
+        $this->assertSame('page', $this->picker->getConfig()->getContext());
     }
 
     public function testReturnsTheMenu(): void
     {
         $menu = $this->picker->getMenu();
 
-        $this->assertInstanceOf('Knp\Menu\ItemInterface', $menu);
         $this->assertSame('picker', $menu->getName());
         $this->assertSame(1, $menu->count());
 

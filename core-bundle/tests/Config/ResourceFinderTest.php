@@ -17,20 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class ResourceFinderTest extends TestCase
 {
-    public function testReturnsAFinderObject(): void
-    {
-        $finder = new ResourceFinder([]);
-
-        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->find());
-
-        $finder = new ResourceFinder([
-            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao',
-            $this->getFixturesDir().'/system/modules/foobar',
-        ]);
-
-        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('config'));
-    }
-
     public function testFailsIfTheSubpathIsInvalid(): void
     {
         $finder = new ResourceFinder([
@@ -39,6 +25,7 @@ class ResourceFinderTest extends TestCase
         ]);
 
         $this->expectException('InvalidArgumentException');
-        $this->assertInstanceOf('Symfony\Component\Finder\Finder', $finder->findIn('foo'));
+
+        $finder->findIn('foo');
     }
 }

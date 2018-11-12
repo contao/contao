@@ -87,7 +87,6 @@ class BackendMenuListenerTest extends TestCase
         $tree = $event->getTree();
 
         // Test root node
-        $this->assertInstanceOf('Knp\Menu\ItemInterface', $tree);
         $this->assertCount(2, $tree->getChildren());
 
         // Test category node

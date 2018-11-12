@@ -22,7 +22,6 @@ class ResponseExceptionTest extends TestCase
     {
         $exception = new ResponseException(new Response('Hello world'));
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
         $this->assertSame(200, $exception->getResponse()->getStatusCode());
         $this->assertSame('Hello world', $exception->getResponse()->getContent());
     }

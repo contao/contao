@@ -23,6 +23,7 @@ use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -103,7 +104,7 @@ EOF;
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
@@ -156,7 +157,7 @@ EOF;
 
         $response = $controller->importTableWizardAction($this->mockDataContainer());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
@@ -213,7 +214,7 @@ EOF;
 
         $response = $controller->importOptionWizardAction($this->mockDataContainer());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
@@ -244,7 +245,7 @@ EOF;
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(303, $response->getStatusCode());
     }
 
@@ -292,7 +293,7 @@ EOF;
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(303, $response->getStatusCode());
     }
 
@@ -323,7 +324,7 @@ EOF;
 
         $response = $controller->importListWizardAction($this->mockDataContainer());
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(303, $response->getStatusCode());
     }
 

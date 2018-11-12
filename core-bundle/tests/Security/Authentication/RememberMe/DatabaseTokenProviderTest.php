@@ -67,7 +67,6 @@ class DatabaseTokenProviderTest extends TestCase
         $provider = new DatabaseTokenProvider($connection, 'secret');
         $token = $provider->loadTokenBySeries('series');
 
-        $this->assertInstanceOf('Contao\CoreBundle\Security\Authentication\RememberMe\PersistentToken', $token);
         $this->assertSame(FrontendUser::class, $token->getClass());
         $this->assertSame('foobar', $token->getUsername());
         $this->assertSame('series', $token->getSeries());

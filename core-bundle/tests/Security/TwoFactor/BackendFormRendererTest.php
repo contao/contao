@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\TwoFactor;
 
 use Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -32,6 +33,6 @@ class BackendFormRendererTest extends TestCase
         $renderer = new BackendFormRenderer($router);
         $response = $renderer->renderForm($this->createMock(Request::class), []);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

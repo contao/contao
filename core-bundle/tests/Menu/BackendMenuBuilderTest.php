@@ -44,10 +44,7 @@ class BackendMenuBuilderTest extends TestCase
 
     public function testCreatesTheRootNode(): void
     {
-        $tree = $this->builder->create();
-
-        $this->assertInstanceOf('Knp\Menu\ItemInterface', $tree);
-        $this->assertSame('root', $tree->getName());
+        $this->assertSame('root', $this->builder->create()->getName());
     }
 
     public function testDispatchesTheMenuBuildEvent(): void

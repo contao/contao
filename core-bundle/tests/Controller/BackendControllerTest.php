@@ -53,7 +53,7 @@ class BackendControllerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $controller->loginAction();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('/contao', $response->getTargetUrl());
     }
 
@@ -76,7 +76,6 @@ class BackendControllerTest extends TestCase
 
         $response = $controller->logoutAction();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertSame('/contao/login', $response->getTargetUrl());
     }
 
@@ -110,7 +109,6 @@ class BackendControllerTest extends TestCase
 
         $response = $controller->pickerAction($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame('/foobar', $response->getTargetUrl());
         $this->assertSame(302, $response->getStatusCode());
     }
@@ -172,6 +170,6 @@ class BackendControllerTest extends TestCase
 
         $response = $controller->twoFactorAuthenticationAction();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

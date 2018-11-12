@@ -591,8 +591,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = $reflection->newInstanceWithoutConstructor();
         $adapter = $framework->getAdapter($class);
 
-        $this->assertInstanceOf('Contao\CoreBundle\Framework\Adapter', $adapter);
-
         $ref = new \ReflectionClass($adapter);
         $prop = $ref->getProperty('class');
         $prop->setAccessible(true);

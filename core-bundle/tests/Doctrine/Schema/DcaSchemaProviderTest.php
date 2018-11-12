@@ -510,7 +510,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $provider->createSchema();
 
-        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
         $this->assertCount(1, $schema->getTables());
         $this->assertTrue($schema->hasTable('tl_member'));
     }
@@ -530,7 +529,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $provider->createSchema();
 
-        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
         $this->assertCount(1, $schema->getTables());
         $this->assertTrue($schema->hasTable('tl_member'));
         $this->assertFalse($schema->hasTable('member'));
@@ -545,6 +543,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $provider->createSchema();
 
-        $this->assertInstanceOf('Doctrine\DBAL\Schema\Schema', $schema);
+        $this->assertCount(0, $schema->getTables());
     }
 }
