@@ -2108,9 +2108,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 * Protect a folder
 	 *
 	 * @throws InternalServerErrorException
+	 *
+	 * @deprecated Deprecated since Contao 4.7 to be removed in 5.0.
+	 *             Use Contao\Folder::protect() and Contao\Folder::unprotect() instead.
 	 */
 	public function protect()
 	{
+		@trigger_error('Using DC_Folder::protect() has been deprecated and will no longer work in Contao 5.0. Use Contao\Folder::protect() and Contao\Folder::unprotect() instead.', E_USER_DEPRECATED);
+
 		if (!is_dir($this->strRootDir . '/' . $this->intId))
 		{
 			throw new InternalServerErrorException('Resource "' . $this->intId . '" is not a directory.');
@@ -3011,18 +3016,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	protected function isProtectedPath($path)
 	{
-		do
-		{
-			if (file_exists($this->strRootDir . '/' . $path . '/.public'))
-			{
-				return false;
-			}
-
-			$path = \dirname($path);
-		}
-		while ($path != '.');
-
-		return true;
+		return !(new Folder($path))->isUnprotected();
 	}
 
 	/**

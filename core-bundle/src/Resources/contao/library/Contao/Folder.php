@@ -327,14 +327,23 @@ class Folder extends System
 
 	/**
 	 * Protect the folder by removing the .public file
+	 *
+	 * @throws \RuntimeException If one of the parent folders is public
 	 */
 	public function protect()
 	{
-		if (file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		if (!$this->isUnprotected())
 		{
-			$objFile = new \File($this->strFolder . '/.public');
-			$objFile->delete();
+			return;
 		}
+
+		// Check if the .public file exists
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		{
+			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
+		}
+
+		(new File($this->strFolder . '/.public'))->delete();
 	}
 
 	/**
@@ -346,6 +355,29 @@ class Folder extends System
 		{
 			\File::putContent($this->strFolder . '/.public', '');
 		}
+	}
+
+	/**
+	 * Check if the folder or any parent folder contains a .public file
+	 *
+	 * @return bool
+	 */
+	public function isUnprotected()
+	{
+		$path = $this->strFolder;
+
+		do
+		{
+			if (file_exists($this->strRootDir . '/' . $path . '/.public'))
+			{
+				return true;
+			}
+
+			$path = \dirname($path);
+		}
+		while ($path != '.');
+
+		return false;
 	}
 
 	/**
