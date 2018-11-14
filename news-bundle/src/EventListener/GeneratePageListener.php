@@ -18,7 +18,6 @@ use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsFeedModel;
 use Contao\PageModel;
-use Contao\PageRegular;
 use Contao\StringUtil;
 use Contao\Template;
 
@@ -69,11 +68,8 @@ class GeneratePageListener
         }
     }
 
-
     /**
      * Change the page title to news title, if set.
-     * @param PageModel   $objPage
-     * @param LayoutModel $objLayout
      */
     public function setMetaData(PageModel $objPage, LayoutModel $objLayout): void
     {
