@@ -882,14 +882,17 @@ class InsertTags extends Controller
 						$height = null;
 					}
 
-					// Use image alt or label if insert tag alt is not set
-					if (!$alt)
+					// Use the alternative text from the image meta data if none is given
+					if (!$alt && ($objFile = \FilesModel::findByPath($strFile)))
 					{
-						$objFiles = \FilesModel::findByPath($strFile);
-						$arrMeta = \Frontend::getMetaData($objFiles->meta, $objPage->language);
-						$alt = $arrMeta['alt'] ?? $arrMeta['title'];
+						$arrMeta = \Frontend::getMetaData($objFile->meta, $objPage->language);
+
+						if (isset($arrMeta['alt']))
+						{
+							$alt = $arrMeta['alt'];
+						}
 					}
-					
+
 					// Generate the thumbnail image
 					try
 					{
