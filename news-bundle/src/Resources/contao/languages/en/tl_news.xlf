@@ -24,13 +24,13 @@
         <source>Meta title</source>
       </trans-unit>
       <trans-unit id="tl_news.metatitle.1">
-        <source>Replaces the automatically assigned meta-title with an individual.</source>
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
       </trans-unit>
       <trans-unit id="tl_news.metadescription.0">
         <source>Meta description</source>
       </trans-unit>
       <trans-unit id="tl_news.metadescription.1">
-        <source>Replaces the automatically assigned meta-description with an individual.</source>
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
       </trans-unit>
       <trans-unit id="tl_news.date.0">
         <source>Date</source>

@@ -204,24 +204,24 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
-        'metatitle' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_news']['metatitle'],
-            'exclude'                 => true,
-            'search'                  => true,
-            'inputType'               => 'text',
-            'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-            'sql'                     => "varchar(255) NOT NULL default ''"
-        ),
-        'metadescription' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_news']['metadescription'],
-            'exclude'                 => true,
-            'search'                  => true,
-            'inputType'               => 'text',
-            'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-            'sql'                     => "varchar(255) NOT NULL default ''"
-        ),
+		'metatitle' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['metatitle'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'metadescription' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['metadescription'],
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'date' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['date'],
