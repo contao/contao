@@ -46,7 +46,7 @@ $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('News', 'getSearchablePages
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('contao_news.listener.generate_page', 'onGeneratePage');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('News', 'generateFeeds');
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_news.listener.insert_tags', 'onReplaceInsertTags');
-$GLOBALS["TL_HOOKS"]['generatePage'][] = array('News', 'setMetaData');
+$GLOBALS["TL_HOOKS"]['generatePage'][] = array('contao_news.listener.generate_page', 'setMetaData');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'news';

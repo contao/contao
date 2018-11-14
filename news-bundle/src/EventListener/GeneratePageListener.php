@@ -18,6 +18,7 @@ use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsFeedModel;
 use Contao\PageModel;
+use Contao\PageRegular;
 use Contao\StringUtil;
 use Contao\Template;
 
@@ -65,6 +66,35 @@ class GeneratePageListener
                 $feed->format,
                 $feed->title
             );
+        }
+    }
+
+
+    /**
+     * Change the page title to news title, if set.
+     * @param PageModel   $objPage
+     * @param LayoutModel $objLayout
+     */
+    public function setMetaData(PageModel $objPage, LayoutModel $objLayout): void
+    {
+        $items = \Input::get('items');
+
+        if (empty($items)) {
+            return; // no news
+        }
+
+        $news = \NewsModel::findOneBy(['alias=?', 'published=?'], [$items, 1]);
+
+        if (null === $news) {
+            return; // not found
+        }
+
+        if ($news->metatitle) {
+            $objPage->pageTitle = $news->metatitle;
+        }
+
+        if ($news->metadescription) {
+            $objPage->description = $news->metadescription;
         }
     }
 }

@@ -494,39 +494,6 @@ class News extends Frontend
 
 		return $arrFeeds;
 	}
-
-	/**
-	 * Change the page title to news title, if set.
-	 * @param PageModel   $objPage
-	 * @param LayoutModel $objLayout
-	 * @param PageRegular $objPageRegular
-	 */
-	public function setMetaData(PageModel $objPage, LayoutModel $objLayout, PageRegular $objPageRegular)
-    {
-        $items = \Input::get('items');
-
-        if (empty($items))
-        {
-            return; // no news
-        }
-
-        $news = \NewsModel::findOneBy(array('alias=?', 'published=?'), array($items, 1));
-
-        if (null === $news)
-        {
-            return; // not found
-        }
-
-        if ($news->metatitle)
-        {
-            $objPage->pageTitle = $news->metatitle;
-        }
-
-        if ($news->metadescription)
-        {
-            $objPage->description = $news->metadescription;
-        }
-    }
 }
 
 class_alias(News::class, 'News');
