@@ -258,7 +258,17 @@ class FileUpload extends Backend
 	 *
 	 * @return string
 	 */
-	public static function getMaximumUploadSize()
+	protected function getMaximumUploadSize()
+	{
+		return static::getMaxUploadSize();
+	}
+
+	/**
+	 * Return the maximum upload file size in bytes
+	 *
+	 * @return string
+	 */
+	public static function getMaxUploadSize()
 	{
 		// Get the upload_max_filesize from the php.ini
 		$upload_max_filesize = ini_get('upload_max_filesize');
