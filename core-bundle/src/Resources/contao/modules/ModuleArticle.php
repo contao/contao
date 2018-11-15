@@ -279,6 +279,11 @@ class ModuleArticle extends Module
 
 		$strArticle = preg_replace($arrSearch, '', $strArticle);
 
+		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
+		{
+			throw new \Exception('No PDF extension found. Did you forget to install contao/tcpdf-bundle?');
+		}
+
 		// HOOK: allow individual PDF routines
 		if (isset($GLOBALS['TL_HOOKS']['printArticleAsPdf']) && \is_array($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
 		{
