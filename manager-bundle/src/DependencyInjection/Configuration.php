@@ -21,20 +21,20 @@ final class Configuration implements ConfigurationInterface
     /**
      * @var string
      */
-    private $projectDir;
+    private $webDir;
 
     /**
-     *  @param string $projectDir
+     *  @param string $webDir
      */
-    public function __construct(string $projectDir)
+    public function __construct(string $webDir)
     {
-        $this->projectDir = $projectDir;
+        $this->webDir = $webDir;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode    = $treeBuilder->root('contao_manager');
@@ -46,14 +46,14 @@ final class Configuration implements ConfigurationInterface
                 ->validate()
                     ->always(
                         function (?string $path): ?string {
-                            if (null === $path || is_file($this->projectDir . '/web/' . $path)) {
+                            if (null === $path || is_file($this->webDir . '/' . $path)) {
                                 return $path;
                             }
 
                             throw new InvalidConfigurationException(
                                 sprintf(
                                     'contao_manager.manager_path is configured but file "%s" does not exist.',
-                                    $this->projectDir . '/web/' . $path
+                                    $this->webDir . '/' . $path
                                 )
                             );
                         }

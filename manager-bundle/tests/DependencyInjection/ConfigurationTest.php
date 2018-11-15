@@ -47,7 +47,7 @@ class ConfigurationTest extends TestCase
     public function testCustomManagerPath(): void
     {
         $fs = new Filesystem();
-        $fs->dumpFile($this->getTempDir() . '/web/custom.phar.php', '');
+        $fs->dumpFile($this->getTempDir() . '/custom.phar.php', '');
 
         $params = [
             'contao_manager' => [

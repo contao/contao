@@ -24,7 +24,7 @@ class ContaoManagerExtension extends ConfigurableExtension
      */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
-        return new Configuration($container->getParameter('kernel.project_dir'));
+        return new Configuration($container->getParameter('contao.web_dir'));
     }
 
     /**
