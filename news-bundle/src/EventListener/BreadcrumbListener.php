@@ -113,7 +113,7 @@ final class BreadcrumbListener
     private function overrideActiveBreadcrumbItem(array $items, NewsModel $news): array
     {
         $currentPage = $this->getCurrentPage();
-        $title       = $this->getNewsTitle($news, $currentPage);
+        $title = $this->getNewsTitle($news, $currentPage);
 
         foreach ($items as &$item) {
             if ($item['isActive'] && $item['data']['id'] === $currentPage->id) {

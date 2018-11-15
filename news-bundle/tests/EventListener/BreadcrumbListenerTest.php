@@ -137,7 +137,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
     public function testAddsBreadcrumbItemForNewsEntry(array $items): void
     {
         $framework = $this->mockContaoFramework();
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $expectedCount = \count($items) + 1;
         $items = $listener->onGenerateBreadcrumb($items);
@@ -169,7 +169,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
-        $count  = count($items);
+        $count = count($items);
 
         if ($count) {
             $items[$count -1]['title'] = self::NEWS_HEADLINE;
