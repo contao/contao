@@ -116,9 +116,21 @@ class Message
 	 */
 	public static function generate($strScope=TL_MODE)
 	{
+		$blnNoWrapper = false;
+
+		if (!\is_string($strScope)) {
+			$strScope = TL_MODE;
+			trigger_error('Calling Message::generate() with boolean argument is deprecated since Contao 4.0. Remove the argument or use a scope constant.', E_USER_DEPRECATED);
+		}
+
+		if (func_num_args() > 1) {
+			$blnNoWrapper = (bool) func_get_arg(1);
+			trigger_error('Calling Message::generate() with second argument is deprecated since Contao 4.0.', E_USER_DEPRECATED);
+		}
+
 		$strMessages = static::generateUnwrapped($strScope);
 
-		if ($strMessages != '')
+		if (!$blnNoWrapper && $strMessages != '')
 		{
 			$strMessages = '<div class="tl_message">' . $strMessages . '</div>';
 		}
