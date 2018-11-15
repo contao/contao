@@ -13,21 +13,21 @@ namespace Contao;
 /**
  * Reads and writes news archives
  *
- * @property integer    $id
- * @property integer    $tstamp
- * @property string     $title
- * @property integer    $jumpTo
- * @property boolean    $protected
- * @property string     $groups
- * @property boolean    $allowComments
- * @property string     $notify
- * @property string     $sortOrder
- * @property integer    $perPage
- * @property boolean    $moderate
- * @property boolean    $bbcode
- * @property boolean    $requireLogin
- * @property boolean    $disableCaptcha
- * @property string     $breadcrumbMode
+ * @property integer $id
+ * @property integer $tstamp
+ * @property string  $title
+ * @property integer $jumpTo
+ * @property boolean $protected
+ * @property string  $groups
+ * @property boolean $allowComments
+ * @property string  $notify
+ * @property string  $sortOrder
+ * @property integer $perPage
+ * @property boolean $moderate
+ * @property boolean $bbcode
+ * @property boolean $requireLogin
+ * @property boolean $disableCaptcha
+ * @property string  $breadcrumbMode
  *
  * @method static NewsArchiveModel|null findById($id, array $opt=array())
  * @method static NewsArchiveModel|null findByPk($id, array $opt=array())
