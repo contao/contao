@@ -67,30 +67,4 @@ class GeneratePageListener
             );
         }
     }
-
-    /**
-     * Change the page title to news title, if set.
-     */
-    public function setMetaData(PageModel $objPage, LayoutModel $objLayout): void
-    {
-        $items = \Input::get('items');
-
-        if (empty($items)) {
-            return; // no news
-        }
-
-        $news = \NewsModel::findOneBy(['alias=?', 'published=?'], [$items, 1]);
-
-        if (null === $news) {
-            return; // not found
-        }
-
-        if ($news->pageTitle) {
-            $objPage->pageTitle = $news->pageTitle;
-        }
-
-        if ($news->description) {
-            $objPage->description = $news->description;
-        }
-    }
 }

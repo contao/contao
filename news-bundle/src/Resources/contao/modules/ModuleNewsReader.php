@@ -99,11 +99,19 @@ class ModuleNewsReader extends ModuleNews
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
-		// Overwrite the page title (see #2853 and #4955)
-		if ($objArticle->headline != '')
-		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objArticle->headline));
-		}
+		// Overwrite the page title (see #2853, #4955 ans #87)
+        if ($objArticle->pageTitle)
+        {
+            $objPage->pageTitle = $objArticle->pageTitle;
+        }
+        elseif ($objArticle->headline != '')
+        {
+            $objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objArticle->headline));
+        }
+
+        if ($objArticle->description) {
+            $objPage->description = $objArticle->description;
+        }
 
 		// Overwrite the page description
 		if ($objArticle->teaser != '')
