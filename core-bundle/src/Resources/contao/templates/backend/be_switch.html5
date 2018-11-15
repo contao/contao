@@ -29,7 +29,7 @@
   <div id="container" class="cf">
     <div class="title">
       <h1 id="page-title"><?= $this->fePreview ?></h1>
-      <p id="page-uri"></p>
+      <p id="page-uri"><?= $this->base ?></p>
     </div>
     <form action="<?= $this->action ?>" method="post">
       <div class="formbody">
@@ -88,7 +88,6 @@
         var data = message.data['contao.preview'];
         if (data) {
           pageTitle.textContent = data.title;
-          pageUri.title = data.uri;
           pageUri.textContent = data.uri;
         }
       }, false);
