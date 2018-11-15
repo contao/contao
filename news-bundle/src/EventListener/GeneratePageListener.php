@@ -85,8 +85,8 @@ class GeneratePageListener
             return; // not found
         }
 
-        if ($news->title) {
-            $objPage->pageTitle = $news->title;
+        if ($news->pageTitle) {
+            $objPage->pageTitle = $news->pageTitle;
         }
 
         if ($news->description) {

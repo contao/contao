@@ -20,10 +20,10 @@
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
       </trans-unit>
-      <trans-unit id="tl_news.title.0">
+      <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
       </trans-unit>
-      <trans-unit id="tl_news.title.1">
+      <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
