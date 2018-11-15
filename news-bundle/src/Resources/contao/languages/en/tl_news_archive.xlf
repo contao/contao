@@ -143,11 +143,26 @@
       <trans-unit id="tl_news_archive.comments.1">
         <source>Show comments of archive ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-      </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage RSS feeds</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.breadcrumbMode.0">
+        <source>Breadcrumb integration</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.breadcrumbMode.1">
+        <source>Please define how a news entry should be displayed in the breadcrumb.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.breadcrumbModes.override.0">
+        <source>Override</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.breadcrumbModes.override.1">
+        <source>The breadcrumb entry of the current page of the reader will be overriden.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.breadcrumbModes.extend.0">
+        <source>Extend</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.breadcrumbModes.extend.1">
+        <source>A new breadcrumb entry will be created for the new entry.</source>
       </trans-unit>
     </body>
   </file>

@@ -14,6 +14,7 @@ namespace Contao\NewsBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\NewsBundle\DependencyInjection\ContaoNewsExtension;
+use Contao\NewsBundle\EventListener\BreadcrumbListener;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
@@ -124,5 +125,16 @@ class ContaoNewsExtensionTest extends TestCase
 
         $this->assertArrayHasKey('contao.picker_provider', $tags);
         $this->assertSame(128, $tags['contao.picker_provider'][0]['priority']);
+    }
+
+    public function testRegistersTheBreadcrumbListener(): void
+    {
+        $this->assertTrue($this->container->has('contao_news.listener.breadcrumb'));
+
+        $definition = $this->container->getDefinition('contao_news.listener.breadcrumb');
+
+        $this->assertSame(BreadcrumbListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 }
