@@ -30,7 +30,7 @@ services:
             - '%contao.upload_path%'
             - '%kernel.logs_dir%'
             - '@contao.resource_finder'
-            - '%kernel.bundles%'
+            - '@event_dispatcher'
         public: true
 
     contao.command.user_password_command:
