@@ -113,6 +113,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
         $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
 
+        $this->addHtaccess($webDir);
         $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);
         $this->storeAppDevAccesskey($input, $this->rootDir);
@@ -121,12 +122,35 @@ class InstallWebDirCommand extends AbstractLockedCommand
     }
 
     /**
+     * Adds the .htaccess file or merges it with an existing one.
+     */
+    private function addHtaccess(string $webDir): void
+    {
+        $htaccess = __DIR__.'/../Resources/skeleton/web/.htaccess';
+
+        if (!file_exists($webDir.'/.htaccess')) {
+            $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
+
+            return;
+        }
+
+        $existingContent = file_get_contents($webDir.'/.htaccess');
+
+        // Return if there already is a rewrite rule
+        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+            return;
+        }
+
+        $this->fs->dumpFile($webDir.'/.htaccess', $existingContent."\n\n".file_get_contents($htaccess));
+    }
+
+    /**
      * Adds files from Resources/skeleton/web to the application's web directory.
      */
     private function addFiles(string $webDir, bool $dev = true): void
     {
         /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/skeleton/web');
+        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
             if ($this->isExistingOptionalFile($file, $webDir)) {
@@ -218,7 +242,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
     {
         static $optional = [
-            '.htaccess',
             'favicon.ico',
             'robots.txt',
         ];

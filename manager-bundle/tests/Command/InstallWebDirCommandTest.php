@@ -105,7 +105,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         }
 
         static $optional = [
-            '.htaccess',
             'favicon.ico',
             'robots.txt',
         ];
@@ -120,6 +119,40 @@ class InstallWebDirCommandTest extends ContaoTestCase
                 $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
             }
         }
+    }
+
+    public function testHtaccessIsNotChangedIfRewriteRuleExists(): void
+    {
+        $existingHtaccess = <<<'EOT'
+<IfModule mod_headers.c>
+  RewriteRule ^ %{ENV:BASE}/app.php [L]
+</IfModule>
+EOT;
+
+        $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute([]);
+
+        $this->assertStringEqualsFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
+    }
+
+    public function testHtaccessIsChangedIfRewriteRuleDoesNotExists(): void
+    {
+        $existingHtaccess = <<<'EOT'
+# Enable PHP 7.2
+AddHandler application/x-httpd-php72 .php
+EOT;
+
+        $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute([]);
+
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/web/.htaccess',
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../src/Resources/skeleton/web/.htaccess')
+        );
     }
 
     public function testCommandRemovesInstallPhp(): void
