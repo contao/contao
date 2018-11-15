@@ -113,6 +113,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
         $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
 
+        $this->addHtaccess($webDir);
         $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);
         $this->storeAppDevAccesskey($input, $this->rootDir);
@@ -121,43 +122,48 @@ class InstallWebDirCommand extends AbstractLockedCommand
     }
 
     /**
+     * Adds the .htaccess file or merges it with an existing one.
+     */
+    private function addHtaccess(string $webDir): void
+    {
+        $htaccess = __DIR__.'/../Resources/skeleton/web/.htaccess';
+
+        if (!file_exists($webDir.'/.htaccess')) {
+            $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
+
+            return;
+        }
+
+        $existingContent = file_get_contents($webDir.'/.htaccess');
+
+        // Return if there already is a rewrite rule
+        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+            return;
+        }
+
+        $this->fs->dumpFile($webDir.'/.htaccess', $existingContent."\n\n".file_get_contents($htaccess));
+    }
+
+    /**
      * Adds files from Resources/skeleton/web to the application's web directory.
      */
     private function addFiles(string $webDir, bool $dev = true): void
     {
         /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/skeleton/web');
+        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
-            $targetPath = $webDir.'/'.$file->getRelativePathname();
-
             if ($this->isExistingOptionalFile($file, $webDir)) {
-                // Update .htaccess if necessary
-                if ('.htaccess' === $file->getRelativePathname()) {
-                    $this->appendHtaccessIfApplicable($targetPath, $file);
-                }
-
                 continue;
             }
 
             if (!$dev && 'app_dev.php' === $file->getRelativePathname()) {
                 continue;
             }
-            $this->fs->copy($file->getPathname(), $targetPath, true);
+
+            $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
             $this->io->text(sprintf('Added/updated the <comment>web/%s</comment> file.', $file->getFilename()));
         }
-    }
-
-    private function appendHtaccessIfApplicable(string $targetPath, SplFileInfo $file): void
-    {
-        $existingContent = file_get_contents($targetPath);
-        $skeletonContent = $file->getContents();
-
-        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
-            return;
-        }
-
-        $this->fs->dumpFile($targetPath, $existingContent . "\n\n" . $skeletonContent);
     }
 
     /**
@@ -236,7 +242,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
     {
         static $optional = [
-            '.htaccess',
             'favicon.ico',
             'robots.txt',
         ];

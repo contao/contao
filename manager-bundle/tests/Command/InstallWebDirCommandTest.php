@@ -123,10 +123,11 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     public function testHtaccessIsNotChangedIfRewriteRuleExists(): void
     {
-        $existingHtaccess = '<IfModule mod_headers.c>
-# Wonderful command
-
-RewriteRule ^ %{ENV:BASE}/app.php [L]';
+        $existingHtaccess = <<<'EOT'
+<IfModule mod_headers.c>
+  RewriteRule ^ %{ENV:BASE}/app.php [L]
+</IfModule>
+EOT;
 
         $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
 
@@ -138,10 +139,10 @@ RewriteRule ^ %{ENV:BASE}/app.php [L]';
 
     public function testHtaccessIsChangedIfRewriteRuleDoesNotExists(): void
     {
-        $existingHtaccess = '<IfModule mod_headers.c>
-# Wonderful comment
-
-AddHandler application/x-httpd-php72 .php';
+        $existingHtaccess = <<<'EOT'
+# Enable PHP 7.2
+AddHandler application/x-httpd-php72 .php
+EOT;
 
         $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
 
@@ -150,7 +151,7 @@ AddHandler application/x-httpd-php72 .php';
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/web/.htaccess',
-            $existingHtaccess . "\n\n" . file_get_contents(__DIR__.'/../../src/Resources/skeleton/web/.htaccess')
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../src/Resources/skeleton/web/.htaccess')
         );
     }
 
