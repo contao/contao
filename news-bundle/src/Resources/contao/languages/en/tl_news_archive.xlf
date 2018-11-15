@@ -159,13 +159,13 @@
         <source>Override</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.breadcrumbModes.override.1">
-        <source>The breadcrumb entry of the current page of the reader will be overriden.</source>
+        <source>The breadcrumb entry of the current page will be overridden.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.breadcrumbModes.extend.0">
         <source>Extend</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.breadcrumbModes.extend.1">
-        <source>A new breadcrumb entry will be created for the new entry.</source>
+        <source>A new breadcrumb entry will be created for the news entry.</source>
       </trans-unit>
     </body>
   </file>

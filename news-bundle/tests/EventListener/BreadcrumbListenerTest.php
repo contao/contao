@@ -56,7 +56,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         unset($GLOBALS['objPage']);
 
         $framework = $this->mockContaoFramework();
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
         $this->assertSame($items, $result);
@@ -74,7 +74,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
             ->willReturn(null);
 
         $framework = $this->mockContaoFramework([Input::class => $inputAdapter]);
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
         $this->assertSame($items, $result);
@@ -97,7 +97,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
                 Config::class => $this->mockConfigAdapter(false)
             ]
         );
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
         $this->assertSame($items, $result);
@@ -111,7 +111,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         $newsArchiveAdapter = $this->mockNewsArchiveAdapter(null);
 
         $framework = $this->mockContaoFramework([NewsArchiveModel::class => $newsArchiveAdapter]);
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
         $this->assertSame($items, $result);
@@ -125,7 +125,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         $newsModelAdapter = $this->mockNewsModelAdapter(null);
 
         $framework = $this->mockContaoFramework([NewsModel::class => $newsModelAdapter]);
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
         $this->assertSame($items, $result);
@@ -140,18 +140,18 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         $listener  = new BreadcrumbListener($framework);
 
         $expectedCount = \count($items) + 1;
-        $items         = $listener->onGenerateBreadcrumb($items);
+        $items = $listener->onGenerateBreadcrumb($items);
 
         $this->assertCount($expectedCount, $items);
         $this->assertSame(
             [
-                'isRoot'   => false,
+                'isRoot' => false,
                 'isActive' => true,
-                'href'     => self::NEWS_URL,
-                'title'    => self::NEWS_HEADLINE,
-                'link'     => self::NEWS_HEADLINE,
-                'data'     => self::CURRENT_PAGE,
-                'class'    => '',
+                'href' => self::NEWS_URL,
+                'title' => self::NEWS_HEADLINE,
+                'link' => self::NEWS_HEADLINE,
+                'data' => self::CURRENT_PAGE,
+                'class' => '',
             ],
             $items[$expectedCount - 1]
         );
@@ -166,7 +166,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         $newsArchiveAdapter = $this->mockNewsArchiveAdapter($newsArchiveModel);
 
         $framework = $this->mockContaoFramework([NewsArchiveModel::class => $newsArchiveAdapter]);
-        $listener  = new BreadcrumbListener($framework);
+        $listener = new BreadcrumbListener($framework);
 
         $result = $listener->onGenerateBreadcrumb($items);
         $count  = count($items);
@@ -193,17 +193,17 @@ final class BreadcrumbListenerTest extends ContaoTestCase
     protected function mockContaoFramework(array $adapters = []): ContaoFrameworkInterface
     {
         if (!isset($adapters[NewsArchiveModel::class])) {
-            $newsArchiveModel                  = $this->mockNewsArchiveModel();
+            $newsArchiveModel = $this->mockNewsArchiveModel();
             $adapters[NewsArchiveModel::class] = $this->mockNewsArchiveAdapter($newsArchiveModel);
         }
 
         if (!isset($adapters[NewsModel::class])) {
-            $newsModel                  = $this->mockNewsModel();
+            $newsModel = $this->mockNewsModel();
             $adapters[NewsModel::class] = $this->mockNewsModelAdapter($newsModel);
         }
 
         if (!isset($adapters[PageModel::class])) {
-            $pageModel                  = $this->mockPageModel();
+            $pageModel= $this->mockPageModel();
             $adapters[PageModel::class] = $this->mockPageModelAdapter($pageModel);
         }
 
@@ -231,7 +231,7 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         return $this->mockClassWithProperties(
             NewsArchiveModel::class,
             [
-                'id'             => self::NEWS_ARCHIVE_ID,
+                'id' => self::NEWS_ARCHIVE_ID,
                 'breadcrumbMode' => $breadcrumbMode,
             ]
         );
@@ -318,11 +318,9 @@ final class BreadcrumbListenerTest extends ContaoTestCase
     }
 
     /**
-     * @param $pageModel
-     *
      * @return Adapter|MockObject
      */
-    private function mockPageModelAdapter($pageModel): Adapter
+    private function mockPageModelAdapter(PageModel $pageModel): Adapter
     {
         $pageModelAdapter = $this->mockAdapter();
         $pageModelAdapter
@@ -355,39 +353,39 @@ final class BreadcrumbListenerTest extends ContaoTestCase
             [
                 [
                     [
-                        'isRoot'   => true,
+                        'isRoot' => true,
                         'isActive' => true,
-                        'href'     => 'index.html',
-                        'title'    => 'Home',
-                        'link'     => 'Home',
-                        'data'     => [
+                        'href' => 'index.html',
+                        'title' => 'Home',
+                        'link' => 'Home',
+                        'data' => [
                             'id' => self::PAGE_ID,
                         ],
-                        'class'    => '',
+                        'class' => '',
                     ],
                 ],
             ],
             [
                 [
                     [
-                        'isRoot'   => true,
+                        'isRoot' => true,
                         'isActive' => false,
-                        'href'     => 'index.html',
-                        'title'    => 'Home',
-                        'link'     => 'Home',
-                        'data'     => [
+                        'href' => 'index.html',
+                        'title' => 'Home',
+                        'link' => 'Home',
+                        'data' => [
                             'id' => self::ROOT_PAGE_ID,
                         ],
-                        'class'    => '',
+                        'class' => '',
                     ],
                     [
-                        'isRoot'   => false,
+                        'isRoot' => false,
                         'isActive' => true,
-                        'href'     => 'mews.html',
-                        'title'    => 'News',
-                        'link'     => 'News',
-                        'data'     => self::CURRENT_PAGE,
-                        'class'    => '',
+                        'href' => 'mews.html',
+                        'title' => 'News',
+                        'link' => 'News',
+                        'data' => self::CURRENT_PAGE,
+                        'class' => '',
                     ],
                 ],
             ],

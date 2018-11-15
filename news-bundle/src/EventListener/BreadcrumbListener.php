@@ -136,7 +136,7 @@ final class BreadcrumbListener
         return $repository->__call('findByPk', [$GLOBALS['objPage']->id]) ?: $GLOBALS['objPage'];
     }
 
-    private function getNewsTitle(NewsModel $news, $currentPage): string
+    private function getNewsTitle(NewsModel $news, PageModel $currentPage): string
     {
         if ($news->headline) {
             return $news->headline;
