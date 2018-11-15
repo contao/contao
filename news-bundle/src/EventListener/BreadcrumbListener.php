@@ -101,7 +101,7 @@ final class BreadcrumbListener
             'isRoot' => false,
             'isActive' => true,
             'href' => $this->generateNewsUrl($news),
-            'title' => StringUtil::specialchars($title),
+            'title' => StringUtil::specialchars($title, true),
             'link' => $title,
             'data' => $currentPage->row(),
             'class' => ''
@@ -117,7 +117,7 @@ final class BreadcrumbListener
 
         foreach ($items as &$item) {
             if ($item['isActive'] && $item['data']['id'] === $currentPage->id) {
-                $item['title'] = StringUtil::specialchars($title);
+                $item['title'] = StringUtil::specialchars($title, true);
                 $item['link'] = $title;
                 $item['href'] = $this->generateNewsUrl($news);
 
