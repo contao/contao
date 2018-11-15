@@ -92,13 +92,6 @@ final class BreadcrumbListener
         $currentPage = $this->getCurrentPage();
 
         foreach ($items as &$item) {
-            // Restore page title for the active item as it might has been changed by a manipulated global $objPage
-            if ($item['isActive'] && $item['data']['id'] === $currentPage->id) {
-                $title = $currentPage->pageTitle ?: $currentPage->title;
-                $item['title'] = StringUtil::specialchars($title, true);
-                $item['link'] = $title;
-            }
-
             $item['isActive'] = false;
         }
         unset ($item);
