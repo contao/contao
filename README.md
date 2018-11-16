@@ -37,7 +37,7 @@ application, it is the easiest to use the [Contao managed edition][3]. Start by
 installing it in your current directory:
 
 ```bash
-$ composer create-project --no-install contao/managed-edition <directory> <branch>
+composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
 Replace `<directory>` with the directory you want to install the managed edition
