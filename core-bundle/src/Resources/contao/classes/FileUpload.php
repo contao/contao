@@ -90,7 +90,7 @@ class FileUpload extends Backend
 			throw new \InvalidArgumentException('Invalid target path ' . $strTarget);
 		}
 
-		$maxlength_kb = $this->getMaximumUploadSize();
+		$maxlength_kb = static::getMaxUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 		$arrUploaded = array();
 		$arrFiles = $this->getFilesFromGlobal();
@@ -211,7 +211,7 @@ class FileUpload extends Backend
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
+  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize(static::getMaxUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
 		}
 
 		return $return;
@@ -256,10 +256,15 @@ class FileUpload extends Backend
 	/**
 	 * Return the maximum upload file size in bytes
 	 *
+	 * @deprecated Deprecated since Contao 4.6, to be removed in Contao 5.0.
+	 *             Use static::getMaxUploadSize() instead.
+	 *
 	 * @return string
 	 */
 	protected function getMaximumUploadSize()
 	{
+		@trigger_error('Using FileUpload->getMaximumUploadSize() has been deprecated and will no longer work in Contao 5.0. Use FileUpload::getMaxUploadSize() instead.', E_USER_DEPRECATED);
+
 		return static::getMaxUploadSize();
 	}
 
