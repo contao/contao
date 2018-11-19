@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -415,8 +414,11 @@ class Automator extends System
 	 */
 	public function generateSymlinks()
 	{
-		$command = new SymlinksCommand();
-		$command->setContainer(\System::getContainer());
+		$container = \System::getContainer();
+
+		$command = $container->get('contao.command.symlinks');
+		$command->setContainer($container);
+
 		$status = $command->run(new ArgvInput(array()), new NullOutput());
 
 		// Add a log entry

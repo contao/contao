@@ -789,6 +789,16 @@ class File extends System
 	}
 
 	/**
+	 * Check if any parent folder contains a .public file
+	 *
+	 * @return bool
+	 */
+	public function isUnprotected()
+	{
+		return (new Folder(\dirname($this->strFile)))->isUnprotected();
+	}
+
+	/**
 	 * Write data to a file
 	 *
 	 * @param mixed  $varData The data to be written

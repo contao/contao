@@ -738,23 +738,16 @@ class tl_files extends Backend
 			return '';
 		}
 
-		$blnPublic = false;
 		$blnDisabled = false;
-		$strCheck = $strPath;
+		$objFolder = new Folder($strPath);
 
-		// Check if a parent folder is public
-		while ($strCheck != '.' && !$blnPublic)
-		{
-			if (!$blnPublic = file_exists($rootDir . '/' . $strCheck . '/.public'))
-			{
-				$strCheck = \dirname($strCheck);
-			}
-		}
+		// Check if the folder or a parent folder is public
+		$blnPublic = $objFolder->isUnprotected();
 
 		// Disable the checkbox if a parent folder is public (see #712)
-		if ($blnPublic && $strCheck != $strPath)
+		if ($blnPublic && ($strParentPath = \dirname($strPath)) != '.')
 		{
-			$blnDisabled = true;
+			$blnDisabled = (new Folder($strParentPath))->isUnprotected();
 		}
 
 		// Protect or unprotect the folder
@@ -765,8 +758,6 @@ class tl_files extends Backend
 				if (!$blnPublic)
 				{
 					$blnPublic = true;
-
-					$objFolder = new Folder($strPath);
 					$objFolder->unprotect();
 
 					$this->import('Automator');
@@ -778,8 +769,6 @@ class tl_files extends Backend
 				if ($blnPublic)
 				{
 					$blnPublic = false;
-
-					$objFolder = new Folder($strPath);
 					$objFolder->protect();
 
 					$this->import('Automator');

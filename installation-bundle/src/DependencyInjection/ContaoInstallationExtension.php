@@ -46,15 +46,15 @@ class ContaoInstallationExtension extends Extension implements PrependExtensionI
      */
     public function prepend(ContainerBuilder $container): void
     {
-        $rootDir = $container->getParameter('kernel.root_dir');
+        $configDir = $container->getParameter('kernel.project_dir').'/app/config';
 
-        if (file_exists($rootDir.'/config/parameters.yml') || !file_exists($rootDir.'/config/parameters.yml.dist')) {
+        if (file_exists($configDir.'/parameters.yml') || !file_exists($configDir.'/parameters.yml.dist')) {
             return;
         }
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator($rootDir.'/config')
+            new FileLocator($configDir)
         );
 
         $loader->load('parameters.yml.dist');

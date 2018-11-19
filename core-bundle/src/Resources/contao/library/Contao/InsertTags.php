@@ -137,7 +137,8 @@ class InsertTags extends Controller
 							array('insertTag' => '{{' . $strTag . '}}'),
 							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
 						),
-						'esi'
+						'esi',
+						array('ignore_errors'=>false) // see #48
 					);
 
 					continue;
@@ -390,6 +391,12 @@ class InsertTags extends Controller
 
 						if ($objNextPage === null)
 						{
+							// Prevent broken markup with link_open and link_close (see #92)
+							if (strtolower($elements[0]) == 'link_open')
+							{
+								$arrCache[$strTag] = '<a>';
+							}
+
 							break;
 						}
 
@@ -873,6 +880,17 @@ class InsertTags extends Controller
 
 						$width = \Config::get('maxImageWidth');
 						$height = null;
+					}
+
+					// Use the alternative text from the image meta data if none is given
+					if (!$alt && ($objFile = \FilesModel::findByPath($strFile)))
+					{
+						$arrMeta = \Frontend::getMetaData($objFile->meta, $objPage->language);
+
+						if (isset($arrMeta['alt']))
+						{
+							$alt = $arrMeta['alt'];
+						}
 					}
 
 					// Generate the thumbnail image

@@ -129,7 +129,6 @@ class ContaoCoreExtensionTest extends TestCase
             new ParameterBag([
                 'kernel.debug' => false,
                 'kernel.project_dir' => $this->getTempDir(),
-                'kernel.root_dir' => $this->getTempDir().'/app',
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -155,7 +154,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * @dataProvider getCommandTestData
      */
-    public function testRegistersTheCommands(string $key, string $class): void
+    public function testRegistersTheCommands(string $key, string $class, bool $public = false): void
     {
         $this->assertTrue($this->container->has($key));
 
@@ -163,6 +162,12 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame($class, $definition->getClass());
         $this->assertTrue($definition->isAutoconfigured());
+
+        if ($public) {
+            $this->assertTrue($definition->isPublic());
+        } else {
+            $this->assertTrue($definition->isPrivate());
+        }
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -175,15 +180,15 @@ class ContaoCoreExtensionTest extends TestCase
     }
 
     /**
-     * @return string[][]
+     * @return array<int,array<int,string|true>>
      */
     public function getCommandTestData(): array
     {
         return [
             ['contao.command.automator', AutomatorCommand::class],
             ['contao.command.filesync', FilesyncCommand::class],
-            ['contao.command.install', InstallCommand::class],
-            ['contao.command.symlinks', SymlinksCommand::class],
+            ['contao.command.install', InstallCommand::class, true],
+            ['contao.command.symlinks', SymlinksCommand::class, true],
             ['contao.command.user_password_command', UserPasswordCommand::class],
             ['contao.command.version', VersionCommand::class],
         ];
@@ -1575,7 +1580,6 @@ class ContaoCoreExtensionTest extends TestCase
             new ParameterBag([
                 'kernel.debug' => false,
                 'kernel.project_dir' => $this->getTempDir(),
-                'kernel.root_dir' => $this->getTempDir().'/app',
                 'kernel.default_locale' => 'en',
             ])
         );

@@ -46,7 +46,26 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * @var string
      */
+    private $uploadPath;
+
+    /**
+     * @var string
+     */
+    private $imageDir;
+
+    /**
+     * @var string
+     */
     private $webDir;
+
+    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
+    {
+        $this->rootDir = $rootDir;
+        $this->uploadPath = $uploadPath;
+        $this->imageDir = $imageDir;
+
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -69,7 +88,6 @@ class InstallCommand extends AbstractLockedCommand
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
-        $this->rootDir = $this->getContainer()->getParameter('kernel.project_dir');
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
@@ -96,7 +114,7 @@ class InstallCommand extends AbstractLockedCommand
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
-        $this->addEmptyDir($this->rootDir.'/'.$this->getContainer()->getParameter('contao.upload_path'));
+        $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
     }
 
     private function addEmptyDir(string $path): void
@@ -126,7 +144,7 @@ class InstallCommand extends AbstractLockedCommand
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
-        $this->addIgnoredDir($this->getContainer()->getParameter('contao.image.target_dir'));
+        $this->addIgnoredDir($this->imageDir);
     }
 
     private function addIgnoredDir(string $path): void

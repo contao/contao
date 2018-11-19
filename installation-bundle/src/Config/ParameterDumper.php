@@ -37,7 +37,7 @@ class ParameterDumper
         $this->rootDir = $rootDir;
         $this->filesystem = $filesystem ?: new Filesystem();
 
-        foreach (['config/parameters.yml.dist', 'config/parameters.yml'] as $file) {
+        foreach (['app/config/parameters.yml.dist', 'app/config/parameters.yml'] as $file) {
             if (file_exists($rootDir.'/'.$file)) {
                 $this->parameters = array_merge(
                     $this->parameters,
@@ -76,7 +76,7 @@ class ParameterDumper
         }
 
         $this->filesystem->dumpFile(
-            $this->rootDir.'/config/parameters.yml',
+            $this->rootDir.'/app/config/parameters.yml',
             "# This file has been auto-generated during installation\n".Yaml::dump($this->getEscapedValues())
         );
     }

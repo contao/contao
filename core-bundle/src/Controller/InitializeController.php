@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Response\InitializeControllerResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
  */
-class InitializeController extends Controller
+class InitializeController extends AbstractController
 {
     /**
      * Initializes the Contao framework.

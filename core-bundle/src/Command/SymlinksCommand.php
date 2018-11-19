@@ -13,11 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
+use Contao\CoreBundle\Config\ResourceFinderInterface;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -48,9 +52,40 @@ class SymlinksCommand extends AbstractLockedCommand
     private $webDir;
 
     /**
+     * @var string
+     */
+    private $uploadPath;
+
+    /**
+     * @var string
+     */
+    private $logsDir;
+
+    /**
+     * @var ResourceFinderInterface
+     */
+    private $resourceFinder;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @var int
      */
     private $statusCode = 0;
+
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
+    {
+        $this->rootDir = $rootDir;
+        $this->uploadPath = $uploadPath;
+        $this->logsDir = $logsDir;
+        $this->resourceFinder = $resourceFinder;
+        $this->eventDispatcher = $eventDispatcher;
+
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -72,7 +107,6 @@ class SymlinksCommand extends AbstractLockedCommand
     protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->rootDir = $this->getContainer()->getParameter('kernel.project_dir');
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->generateSymlinks();
@@ -91,14 +125,13 @@ class SymlinksCommand extends AbstractLockedCommand
     private function generateSymlinks(): void
     {
         $fs = new Filesystem();
-        $uploadPath = $this->getContainer()->getParameter('contao.upload_path');
 
         // Remove the base folders in the document root
-        $fs->remove($this->rootDir.'/'.$this->webDir.'/'.$uploadPath);
+        $fs->remove($this->rootDir.'/'.$this->webDir.'/'.$this->uploadPath);
         $fs->remove($this->rootDir.'/'.$this->webDir.'/system/modules');
         $fs->remove($this->rootDir.'/'.$this->webDir.'/vendor');
 
-        $this->symlinkFiles($uploadPath);
+        $this->symlinkFiles($this->uploadPath);
         $this->symlinkModules();
         $this->symlinkThemes();
 
@@ -107,10 +140,9 @@ class SymlinksCommand extends AbstractLockedCommand
         $this->symlink('system/themes', $this->webDir.'/system/themes');
 
         // Symlinks the logs directory
-        $this->symlink($this->getRelativePath($this->getContainer()->getParameter('kernel.logs_dir')), 'system/logs');
+        $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
 
-        // Symlink the TCPDF config file
-        $this->symlink('vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
+        $this->triggerSymlinkEvent();
     }
 
     private function symlinkFiles(string $uploadPath): void
@@ -136,7 +168,7 @@ class SymlinksCommand extends AbstractLockedCommand
     private function symlinkThemes(): void
     {
         /** @var SplFileInfo[] $themes */
-        $themes = $this->getContainer()->get('contao.resource_finder')->findIn('themes')->depth(0)->directories();
+        $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
 
         foreach ($themes as $theme) {
             $path = $this->getRelativePath($theme->getPathname());
@@ -156,6 +188,17 @@ class SymlinksCommand extends AbstractLockedCommand
         foreach ($files as $file) {
             $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
             $this->symlink($path, $this->webDir.'/'.$path);
+        }
+    }
+
+    private function triggerSymlinkEvent(): void
+    {
+        $event = new GenerateSymlinksEvent();
+
+        $this->eventDispatcher->dispatch(ContaoCoreEvents::GENERATE_SYMLINKS, $event);
+
+        foreach ($event->getSymlinks() as $target => $link) {
+            $this->symlink($target, $link);
         }
     }
 

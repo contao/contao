@@ -333,7 +333,7 @@ class RoutingTest extends WebTestCase
                 '/en/home.xml',
                 404,
                 '(404 Not Found)',
-                [],
+                ['language' => 'en'],
                 'root-with-home.local',
                 false,
                 false,

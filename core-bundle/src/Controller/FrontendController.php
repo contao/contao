@@ -18,7 +18,7 @@ use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Contao\PageError401;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Exception\LogoutException;
 /**
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
  */
-class FrontendController extends Controller
+class FrontendController extends AbstractController
 {
     public function indexAction(): Response
     {

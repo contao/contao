@@ -4,6 +4,10 @@ services:
 
     contao.command.lock:
         class: Contao\InstallationBundle\Command\LockCommand
+        arguments:
+            - '%kernel.project_dir%/var/install_lock'
 
     contao.command.unlock:
         class: Contao\InstallationBundle\Command\UnlockCommand
+        arguments:
+            - '%kernel.project_dir%/var/install_lock'

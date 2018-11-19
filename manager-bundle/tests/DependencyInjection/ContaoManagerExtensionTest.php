@@ -107,5 +107,6 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertSame('routing.loader', (string) $definition->getArgument(0));
         $this->assertSame('contao_manager.plugin_loader', (string) $definition->getArgument(1));
         $this->assertSame('kernel', (string) $definition->getArgument(2));
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
     }
 }

@@ -113,6 +113,7 @@
         "symfony/phpunit-bridge": "^3.4.5"
     },
     "suggest": {
+        "contao/tcpdf-bundle": "To export articles as PDF files",
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "extra": {
@@ -134,7 +135,7 @@
         "exclude-from-classmap": [
             "src/Resources/contao/config/",
             "src/Resources/contao/dca/",
-            "src/Resources/contao/helper/",
+            "src/Resources/contao/helper/functions.php",
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/",
             "src/Resources/contao/themes/"

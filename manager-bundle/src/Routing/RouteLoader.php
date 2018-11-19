@@ -35,11 +35,17 @@ class RouteLoader
      */
     private $kernel;
 
-    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel)
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $rootDir)
     {
         $this->loader = $loader;
         $this->pluginLoader = $pluginLoader;
         $this->kernel = $kernel;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -62,7 +68,7 @@ class RouteLoader
         );
 
         // Load the app/config/routing.yml file if it exists
-        if (file_exists($configFile = $this->kernel->getRootDir().'/config/routing.yml')) {
+        if (file_exists($configFile = $this->rootDir.'/app/config/routing.yml')) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 
             if ($routes instanceof RouteCollection) {

@@ -4135,26 +4135,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 				elseif ($v == 'tstamp')
 				{
-					if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
-					{
-						$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
-						$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
-
-						$objMaxTstamp = $this->Database->prepare("SELECT MAX(tstamp) AS tstamp FROM " . $this->strTable . " WHERE pid=? AND $cond")
-													   ->execute($objParent->id, $ptable);
-					}
-					else
-					{
-						$objMaxTstamp = $this->Database->prepare("SELECT MAX(tstamp) AS tstamp FROM " . $this->strTable . " WHERE pid=?")
-													   ->execute($objParent->id);
-					}
-
-					if (!$objMaxTstamp->tstamp)
-					{
-						$objMaxTstamp->tstamp = $objParent->tstamp;
-					}
-
-					$_v = \Date::parse(\Config::get('datimFormat'), max($objParent->tstamp, $objMaxTstamp->tstamp));
+					$_v = \Date::parse(\Config::get('datimFormat'), $objParent->tstamp);
 				}
 				elseif (isset($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey']))
 				{

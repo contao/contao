@@ -1,6 +1,6 @@
 # Contao 4 bundles
 
-[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.org/contao/contao/)
+[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.com/contao/contao/)
 [![](https://img.shields.io/coveralls/contao/contao/master.svg?style=flat-square)](https://coveralls.io/github/contao/contao)
 [![](https://img.shields.io/packagist/v/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
 
@@ -37,11 +37,13 @@ application, it is the easiest to use the [Contao managed edition][3]. Start by
 installing it in your current directory:
 
 ```bash
-$ composer create-project --no-install contao/managed-edition <branch> .
+$ composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
-Replace `<branch>` with `dev-master` if you want to add a new feature or with
-`<lts-version>.x-dev` (currently `4.4.x-dev`) if you want to fix a bug.
+Replace `<directory>` with the directory you want to install the managed edition
+in (use `.` for the current one) and `<branch>` with `dev-master` if you want to
+add a new feature or with `<lts-version>.x-dev` (currently `4.4.x-dev`) if you
+want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file so Composer
 loads the monorepo instead of the individual bundles:

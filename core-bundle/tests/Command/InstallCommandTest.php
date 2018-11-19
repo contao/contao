@@ -36,11 +36,14 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getTempDir().'/files_test');
         $fs->remove($this->getTempDir().'/system/cache');
         $fs->remove($this->getTempDir().'/system/config');
+        $fs->remove($this->getTempDir().'/system/initialize.php');
         $fs->remove($this->getTempDir().'/system/modules/.gitignore');
+        $fs->remove($this->getTempDir().'/system/themes');
         $fs->remove($this->getTempDir().'/system/tmp');
         $fs->remove($this->getTempDir().'/templates');
         $fs->remove($this->getTempDir().'/web/share');
         $fs->remove($this->getTempDir().'/web/system');
+        $fs->remove($this->getTempDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
     }
 
     public function testCreatesTheContaoFolders(): void
@@ -48,7 +51,7 @@ class InstallCommandTest extends TestCase
         $container = $this->mockContainer($this->getTempDir());
         $container->set('filesystem', new Filesystem());
 
-        $command = new InstallCommand('contao:install');
+        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/assets/images');
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
@@ -73,7 +76,7 @@ class InstallCommandTest extends TestCase
         $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images_test');
         $container->set('filesystem', new Filesystem());
 
-        $command = new InstallCommand('contao:install');
+        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/assets/images_test');
         $command->setContainer($container);
 
         $tester = new CommandTester($command);
@@ -98,7 +101,7 @@ class InstallCommandTest extends TestCase
         $lock = $factory->createLock('contao:install');
         $lock->acquire();
 
-        $command = new InstallCommand('contao:install');
+        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/assets/images');
         $command->setContainer($this->mockContainer($this->getTempDir()));
 
         $tester = new CommandTester($command);

@@ -11,13 +11,17 @@ declare(strict_types=1);
  */
 
 use Contao\ManagerBundle\ContaoManager\Plugin;
-use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
 // Suppress error messages (see #1422)
 @ini_set('display_errors', '0');
+
+// Disable the phar stream wrapper for security reasons (see #105)
+if (\in_array('phar', stream_get_wrappers(), true)) {
+    stream_wrapper_unregister('phar');
+}
 
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
@@ -39,13 +43,13 @@ unset($trustedProxies, $trustedHosts);
 
 Plugin::autoloadModules(__DIR__.'/../system/modules');
 ContaoKernel::setProjectDir(\dirname(__DIR__));
+Request::enableHttpMethodParameterOverride();
 
 $kernel = new ContaoKernel('prod', false);
-Request::enableHttpMethodParameterOverride();
+$cache = $kernel->getHttpCache();
 $request = Request::createFromGlobals();
 
 // Enable the Symfony reverse proxy if request has no surrogate capability
-$cache = new ContaoCache($kernel);
 if (null !== $cache->getSurrogate() && !$cache->getSurrogate()->hasSurrogateCapability($request)) {
     $kernel = $cache;
 }

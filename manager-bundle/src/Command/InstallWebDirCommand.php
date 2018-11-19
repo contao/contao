@@ -37,39 +37,31 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $io;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    public function __construct(string $rootDir)
+    {
+        $this->rootDir = $rootDir;
+
+        parent::__construct();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure(): void
     {
         $this
             ->setName('contao:install-web-dir')
-            ->setDescription('Generates entry points in /web directory.')
-            ->addArgument(
-                'path',
-                InputArgument::OPTIONAL,
-                'The installation root directory',
-                getcwd()
-            )
-            ->addOption(
-                'no-dev',
-                null,
-                InputOption::VALUE_NONE,
-                'Do not copy the app_dev.php entry point to the web folder'
-            )
-            ->addOption(
-                'user',
-                'u',
-                InputOption::VALUE_REQUIRED,
-                'Set the username for the app_dev.php entry point',
-                false
-            )
-            ->addOption(
-                'password',
-                'p',
-                InputOption::VALUE_OPTIONAL,
-                'Set the password for the app_dev.php entry point',
-                false
-            )
+            ->setDefinition([
+                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
+                new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Do not install the app_dev.php entry point'),
+                new InputOption('user', 'u', InputOption::VALUE_REQUIRED, 'Set a username for app_dev.php', false),
+                new InputOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Set a password for app_dev.php', false),
+            ])
+            ->setDescription('Installs the files in the "web" directory')
         ;
     }
 
@@ -82,7 +74,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $password = $input->getOption('password');
 
         if ((false !== $user || false !== $password) && true === $input->getOption('no-dev')) {
-            throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
+            throw new \InvalidArgumentException('Cannot set a password in no-dev mode');
         }
 
         // Return if both username and password are set or both are not set
@@ -119,14 +111,37 @@ class InstallWebDirCommand extends AbstractLockedCommand
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $projectDir = $input->getArgument('path');
-        $webDir = rtrim($projectDir, '/').'/web';
+        $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
 
+        $this->addHtaccess($webDir);
         $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);
-        $this->storeAppDevAccesskey($input, $projectDir);
+        $this->storeAppDevAccesskey($input, $this->rootDir);
 
         return 0;
+    }
+
+    /**
+     * Adds the .htaccess file or merges it with an existing one.
+     */
+    private function addHtaccess(string $webDir): void
+    {
+        $htaccess = __DIR__.'/../Resources/skeleton/web/.htaccess';
+
+        if (!file_exists($webDir.'/.htaccess')) {
+            $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
+
+            return;
+        }
+
+        $existingContent = file_get_contents($webDir.'/.htaccess');
+
+        // Return if there already is a rewrite rule
+        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+            return;
+        }
+
+        $this->fs->dumpFile($webDir.'/.htaccess', $existingContent."\n\n".file_get_contents($htaccess));
     }
 
     /**
@@ -135,7 +150,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private function addFiles(string $webDir, bool $dev = true): void
     {
         /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/skeleton/web');
+        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
             if ($this->isExistingOptionalFile($file, $webDir)) {
@@ -227,7 +242,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
     {
         static $optional = [
-            '.htaccess',
             'favicon.ico',
             'robots.txt',
         ];

@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\EventListener;
 
-use Contao\CoreBundle\Command\InstallCommand;
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -70,7 +68,11 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
-        if (null === ($output = $this->runCommand(new InstallCommand()))) {
+        $webDir = $this->container->getParameter('contao.web_dir');
+        $command = $this->container->get('contao.command.install');
+        $input = new ArgvInput(['contao:install', substr($webDir, \strlen($projectDir) + 1)]);
+
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
@@ -85,7 +87,11 @@ class InitializeApplicationListener implements ContainerAwareInterface
             return;
         }
 
-        if (null === ($output = $this->runCommand(new SymlinksCommand()))) {
+        $projectDir = $this->container->getParameter('kernel.project_dir');
+        $command = $this->container->get('contao.command.symlinks');
+        $input = new ArgvInput(['contao:symlinks', substr($webDir, \strlen($projectDir) + 1)]);
+
+        if (null === ($output = $this->runCommand($command, $input))) {
             return;
         }
 
@@ -95,12 +101,8 @@ class InitializeApplicationListener implements ContainerAwareInterface
     /**
      * Runs a command and returns the error (if any).
      */
-    private function runCommand(Command $command, InputInterface $input = null): ?string
+    private function runCommand(Command $command, InputInterface $input): ?string
     {
-        if (null === $input) {
-            $input = new ArgvInput([]);
-        }
-
         if ($command instanceof ContainerAwareCommand) {
             $command->setContainer($this->container);
         }
