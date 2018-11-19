@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Handle unknown languages in the meta editor (see #127).
+
 ## 4.4.28 (2018-10-31)
 
  * Correctly rebuild the symlinks in the maintenance module (see #150).
