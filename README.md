@@ -33,7 +33,7 @@ application, it is the easiest to use the [Contao managed edition][3]. Start by
 installing it in your current directory:
 
 ```bash
-$ composer create-project --no-install contao/managed-edition <branch> .
+composer create-project --no-install contao/managed-edition <branch> .
 ```
 
 Replace `<branch>` with `dev-master` if you want to add a new feature or with
@@ -55,7 +55,7 @@ if you want to fix a bug.
 Next install the dependencies:
 
 ```
-$ composer update
+composer update
 ```
 
 Because we have required `contao/contao` with a `dev-` prefix, Composer will
