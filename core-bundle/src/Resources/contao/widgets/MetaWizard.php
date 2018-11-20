@@ -108,9 +108,7 @@ class MetaWizard extends Widget
 	public function generate()
 	{
 		$count = 0;
-		$languages = $this->getLanguages();
 		$return = '';
-		$taken = array();
 
 		$this->import('Database');
 		$this->import('BackendUser', 'User');
@@ -119,53 +117,21 @@ class MetaWizard extends Widget
 		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
 		$existing = $objRootLangs->fetchEach('language');
 
-		// Also add the existing keys (see #878)
-		if (!empty($this->varValue))
+		foreach ($existing as $lang)
 		{
-			$existing = array_unique(array_merge($existing, array_keys($this->varValue)));
+			if (!isset($this->varValue[$lang]))
+			{
+				$this->varValue[$lang] = array();
+			}
 		}
 
-		$languages = array_intersect_key($languages, array_flip($existing));
-
-		// Prefer languages matching the back end user's language (see #1358)
-		uksort($languages, function ($a, $b)
-		{
-			if ($a == $this->User->language)
-			{
-				return -1;
-			}
-
-			if ($b == $this->User->language)
-			{
-				return 1;
-			}
-
-			if (strncmp($a, $this->User->language, 2) === 0)
-			{
-				return -1;
-			}
-
-			if (strncmp($b, $this->User->language, 2) === 0)
-			{
-				return 1;
-			}
-
-			return 0;
-		});
-
-		// Make sure there is at least an empty array
+		// No languages defined in the site structure
 		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
-			if (\count($languages) > 0)
-			{
-				$key = isset($languages[$GLOBALS['TL_LANGUAGE']]) ? $GLOBALS['TL_LANGUAGE'] : key($languages);
-				$this->varValue = array($key=>array()); // see #4188
-			}
-			else
-			{
-				return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';
-			}
+			return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';
 		}
+
+		$languages = $this->getLanguages(true);
 
 		// Add the existing entries
 		if (!empty($this->varValue))
@@ -197,7 +163,7 @@ class MetaWizard extends Widget
 				$return .= '
     </li>';
 
-				$taken[] = $lang;
+				unset($languages[$lang]);
 				++$count;
 			}
 
@@ -210,7 +176,7 @@ class MetaWizard extends Widget
 		// Add the remaining languages
 		foreach ($languages as $k=>$v)
 		{
-			$options[] = '<option value="' . $k . '"' . (\in_array($k, $taken) ? ' disabled' : '') . '>' . $v . '</option>';
+			$options[] = '<option value="' . $k . '">' . $v . '</option>';
 		}
 
 		$return .= '

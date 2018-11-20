@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Show all root languages by default in the meta editor (see contao/core#6254).
  * Try to preserve existing .htaccess entries when installing the web directory (see #160).
  * Use the alternative text from the image meta data if none is given (see #165).
  * Improve the API for protecting files and folders (see contao/core-bundle#1601).
