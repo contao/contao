@@ -699,7 +699,7 @@ class tl_user extends Backend
 
 		if ($this->User->id == $row['id'])
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
 
 		$router = \System::getContainer()->get('router');

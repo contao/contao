@@ -361,8 +361,6 @@ class tl_templates extends Backend
 	 *
 	 * @param DataContainer $dc
 	 *
-	 * @return string
-	 *
 	 * @throws Contao\CoreBundle\Exception\InternalServerErrorException
 	 */
 	public function compareTemplate(DataContainer $dc)

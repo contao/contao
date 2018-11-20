@@ -516,7 +516,7 @@ class tl_member extends Backend
 
 		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && \count(array_intersect(\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
 
 		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" title="'.StringUtil::specialchars($title).'" target="_blank">'.Image::getHtml($icon, $label).'</a> ';
