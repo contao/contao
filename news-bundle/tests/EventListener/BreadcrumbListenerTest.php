@@ -67,10 +67,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     public function testDoesNotAddBreadcrumbItemForEnabledAutoItemButMissingAutoItemParameter(array $items): void
     {
-        $inputAdapter = $this->mockAdapter();
+        $inputAdapter = $this->mockAdapter(['get']);
         $inputAdapter
-            ->method('__call')
-            ->with('get', ['auto_item'])
+            ->method('get')
+            ->with('auto_item')
             ->willReturn(null);
 
         $framework = $this->mockContaoFramework([Input::class => $inputAdapter]);
@@ -85,10 +85,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     public function testDoesNotAddBreadcrumbItemForDisabledAutoItemAndMissingItemsParameter(array $items): void
     {
-        $inputAdapter = $this->mockAdapter();
+        $inputAdapter = $this->mockAdapter(['get']);
         $inputAdapter
-            ->method('__call')
-            ->with('get', ['items'])
+            ->method('get')
+            ->with('items')
             ->willReturn(null);
 
         $framework = $this->mockContaoFramework(
@@ -180,16 +180,6 @@ final class BreadcrumbListenerTest extends ContaoTestCase
         $this->assertSame($items, $result);
     }
 
-    /**
-     * Mocks a configured adapter with the given methods and return values.
-     *
-     * @return Adapter|MockObject
-     */
-    protected function mockAdapter(array $methods = ['__call']): Adapter
-    {
-        return parent::mockAdapter($methods);
-    }
-
     protected function mockContaoFramework(array $adapters = []): ContaoFrameworkInterface
     {
         if (!isset($adapters[NewsArchiveModel::class])) {
@@ -266,10 +256,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockNewsArchiveAdapter(?NewsArchiveModel $newsArchiveModel): Adapter
     {
-        $newsArchiveAdapter = $this->mockAdapter();
+        $newsArchiveAdapter = $this->mockAdapter(['findOneByJumpTo']);
         $newsArchiveAdapter
-            ->method('__call')
-            ->with('findOneByJumpTo', [self::PAGE_ID])
+            ->method('findOneByJumpTo')
+            ->with(self::PAGE_ID)
             ->willReturn($newsArchiveModel);
 
         return $newsArchiveAdapter;
@@ -280,10 +270,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockNewsModelAdapter(?NewsModel $newsModel): Adapter
     {
-        $newsModelAdapter = $this->mockAdapter();
+        $newsModelAdapter = $this->mockAdapter(['findPublishedByParentAndIdOrAlias']);
         $newsModelAdapter
-            ->method('__call')
-            ->with('findPublishedByParentAndIdOrAlias', [self::NEWS_ALIAS, [self::NEWS_ARCHIVE_ID]])
+            ->method('findPublishedByParentAndIdOrAlias')
+            ->with(self::NEWS_ALIAS, [self::NEWS_ARCHIVE_ID])
             ->willReturn($newsModel);
 
         return $newsModelAdapter;
@@ -294,10 +284,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockConfigAdapter(bool $useAutoItem = true): Adapter
     {
-        $configAdapter = $this->mockAdapter();
+        $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
-            ->method('__call')
-            ->with('get', ['useAutoItem'])
+            ->method('get')
+            ->with('useAutoItem')
             ->willReturn($useAutoItem);
 
         return $configAdapter;
@@ -308,10 +298,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockInputAdapter(): Adapter
     {
-        $inputAdapter = $this->mockAdapter();
+        $inputAdapter = $this->mockAdapter(['get']);
         $inputAdapter
-            ->method('__call')
-            ->with('get', ['auto_item'])
+            ->method('get')
+            ->with('auto_item')
             ->willReturn(self::NEWS_ALIAS);
 
         return $inputAdapter;
@@ -322,10 +312,10 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockPageModelAdapter(PageModel $pageModel): Adapter
     {
-        $pageModelAdapter = $this->mockAdapter();
+        $pageModelAdapter = $this->mockAdapter(['findByPk']);
         $pageModelAdapter
-            ->method('__call')
-            ->with('findByPk', [self::PAGE_ID])
+            ->method('findByPk')
+            ->with(self::PAGE_ID)
             ->willReturn($pageModel);
 
         return $pageModelAdapter;
@@ -336,9 +326,9 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockNewsAdapter(): Adapter
     {
-        $newsAdapter = $this->mockAdapter();
+        $newsAdapter = $this->mockAdapter(['generateNewsUrl']);
         $newsAdapter
-            ->method('__call')
+            ->method('generateNewsUrl')
             ->willReturn(self::NEWS_URL);
 
         return $newsAdapter;

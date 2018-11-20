@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Input;
 use Contao\News;
@@ -63,28 +64,32 @@ final class BreadcrumbListener
             return null;
         }
 
+        /** @var Adapter|Input $inputAdapter */
         $inputAdapter = $this->framework->getAdapter(Input::class);
+        /** @var Adapter|Config $configAdapter */
         $configAdapter = $this->framework->getAdapter(Config::class);
 
-        if ($configAdapter->__call('get', ['useAutoItem'])) {
-            return $inputAdapter->__call('get', ['auto_item']);
+        if ($configAdapter->get('useAutoItem')) {
+            return $inputAdapter->get('auto_item');
         }
 
-        return $inputAdapter->__call('get', ['items']);
+        return $inputAdapter->get('items');
     }
 
     private function getNewsArchive(): ?NewsArchiveModel
     {
+        /** @var Adapter|NewsArchiveModel $repository */
         $repository = $this->framework->getAdapter(NewsArchiveModel::class);
 
-        return $repository->__call('findOneByJumpTo', [$GLOBALS['objPage']->id]);
+        return $repository->findOneByJumpTo($GLOBALS['objPage']->id);
     }
 
     private function getNews(string $newsAlias, NewsArchiveModel $newsArchive): ?NewsModel
     {
+        /** @var Adapter|NewsModel $repository */
         $repository = $this->framework->getAdapter(NewsModel::class);
 
-        return $repository->__call('findPublishedByParentAndIdOrAlias', [$newsAlias, [$newsArchive->id]]);
+        return $repository->findPublishedByParentAndIdOrAlias($newsAlias, [$newsArchive->id]);
     }
 
     private function addBreadcrumbItem(array $items, NewsModel $news): array
@@ -131,9 +136,10 @@ final class BreadcrumbListener
     private function getCurrentPage(): PageModel
     {
         // Fetch the page again from the database as the global objPage might already have an overridden title
+        /** @var Adapter|PageModel $repository */
         $repository = $this->framework->getAdapter(PageModel::class);
 
-        return $repository->__call('findByPk', [$GLOBALS['objPage']->id]) ?: $GLOBALS['objPage'];
+        return $repository->findByPk($GLOBALS['objPage']->id) ?: $GLOBALS['objPage'];
     }
 
     private function getNewsTitle(NewsModel $news, PageModel $currentPage): string
@@ -147,8 +153,9 @@ final class BreadcrumbListener
 
     private function generateNewsUrl(NewsModel $newsModel): string
     {
+        /** @var Adapter|News $adapter */
         $adapter = $this->framework->getAdapter(News::class);
 
-        return $adapter->__call('generateNewsUrl', [$newsModel]);
+        return $adapter->generateNewsUrl($newsModel);
     }
 }
