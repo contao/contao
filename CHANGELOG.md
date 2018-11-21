@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Automatically enable image sizes created by regular users (see contao/core#8836).
  * Handle unknown languages in the meta editor (see #127).
 
 ## 4.4.28 (2018-10-31)
