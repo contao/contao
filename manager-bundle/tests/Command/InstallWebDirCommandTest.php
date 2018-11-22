@@ -53,14 +53,8 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
         $this->command = new InstallWebDirCommand($this->getTempDir());
         $this->command->setApplication($this->mockApplication());
-
         $this->filesystem = new Filesystem();
-
-        $this->webFiles = Finder::create()
-            ->files()
-            ->ignoreDotFiles(false)
-            ->in(__DIR__.'/../../src/Resources/skeleton/web')
-        ;
+        $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/skeleton/web');
     }
 
     /**

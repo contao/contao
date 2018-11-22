@@ -527,7 +527,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/js/dropzone.min.js';
 
 			$strAccepted = implode(',', array_map(function ($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
-			$intMaxSize = round(\FileUpload::getMaximumUploadSize() / 1024 / 1024);
+			$intMaxSize = round(\FileUpload::getMaxUploadSize() / 1024 / 1024);
 
 			$return .= '<script>'
 				.'Dropzone.autoDiscover = false;'

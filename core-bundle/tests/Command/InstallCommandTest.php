@@ -43,7 +43,6 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getTempDir().'/templates');
         $fs->remove($this->getTempDir().'/web/share');
         $fs->remove($this->getTempDir().'/web/system');
-        $fs->remove($this->getTempDir().'/vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php');
     }
 
     public function testCreatesTheContaoFolders(): void

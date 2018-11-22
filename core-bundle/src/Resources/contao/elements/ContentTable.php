@@ -63,7 +63,7 @@ class ContentTable extends ContentElement
 				$arrHeader[] = array
 				(
 					'class' => 'head_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
-					'content' => (($v != '') ? nl2br_html5($v) : '&nbsp;')
+					'content' => (($v != '') ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
 
@@ -107,7 +107,7 @@ class ContentTable extends ContentElement
 				$arrBody['row_' . $j . $class_tr . $class_eo][] = array
 				(
 					'class' => 'col_'.$i . $class_td,
-					'content' => (($v != '') ? nl2br_html5($v) : '&nbsp;')
+					'content' => (($v != '') ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
 		}
@@ -122,12 +122,29 @@ class ContentTable extends ContentElement
 				$arrFooter[] = array
 				(
 					'class' => 'foot_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[(\count($rows)-1)]) - 1)) ? ' col_last' : ''),
-					'content' => (($v != '') ? nl2br_html5($v) : '&nbsp;')
+					'content' => (($v != '') ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
 		}
 
 		$this->Template->footer = $arrFooter;
+	}
+
+	/**
+	 * Convert new lines to <br> tags if there are no HTML block elements
+	 *
+	 * @param string $strString
+	 *
+	 * @return string
+	 */
+	private function nl2br($strString)
+	{
+		if (preg_match('#<(?:address|blockquote|dd|div|dl|dt|figcaption|figure|h[1-6]|hr|li|ol|p|pre|ul)[ >]#', $strString))
+		{
+			return $strString;
+		}
+
+		return nl2br($strString, false);
 	}
 }
 

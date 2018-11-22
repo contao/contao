@@ -130,6 +130,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
         if (!file_exists($webDir.'/.htaccess')) {
             $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
+            $this->io->writeln('Added the <comment>web/.htaccess</comment> file.');
 
             return;
         }
@@ -142,6 +143,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         }
 
         $this->fs->dumpFile($webDir.'/.htaccess', $existingContent."\n\n".file_get_contents($htaccess));
+        $this->io->writeln('Updated the <comment>web/.htaccess</comment> file.');
     }
 
     /**
@@ -162,7 +164,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
             }
 
             $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
-            $this->io->text(sprintf('Added/updated the <comment>web/%s</comment> file.', $file->getFilename()));
+            $this->io->writeln(sprintf('Added the <comment>web/%s</comment> file.', $file->getFilename()));
         }
     }
 
@@ -176,7 +178,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         }
 
         $this->fs->remove($webDir.'/install.php');
-        $this->io->text('Deleted the <comment>web/install.php</comment> file.');
+        $this->io->writeln('Deleted the <comment>web/install.php</comment> file.');
     }
 
     /**
