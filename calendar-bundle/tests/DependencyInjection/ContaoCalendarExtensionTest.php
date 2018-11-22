@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\Tests\DependencyInjection;
 
 use Contao\CalendarBundle\DependencyInjection\ContaoCalendarExtension;
+use Contao\CalendarBundle\EventListener\BreadcrumbListener;
 use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
@@ -124,5 +125,16 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertArrayHasKey('contao.picker_provider', $tags);
         $this->assertSame(96, $tags['contao.picker_provider'][0]['priority']);
+    }
+
+    public function testRegistersTheBreadcrumbListener(): void
+    {
+        $this->assertTrue($this->container->has('contao_calendar.listener.breadcrumb'));
+
+        $definition = $this->container->getDefinition('contao_calendar.listener.breadcrumb');
+
+        $this->assertSame(BreadcrumbListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 }
