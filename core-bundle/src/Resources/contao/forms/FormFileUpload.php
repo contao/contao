@@ -321,7 +321,7 @@ class FormFileUpload extends Widget implements \uploadable
 			return $this->maxlength;
 		}
 
-		return FileUpload::getMaxUploadSize();
+		return \FileUpload::getMaxUploadSize();
 	}
 }
 
