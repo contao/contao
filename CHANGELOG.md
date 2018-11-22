@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.29 (2018-11-22)
 
  * Do not convert line breaks in table cells if there are HTML block elements (see #159).
  * Automatically enable image sizes created by regular users (see contao/core#8836).
