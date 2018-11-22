@@ -127,6 +127,15 @@ class MetaWizard extends Widget
 
 		$languages = array_intersect_key($languages, array_flip($existing));
 
+		// Add unknown languages at the end (see #127)
+		foreach ($existing as $lang)
+		{
+			if (!isset($languages[$lang]))
+			{
+				$languages[$lang] = $lang;
+			}
+		}
+
 		// Prefer languages matching the back end user's language (see #1358)
 		uksort($languages, function ($a, $b)
 		{

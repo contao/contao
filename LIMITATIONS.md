@@ -15,3 +15,11 @@ types, e.g. from an article to a news item or from a news item to an event.
 They can only copy or move elements from e.g. one article to another article.
 
 More information: https://github.com/contao/core/issues/5234
+
+## Unique checks on encrypted data
+
+The DCA option `'encrypt'=>true` cannot be used together with `'unique'=>true`,
+because there is no effective way to check the unencrypted values for
+duplicate entries.
+
+More information: https://github.com/contao/core/issues/8144

@@ -25,6 +25,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			array('tl_image_size', 'checkPermission'),
 			array('tl_image_size', 'showJsLibraryHint')
 		),
+		'oncreate_callback' => array
+		(
+			array('tl_image_size', 'adjustPermissions')
+		),
+		'oncopy_callback' => array
+		(
+			array('tl_image_size', 'adjustPermissions')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -229,6 +237,92 @@ class tl_image_size extends Backend
 		if (!$this->User->hasAccess('image_sizes', 'themes'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the image sizes module.');
+		}
+	}
+
+	/**
+	 * Add the new image size to the permissions
+	 *
+	 * @param $insertId
+	 */
+	public function adjustPermissions($insertId)
+	{
+		// The oncreate_callback passes $insertId as second argument
+		if (\func_num_args() == 4)
+		{
+			$insertId = func_get_arg(1);
+		}
+
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		// Set the image sizes
+		if (empty($this->User->imageSizes) || !\is_array($this->User->imageSizes))
+		{
+			$imageSizes = array();
+		}
+		else
+		{
+			$imageSizes = $this->User->imageSizes;
+		}
+
+		// The image size is enabled already
+		if (\in_array($insertId, $imageSizes))
+		{
+			return;
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+
+		$arrNew = $objSessionBag->get('new_records');
+
+		if (\is_array($arrNew['tl_image_size']) && \in_array($insertId, $arrNew['tl_image_size']))
+		{
+			// Add the permissions on group level
+			if ($this->User->inherit != 'custom')
+			{
+				$objGroup = $this->Database->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+
+				while ($objGroup->next())
+				{
+					$arrThemes = StringUtil::deserialize($objGroup->themes);
+
+					if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
+					{
+						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
+						$arrImageSizes[] = $insertId;
+
+						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
+									   ->execute(serialize($arrImageSizes), $objGroup->id);
+					}
+				}
+			}
+
+			// Add the permissions on user level
+			if ($this->User->inherit != 'group')
+			{
+				$objUser = $this->Database->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
+										   ->limit(1)
+										   ->execute($this->User->id);
+
+				$arrThemes = StringUtil::deserialize($objUser->themes);
+
+				if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
+				{
+					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
+					$arrImageSizes[] = $insertId;
+
+					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
+								   ->execute(serialize($arrImageSizes), $this->User->id);
+				}
+			}
+
+			// Add the new element to the user object
+			$imageSizes[] = $insertId;
+			$this->User->imageSizes = $imageSizes;
 		}
 	}
 

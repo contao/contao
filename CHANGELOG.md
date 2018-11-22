@@ -4,6 +4,9 @@
 
  * Correctly redirect in the "close account" module (see #93).
  * Correctly rebuild the symlinks in the maintenance module (see #150).
+ * Do not convert line breaks in table cells if there are HTML block elements (see #159).
+ * Automatically enable image sizes created by regular users (see contao/core#8836).
+ * Handle unknown languages in the meta editor (see #127).
 
 ## 4.6.7 (2018-10-31)
 
