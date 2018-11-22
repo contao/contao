@@ -257,10 +257,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'default'                 => \Contao\NewsArchiveModel::BREADCRUMB_MODE_OVERRIDE,
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array(
-				\Contao\NewsArchiveModel::BREADCRUMB_MODE_OVERRIDE,
-				\Contao\NewsArchiveModel::BREADCRUMB_MODE_EXTEND
-            ),
+			'options'                 => \Contao\NewsArchiveModel::BREADCRUMB_MODES,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news_archive']['breadcrumbModes'],
 			'eval'                    => array('tl_class'=>'w50 clr', 'helpwizard'=>true),
 			'sql'                     => "varchar(32) NOT NULL default ''"
