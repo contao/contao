@@ -230,7 +230,7 @@ if (!$response instanceof InitializeControllerResponse) {
 EOF
         );
 
-        $this->io->text("Added/updated the <comment>system/initialize.php</comment> file.\n");
+        $this->io->writeln('Added the <comment>system/initialize.php</comment> file.');
     }
 
     /**
@@ -244,6 +244,6 @@ EOF
             $this->rootDir
         );
 
-        $this->io->text("Symlinked the <comment>system/config/tcpdf.php</comment> file.\n");
+        $this->io->writeln('Symlinked the <comment>system/config/tcpdf.php</comment> file.');
     }
 }

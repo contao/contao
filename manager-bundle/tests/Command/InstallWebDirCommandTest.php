@@ -50,11 +50,6 @@ class InstallWebDirCommandTest extends TestCase
     private $webFiles;
 
     /**
-     * @var array
-     */
-    private $optionalFiles;
-
-    /**
      * {@inheritdoc}
      */
     public function setUp()
@@ -63,15 +58,10 @@ class InstallWebDirCommandTest extends TestCase
 
         $this->filesystem = new Filesystem();
         $this->tmpdir = sys_get_temp_dir().'/'.uniqid('InstallWebDirCommand_', true);
-        $this->webFiles = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../../src/Resources/web');
+        $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/web');
 
         $this->command = new InstallWebDirCommand($this->tmpdir);
         $this->command->setApplication($this->mockApplication());
-
-        $ref = new \ReflectionClass(InstallWebDirCommand::class);
-        $prop = $ref->getProperty('optionalFiles');
-        $prop->setAccessible(true);
-        $this->optionalFiles = $prop->getValue($this->command);
     }
 
     /**
@@ -114,24 +104,43 @@ class InstallWebDirCommandTest extends TestCase
     }
 
     /**
-     * Tests that the command does not override optional optional files.
+     * Tests that the .htaccess file is not changed if it includes a rewrite rule.
      */
-    public function testCommandDoesNotOverrideOptionals()
+    public function testHtaccessIsNotChangedIfRewriteRuleExists()
     {
-        foreach ($this->webFiles as $file) {
-            $this->filesystem->dumpFile($this->tmpdir.'/web/'.$file->getRelativePathname(), 'foobar-content');
-        }
+        $existingHtaccess = <<<'EOT'
+<IfModule mod_headers.c>
+  RewriteRule ^ %{ENV:BASE}/app.php [L]
+</IfModule>
+EOT;
+
+        $this->filesystem->dumpFile($this->tmpdir.'/web/.htaccess', $existingHtaccess);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        foreach ($this->webFiles as $file) {
-            if (\in_array($file->getRelativePathname(), $this->optionalFiles, true)) {
-                $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
-            } else {
-                $this->assertStringNotEqualsFile($this->tmpdir.'/web/'.$file->getFilename(), 'foobar-content');
-            }
-        }
+        $this->assertStringEqualsFile($this->tmpdir.'/web/.htaccess', $existingHtaccess);
+    }
+
+    /**
+     * Tests that the .htaccess file is changed if it does not include a rewrite rule.
+     */
+    public function testHtaccessIsChangedIfRewriteRuleDoesNotExists()
+    {
+        $existingHtaccess = <<<'EOT'
+# Enable PHP 7.2
+AddHandler application/x-httpd-php72 .php
+EOT;
+
+        $this->filesystem->dumpFile($this->tmpdir.'/web/.htaccess', $existingHtaccess);
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute([]);
+
+        $this->assertStringEqualsFile(
+            $this->tmpdir.'/web/.htaccess',
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../src/Resources/web/.htaccess')
+        );
     }
 
     /**

@@ -44,24 +44,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private $rootDir;
 
     /**
-     * Files that should not be copied if they exist in the web directory.
-     *
-     * @var array
-     */
-    private $optionalFiles = [
-        '.htaccess',
-    ];
-
-    /**
-     * Files that should not be copied on no-dev option.
-     *
-     * @var array
-     */
-    private $devFiles = [
-        'app_dev.php',
-    ];
-
-    /**
      * Constructor.
      *
      * @param string $rootDir
@@ -138,11 +120,39 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
         $webDir = $this->rootDir.'/'.rtrim($input->getArgument('target'), '/');
 
+        $this->addHtaccess($webDir);
         $this->addFiles($webDir, !$input->getOption('no-dev'));
         $this->removeInstallPhp($webDir);
         $this->storeAppDevAccesskey($input, $this->rootDir);
 
         return 0;
+    }
+
+    /**
+     * Adds the .htaccess file or merges it with an existing one.
+     *
+     * @param string $webDir
+     */
+    private function addHtaccess($webDir)
+    {
+        $htaccess = __DIR__.'/../Resources/web/.htaccess';
+
+        if (!file_exists($webDir.'/.htaccess')) {
+            $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
+            $this->io->writeln('Added the <comment>web/.htaccess</comment> file.');
+
+            return;
+        }
+
+        $existingContent = file_get_contents($webDir.'/.htaccess');
+
+        // Return if there already is a rewrite rule
+        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+            return;
+        }
+
+        $this->fs->dumpFile($webDir.'/.htaccess', $existingContent."\n\n".file_get_contents($htaccess));
+        $this->io->writeln('Updated the <comment>web/.htaccess</comment> file.');
     }
 
     /**
@@ -154,22 +164,19 @@ class InstallWebDirCommand extends AbstractLockedCommand
     private function addFiles($webDir, $dev = true)
     {
         /** @var Finder $finder */
-        $finder = Finder::create()->files()->ignoreDotFiles(false)->in(__DIR__.'/../Resources/web');
+        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/web');
 
         foreach ($finder as $file) {
-            if (
-                \in_array($file->getRelativePathname(), $this->optionalFiles, true)
-                && $this->fs->exists($webDir.'/'.$file->getRelativePathname())
-            ) {
+            if ($this->fs->exists($webDir.'/'.$file->getRelativePathname())) {
                 continue;
             }
 
-            if (!$dev && \in_array($file->getRelativePathname(), $this->devFiles, true)) {
+            if (!$dev && 'app_dev.php' === $file->getRelativePathname()) {
                 continue;
             }
 
             $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
-            $this->io->text(sprintf('Added/updated the <comment>web/%s</comment> file.', $file->getFilename()));
+            $this->io->writeln(sprintf('Added the <comment>web/%s</comment> file.', $file->getFilename()));
         }
     }
 
@@ -185,7 +192,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
         }
 
         $this->fs->remove($webDir.'/install.php');
-        $this->io->text('Deleted the <comment>web/install.php</comment> file.');
+        $this->io->writeln('Deleted the <comment>web/install.php</comment> file.');
     }
 
     /**
