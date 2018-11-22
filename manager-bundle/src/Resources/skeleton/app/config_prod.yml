@@ -1,6 +1,9 @@
 imports:
     - { resource: config.yml }
 
+contao:
+    pretty_error_screens: true
+
 # Monolog configuration
 monolog:
     handlers:

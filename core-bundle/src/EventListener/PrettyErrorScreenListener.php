@@ -103,7 +103,7 @@ class PrettyErrorScreenListener
 
         $request = $event->getRequest();
 
-        if ('html' !== $request->getRequestFormat() || !$this->scopeMatcher->isContaoRequest($request)) {
+        if ('html' !== $request->getRequestFormat()) {
             return;
         }
 
