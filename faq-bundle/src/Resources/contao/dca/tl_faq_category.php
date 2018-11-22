@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('allowComments'),
-		'default'                     => '{title_legend},title,headline,jumpTo;{comments_legend:hide},allowComments'
+		'default'                     => '{title_legend},title,headline,jumpTo,breadcrumbMode;{comments_legend:hide},allowComments'
 	),
 
 	// Subpalettes
@@ -226,7 +226,18 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
-		)
+		),
+		'breadcrumbMode' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['breadcrumbMode'],
+			'default'                 => \Contao\FaqCategoryModel::BREADCRUMB_MODE_OVERRIDE,
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'options'                 => \Contao\FaqCategoryModel::BREADCRUMB_MODES,
+			'reference'               => &$GLOBALS['TL_LANG']['tl_faq_category']['breadcrumbModes'],
+			'eval'                    => array('tl_class'=>'w50 clr', 'helpwizard'=>true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
 	)
 );
 

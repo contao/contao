@@ -14,6 +14,7 @@ namespace Contao\FaqBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
+use Contao\FaqBundle\EventListener\BreadcrumbListener;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
 use PHPUnit\Framework\TestCase;
@@ -76,5 +77,16 @@ class ContaoFaqExtensionTest extends TestCase
 
         $this->assertArrayHasKey('contao.picker_provider', $tags);
         $this->assertSame(64, $tags['contao.picker_provider'][0]['priority']);
+    }
+
+    public function testRegistersTheBreadcrumbListener(): void
+    {
+        $this->assertTrue($this->container->has('contao_faq.listener.breadcrumb'));
+
+        $definition = $this->container->getDefinition('contao_faq.listener.breadcrumb');
+
+        $this->assertSame(BreadcrumbListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 }

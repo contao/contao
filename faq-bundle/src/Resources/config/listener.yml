@@ -4,3 +4,11 @@ services:
         arguments:
             - "@contao.framework"
         public: true
+
+    contao_faq.listener.breadcrumb:
+        class: Contao\FaqBundle\EventListener\BreadcrumbListener
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: contao.hook, hook: generateBreadcrumb }
+        public: true
