@@ -110,7 +110,7 @@ abstract class Model
 	/**
 	 * Load the relations and optionally process a result set
 	 *
-	 * @param Result|array $objResult Optional database result or array data to initialize the model
+	 * @param Result|array $objResult An optional database result or array to initialize the model
 	 */
 	public function __construct($objResult=null)
 	{
