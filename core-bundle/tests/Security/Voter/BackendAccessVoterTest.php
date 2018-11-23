@@ -25,14 +25,14 @@ class BackendAccessVoterTest extends TestCase
      */
     private $voter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->voter = new BackendAccessVoter();
     }
 
-    public function testAbstainsNonContaoUserAttributes(): void
+    public function testAbstainsIfThereIsNoContaoUserAttribute(): void
     {
         $token = $this->createMock(TokenInterface::class);
         $attributes = ['foo', 'bar', 'contao.', 'contao_user_name'];
@@ -40,19 +40,19 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', $attributes));
     }
 
-    public function testVotesDeniedIfTokenDoesNotHaveABackendUser()
+    public function testDeniesAccessIfTheTokenDoesNotHaveABackendUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn('not a user')
+            ->willReturn(null)
         ;
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'alexf', ['contao_user.']));
     }
 
-    public function testVotesDeniedIfSubjectIsNotScalarOrArray()
+    public function testDeniesAccessIfTheSubjectIsNotAScalarOrArray(): void
     {
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -64,7 +64,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, new \stdClass(), ['contao_user.']));
     }
 
-    public function testVotesDeniedIfUserDeniesAccess()
+    public function testDeniesAccessIfTheUserObjectDeniesAccess(): void
     {
         $user = $this->createMock(BackendUser::class);
         $user
@@ -83,7 +83,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, 'alexf', ['contao_user.']));
     }
 
-    public function testVotesGrantedIfUserAllowsAccess()
+    public function testGrantsAccessIfTheUserObjectGrantsAccess(): void
     {
         $user = $this->createMock(BackendUser::class);
         $user
