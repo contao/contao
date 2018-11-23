@@ -20,6 +20,18 @@
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_news.date.0">
         <source>Date</source>
       </trans-unit>
@@ -154,6 +166,9 @@
       </trans-unit>
       <trans-unit id="tl_news.title_legend">
         <source>Title and author</source>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
