@@ -119,10 +119,20 @@ class InsertTags extends Controller
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
 
+					$attributes = array('insertTag' => '{{' . $strTag . '}}');
+
+					/** @var \Symfony\Component\HttpFoundation\Request|null $request */
+					$request = $container->get('request_stack')->getCurrentRequest();
+
+					if (null !== $request && ($scope = $request->attributes->get('_scope')))
+					{
+						$attributes['_scope'] = $scope;
+					}
+
 					$strBuffer .= $fragmentHandler->render(
 						new ControllerReference(
 							'contao.controller.insert_tags:renderAction',
-							array('insertTag' => '{{' . $strTag . '}}'),
+							$attributes,
 							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
 						),
 						'esi',
