@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
+use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -153,6 +154,56 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($container);
 
         $controller(new Request(), $model, 'main');
+    }
+
+    public function testSetsTheSharedMaxAgeIfTheElementHasAStartDate(): void
+    {
+        $time = time();
+        $start = strtotime('+2 weeks', $time);
+        $expires = $start - $time;
+
+        $model = new ContentModel();
+        $model->start = (string) $start;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+
+        $controller = new TestSharedMaxAgeController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame($expires, $response->getMaxAge());
+    }
+
+    public function testSetsTheSharedMaxAgeIfTheElementHasAStopDate(): void
+    {
+        $time = time();
+        $stop = strtotime('+2 weeks', $time);
+        $expires = $stop - $time;
+
+        $model = new ContentModel();
+        $model->stop = (string) $stop;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+
+        $controller = new TestSharedMaxAgeController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame($expires, $response->getMaxAge());
+    }
+
+    public function testDoesNotSetTheSharedMaxAgeIfTheElementHasNeitherAStartNorAStopDate(): void
+    {
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+
+        $controller = new TestSharedMaxAgeController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), new ContentModel(), 'main');
+
+        $this->assertNull($response->getMaxAge());
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
