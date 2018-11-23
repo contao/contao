@@ -661,7 +661,7 @@ class Versions extends \Controller
 
 			if ($arrRow['editUrl'] != '')
 			{
-				$arrRow['editUrl'] = preg_replace('/&(amp;)?rt=[^&]+/', '&amp;rt=' . REQUEST_TOKEN, ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), ampersand($arrRow['editUrl']));
 			}
 
 			$arrVersions[] = $arrRow;
