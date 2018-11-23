@@ -28,6 +28,8 @@ class TestSharedMaxAgeController extends AbstractContentElementController
     {
         $response = new JsonResponse($template->getData());
 
-        return $this->addSharedMaxAgeFromStartAndStop($response, $model);
+        $this->addSharedMaxAgeToResponse($response, $model);
+
+        return $response;
     }
 }

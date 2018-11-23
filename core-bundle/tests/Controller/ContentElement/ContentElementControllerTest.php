@@ -156,9 +156,14 @@ class ContentElementControllerTest extends TestCase
         $controller(new Request(), $model, 'main');
     }
 
-    public function testDoesNotExpire(): void
+    public function testSetsTheSharedMaxAgeIfTheElementHasAStartDate(): void
     {
+        $time = time();
+        $start = strtotime('+2 weeks', $time);
+        $expires = $start - $time;
+
         $model = new ContentModel();
+        $model->start = (string) $start;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
 
@@ -167,10 +172,10 @@ class ContentElementControllerTest extends TestCase
 
         $response = $controller(new Request(), $model, 'main');
 
-        $this->assertNull($response->getMaxAge());
+        $this->assertSame($expires, $response->getMaxAge());
     }
 
-    public function testSetsSharedMaxAgeWithElementExpiring(): void
+    public function testSetsTheSharedMaxAgeIfTheElementHasAStopDate(): void
     {
         $time = time();
         $stop = strtotime('+2 weeks', $time);
@@ -189,23 +194,16 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame($expires, $response->getMaxAge());
     }
 
-    public function testSetsSharedMaxAgeWithElementForthcoming(): void
+    public function testDoesNotSetTheSharedMaxAgeIfTheElementHasNeitherAStartNorAStopDate(): void
     {
-        $time = time();
-        $start = strtotime('+2 weeks', $time);
-        $expires = $start - $time;
-
-        $model = new ContentModel();
-        $model->start = (string) $start;
-
         $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
 
         $controller = new TestSharedMaxAgeController();
         $controller->setContainer($container);
 
-        $response = $controller(new Request(), $model, 'main');
+        $response = $controller(new Request(), new ContentModel(), 'main');
 
-        $this->assertSame($expires, $response->getMaxAge());
+        $this->assertNull($response->getMaxAge());
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
