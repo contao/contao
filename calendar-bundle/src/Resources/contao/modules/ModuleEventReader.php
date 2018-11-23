@@ -98,14 +98,22 @@ class ModuleEventReader extends Events
 			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
 		}
 
-		// Overwrite the page title (see #2853 and #4955)
-		if ($objEvent->title != '')
+		// Overwrite the page title (see #2853, #4955 and #87)
+		if ($objEvent->pageTitle)
+		{
+			$objPage->pageTitle = $objEvent->pageTitle;
+		}
+		elseif ($objEvent->title)
 		{
 			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objEvent->title));
 		}
 
 		// Overwrite the page description
-		if ($objEvent->teaser != '')
+		if ($objEvent->description)
+		{
+			$objPage->description = $objEvent->description;
+		}
+		elseif ($objEvent->teaser)
 		{
 			$objPage->description = $this->prepareMetaDescription($objEvent->teaser);
 		}
