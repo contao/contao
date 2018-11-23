@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
@@ -121,7 +122,7 @@ class InsertTags extends Controller
 
 					$attributes = array('insertTag' => '{{' . $strTag . '}}');
 
-					/** @var \Symfony\Component\HttpFoundation\Request|null $request */
+					/** @var Request|null $request */
 					$request = $container->get('request_stack')->getCurrentRequest();
 
 					if (null !== $request && ($scope = $request->attributes->get('_scope')))
