@@ -1,6 +1,6 @@
 <?php
 
-$header = <<<EOF
+$header = <<<'EOF'
 This file is part of Contao.
 
 (c) Leo Feyer
