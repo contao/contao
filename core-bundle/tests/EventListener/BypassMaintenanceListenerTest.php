@@ -40,7 +40,7 @@ class BypassMaintenanceListenerTest extends TestCase
         $this->assertTrue($event->getRequest()->attributes->get('_bypass_maintenance'));
     }
 
-    public function testDoesNotAddTheRequestAttributeIfThereIsNoBackEndUser(): void
+    public function testDoesNotAddTheRequestAttributeIfThereIsNoBackendUser(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
