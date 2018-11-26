@@ -14,15 +14,15 @@ namespace Contao\ManagerBundle\Tests\EventListener;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\EventListener\BackendMenuListener;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class BackendMenuListenerTest extends TestCase
+class BackendMenuListenerTest extends ContaoTestCase
 {
     /**
      * {@inheritdoc}
