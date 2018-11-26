@@ -43,8 +43,12 @@ class Version410Update extends AbstractVersionUpdate
 
         $options = [];
 
-        foreach ($crop as $group => $values) {
-            $options = array_merge($options, array_values($values));
+        foreach ($crop as $group => $modes) {
+            $options[] = array_values($modes);
+        }
+
+        if (!empty($options)) {
+            $options = array_merge(...$options);
         }
 
         $rows = $this->connection->fetchAll('

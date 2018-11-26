@@ -107,10 +107,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 ->in(static::$autoloadModules)
             ;
 
+            $iniConfigs = [];
+
             foreach ($modules as $module) {
                 if (!file_exists($module->getPathname().'/.skip')) {
-                    $configs = array_merge($configs, $parser->parse($module->getFilename(), 'ini'));
+                    $iniConfigs[] = $parser->parse($module->getFilename(), 'ini');
                 }
+            }
+
+            if (!empty($iniConfigs)) {
+                $configs = array_merge($configs, ...$iniConfigs);
             }
         }
 
@@ -273,8 +279,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         foreach ($extensionConfigs as $extensionConfig) {
             if (isset($extensionConfig['dbal']['connections']['default'])) {
-                $params = array_merge($params, $extensionConfig['dbal']['connections']['default']);
+                $params[] = $extensionConfig['dbal']['connections']['default'];
             }
+        }
+
+        if (!empty($params)) {
+            $params = array_merge(...$params);
         }
 
         $parameterBag = $container->getParameterBag();
