@@ -67,10 +67,7 @@ class Installer
             $this->compileCommands();
         }
 
-        $commands = [];
-        array_map(function ($c) use (&$commands): void {
-            $commands += $c;
-        }, $this->commands);
+		$commands = array_reduce($this->commands, 'array_merge', []);
 
         if(!empty($unmappedHashes = array_diff($hashes, array_keys($commands)))) {
 			throw new \InvalidArgumentException(
