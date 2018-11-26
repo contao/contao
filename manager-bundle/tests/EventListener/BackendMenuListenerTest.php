@@ -18,26 +18,64 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BackendMenuListenerTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $fs = new Filesystem();
+        $fs->dumpFile($this->getTempDir().'/web/contao-manager.phar.php', '');
+    }
+
     public function testAddsTheContaoManagerLinkIfTheUserIsAnAdmin(): void
     {
-        $listener = new BackendMenuListener($this->getTokenStorage(true), 'contao-manager.phar.php');
+        $listener = new BackendMenuListener(
+            $this->getTokenStorage(true),
+            $this->getTempDir().'/web',
+            'contao-manager.phar.php'
+        );
+
         $listener->onBuild($this->getMenuEvent(true));
     }
 
     public function testDoesNotAddTheContaoManagerLinkIfTheUserIsNotAnAdmin(): void
     {
-        $listener = new BackendMenuListener($this->getTokenStorage(false), 'contao-manager.phar.php');
+        $listener = new BackendMenuListener(
+            $this->getTokenStorage(false),
+            $this->getTempDir().'/web',
+            'contao-manager.phar.php'
+        );
+
         $listener->onBuild($this->getMenuEvent(false));
     }
 
     public function testDoesNotAddTheContaoManagerLinkIfTheManagerPathIsNotConfigured(): void
     {
-        $listener = new BackendMenuListener($this->getTokenStorage(true), null);
+        $listener = new BackendMenuListener(
+            $this->getTokenStorage(true),
+            $this->getTempDir().'/web',
+            ''
+        );
+
+        $listener->onBuild($this->getMenuEvent(false));
+    }
+
+    public function testDoesNotAddTheContaoManagerLinkIfTheFileDoesNotExist(): void
+    {
+        $listener = new BackendMenuListener(
+            $this->getTokenStorage(true),
+            $this->getTempDir().'/web',
+            'custom.phar.php'
+        );
+
         $listener->onBuild($this->getMenuEvent(false));
     }
 

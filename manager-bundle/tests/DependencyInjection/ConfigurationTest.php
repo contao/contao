@@ -14,9 +14,7 @@ namespace Contao\ManagerBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\DependencyInjection\Configuration;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends TestCase
 {
@@ -32,35 +30,27 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration($this->getTempDir());
+        $this->configuration = new Configuration();
     }
 
-    public function testCustomManagerPath(): void
+    /**
+     * @dataProvider getManagerPaths
+     */
+    public function testRegistersTheDefaultContaoManagerPath(string $file, array $params): void
     {
-        $fs = new Filesystem();
-        $fs->dumpFile($this->getTempDir().'/custom.phar.php', '');
-
-        $params = [
-            'contao_manager' => [
-                'manager_path' => 'custom.phar.php',
-            ],
-        ];
-
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame('custom.phar.php', $configuration['manager_path']);
+        $this->assertSame($file, $configuration['path']);
     }
 
-    public function testExceptionIsThrownIfPathNotExists(): void
+    /**
+     * @return array<int,array<int,string|array<string,array<string,string>>>>
+     */
+    public function getManagerPaths(): array
     {
-        $params = [
-            'contao_manager' => [
-                'manager_path' => 'custom.php',
-            ],
+        return [
+            ['contao-manager.phar.php', []],
+            ['custom.phar.php', ['contao_manager' => ['path' => 'custom.phar.php']]],
         ];
-
-        $this->expectException(InvalidConfigurationException::class);
-
-        (new Processor())->processConfiguration($this->configuration, $params);
     }
 }

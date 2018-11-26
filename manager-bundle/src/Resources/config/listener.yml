@@ -3,7 +3,8 @@ services:
         class: Contao\ManagerBundle\EventListener\BackendMenuListener
         arguments:
             - "@security.token_storage"
-            - "%contao_manager.manager_path%"
+            - "%contao.web_dir%"
+            - "%contao_manager.path%"
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -10 }
 

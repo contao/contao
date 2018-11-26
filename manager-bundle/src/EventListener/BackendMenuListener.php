@@ -26,11 +26,17 @@ final class BackendMenuListener
     /**
      * @var string
      */
+    private $webDir;
+
+    /**
+     * @var string
+     */
     private $managerPath;
 
-    public function __construct(TokenStorageInterface $tokenStorage, ?string $managerPath)
+    public function __construct(TokenStorageInterface $tokenStorage, string $webDir, string $managerPath)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->webDir = $webDir;
         $this->managerPath = $managerPath;
     }
 
@@ -39,7 +45,7 @@ final class BackendMenuListener
      */
     public function onBuild(MenuEvent $event): void
     {
-        if (null === $this->managerPath || !$this->isAdminUser()) {
+        if (!$this->hasManager() || !$this->isAdminUser()) {
             return;
         }
 
@@ -65,6 +71,11 @@ final class BackendMenuListener
         );
 
         $categoryNode->addChild($item);
+    }
+
+    private function hasManager(): bool
+    {
+        return $this->managerPath && file_exists($this->webDir.'/'.$this->managerPath);
     }
 
     private function isAdminUser(): bool

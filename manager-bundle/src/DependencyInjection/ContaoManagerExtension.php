@@ -22,14 +22,6 @@ class ContaoManagerExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container): Configuration
-    {
-        return new Configuration($container->getParameter('contao.web_dir'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
@@ -41,23 +33,6 @@ class ContaoManagerExtension extends ConfigurableExtension
         $loader->load('listener.yml');
         $loader->load('services.yml');
 
-        $this->addContaoManagerPath($mergedConfig, $container);
-    }
-
-    protected function addContaoManagerPath(array $mergedConfig, ContainerBuilder $container): void
-    {
-        $managerPath = null;
-
-        if ($mergedConfig['manager_path']) {
-            $managerPath = $mergedConfig['manager_path'];
-        } else {
-            $webDir = $container->getParameter('contao.web_dir');
-
-            if (is_file($webDir.'/contao-manager.phar.php')) {
-                $managerPath = 'contao-manager.phar.php';
-            }
-        }
-
-        $container->setParameter('contao_manager.manager_path', $managerPath);
+        $container->setParameter('contao_manager.path', $mergedConfig['path']);
     }
 }

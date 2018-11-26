@@ -126,7 +126,7 @@ class ContaoManagerExtensionTest extends ContaoTestCase
         $extension->load([$config], $this->container);
 
         $this->assertFileExists($webDir.'/'.$file);
-        $this->assertSame($file, $this->container->getParameter('contao_manager.manager_path'));
+        $this->assertSame($file, $this->container->getParameter('contao_manager.path'));
 
         $fs->remove($webDir.'/'.$file);
     }
@@ -138,7 +138,7 @@ class ContaoManagerExtensionTest extends ContaoTestCase
     {
         return [
             ['contao-manager.phar.php', []],
-            ['custom.phar.php', ['manager_path' => 'custom.phar.php']],
+            ['custom.phar.php', ['path' => 'custom.phar.php']],
         ];
     }
 }
