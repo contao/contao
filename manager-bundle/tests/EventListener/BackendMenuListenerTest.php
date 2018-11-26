@@ -17,137 +17,65 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Knp\Menu\FactoryInterface;
-use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BackendMenuListenerTest extends TestCase
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var ItemInterface
-     */
-    private $tree;
-
-    /**
-     * @var MenuItem|MockObject
-     */
-    private $systemNode;
-
-    /**
-     * @var FactoryInterface|MockObject
-     */
-    private $factory;
-
-    /**
-     * @var \Contao\BackendUser
-     */
-    private $backendUser;
-
-    protected function setUp(): void
+    public function testAddsTheContaoManagerLinkIfTheUserIsAnAdmin(): void
     {
-        parent::setUp();
+        $listener = new BackendMenuListener($this->getTokenStorage(true), 'contao-manager.phar.php');
+        $listener->onBuild($this->getMenuEvent(true));
+    }
 
-        $this->factory = $this->createMock(FactoryInterface::class);
-        $this->factory
-            ->method('createItem')
-            ->willReturnCallback(
-                function (string $name) {
-                    return new MenuItem($name, $this->factory);
-                }
-            )
+    public function testDoesNotAddTheContaoManagerLinkIfTheUserIsNotAnAdmin(): void
+    {
+        $listener = new BackendMenuListener($this->getTokenStorage(false), 'contao-manager.phar.php');
+        $listener->onBuild($this->getMenuEvent(false));
+    }
+
+    public function testDoesNotAddTheContaoManagerLinkIfTheManagerPathIsNotConfigured(): void
+    {
+        $listener = new BackendMenuListener($this->getTokenStorage(true), null);
+        $listener->onBuild($this->getMenuEvent(false));
+    }
+
+    private function getMenuEvent(bool $addLink): MenuEvent
+    {
+        $factory = $this->createMock(FactoryInterface::class);
+
+        $systemNode = $this->createPartialMock(MenuItem::class, ['addChild', 'getName']);
+        $systemNode
+            ->expects($addLink ? $this->once() : $this->never())
+            ->method('addChild')
         ;
 
-        $this->systemNode = $this->createPartialMock(MenuItem::class, ['addChild', 'getName']);
-        $this->systemNode
+        $systemNode
             ->method('getName')
             ->willReturn('system')
         ;
 
-        $this->backendUser = $this->createPartialMock(BackendUser::class, ['__get']);
+        $tree = new MenuItem('root', $factory);
+        $tree->addChild($systemNode);
 
+        return new MenuEvent($factory, $tree);
+    }
+
+    private function getTokenStorage(bool $isAdmin): TokenStorageInterface
+    {
         $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->backendUser)
+            ->willReturn($this->mockClassWithProperties(BackendUser::class, compact('isAdmin')))
         ;
 
-        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $this->tokenStorage
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->tree = new MenuItem('root', $this->factory);
-        $this->tree->addChild($this->factory->createItem('system'));
-    }
-
-    public function testContaoManagerBackendNavItemIsAddedForAdminUser(): void
-    {
-        $event = new MenuEvent($this->factory, $this->tree);
-        $listener = new BackendMenuListener($this->tokenStorage, 'contao-manager.phar.php');
-
-        $this->backendUser
-            ->method('__get')
-            ->with('isAdmin')
-            ->willReturn(true)
-        ;
-
-        $this->tree->addChild($this->systemNode);
-
-        $this->systemNode
-            ->expects($this->once())
-            ->method('addChild')
-        ;
-
-        $listener->onBuild($event);
-    }
-
-    public function testContaoManagerBackendNavItemIsNotAddedForNonAdminUser(): void
-    {
-        $event = new MenuEvent($this->factory, $this->tree);
-        $listener = new BackendMenuListener($this->tokenStorage, 'contao-manager.phar.php');
-
-        $this->backendUser
-            ->method('__get')
-            ->with('isAdmin')
-            ->willReturn(false)
-        ;
-
-        $this->tree->addChild($this->systemNode);
-
-        $this->systemNode
-            ->expects($this->never())
-            ->method('addChild')
-        ;
-
-        $listener->onBuild($event);
-    }
-
-    public function testContaoManagerBackendNavItemIsNotAddedForMissingConfig(): void
-    {
-        $event = new MenuEvent($this->factory, $this->tree);
-        $listener = new BackendMenuListener($this->tokenStorage, null);
-
-        $this->backendUser
-            ->method('__get')
-            ->with('isAdmin')
-            ->willReturn(true)
-        ;
-
-        $this->tree->addChild($this->systemNode);
-
-        $this->systemNode
-            ->expects($this->never())
-            ->method('addChild')
-        ;
-
-        $listener->onBuild($event);
+        return $tokenStorage;
     }
 }
