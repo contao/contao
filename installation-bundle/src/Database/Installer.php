@@ -180,7 +180,7 @@ class Installer
             // make sure commands added via the hook are also appended to the command order
             foreach ($return as $commandSet) {
                 foreach ($commandSet as $hash => $sql) {
-                    if (!isset($order[$hash])) {
+					if (!\in_array($hash, $order, true)) {
                         $order[] = $hash;
                     }
                 }
