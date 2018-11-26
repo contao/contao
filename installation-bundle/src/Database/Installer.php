@@ -67,13 +67,13 @@ class Installer
             $this->compileCommands();
         }
 
-		$commands = array_reduce($this->commands, 'array_merge', []);
+        $commands = array_reduce($this->commands, 'array_merge', []);
 
-        if(!empty($unmappedHashes = array_diff($hashes, array_keys($commands)))) {
-			throw new \InvalidArgumentException(
-				sprintf('Invalid SQL hash(es): %s', implode(', ', $unmappedHashes))
-			);
-		}
+        if (!empty($unmappedHashes = array_diff($hashes, array_keys($commands)))) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid SQL hash(es): %s', implode(', ', $unmappedHashes))
+            );
+        }
 
         foreach (array_intersect($this->commandOrder, $hashes) as $hash) {
             $this->connection->query($commands[$hash]);
@@ -180,7 +180,7 @@ class Installer
             // make sure commands added via the hook are also appended to the command order
             foreach ($return as $commandSet) {
                 foreach ($commandSet as $hash => $sql) {
-					if (!\in_array($hash, $order, true)) {
+                    if (!\in_array($hash, $order, true)) {
                         $order[] = $hash;
                     }
                 }
