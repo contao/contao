@@ -112,35 +112,33 @@ class ContaoManagerExtensionTest extends ContaoTestCase
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
     }
 
-    public function testRegistersTheDefaultContaoManagerPath(): void
+    /**
+     * @dataProvider getManagerPaths
+     */
+    public function testRegistersTheContaoManagerPath(string $file, array $config): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 
         $fs = new Filesystem();
-        $fs->dumpFile($webDir.'/contao-manager.phar.php', '');
+        $fs->dumpFile($webDir.'/'.$file, '');
 
         $extension = new ContaoManagerExtension();
-        $extension->load([], $this->container);
+        $extension->load([$config], $this->container);
 
-        $this->assertFileExists($webDir.'/contao-manager.phar.php');
-        $this->assertSame('contao-manager.phar.php', $this->container->getParameter('contao_manager.manager_path'));
+        $this->assertFileExists($webDir.'/'.$file);
+        $this->assertSame($file, $this->container->getParameter('contao_manager.manager_path'));
 
-        $fs->remove($webDir.'/contao-manager.phar.php');
+        $fs->remove($webDir.'/'.$file);
     }
 
-    public function testRegistersACustomContaoManagerPath(): void
+    /**
+     * @return array<int,array<int,array<string,string>|string>>
+     */
+    public function getManagerPaths(): array
     {
-        $webDir = $this->container->getParameter('contao.web_dir');
-
-        $fs = new Filesystem();
-        $fs->dumpFile($webDir.'/custom.phar.php', '');
-
-        $extension = new ContaoManagerExtension();
-        $extension->load([['manager_path' => 'custom.phar.php']], $this->container);
-
-        $this->assertFileExists($webDir.'/custom.phar.php');
-        $this->assertSame('custom.phar.php', $this->container->getParameter('contao_manager.manager_path'));
-
-        $fs->remove($webDir.'/custom.phar.php');
+        return [
+            ['contao-manager.phar.php', []],
+            ['custom.phar.php', ['manager_path' => 'custom.phar.php']],
+        ];
     }
 }
