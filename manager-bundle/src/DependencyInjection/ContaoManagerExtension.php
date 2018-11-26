@@ -22,7 +22,7 @@ class ContaoManagerExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration($container->getParameter('contao.web_dir'));
     }
@@ -30,7 +30,7 @@ class ContaoManagerExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
             $container,
@@ -41,13 +41,10 @@ class ContaoManagerExtension extends ConfigurableExtension
         $loader->load('listener.yml');
         $loader->load('services.yml');
 
-        $this->configureManagerUrlParameter($mergedConfig, $container);
+        $this->addContaoManagerPath($mergedConfig, $container);
     }
 
-    /**
-     * Configure the manager url porameter by checking configuration or default paths.
-     */
-    protected function configureManagerUrlParameter(array $mergedConfig, ContainerBuilder $container): void
+    protected function addContaoManagerPath(array $mergedConfig, ContainerBuilder $container): void
     {
         $managerPath = null;
 
@@ -56,7 +53,7 @@ class ContaoManagerExtension extends ConfigurableExtension
         } else {
             $webDir = $container->getParameter('contao.web_dir');
 
-            if (is_file($webDir . '/contao-manager.phar.php')) {
+            if (is_file($webDir.'/contao-manager.phar.php')) {
                 $managerPath = 'contao-manager.phar.php';
             }
         }

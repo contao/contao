@@ -23,9 +23,6 @@ final class Configuration implements ConfigurationInterface
      */
     private $webDir;
 
-    /**
-     *  @param string $webDir
-     */
     public function __construct(string $webDir)
     {
         $this->webDir = $webDir;
@@ -37,28 +34,32 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode    = $treeBuilder->root('contao_manager');
 
-        $rootNode->children()
-            ->scalarNode('manager_path')
-                ->info('Path to the manager relative to the web dir.')
-                ->defaultValue(null)
-                ->validate()
-                    ->always(
-                        function (?string $path): ?string {
-                            if (null === $path || is_file($this->webDir . '/' . $path)) {
-                                return $path;
+        $rootNode = $treeBuilder->root('contao_manager');
+        $rootNode
+            ->children()
+                ->scalarNode('manager_path')
+                    ->defaultValue(null)
+                    ->validate()
+                        ->always(
+                            function (?string $path): ?string {
+                                if (null === $path || is_file($this->webDir.'/'.$path)) {
+                                    return $path;
+                                }
+
+                                throw new InvalidConfigurationException(
+                                    sprintf(
+                                        'contao_manager.manager_path is configured but file "%s" does not exist.',
+                                        $this->webDir.'/'.$path
+                                    )
+                                );
                             }
-
-                            throw new InvalidConfigurationException(
-                                sprintf(
-                                    'contao_manager.manager_path is configured but file "%s" does not exist.',
-                                    $this->webDir . '/' . $path
-                                )
-                            );
-                        }
-                    )
-            ->end();
+                        )
+                    ->end()
+                    ->info('Path to the manager relative to the web dir.')
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

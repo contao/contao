@@ -28,24 +28,18 @@ final class BackendMenuListener
      */
     private $managerPath;
 
-    /**
-     * BackendMenuListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param string|null           $managerPath
-     */
     public function __construct(TokenStorageInterface $tokenStorage, ?string $managerPath)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->managerPath  = $managerPath;
+        $this->managerPath = $managerPath;
     }
 
     /**
-     * Adds the contao manager to the backend navigation.
+     * Adds a link to the Contao Manager to the back end navigation.
      */
     public function onBuild(MenuEvent $event): void
     {
-        if ($this->managerPath === null || !$this->isAdminUser()) {
+        if (null === $this->managerPath || !$this->isAdminUser()) {
             return;
         }
 
@@ -63,9 +57,9 @@ final class BackendMenuListener
                 'label' => 'Contao Manager',
                 'attributes' => [
                     'title' => 'Contao Manager',
-                    'href' => '/' . $this->managerPath,
+                    'href' => '/'.$this->managerPath,
                     'target' => '_blank',
-                    'class' => 'navigation contao_manager'
+                    'class' => 'navigation contao_manager',
                 ],
             ]
         );

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -49,77 +50,103 @@ class BackendMenuListenerTest extends TestCase
      */
     private $backendUser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $this->factory      = $this->createMock(FactoryInterface::class);
-        $this->tree         = new MenuItem('root', $this->factory);
-
-        $this->factory->method('createItem')->willReturnCallback(
-            function (string $name) {
-                return new MenuItem($name, $this->factory);
-            }
-        );
+        $this->factory = $this->createMock(FactoryInterface::class);
+        $this->factory
+            ->method('createItem')
+            ->willReturnCallback(
+                function (string $name) {
+                    return new MenuItem($name, $this->factory);
+                }
+            )
+        ;
 
         $this->systemNode = $this->createPartialMock(MenuItem::class, ['addChild', 'getName']);
-        $this->systemNode->method('getName')->willReturn('system');
+        $this->systemNode
+            ->method('getName')
+            ->willReturn('system')
+        ;
 
         $this->backendUser = $this->createPartialMock(BackendUser::class, ['__get']);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->method('getUser')->willReturn($this->backendUser);
+        $token
+            ->method('getUser')
+            ->willReturn($this->backendUser)
+        ;
 
-        $this->tokenStorage->method('getToken')->willReturn($token);
+        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $this->tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
 
+        $this->tree = new MenuItem('root', $this->factory);
         $this->tree->addChild($this->factory->createItem('system'));
     }
 
     public function testContaoManagerBackendNavItemIsAddedForAdminUser(): void
     {
+        $event = new MenuEvent($this->factory, $this->tree);
         $listener = new BackendMenuListener($this->tokenStorage, 'contao-manager.phar.php');
-        $event    = new MenuEvent($this->factory, $this->tree);
 
-        $this->backendUser->method('__get')->with('isAdmin')->willReturn(true);
+        $this->backendUser
+            ->method('__get')
+            ->with('isAdmin')
+            ->willReturn(true)
+        ;
 
         $this->tree->addChild($this->systemNode);
 
         $this->systemNode
             ->expects($this->once())
-            ->method('addChild');
+            ->method('addChild')
+        ;
 
         $listener->onBuild($event);
     }
 
     public function testContaoManagerBackendNavItemIsNotAddedForNonAdminUser(): void
     {
+        $event = new MenuEvent($this->factory, $this->tree);
         $listener = new BackendMenuListener($this->tokenStorage, 'contao-manager.phar.php');
-        $event    = new MenuEvent($this->factory, $this->tree);
 
-        $this->backendUser->method('__get')->with('isAdmin')->willReturn(false);
+        $this->backendUser
+            ->method('__get')
+            ->with('isAdmin')
+            ->willReturn(false)
+        ;
 
         $this->tree->addChild($this->systemNode);
 
         $this->systemNode
             ->expects($this->never())
-            ->method('addChild');
+            ->method('addChild')
+        ;
 
         $listener->onBuild($event);
     }
 
     public function testContaoManagerBackendNavItemIsNotAddedForMissingConfig(): void
     {
+        $event = new MenuEvent($this->factory, $this->tree);
         $listener = new BackendMenuListener($this->tokenStorage, null);
-        $event    = new MenuEvent($this->factory, $this->tree);
 
-        $this->backendUser->method('__get')->with('isAdmin')->willReturn(true);
+        $this->backendUser
+            ->method('__get')
+            ->with('isAdmin')
+            ->willReturn(true)
+        ;
 
         $this->tree->addChild($this->systemNode);
 
         $this->systemNode
             ->expects($this->never())
-            ->method('addChild');
+            ->method('addChild')
+        ;
 
         $listener->onBuild($event);
     }
