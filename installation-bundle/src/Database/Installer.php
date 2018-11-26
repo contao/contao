@@ -72,6 +72,12 @@ class Installer
             $commands += $c;
         }, $this->commands);
 
+        if(!empty($unmappedHashes = array_diff($hashes, array_keys($commands)))) {
+			throw new \InvalidArgumentException(
+				sprintf('Invalid SQL hash(es): %s', implode(', ', $unmappedHashes))
+			);
+		}
+
         foreach (array_intersect($this->commandOrder, $hashes) as $hash) {
             $this->connection->query($commands[$hash]);
         }
