@@ -111,25 +111,27 @@ class Installer
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 
         foreach ($diff as $sql) {
-            $order[] = md5($sql);
-
             switch (true) {
                 case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP TABLE ', 11):
                     $return['DROP'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'CREATE INDEX ', 13):
                 case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
                 case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP INDEX', 10):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
+                    $order[] = md5($sql);
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
@@ -144,15 +146,18 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
+                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
+                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
+                                $order[] = md5($command);
                                 break;
 
                             default:
