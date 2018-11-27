@@ -172,12 +172,31 @@ class ModuleEventReader extends Events
 
 			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				$strKey = 'cal_' . $arrRange['unit'];
-				$recurring = sprintf($GLOBALS['TL_LANG']['MSC'][$strKey], $arrRange['value']);
+				if ($arrRange['value'] == 1)
+				{
+					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_'.$arrRange['unit']];
+				}
+				else
+				{
+					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_'.$arrRange['unit']], $arrRange['value']);
+				}
 
 				if ($objEvent->recurrences > 0)
 				{
-					$until = sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+				}
+
+				if ($objEvent->recurrences > 0 && $intEndTime <= time())
+				{
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
+				}
+				elseif ($strTime)
+				{
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), \Date::parse($objPage->dateFormat, $intStartTime).', '.$strTime);
+				}
+				else
+				{
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), \Date::parse($objPage->dateFormat, $intStartTime));
 				}
 			}
 		}
