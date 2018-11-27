@@ -1535,6 +1535,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 			}
 
+			// Invalidate cache tags (no need to invalidate the parent)
+			$this->invalidateCacheTags($this);
+
 			// Delete the records
 			foreach ($delete as $table=>$fields)
 			{
@@ -1543,9 +1546,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$this->Database->prepare("DELETE FROM " . $table . " WHERE id=?")
 								   ->limit(1)
 								   ->execute($v);
-
-					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($this->getCacheTags($table, array($v)));
 				}
 			}
 
@@ -1753,7 +1753,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
 				// Invalidate cache tags
-				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id']), $this->ptable, $this->activeRecord->pid));
+				$this->invalidateCacheTags($this);
 			}
 		}
 
@@ -2156,7 +2156,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags
-			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id), $this->ptable, $this->activeRecord->pid));
+			$this->invalidateCacheTags($this);
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -3309,7 +3309,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
 				// Invalidate cache tags (no need to invalidate the parent)
-				$this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
+				// TODO: should load a $dc here for all ids, what's the best idea here?
+				// $this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
 
 				if ($objStmt->affectedRows > 0)
 				{

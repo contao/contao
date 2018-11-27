@@ -1181,21 +1181,20 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Invalidates a list of cache tags.
+	 * Invalidates the cache tags associated with a given DC
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
 	 *
-	 * @param array $tags
+	 * @param DataContainer $dc
 	 */
-	protected function invalidateCacheTags(array $tags)
+	protected function invalidateCacheTags(DataContainer $dc)
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{
 			return;
 		}
 
-		// Filter empty tags
-		$tags = array_filter(array_unique($tags));
+		$tags = $this->getCacheTags($dc);
 
 		/** @var CacheManager $cacheManager */
 		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
@@ -1206,47 +1205,35 @@ abstract class DataContainer extends Backend
 	 * Return an array of cache tags, optionally including the parent table
 	 * (which is useful when creating new elements or editing a certain element)
 	 *
-	 * @param string $table
-	 * @param array  $ids
-	 * @param string $parentTable
-	 * @param int    $parentId
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	protected function getCacheTags($table, array $ids = array(), $parentTable = '', $parentId = 0)
+	protected function getCacheTags(DataContainer $dc)
 	{
 		$ns = 'contao.db.';
-		$tags = array($ns . $table);
+		$tags = array($ns . $dc->table, $ns . $dc->table . '.' . $dc->id);
 
-		foreach ($ids as $id)
+		if ($dc->ptable && $dc->activeRecord && $dc->activeRecord->pid > 0)
 		{
-			$tags[] = $ns . $table . '.' . $id;
-		}
-
-		if ($parentTable && $parentId > 0)
-		{
-			$tags[] = $ns . $parentTable;
-			$tags[] = $ns . $parentTable . '.' . $parentId;
+			$tags[] = $ns . $dc->ptable;
+			$tags[] = $ns . $dc->ptable . '.' . $dc->activeRecord->pid;
 		}
 
 		// Trigger the oncachetags_callback
-		if (\is_array($GLOBALS['TL_DCA'][$table]['config']['oncachetags_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA'][$table]['config']['oncachetags_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
+		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oncachetags_callback'])) {
+			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oncachetags_callback'] as $callback) {
+				if (\is_array($callback)) {
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($ids, $tags);
-				}
-				elseif (\is_callable($callback))
-				{
-					$callback($ids, $tags);
+					$tags = $this->{$callback[0]}->{$callback[1]}($dc, $tags);
+				} elseif (\is_callable($callback)) {
+					$tags = $callback($dc, $tags);
 				}
 			}
 		}
 
-		return array_unique($tags);
+		// Make sure tags are unique and empty ones are removed
+		return array_filter(array_unique($tags));
 	}
 
 	/**
