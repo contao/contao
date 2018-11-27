@@ -57,10 +57,6 @@ class Installer
         return $this->commands;
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     * @throws \Doctrine\DBAL\DBALException
-     */
     public function execCommands(array $hashes): void
     {
         if (null === $this->commands) {
@@ -68,11 +64,10 @@ class Installer
         }
 
         $commands = array_reduce($this->commands, 'array_merge', []);
+        $unmappedHashes = array_diff($hashes, array_keys($commands));
 
-        if (!empty($unmappedHashes = array_diff($hashes, array_keys($commands)))) {
-            throw new \InvalidArgumentException(
-                sprintf('Invalid SQL hash(es): %s', implode(', ', $unmappedHashes))
-            );
+        if (!empty($unmappedHashes)) {
+            throw new \InvalidArgumentException(sprintf('Invalid SQL hashes: %s', implode(', ', $unmappedHashes)));
         }
 
         foreach (array_intersect($this->commandOrder, $hashes) as $hash) {
@@ -93,8 +88,8 @@ class Installer
             'DROP' => [],
             'ALTER_DROP' => [],
         ];
-        $order = [];
 
+        $order = [];
         $config = $this->connection->getConfiguration();
 
         // Overwrite the schema filter (see #78)
@@ -182,7 +177,7 @@ class Installer
                 $return = \System::importStatic($callback[0])->{$callback[1]}($return);
             }
 
-            // make sure commands added via the hook are also appended to the command order
+            // Make sure commands added via the hook are also appended to the command order
             foreach ($return as $commandSet) {
                 foreach ($commandSet as $hash => $sql) {
                     if (!\in_array($hash, $order, true)) {
