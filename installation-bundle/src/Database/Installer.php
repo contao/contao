@@ -167,7 +167,7 @@ class Installer
             }
         }
 
-        $this->checkEngineAndCollation($return, $fromSchema, $toSchema);
+        $this->checkEngineAndCollation($return, $order, $fromSchema, $toSchema);
 
         $return = array_filter($return);
 
@@ -188,13 +188,13 @@ class Installer
         }
 
         $this->commands = $return;
-        $this->commandOrder = $order;
+        $this->commandOrder = array_unique($order);
     }
 
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
      */
-    private function checkEngineAndCollation(array &$sql, Schema $fromSchema, Schema $toSchema): void
+    private function checkEngineAndCollation(array &$sql, array &$order, Schema $fromSchema, Schema $toSchema): void
     {
         $tables = $toSchema->getTables();
         $dynamic = $this->hasDynamicRowFormat();
@@ -275,11 +275,13 @@ class Installer
                     }
 
                     $sql['ALTER_TABLE'][$strKey] = $indexCommand;
+                    $order[] = $strKey;
                 }
             }
 
             foreach ($alterTables as $k => $alterTable) {
                 $sql['ALTER_TABLE'][$k] = $alterTable;
+                $order[] = $k;
             }
         }
     }
