@@ -29,8 +29,13 @@ body {
 }
 .tl_label {
 	margin-right:12px;
-	font-weight:bold;
+	font-weight:600;
 	white-space:nowrap;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.tl_label {
+		font-weight:500;
+	}
 }
 .meta p {
 	margin:.5em 0 0;

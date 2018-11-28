@@ -21,7 +21,12 @@ body {
 	padding:12px 12px 12px 42px;
 	background:#f47c00 url("icons/logo.svg") no-repeat 9px center;
 	color:#fff;
-	font-weight:normal;
+	font-weight:400;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	#header h1 {
+		font-weight:300;
+	}
 }
 
 /* Main */
@@ -44,14 +49,19 @@ body {
 	padding:12px 0 3px;
 	font-size:.875rem;
 }
+#container .nolegend h3 {
+	padding-top:0;
+}
 #container h4 {
 	margin:12px 0 0;
 	padding:0;
 	font-size:.875rem;
-	font-weight:normal;
+	font-weight:400;
 }
-#container .nolegend h3 {
-	padding-top:0;
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	#container h4 {
+		font-weight:300;
+	}
 }
 
 /* Paragraphs */

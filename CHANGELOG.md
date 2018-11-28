@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Use a native font stack instead of a web font in the back end (see #98).
  * Improve the text for repeated events (see #175).
  * Allow to overwrite the page title and description in news and events (see #161).
  * Show all root languages by default in the meta editor (see contao/core#6254).

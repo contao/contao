@@ -44,20 +44,27 @@ button {
 
 /* Font */
 body {
-	font:.875rem/1 Lato,sans-serif;
+	font:400 .875rem/1 -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	color:#444;
+}
+h1,h2,h3,h4,h5,h6,strong,b,th {
 	color:#222;
+	font-weight:600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	body {
-		font-family:"Lato Retina",Lato,sans-serif;
+		color:#222;
+		font-weight:300;
+	}
+	h1,h2,h3,h4,h5,h6,strong,b,th {
+		font-weight:500;
 	}
 }
 pre,code,.tl_textarea.monospace {
-	font:300 .75rem/1.25 "Roboto Mono",monospace;
+	font:300 .75rem/1.25 SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
 }
 h1,h2,h3,h4,h5,h6 {
 	font-size:1rem;
-	font-weight:bold;
 }
 input,textarea,select,button {
 	font:inherit;
@@ -66,9 +73,6 @@ input,textarea,select,button {
 }
 input {
 	line-height:normal; /* see #501 */
-}
-strong,b,th {
-	font-weight:bold;
 }
 .tl_gray {
 	color:#999;
@@ -91,8 +95,13 @@ span.mandatory {
 
 /* Basic elements */
 a {
-	color:#222;
+	color:#444;
 	text-decoration:none;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	a {
+		color:#222;
+	}
 }
 a:hover,a:active {
 	color:#006494;
@@ -198,7 +207,12 @@ fieldset.tl_radio_container {
 	line-height:16px;
 }
 fieldset.tl_checkbox_container legend,fieldset.tl_radio_container legend {
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	fieldset.tl_checkbox_container legend,fieldset.tl_radio_container legend {
+		font-weight:500;
+	}
 }
 fieldset.checkbox_container,fieldset.radio_container {
 	border:0;
@@ -325,16 +339,26 @@ select[multiple] {
 }
 .tl_checkbox_single_container label {
 	margin-left:4px;
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.tl_checkbox_single_container label {
+		font-weight:500;
+	}
 }
 
 /* Grouped checkboxes */
 .checkbox_toggler {
-	font-weight:bold;
+	font-weight:600;
 }
 .checkbox_toggler_first {
 	margin-top:3px;
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.checkbox_toggler,.checkbox_toggler_first {
+		font-weight:500;
+	}
 }
 .checkbox_toggler img,.checkbox_toggler_first img {
 	position:relative;

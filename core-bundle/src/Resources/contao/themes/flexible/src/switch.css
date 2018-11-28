@@ -41,9 +41,14 @@ html,body {
 h1 {
 	padding:3px 0;
 	font-size:.875rem;
-	font-weight:normal;
+	font-weight:400;
 	overflow:hidden;
 	text-overflow:ellipsis;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	h1 {
+		font-weight:300;
+	}
 }
 .title {
 	flex:5 0 0;
@@ -63,9 +68,14 @@ h1 {
 .close {
 	font-size:1rem;
 	color:#999;
-	font-weight:bold;
+	font-weight:600;
 	padding:0 3px;
 	vertical-align:middle;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.close {
+		font-weight:500;
+	}
 }
 .close:hover {
 	color:#666;
