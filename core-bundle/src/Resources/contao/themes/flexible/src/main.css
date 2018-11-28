@@ -1608,7 +1608,12 @@ ul.sortable button[disabled]:hover {
 .ace_editor,.ace_editor * {
 	font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace  !important;
 	font-size:.75rem !important;
-	color:inherit;
+	color:#444;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.ace_editor,.ace_editor * {
+		color:#222;
+	}
 }
 .ace-fullsize {
 	overflow:hidden !important;
