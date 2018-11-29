@@ -15,14 +15,14 @@ namespace Contao\ManagerBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoManagerExtension extends ConfigurableExtension
+class ContaoManagerExtension extends Extension
 {
     /**
      * {@inheritdoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
             $container,
@@ -32,7 +32,5 @@ class ContaoManagerExtension extends ConfigurableExtension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
-
-        $container->setParameter('contao_manager.path', $mergedConfig['path']);
     }
 }

@@ -17,11 +17,10 @@ use Contao\ManagerBundle\DependencyInjection\ContaoManagerExtension;
 use Contao\ManagerBundle\EventListener\InitializeApplicationListener;
 use Contao\ManagerBundle\EventListener\InstallCommandListener;
 use Contao\ManagerBundle\Routing\RouteLoader;
-use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\Filesystem;
 
-class ContaoManagerExtensionTest extends ContaoTestCase
+class ContaoManagerExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder
@@ -36,7 +35,6 @@ class ContaoManagerExtensionTest extends ContaoTestCase
         parent::setUp();
 
         $this->container = new ContainerBuilder();
-        $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');
 
         $extension = new ContaoManagerExtension();
         $extension->load([], $this->container);
@@ -110,35 +108,5 @@ class ContaoManagerExtensionTest extends ContaoTestCase
         $this->assertSame('contao_manager.plugin_loader', (string) $definition->getArgument(1));
         $this->assertSame('kernel', (string) $definition->getArgument(2));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
-    }
-
-    /**
-     * @dataProvider getManagerPaths
-     */
-    public function testRegistersTheContaoManagerPath(string $file, array $config): void
-    {
-        $webDir = $this->container->getParameter('contao.web_dir');
-
-        $fs = new Filesystem();
-        $fs->dumpFile($webDir.'/'.$file, '');
-
-        $extension = new ContaoManagerExtension();
-        $extension->load([$config], $this->container);
-
-        $this->assertFileExists($webDir.'/'.$file);
-        $this->assertSame($file, $this->container->getParameter('contao_manager.path'));
-
-        $fs->remove($webDir.'/'.$file);
-    }
-
-    /**
-     * @return array<int,array<int,array<string,string>|string>>
-     */
-    public function getManagerPaths(): array
-    {
-        return [
-            ['contao-manager.phar.php', []],
-            ['custom.phar.php', ['path' => 'custom.phar.php']],
-        ];
     }
 }
