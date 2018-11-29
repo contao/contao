@@ -294,16 +294,19 @@ class DC_Table extends DataContainer implements \listable, \editable
 		/** @var SessionInterface $objSession */
 		$objSession = \System::getContainer()->get('session');
 
+		$undoPeriod = (int) \Config::get('undoPeriod');
+		$logPeriod = (int) \Config::get('logPeriod');
+
 		// Clean up old tl_undo and tl_log entries
-		if ($this->strTable == 'tl_undo' && \strlen(\Config::get('undoPeriod')))
+		if ($this->strTable == 'tl_undo' && $undoPeriod > 0)
 		{
 			$this->Database->prepare("DELETE FROM tl_undo WHERE tstamp<?")
-						   ->execute((time() - (int) \Config::get('undoPeriod')));
+						   ->execute(time() - $undoPeriod);
 		}
-		elseif ($this->strTable == 'tl_log' && \strlen(\Config::get('logPeriod')))
+		elseif ($this->strTable == 'tl_log' && $logPeriod > 0)
 		{
 			$this->Database->prepare("DELETE FROM tl_log WHERE tstamp<?")
-						   ->execute((time() - (int) \Config::get('logPeriod')));
+						   ->execute(time() - $logPeriod);
 		}
 
 		$this->reviseTable();

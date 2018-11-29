@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -222,30 +222,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			(
 				array('tl_settings', 'clearSearchIndex')
 			)
-		),
-		'undoPeriod' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['undoPeriod'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
-		),
-		'versionPeriod' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['versionPeriod'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
-		),
-		'logPeriod' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['logPeriod'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
-		),
-		'sessionTimeout' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['sessionTimeout'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
 		'defaultUser' => array(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['defaultUser'],
