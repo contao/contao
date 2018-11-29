@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Asset;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use Symfony\Component\Asset\Context\ContextInterface;
@@ -111,19 +110,14 @@ class ContaoContext implements ContextInterface
     }
 
     /**
-     * Returns a field value from the page model or the global configuration.
+     * Returns a field value from the page model.
      */
     private function getFieldValue(?PageModel $page): string
     {
-        if (null !== $page) {
-            return (string) $page->{$this->field};
+        if (null === $page) {
+            return '';
         }
 
-        $this->framework->initialize();
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        return (string) $config->get($this->field);
+        return (string) $page->{$this->field};
     }
 }

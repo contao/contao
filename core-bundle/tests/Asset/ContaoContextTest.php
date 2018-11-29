@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Asset;
 
-use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
@@ -79,34 +78,6 @@ class ContaoContextTest extends TestCase
     }
 
     /**
-     * @dataProvider getBasePaths
-     */
-    public function testReadsTheBasePathFromTheGlobalConfigurationIfThePageDoesNotDefineIt(string $domain, bool $useSSL, string $basePath, string $expected): void
-    {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->once())
-            ->method('getBasePath')
-            ->willReturn($basePath)
-        ;
-
-        $request
-            ->expects($this->once())
-            ->method('isSecure')
-            ->willReturn($useSSL)
-        ;
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $config = $this->mockConfiguredAdapter(['get' => $domain]);
-        $framework = $this->mockContaoFramework([Config::class => $config]);
-        $context = $this->mockContaoContext('staticPlugins', $requestStack, $framework);
-
-        $this->assertSame($expected, $context->getBasePath());
-    }
-
-    /**
      * @return (string|bool)[][]
      */
     public function getBasePaths(): array
@@ -129,18 +100,16 @@ class ContaoContextTest extends TestCase
             ->willReturn('/foo')
         ;
 
-        $request
-            ->expects($this->once())
-            ->method('isSecure')
-            ->willReturn(true)
-        ;
-
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $config = $this->mockConfiguredAdapter(['get' => 'example.com']);
-        $framework = $this->mockContaoFramework([Config::class => $config]);
-        $context = $this->mockContaoContext('staticPlugins', $requestStack, $framework);
+        $page = $this->mockPageWithDetails();
+        $page->rootUseSSL = true;
+        $page->staticPlugins = 'example.com';
+
+        $GLOBALS['objPage'] = $page;
+
+        $context = $this->mockContaoContext('staticPlugins', $requestStack);
 
         $this->assertSame('https://example.com/foo/', $context->getStaticUrl());
     }
