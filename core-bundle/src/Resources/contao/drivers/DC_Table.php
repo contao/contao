@@ -3466,7 +3466,19 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		$label = $GLOBALS['TL_DCA'][$table]['config']['label'];
+		if (isset($GLOBALS['TL_DCA'][$table]['config']['label']))
+		{
+			$label = $GLOBALS['TL_DCA'][$table]['config']['label'];
+		}
+		elseif (($do = \Input::get('do')) && isset($GLOBALS['TL_LANG']['MOD'][$do]))
+		{
+			$label = $GLOBALS['TL_LANG']['MOD'][$do][0];
+		}
+		else
+		{
+			$label = $GLOBALS['TL_LANG']['MOD']['page'][0];
+		}
+
 		$icon = $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] ?: 'pagemounts.svg';
 		$label = \Image::getHtml($icon).' <label>'.$label.'</label>';
 

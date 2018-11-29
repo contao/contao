@@ -1271,9 +1271,6 @@
       <trans-unit id="MSC.justify">
         <source>justified</source>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
       </trans-unit>
