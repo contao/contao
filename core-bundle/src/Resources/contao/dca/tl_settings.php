@@ -21,18 +21,12 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
 	'fields' => array
 	(
-		'websiteTitle' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['websiteTitle'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50')
-		),
 		'dateFormat' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['dateFormat'],

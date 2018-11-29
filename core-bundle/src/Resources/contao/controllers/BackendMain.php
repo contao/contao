@@ -201,7 +201,6 @@ class BackendMain extends Backend
 		// Add the versions overview
 		\Versions::addToTemplate($objTemplate);
 
-		$objTemplate->welcome = sprintf($GLOBALS['TL_LANG']['MSC']['welcomeTo'], \Config::get('websiteTitle'));
 		$objTemplate->showDifferences = \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
 		$objTemplate->recordOfTable = \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
@@ -222,7 +221,7 @@ class BackendMain extends Backend
 		// Default headline
 		if ($this->Template->headline == '')
 		{
-			$this->Template->headline = \Config::get('websiteTitle');
+			$this->Template->headline = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 
 		// Default title
@@ -239,12 +238,6 @@ class BackendMain extends Backend
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
-		}
-
-		// Website title
-		if (\Config::get('websiteTitle') != 'Contao Open Source CMS')
-		{
-			$this->Template->websiteTitle = \Config::get('websiteTitle');
 		}
 
 		$this->Template->theme = \Backend::getTheme();

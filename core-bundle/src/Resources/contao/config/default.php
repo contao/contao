@@ -9,7 +9,6 @@
  */
 
 // General settings
-$GLOBALS['TL_CONFIG']['websiteTitle']   = 'Contao Open Source CMS';
 $GLOBALS['TL_CONFIG']['characterSet']   = 'utf-8';
 $GLOBALS['TL_CONFIG']['adminEmail']     = '';
 $GLOBALS['TL_CONFIG']['enableSearch']   = true;

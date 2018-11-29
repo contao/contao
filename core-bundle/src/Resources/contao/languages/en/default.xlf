@@ -1091,9 +1091,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
       </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-      </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
       </trans-unit>
@@ -1316,8 +1313,8 @@
       <trans-unit id="MSC.backendModules">
         <source>Back end modules</source>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>

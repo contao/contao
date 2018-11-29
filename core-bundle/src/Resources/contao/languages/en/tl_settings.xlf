@@ -2,12 +2,6 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en">
     <body>
-      <trans-unit id="tl_settings.websiteTitle.0">
-        <source>Website title</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.websiteTitle.1">
-        <source>Please enter the title of the website.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
       </trans-unit>
@@ -181,9 +175,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.1">
         <source>Please assign the default access rights for pages and articles.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.title_legend">
-        <source>Website title</source>
       </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>

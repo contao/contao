@@ -139,7 +139,7 @@ class Updater extends Controller
 
 		// Create a theme from the present resources
 		$this->Database->prepare("INSERT INTO tl_theme SET tstamp=?, name=?")
-					   ->execute(time(), \Config::get('websiteTitle'));
+					   ->execute(time(), 'Default');
 
 		// Adjust the back end user permissions
 		$this->Database->query("ALTER TABLE `tl_user` ADD `themes` blob NULL");
