@@ -131,6 +131,11 @@ var Theme = {
 			if (Browser.ie6 || Browser.ie7 || Browser.ie8) return;
 			if (el.hasClass('noresize') || el.retrieve('autogrow')) return;
 
+			// If there are multiple lines, set the line-height to 1.25
+			if (el.get('value').indexOf("\n") != -1 && el.getStyle('line-height').indexOf('px') != -1) {
+				el.setStyle('line-height', (el.getStyle('line-height').replace('px', '') * 1.25) + 'px');
+			}
+
 			// Set up the dummy element
 			var dummy = new Element('div', {
 				html: 'X',
