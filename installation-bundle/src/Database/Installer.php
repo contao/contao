@@ -30,11 +30,6 @@ class Installer
     private $commands;
 
     /**
-     * @var array
-     */
-    private $commandOrder;
-
-    /**
      * @var DcaSchemaProvider
      */
     private $schemaProvider;
@@ -57,22 +52,24 @@ class Installer
         return $this->commands;
     }
 
-    public function execCommands(array $hashes): void
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public function execCommand(string $hash): void
     {
         if (null === $this->commands) {
             $this->compileCommands();
         }
 
-        $commands = array_reduce($this->commands, 'array_merge', []);
-        $unmappedHashes = array_diff($hashes, array_keys($commands));
+        foreach ($this->commands as $commands) {
+            if (isset($commands[$hash])) {
+                $this->connection->query($commands[$hash]);
 
-        if (!empty($unmappedHashes)) {
-            throw new \InvalidArgumentException(sprintf('Invalid SQL hashes: %s', implode(', ', $unmappedHashes)));
+                return;
+            }
         }
 
-        foreach (array_intersect($this->commandOrder, $hashes) as $hash) {
-            $this->connection->query($commands[$hash]);
-        }
+        throw new \InvalidArgumentException(sprintf('Invalid hash: %s', $hash));
     }
 
     /**
@@ -89,7 +86,6 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
-        $order = [];
         $config = $this->connection->getConfiguration();
 
         // Overwrite the schema filter (see #78)
@@ -109,24 +105,20 @@ class Installer
             switch (true) {
                 case 0 === strncmp($sql, 'CREATE TABLE ', 13):
                     $return['CREATE'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP TABLE ', 11):
                     $return['DROP'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'CREATE INDEX ', 13):
                 case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
                 case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
                     break;
 
                 case 0 === strncmp($sql, 'DROP INDEX', 10):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
@@ -141,18 +133,15 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
-                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
-                                $order[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
-                                $order[] = md5($command);
                                 break;
 
                             default:
@@ -176,19 +165,9 @@ class Installer
             foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
                 $return = \System::importStatic($callback[0])->{$callback[1]}($return);
             }
-
-            // Make sure commands added via the hook are also appended to the command order
-            foreach ($return as $commandSet) {
-                foreach ($commandSet as $hash => $sql) {
-                    if (!\in_array($hash, $order, true)) {
-                        $order[] = $hash;
-                    }
-                }
-            }
         }
 
         $this->commands = $return;
-        $this->commandOrder = $order;
     }
 
     /**
