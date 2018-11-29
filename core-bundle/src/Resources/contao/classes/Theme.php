@@ -1189,13 +1189,10 @@ class Theme extends Backend
 			return;
 		}
 
-		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
-		$arrAllowed[] = 'sql'; // see #7048
-
-		// Add all template files to the archive
+		// Add all template files to the archive (see #7048)
 		foreach (scan($this->strRootDir .'/'. $strFolder) as $strFile)
 		{
-			if (preg_match('/\.(' . implode('|', $arrAllowed) . ')$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
+			if (preg_match('/\.(html5|sql)$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
 			{
 				$objArchive->addFile($strFolder .'/'. $strFile);
 			}

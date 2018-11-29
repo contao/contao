@@ -47,23 +47,13 @@ abstract class Controller extends System
 	 * Find a particular template file and return its path
 	 *
 	 * @param string $strTemplate The name of the template
-	 * @param string $strFormat   The file extension
 	 *
 	 * @return string The path to the template file
 	 *
-	 * @throws \InvalidArgumentException If $strFormat is unknown
-	 * @throws \RuntimeException         If the template group folder is insecure
+	 * @throws \RuntimeException If the template group folder is insecure
 	 */
-	public static function getTemplate($strTemplate, $strFormat='html5')
+	public static function getTemplate($strTemplate)
 	{
-		$arrAllowed = \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')));
-		$arrAllowed[] = 'html5'; // see #3398
-
-		if (!\in_array($strFormat, $arrAllowed))
-		{
-			throw new \InvalidArgumentException('Invalid output format ' . $strFormat);
-		}
-
 		$strTemplate = basename($strTemplate);
 
 		// Check for a theme folder
@@ -79,11 +69,11 @@ abstract class Controller extends System
 					throw new \RuntimeException('Invalid path ' . $objPage->templateGroup);
 				}
 
-				return \TemplateLoader::getPath($strTemplate, $strFormat, $objPage->templateGroup);
+				return \TemplateLoader::getPath($strTemplate, 'html5', $objPage->templateGroup);
 			}
 		}
 
-		return \TemplateLoader::getPath($strTemplate, $strFormat);
+		return \TemplateLoader::getPath($strTemplate, 'html5');
 	}
 
 	/**
@@ -104,8 +94,7 @@ abstract class Controller extends System
 		}
 
 		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
-		$strBrace = '{' . implode(',', \StringUtil::trimsplit(',', strtolower(\Config::get('templateFiles')))) . '}';
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strPrefix . '*.' . $strBrace);
+		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strPrefix . '*.html5');
 
 		// Add the customized templates
 		if (\is_array($arrCustomized))
@@ -137,7 +126,7 @@ abstract class Controller extends System
 				{
 					if ($objTheme->templates != '')
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strPrefix . '*.' . $strBrace);
+						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strPrefix . '*.html5');
 
 						if (\is_array($arrThemeTemplates))
 						{

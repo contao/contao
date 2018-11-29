@@ -128,12 +128,6 @@
       <trans-unit id="tl_settings.editableFiles.1">
         <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.0">
-        <source>Template file types</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.1">
-        <source>Here you can enter a comma separated list of supported template file types.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
       </trans-unit>

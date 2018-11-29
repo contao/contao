@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,templateFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -177,16 +177,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50')
 		),
-		'templateFiles' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['templateFiles'],
-			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_settings', 'checkTemplateFiles')
-			)
-		),
 		'gdMaxImgWidth' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['gdMaxImgWidth'],
@@ -304,23 +294,6 @@ class tl_settings extends Backend
 		if (!$varValue)
 		{
 			$this->Database->execute("DELETE FROM tl_search WHERE protected=1");
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Make sure that "html5" is in the list of valid template files, so the back end works correctly (see #3398)
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function checkTemplateFiles($varValue)
-	{
-		if (strpos($varValue, 'html5') === false)
-		{
-			$varValue .= (($varValue != '') ? ',' : '') . 'html5';
 		}
 
 		return $varValue;

@@ -14,7 +14,7 @@ System::loadLanguageFile('tl_files');
 if (Input::get('do') == 'tpl_editor')
 {
 	Config::set('uploadPath', 'templates');
-	Config::set('editableFiles', Config::get('templateFiles'));
+	Config::set('editableFiles', 'html5');
 }
 
 $GLOBALS['TL_DCA']['tl_templates'] = array
@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	'config' => array
 	(
 		'dataContainer'               => 'Folder',
-		'validFileTypes'              => Config::get('templateFiles'),
+		'validFileTypes'              => 'html5',
 		'closed'                      => true,
 		'onload_callback' => array
 		(
@@ -230,10 +230,9 @@ class tl_templates extends Backend
 	public function addNewTemplate()
 	{
 		$arrAllTemplates = array();
-		$arrAllowed = StringUtil::trimsplit(',', strtolower(Config::get('templateFiles')));
 
 		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.(' . implode('|', $arrAllowed) . ')$/');
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 
 		foreach ($files as $file)
 		{
