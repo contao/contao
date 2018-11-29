@@ -26,6 +26,7 @@ window.ace && window.addEvent('domready', function() {
   editor.setTheme("ace/theme/clouds");
   editor.renderer.setScrollMargin(3, 3, 0, 0);
   editor.renderer.scrollBy(0, -6);
+  editor.container.style.lineHeight = 1.45;
   editor.getSession().setValue(ta.value);
   editor.getSession().setMode("ace/mode/<?= Backend::getAceType($this->type) ?>");
   editor.getSession().setUseSoftTabs(false);

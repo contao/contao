@@ -261,8 +261,8 @@ fieldset.checkbox_container,fieldset.radio_container {
 	cursor:not-allowed;
 }
 .tl_textarea {
-	padding-top:7px;
-	padding-bottom:5px;
+	padding:4px 6px;
+	line-height:1.45;
 }
 .tl_text_2,.tl_text_3,.tl_text_4,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
 	margin-right:1%;
@@ -501,7 +501,7 @@ a.tl_submit {
 
 /* Tips */
 .tl_tip {
-	height:14px;
+	height:15px;
 	overflow:hidden;
 	cursor:help;
 }
