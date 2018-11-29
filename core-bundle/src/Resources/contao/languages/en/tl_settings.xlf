@@ -56,12 +56,6 @@
       <trans-unit id="tl_settings.minifyMarkup.1">
         <source>Minify the HTML markup before it is sent to the browser.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.0">
-        <source>Compress scripts</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.1">
-        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
       </trans-unit>

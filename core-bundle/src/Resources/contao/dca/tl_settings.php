@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,templateFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,templateFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -83,12 +83,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'minifyMarkup' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['minifyMarkup'],
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
-		),
-		'gzipScripts' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['gzipScripts'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
 		),

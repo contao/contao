@@ -363,12 +363,6 @@ class Combiner extends System
 		unset($content);
 		$objFile->close();
 
-		// Create a gzipped version
-		if (\Config::get('gzipScripts') && \function_exists('gzencode'))
-		{
-			\File::putContent('assets/' . $strTarget . '/' . $strKey . $this->strMode . '.gz', gzencode(file_get_contents($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode), 9));
-		}
-
 		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 	}
 
