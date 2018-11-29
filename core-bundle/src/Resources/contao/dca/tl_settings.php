@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -141,12 +141,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['folderUrl'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
-		),
-		'sslProxyDomain' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['sslProxyDomain'],
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'tl_class'=>'w50')
 		),
 		'disableRefererCheck' => array
 		(
