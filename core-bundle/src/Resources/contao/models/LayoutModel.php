@@ -32,7 +32,7 @@ namespace Contao;
  * @property boolean $combineScripts
  * @property string  $modules
  * @property string  $template
- * @property string  $doctype
+ * @property string  $minifyMarkup
  * @property string  $webfonts
  * @property boolean $picturefill
  * @property string  $viewport
@@ -77,7 +77,7 @@ namespace Contao;
  * @method static LayoutModel|null findOneByCombineScripts($val, array $opt=array())
  * @method static LayoutModel|null findOneByModules($val, array $opt=array())
  * @method static LayoutModel|null findOneByTemplate($val, array $opt=array())
- * @method static LayoutModel|null findOneByDoctype($val, array $opt=array())
+ * @method static LayoutModel|null findOneByMinifyMarkup($val, array $opt=array())
  * @method static LayoutModel|null findOneByWebfonts($val, array $opt=array())
  * @method static LayoutModel|null findOneByPicturefill($val, array $opt=array())
  * @method static LayoutModel|null findOneByViewport($val, array $opt=array())
@@ -118,7 +118,7 @@ namespace Contao;
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByCombineScripts($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByModules($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByDoctype($val, array $opt=array())
+ * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByMinifyMarkup($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWebfonts($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByPicturefill($val, array $opt=array())
  * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByViewport($val, array $opt=array())
@@ -163,7 +163,7 @@ namespace Contao;
  * @method static integer countByCombineScripts($val, array $opt=array())
  * @method static integer countByModules($val, array $opt=array())
  * @method static integer countByTemplate($val, array $opt=array())
- * @method static integer countByDoctype($val, array $opt=array())
+ * @method static integer countByMinifyMarkup($val, array $opt=array())
  * @method static integer countByWebfonts($val, array $opt=array())
  * @method static integer countByPicturefill($val, array $opt=array())
  * @method static integer countByViewport($val, array $opt=array())

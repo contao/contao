@@ -204,18 +204,6 @@ abstract class Widget extends Controller
 	{
 		parent::__construct();
 
-		// Override the output format in the front end
-		if (TL_MODE == 'FE')
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			if ($objPage->outputFormat != '')
-			{
-				$this->strFormat = $objPage->outputFormat;
-			}
-		}
-
 		$this->addAttributes($arrAttributes);
 	}
 

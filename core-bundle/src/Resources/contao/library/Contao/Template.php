@@ -360,9 +360,6 @@ abstract class Template extends Controller
 		{
 			$this->strBuffer = $this->parse();
 		}
-
-		// Minify the markup
-		$this->strBuffer = $this->minifyHtml($this->strBuffer);
 	}
 
 	/**
@@ -384,8 +381,7 @@ abstract class Template extends Controller
 	 */
 	public function minifyHtml($strHtml)
 	{
-		// The feature has been disabled
-		if (!\Config::get('minifyMarkup') || \Config::get('debugMode'))
+		if (\Config::get('debugMode'))
 		{
 			return $strHtml;
 		}

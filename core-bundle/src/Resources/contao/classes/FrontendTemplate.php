@@ -42,15 +42,6 @@ class FrontendTemplate extends Template
 	 */
 	public function parse()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		// Adjust the output format
-		if ($objPage->outputFormat != '')
-		{
-			$this->strFormat = $objPage->outputFormat;
-		}
-
 		$strBuffer = parent::parse();
 
 		// HOOK: add custom parse filters
@@ -92,7 +83,7 @@ class FrontendTemplate extends Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		/** @var $objPage \PageModel */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Vary on the page layout
@@ -152,6 +143,15 @@ class FrontendTemplate extends Template
 		if ($this->blnCheckRequest && \Input::hasUnusedGet())
 		{
 			throw new \UnusedArgumentsException();
+		}
+
+		/** @var PageModel $objPage */
+		global $objPage;
+
+		// Minify the markup
+		if ($objPage->minifyMarkup)
+		{
+			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
 
 		parent::compile();
@@ -319,16 +319,10 @@ class FrontendTemplate extends Template
 
 		$tag = 'div';
 
+		// Use the section tag for the main column
 		if ($strKey == 'main')
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			// Use the section tag in HTML5
-			if ($objPage->outputFormat == 'html5')
-			{
-				$tag = 'section';
-			}
+			$tag = 'section';
 		}
 
 		$sections = '';

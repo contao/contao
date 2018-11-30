@@ -88,8 +88,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean $rootUseSSL
  * @property string  $rootFallbackLanguage
  * @property array   $subpages
- * @property string  $outputFormat
- * @property string  $outputVariant
+ * @property boolean $minifyMarkup
  * @property integer $layoutId
  * @property boolean $hasJQuery
  * @property boolean $hasMooTools

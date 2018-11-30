@@ -194,11 +194,11 @@
       <trans-unit id="tl_layout.template.1">
         <source>Here you can select the page template.</source>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>

@@ -99,10 +99,8 @@ class PageRegular extends Frontend
 		$objPage->template = $objLayout->template ?: 'fe_page';
 		$objPage->templateGroup = $objTheme->templates;
 
-		// Store the output format
-		list($strFormat, $strVariant) = explode('_', $objLayout->doctype);
-		$objPage->outputFormat = $strFormat;
-		$objPage->outputVariant = $strVariant;
+		// Minify the markup
+		$objPage->minifyMarkup = $objLayout->minifyMarkup;
 
 		// Initialize the template
 		$this->createTemplate($objPage, $objLayout);
