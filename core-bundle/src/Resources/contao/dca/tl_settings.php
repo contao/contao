@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,minifyMarkup;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -133,17 +133,11 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50')
 		),
-		'editableFiles' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['editableFiles'],
-			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50')
-		),
 		'gdMaxImgWidth' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['gdMaxImgWidth'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50 clr')
 		),
 		'gdMaxImgHeight' => array
 		(
