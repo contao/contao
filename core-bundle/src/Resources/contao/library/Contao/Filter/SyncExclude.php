@@ -22,27 +22,6 @@ class SyncExclude extends \RecursiveFilterIterator
 {
 
 	/**
-	 * Exempted folders
-	 * @var array
-	 */
-	protected $arrExempt = array();
-
-	/**
-	 * Exempt folders from the synchronisation (see #4522)
-	 *
-	 * @param \RecursiveIterator $iterator The iterator object
-	 */
-	public function __construct(\RecursiveIterator $iterator)
-	{
-		if (\Config::get('fileSyncExclude') != '')
-		{
-			$this->arrExempt = array_map(function ($e) { return \Config::get('uploadPath') . '/' . $e; }, \StringUtil::trimsplit(',', \Config::get('fileSyncExclude')));
-		}
-
-		parent::__construct($iterator);
-	}
-
-	/**
 	 * Check whether the current element of the iterator is acceptable
 	 *
 	 * @return boolean True if the element is acceptable
@@ -55,16 +34,16 @@ class SyncExclude extends \RecursiveFilterIterator
 			return false;
 		}
 
-		$strRelpath = \StringUtil::stripRootDir($this->current()->getPathname());
+		$strPath = $this->current()->getPathname();
 
-		// The resource is an exempt folder
-		if (\in_array($strRelpath, $this->arrExempt))
+		if (is_file($strPath))
 		{
-			return false;
+			$strPath = \dirname($strPath);
 		}
 
-		// The resource is accepted
-		return true;
+		$objFolder = new \Folder(\StringUtil::stripRootDir($strPath));
+
+		return !$objFolder->isUnsynchronized();
 	}
 }
 

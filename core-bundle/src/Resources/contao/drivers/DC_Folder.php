@@ -1320,7 +1320,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		else
 		{
 			// Unset the database fields
-			$GLOBALS['TL_DCA'][$this->strTable]['fields'] = array_intersect_key($GLOBALS['TL_DCA'][$this->strTable]['fields'], array('name' => true, 'protected' => true));
+			$GLOBALS['TL_DCA'][$this->strTable]['fields'] = array_intersect_key($GLOBALS['TL_DCA'][$this->strTable]['fields'], array('name' => true, 'protected' => true, 'syncExclude' => true));
 		}
 
 		// Build an array from boxes and rows (do not show excluded fields)
@@ -1560,7 +1560,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$this->redirect($this->addToUrl('id='.$this->urlEncode($this->strPath.'/'.$this->varValue).$this->strExtension));
+				$this->redirect($this->addToUrl('id='.$this->urlEncode($this->intId)));
 			}
 		}
 

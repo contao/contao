@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{global_legend:hide},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{global_legend:hide},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['resultsPerPage'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'minval'=>1, 'nospace'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'minval'=>1, 'nospace'=>true, 'tl_class'=>'w50 clr')
 		),
 		'maxResultsPerPage' => array
 		(
@@ -80,17 +80,11 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
-		'fileSyncExclude' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['fileSyncExclude'],
-			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50')
-		),
 		'doNotCollapse' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['doNotCollapse'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12')
+			'eval'                    => array('tl_class'=>'w50')
 		),
 		'doNotRedirectEmpty' => array
 		(

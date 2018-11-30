@@ -134,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => 'name,protected,importantPartX,importantPartY,importantPartWidth,importantPartHeight;meta'
+		'default'                     => 'name,protected,syncExclude,importantPartX,importantPartY,importantPartWidth,importantPartHeight;meta'
 	),
 
 	// Fields
@@ -198,7 +198,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['protected'],
 			'input_field_callback'    => array('tl_files', 'protectFolder'),
-			'eval'                    => array('tl_class'=>'w50 m12')
+			'eval'                    => array('tl_class'=>'w50 clr')
+		),
+		'syncExclude' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['syncExclude'],
+			'input_field_callback'    => array('tl_files', 'excludeFolder'),
+			'eval'                    => array('tl_class'=>'w50')
 		),
 		'importantPartX' => array
 		(
@@ -702,7 +708,7 @@ class tl_files extends Backend
 	}
 
 	/**
-	 * Return a checkbox to delete session data
+	 * Return a checkbox to protect a folder
 	 *
 	 * @param DataContainer $dc
 	 *
@@ -738,26 +744,22 @@ class tl_files extends Backend
 			return '';
 		}
 
-		$blnDisabled = false;
 		$objFolder = new Folder($strPath);
 
 		// Check if the folder or a parent folder is public
-		$blnPublic = $objFolder->isUnprotected();
+		$blnUnprotected = $objFolder->isUnprotected();
 
 		// Disable the checkbox if a parent folder is public (see #712)
-		if ($blnPublic && ($strParentPath = \dirname($strPath)) != '.')
-		{
-			$blnDisabled = (new Folder($strParentPath))->isUnprotected();
-		}
+		$blnDisable = $blnUnprotected && !file_exists($rootDir . '/' . $strPath . '/.public');
 
 		// Protect or unprotect the folder
-		if (Input::post('FORM_SUBMIT') == 'tl_files')
+		if (!$blnDisable && Input::post('FORM_SUBMIT') == 'tl_files')
 		{
 			if (Input::post($dc->inputName))
 			{
-				if (!$blnPublic)
+				if (!$blnUnprotected)
 				{
-					$blnPublic = true;
+					$blnUnprotected = true;
 					$objFolder->unprotect();
 
 					$this->import('Automator');
@@ -766,9 +768,9 @@ class tl_files extends Backend
 			}
 			else
 			{
-				if ($blnPublic)
+				if ($blnUnprotected)
 				{
-					$blnPublic = false;
+					$blnUnprotected = false;
 					$objFolder->protect();
 
 					$this->import('Automator');
@@ -789,9 +791,93 @@ class tl_files extends Backend
 		return '
 <div class="' . $class . '">
   <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
-    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . (($blnPublic || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisabled ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . (($blnUnprotected || basename($strPath) == '__new__') ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['protected'][0] . '</label>
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['protected'][1] . '</p>' : '') . '
+</div>';
+	}
+
+	/**
+	 * Return a checkbox to exclude a folder from synchronization
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return string
+	 *
+	 * @throws RuntimeException
+	 */
+	public function excludeFolder(DataContainer $dc)
+	{
+		$strPath = $dc->id;
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		// Check if the folder has been renamed (see #6432, #934)
+		if (Input::post('name'))
+		{
+			if (Validator::isInsecurePath(Input::post('name')))
+			{
+				throw new RuntimeException('Invalid file or folder name ' . Input::post('name'));
+			}
+
+			$count = 0;
+			$strName = basename($strPath);
+
+			if (($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			{
+				$strPath = $strNewPath;
+			}
+		}
+
+		// Only show for folders (see #5660)
+		if (!is_dir($rootDir . '/' . $strPath))
+		{
+			return '';
+		}
+
+		$objFolder = new Folder($strPath);
+
+		// Check if the folder or a parent folder is unsynchronized
+		$blnUnsynchronized = $objFolder->isUnsynchronized();
+
+		// Disable the checkbox if a parent folder is unsynchronized
+		$blnDisable = $blnUnsynchronized && !file_exists($rootDir . '/' . $strPath . '/.nosync');
+
+		// Synchronize or unsynchronize the folder
+		if (!$blnDisable && Input::post('FORM_SUBMIT') == 'tl_files')
+		{
+			if (Input::post($dc->inputName))
+			{
+				if (!$blnUnsynchronized)
+				{
+					$blnUnsynchronized = true;
+					$objFolder->unsynchronize();
+				}
+			}
+			else
+			{
+				if ($blnUnsynchronized)
+				{
+					$blnUnsynchronized = false;
+					$objFolder->synchronize();
+				}
+			}
+		}
+
+		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
+
+		if (Input::get('act') == 'editAll' || Input::get('act') == 'overrideAll')
+		{
+			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
+		}
+
+		$class = trim('widget ' . $class);
+
+		return '
+<div class="' . $class . '">
+  <div id="ctrl_' . $dc->field . '" class="tl_checkbox_single_container">
+    <input type="hidden" name="' . $dc->inputName . '" value=""><input type="checkbox" name="' . $dc->inputName . '" id="opt_' . $dc->inputName . '_0" class="tl_checkbox" value="1"' . ($blnUnsynchronized ? ' checked="checked"' : '') . ' onfocus="Backend.getScrollOffset()"' . ($blnDisable ? ' disabled' : '') . '> <label for="opt_' . $dc->inputName . '_0">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][0] . '</label>
+  </div>' . (Config::get('showHelp') ? '
+  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][1] . '</p>' : '') . '
 </div>';
 	}
 }

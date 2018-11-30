@@ -51,5 +51,19 @@ class Version470Update extends AbstractVersionUpdate
                     minifyMarkup = '1'
             ");
         }
+
+        // Add a .nosync file in every excluded folder
+        if (!empty($GLOBALS['TL_CONFIG']['fileSyncExclude'])) {
+            $fs = $this->container->get('filesystem');
+            $uploadPath = $this->container->getParameter('contao.upload_path');
+            $rootDir = $this->container->getParameter('kernel.project_dir');
+            $folders = array_map('trim', explode(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
+
+            foreach ($folders as $folder) {
+                if (is_dir($rootDir.'/'.$uploadPath.'/'.$folder)) {
+                    $fs->touch($rootDir.'/'.$uploadPath.'/'.$folder.'/.nosync');
+                }
+            }
+        }
     }
 }

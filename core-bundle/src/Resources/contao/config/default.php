@@ -100,7 +100,6 @@ $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
 $GLOBALS['TL_CONFIG']['fullscreen']           = false;
 $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = array();
-$GLOBALS['TL_CONFIG']['fileSyncExclude']      = '';
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
 $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;

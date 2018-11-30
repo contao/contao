@@ -147,7 +147,7 @@ class Dbafs
 		// Create the new resources
 		foreach ($arrPaths as $strPath)
 		{
-			if (basename($strPath) == '.public')
+			if (\in_array(basename($strPath), array('.public', '.nosync')))
 			{
 				continue;
 			}
@@ -823,32 +823,26 @@ class Dbafs
 
 		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
+		// The file has been removed
+		if (!file_exists($rootDir . '/' . $strPath))
+		{
+			return true;
+		}
+
 		if (is_file($rootDir . '/' . $strPath))
 		{
 			$strPath = \dirname($strPath);
 		}
 
+		$uploadPath = \System::getContainer()->getParameter('contao.upload_path');
+
 		// Outside the files directory
-		if (strncmp($strPath . '/', \Config::get('uploadPath') . '/', \strlen(\Config::get('uploadPath')) + 1) !== 0)
+		if (strncmp($strPath . '/', $uploadPath . '/', \strlen($uploadPath) + 1) !== 0)
 		{
 			return true;
 		}
 
-		// Check the excluded folders
-		if (\Config::get('fileSyncExclude') != '')
-		{
-			$arrExempt = array_map(function ($e) { return \Config::get('uploadPath') . '/' . $e; }, \StringUtil::trimsplit(',', \Config::get('fileSyncExclude')));
-
-			foreach ($arrExempt as $strExempt)
-			{
-				if (strncmp($strExempt . '/', $strPath . '/', \strlen($strExempt) + 1) === 0)
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return (new \Folder($strPath))->isUnsynchronized();
 	}
 }
 

@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Move the "syncExclude" option to the file manager (see #203).
+ * Move the "minifyHtml" option to the page layout (see #203).
  * Use a native font stack instead of a web font in the back end (see #98).
  * Improve the text for repeated events (see #175).
  * Allow to overwrite the page title and description in news and events (see #161).

@@ -343,7 +343,7 @@ class Folder extends System
 			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
 		}
 
-		(new File($this->strFolder . '/.public'))->delete();
+		(new \File($this->strFolder . '/.public'))->delete();
 	}
 
 	/**
@@ -353,7 +353,7 @@ class Folder extends System
 	{
 		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			\File::putContent($this->strFolder . '/.public', '');
+			\System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
 		}
 	}
 
@@ -369,6 +369,61 @@ class Folder extends System
 		do
 		{
 			if (file_exists($this->strRootDir . '/' . $path . '/.public'))
+			{
+				return true;
+			}
+
+			$path = \dirname($path);
+		}
+		while ($path != '.');
+
+		return false;
+	}
+
+	/**
+	 * Synchronize the folder by removing the .nosync file
+	 *
+	 * @throws \RuntimeException If one of the parent folders is unsynchronized
+	 */
+	public function synchronize()
+	{
+		if (!$this->isUnsynchronized())
+		{
+			return;
+		}
+
+		// Check if the .nosync file exists
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
+		{
+			throw new \RuntimeException(sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
+		}
+
+		(new \File($this->strFolder . '/.nosync'))->delete();
+	}
+
+	/**
+	 * Unsynchronize the folder by adding a .nosync file
+	 */
+	public function unsynchronize()
+	{
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
+		{
+			\System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.nosync');
+		}
+	}
+
+	/**
+	 * Check if the folder or any parent folder contains a .nosync file
+	 *
+	 * @return bool
+	 */
+	public function isUnsynchronized()
+	{
+		$path = $this->strFolder;
+
+		do
+		{
+			if (file_exists($this->strRootDir . '/' . $path . '/.nosync'))
 			{
 				return true;
 			}
