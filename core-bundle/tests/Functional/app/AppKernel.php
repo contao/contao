@@ -19,7 +19,6 @@ use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Psr\Log\NullLogger;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
@@ -40,7 +39,6 @@ class AppKernel extends Kernel
             new MonologBundle(),
             new SwiftmailerBundle(),
             new DoctrineBundle(),
-            new SensioFrameworkExtraBundle(),
             new SchebTwoFactorBundle(),
             new KnpTimeBundle(),
             new KnpMenuBundle(),

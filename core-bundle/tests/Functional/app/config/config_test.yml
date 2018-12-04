@@ -22,10 +22,6 @@ framework:
         storage_id: session.storage.mock_file
     fragments: { path: /_fragment }
 
-sensio_framework_extra:
-    router:
-        annotations: false
-
 twig:
     debug: "%kernel.debug%"
     strict_variables: "%kernel.debug%"
