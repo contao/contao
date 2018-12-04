@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not add a favicon.ico file by default (see #181).
  * Fix a compatibility issue with Doctrine DBAL 2.9 (see #212).
 
 ## 4.6.9 (2018-11-22)
