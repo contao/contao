@@ -210,9 +210,15 @@ class InstallTool
             ->getListTableColumnsSQL('tl_layout', $this->connection->getDatabase())
         ;
 
-        $column = $this->connection->fetchAssoc($sql." AND COLUMN_NAME = 'sections'");
+        $columns = $this->connection->fetchAll($sql);
 
-        return !\in_array($column['Type'], ['varchar(1022)', 'blob'], true);
+        foreach ($columns as $column) {
+            if ('sections' === $column['Field']) {
+                return !\in_array($column['Type'], ['varchar(1022)', 'blob'], true);
+            }
+        }
+
+        return false;
     }
 
     /**

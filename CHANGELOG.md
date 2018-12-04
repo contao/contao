@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Fix a compatibility issue with Doctrine DBAL 2.9 (see #212).
+
 ## 4.4.29 (2018-11-22)
 
  * Do not convert line breaks in table cells if there are HTML block elements (see #159).
