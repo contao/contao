@@ -98,16 +98,11 @@ class InstallWebDirCommandTest extends ContaoTestCase
             $this->filesystem->dumpFile($this->getTempDir().'/web/'.$file->getRelativePathname(), 'foobar-content');
         }
 
-        static $optional = [
-            'favicon.ico',
-            'robots.txt',
-        ];
-
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
         foreach ($this->webFiles as $file) {
-            if (\in_array($file->getRelativePathname(), $optional, true)) {
+            if ('robots.txt' === $file->getRelativePathname()) {
                 $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
             } else {
                 $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');

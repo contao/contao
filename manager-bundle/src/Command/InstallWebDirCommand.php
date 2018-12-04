@@ -243,19 +243,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
     {
-        static $optional = [
-            'favicon.ico',
-            'robots.txt',
-        ];
+        $path = $file->getRelativePathname();
 
-        if (!\in_array($file->getRelativePathname(), $optional, true)) {
-            return false;
-        }
-
-        if (!$this->fs->exists($webDir.'/'.$file->getRelativePathname())) {
-            return false;
-        }
-
-        return true;
+        return 'robots.txt' === $path && $this->fs->exists($webDir.'/'.$path);
     }
 }
