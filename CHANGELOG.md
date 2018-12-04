@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.6.10 (2018-12-04)
 
  * Do not add a favicon.ico file by default (see #181).
  * Fix a compatibility issue with Doctrine DBAL 2.9 (see #212).

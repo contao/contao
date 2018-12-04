@@ -111,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>送信の処理が中断した場合に、特定の宛先から継続する補正値を入力できます。何通が送信されたかはシステムログの&lt;code&gt;NEWSLETTER&lt;/code&gt;のカテゴリを選択すると確認できます。例えば、120通のメールが送信済みの場合は、121番目の宛先から送信を続けるために(0から数えた)120と入力します。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
