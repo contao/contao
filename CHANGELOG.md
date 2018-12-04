@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Fix a compatibility issue with Doctrine DBAL 2.9 (see #212).
+
 ## 4.6.9 (2018-11-22)
 
  * Fix a BC break in the FileUpload class (see #188).
