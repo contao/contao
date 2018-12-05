@@ -344,7 +344,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'staticFiles' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['staticFiles'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['staticFiles'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -357,7 +357,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'staticPlugins' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['staticPlugins'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['staticPlugins'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
