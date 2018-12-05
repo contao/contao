@@ -387,7 +387,11 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Call recursive function tree()
-		if (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
+		if ($for != '' && empty($this->arrFilemounts))
+		{
+			// Show an empty tree if there are no search results
+		}
+		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
 		{
 			$return .= $this->generateTree($this->strRootDir . '/' . \Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
 		}
