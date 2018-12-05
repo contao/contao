@@ -476,10 +476,10 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:16px 15px 8px;
+	margin:17px 15px;
 }
 .cbx {
-	min-height:56px;
+	min-height:auto;
 }
 .subpal {
 	clear:both;
@@ -634,8 +634,9 @@ a.tl_submit {
 		float:none;
 		width:calc(100% - 30px);
 	}
-	.cbx {
-		min-height:32px;
+	.m12 {
+		margin-top:0;
+		margin-bottom:0;
 	}
 	.tip {
 		max-width:80vw;

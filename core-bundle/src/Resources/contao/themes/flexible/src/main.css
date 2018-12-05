@@ -512,9 +512,6 @@ input[type=search]::-webkit-search-decoration {
 .tl_formbody_edit.nogrid .w50 {
 	float:none;
 }
-.tl_formbody_edit.nogrid .cbx {
-	height:auto;
-}
 .tl_formbody_edit.nogrid .m12 {
 	margin-top:0;
 	margin-bottom:0;
