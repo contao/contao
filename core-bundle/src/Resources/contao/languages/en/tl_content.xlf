@@ -26,6 +26,12 @@
       <trans-unit id="tl_content.addImage.1">
         <source>Add an image to the content element.</source>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
       </trans-unit>
@@ -223,12 +229,6 @@
       </trans-unit>
       <trans-unit id="tl_content.titleText.1">
         <source>The link title is added as &lt;em&gt;title&lt;/em&gt; attribute in the HTML markup.</source>
-      </trans-unit>
-      <trans-unit id="tl_content.disposition.0">
-        <source>Disposition</source>
-      </trans-unit>
-      <trans-unit id="tl_content.disposition.1">
-        <source>Choose whether the download should be provided as a downloadable file or directly in the browser.</source>
       </trans-unit>
       <trans-unit id="tl_content.embed.0">
         <source>Embed the link</source>

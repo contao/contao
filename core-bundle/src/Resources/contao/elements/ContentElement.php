@@ -24,6 +24,7 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $headline
  * @property string  $text
  * @property boolean $addImage
+ * @property boolean $inline
  * @property boolean $overwriteMeta
  * @property string  $singleSRC
  * @property string  $alt

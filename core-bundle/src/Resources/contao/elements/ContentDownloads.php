@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use \Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Front end content element "downloads".
@@ -78,7 +77,7 @@ class ContentDownloads extends ContentElement
 			{
 				if ($file == $this->objFiles->path || \dirname($file) == $this->objFiles->path)
 				{
-					\Controller::sendFileToBrowser($file, $this->disposition ?? ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+					\Controller::sendFileToBrowser($file, (bool) $this->inline);
 				}
 			}
 

@@ -20,7 +20,6 @@ use Contao\Image\PictureConfigurationInterface;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Abstract parent class for Controllers
@@ -1206,12 +1205,12 @@ abstract class Controller extends System
 	/**
 	 * Send a file to the browser so the "save as …" dialogue opens
 	 *
-	 * @param string $strFile        The file path
-	 * @param string $strDisposition The optional disposition
+	 * @param string  $strFile The file path
+	 * @param boolean $inline  Show the file in the browser instead of opening the download dialog
 	 *
 	 * @throws AccessDeniedException
 	 */
-	public static function sendFileToBrowser($strFile, $strDisposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT)
+	public static function sendFileToBrowser($strFile, $inline=false)
 	{
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
@@ -1250,7 +1249,7 @@ abstract class Controller extends System
 		}
 
 		// Send the file (will stop the script execution)
-		$objFile->sendToBrowser('', $strDisposition);
+		$objFile->sendToBrowser('', $inline);
 	}
 
 	/**
