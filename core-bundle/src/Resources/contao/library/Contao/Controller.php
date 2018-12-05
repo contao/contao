@@ -1208,11 +1208,12 @@ abstract class Controller extends System
 	/**
 	 * Send a file to the browser so the "save as …" dialogue opens
 	 *
-	 * @param string $strFile The file path
+	 * @param string  $strFile The file path
+	 * @param boolean $inline  Show the file in the browser instead of opening the download dialog
 	 *
 	 * @throws AccessDeniedException
 	 */
-	public static function sendFileToBrowser($strFile)
+	public static function sendFileToBrowser($strFile, $inline=false)
 	{
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
@@ -1253,7 +1254,7 @@ abstract class Controller extends System
 		}
 
 		// Send the file (will stop the script execution)
-		$objFile->sendToBrowser();
+		$objFile->sendToBrowser('', $inline);
 	}
 
 	/**

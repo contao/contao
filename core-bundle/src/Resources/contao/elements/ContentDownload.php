@@ -66,7 +66,7 @@ class ContentDownload extends ContentElement
 		{
 			if ($file == $objFile->path)
 			{
-				\Controller::sendFileToBrowser($file);
+				\Controller::sendFileToBrowser($file, (bool) $this->inline);
 			}
 
 			if (isset($_GET['cid']))

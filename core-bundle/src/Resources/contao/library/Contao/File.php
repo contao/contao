@@ -764,17 +764,18 @@ class File extends System
 	/**
 	 * Send the file to the browser
 	 *
-	 * @param string $filename An optional filename
+	 * @param string  $filename An optional filename
+	 * @param boolean $inline   Show the file in the browser instead of opening the download dialog
 	 *
 	 * @throws ResponseException
 	 */
-	public function sendToBrowser($filename='')
+	public function sendToBrowser($filename='', $inline=false)
 	{
 		$response = new BinaryFileResponse($this->strRootDir . '/' . $this->strFile);
 
 		$response->setContentDisposition
 		(
-			ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+			$inline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 			$filename,
 			Utf8::toAscii($this->basename)
 		);
@@ -782,7 +783,6 @@ class File extends System
 		$response->headers->addCacheControlDirective('must-revalidate');
 		$response->headers->addCacheControlDirective('post-check', 0);
 		$response->headers->addCacheControlDirective('pre-check', 0);
-
 		$response->headers->set('Connection', 'close');
 
 		throw new ResponseException($response);
