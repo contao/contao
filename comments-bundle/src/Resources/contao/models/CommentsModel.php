@@ -21,6 +21,7 @@ namespace Contao;
  * @property string  $name
  * @property string  $email
  * @property string  $website
+ * @property string  $member
  * @property string  $comment
  * @property boolean $addReply
  * @property integer $author
@@ -41,6 +42,7 @@ namespace Contao;
  * @method static CommentsModel|null findOneByName($val, array $opt=array())
  * @method static CommentsModel|null findOneByEmail($val, array $opt=array())
  * @method static CommentsModel|null findOneByWebsite($val, array $opt=array())
+ * @method static CommentsModel|null findOneByMember($val, array $opt=array())
  * @method static CommentsModel|null findOneByComment($val, array $opt=array())
  * @method static CommentsModel|null findOneByAddReply($val, array $opt=array())
  * @method static CommentsModel|null findOneByAuthor($val, array $opt=array())
@@ -57,6 +59,7 @@ namespace Contao;
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByName($val, array $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByEmail($val, array $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByWebsite($val, array $opt=array())
+ * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByMember($val, array $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByComment($val, array $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByAddReply($val, array $opt=array())
  * @method static Model\Collection|CommentsModel[]|CommentsModel|null findByAuthor($val, array $opt=array())
@@ -77,6 +80,7 @@ namespace Contao;
  * @method static integer countByName($val, array $opt=array())
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByWebsite($val, array $opt=array())
+ * @method static integer countByMember($val, array $opt=array())
  * @method static integer countByComment($val, array $opt=array())
  * @method static integer countByAddReply($val, array $opt=array())
  * @method static integer countByAuthor($val, array $opt=array())

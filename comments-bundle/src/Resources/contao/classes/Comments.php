@@ -323,6 +323,13 @@ class Comments extends Frontend
 			// Prevent cross-site request forgeries
 			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
+			$intMember = 0;
+
+			if (\System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$intMember = \FrontendUser::getInstance()->id;
+			}
+
 			$time = time();
 
 			// Prepare the record
@@ -334,6 +341,7 @@ class Comments extends Frontend
 				'name'      => $arrWidgets['name']->value,
 				'email'     => $arrWidgets['email']->value,
 				'website'   => $strWebsite,
+				'member'    => $intMember,
 				'comment'   => $this->convertLineFeeds($strComment),
 				'ip'        => \Environment::get('ip'),
 				'date'      => $time,

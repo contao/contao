@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addReply'),
-		'default'                     => '{author_legend},name,email,website;{comment_legend},comment;{reply_legend},addReply;{publish_legend},published'
+		'default'                     => '{author_legend},name,member,email,website;{comment_legend},comment;{reply_legend},addReply;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'website' => array
@@ -170,6 +170,16 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>128, 'rgxp'=>'url', 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
+		),
+		'member' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['member'],
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
+			'eval'                    => array('chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NULL default '0'",
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'comment' => array
 		(
