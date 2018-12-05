@@ -76,8 +76,8 @@ class ModuleCustomnav extends Module
 			$groups = $this->User->groups;
 		}
 
-		// Get all active pages
-		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>true));
+		// Get all active pages and also include root pages if the language is added to the URL (see #72)
+		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>\Config::get('addLanguageToUrl')));
 
 		// Return if there are no pages
 		if ($objPages === null)
