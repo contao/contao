@@ -103,16 +103,21 @@ class ModuleSearch extends Module
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
-				$varRootId = \implode('-', $this->pages);
+				$varRootId = implode('-', $this->pages);
 				$arrPages = array();
 
 				foreach ($this->pages as $intPageId)
 				{
-					$arrPages[] = $intPageId;
-					$arrPages = \array_merge($arrPages, $this->Database->getChildRecords($intPageId, 'tl_page'));
+					$arrPages[] = array($intPageId);
+					$arrPages[] = $this->Database->getChildRecords($intPageId, 'tl_page');
 				}
 
-				$arrPages = \array_unique($arrPages);
+				if (!empty($arrPages))
+				{
+					$arrPages = array_merge(...$arrPages);
+				}
+
+				$arrPages = array_unique($arrPages);
 			}
 			// Website root
 			else

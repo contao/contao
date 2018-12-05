@@ -70,7 +70,7 @@ function scan($strFolder, $blnUncached=false)
 	$arrReturn = array();
 
 	// Scan directory
-	foreach (scandir($strFolder) as $strFile)
+	foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
 	{
 		if ($strFile == '.' || $strFile == '..')
 		{

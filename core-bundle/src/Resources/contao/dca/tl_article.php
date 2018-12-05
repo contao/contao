@@ -513,8 +513,13 @@ class tl_article extends Backend
 				// Get all allowed pages for the current user
 				foreach ($this->User->pagemounts as $root)
 				{
-					$pagemounts[] = $root;
-					$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+					$pagemounts[] = array($root);
+					$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+				}
+
+				if (!empty($pagemounts))
+				{
+					$pagemounts = array_merge(...$pagemounts);
 				}
 
 				$pagemounts = array_unique($pagemounts);

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Asset;
 
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -24,7 +23,7 @@ class ContaoContextTest extends TestCase
 {
     public function testReturnsAnEmptyBasePathInDebugMode(): void
     {
-        $context = new ContaoContext($this->mockContaoFramework(), new RequestStack(), 'staticPlugins', true);
+        $context = new ContaoContext(new RequestStack(), 'staticPlugins', true);
 
         $this->assertSame('', $context->getBasePath());
     }
@@ -116,7 +115,7 @@ class ContaoContextTest extends TestCase
 
     public function testReturnsAnEmptyStaticUrlIfTheBasePathIsEmpty(): void
     {
-        $context = new ContaoContext($this->mockContaoFramework(), new RequestStack(), 'staticPlugins');
+        $context = new ContaoContext(new RequestStack(), 'staticPlugins');
 
         $this->assertSame('', $context->getStaticUrl());
     }
@@ -175,16 +174,12 @@ class ContaoContextTest extends TestCase
         return $page->loadDetails();
     }
 
-    private function mockContaoContext(string $field, RequestStack $requestStack = null, ContaoFrameworkInterface $framework = null): ContaoContext
+    private function mockContaoContext(string $field, RequestStack $requestStack = null): ContaoContext
     {
         if (null === $requestStack) {
             $requestStack = new RequestStack();
         }
 
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
-
-        return new ContaoContext($framework, $requestStack, $field);
+        return new ContaoContext($requestStack, $field);
     }
 }

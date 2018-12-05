@@ -1387,7 +1387,12 @@ abstract class Controller extends System
 
 		foreach ($arrPaths as $path)
 		{
-			$nested = array_merge($nested, preg_grep('/^' . preg_quote($path, '/') . '\/.+/', $arrPaths));
+			$nested[] = preg_grep('/^' . preg_quote($path, '/') . '\/.+/', $arrPaths);
+		}
+
+		if (!empty($nested))
+		{
+			$nested = array_merge(...$nested);
 		}
 
 		return array_values(array_diff($arrPaths, $nested));

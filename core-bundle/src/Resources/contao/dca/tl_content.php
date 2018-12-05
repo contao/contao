@@ -971,8 +971,13 @@ class tl_content extends Backend
 
 		foreach ($this->User->pagemounts as $root)
 		{
-			$pagemounts[] = $root;
-			$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+			$pagemounts[] = array($root);
+			$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+		}
+
+		if (!empty($pagemounts))
+		{
+			$pagemounts = array_merge(...$pagemounts);
 		}
 
 		$pagemounts = array_unique($pagemounts);
@@ -1301,11 +1306,15 @@ class tl_content extends Backend
 		{
 			foreach ($this->User->pagemounts as $id)
 			{
-				$arrPids[] = $id;
-				$arrPids = array_merge($arrPids, $this->Database->getChildRecords($id, 'tl_page'));
+				$arrPids[] = array($id);
+				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
 			}
 
-			if (empty($arrPids))
+			if (!empty($arrPids))
+			{
+				$arrPids = array_merge(...$arrPids);
+			}
+			else
 			{
 				return $arrAlias;
 			}
@@ -1359,11 +1368,15 @@ class tl_content extends Backend
 		{
 			foreach ($this->User->pagemounts as $id)
 			{
-				$arrPids[] = $id;
-				$arrPids = array_merge($arrPids, $this->Database->getChildRecords($id, 'tl_page'));
+				$arrPids[] = array($id);
+				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
 			}
 
-			if (empty($arrPids))
+			if (!empty($arrPids))
+			{
+				$arrPids = array_merge(...$arrPids);
+			}
+			else
 			{
 				return $arrAlias;
 			}
@@ -1558,11 +1571,15 @@ class tl_content extends Backend
 					continue;
 				}
 
-				$arrPids[] = $id;
-				$arrPids = array_merge($arrPids, $this->Database->getChildRecords($id, 'tl_page'));
+				$arrPids[] = array($id);
+				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
 			}
 
-			if (empty($arrPids))
+			if (!empty($arrPids))
+			{
+				$arrPids = array_merge(...$arrPids);
+			}
+			else
 			{
 				return $arrArticle;
 			}

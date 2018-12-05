@@ -130,12 +130,7 @@ class ModuleWizard extends Widget
 				$arrCols[$key][] = $v;
 			}
 
-			$this->varValue = array();
-
-			foreach ($arrCols as $arrCol)
-			{
-				$this->varValue = array_merge($this->varValue, $arrCol);
-			}
+			$this->varValue = array_merge(...array_values($arrCols));
 		}
 
 		// Add the label and the return wizard

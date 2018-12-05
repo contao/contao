@@ -620,10 +620,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoContext::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('staticPlugins', $definition->getArgument(2));
-        $this->assertSame('%kernel.debug%', $definition->getArgument(3));
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertSame('staticPlugins', $definition->getArgument(1));
+        $this->assertSame('%kernel.debug%', $definition->getArgument(2));
     }
 
     public function testRegistersTheAssetFilesContext(): void
@@ -634,10 +633,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoContext::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('staticFiles', $definition->getArgument(2));
-        $this->assertSame('%kernel.debug%', $definition->getArgument(3));
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertSame('staticFiles', $definition->getArgument(1));
+        $this->assertSame('%kernel.debug%', $definition->getArgument(2));
     }
 
     public function testRegistersTheContaoCache(): void

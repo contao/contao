@@ -477,7 +477,12 @@ class Newsletter extends Backend
 
 				while(($arrRow = @fgetcsv($resFile, null, $strSeparator)) !== false)
 				{
-					$arrRecipients = array_merge($arrRecipients, $arrRow);
+					$arrRecipients[] = $arrRow;
+				}
+
+				if (!empty($arrRecipients))
+				{
+					$arrRecipients = array_merge(...$arrRecipients);
 				}
 
 				$arrRecipients = array_filter(array_unique($arrRecipients));

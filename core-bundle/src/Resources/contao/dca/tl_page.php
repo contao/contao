@@ -870,13 +870,17 @@ class tl_page extends Backend
 				{
 					if (Input::get('act') != 'delete')
 					{
-						$pagemounts[] = $root;
+						$pagemounts[] = array($root);
 					}
 
-					$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+					$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
 				}
 
-				$error = false;
+				if (!empty($pagemounts))
+				{
+					$pagemounts = array_merge(...$pagemounts);
+				}
+
 				$pagemounts = array_unique($pagemounts);
 
 				// Do not allow to paste after pages on the root level (pagemounts)
@@ -884,6 +888,8 @@ class tl_page extends Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
 				}
+
+				$error = false;
 
 				// Check each page
 				foreach ($ids as $i=>$id)

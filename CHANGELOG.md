@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Associate comments with members (see contao/comments-bundle#7).
+ * Add content disposition to download elements (see #20).
  * Move the "syncExclude" option to the file manager (see #203).
  * Move the "minifyHtml" option to the page layout (see #203).
  * Use a native font stack instead of a web font in the back end (see #98).
