@@ -479,6 +479,9 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
       </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
       </trans-unit>

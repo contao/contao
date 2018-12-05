@@ -1206,7 +1206,7 @@ abstract class Controller extends System
 	/**
 	 * Send a file to the browser so the "save as …" dialogue opens
 	 *
-	 * @param string $strFile The file path
+	 * @param string $strFile        The file path
 	 * @param string $strDisposition The optional disposition
 	 *
 	 * @throws AccessDeniedException

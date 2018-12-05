@@ -503,11 +503,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'disposition' => [
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['disposition'],
+			'default'                 => Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options' => [
-				\Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-				\Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_INLINE
+				Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+				Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_INLINE
 			],
 			'reference'               => &$GLOBALS['TL_LANG']['MSC']['disposition'],
 			'eval'                    => ['tl_class' => 'w50'],
