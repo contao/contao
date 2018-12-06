@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Add methods to retrive past and upcoming dates in the event reader (see #175).
  * Associate comments with members (see contao/comments-bundle#7).
  * Add content disposition to download elements (see #20).
  * Move the "syncExclude" option to the file manager (see #203).

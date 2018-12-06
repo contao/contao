@@ -137,33 +137,11 @@ class ModuleEventReader extends Events
 			}
 		}
 
-		$strDate = \Date::parse($objPage->dateFormat, $intStartTime);
-
-		if ($span > 0)
-		{
-			$strDate = \Date::parse($objPage->dateFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->dateFormat, $intEndTime);
-		}
-
-		$strTime = '';
-
-		if ($objEvent->addTime)
-		{
-			if ($span > 0)
-			{
-				$strDate = \Date::parse($objPage->datimFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->datimFormat, $intEndTime);
-			}
-			elseif ($intStartTime == $intEndTime)
-			{
-				$strTime = \Date::parse($objPage->timeFormat, $intStartTime);
-			}
-			else
-			{
-				$strTime = \Date::parse($objPage->timeFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->timeFormat, $intEndTime);
-			}
-		}
+		list($strDate, $strTime) = $this->getDateAndTime($objEvent, $objPage, $intStartTime, $intEndTime, $span);
 
 		$until = '';
 		$recurring = '';
+		$arrRange = array();
 
 		// Recurring event
 		if ($objEvent->recurring)
@@ -190,13 +168,13 @@ class ModuleEventReader extends Events
 				{
 					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
 				}
-				elseif ($strTime)
+				elseif ($objEvent->addTime)
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), \Date::parse($objPage->dateFormat, $intStartTime).', '.$strTime);
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStartTime), $strDate . ($strTime ? ' ' . $strTime : ''));
 				}
 				else
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), \Date::parse($objPage->dateFormat, $intStartTime));
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStartTime), $strDate);
 				}
 			}
 		}
@@ -304,6 +282,82 @@ class ModuleEventReader extends Events
 			$this->addEnclosuresToTemplate($objTemplate, $objEvent->row());
 		}
 
+		// Add a function to retrieve upcoming dates (see #175)
+		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
+		{
+			if (!$objEvent->recurring || !\is_array($arrRange) || !isset($arrRange['unit']) || !isset($arrRange['value']))
+			{
+				return array();
+			}
+
+			$dates = array();
+			$startTime = $intStartTime;
+			$endTime = $intEndTime;
+			$strtotime = '+ ' . $arrRange['value'] . ' ' . $arrRange['unit'];
+
+			for ($i=0; $i<$recurrences; $i++)
+			{
+				$startTime = strtotime($strtotime, $startTime);
+				$endTime = strtotime($strtotime, $endTime);
+
+				if ($endTime > $objEvent->repeatEnd)
+				{
+					break;
+				}
+
+				list($strDate, $strTime) = $this->getDateAndTime($objEvent, $objPage, $startTime, $endTime, $span);
+
+				$dates[] = array
+				(
+					'date' => $strDate,
+					'time' => $strTime,
+					'datetime' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $startTime) : date('Y-m-d', $endTime),
+					'begin' => $startTime,
+					'end' => $endTime
+				);
+			}
+
+			return $dates;
+		};
+
+		// Add a function to retrieve past dates (see #175)
+		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
+		{
+			if (!$objEvent->recurring || !\is_array($arrRange) || !isset($arrRange['unit']) || !isset($arrRange['value']))
+			{
+				return array();
+			}
+
+			$dates = array();
+			$startTime = $intStartTime;
+			$endTime = $intEndTime;
+			$strtotime = '- ' . $arrRange['value'] . ' ' . $arrRange['unit'];
+
+			for ($i=0; $i<$recurrences; $i++)
+			{
+				$startTime = strtotime($strtotime, $startTime);
+				$endTime = strtotime($strtotime, $endTime);
+
+				if ($startTime < $objEvent->startDate)
+				{
+					break;
+				}
+
+				list($strDate, $strTime) = $this->getDateAndTime($objEvent, $objPage, $startTime, $endTime, $span);
+
+				$dates[] = array
+				(
+					'date' => $strDate,
+					'time' => $strTime,
+					'datetime' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $startTime) : date('Y-m-d', $endTime),
+					'begin' => $startTime,
+					'end' => $endTime
+				);
+			}
+
+			return $dates;
+		};
+
 		$this->Template->event = $objTemplate->parse();
 
 		$bundles = \System::getContainer()->getParameter('kernel.bundles');
@@ -360,6 +414,47 @@ class ModuleEventReader extends Events
 		$objConfig->moderate = $objCalendar->moderate;
 
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_calendar_events', $objEvent->id, $arrNotifies);
+	}
+
+	/**
+	 * Return the date and time strings
+	 *
+	 * @param CalendarEventsModel $objEvent
+	 * @param PageModel           $objPage
+	 * @param integer             $intStartTime
+	 * @param integer             $intEndTime
+	 * @param integer             $span
+	 *
+	 * @return array
+	 */
+	private function getDateAndTime(CalendarEventsModel $objEvent, PageModel $objPage, $intStartTime, $intEndTime, $span)
+	{
+		$strDate = \Date::parse($objPage->dateFormat, $intStartTime);
+
+		if ($span > 0)
+		{
+			$strDate = \Date::parse($objPage->dateFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->dateFormat, $intEndTime);
+		}
+
+		$strTime = '';
+
+		if ($objEvent->addTime)
+		{
+			if ($span > 0)
+			{
+				$strDate = \Date::parse($objPage->datimFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->datimFormat, $intEndTime);
+			}
+			elseif ($intStartTime == $intEndTime)
+			{
+				$strTime = \Date::parse($objPage->timeFormat, $intStartTime);
+			}
+			else
+			{
+				$strTime = \Date::parse($objPage->timeFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->timeFormat, $intEndTime);
+			}
+		}
+
+		return array($strDate, $strTime);
 	}
 }
 

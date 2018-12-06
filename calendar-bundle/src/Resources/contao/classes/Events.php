@@ -273,13 +273,13 @@ abstract class Events extends Module
 				{
 					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
 				}
-				elseif ($strTime)
+				elseif ($objEvents->addTime)
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStart), \Date::parse($objPage->dateFormat, $intStart).', '.$strTime);
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStart), $strDate . ($strTime ? ' ' . $strTime : ''));
 				}
 				else
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStart), \Date::parse($objPage->dateFormat, $intStart));
+					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStart), $strDate);
 				}
 			}
 		}
