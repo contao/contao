@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,11 +15,6 @@ namespace Contao\CoreBundle\Tests\Config\Loader;
 use Contao\CoreBundle\Config\Loader\PhpFileIncluder;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the PhpFileIncluder class.
- *
- * @author Mike vom Scheidt <https://github.com/mvscheidt>
- */
 class PhpFileIncluderTest extends TestCase
 {
     /**
@@ -25,46 +22,37 @@ class PhpFileIncluderTest extends TestCase
      */
     private $loader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->loader = new PhpFileIncluder();
     }
 
-    public function testCanBeInstantiated()
-    {
-        $this->assertInstanceOf('Contao\CoreBundle\Config\Loader\PhpFileIncluder', $this->loader);
-    }
-
-    public function testSupportsPhpFiles()
+    public function testSupportsPhpFiles(): void
     {
         $this->assertTrue(
             $this->loader->supports(
-                $this->getFixturesDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php'
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.php'
             )
         );
-    }
 
-    public function testDoesNotSupportOtherFiletypes()
-    {
         $this->assertFalse(
             $this->loader->supports(
-                $this->getFixturesDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
+                $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf'
             )
         );
     }
 
-    public function testIncludesPhpFiles()
+    public function testIncludesPhpFiles(): void
     {
-        //the test files "dies" if the TL_ROOT is not defined
-        define('TL_ROOT', '');
-
         $this->loader->load(
-            $this->getFixturesDir() . '/vendor/contao/test-bundle/Resources/contao/languages/en/tl_test.php'
+            $this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.php'
         );
 
-        $this->assertArrayHasKey('TL_TEST', $GLOBALS);
-        $this->assertEquals(true, $GLOBALS['TL_TEST']);
+        $this->assertTrue(isset($GLOBALS['TL_LANG']['MSC']['test']));
+        $this->assertSame('Test', $GLOBALS['TL_LANG']['MSC']['test']);
+
+        unset($GLOBALS['TL_LANG']);
     }
 }

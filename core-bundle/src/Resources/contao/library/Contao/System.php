@@ -410,58 +410,44 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
-
 		$resLoaderDelegator = static::getContainer()->get('contao.resource_loader.delegator');
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
-            $cachedFile = $strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
+			$cachedFile = $strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
 
-            // Try to load from cache
-            if (file_exists($cachedFile))
-            {
-                try
-                {
-                    $resLoaderDelegator->load($cachedFile);
-                    /**
-                     * if there is an exception, continue will not be reached. instead we log the exception and
-                     * load the uncached file
-                     */
-                    continue;
-                }
-                catch (\Exception $e)
-                {
-                    static::getContainer()->get('monolog.logger.contao')->log(
-                        LogLevel::ERROR,
-                        $e->getMessage(),
-                        ['exception' => $e->getTraceAsString()]
-                    );
-                }
-            }
+			// Try to load from cache
+			if (file_exists($cachedFile))
+			{
+				try
+				{
+					$resLoaderDelegator->load($cachedFile);
 
-            $finder = static::getcontainer()->get('contao.resource_finder')->findIn("languages/{$strCreateLang}");
+					continue;
+				}
+				catch (\Exception $e)
+				{
+					static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
+				}
+			}
 
-            //find the given filename, either as .php or .xlf filetype (contao supports both)
-            $finder->name("/^{$strName}\.(php|xlf)$/");
+			// Find the given filename either as .php or .xlf file
+			$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
-            /** @var SplFileInfo $file */
-            foreach ($finder as $file)
-            {
-                try
-                {
-                    $resLoaderDelegator->load($file->getRealPath(), $strCreateLang);
-                }
-                catch (\Exception $e)
-                {
-                    static::getContainer()->get('monolog.logger.contao')->log(
-                        LogLevel::ERROR,
-                        $e->getMessage(),
-                        ['exception' => $e->getTraceAsString()]
-                    );
-                }
-            }
-        }
+			/** @var SplFileInfo $file */
+			foreach ($finder as $file)
+			{
+				try
+				{
+					$resLoaderDelegator->load($file->getPathname(), $strCreateLang);
+				}
+				catch (\Exception $e)
+				{
+					static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
+				}
+			}
+		}
 
 		// HOOK: allow to load custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
@@ -481,23 +467,20 @@ abstract class System
 		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
-        $langconfig = TL_ROOT . '/system/config/langconfig.php';
+		$langconfig = $rootDir . '/system/config/langconfig.php';
+
 		if (file_exists($langconfig))
 		{
 			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in app/Resources/contao/languages instead.', E_USER_DEPRECATED);
 
 			try
-            {
-                $resLoaderDelegator->load($langconfig);
-            }
-            catch (\Exception $e)
-            {
-                static::getContainer()->get('monolog.logger.contao')->log(
-                    LogLevel::ERROR,
-                    $e->getMessage(),
-                    ['exception' => $e->getTraceAsString()]
-                );
-            }
+			{
+				$resLoaderDelegator->load($langconfig);
+			}
+			catch (\Exception $e)
+			{
+				static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
+			}
 		}
 	}
 
