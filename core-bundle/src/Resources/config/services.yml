@@ -311,6 +311,26 @@ services:
             - "%contao.resources_paths%"
         public: true
 
+    contao.resource_loader:
+        class: Symfony\Component\Config\Loader\DelegatingLoader
+        arguments:
+            - "@contao.resource_loader.resolver"
+        public: true
+
+    contao.resource_loader.php:
+        class: Contao\CoreBundle\Config\Loader\PhpFileIncluder
+
+    contao.resource_loader.resolver:
+        class: Symfony\Component\Config\Loader\LoaderResolver
+        arguments:
+            - ["@contao.resource_loader.xliff", "@contao.resource_loader.php"]
+
+    contao.resource_loader.xliff:
+        class: Contao\CoreBundle\Config\Loader\XliffFileLoader
+        arguments:
+            - "%kernel.project_dir%"
+            - true
+
     contao.resource_locator:
         class: Symfony\Component\Config\FileLocator
         arguments:
