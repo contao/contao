@@ -69,7 +69,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
         $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
@@ -103,7 +102,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
         $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
@@ -130,7 +128,6 @@ class ContaoFrameworkTest extends TestCase
 //        $framework->initialize();
 //
 //        $this->assertTrue(\defined('TL_MODE'));
-//        $this->assertTrue(\defined('TL_START'));
 //        $this->assertTrue(\defined('TL_ROOT'));
 //        $this->assertTrue(\defined('TL_REFERER_ID'));
 //        $this->assertTrue(\defined('TL_SCRIPT'));
@@ -167,7 +164,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
         $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
@@ -197,7 +193,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
         $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
