@@ -25,26 +25,20 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class BreadcrumbListenerTest extends ContaoTestCase
 {
-    private const ROOT_PAGE_ID = 1;
-
-    private const PAGE_ID = 4;
-
-    private const FAQ_CATEGORY_ID = 3;
-
-    private const FAQ_ALIAS = 'foo-bar';
-
-    private const FAQ_QUESTION = 'Foo bar';
-
-    private const FAQ_URL = 'faq/foo-bar.html';
-
     private const CURRENT_PAGE = [
-        'id' => self::PAGE_ID,
+        'id' => 4,
         'pageTitle' => 'FAQs'
     ];
 
     protected function setUp(): void
     {
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, self::CURRENT_PAGE);
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 4,
+                'pageTitle' => 'FAQs'
+            ]
+        );
     }
 
     /**
@@ -146,10 +140,13 @@ class BreadcrumbListenerTest extends ContaoTestCase
             [
                 'isRoot' => false,
                 'isActive' => true,
-                'href' => self::FAQ_URL,
-                'title' => self::FAQ_QUESTION,
-                'link' => self::FAQ_QUESTION,
-                'data' => self::CURRENT_PAGE,
+                'href' => 'faq/foo-bar.html',
+                'title' => 'Foo bar',
+                'link' => 'Foo bar',
+                'data' => [
+                    'id' => 4,
+                    'pageTitle' => 'FAQs'
+                ],
                 'class' => '',
             ],
             $items[$expectedCount - 1]
@@ -164,7 +161,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $GLOBALS['objPage'] = $this->mockClassWithProperties(
             PageModel::class,
             [
-                'id' => self::PAGE_ID,
+                'id' => 4,
                 'pageTitle' => 'News',
                 'requireItem' => '1'
             ]
@@ -180,9 +177,9 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $count = count($items);
 
         if ($count) {
-            $items[$count -1]['title'] = self::FAQ_QUESTION;
-            $items[$count -1]['link'] = self::FAQ_QUESTION;
-            $items[$count -1]['href'] = self::FAQ_URL;
+            $items[$count -1]['title'] = 'Foo bar';
+            $items[$count -1]['link'] = 'Foo bar';
+            $items[$count -1]['href'] = 'faq/foo-bar.html';
         }
 
         $this->assertSame($items, $result);
@@ -224,7 +221,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         return $this->mockClassWithProperties(
             FaqCategoryModel::class,
             [
-                'id' => self::FAQ_CATEGORY_ID,
+                'id' => 3,
             ]
         );
     }
@@ -237,7 +234,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         return $this->mockClassWithProperties(
             FaqModel::class,
             [
-                'question' => self::FAQ_QUESTION,
+                'question' => 'Foo bar',
             ]
         );
     }
@@ -247,9 +244,20 @@ class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockPageModel(): PageModel
     {
-        $page = $this->mockClassWithProperties(PageModel::class, self::CURRENT_PAGE);
-        $page->method('row')->willReturn(self::CURRENT_PAGE);
-        $page->method('getFrontendUrl')->willReturn(self::FAQ_URL);
+        $page = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 4,
+                'pageTitle' => 'FAQs'
+            ]
+        );
+        $page->method('row')->willReturn(
+            [
+                'id' => 4,
+                'pageTitle' => 'FAQs'
+            ]
+        );
+        $page->method('getFrontendUrl')->willReturn('faq/foo-bar.html');
 
         return $page;
     }
@@ -262,7 +270,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $faqCategoryAdapter = $this->mockAdapter(['findOneByJumpTo']);
         $faqCategoryAdapter
             ->method('findOneByJumpTo')
-            ->with(self::PAGE_ID)
+            ->with(4)
             ->willReturn($faqCategoryModel);
 
         return $faqCategoryAdapter;
@@ -276,7 +284,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $faqModelAdapter = $this->mockAdapter(['findPublishedByParentAndIdOrAlias']);
         $faqModelAdapter
             ->method('findPublishedByParentAndIdOrAlias')
-            ->with(self::FAQ_ALIAS, [self::FAQ_CATEGORY_ID])
+            ->with('foo-bar', [3])
             ->willReturn($faqModel);
 
         return $faqModelAdapter;
@@ -305,7 +313,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $inputAdapter
             ->method('get')
             ->with('auto_item')
-            ->willReturn(self::FAQ_ALIAS);
+            ->willReturn('foo-bar');
 
         return $inputAdapter;
     }
@@ -318,7 +326,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $pageModelAdapter = $this->mockAdapter(['findByPk']);
         $pageModelAdapter
             ->method('findByPk')
-            ->with(self::PAGE_ID)
+            ->with(4)
             ->willReturn($pageModel);
 
         return $pageModelAdapter;
@@ -339,7 +347,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
                         'title' => 'Home',
                         'link' => 'Home',
                         'data' => [
-                            'id' => self::PAGE_ID,
+                            'id' => 4,
                         ],
                         'class' => '',
                     ],
@@ -354,7 +362,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
                         'title' => 'Home',
                         'link' => 'Home',
                         'data' => [
-                            'id' => self::ROOT_PAGE_ID,
+                            'id' => 1,
                         ],
                         'class' => '',
                     ],
@@ -364,7 +372,10 @@ class BreadcrumbListenerTest extends ContaoTestCase
                         'href' => 'faq.html',
                         'title' => 'FAQs',
                         'link' => 'FAQs',
-                        'data' => self::CURRENT_PAGE,
+                        'data' => [
+                            'id' => 4,
+                            'pageTitle' => 'FAQs'
+                        ],
                         'class' => '',
                     ],
                 ],

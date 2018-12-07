@@ -26,26 +26,15 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class BreadcrumbListenerTest extends ContaoTestCase
 {
-    private const ROOT_PAGE_ID = 1;
-
-    private const PAGE_ID = 4;
-
-    private const NEWS_ARCHIVE_ID = 3;
-
-    private const NEWS_ALIAS = 'foo-bar';
-
-    private const NEWS_HEADLINE = 'Foo bar';
-
-    private const NEWS_URL = 'news/foo-bar.html';
-
-    private const CURRENT_PAGE = [
-        'id' => self::PAGE_ID,
-        'pageTitle' => 'News'
-    ];
-
     protected function setUp(): void
     {
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, self::CURRENT_PAGE);
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 4,
+                'pageTitle' => 'News'
+            ]
+        );
     }
 
     /**
@@ -147,10 +136,13 @@ class BreadcrumbListenerTest extends ContaoTestCase
             [
                 'isRoot' => false,
                 'isActive' => true,
-                'href' => self::NEWS_URL,
-                'title' => self::NEWS_HEADLINE,
-                'link' => self::NEWS_HEADLINE,
-                'data' => self::CURRENT_PAGE,
+                'href' => 'news/foo-bar.html',
+                'title' => 'Foo bar',
+                'link' => 'Foo bar',
+                'data' => [
+                    'id' => 4,
+                    'pageTitle' => 'News'
+                ],
                 'class' => '',
             ],
             $items[$expectedCount - 1]
@@ -165,7 +157,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $GLOBALS['objPage'] = $this->mockClassWithProperties(
             PageModel::class,
             [
-                'id' => self::PAGE_ID,
+                'id' => 4,
                 'pageTitle' => 'News',
                 'requireItem' => '1'
             ]
@@ -181,9 +173,9 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $count = count($items);
 
         if ($count) {
-            $items[$count -1]['title'] = self::NEWS_HEADLINE;
-            $items[$count -1]['link'] = self::NEWS_HEADLINE;
-            $items[$count -1]['href'] = self::NEWS_URL;
+            $items[$count -1]['title'] = 'Foo bar';
+            $items[$count -1]['link'] = 'Foo bar';
+            $items[$count -1]['href'] = 'news/foo-bar.html';
         }
 
         $this->assertSame($items, $result);
@@ -229,7 +221,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         return $this->mockClassWithProperties(
             NewsArchiveModel::class,
             [
-                'id' => self::NEWS_ARCHIVE_ID,
+                'id' => 3,
             ]
         );
     }
@@ -242,7 +234,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         return $this->mockClassWithProperties(
             NewsModel::class,
             [
-                'headline' => self::NEWS_HEADLINE,
+                'headline' => 'Foo bar',
             ]
         );
     }
@@ -252,8 +244,20 @@ class BreadcrumbListenerTest extends ContaoTestCase
      */
     private function mockPageModel(): PageModel
     {
-        $page = $this->mockClassWithProperties(PageModel::class, self::CURRENT_PAGE);
-        $page->method('row')->willReturn(self::CURRENT_PAGE);
+        $page = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 4,
+                'pageTitle' => 'News'
+            ]
+        );
+
+        $page->method('row')->willReturn(
+            [
+                'id' => 4,
+                'pageTitle' => 'News'
+            ]
+        );
 
         return $page;
     }
@@ -266,7 +270,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $newsArchiveAdapter = $this->mockAdapter(['findOneByJumpTo']);
         $newsArchiveAdapter
             ->method('findOneByJumpTo')
-            ->with(self::PAGE_ID)
+            ->with(4)
             ->willReturn($newsArchiveModel);
 
         return $newsArchiveAdapter;
@@ -280,7 +284,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $newsModelAdapter = $this->mockAdapter(['findPublishedByParentAndIdOrAlias']);
         $newsModelAdapter
             ->method('findPublishedByParentAndIdOrAlias')
-            ->with(self::NEWS_ALIAS, [self::NEWS_ARCHIVE_ID])
+            ->with('foo-bar', [3])
             ->willReturn($newsModel);
 
         return $newsModelAdapter;
@@ -309,7 +313,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $inputAdapter
             ->method('get')
             ->with('auto_item')
-            ->willReturn(self::NEWS_ALIAS);
+            ->willReturn('foo-bar');
 
         return $inputAdapter;
     }
@@ -322,7 +326,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $pageModelAdapter = $this->mockAdapter(['findByPk']);
         $pageModelAdapter
             ->method('findByPk')
-            ->with(self::PAGE_ID)
+            ->with(4)
             ->willReturn($pageModel);
 
         return $pageModelAdapter;
@@ -336,7 +340,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $newsAdapter = $this->mockAdapter(['generateNewsUrl']);
         $newsAdapter
             ->method('generateNewsUrl')
-            ->willReturn(self::NEWS_URL);
+            ->willReturn('news/foo-bar.html');
 
         return $newsAdapter;
     }
@@ -356,7 +360,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
                         'title' => 'Home',
                         'link' => 'Home',
                         'data' => [
-                            'id' => self::PAGE_ID,
+                            'id' => 4,
                         ],
                         'class' => '',
                     ],
@@ -371,7 +375,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
                         'title' => 'Home',
                         'link' => 'Home',
                         'data' => [
-                            'id' => self::ROOT_PAGE_ID,
+                            'id' => 1,
                         ],
                         'class' => '',
                     ],
@@ -381,7 +385,10 @@ class BreadcrumbListenerTest extends ContaoTestCase
                         'href' => 'mews.html',
                         'title' => 'News',
                         'link' => 'News',
-                        'data' => self::CURRENT_PAGE,
+                        'data' => [
+                            'id' => 4,
+                            'pageTitle' => 'News'
+                        ],
                         'class' => '',
                     ],
                 ],
