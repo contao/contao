@@ -129,12 +129,26 @@ class ModuleEventReader extends Events
 
 			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
-				while ($intStartTime < time() && $intEndTime < $objEvent->repeatEnd)
+				while (($this->cal_hideRunning ? $intStartTime : $intEndTime) < time() && $intEndTime < $objEvent->repeatEnd)
 				{
 					$intStartTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intStartTime);
 					$intEndTime = strtotime('+' . $arrRange['value'] . ' ' . $arrRange['unit'], $intEndTime);
 				}
 			}
+		}
+
+		// Mark past and upcoming events (see #187)
+		if ($intEndTime < strtotime('00:00:00'))
+		{
+			$objEvent->cssClass .= ' bygone';
+		}
+		elseif ($intStartTime > strtotime('23:59:59'))
+		{
+			$objEvent->cssClass .= ' upcoming';
+		}
+		else
+		{
+			$objEvent->cssClass .= ' current';
 		}
 
 		list($strDate, $strTime) = $this->getDateAndTime($objEvent, $objPage, $intStartTime, $intEndTime, $span);
@@ -186,7 +200,7 @@ class ModuleEventReader extends Events
 		$objTemplate->datetime = $objEvent->addTime ? date('Y-m-d\TH:i:sP', $intStartTime) : date('Y-m-d', $intStartTime);
 		$objTemplate->begin = $intStartTime;
 		$objTemplate->end = $intEndTime;
-		$objTemplate->class = ($objEvent->cssClass != '') ? ' ' . $objEvent->cssClass : '';
+		$objTemplate->class = ($objEvent->cssClass != '') ? ' ' . trim($objEvent->cssClass) : '';
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
