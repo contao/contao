@@ -51,11 +51,11 @@ final class BreadcrumbListener
             return $items;
         }
 
-        if ($newsArchive::BREADCRUMB_MODE_EXTEND === $newsArchive->breadcrumbMode) {
-            return $this->addBreadcrumbItem($items, $news);
+        if ($GLOBALS['objPage']->requireItem) {
+            return $this->overrideActiveBreadcrumbItem($items, $news);
         }
 
-        return $this->overrideActiveBreadcrumbItem($items, $news);
+        return $this->addBreadcrumbItem($items, $news);
     }
 
     private function getNewsAlias(): ?string

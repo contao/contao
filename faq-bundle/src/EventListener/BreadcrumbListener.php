@@ -54,11 +54,11 @@ final class BreadcrumbListener
             return $items;
         }
 
-        if ($faqCategory::BREADCRUMB_MODE_EXTEND === $faqCategory->breadcrumbMode) {
-            return $this->addBreadcrumbItem($items, $faq, $useAutoItem);
+        if ($GLOBALS['objPage']->requireItem) {
+            return $this->overrideActiveBreadcrumbItem($items, $faq, $useAutoItem);
         }
 
-        return $this->overrideActiveBreadcrumbItem($items, $faq, $useAutoItem);
+        return $this->addBreadcrumbItem($items, $faq, $useAutoItem);
     }
 
     private function getFaqAlias(bool $useAutoItem): ?string

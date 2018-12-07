@@ -162,7 +162,16 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     public function testOverridesCurrentPageItemWithEvent(array $items): void
     {
-        $calendarModel = $this->mockCalenderModel(CalendarModel::BREADCRUMB_MODE_OVERRIDE);
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => self::PAGE_ID,
+                'pageTitle' => 'News',
+                'requireItem' => '1'
+            ]
+        );
+
+        $calendarModel = $this->mockCalenderModel();
         $calendarAdapter = $this->mockCalendarAdapter($calendarModel);
 
         $framework = $this->mockContaoFramework([CalendarModel::class => $calendarAdapter]);
@@ -215,14 +224,12 @@ final class BreadcrumbListenerTest extends ContaoTestCase
     /**
      * @return MockObject|CalendarModel
      */
-    private function mockCalenderModel(
-        string $breadcrumbMode = CalendarModel::BREADCRUMB_MODE_EXTEND
-    ): CalendarModel {
+    private function mockCalenderModel(): CalendarModel
+    {
         return $this->mockClassWithProperties(
             CalendarModel::class,
             [
                 'id' => self::CALENDAR_ID,
-                'breadcrumbMode' => $breadcrumbMode,
             ]
         );
     }

@@ -128,24 +128,6 @@
       <trans-unit id="tl_faq_category.delete.1">
         <source>Delete category ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_faq_category.breadcrumbMode.0">
-        <source>Breadcrumb integration</source>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.breadcrumbMode.1">
-        <source>Please define how a question should be displayed in the breadcrumb.</source>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.breadcrumbModes.override.0">
-        <source>Override</source>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.breadcrumbModes.override.1">
-        <source>The breadcrumb entry of the current page will be overridden.</source>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.breadcrumbModes.extend.0">
-        <source>Extend</source>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.breadcrumbModes.extend.1">
-        <source>A new breadcrumb entry will be created for the question.</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

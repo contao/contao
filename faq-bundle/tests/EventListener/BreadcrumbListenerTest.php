@@ -161,7 +161,16 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     public function testOverridesCurrentPageItemWithFaqEntry(array $items): void
     {
-        $faqCategoryModel = $this->mockFaqCategoryModel(FaqCategoryModel::BREADCRUMB_MODE_OVERRIDE);
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => self::PAGE_ID,
+                'pageTitle' => 'News',
+                'requireItem' => '1'
+            ]
+        );
+
+        $faqCategoryModel = $this->mockFaqCategoryModel();
         $faqCategoryAdapter = $this->mockFaqCategoryAdapter($faqCategoryModel);
 
         $framework = $this->mockContaoFramework([FaqCategoryModel::class => $faqCategoryAdapter]);
@@ -210,14 +219,12 @@ final class BreadcrumbListenerTest extends ContaoTestCase
     /**
      * @return MockObject|FaqCategoryModel
      */
-    private function mockFaqCategoryModel(
-        string $breadcrumbMode = FaqCategoryModel::BREADCRUMB_MODE_EXTEND
-    ): FaqCategoryModel {
+    private function mockFaqCategoryModel(): FaqCategoryModel
+    {
         return $this->mockClassWithProperties(
             FaqCategoryModel::class,
             [
                 'id' => self::FAQ_CATEGORY_ID,
-                'breadcrumbMode' => $breadcrumbMode,
             ]
         );
     }

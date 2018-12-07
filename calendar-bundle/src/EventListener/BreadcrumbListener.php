@@ -51,11 +51,11 @@ final class BreadcrumbListener
             return $items;
         }
 
-        if ($calendar::BREADCRUMB_MODE_EXTEND === $calendar->breadcrumbMode) {
-            return $this->addBreadcrumbItem($items, $eventModel);
+        if ($GLOBALS['objPage']->requireItem) {
+            return $this->overrideActiveBreadcrumbItem($items, $eventModel);
         }
 
-        return $this->overrideActiveBreadcrumbItem($items, $eventModel);
+        return $this->addBreadcrumbItem($items, $eventModel);
     }
 
     private function getEventAlias(): ?string

@@ -162,7 +162,16 @@ final class BreadcrumbListenerTest extends ContaoTestCase
      */
     public function testOverridesCurrentPageItemWithNewsEntry(array $items): void
     {
-        $newsArchiveModel = $this->mockNewsArchiveModel(NewsArchiveModel::BREADCRUMB_MODE_OVERRIDE);
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => self::PAGE_ID,
+                'pageTitle' => 'News',
+                'requireItem' => '1'
+            ]
+        );
+
+        $newsArchiveModel = $this->mockNewsArchiveModel();
         $newsArchiveAdapter = $this->mockNewsArchiveAdapter($newsArchiveModel);
 
         $framework = $this->mockContaoFramework([NewsArchiveModel::class => $newsArchiveAdapter]);
@@ -215,14 +224,12 @@ final class BreadcrumbListenerTest extends ContaoTestCase
     /**
      * @return MockObject|NewsArchiveModel
      */
-    private function mockNewsArchiveModel(
-        string $breadcrumbMode = NewsArchiveModel::BREADCRUMB_MODE_EXTEND
-    ): NewsArchiveModel {
+    private function mockNewsArchiveModel(): NewsArchiveModel
+    {
         return $this->mockClassWithProperties(
             NewsArchiveModel::class,
             [
                 'id' => self::NEWS_ARCHIVE_ID,
-                'breadcrumbMode' => $breadcrumbMode,
             ]
         );
     }

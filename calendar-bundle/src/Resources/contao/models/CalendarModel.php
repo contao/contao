@@ -82,12 +82,6 @@ namespace Contao;
  */
 class CalendarModel extends Model
 {
-	public const BREADCRUMB_MODE_EXTEND = 'extend';
-
-	public const BREADCRUMB_MODE_OVERRIDE = 'override';
-
-	public const BREADCRUMB_MODES = [self::BREADCRUMB_MODE_OVERRIDE, self::BREADCRUMB_MODE_EXTEND];
-
 	/**
 	 * Table name
 	 * @var string
