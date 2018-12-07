@@ -467,6 +467,12 @@ class BackendUser extends User
 				$this->filemounts = $objFiles->fetchEach('path');
 			}
 		}
+
+		// Hide the "admin" field if the user is not an admin (see #184)
+		if (!$this->isAdmin && ($index = array_search('tl_user::admin', $this->alexf)) !== false)
+		{
+			unset($this->alexf[$index]);
+		}
 	}
 
 	/**

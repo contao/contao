@@ -358,6 +358,12 @@ class tl_user_group extends Backend
 			{
 				foreach ($v['fields'] as $kk=>$vv)
 				{
+					// Hide the "admin" field if the user is not an admin (see #184)
+					if ($k == 'tl_user' && $kk == 'admin' && !$this->User->isAdmin)
+					{
+						continue;
+					}
+
 					if ($vv['exclude'] || $vv['orig_exclude'])
 					{
 						$arrReturn[$k][StringUtil::specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
