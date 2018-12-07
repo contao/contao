@@ -410,41 +410,32 @@ abstract class System
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
-		$resLoaderDelegator = static::getContainer()->get('contao.resource_loader.delegator');
+		$objResourceLoader = static::getContainer()->get('contao.resource_loader');
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
 		{
-			$cachedFile = $strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
-
 			// Try to load from cache
-			if (file_exists($cachedFile))
+			if (file_exists($strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php'))
 			{
-				try
-				{
-					$resLoaderDelegator->load($cachedFile);
-
-					continue;
-				}
-				catch (\Exception $e)
-				{
-					static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
-				}
+				$objResourceLoader->load($strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php');
 			}
-
-			// Find the given filename either as .php or .xlf file
-			$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
-
-			/** @var SplFileInfo $file */
-			foreach ($finder as $file)
+			else
 			{
-				try
+				// Find the given filename either as .php or .xlf file
+				$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+
+				/** @var SplFileInfo $file */
+				foreach ($finder as $file)
 				{
-					$resLoaderDelegator->load($file->getPathname(), $strCreateLang);
-				}
-				catch (\Exception $e)
-				{
-					static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
+					try
+					{
+						$objResourceLoader->load($file->getPathname(), $strCreateLang);
+					}
+					catch (\Exception $e)
+					{
+						static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
+					}
 				}
 			}
 		}
@@ -467,20 +458,10 @@ abstract class System
 		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
-		$langconfig = $rootDir . '/system/config/langconfig.php';
-
-		if (file_exists($langconfig))
+		if (file_exists($rootDir . '/system/config/langconfig.php'))
 		{
 			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in app/Resources/contao/languages instead.', E_USER_DEPRECATED);
-
-			try
-			{
-				$resLoaderDelegator->load($langconfig);
-			}
-			catch (\Exception $e)
-			{
-				static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
-			}
+			$objResourceLoader->load($rootDir . '/system/config/langconfig.php');
 		}
 	}
 
