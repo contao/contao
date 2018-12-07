@@ -1098,21 +1098,7 @@ class tl_page extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$slugOptions = array();
-
-			// Read the slug options from the associated page
-			if (($objPage = PageModel::findWithDetails($dc->activeRecord->id)) !== null)
-			{
-				$slugOptions = $objPage->getSlugOptions();
-			}
-
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
-
-			// Prefix numeric aliases (see #1598)
-			if (is_numeric($varValue))
-			{
-				$varValue = 'id-' . $varValue;
-			}
+			$varValue = System::getContainer()->get('contao.slug.helper')->generateSlug($dc->activeRecord->title, $dc->activeRecord->id);
 
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl') && $objPage->folderUrl != '')
