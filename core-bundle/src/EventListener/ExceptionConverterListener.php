@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ExceptionConverterListener
 {
@@ -54,7 +55,7 @@ class ExceptionConverterListener
     {
         $exception = $event->getException();
 
-        if ($exception instanceof NotFoundHttpException && !$this->hasRootPages()) {
+        if ($exception->getPrevious() instanceof ResourceNotFoundException && !$this->hasRootPages()) {
             $exception = new NoRootPageFoundException('No root page found', 0, $exception);
         }
 

@@ -25,6 +25,9 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Fixtures\Exception\DerivedPageNotFoundException;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +39,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ExceptionConverterListenerTest extends TestCase
 {
@@ -43,7 +47,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new AccessDeniedException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -56,7 +60,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new ForwardPageNotFoundException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -69,7 +73,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new IncompleteInstallationException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -82,7 +86,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new InsecureInstallationException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -95,7 +99,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new InsufficientAuthenticationException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -108,7 +112,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new InvalidRequestTokenException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -121,7 +125,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new NoActivePageFoundException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -134,7 +138,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new NoLayoutSpecifiedException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -147,7 +151,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new NoRootPageFoundException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -160,7 +164,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new PageNotFoundException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -169,11 +173,24 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf(PageNotFoundException::class, $exception->getPrevious());
     }
 
+    public function testConvertsResourceNotFoundExceptionWithoutRootPages(): void
+    {
+        $event = $this->mockResponseEvent(new NotFoundHttpException(null, new ResourceNotFoundException()));
+
+        $listener = new ExceptionConverterListener($this->mockConnection(0));
+        $listener->onKernelException($event);
+
+        $exception = $event->getException();
+
+        $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
+        $this->assertInstanceOf(NoRootPageFoundException::class, $exception->getPrevious());
+    }
+
     public function testConvertsServiceUnavailableExceptions(): void
     {
         $event = $this->mockResponseEvent(new ServiceUnavailableException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -186,7 +203,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new \RuntimeException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -198,7 +215,7 @@ class ExceptionConverterListenerTest extends TestCase
     {
         $event = $this->mockResponseEvent(new DerivedPageNotFoundException());
 
-        $listener = new ExceptionConverterListener();
+        $listener = new ExceptionConverterListener($this->mockConnection());
         $listener->onKernelException($event);
 
         $exception = $event->getException();
@@ -213,5 +230,40 @@ class ExceptionConverterListenerTest extends TestCase
         $request = new Request();
 
         return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+    }
+
+    private function mockConnection(int $rowCount = 1)
+    {
+        $statement = $this->createMock(Statement::class);
+
+        $statement
+            ->expects($this->any())
+            ->method('fetchColumn')
+            ->willReturn($rowCount)
+        ;
+
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+
+        $queryBuilder
+            ->expects($this->any())
+            ->method($this->logicalNot($this->equalTo('execute')))
+            ->willReturnSelf()
+        ;
+
+        $queryBuilder
+            ->expects($this->any())
+            ->method('execute')
+            ->willReturn($statement)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->expects($this->any())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder)
+        ;
+
+        return $connection;
     }
 }
