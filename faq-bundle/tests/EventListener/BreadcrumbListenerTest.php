@@ -23,7 +23,7 @@ use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
-final class BreadcrumbListenerTest extends ContaoTestCase
+class BreadcrumbListenerTest extends ContaoTestCase
 {
     private const ROOT_PAGE_ID = 1;
 

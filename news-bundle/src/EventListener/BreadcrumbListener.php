@@ -22,7 +22,7 @@ use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 
-final class BreadcrumbListener
+class BreadcrumbListener
 {
     /**
      * @var ContaoFrameworkInterface
