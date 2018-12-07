@@ -56,7 +56,7 @@ class InputEnhancer implements RouteEnhancerInterface
 
         $this->framework->initialize();
 
-        if ($this->configAdapter->get('addLanguageToUrl')) {
+        if (!empty($defaults['_locale']) && $this->configAdapter->get('addLanguageToUrl')) {
             $this->inputAdapter->setGet('language', $defaults['_locale']);
         }
 
@@ -64,6 +64,7 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
+        // TODO should we use trim() instead of substr()?
         $fragments = explode('/', substr($defaults['parameters'], 1));
 
         // Add the second fragment as auto_item if the number of fragments is even
@@ -73,20 +74,23 @@ class InputEnhancer implements RouteEnhancerInterface
 
         for ($i = 0, $c = \count($fragments); $i < $c; $i += 2) {
             // Skip key value pairs if the key is empty (see #4702)
+            // TODO why does this make sense?
             if ('' === $fragments[$i]) {
                 continue;
             }
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)
+            // TODO should we use $request->query here?
             if (isset($_GET[$fragments[$i]])) {
                 throw new ResourceNotFoundException('Duplicate parameter "'.$fragments[$i].'" in path.');
             }
 
             // Abort if the request contains an auto_item keyword (duplicate content) (see #4012)
-            if ($this->configAdapter->get('useAutoItem') && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)) {
+            if ($this->configAdapter->get('useAutoItem') && isset($GLOBALS['TL_AUTO_ITEM']) && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)) {
                 throw new ResourceNotFoundException('"'.$fragments[$i].'" is an auto_item keyword (duplicate content)');
             }
 
+            // TODO what if the number of parameters is uneven and there is no auto_item?
             $this->inputAdapter->setGet(urldecode($fragments[$i]), $fragments[$i + 1], true);
         }
 
