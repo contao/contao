@@ -666,7 +666,7 @@ class tl_news extends Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug.helper')->generateSlug($dc->activeRecord->headline, NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo ?? [], $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo ?? [], $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{

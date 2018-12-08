@@ -1098,7 +1098,7 @@ class tl_page extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = System::getContainer()->get('contao.slug.helper')->generateSlug($dc->activeRecord->title, $dc->activeRecord->id);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->id);
 
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl') && $objPage->folderUrl != '')

@@ -702,7 +702,7 @@ class tl_calendar_events extends Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug.helper')->generateSlug($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo ?? [], $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo ?? [], $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{

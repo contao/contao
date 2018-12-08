@@ -496,7 +496,7 @@ class tl_form extends Backend
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug.helper')->generateSlug($dc->activeRecord->title, $dc->activeRecord->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{

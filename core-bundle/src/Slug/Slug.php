@@ -17,7 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use Contao\StringUtil;
 
-class Helper
+class Slug
 {
     /**
      * @var SlugGenerator
@@ -39,7 +39,7 @@ class Helper
      * @param int|iterable $options        Page id to get the options from or options object {@see SlugGenerator::generate()}
      * @param callable     $duplicateCheck Callback to check if the slug is already in use: function(string $slug): bool
      */
-    public function generateSlug(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
+    public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
             /** @var $page PageModel */

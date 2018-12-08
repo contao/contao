@@ -466,8 +466,8 @@ services:
         calls:
             - ["setName", ["contao_frontend"]]
 
-    contao.slug.helper:
-        class: Contao\CoreBundle\Slug\Helper
+    contao.slug:
+        class: Contao\CoreBundle\Slug\Slug
         arguments:
             - "@contao.slug.generator"
             - "@contao.framework"
