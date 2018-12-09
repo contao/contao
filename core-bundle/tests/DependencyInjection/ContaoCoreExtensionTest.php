@@ -92,6 +92,7 @@ use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Slug\ValidCharacters;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
@@ -1512,6 +1513,18 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame('setName', $methodCalls[0][0]);
         $this->assertSame(['contao_frontend'], $methodCalls[0][1]);
+    }
+
+    public function testRegistersTheSlugService(): void
+    {
+        $this->assertTrue($this->container->has('contao.slug'));
+
+        $definition = $this->container->getDefinition('contao.slug');
+
+        $this->assertSame(Slug::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.slug.generator', (string) $definition->getArgument(0));
+        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheSlugGenerator(): void
