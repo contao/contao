@@ -106,6 +106,13 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'key=compare',
 				'icon'                => 'diffTemplate.svg',
 				'button_callback'     => array('tl_templates', 'compareButton')
+			),
+			'drag' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
+				'icon'                => 'drag.svg',
+				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'button_callback'     => array('tl_templates', 'dragFile')
 			)
 		)
 	),
@@ -491,6 +498,23 @@ class tl_templates extends Backend
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
 		return is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+	}
+
+	/**
+	 * Return the drag file button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function dragFile($row, $href, $label, $title, $icon, $attributes)
+	{
+		return '<button type="button" title="'.StringUtil::specialchars($title).'" '.$attributes.'>'.Image::getHtml($icon, $label).'</button> ';
 	}
 
 	/**
