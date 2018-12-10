@@ -1094,10 +1094,10 @@ class tl_page extends Backend
 	{
 		$objPage = PageModel::findWithDetails($dc->id);
 
-		$aliasExists = function(string $alias) use($dc, $objPage): bool
+		$aliasExists = function (string $alias) use ($dc, $objPage): bool
 		{
 			$objAliasIds = $this->Database->prepare("SELECT id FROM tl_page WHERE alias=? AND id!=?")
-				->execute($alias, $dc->id);
+										  ->execute($alias, $dc->id);
 
 			if (!$objAliasIds->numRows)
 			{
@@ -1106,6 +1106,7 @@ class tl_page extends Backend
 
 			$strCurrentDomain = $objPage->domain;
 			$strCurrentLanguage = $objPage->rootLanguage;
+
 			if ($objPage->type == 'root')
 			{
 				$strCurrentDomain = Input::post('dns');
@@ -1115,10 +1116,12 @@ class tl_page extends Backend
 			while ($objAliasIds->next())
 			{
 				$objAliasPage = PageModel::findWithDetails($objAliasIds->id);
+
 				if ($objAliasPage->domain != $strCurrentDomain)
 				{
 					continue;
 				}
+
 				if (Config::get('addLanguageToUrl') && $objAliasPage->rootLanguage != $strCurrentLanguage)
 				{
 					continue;
@@ -1134,10 +1137,15 @@ class tl_page extends Backend
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->id, function($alias) use($objPage, $aliasExists)
-			{
-				return $aliasExists((Config::get('folderUrl') ? $objPage->folderUrl : '') . $alias);
-			});
+			$varValue = System::getContainer()->get('contao.slug')->generate
+			(
+				$dc->activeRecord->title,
+				$dc->activeRecord->id,
+				function ($alias) use ($objPage, $aliasExists)
+				{
+					return $aliasExists((Config::get('folderUrl') ? $objPage->folderUrl : '') . $alias);
+				}
+			);
 
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl') && $objPage->folderUrl != '')

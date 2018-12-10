@@ -36,15 +36,16 @@ class Slug
     }
 
     /**
-     * @param int|iterable $options        Page id to get the options from or options object {@see SlugGenerator::generate()}
-     * @param callable     $duplicateCheck Callback to check if the slug is already in use: function(string $slug): bool
+     * @param int|iterable $options        A page ID, object or options array {@see SlugGenerator::generate()}
+     * @param callable     $duplicateCheck A callback to check if the slug is already in use
      */
     public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
             /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            if (($page = $pageAdapter->findWithDetails((int) $options)) !== null) {
+
+            if (null !== ($page = $pageAdapter->findWithDetails((int) $options))) {
                 $options = $page->getSlugOptions();
             } else {
                 $options = [];
@@ -54,7 +55,7 @@ class Slug
         $text = StringUtil::prepareSlug($text);
         $slug = $this->slugGenerator->generate($text, $options);
 
-        if (preg_match('/^[1-9][0-9]*$/', $slug)) {
+        if (preg_match('/^[1-9]\d*$/', $slug)) {
             $slug = $integerPrefix.$slug;
         }
 
@@ -63,7 +64,8 @@ class Slug
         }
 
         $base = $slug;
-        for ($count = 2; $duplicateCheck($slug); $count++) {
+
+        for ($count = 2; $duplicateCheck($slug); ++$count) {
             $slug = $base.'-'.$count;
         }
 

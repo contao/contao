@@ -579,10 +579,13 @@ class tl_article extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function(string $alias) use($dc): bool {
-			if (\in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true)) {
+		$aliasExists = function (string $alias) use ($dc): bool
+		{
+			if (\in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true))
+			{
 				return true;
 			}
+
 			return $this->Database->prepare("SELECT id FROM tl_article WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 

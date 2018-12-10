@@ -20,7 +20,7 @@ use Contao\TestCase\ContaoTestCase;
 
 class SlugTest extends ContaoTestCase
 {
-    public function testGeneratesSlug(): void
+    public function testGeneratesTheSlug(): void
     {
         $pageModel = $this->createMock(PageModel::class);
         $pageModel
@@ -59,11 +59,7 @@ class SlugTest extends ContaoTestCase
         $this->assertSame('123', $slug->generate('123', 123, null, ''));
         $this->assertSame('12.3', $slug->generate('12.3'));
         $this->assertSame('text<', $slug->generate('&#116;ext{{insert::tag}}[lt]', 123));
-        $this->assertSame('text-2', $slug->generate('text', [], function($alias) {
-            return $alias === 'text';
-        }));
-        $this->assertSame('text-10', $slug->generate('text', [], function($alias) {
-            return strlen($alias) < 7;
-        }));
+        $this->assertSame('text-2', $slug->generate('text', [], function ($alias) { return 'text' === $alias; }));
+        $this->assertSame('text-10', $slug->generate('text', [], function ($alias) { return \strlen($alias) < 7; }));
     }
 }

@@ -695,14 +695,15 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function(string $alias) use($dc): bool {
+		$aliasExists = function (string $alias) use ($dc): bool
+		{
 			return $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
-		// Generate alias if there is none
+		// Generate the alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo ?? [], $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo ?? array(), $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{

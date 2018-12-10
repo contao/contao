@@ -792,7 +792,7 @@ abstract class Model
 	 */
 	public static function findByIdOrAlias($varId, array $arrOptions=array())
 	{
-		$isAlias = !preg_match('/^[1-9][0-9]*$/', $varId);
+		$isAlias = !preg_match('/^[1-9]\d*$/', $varId);
 
 		// Try to load from the registry
 		if (!$isAlias && empty($arrOptions))
