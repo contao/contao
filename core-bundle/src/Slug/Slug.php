@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Slug;
 
-use Ausi\SlugGenerator\SlugGenerator;
+use Ausi\SlugGenerator\SlugGeneratorInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -20,7 +20,7 @@ use Contao\StringUtil;
 class Slug
 {
     /**
-     * @var SlugGenerator
+     * @var SlugGeneratorInterface
      */
     private $slugGenerator;
 
@@ -29,14 +29,14 @@ class Slug
      */
     private $framework;
 
-    public function __construct(SlugGenerator $slugGenerator, ContaoFrameworkInterface $framework)
+    public function __construct(SlugGeneratorInterface $slugGenerator, ContaoFrameworkInterface $framework)
     {
         $this->slugGenerator = $slugGenerator;
         $this->framework = $framework;
     }
 
     /**
-     * @param int|iterable $options        A page ID, object or options array {@see SlugGenerator::generate()}
+     * @param int|iterable $options        A page ID, object or options array {@see SlugGeneratorInterface::generate()}
      * @param callable     $duplicateCheck A callback to check if the slug is already in use
      */
     public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string

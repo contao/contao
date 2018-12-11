@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Slug;
 
-use Ausi\SlugGenerator\SlugGenerator;
+use Ausi\SlugGenerator\SlugGeneratorInterface;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\PageModel;
@@ -45,7 +45,7 @@ class SlugTest extends ContaoTestCase
             ->willReturn($pageModelAdapter)
         ;
 
-        $generator = $this->createMock(SlugGenerator::class);
+        $generator = $this->createMock(SlugGeneratorInterface::class);
         $generator
             ->expects($this->atLeastOnce())
             ->method('generate')
