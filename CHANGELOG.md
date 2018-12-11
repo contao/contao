@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Enable drag and drop for templates (see #223).
  * Add the integrity attribute when loading jQuery from CDN (see contao/core-bundle#702).
  * Add methods to retrive past and upcoming dates in the event reader (see #175).
  * Associate comments with members (see contao/comments-bundle#7).
