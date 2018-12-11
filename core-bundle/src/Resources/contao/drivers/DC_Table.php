@@ -5106,7 +5106,17 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		foreach ($searchFields as $field)
 		{
-			$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field]);
+			$option_label = $field;
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
+			{
+				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
+			}
+			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
+			{
+				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
+			}
+
 			$options_sorter[Utf8::toAscii($option_label).'_'.$field] = '  <option value="'.\StringUtil::specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
 		}
 

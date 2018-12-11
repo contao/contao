@@ -363,7 +363,6 @@ class ModuleRegistration extends Module
 	{
 		$arrData['tstamp'] = time();
 		$arrData['login'] = $this->reg_allowLogin;
-		$arrData['activation'] = 'RG' . substr(md5(uniqid(mt_rand(), true)), 2);
 		$arrData['dateAdded'] = $arrData['tstamp'];
 
 		// Set default groups
@@ -459,6 +458,8 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendActivationMail($arrData)
 	{
+		$arrData['activation'] = 'RG' . substr(md5(uniqid(mt_rand(), true)), 2);
+
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
 		$arrTokenData['domain'] = \Idna::decode(\Environment::get('host'));

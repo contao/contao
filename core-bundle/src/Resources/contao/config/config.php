@@ -69,6 +69,10 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_user_group')
 		),
+		'opt_in' => array
+		(
+			'tables'                  => array('tl_opt_in')
+		),
 		'login' => array
 		(
 			'tables'                  => array('tl_user'),
