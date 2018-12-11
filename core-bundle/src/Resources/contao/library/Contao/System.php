@@ -409,8 +409,10 @@ abstract class System
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
+		// Prepare the XLIFF loader
+		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
+
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
-		$objResourceLoader = static::getContainer()->get('contao.resource_loader');
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
@@ -418,7 +420,7 @@ abstract class System
 			// Try to load from cache
 			if (file_exists($strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php'))
 			{
-				$objResourceLoader->load($strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php');
+				include $strCacheDir . '/contao/languages/' . $strCreateLang . '/' . $strName . '.php';
 			}
 			else
 			{
@@ -428,13 +430,18 @@ abstract class System
 				/** @var SplFileInfo $file */
 				foreach ($finder as $file)
 				{
-					try
+					switch ($file->getExtension())
 					{
-						$objResourceLoader->load($file->getPathname(), $strCreateLang);
-					}
-					catch (\Exception $e)
-					{
-						static::getContainer()->get('monolog.logger.contao')->log(LogLevel::ERROR, $e->getMessage(), array('exception'=>$e));
+						case 'php':
+							include $file;
+							break;
+
+						case 'xlf':
+							$xlfLoader->load($file, $strCreateLang);
+							break;
+
+						default:
+							throw new \RuntimeException(sprintf('Invalid language file extension: %s', $file->getExtension()));
 					}
 				}
 			}
@@ -461,7 +468,7 @@ abstract class System
 		if (file_exists($rootDir . '/system/config/langconfig.php'))
 		{
 			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in app/Resources/contao/languages instead.', E_USER_DEPRECATED);
-			$objResourceLoader->load($rootDir . '/system/config/langconfig.php');
+			include $rootDir . '/system/config/langconfig.php';
 		}
 	}
 

@@ -23,8 +23,6 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Command\VersionCommand;
-use Contao\CoreBundle\Config\Loader\PhpFileIncluder;
-use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Controller\InsertTagsController;
@@ -106,8 +104,6 @@ use Doctrine\Common\Cache\FilesystemCache;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -1215,54 +1211,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ResourceFinder::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('%contao.resources_paths%', $definition->getArgument(0));
-    }
-
-    public function testRegistersTheResourceLoader(): void
-    {
-        $this->assertTrue($this->container->has('contao.resource_loader'));
-
-        $definition = $this->container->getDefinition('contao.resource_loader');
-
-        $this->assertSame(DelegatingLoader::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.resource_loader.resolver', (string) $definition->getArgument(0));
-    }
-
-    public function testRegistersTheResourceLoaderResolver(): void
-    {
-        $this->assertTrue($this->container->has('contao.resource_loader.resolver'));
-
-        $definition = $this->container->getDefinition('contao.resource_loader.resolver');
-
-        $this->assertSame(LoaderResolver::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-
-        $loaders = $definition->getArgument(0);
-
-        $this->assertSame('contao.resource_loader.xliff', (string) $loaders[0]);
-        $this->assertSame('contao.resource_loader.php', (string) $loaders[1]);
-    }
-
-    public function testRegistersThePhpResourceLoader(): void
-    {
-        $this->assertTrue($this->container->has('contao.resource_loader.php'));
-
-        $definition = $this->container->getDefinition('contao.resource_loader.php');
-
-        $this->assertSame(PhpFileIncluder::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-    }
-
-    public function testRegistersTheXliffResourceLoader(): void
-    {
-        $this->assertTrue($this->container->has('contao.resource_loader.xliff'));
-
-        $definition = $this->container->getDefinition('contao.resource_loader.xliff');
-
-        $this->assertSame(XliffFileLoader::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%kernel.project_dir%', $definition->getArgument(0));
-        $this->assertTrue($definition->getArgument(1));
     }
 
     public function testRegistersTheResourceLocator(): void
