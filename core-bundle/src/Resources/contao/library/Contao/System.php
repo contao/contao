@@ -441,7 +441,7 @@ abstract class System
 							break;
 
 						default:
-							throw new \RuntimeException(sprintf('Cannot load language file with extension "%s"', $file->getExtension()));
+							throw new \RuntimeException(sprintf('Invalid language file extension: %s', $file->getExtension()));
 					}
 				}
 			}
