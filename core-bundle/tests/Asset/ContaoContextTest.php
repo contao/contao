@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Asset;
 
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
@@ -165,12 +164,7 @@ class ContaoContextTest extends TestCase
 
     private function mockPageWithDetails(): PageModel
     {
-        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $container = $this->mockContainer();
-        $container->set('contao.resource_finder', $finder);
-
-        System::setContainer($container);
+        System::setContainer($this->mockContainer());
 
         $page = new PageModel();
         $page->type = 'root';
