@@ -32,9 +32,9 @@ class OptIn implements OptInInterface
     /**
      * {@inheritdoc}
      */
-    public function create(string $table, int $id, string $email, string $subject, string $text): string
+    public function create(string $prefix, string $table, int $id, string $email, string $subject, string $text): string
     {
-        $token = bin2hex(random_bytes(16));
+        $token = $prefix.bin2hex(random_bytes(16));
 
         /** @var OptInModel $model */
         $model = $this->framework->createInstance(OptInModel::class);

@@ -17,7 +17,7 @@ interface OptInInterface
     /**
      * Creates a new double opt-in token.
      */
-    public function create(string $table, int $id, string $email, string $subject, string $text): string;
+    public function create(string $prefix, string $table, int $id, string $email, string $subject, string $text): string;
 
     /**
      * Confirms a double opt-in token.
@@ -35,10 +35,8 @@ interface OptInInterface
     public function flagForRemoval(string $token, int $removeOn): void;
 
     /**
-     * Purges double opt-in tokens.
-     *
-     * Automatically remove confirmed tokens once they reach their "removeOn" date
-     * and unconfirmed tokens toghether with their related record after 24 hours.
+     * Purges double opt-in tokens and also delete the related record if the
+     * token has never been confirmed.
      */
     public function purgeTokens(): void;
 }

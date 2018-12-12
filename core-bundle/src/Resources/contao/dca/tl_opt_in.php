@@ -75,7 +75,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['token'],
 			'search'                  => true,
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(40) NOT NULL default ''"
 		),
 		'createdOn' => array
 		(

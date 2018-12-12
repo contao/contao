@@ -37,9 +37,9 @@ class OptInTest extends ContaoTestCase
             ->willReturn($model)
         ;
 
-        $token = (new OptIn($framework))->create('tl_member', 1, 'foo@bar.com', 'Subject', 'Text');
+        $token = (new OptIn($framework))->create('reg-', 'tl_member', 1, 'foo@bar.com', 'Subject', 'Text');
 
-        $this->assertStringMatchesFormat('%x', $token);
+        $this->assertStringMatchesFormat('reg-%x', $token);
     }
 
     public function testConfirmsAToken(): void
