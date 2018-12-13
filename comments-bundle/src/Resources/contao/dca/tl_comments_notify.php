@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'email' => array
 		(
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'url' => array
 		(

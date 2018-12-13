@@ -636,7 +636,7 @@ class tl_user extends Backend
 	}
 
 	/**
-	 * Return the copy page button
+	 * Return the copy user button
 	 *
 	 * @param array  $row
 	 * @param string $href
@@ -659,7 +659,7 @@ class tl_user extends Backend
 	}
 
 	/**
-	 * Return the delete page button
+	 * Return the delete user button
 	 *
 	 * @param array  $row
 	 * @param string $href

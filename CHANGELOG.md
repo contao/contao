@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Prevent information disclosure through incorrect access control in the back end (see CVE-2018-20028).
+
 ## 4.6.10 (2018-12-04)
 
  * Do not add a favicon.ico file by default (see #181).

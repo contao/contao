@@ -533,7 +533,11 @@ class tl_news extends Backend
 		switch (Input::get('act'))
 		{
 			case 'paste':
-				// Allow
+			case 'select':
+				if (!\in_array($id, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
+				}
 				break;
 
 			case 'create':
@@ -589,7 +593,6 @@ class tl_news extends Backend
 				}
 				break;
 
-			case 'select':
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':

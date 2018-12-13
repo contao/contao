@@ -214,7 +214,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->ptable : $this->strTable;
 
-			 // Unless there are any root records specified, use all records with parent ID 0
+			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
 				$objIds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''))
@@ -229,7 +229,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Get root records from global configuration file
 			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
 			{
-				$this->root = $this->eliminateNestedPages($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $table, $this->Database->fieldExists('sorting', $table));
+				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
+				{
+					$this->root = array(0);
+				}
+				else
+				{
+					$this->root = $this->eliminateNestedPages($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $table, $this->Database->fieldExists('sorting', $table));
+				}
 			}
 		}
 
@@ -5519,6 +5526,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$what = "UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01')) AS $what";
 				}
+			}
+
+			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? $this->ptable : $this->strTable;
+
+			// Limit the options if there are root records
+			if (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] !== false)
+			{
+				$arrProcedure[] = "id IN(" . implode(',', array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'])) . ")";
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && \strlen($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
