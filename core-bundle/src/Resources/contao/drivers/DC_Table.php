@@ -384,8 +384,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			return '';
 		}
 
-		$count = 1;
-		$return = '';
+		$data = array();
 		$row = $objRow->row();
 
 		// Get the order fields
@@ -425,8 +424,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$value = \Encryption::decrypt($value);
 			}
-
-			$class = (($count++ % 2) == 0) ? ' class="tl_bg"' : '';
 
 			// Get the field value
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey']))
@@ -550,11 +547,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$label = $i;
 			}
 
-			$return .= '
-  <tr>
-    <td'.$class.'><span class="tl_label">'.$label.': </span></td>
-    <td'.$class.'>'.\StringUtil::specialchars($row[$i]).'</td>
-  </tr>';
+			$data[$this->strTable][$i] = array('label' => $label, 'value' => $row[$i]);
 		}
 
 		// Special treatment for tl_undo
@@ -569,20 +562,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				foreach ($arrTableData as $arrRow)
 				{
-					$count = 0;
-					$return .= '
-  <tr>
-    <td colspan="2" style="height:5em"></td>
-  </tr>';
-
 					foreach ($arrRow as $i=>$v)
 					{
 						if (\is_array(\StringUtil::deserialize($v)))
 						{
 							continue;
 						}
-
-						$class = (($count++ % 2) == 0) ? ' class="tl_bg"' : '';
 
 						// Get the field label
 						if (isset($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']))
@@ -599,21 +584,69 @@ class DC_Table extends DataContainer implements \listable, \editable
 							$label = $i;
 						}
 
-						// Always encode special characters (thanks to Oliver Klee)
-						$return .= '
-  <tr>
-    <td'.$class.'><span class="tl_label">'.$label.': </span></td>
-    <td'.$class.'>'.\StringUtil::specialchars($v).'</td>
-  </tr>';
+						$data[$strTable][$i] = array('label' => $label, 'value' => $v);
 					}
 				}
 			}
 		}
 
+		// Call onshow_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onshow_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onshow_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$data = $this->{$callback[0]}->{$callback[1]}($data, $objRow->row(), $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$data = $callback($data, $objRow->row(), $this);
+				}
+			}
+		}
+
+		$count = 0;
+		$return = '<table class="tl_show">';
+
+		// Generate table
+		foreach ($data as $table => $items)
+		{
+			// Separate multiple tables (e.g. tl_undo)
+			if (++$count > 1)
+			{
+				$return .= '
+  <tr>
+    <td colspan="2" style="height:5em"></td>
+  </tr>';
+			}
+
+			// Add the table name if there are multiple (e.g. tl_undo);
+			if (count($data) > 1)
+			{
+				$return .= '
+  <tr>
+    <td class="tl_folder_top"><span class="tl_label">'.$GLOBALS['TL_LANG']['MSC']['table'].': </span></td>
+    <td class="tl_folder_top">'.$table.'</td>
+  </tr>
+';
+			}
+
+			foreach (array_values($items) as $index => $item)
+			{
+				$class = (($index % 2) !== 0) ? ' class="tl_bg"' : '';
+
+				$return .= '
+  <tr>
+    <td'.$class.'><span class="tl_label">'.$item['label'].': </span></td>
+    <td'.$class.'>'.\StringUtil::specialchars($item['value']).'</td>
+  </tr>';
+			}
+		}
+
 		// Return table
-		return '
-<table class="tl_show">'.$return.'
-</table>';
+		return $return . '</table>';
 	}
 
 	/**
