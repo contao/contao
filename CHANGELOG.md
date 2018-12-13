@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.6.11 (2018-12-13)
 
  * Prevent information disclosure through incorrect access control in the back end (see CVE-2018-20028).
 
