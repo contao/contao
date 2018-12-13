@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Prevent information disclosure through incorrect access control in the back end (see CVE-2018-20028).
+
 ## 4.4.30 (2018-12-04)
 
  * Fix a compatibility issue with Doctrine DBAL 2.9 (see #212).

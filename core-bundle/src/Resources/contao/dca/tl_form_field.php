@@ -462,11 +462,14 @@ class tl_form_field extends Backend
 		switch (Input::get('act'))
 		{
 			case 'paste':
-				// Allow
+			case 'select':
+				if (!\in_array($id, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
+				}
 				break;
 
 			case 'create':
-			case 'select':
 				if (!\strlen(Input::get('id')) || !\in_array(Input::get('id'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . Input::get('id') . '.');

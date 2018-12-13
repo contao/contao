@@ -237,7 +237,10 @@ class tl_newsletter_recipients extends Backend
 		{
 			case 'paste':
 			case 'select':
-				// Allow
+				if (!\in_array($id, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
+				}
 				break;
 
 			case 'create':
