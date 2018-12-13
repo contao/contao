@@ -91,7 +91,7 @@ class InputEnhancer implements RouteEnhancerInterface
             }
 
             // TODO what if the number of parameters is uneven and there is no auto_item?
-            $this->inputAdapter->setGet(urldecode($fragments[$i]), $fragments[$i + 1], true);
+            $this->inputAdapter->setGet(urldecode($fragments[$i]), urldecode($fragments[$i + 1] ?? ''), true);
         }
 
         return $defaults;
