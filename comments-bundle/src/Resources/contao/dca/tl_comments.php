@@ -446,7 +446,7 @@ class tl_comments extends Backend
 				break;
 
 			case 'tl_faq':
-				// Do not check the access to the FAQ module (see #5174)
+				// Do not check access to the FAQ module (see #5174)
 				Cache::set($strKey, true);
 				break;
 
