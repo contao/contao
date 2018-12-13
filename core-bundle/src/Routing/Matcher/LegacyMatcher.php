@@ -69,6 +69,8 @@ class LegacyMatcher implements RequestMatcherInterface
             return $this->requestMatcher->matchRequest($request);
         }
 
+        @trigger_error('Using the "getPageIdFromUrl" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
         $fragments = null;
 
         if ($this->configAdapter->get('folderUrl')) {
@@ -113,7 +115,7 @@ class LegacyMatcher implements RequestMatcherInterface
 
         // Add the second fragment as auto_item if the number of fragments is even
         if ($this->configAdapter->get('useAutoItem') && 0 === \count($fragments) % 2) {
-            array_insert($fragments, 1, ['auto_item']);
+            array_splice($fragments, 1, 0, ['auto_item']);
         }
 
         return $fragments;
@@ -125,7 +127,7 @@ class LegacyMatcher implements RequestMatcherInterface
 
         // Add the second fragment as auto_item if the number of fragments is even
         if ($this->configAdapter->get('useAutoItem') && 0 === \count($fragments) % 2) {
-            array_insert($fragments, 1, ['auto_item']);
+            array_splice($fragments, 1, 0, ['auto_item']);
         }
 
         return $fragments;
@@ -140,13 +142,13 @@ class LegacyMatcher implements RequestMatcherInterface
 
         // Return if the alias is empty (see #4702 and #4972)
         if ('' === $fragments[0]) {
-            throw new ResourceNotFoundException('Page alias is empty.');
+            throw new ResourceNotFoundException('Page alias is empty');
         }
 
         return $fragments;
     }
 
-    private function createPathFromFragments(array $fragments, string $locale)
+    private function createPathFromFragments(array $fragments, ?string $locale)
     {
         if ($this->configAdapter->get('useAutoItem') && 'auto_item' === $fragments[1]) {
             unset($fragments[1]);

@@ -1,0 +1,624 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\Routing\Matcher;
+
+use Contao\Config;
+use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\Input;
+use Contao\PageModel;
+use Contao\System;
+use PHPUnit\Framework\MockObject\Matcher\Invocation;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+
+/**
+ * @group legacy
+ */
+class LegacyMatcherTest extends TestCase
+{
+    public function testDoesNothingIfNoHooksAreRegistered()
+    {
+        unset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']);
+
+        $config = $this->mockAdapter(['get']);
+        $config
+            ->expects($this->never())
+            ->method('get')
+        ;
+
+        $matcher = new LegacyMatcher(
+            $this->mockFrameworkWithAdapters($config),
+            $this->mockRequestMatcher($this->once())
+        );
+        $matcher->matchRequest($this->createMock(Request::class));
+    }
+
+    /**
+     * @dataProvider matchRequestWithoutFolderUrlProvider
+     */
+    public function testMatchesRequestWithoutFolderUrl(string $requestPath, ?string $language, string $urlSuffix, bool $useAutoItem, string $resultPath, ...$hooks)
+    {
+        $config = [
+            'folderUrl' => false,
+            'useAutoItem' => $useAutoItem,
+            'addLanguageToUrl' => null !== $language,
+            'urlSuffix' => $urlSuffix,
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            $language,
+            $hooks
+        );
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn($requestPath)
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
+
+        $matcher = new LegacyMatcher(
+            $framework,
+            $this->mockRequestMatcher($this->once(), $resultPath)
+        );
+        $matcher->matchRequest($request);
+    }
+
+    public function matchRequestWithoutFolderUrlProvider()
+    {
+        /**
+         * Test Data:
+         * 1. Request path
+         * 2. Language, or NULL if not in request path
+         * 3. URL suffix
+         * 4. True when autoItem is enabled
+         * 5. Expected path after hooks
+         * 6+. One or more hook arrays with class, method, input array and option output array
+         */
+
+        yield [
+            '/foo.html',
+            null,
+            '.html',
+            false,
+            '/foo.html',
+            ['foo', 'bar', ['foo']],
+        ];
+
+        yield [
+            '/de/foo.html',
+            'de',
+            '.html',
+            false,
+            '/de/foo.html',
+            ['foo', 'bar', ['foo']],
+        ];
+
+        yield [
+            '/foo/bar/baz.html',
+            null,
+            '.html',
+            false,
+            '/foo/bar/baz.html',
+            ['foo', 'bar', ['foo', 'bar', 'baz']],
+        ];
+
+        yield [
+            '/fr/foo/bar/baz.html',
+            'fr',
+            '.html',
+            false,
+            '/fr/foo/bar/baz.html',
+            ['foo', 'bar', ['foo', 'bar', 'baz']],
+        ];
+
+        yield [
+            '/foo/',
+            null,
+            '/',
+            false,
+            '/foo/',
+            ['foo', 'bar', ['foo']],
+        ];
+
+        yield [
+            '/en/foo/bar/',
+            null,
+            '/',
+            false,
+            '/en/foo/bar/',
+            ['foo', 'bar', ['en', 'foo', 'bar']],
+        ];
+
+        yield [
+            '/en/foo/bar',
+            'en',
+            '',
+            false,
+            '/en/foo/bar',
+            ['foo', 'bar', ['foo', 'bar']],
+        ];
+
+        yield [
+            '/en/foo/bar',
+            'en',
+            '',
+            true,
+            '/en/foo/bar',
+            ['foo', 'bar', ['foo', 'auto_item', 'bar']],
+        ];
+
+        yield [
+            '/foo.html',
+            null,
+            '.html',
+            false,
+            '/bar.html',
+            ['foo', 'bar', ['foo'], ['bar']],
+        ];
+
+        yield [
+            '/foo/bar/baz.html',
+            null,
+            '.html',
+            false,
+            '/bar.html',
+            ['foo', 'bar', ['foo', 'bar', 'baz'], ['bar']],
+        ];
+
+        yield [
+            '/foo.html',
+            null,
+            '.html',
+            false,
+            '/baz.html',
+            ['foo', 'bar', ['foo'], ['bar']],
+            ['bar', 'baz', ['bar'], ['baz']],
+        ];
+    }
+
+    public function testMatchRequestFromPathIfFolderUrlIsNotFound()
+    {
+        $config = [
+            'folderUrl' => true,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            null,
+            [['foo', 'bar', ['foo']]]
+        );
+
+        $folderUrlMatched = 0;
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn('foo.html')
+        ;
+
+        $matcher = $this->createMock(RequestMatcherInterface::class);
+        $matcher
+            ->expects($this->exactly(2))
+            ->method('matchRequest')
+            ->with($this->callback(function (Request $incoming) use ($request, &$folderUrlMatched) {
+                if ($folderUrlMatched > 0) {
+                    return true;
+                }
+
+                $folderUrlMatched = 1;
+
+                return $incoming === $request;
+            }))
+            ->willReturnCallback(function () use (&$folderUrlMatched) {
+                if ($folderUrlMatched < 2) {
+                    $folderUrlMatched = 2;
+                    throw new ResourceNotFoundException('');
+                }
+
+                return null;
+            });
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
+
+        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher->matchRequest($request);
+    }
+
+    public function testMatchRequestFromPathIfFolderUrlHasNoModel()
+    {
+        $config = [
+            'folderUrl' => true,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            null,
+            [['foo', 'bar', ['foo']]]
+        );
+
+        $folderUrlMatched = 0;
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn('foo.html')
+        ;
+
+        $matcher = $this->createMock(RequestMatcherInterface::class);
+        $matcher
+            ->expects($this->exactly(2))
+            ->method('matchRequest')
+            ->with($this->callback(function (Request $incoming) use ($request, &$folderUrlMatched) {
+                if ($folderUrlMatched > 0) {
+                    return true;
+                }
+
+                $folderUrlMatched = 1;
+
+                return $incoming === $request;
+            }))
+            ->willReturnCallback(function () use (&$folderUrlMatched) {
+                if ($folderUrlMatched < 2) {
+                    $folderUrlMatched = 2;
+                    return [];
+                }
+
+                return null;
+            });
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
+
+        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher->matchRequest($request);
+    }
+
+    public function testUsesPageAliasFromFolderUrlRoute()
+    {
+        $config = [
+            'folderUrl' => true,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            null,
+            [['foo', 'bar', ['bar']]]
+        );
+
+        $folderUrlMatched = 0;
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->never())
+            ->method('getPathInfo')
+        ;
+
+        $matcher = $this->createMock(RequestMatcherInterface::class);
+        $matcher
+            ->expects($this->exactly(2))
+            ->method('matchRequest')
+            ->with($this->callback(function (Request $incoming) use ($request, &$folderUrlMatched) {
+                if ($folderUrlMatched > 0) {
+                    return true;
+                }
+
+                $folderUrlMatched = 1;
+
+                return $incoming === $request;
+            }))
+            ->willReturnCallback(function () use (&$folderUrlMatched) {
+                if ($folderUrlMatched < 2) {
+                    $folderUrlMatched = 2;
+
+                    return [
+                        'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'bar']),
+                    ];
+                }
+
+                return null;
+            });
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
+
+        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher->matchRequest($request);
+    }
+
+    public function testMatchesFragmentsWithParametersFolderUrlRoute()
+    {
+        $config = [
+            'folderUrl' => true,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            null,
+            [['foo', 'bar', ['foo', 'bar', 'baz']]]
+        );
+
+        $folderUrlMatched = 0;
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->never())
+            ->method('getPathInfo')
+        ;
+
+        $matcher = $this->createMock(RequestMatcherInterface::class);
+        $matcher
+            ->expects($this->exactly(2))
+            ->method('matchRequest')
+            ->with($this->callback(function (Request $incoming) use ($request, &$folderUrlMatched) {
+                if ($folderUrlMatched > 0) {
+                    return true;
+                }
+
+                $folderUrlMatched = 1;
+
+                return $incoming === $request;
+            }))
+            ->willReturnCallback(function () use (&$folderUrlMatched) {
+                if ($folderUrlMatched < 2) {
+                    $folderUrlMatched = 2;
+
+                    return [
+                        'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'foo']),
+                        'parameters' => '/bar/baz'
+                    ];
+                }
+
+                return null;
+            });
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
+
+        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher->matchRequest($request);
+    }
+
+    public function testAddsAutoItemToFragmentsOfFolderUrlRoute()
+    {
+        $config = [
+            'folderUrl' => true,
+            'useAutoItem' => true,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            null,
+            [['foo', 'bar', ['foo', 'auto_item', 'baz']]]
+        );
+
+        $folderUrlMatched = 0;
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->never())
+            ->method('getPathInfo')
+        ;
+
+        $matcher = $this->createMock(RequestMatcherInterface::class);
+        $matcher
+            ->expects($this->exactly(2))
+            ->method('matchRequest')
+            ->with($this->callback(function (Request $incoming) use ($request, &$folderUrlMatched) {
+                if ($folderUrlMatched > 0) {
+                    return true;
+                }
+
+                $folderUrlMatched = 1;
+
+                return $incoming === $request;
+            }))
+            ->willReturnCallback(function () use (&$folderUrlMatched) {
+                if ($folderUrlMatched < 2) {
+                    $folderUrlMatched = 2;
+
+                    return [
+                        'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'foo']),
+                        'parameters' => '/baz'
+                    ];
+                }
+
+                return null;
+            });
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
+
+        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher->matchRequest($request);
+    }
+
+    public function testThrowsExceptionIfUrlSuffixDoesNotMatch()
+    {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('URL suffix does not match');
+
+        $config = [
+            'folderUrl' => false,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn('foo.php')
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
+
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()));
+        $matcher->matchRequest($request);
+    }
+
+    public function testThrowsExceptionIfLanguageIsMissing()
+    {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Locale does not match');
+
+        $config = [
+            'folderUrl' => false,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => true,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn('foo/bar.html')
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
+
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()));
+        $matcher->matchRequest($request);
+    }
+
+    public function testThrowsExceptionIfHookReturnsAnEmptyAlias()
+    {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Page alias is empty');
+
+        $config = [
+            'folderUrl' => false,
+            'useAutoItem' => false,
+            'addLanguageToUrl' => false,
+            'urlSuffix' => '.html',
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters(
+            $this->mockConfigAdapter($config),
+            null,
+            [['foo', 'bar', ['foo'], ['']]]
+        );
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn('foo.html')
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
+
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()));
+        $matcher->matchRequest($request);
+    }
+
+    private function mockFrameworkWithAdapters($configAdapter = null, $language = null, array $hooks = [])
+    {
+        $classes = [];
+        $callbacks = [];
+        foreach ($hooks as $hook) {
+            $classes[] = [$hook[0]];
+
+            $callback = $this->mockAdapter([$hook[1]]);
+            $callback
+                ->expects($this->once())
+                ->method($hook[1])
+                ->with($hook[2])
+                ->willReturn($hook[3] ?? $hook[2])
+            ;
+
+            $callbacks[] = $callback;
+        }
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter
+            ->expects($this->exactly(\count($hooks)))
+            ->method('importStatic')
+            ->withConsecutive(...$classes)
+            ->willReturnOnConsecutiveCalls(...$callbacks)
+        ;
+
+        $inputAdapter = $this->mockAdapter(['setGet']);
+        $inputAdapter
+            ->expects(null === $language ? $this->never() : $this->once())
+            ->method('setGet')
+            ->with('language', $language)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            System::class => $systemAdapter,
+            Input::class => $inputAdapter,
+            Config::class => $configAdapter,
+        ]);
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        return $framework;
+    }
+
+    private function mockRequestMatcher(Invocation $expects, string $pathInfo = null, array $match = null)
+    {
+        $matcher = $this->createMock(RequestMatcherInterface::class);
+
+        $matcher
+            ->expects($expects)
+            ->method('matchRequest')
+            ->with($this->callback(function (Request $request) use ($pathInfo) {
+                return null === $pathInfo || $request->getPathInfo() === $pathInfo;
+            }))
+            ->willReturn($match)
+        ;
+
+        return $matcher;
+    }
+
+    private function mockConfigAdapter(array $config)
+    {
+        $configAdapter = $this->mockAdapter(['get']);
+
+        $configAdapter
+            ->method('get')
+            ->willReturnCallback(function ($param) use ($config) {
+                return $config[$param] ?? null;
+            })
+        ;
+
+        return $configAdapter;
+    }
+}
