@@ -40,22 +40,23 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('token', 'email', 'createdOn', 'relatedTable', 'relatedId'),
+			'fields'                  => array('token', 'email', 'createdOn', 'confirmedOn', 'relatedTable'),
 			'showColumns'             => true,
 		),
 		'operations' => array
 		(
+			'resend' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_opt_in']['resend'],
+				'href'                => 'key=resend',
+				'icon'                => 'resend.svg',
+				'button_callback'     => array('tl_opt_in', 'resendButton')
+			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_opt_in']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
-			),
-			'resend' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_opt_in']['resend'],
-				'href'                => 'act=resend',
-				'icon'                => 'resend.svg'
 			)
 		)
 	),
@@ -75,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['token'],
 			'search'                  => true,
-			'sql'                     => "varchar(40) NOT NULL default ''"
+			'sql'                     => "varchar(24) NOT NULL default ''"
 		),
 		'createdOn' => array
 		(
@@ -139,3 +140,45 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		)
 	)
 );
+
+/**
+ * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @author Leo Feyer <https://github.com/leofeyer>
+ */
+class tl_opt_in extends Backend
+{
+
+	/**
+	 * Resend the double opt-in token
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function resendToken(DataContainer $dc)
+	{
+		$optIn = System::getContainer()->get('contao.opt-in');
+		$token = $optIn->find(OptInModel::findByPk($dc->id)->token);
+
+		$optIn->send($token);
+
+		Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $token->email));
+		Controller::redirect($this->getReferer());
+	}
+
+	/**
+	 * Return the resend token button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function resendButton($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$row['confirmedOn'] ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : '';
+	}
+}

@@ -17,26 +17,15 @@ interface OptInInterface
     /**
      * Creates a new double opt-in token.
      */
-    public function create(string $prefix, string $table, int $id, string $email, string $subject, string $text): string;
+    public function create(string $prefix, string $email, string $table, int $id): OptInTokenInterface;
 
     /**
-     * Confirms a double opt-in token.
+     * Finds a double opt-in token by its identifier.
      */
-    public function confirm(string $token): void;
+    public function find(string $identifier): ?OptInTokenInterface;
 
     /**
-     * Sends a double opt-in token via e-mail.
-     */
-    public function sendMail(string $token): void;
-
-    /**
-     * Flags a double opt-in token for removal.
-     */
-    public function flagForRemoval(string $token, int $removeOn): void;
-
-    /**
-     * Purges double opt-in tokens and also delete the related record if the
-     * token has never been confirmed.
+     * Purges double opt-in tokens.
      */
     public function purgeTokens(): void;
 }

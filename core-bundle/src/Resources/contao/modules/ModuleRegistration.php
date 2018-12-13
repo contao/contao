@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
 
 /**
@@ -87,7 +88,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Activate account
-		if (strncmp(\Input::get('token'), 'RG', 2) === 0)
+		if (strncmp(\Input::get('token'), 'reg-', 4) === 0)
 		{
 			$this->activateAcount();
 
@@ -166,7 +167,7 @@ class ModuleRegistration extends Module
 		$hasUpload = false;
 		$i = 0;
 
-		// Build form
+		// Build the form
 		foreach ($this->editable as $field)
 		{
 			$arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field];
@@ -374,12 +375,6 @@ class ModuleRegistration extends Module
 		// Disable account
 		$arrData['disable'] = 1;
 
-		// Send activation e-mail
-		if ($this->reg_activate)
-		{
-			$this->sendActivationMail($arrData);
-		}
-
 		// Make sure newsletter is an array
 		if (isset($arrData['newsletter']) && !\is_array($arrData['newsletter']))
 		{
@@ -390,6 +385,12 @@ class ModuleRegistration extends Module
 		$objNewUser = new \MemberModel();
 		$objNewUser->setRow($arrData);
 		$objNewUser->save();
+
+		// Send activation e-mail
+		if ($this->reg_activate)
+		{
+			$this->sendActivationMail($arrData, $objNewUser);
+		}
 
 		// Assign home directory
 		if ($this->reg_assignDir)
@@ -454,11 +455,16 @@ class ModuleRegistration extends Module
 	/**
 	 * Send the activation mail
 	 *
-	 * @param array $arrData
+	 * @param array       $arrData
+	 * @param MemberModel $objNewUser
 	 */
-	protected function sendActivationMail($arrData)
+	protected function sendActivationMail($arrData, $objNewUser)
 	{
-		$arrData['activation'] = 'RG' . substr(md5(uniqid(mt_rand(), true)), 2);
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('reg-', $objNewUser->email, 'tl_member', $objNewUser->id);
+
+		$arrData['activation'] = $optInToken->getIdentifier();
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
@@ -498,13 +504,11 @@ class ModuleRegistration extends Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
-		$objEmail = new \Email();
-
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData);
-		$objEmail->sendTo($arrData['email']);
+		$optInToken->send
+		(
+			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host'))),
+			\StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData)
+		);
 	}
 
 	/**
@@ -513,12 +517,9 @@ class ModuleRegistration extends Module
 	protected function activateAcount()
 	{
 		$this->strTemplate = 'mod_message';
-
 		$this->Template = new \FrontendTemplate($this->strTemplate);
 
-		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
-
-		if ($objMember === null)
+		if (!$objMember = $this->getMemberFromToken(\Input::get('token')))
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
@@ -526,9 +527,8 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		// Update the account
+		// Enable the account
 		$objMember->disable = '';
-		$objMember->activation = '';
 		$objMember->save();
 
 		// HOOK: post activation callback
@@ -617,6 +617,41 @@ class ModuleRegistration extends Module
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
 		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, TL_ACCESS);
+	}
+
+	/**
+	 * Return the member model associated with a token
+	 *
+	 * @param string $token
+	 *
+	 * @return MemberModel|null
+	 */
+	private function getMemberFromToken($token)
+	{
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+
+		if (!$optInToken = $optIn->find($token))
+		{
+			return null;
+		}
+
+		/** @var MemberModel $objMember */
+		if (!($objMember = $optInToken->getRelatedModel()) instanceof MemberModel)
+		{
+			return null;
+		}
+
+		try
+		{
+			$optInToken->confirm();
+		}
+		catch (\LogicException $e)
+		{
+			return null;
+		}
+
+		return $objMember;
 	}
 }
 

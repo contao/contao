@@ -71,7 +71,8 @@ $GLOBALS['BE_MOD'] = array
 		),
 		'opt_in' => array
 		(
-			'tables'                  => array('tl_opt_in')
+			'tables'                  => array('tl_opt_in'),
+			'resend'                  => array('tl_opt_in', 'resendToken'),
 		),
 		'login' => array
 		(
