@@ -178,6 +178,42 @@ abstract class ContaoTestCase extends TestCase
     }
 
     /**
+     * Mocks a class with getters and setters.
+     */
+    protected function mockClassWithGetterSetter(string $class, array $properties = []): MockObject
+    {
+        $mock = $this->createMock($class);
+        $mock
+            ->method('__get')
+            ->willReturnCallback(
+                function (string $key) use (&$properties) {
+                    return $properties[$key] ?? null;
+                }
+            )
+        ;
+
+        $mock
+            ->method('__set')
+            ->willReturnCallback(
+                function (string $key, $value) use (&$properties): void {
+                    $properties[$key] = $value;
+                }
+            )
+        ;
+
+        $mock
+            ->method('__isset')
+            ->willReturnCallback(
+                function (string $key) use (&$properties): bool {
+                    return isset($properties[$key]);
+                }
+            )
+        ;
+
+        return $mock;
+    }
+
+    /**
      * Mocks a token storage with a Contao user.
      *
      * @throws \Exception
