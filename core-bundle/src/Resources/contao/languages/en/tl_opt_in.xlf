@@ -5,11 +5,11 @@
       <trans-unit id="tl_opt_in.token">
         <source>Token</source>
       </trans-unit>
+      <trans-unit id="tl_opt_in.validUntil">
+        <source>Valid until</source>
+      </trans-unit>
       <trans-unit id="tl_opt_in.confirmedOn">
         <source>Confirmed on</source>
-      </trans-unit>
-      <trans-unit id="tl_opt_in.removeOn">
-        <source>Remove on</source>
       </trans-unit>
       <trans-unit id="tl_opt_in.relatedTable">
         <source>Related table</source>

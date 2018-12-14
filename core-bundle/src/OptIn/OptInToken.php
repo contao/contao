@@ -46,14 +46,22 @@ class OptInToken implements OptInTokenInterface
     /**
      * {@inheritdoc}
      */
+    public function isValid(): bool
+    {
+        return $this->model->validUntil > time();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function confirm(): void
     {
         if ($this->isConfirmed()) {
             throw new \LogicException('The token has already been confirmed');
         }
 
-        if ($this->isFlaggedForRemoval()) {
-            throw new \LogicException('The token has been flagged for removal');
+        if (!$this->isValid()) {
+            throw new \LogicException('The token is no longer valid');
         }
 
         $this->model->tstamp = time();
@@ -76,6 +84,10 @@ class OptInToken implements OptInTokenInterface
     {
         if ($this->isConfirmed()) {
             throw new \LogicException('The token has already been confirmed');
+        }
+
+        if (!$this->isValid()) {
+            throw new \LogicException('The token is no longer valid');
         }
 
         if (!$this->hasBeenSent()) {
@@ -101,28 +113,6 @@ class OptInToken implements OptInTokenInterface
     public function hasBeenSent(): bool
     {
         return $this->model->emailSubject && $this->model->emailText;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function flagForRemoval(int $removeOn): void
-    {
-        if ($this->isFlaggedForRemoval()) {
-            throw new \LogicException('The token has already been flagged for removal');
-        }
-
-        $this->model->tstamp = time();
-        $this->model->removeOn = $removeOn;
-        $this->model->save();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isFlaggedForRemoval(): bool
-    {
-        return $this->model->removeOn > 0;
     }
 
     /**

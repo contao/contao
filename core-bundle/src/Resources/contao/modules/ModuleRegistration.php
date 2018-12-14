@@ -90,7 +90,7 @@ class ModuleRegistration extends Module
 		// Activate account
 		if (strncmp(\Input::get('token'), 'reg-', 4) === 0)
 		{
-			$this->activateAcount();
+			$this->activateAcount(\Input::get('token'));
 
 			return;
 		}
@@ -389,7 +389,7 @@ class ModuleRegistration extends Module
 		// Send activation e-mail
 		if ($this->reg_activate)
 		{
-			$this->sendActivationMail($arrData, $objNewUser);
+			$this->sendActivationMail($objNewUser->id, $arrData);
 		}
 
 		// Assign home directory
@@ -455,21 +455,20 @@ class ModuleRegistration extends Module
 	/**
 	 * Send the activation mail
 	 *
-	 * @param array       $arrData
+	 * @param integer     $intId
 	 * @param MemberModel $objNewUser
 	 */
-	protected function sendActivationMail($arrData, $objNewUser)
+	protected function sendActivationMail($intId, $arrData)
 	{
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('reg-', $objNewUser->email, 'tl_member', $objNewUser->id);
-
-		$arrData['activation'] = $optInToken->getIdentifier();
+		$optInToken = $optIn->create('reg-', $arrData['email'], 'tl_member', $intId);
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
+		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
+		$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrTokenData['channels'] = '';
 
 		$bundles = \System::getContainer()->getParameter('kernel.bundles');
@@ -504,22 +503,24 @@ class ModuleRegistration extends Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
-		$optInToken->send
-		(
-			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host'))),
-			\StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData)
-		);
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host'))), \StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData));
 	}
 
 	/**
 	 * Activate an account
+	 *
+	 * @param string $token
 	 */
-	protected function activateAcount()
+	protected function activateAcount($token)
 	{
 		$this->strTemplate = 'mod_message';
 		$this->Template = new \FrontendTemplate($this->strTemplate);
 
-		if (!$objMember = $this->getMemberFromToken(\Input::get('token')))
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || !($objMember = $optInToken->getRelatedModel()) instanceof MemberModel)
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
@@ -530,6 +531,8 @@ class ModuleRegistration extends Module
 		// Enable the account
 		$objMember->disable = '';
 		$objMember->save();
+
+		$optInToken->confirm();
 
 		// HOOK: post activation callback
 		if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
@@ -569,10 +572,9 @@ class ModuleRegistration extends Module
 		}
 
 		$this->strTemplate = 'mod_message';
-
 		$this->Template = new \FrontendTemplate($this->strTemplate);
 
-		$this->sendActivationMail($objMember->row());
+		$this->sendActivationMail($objMember->id, $objMember->row());
 
 		// Confirm activation
 		$this->Template->type = 'confirm';
@@ -588,7 +590,6 @@ class ModuleRegistration extends Module
 	protected function sendAdminNotification($intId, $arrData)
 	{
 		$objEmail = new \Email();
-
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], \Idna::decode(\Environment::get('host')));
@@ -598,7 +599,7 @@ class ModuleRegistration extends Module
 		// Add user details
 		foreach ($arrData as $k=>$v)
 		{
-			if ($k == 'password' || $k == 'tstamp' || $k == 'activation' || $k == 'dateAdded')
+			if ($k == 'password' || $k == 'tstamp' || $k == 'dateAdded')
 			{
 				continue;
 			}
@@ -617,41 +618,6 @@ class ModuleRegistration extends Module
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
 		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, TL_ACCESS);
-	}
-
-	/**
-	 * Return the member model associated with a token
-	 *
-	 * @param string $token
-	 *
-	 * @return MemberModel|null
-	 */
-	private function getMemberFromToken($token)
-	{
-		/** @var OptIn $optIn */
-		$optIn = \System::getContainer()->get('contao.opt-in');
-
-		if (!$optInToken = $optIn->find($token))
-		{
-			return null;
-		}
-
-		/** @var MemberModel $objMember */
-		if (!($objMember = $optInToken->getRelatedModel()) instanceof MemberModel)
-		{
-			return null;
-		}
-
-		try
-		{
-			$optInToken->confirm();
-		}
-		catch (\LogicException $e)
-		{
-			return null;
-		}
-
-		return $objMember;
 	}
 }
 

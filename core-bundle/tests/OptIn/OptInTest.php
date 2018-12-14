@@ -37,6 +37,9 @@ class OptInTest extends ContaoTestCase
         $token = (new OptIn($framework))->create('reg-', 'foo@bar.com', 'tl_member', 1);
 
         $this->assertStringMatchesFormat('reg-%x', $token->getIdentifier());
+        $this->assertTrue($token->isValid());
+        $this->assertFalse($token->isConfirmed());
+        $this->assertFalse($token->hasBeenSent());
     }
 
     public function testDoesNotCreateATokenIfThePrefixIsTooLong(): void
@@ -69,24 +72,5 @@ class OptInTest extends ContaoTestCase
 
         $this->assertSame('foobar', $token->getIdentifier());
         $this->assertNull((new OptIn($framework))->find('barfoo'));
-    }
-
-    public function testPurgesExpiredTokens(): void
-    {
-        $model = $this->mockClassWithProperties(OptInModel::class, ['confirmedOn' => 123456789]);
-        $model
-            ->expects($this->once())
-            ->method('delete')
-        ;
-
-        $adapter = $this->mockAdapter(['findExpiredTokens']);
-        $adapter
-            ->method('findExpiredTokens')
-            ->willReturn([$model])
-        ;
-
-        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
-
-        (new OptIn($framework))->purgeTokens();
     }
 }

@@ -69,11 +69,6 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_user_group')
 		),
-		'opt_in' => array
-		(
-			'tables'                  => array('tl_opt_in'),
-			'resend'                  => array('tl_opt_in', 'resendToken'),
-		),
 		'login' => array
 		(
 			'tables'                  => array('tl_user'),
@@ -95,10 +90,6 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_files')
 		),
-		'log' => array
-		(
-			'tables'                  => array('tl_log')
-		),
 		'settings' => array
 		(
 			'tables'                  => array('tl_settings')
@@ -111,6 +102,15 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_undo'),
 			'disablePermissionChecks' => true
+		),
+		'log' => array
+		(
+			'tables'                  => array('tl_log')
+		),
+		'opt_in' => array
+		(
+			'tables'                  => array('tl_opt_in'),
+			'resend'                  => array('tl_opt_in', 'resendToken'),
 		)
 	)
 );
@@ -373,7 +373,8 @@ $GLOBALS['TL_CRON'] = array
 		'purgeTempFolder' => array('Automator', 'purgeTempFolder'),
 		'purgeSearchCache' => array('Automator', 'purgeSearchCache'),
 		'generateSitemap' => array('Automator', 'generateSitemap'),
-		'purgeRegistrations' => array('Automator', 'purgeRegistrations')
+		'purgeRegistrations' => array('Automator', 'purgeRegistrations'),
+		'purgeOptInTokens' => array('Automator', 'purgeOptInTokens')
 	),
 	'hourly' => array(),
 	'minutely' => array()

@@ -18,7 +18,7 @@ namespace Contao;
  * @property string  $token
  * @property integer $createdOn
  * @property integer $confirmedOn
- * @property integer $removeOn
+ * @property integer $validUntil
  * @property string  $relatedTable
  * @property integer $relatedId
  * @property string  $email
@@ -33,7 +33,7 @@ namespace Contao;
  * @method static OptInModel|null findOneByToken($val, array $opt=array())
  * @method static OptInModel|null findOneByCreatedOn($val, array $opt=array())
  * @method static OptInModel|null findOneByConfirmedOn($val, array $opt=array())
- * @method static OptInModel|null findOneByRemoveOn($val, array $opt=array())
+ * @method static OptInModel|null findOneByValidUntil($val, array $opt=array())
  * @method static OptInModel|null findOneByRelatedTable($val, array $opt=array())
  * @method static OptInModel|null findOneByRelatedId($val, array $opt=array())
  * @method static OptInModel|null findOneByEmail($val, array $opt=array())
@@ -44,7 +44,7 @@ namespace Contao;
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByToken($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
+ * @method static Model\Collection|OptInModel[]|OptInModel|null findByValidUntil($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByRelatedTable($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByRelatedId($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
@@ -59,7 +59,7 @@ namespace Contao;
  * @method static integer countByToken($val, array $opt=array())
  * @method static integer countByCreatedOn($val, array $opt=array())
  * @method static integer countByConfirmedOn($val, array $opt=array())
- * @method static integer countByRemoveOn($val, array $opt=array())
+ * @method static integer countByValidUntil($val, array $opt=array())
  * @method static integer countByRelatedTable($val, array $opt=array())
  * @method static integer countByRelatedId($val, array $opt=array())
  * @method static integer countByEmail($val, array $opt=array())
@@ -78,7 +78,7 @@ class OptInModel extends Model
 	protected static $strTable = 'tl_opt_in';
 
 	/**
-	 * Find double opt-in tokens that have a "removeOn" date or have not been activated for more than 24 hours
+	 * Find double opt-in tokens that have been created more than 3 years ago
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
@@ -88,7 +88,7 @@ class OptInModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("($t.removeOn>0 AND $t.removeOn<?) OR ($t.confirmedOn=0 AND $t.createdOn<?)"), array(strtotime('-3 years'), strtotime('-1 day')), $arrOptions);
+		return static::findBy(array("$t.createdOn<?"), strtotime('-3 years'), $arrOptions);
 	}
 }
 

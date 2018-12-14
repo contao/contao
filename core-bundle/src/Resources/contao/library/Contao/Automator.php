@@ -218,6 +218,24 @@ class Automator extends System
 	}
 
 	/**
+	 * Purge opt-in tokens
+	 */
+	public function purgeOptInTokens()
+	{
+		$objToken = \OptInModel::findExpiredTokens();
+
+		if ($objToken === null)
+		{
+			return;
+		}
+
+		foreach ($objToken as $objModel)
+		{
+			$objModel->delete();
+		}
+	}
+
+	/**
 	 * Remove old XML files from the share directory
 	 *
 	 * @param boolean $blnReturn If true, only return the finds and don't delete

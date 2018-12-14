@@ -47,6 +47,7 @@ class OptIn implements OptInInterface
         $model->tstamp = time();
         $model->token = $token;
         $model->createdOn = time();
+        $model->validUntil = strtotime('+24 hours');
         $model->email = $email;
         $model->relatedTable = $table;
         $model->relatedId = $id;
@@ -68,22 +69,5 @@ class OptIn implements OptInInterface
         }
 
         return new OptInToken($model, $this->framework);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function purgeTokens(): void
-    {
-        /** @var OptInModel $adapter */
-        $adapter = $this->framework->getAdapter(OptInModel::class);
-
-        if (!$models = $adapter->findExpiredTokens()) {
-            return;
-        }
-
-        foreach ($models as $model) {
-            $model->delete();
-        }
     }
 }

@@ -23,9 +23,4 @@ interface OptInInterface
      * Finds a double opt-in token by its identifier.
      */
     public function find(string $identifier): ?OptInTokenInterface;
-
-    /**
-     * Purges double opt-in tokens.
-     */
-    public function purgeTokens(): void;
 }

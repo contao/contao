@@ -22,6 +22,11 @@ interface OptInTokenInterface
     public function getIdentifier(): string;
 
     /**
+     * Returns true if the token is valid.
+     */
+    public function isValid(): bool;
+
+    /**
      * Confirms the token.
      */
     public function confirm(): void;
@@ -40,16 +45,6 @@ interface OptInTokenInterface
      * Returns true if the token has been sent via e-mail.
      */
     public function hasBeenSent(): bool;
-
-    /**
-     * Flags the token for removal.
-     */
-    public function flagForRemoval(int $removeOn): void;
-
-    /**
-     * Returns true if the token has been flagged for removal.
-     */
-    public function isFlaggedForRemoval(): bool;
 
     /**
      * Returns the related model.

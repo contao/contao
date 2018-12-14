@@ -18,8 +18,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'enableVersioning'            => true,
 		'onsubmit_callback' => array
 		(
-			array('tl_member', 'storeDateAdded'),
-			array('tl_member', 'removeOptInToken')
+			array('tl_member', 'storeDateAdded')
 		),
 		'sql' => array
 		(
@@ -27,8 +26,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'id' => 'primary',
 				'username' => 'unique',
-				'email' => 'index',
-				'activation' => 'index'
+				'email' => 'index'
 			)
 		)
 	),
@@ -410,16 +408,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "blob NULL"
-		),
-		'createdOn' => array
-		(
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
-		),
-		'activation' => array
-		(
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		)
 	)
 );
@@ -589,26 +577,6 @@ class tl_member extends Backend
 
 		$this->Database->prepare("UPDATE tl_member SET dateAdded=? WHERE id=?")
 					   ->execute($time, $dc->id);
-	}
-
-	/**
-	 * Remove the double opt-in token if an account is activated manually
-	 *
-	 * @param DataContainer|FrontendUser $dc
-	 */
-	public function removeOptInToken($dc)
-	{
-		// Front end call
-		if (!$dc instanceof DataContainer)
-		{
-			return;
-		}
-
-		if ($dc->activeRecord && !$dc->activeRecord->disable && $dc->activeRecord->activation)
-		{
-			$this->Database->prepare("UPDATE tl_member SET activation='' WHERE id=?")
-						   ->execute($dc->id);
-		}
 	}
 
 	/**

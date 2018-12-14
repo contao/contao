@@ -37,7 +37,7 @@ class OptInTokenTest extends ContaoTestCase
     {
         $properties = [
             'confirmedOn' => 0,
-            'removeOn' => 0,
+            'validUntil' => strtotime('+1 day'),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -52,7 +52,7 @@ class OptInTokenTest extends ContaoTestCase
     public function testDoesNotConfirmAConfirmedToken(): void
     {
         $properties = [
-            'confirmedOn' => 123456789,
+            'confirmedOn' => time(),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -65,11 +65,11 @@ class OptInTokenTest extends ContaoTestCase
         $token->confirm();
     }
 
-    public function testDoesNotConfirmATokenFlaggedForRemoval(): void
+    public function testDoesNotConfirmAnExpiredToken(): void
     {
         $properties = [
             'confirmedOn' => 0,
-            'removeOn' => 123456789,
+            'validUntil' => strtotime('-1 day'),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -77,7 +77,7 @@ class OptInTokenTest extends ContaoTestCase
         $token = $this->getToken($model);
 
         $this->expectException('LogicException');
-        $this->expectExceptionMessage('The token has been flagged for removal');
+        $this->expectExceptionMessage('The token is no longer valid');
 
         $token->confirm();
     }
@@ -86,6 +86,7 @@ class OptInTokenTest extends ContaoTestCase
     {
         $properties = [
             'confirmedOn' => 0,
+            'validUntil' => strtotime('+1 day'),
             'emailSubject' => '',
             'emailText' => '',
         ];
@@ -120,9 +121,7 @@ class OptInTokenTest extends ContaoTestCase
     public function testDoesNotSendAConfirmedTokenViaEmail(): void
     {
         $properties = [
-            'confirmedOn' => 123456789,
-            'emailSubject' => '',
-            'emailText' => '',
+            'confirmedOn' => time(),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -135,10 +134,28 @@ class OptInTokenTest extends ContaoTestCase
         $token->send('Subject', 'Text');
     }
 
+    public function testDoesNotSendAnExpiredTokenViaEmail(): void
+    {
+        $properties = [
+            'confirmedOn' => 0,
+            'validUntil' => strtotime('-1 day'),
+        ];
+
+        /** @var OptInModel|MockObject $model */
+        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $token = $this->getToken($model);
+
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('The token is no longer valid');
+
+        $token->send('Subject', 'Text');
+    }
+
     public function testRequiresSubjectAndTextToSendToken(): void
     {
         $properties = [
             'confirmedOn' => 0,
+            'validUntil' => strtotime('+1 day'),
             'emailSubject' => '',
             'emailText' => '',
         ];
@@ -162,6 +179,7 @@ class OptInTokenTest extends ContaoTestCase
     {
         $properties = [
             'confirmedOn' => 0,
+            'validUntil' => strtotime('+1 day'),
             'emailSubject' => 'Subject',
             'emailText' => 'Text',
         ];
@@ -191,39 +209,6 @@ class OptInTokenTest extends ContaoTestCase
         $token->send('Subject', 'Text');
 
         $this->assertTrue($token->hasBeenSent());
-    }
-
-    public function testFlagsATokenForRemoval(): void
-    {
-        $properties = [
-            'confirmedOn' => 123456789,
-            'removeOn' => 0,
-        ];
-
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
-
-        $token = $this->getToken($model);
-        $token->flagForRemoval(123456789);
-
-        $this->assertTrue($token->isFlaggedForRemoval());
-    }
-
-    public function testDoesNotFlagAFlaggedTokenForRemoval(): void
-    {
-        $properties = [
-            'confirmedOn' => 123456789,
-            'removeOn' => 123456789,
-        ];
-
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
-        $token = $this->getToken($model);
-
-        $this->expectException('LogicException');
-        $this->expectExceptionMessage('The token has already been flagged for removal');
-
-        $token->flagForRemoval(123456789);
     }
 
     public function testReturnsTheRelatedModel(): void

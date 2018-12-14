@@ -24,7 +24,9 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'token' => 'unique'
+				'token' => 'unique',
+				'relatedTable,relatedId' => 'index',
+				'validUntil' => 'index'
 			)
 		)
 	),
@@ -35,12 +37,12 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('createdOn DESC'),
+			'fields'                  => array('validUntil DESC'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
-			'fields'                  => array('token', 'email', 'createdOn', 'confirmedOn', 'relatedTable'),
+			'fields'                  => array('token', 'email', 'validUntil', 'confirmedOn', 'relatedTable'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -87,18 +89,18 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
-		'confirmedOn' => array
+		'validUntil' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['confirmedOn'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['validUntil'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
-		'removeOn' => array
+		'confirmedOn' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['removeOn'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['confirmedOn'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
@@ -156,12 +158,10 @@ class tl_opt_in extends Backend
 	 */
 	public function resendToken(DataContainer $dc)
 	{
-		$optIn = System::getContainer()->get('contao.opt-in');
-		$token = $optIn->find(OptInModel::findByPk($dc->id)->token);
+		$model = OptInModel::findByPk($dc->id);
 
-		$optIn->send($token);
-
-		Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $token->email));
+		System::getContainer()->get('contao.opt-in')->find($model->token)->send();
+		Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $model->email));
 		Controller::redirect($this->getReferer());
 	}
 
@@ -179,6 +179,6 @@ class tl_opt_in extends Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return !$row['confirmedOn'] ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : '';
+		return (!$row['confirmedOn'] && $row['validUntil'] > time()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : '';
 	}
 }
