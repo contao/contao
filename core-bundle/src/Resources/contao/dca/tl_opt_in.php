@@ -25,8 +25,8 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			(
 				'id' => 'primary',
 				'token' => 'unique',
-				'relatedTable,relatedId' => 'index',
-				'validUntil' => 'index'
+				'relatedTable,relatedId,confirmedOn,validUntil' => 'index',
+				'createdOn' => 'index'
 			)
 		)
 	),

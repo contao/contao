@@ -208,10 +208,11 @@ class MemberModel extends Model
 	 */
 	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
 	{
+		$t = static::$strTable;
 		$time = time();
 		$objDatabase = \Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM tl_member WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='tl_member' AND relatedId=tl_member.id AND confirmedOn=0 AND validUntil>$time)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND validUntil>$time)")
 								 ->limit(1)
 								 ->execute($strEmail);
 
@@ -223,7 +224,7 @@ class MemberModel extends Model
 		$objRegistry = Registry::getInstance();
 
 		/** @var MemberModel|Model $objMember */
-		if ($objMember = $objRegistry->fetch('tl_member', $objResult->id))
+		if ($objMember = $objRegistry->fetch($t, $objResult->id))
 		{
 			return $objMember;
 		}
@@ -240,17 +241,18 @@ class MemberModel extends Model
 	 */
 	public static function findExpiredRegistrations(array $arrOptions=array())
 	{
+		$t = static::$strTable;
 		$time = time();
 		$objDatabase = \Database::getInstance();
 
-		$objResult = $objDatabase->query("SELECT * FROM tl_member WHERE disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='tl_member' AND relatedId=tl_member.id AND confirmedOn=0 AND validUntil<=$time)");
+		$objResult = $objDatabase->query("SELECT * FROM $t WHERE disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND validUntil<=$time)");
 
 		if ($objResult->numRows < 1)
 		{
 			return null;
 		}
 
-		return static::createCollectionFromDbResult($objResult, 'tl_member');
+		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
 

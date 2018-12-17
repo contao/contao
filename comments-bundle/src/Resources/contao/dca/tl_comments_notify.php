@@ -22,8 +22,8 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'tokenRemove' => 'index',
-				'source,parent,tokenConfirm' => 'index'
+				'source,parent,confirmed' => 'index',
+				'tokenRemove' => 'index'
 			)
 		)
 	),
@@ -63,13 +63,9 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		(
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
-		'ip' => array
+		'confirmed' => array
 		(
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'tokenConfirm' => array
-		(
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'tokenRemove' => array
 		(

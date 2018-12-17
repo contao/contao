@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\OptIn\OptIn;
 
 /**
  * Class Comments
@@ -172,10 +173,18 @@ class Comments extends Frontend
 			return;
 		}
 
-		// Confirm or remove a subscription
-		if (\Input::get('token'))
+		// Confirm a subscription
+		if (strncmp(\Input::get('token'), 'com-', 4) === 0)
 		{
-			static::changeSubscriptionStatus($objTemplate);
+			static::confirmSubscription(\Input::get('token'), $objTemplate);
+
+			return;
+		}
+
+		// Remove a subscription
+		if (strncmp(\Input::get('token'), 'cmu-', 4) === 0)
+		{
+			static::removeSubscription(\Input::get('token'), $objTemplate);
 
 			return;
 		}
@@ -558,9 +567,8 @@ class Comments extends Frontend
 			'email'        => $objComment->email,
 			'url'          => \Environment::get('request'),
 			'addedOn'      => $time,
-			'ip'           => \Environment::get('ip'),
-			'tokenConfirm' => md5(uniqid(mt_rand(), true)),
-			'tokenRemove'  => md5(uniqid(mt_rand(), true))
+			'confirmed'    => '',
+			'tokenRemove'  => 'cmu-'.bin2hex(random_bytes(10))
 		);
 
 		// Store the subscription
@@ -570,23 +578,53 @@ class Comments extends Frontend
 		$strUrl = \Idna::decode(\Environment::get('base')) . \Environment::get('request');
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
-		// Send the activation mail
-		$objEmail = new \Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $objNotify->tokenConfirm, $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove);
-		$objEmail->sendTo($objComment->email);
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('com-', $objComment->email, 'tl_comments_notify', $objNotify->id);
+
+		// Send the token
+		$optInToken->send
+		(
+			sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host'))),
+			sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove)
+		);
 	}
 
 	/**
-	 * Change the subscription status
+	 * Confirm a subscription
 	 *
+	 * @param string           $token
 	 * @param FrontendTemplate $objTemplate
 	 */
-	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
+	public static function confirmSubscription($token, FrontendTemplate $objTemplate)
 	{
-		$objNotify = \CommentsNotifyModel::findByTokens(\Input::get('token'));
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || !($objNotify = $optInToken->getRelatedModel()) instanceof CommentsNotifyModel)
+		{
+			$objTemplate->confirm = 'Invalid token';
+
+			return;
+		}
+
+		$objNotify->confirmed = '1';
+		$objNotify->save();
+
+		$optInToken->confirm();
+
+		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
+	}
+
+	/**
+	 * Remove a subscription
+	 *
+	 * @param string           $token
+	 * @param FrontendTemplate $objTemplate
+	 */
+	public static function removeSubscription($token, FrontendTemplate $objTemplate)
+	{
+		$objNotify = \CommentsNotifyModel::findOneByTokenRemove($token);
 
 		if ($objNotify === null)
 		{
@@ -595,17 +633,8 @@ class Comments extends Frontend
 			return;
 		}
 
-		if ($objNotify->tokenConfirm != '' && $objNotify->tokenConfirm == \Input::get('token'))
-		{
-			$objNotify->tokenConfirm = '';
-			$objNotify->save();
-			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
-		}
-		elseif ($objNotify->tokenRemove != '' && $objNotify->tokenRemove == \Input::get('token'))
-		{
-			$objNotify->delete();
-			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
-		}
+		$objNotify->delete();
+		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
 	}
 
 	/**
@@ -645,7 +674,7 @@ class Comments extends Frontend
 			}
 		}
 
-		$objComment->notified = 1;
+		$objComment->notified = '1';
 		$objComment->save();
 	}
 }
