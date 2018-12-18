@@ -144,6 +144,10 @@ class BreadcrumbListener
 
     private function getEventTitle(CalendarEventsModel $eventModel, PageModel $currentPage): string
     {
+        if ($eventModel->pageTitle) {
+            return $eventModel->pageTitle;
+        }
+
         if ($eventModel->title) {
             return $eventModel->title;
         }

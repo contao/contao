@@ -152,6 +152,42 @@ class BreadcrumbListenerTest extends ContaoTestCase
     /**
      * @dataProvider provideBreadcrumbItems
      */
+    public function testAddsBreadcrumbItemUsingPageTitleForEvent(array $items): void
+    {
+        $eventsModelAdapter = $this->mockEventsModelAdapter(
+            $this->mockEventModel([
+                'title' => 'Foo bar',
+                'pageTitle' => 'Page title foo bar'
+            ])
+        );
+
+        $framework = $this->mockContaoFramework([CalendarEventsModel::class => $eventsModelAdapter]);
+        $listener = new BreadcrumbListener($framework);
+
+        $expectedCount = \count($items) + 1;
+        $items = $listener->onGenerateBreadcrumb($items);
+
+        $this->assertCount($expectedCount, $items);
+        $this->assertSame(
+            [
+                'isRoot' => false,
+                'isActive' => true,
+                'href' => 'events/foo-bar.html',
+                'title' => 'Page title foo bar',
+                'link' => 'Page title foo bar',
+                'data' => [
+                    'id' => 4,
+                    'pageTitle' => 'Events'
+                ],
+                'class' => '',
+            ],
+            $items[$expectedCount - 1]
+        );
+    }
+
+    /**
+     * @dataProvider provideBreadcrumbItems
+     */
     public function testOverridesCurrentPageItemWithEvent(array $items): void
     {
         $GLOBALS['objPage'] = $this->mockClassWithProperties(
@@ -175,6 +211,51 @@ class BreadcrumbListenerTest extends ContaoTestCase
         if ($count) {
             $items[$count -1]['title'] = 'Foo bar';
             $items[$count -1]['link'] = 'Foo bar';
+            $items[$count -1]['href'] = 'events/foo-bar.html';
+        }
+
+        $this->assertSame($items, $result);
+    }
+
+
+    /**
+     * @dataProvider provideBreadcrumbItems
+     */
+    public function testOverridesCurrentPageItemWithEventUsingPageTitle(array $items): void
+    {
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 4,
+                'pageTitle' => 'News',
+                'requireItem' => '1'
+            ]
+        );
+
+        $calendarModel = $this->mockCalenderModel();
+        $calendarAdapter = $this->mockCalendarAdapter($calendarModel);
+
+        $eventsModelAdapter = $this->mockEventsModelAdapter(
+            $this->mockEventModel([
+                'title' => 'Foo bar',
+                'pageTitle' => 'Custom page title'
+            ])
+        );
+
+        $framework = $this->mockContaoFramework(
+            [
+                CalendarModel::class => $calendarAdapter,
+                CalendarEventsModel::class => $eventsModelAdapter
+            ]
+        );
+        $listener = new BreadcrumbListener($framework);
+
+        $result = $listener->onGenerateBreadcrumb($items);
+        $count = count($items);
+
+        if ($count) {
+            $items[$count -1]['title'] = 'Custom page title';
+            $items[$count -1]['link'] = 'Custom page title';
             $items[$count -1]['href'] = 'events/foo-bar.html';
         }
 
@@ -229,14 +310,14 @@ class BreadcrumbListenerTest extends ContaoTestCase
     /**
      * @return MockObject|CalendarEventsModel
      */
-    private function mockEventModel(): CalendarEventsModel
+    private function mockEventModel(?array $properties = null): CalendarEventsModel
     {
-        return $this->mockClassWithProperties(
-            CalendarEventsModel::class,
-            [
-                'title' => 'Foo bar',
-            ]
-        );
+        $properties = $properties ?: [
+            'title' => 'Foo bar',
+            'pageTitle' => ''
+        ];
+
+        return $this->mockClassWithProperties(CalendarEventsModel::class, $properties);
     }
 
     /**

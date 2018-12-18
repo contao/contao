@@ -149,10 +149,95 @@ class BreadcrumbListenerTest extends ContaoTestCase
         );
     }
 
+
+    /**
+     * @dataProvider provideBreadcrumbItems
+     */
+    public function testAddsBreadcrumbItemUsingPageTitleForNewsEntry(array $items): void
+    {
+        $newsModelAdapter = $this->mockNewsModelAdapter(
+            $this->mockNewsModel(
+                [
+                    'headline' => 'Foo bar',
+                    'pageTitle' => 'Custom page title'
+                ]
+            )
+        );
+
+        $framework = $this->mockContaoFramework([NewsModel::class => $newsModelAdapter]);
+        $listener = new BreadcrumbListener($framework);
+
+        $expectedCount = \count($items) + 1;
+        $items = $listener->onGenerateBreadcrumb($items);
+
+        $this->assertCount($expectedCount, $items);
+        $this->assertSame(
+            [
+                'isRoot' => false,
+                'isActive' => true,
+                'href' => 'news/foo-bar.html',
+                'title' => 'Custom page title',
+                'link' => 'Custom page title',
+                'data' => [
+                    'id' => 4,
+                    'pageTitle' => 'News'
+                ],
+                'class' => '',
+            ],
+            $items[$expectedCount - 1]
+        );
+    }
+
     /**
      * @dataProvider provideBreadcrumbItems
      */
     public function testOverridesCurrentPageItemWithNewsEntry(array $items): void
+    {
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'id' => 4,
+                'pageTitle' => 'News',
+                'requireItem' => '1'
+            ]
+        );
+
+        $newsArchiveModel = $this->mockNewsArchiveModel();
+        $newsArchiveAdapter = $this->mockNewsArchiveAdapter($newsArchiveModel);
+
+        $newsModelAdapter = $this->mockNewsModelAdapter(
+            $this->mockNewsModel(
+                [
+                    'headline' => 'Foo bar',
+                    'pageTitle' => 'Custom page title'
+                ]
+            )
+        );
+
+        $framework = $this->mockContaoFramework(
+            [
+                NewsArchiveModel::class => $newsArchiveAdapter,
+                NewsModel::class => $newsModelAdapter
+            ]
+        );
+        $listener = new BreadcrumbListener($framework);
+
+        $result = $listener->onGenerateBreadcrumb($items);
+        $count = count($items);
+
+        if ($count) {
+            $items[$count -1]['title'] = 'Custom page title';
+            $items[$count -1]['link'] = 'Custom page title';
+            $items[$count -1]['href'] = 'news/foo-bar.html';
+        }
+
+        $this->assertSame($items, $result);
+    }
+
+    /**
+     * @dataProvider provideBreadcrumbItems
+     */
+    public function testOverridesCurrentPageItemWithNewsEntryUsingPageTitle(array $items): void
     {
         $GLOBALS['objPage'] = $this->mockClassWithProperties(
             PageModel::class,
@@ -229,14 +314,14 @@ class BreadcrumbListenerTest extends ContaoTestCase
     /**
      * @return MockObject|NewsModel
      */
-    private function mockNewsModel(): NewsModel
+    private function mockNewsModel(?array $properties = null): NewsModel
     {
-        return $this->mockClassWithProperties(
-            NewsModel::class,
-            [
-                'headline' => 'Foo bar',
-            ]
-        );
+        $properties = $properties ?: [
+            'headline' => 'Foo bar',
+            'pageTitle' => ''
+        ];
+
+        return $this->mockClassWithProperties(NewsModel::class, $properties);
     }
 
     /**

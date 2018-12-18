@@ -144,6 +144,10 @@ class BreadcrumbListener
 
     private function getNewsTitle(NewsModel $news, PageModel $currentPage): string
     {
+        if ($news->pageTitle) {
+            return $news->pageTitle;
+        }
+
         if ($news->headline) {
             return $news->headline;
         }
