@@ -182,7 +182,7 @@ class Comments extends Frontend
 		}
 
 		// Remove a subscription
-		if (strncmp(\Input::get('token'), 'cmu-', 4) === 0)
+		if (strncmp(\Input::get('token'), 'cor-', 4) === 0)
 		{
 			static::removeSubscription(\Input::get('token'), $objTemplate);
 
@@ -534,10 +534,12 @@ class Comments extends Frontend
 			return;
 		}
 
-		foreach ($objNotify as $objModel)
-		{
-			$objModel->delete();
-		}
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optIn->deleteWithRelatedRecord($objNotify);
+
+		// Add a log entry
+		$this->log('Purged the unactivated comment subscriptions', __METHOD__, TL_CRON);
 	}
 
 	/**
@@ -568,7 +570,7 @@ class Comments extends Frontend
 			'url'          => \Environment::get('request'),
 			'addedOn'      => $time,
 			'confirmed'    => '',
-			'tokenRemove'  => 'cmu-'.bin2hex(random_bytes(10))
+			'tokenRemove'  => 'cor-'.bin2hex(random_bytes(10))
 		);
 
 		// Store the subscription

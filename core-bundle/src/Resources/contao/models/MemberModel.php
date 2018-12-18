@@ -209,12 +209,11 @@ class MemberModel extends Model
 	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$time = time();
 		$objDatabase = \Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND validUntil>$time)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND createdOn>?)")
 								 ->limit(1)
-								 ->execute($strEmail);
+								 ->execute($strEmail, strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)
 		{
@@ -242,10 +241,10 @@ class MemberModel extends Model
 	public static function findExpiredRegistrations(array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$time = time();
 		$objDatabase = \Database::getInstance();
 
-		$objResult = $objDatabase->query("SELECT * FROM $t WHERE disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND validUntil<=$time)");
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable='1' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND createdOn<=?)")
+								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)
 		{

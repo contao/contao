@@ -25,8 +25,8 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			(
 				'id' => 'primary',
 				'token' => 'unique',
-				'relatedTable,relatedId,confirmedOn,validUntil' => 'index',
-				'createdOn' => 'index'
+				'relatedTable,confirmedOn,removeOn' => 'index',
+				'relatedTable,relatedId,confirmedOn,createdOn' => 'index'
 			)
 		)
 	),
@@ -37,12 +37,12 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('validUntil DESC'),
+			'fields'                  => array('createdOn DESC'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
-			'fields'                  => array('token', 'email', 'validUntil', 'confirmedOn', 'relatedTable'),
+			'fields'                  => array('token', 'email', 'createdOn', 'confirmedOn', 'relatedTable'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -89,21 +89,18 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
-		'validUntil' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['validUntil'],
-			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => 6,
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
-		),
 		'confirmedOn' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['confirmedOn'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
+			'eval'                    => array('rgxp'=>'datim'),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+		),
+		'removeOn' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['removeOn'],
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
@@ -179,6 +176,6 @@ class tl_opt_in extends Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] && $row['validUntil'] > time()) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : '';
+		return (!$row['confirmedOn'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : '';
 	}
 }

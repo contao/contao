@@ -18,7 +18,7 @@ namespace Contao;
  * @property string  $token
  * @property integer $createdOn
  * @property integer $confirmedOn
- * @property integer $validUntil
+ * @property integer $removeOn
  * @property string  $relatedTable
  * @property integer $relatedId
  * @property string  $email
@@ -33,7 +33,7 @@ namespace Contao;
  * @method static OptInModel|null findOneByToken($val, array $opt=array())
  * @method static OptInModel|null findOneByCreatedOn($val, array $opt=array())
  * @method static OptInModel|null findOneByConfirmedOn($val, array $opt=array())
- * @method static OptInModel|null findOneByValidUntil($val, array $opt=array())
+ * @method static OptInModel|null findOneByRemoveOn($val, array $opt=array())
  * @method static OptInModel|null findOneByRelatedTable($val, array $opt=array())
  * @method static OptInModel|null findOneByRelatedId($val, array $opt=array())
  * @method static OptInModel|null findOneByEmail($val, array $opt=array())
@@ -44,7 +44,7 @@ namespace Contao;
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByToken($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByValidUntil($val, array $opt=array())
+ * @method static Model\Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByRelatedTable($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByRelatedId($val, array $opt=array())
  * @method static Model\Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
@@ -59,7 +59,7 @@ namespace Contao;
  * @method static integer countByToken($val, array $opt=array())
  * @method static integer countByCreatedOn($val, array $opt=array())
  * @method static integer countByConfirmedOn($val, array $opt=array())
- * @method static integer countByValidUntil($val, array $opt=array())
+ * @method static integer countByRemoveOn($val, array $opt=array())
  * @method static integer countByRelatedTable($val, array $opt=array())
  * @method static integer countByRelatedId($val, array $opt=array())
  * @method static integer countByEmail($val, array $opt=array())
@@ -78,7 +78,24 @@ class OptInModel extends Model
 	protected static $strTable = 'tl_opt_in';
 
 	/**
-	 * Find double opt-in tokens that have been created more than 3 years ago
+	 * Find expired double opt-in tokens
+	 *
+	 * @param string  $strEmail
+	 * @param string  $strTable
+	 * @param integer $strId
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|OptInModel[]|OptInModel|null A collection of models or null if there are no expired tokens
+	 */
+	public static function findByEmailAndRelatedRecord($strEmail, $strTable, $intId, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		return static::findBy(array("$t.email=? AND $t.relatedTable=? AND $t.relatedId=?"), array($strEmail, $strTable, $intId), $arrOptions);
+	}
+
+	/**
+	 * Find expired double opt-in tokens
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
@@ -88,7 +105,50 @@ class OptInModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.createdOn<?"), strtotime('-3 years'), $arrOptions);
+		return static::findBy(array("$t.removeOn>0 AND $t.removeOn<?"), time(), $arrOptions);
+	}
+
+	/**
+	 * Find confirmed double opt-in tokens without related record
+	 *
+	 * @param array $arrOptions An optional options array
+	 *
+	 * @return Model\Collection|OptInModel[]|OptInModel|null A collection of models or null if there are no expired tokens
+	 */
+	public static function findConfirmedTokensWithoutRelatedRecord(array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$objDatabase = \Database::getInstance();
+		$objResult = $objDatabase->query("SELECT DISTINCT(relatedTable) FROM $t WHERE confirmedOn>0 AND removeOn=0");
+		$arrTables = $objResult->fetchEach('relatedTable');
+		$objRegistry = \Model\Registry::getInstance();
+		$arrModels = array();
+
+		foreach ($arrTables as $strTable)
+		{
+			$objResult = $objDatabase->query("SELECT $t.* FROM $t WHERE relatedTable='$strTable' AND confirmedOn>0 AND removeOn=0 AND NOT EXISTS (SELECT * FROM $strTable WHERE id=$t.relatedId)");
+
+			if ($objResult->numRows)
+			{
+				while ($objResult->next())
+				{
+					/** @var OptInModel|Model $optInModel */
+					if (!$optInModel = $objRegistry->fetch($t, $objResult->id))
+					{
+						$optInModel = new static($objResult->row());
+					}
+
+					$arrModels[] = $optInModel;
+				}
+			}
+		}
+
+		if (empty($arrModels))
+		{
+			return null;
+		}
+
+		return static::createCollection($arrModels, $t);
 	}
 }
 

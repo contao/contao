@@ -23,6 +23,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 			(
 				'id' => 'primary',
 				'source,parent,confirmed' => 'index',
+				'confirmed' => 'index',
 				'tokenRemove' => 'index'
 			)
 		)

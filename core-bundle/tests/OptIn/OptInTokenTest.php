@@ -36,8 +36,8 @@ class OptInTokenTest extends ContaoTestCase
     public function testConfirmsAToken(): void
     {
         $properties = [
+            'createdOn' => time(),
             'confirmedOn' => 0,
-            'validUntil' => strtotime('+1 day'),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -68,8 +68,8 @@ class OptInTokenTest extends ContaoTestCase
     public function testDoesNotConfirmAnExpiredToken(): void
     {
         $properties = [
+            'createdOn' => strtotime('-1 day'),
             'confirmedOn' => 0,
-            'validUntil' => strtotime('-1 day'),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -85,8 +85,8 @@ class OptInTokenTest extends ContaoTestCase
     public function testSendsATokenViaEmail(): void
     {
         $properties = [
+            'createdOn' => time(),
             'confirmedOn' => 0,
-            'validUntil' => strtotime('+1 day'),
             'emailSubject' => '',
             'emailText' => '',
         ];
@@ -137,8 +137,8 @@ class OptInTokenTest extends ContaoTestCase
     public function testDoesNotSendAnExpiredTokenViaEmail(): void
     {
         $properties = [
+            'createdOn' => strtotime('-1 day'),
             'confirmedOn' => 0,
-            'validUntil' => strtotime('-1 day'),
         ];
 
         /** @var OptInModel|MockObject $model */
@@ -154,8 +154,8 @@ class OptInTokenTest extends ContaoTestCase
     public function testRequiresSubjectAndTextToSendToken(): void
     {
         $properties = [
+            'createdOn' => time(),
             'confirmedOn' => 0,
-            'validUntil' => strtotime('+1 day'),
             'emailSubject' => '',
             'emailText' => '',
         ];
@@ -178,8 +178,8 @@ class OptInTokenTest extends ContaoTestCase
     public function testDoesNotRequireSubjectAndTextToResendToken(): void
     {
         $properties = [
+            'createdOn' => time(),
             'confirmedOn' => 0,
-            'validUntil' => strtotime('+1 day'),
             'emailSubject' => 'Subject',
             'emailText' => 'Text',
         ];

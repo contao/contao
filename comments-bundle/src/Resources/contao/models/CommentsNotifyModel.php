@@ -116,10 +116,10 @@ class CommentsNotifyModel extends Model
 	public static function findExpiredSubscriptions(array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$time = time();
 		$objDatabase = \Database::getInstance();
 
-		$objResult = $objDatabase->query("SELECT * FROM $t WHERE confirmed='' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND validUntil<=$time)");
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE confirmed='' AND EXISTS (SELECT * FROM tl_opt_in WHERE relatedTable='$t' AND relatedId=$t.id AND confirmedOn=0 AND createdOn<=?)")
+								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)
 		{

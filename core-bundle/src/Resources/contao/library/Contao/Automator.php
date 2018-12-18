@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -211,10 +212,12 @@ class Automator extends System
 			return;
 		}
 
-		foreach ($objMember as $objModel)
-		{
-			$objModel->delete();
-		}
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optIn->deleteWithRelatedRecord($objMember);
+
+		// Add a log entry
+		$this->log('Purged the unactivated member registrations', __METHOD__, TL_CRON);
 	}
 
 	/**
@@ -222,17 +225,12 @@ class Automator extends System
 	 */
 	public function purgeOptInTokens()
 	{
-		$objToken = \OptInModel::findExpiredTokens();
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optIn->purgeTokens();
 
-		if ($objToken === null)
-		{
-			return;
-		}
-
-		foreach ($objToken as $objModel)
-		{
-			$objModel->delete();
-		}
+		// Add a log entry
+		$this->log('Purged the expired double opt-in tokens', __METHOD__, TL_CRON);
 	}
 
 	/**

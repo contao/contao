@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\OptIn;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Model\Collection;
 use Contao\OptInModel;
 
 class OptIn implements OptInInterface
@@ -47,7 +48,6 @@ class OptIn implements OptInInterface
         $model->tstamp = time();
         $model->token = $token;
         $model->createdOn = time();
-        $model->validUntil = strtotime('+24 hours');
         $model->email = $email;
         $model->relatedTable = $table;
         $model->relatedId = $id;
@@ -69,5 +69,42 @@ class OptIn implements OptInInterface
         }
 
         return new OptInToken($model, $this->framework);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function purgeTokens(): void
+    {
+        // Remove expired tokens
+        if ($tokens = OptInModel::findExpiredTokens()) {
+            foreach ($tokens as $token) {
+                $token->delete();
+            }
+        }
+
+        // Flag confirmed tokens without related record for removal
+        if ($tokens = OptInModel::findConfirmedTokensWithoutRelatedRecord()) {
+            foreach ($tokens as $token) {
+                $token->removeOn = strtotime('+3 years');
+                $token->save();
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteWithRelatedRecord(Collection $models): void
+    {
+        foreach ($models as $model) {
+            if ($tokens = OptInModel::findByEmailAndRelatedRecord($model->email, $model->getTable(), $model->id)) {
+                foreach ($tokens as $token) {
+                    $token->delete();
+                }
+            }
+
+            $model->delete();
+        }
     }
 }

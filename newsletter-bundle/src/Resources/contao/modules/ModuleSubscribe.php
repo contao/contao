@@ -78,9 +78,9 @@ class ModuleSubscribe extends Module
 		$this->Template->captcha = '';
 
 		// Activate e-mail address
-		if (\Input::get('token'))
+		if (strncmp(\Input::get('token'), 'nl-', 3) === 0)
 		{
-			$this->activateRecipient();
+			$this->activateRecipient(\Input::get('token'));
 
 			return;
 		}
@@ -111,7 +111,7 @@ class ModuleSubscribe extends Module
 
 			if ($varSubmitted !== false)
 			{
-				\call_user_func_array(array($this, 'addRecipient'), $varSubmitted);
+				$this->addRecipient(...$varSubmitted);
 			}
 		}
 
@@ -159,13 +159,15 @@ class ModuleSubscribe extends Module
 
 	/**
 	 * Activate a recipient
+	 *
+	 * @param string $token
 	 */
-	protected function activateRecipient()
+	protected function activateRecipient($token)
 	{
 		$this->Template = new \FrontendTemplate('mod_newsletter');
 
 		// Check the token
-		$objRecipient = \NewsletterRecipientsModel::findByToken(\Input::get('token'));
+		$objRecipient = \NewsletterRecipientsModel::findByToken($token);
 
 		if ($objRecipient === null)
 		{
@@ -258,14 +260,14 @@ class ModuleSubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active=1"), $varInput)) !== null)
+		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}
 
-		$arrNew = array_diff($arrChannels, $arrSubscriptions);
+		$arrChannels = array_diff($arrChannels, $arrSubscriptions);
 
-		if (empty($arrNew) || !\is_array($arrNew))
+		if (empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['subscribed'];
@@ -284,7 +286,7 @@ class ModuleSubscribe extends Module
 			}
 		}
 
-		return array($varInput, $arrNew);
+		return array($varInput, $arrChannels);
 	}
 
 	/**
