@@ -14,11 +14,14 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -34,11 +37,6 @@ class SymlinksCommand extends AbstractLockedCommand
     private $io;
 
     /**
-     * @var ResourceFinderInterface
-     */
-    private $resourceFinder;
-
-    /**
      * @var array
      */
     private $rows = [];
@@ -51,6 +49,11 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * @var string
      */
+    private $webDir;
+
+    /**
+     * @var string
+     */
     private $uploadPath;
 
     /**
@@ -59,27 +62,27 @@ class SymlinksCommand extends AbstractLockedCommand
     private $logsDir;
 
     /**
-     * @var string
+     * @var ResourceFinderInterface
      */
-    private $webDir;
+    private $resourceFinder;
 
     /**
-     * @var array
+     * @var EventDispatcherInterface
      */
-    private $bundles;
+    private $eventDispatcher;
 
     /**
      * @var int
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, array $bundles)
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
-        $this->bundles = $bundles;
+        $this->eventDispatcher = $eventDispatcher;
 
         parent::__construct();
     }
@@ -139,8 +142,7 @@ class SymlinksCommand extends AbstractLockedCommand
         // Symlinks the logs directory
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
 
-        // Symlink the TCPDF config file
-        $this->symlinkTcpdfConfig();
+        $this->triggerSymlinkEvent();
     }
 
     private function symlinkFiles(string $uploadPath): void
@@ -179,14 +181,6 @@ class SymlinksCommand extends AbstractLockedCommand
         }
     }
 
-    private function symlinkTcpdfConfig(): void
-    {
-        $coreBundle = new \ReflectionClass($this->bundles['ContaoCoreBundle']);
-        $relPath = $this->getRelativePath(\dirname($coreBundle->getFileName()));
-
-        $this->symlink($relPath.'/Resources/contao/config/tcpdf.php', 'system/config/tcpdf.php');
-    }
-
     private function createSymlinksFromFinder(Finder $finder, string $prepend): void
     {
         $files = $this->filterNestedPaths($finder, $prepend);
@@ -194,6 +188,17 @@ class SymlinksCommand extends AbstractLockedCommand
         foreach ($files as $file) {
             $path = rtrim($prepend.'/'.$file->getRelativePath(), '/');
             $this->symlink($path, $this->webDir.'/'.$path);
+        }
+    }
+
+    private function triggerSymlinkEvent(): void
+    {
+        $event = new GenerateSymlinksEvent();
+
+        $this->eventDispatcher->dispatch(ContaoCoreEvents::GENERATE_SYMLINKS, $event);
+
+        foreach ($event->getSymlinks() as $target => $link) {
+            $this->symlink($target, $link);
         }
     }
 

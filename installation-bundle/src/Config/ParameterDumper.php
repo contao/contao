@@ -36,14 +36,16 @@ class ParameterDumper
     {
         $this->rootDir = $rootDir;
         $this->filesystem = $filesystem ?: new Filesystem();
+        $parameters = [];
 
         foreach (['app/config/parameters.yml.dist', 'app/config/parameters.yml'] as $file) {
             if (file_exists($rootDir.'/'.$file)) {
-                $this->parameters = array_merge(
-                    $this->parameters,
-                    Yaml::parse(file_get_contents($rootDir.'/'.$file))
-                );
+                $parameters[] = Yaml::parse(file_get_contents($rootDir.'/'.$file));
             }
+        }
+
+        if (!empty($parameters)) {
+            $this->parameters = array_merge($this->parameters, ...$parameters);
         }
     }
 

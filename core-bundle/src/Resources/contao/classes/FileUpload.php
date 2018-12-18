@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 /**
  * Provide methods to handle file uploads in the back end.
  *
@@ -90,7 +92,7 @@ class FileUpload extends Backend
 			throw new \InvalidArgumentException('Invalid target path ' . $strTarget);
 		}
 
-		$maxlength_kb = $this->getMaximumUploadSize();
+		$maxlength_kb = static::getMaxUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 		$arrUploaded = array();
 		$arrFiles = $this->getFilesFromGlobal();
@@ -211,7 +213,7 @@ class FileUpload extends Backend
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
+  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize(static::getMaxUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
 		}
 
 		return $return;
@@ -257,27 +259,25 @@ class FileUpload extends Backend
 	 * Return the maximum upload file size in bytes
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.6, to be removed in Contao 5.0.
+	 *             Use FileUpload::getMaxUploadSize() instead.
 	 */
-	public static function getMaximumUploadSize()
+	protected function getMaximumUploadSize()
 	{
-		// Get the upload_max_filesize from the php.ini
-		$upload_max_filesize = ini_get('upload_max_filesize');
+		@trigger_error('Using FileUpload::getMaximumUploadSize() has been deprecated and will no longer work in Contao 5.0. Use FileUpload::getMaxUploadSize() instead.', E_USER_DEPRECATED);
 
-		// Convert the value to bytes
-		if (stripos($upload_max_filesize, 'K') !== false)
-		{
-			$upload_max_filesize = round(str_replace('K', '', $upload_max_filesize) * 1024);
-		}
-		elseif (stripos($upload_max_filesize, 'M') !== false)
-		{
-			$upload_max_filesize = round(str_replace('M', '', $upload_max_filesize) * 1024 * 1024);
-		}
-		elseif (stripos($upload_max_filesize, 'G') !== false)
-		{
-			$upload_max_filesize = round(str_replace('G', '', $upload_max_filesize) * 1024 * 1024 * 1024);
-		}
+		return static::getMaxUploadSize();
+	}
 
-		return min($upload_max_filesize, \Config::get('maxFileSize'));
+	/**
+	 * Return the maximum upload file size in bytes
+	 *
+	 * @return string
+	 */
+	public static function getMaxUploadSize()
+	{
+		return min(UploadedFile::getMaxFilesize(), \Config::get('maxFileSize'));
 	}
 
 	/**

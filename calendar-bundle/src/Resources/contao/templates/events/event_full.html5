@@ -2,10 +2,11 @@
 <div class="event layout_full block<?= $this->class ?>" itemscope itemtype="http://schema.org/Event">
 
   <h1 itemprop="name"><?= $this->title ?></h1>
-  <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time): ?>, <?= $this->time ?><?php endif; ?></time></p>
 
   <?php if ($this->recurring): ?>
-    <p class="recurring"><?= $this->recurring ?><?php if ($this->until) echo ' ' . $this->until; ?>.</p>
+    <p class="info recurring"><?= $this->recurring ?></p>
+  <?php else: ?>
+    <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time) echo ', '.$this->time; ?></time></p>
   <?php endif; ?>
 
   <?php if ($this->location): ?>

@@ -33,5 +33,25 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         return $this->getResponse($template, $model, $request);
     }
 
+    protected function addSharedMaxAgeToResponse(Response $response, ContentModel $model): void
+    {
+        $time = time();
+        $min = [];
+
+        if ('' !== $model->start && $model->start > $time) {
+            $min[] = (int) $model->start - $time;
+        }
+
+        if ('' !== $model->stop && $model->stop > $time) {
+            $min[] = (int) $model->stop - $time;
+        }
+
+        if (empty($min)) {
+            return;
+        }
+
+        $response->setSharedMaxAge(min($min));
+    }
+
     abstract protected function getResponse(Template $template, ContentModel $model, Request $request): Response;
 }

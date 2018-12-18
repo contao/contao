@@ -24,6 +24,15 @@ final class ContaoCoreEvents
     public const BACKEND_MENU_BUILD = 'contao.backend_menu_build';
 
     /**
+     * The contao.generate_symlinks event is triggered when the symlinks are generated.
+     *
+     * @var string
+     *
+     * @see GenerateSymlinksEvent
+     */
+    public const GENERATE_SYMLINKS = 'contao.generate_symlinks';
+
+    /**
      * The contao.image_sizes_all event is triggered when the image sizes are generated.
      *
      * @var string
