@@ -72,6 +72,7 @@
         "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
+        "doctrine/dbal": ">=2.9",
         "doctrine/doctrine-migrations-bundle": "<1.1",
         "doctrine/orm": "<2.4",
         "lexik/maintenance-bundle": "2.1.4",
