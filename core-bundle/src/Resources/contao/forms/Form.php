@@ -294,8 +294,6 @@ class Form extends Hybrid
 			/** @var PageModel $objTarget */
 			$this->Template->action = $objTarget->getFrontendUrl();
 		}
-
-		return $this->Template->parse();
 	}
 
 	/**

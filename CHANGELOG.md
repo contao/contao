@@ -3,6 +3,8 @@
 ## DEV
 
  * Fix another compatibility issue with Doctrine DBAL 2.9 (see #238).
+ * Correctly check the permission to move child records as non-admin user (see #247).
+ * Do not parse form templates twice (see #214).
 
 ## 4.6.11 (2018-12-13)
 
