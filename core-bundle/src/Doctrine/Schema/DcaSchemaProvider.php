@@ -282,17 +282,13 @@ class DcaSchemaProvider
 
         $columns = [];
         $flags = [];
+        $lengths = [];
 
         foreach (explode(',', $matches[3]) as $column) {
-            preg_match('/`([^`]+)`/', $column, $cm);
+            $name = trim($column, '` ');
 
-            $column = $cm[1];
-
-            if (null !== ($indexLength = $this->getIndexLength($table, $column))) {
-                $column .= '('.$indexLength.')';
-            }
-
-            $columns[$cm[1]] = $column;
+            $columns[] = $name;
+            $lengths[] = $this->getIndexLength($table, $name);
         }
 
         if (false !== strpos($matches[1], 'unique')) {
@@ -302,7 +298,7 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            $table->addIndex($columns, $matches[2], $flags);
+            $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);
         }
     }
 

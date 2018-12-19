@@ -362,12 +362,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $this->assertTrue($table->hasIndex('name'));
         $this->assertFalse($table->getIndex('name')->isUnique());
-
-        if (null === $expected) {
-            $this->assertSame(['name'], $table->getIndex('name')->getColumns());
-        } else {
-            $this->assertSame(['name('.$expected.')'], $table->getIndex('name')->getColumns());
-        }
+        $this->assertSame(['name'], $table->getIndex('name')->getColumns());
+        $this->assertSame([$expected], $table->getIndex('name')->getOption('lengths'));
     }
 
     /**
