@@ -416,6 +416,19 @@ abstract class Model
 			throw new \RuntimeException('The model instance has been detached and cannot be saved');
 		}
 
+		$intPk = $this->{static::$strPk};
+
+		// Track primary key changes
+		if (isset($this->arrModified[static::$strPk]))
+		{
+			$intPk = $this->arrModified[static::$strPk];
+		}
+
+		if ($intPk !== null && empty($intPk))
+		{
+			throw new \RuntimeException('Model cannot be saved: Invalid primary key (' . static::$strPk . ')');
+		}
+
 		$objDatabase = \Database::getInstance();
 		$arrFields = $objDatabase->getFieldNames(static::$strTable);
 
@@ -441,14 +454,6 @@ abstract class Model
 			if (empty($arrSet))
 			{
 				return $this;
-			}
-
-			$intPk = $this->{static::$strPk};
-
-			// Track primary key changes
-			if (isset($this->arrModified[static::$strPk]))
-			{
-				$intPk = $this->arrModified[static::$strPk];
 			}
 
 			// Update the row
