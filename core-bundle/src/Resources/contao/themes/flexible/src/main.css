@@ -1785,10 +1785,6 @@ fieldset.tl_tbox,fieldset.tl_box {
 fieldset.tl_tbox.nolegend,fieldset.tl_box.nolegend {
 	border-top:0;
 }
-fieldset.tl_tbox.nolegend {
-	margin-top:0;
-	border-top:1px solid #e6e6e8;
-}
 fieldset.tl_tbox > legend,fieldset.tl_box > legend {
 	width:100%;
 	box-sizing:border-box;

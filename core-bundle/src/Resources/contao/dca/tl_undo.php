@@ -27,6 +27,10 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'onload_callback' => array
 		(
 			array('tl_undo', 'checkPermission')
+		),
+		'onshow_callback' => array
+		(
+			array('tl_undo', 'showDeletedRecords')
 		)
 	),
 
@@ -149,6 +153,57 @@ class tl_undo extends Backend
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
 		}
+	}
+
+	/**
+	 * Show the deleted records
+	 *
+	 * @param array $data
+	 * @param array $arrRow
+	 */
+	public function showDeletedRecords($data, $row)
+	{
+		$arrData = \StringUtil::deserialize($row['data']);
+
+		foreach ($arrData as $strTable=>$arrTableData)
+		{
+			System::loadLanguageFile($strTable);
+			Controller::loadDataContainer($strTable);
+
+			foreach ($arrTableData as $arrRow)
+			{
+				$arrBuffer = array();
+
+				foreach ($arrRow as $i=>$v)
+				{
+					if (\is_array(StringUtil::deserialize($v)))
+					{
+						continue;
+					}
+
+					// Get the field label
+					if (isset($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']))
+					{
+						$label = \is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']) ? $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'][0] : $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'];
+					}
+					else
+					{
+						$label = \is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
+					}
+
+					if (!$label)
+					{
+						$label = $i;
+					}
+
+					$arrBuffer[$label] = $v;
+				}
+
+				$data[$strTable][] = $arrBuffer;
+			}
+		}
+
+		return $data;
 	}
 
 	/**

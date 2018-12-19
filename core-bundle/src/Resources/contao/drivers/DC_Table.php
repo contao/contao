@@ -562,47 +562,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$label = $i;
 			}
 
-			$data[$this->strTable][$i] = array('label' => $label, 'value' => $row[$i]);
-		}
-
-		// Special treatment for tl_undo
-		if ($this->strTable == 'tl_undo')
-		{
-			$arrData = \StringUtil::deserialize($objRow->data);
-
-			foreach ($arrData as $strTable=>$arrTableData)
-			{
-				\System::loadLanguageFile($strTable);
-				$this->loadDataContainer($strTable);
-
-				foreach ($arrTableData as $arrRow)
-				{
-					foreach ($arrRow as $i=>$v)
-					{
-						if (\is_array(\StringUtil::deserialize($v)))
-						{
-							continue;
-						}
-
-						// Get the field label
-						if (isset($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']))
-						{
-							$label = \is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']) ? $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'][0] : $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'];
-						}
-						else
-						{
-							$label = \is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
-						}
-
-						if (!\strlen($label))
-						{
-							$label = $i;
-						}
-
-						$data[$strTable][$i] = array('label' => $label, 'value' => $v);
-					}
-				}
-			}
+			$data[$this->strTable][0][$label] = $row[$i];
 		}
 
 		// Call onshow_callback
@@ -622,39 +582,45 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
-		$count = 0;
+		$separate = false;
 		$return = '<table class="tl_show">';
 
 		// Generate table
-		foreach ($data as $table => $items)
+		foreach ($data as $table=>$rows)
 		{
-			// Separate multiple tables (e.g. tl_undo)
-			if (++$count > 1)
+			foreach ($rows as $entries)
 			{
-				$return .= '
+				// Separate multiple rows
+				if ($separate)
+				{
+					$return .= '
   <tr>
     <td colspan="2" style="height:1em"></td>
-  </tr>';
-			}
+   </tr>';
+				}
 
-			// Add the table name
-			$return .= '
+				$separate = true;
+				$index = 1;
+
+				// Add the table name
+				$return .= '
   <tr>
     <td class="tl_folder_top"><span class="tl_label">'.$GLOBALS['TL_LANG']['MSC']['table'].' </span></td>
     <td class="tl_folder_top">'.$table.'</td>
   </tr>
 ';
 
-			foreach (array_values($items) as $index => $item)
-			{
-				$class = (($index % 2) !== 0) ? ' class="tl_bg"' : '';
+				foreach ($entries as $lbl=>$val)
+				{
+					$class = ((++$index % 2) !== 0) ? ' class="tl_bg"' : '';
 
-				// Always encode special characters (thanks to Oliver Klee)
-				$return .= '
-  <tr>
-    <td'.$class.'><span class="tl_label">'.$item['label'].' </span></td>
-    <td'.$class.'>'.\StringUtil::specialchars($item['value']).'</td>
-  </tr>';
+					// Always encode special characters (thanks to Oliver Klee)
+					$return .= '
+	  <tr>
+		<td'.$class.'><span class="tl_label">'.$lbl.' </span></td>
+		<td'.$class.'>'.\StringUtil::specialchars($val).'</td>
+	  </tr>';
+				}
 			}
 		}
 
