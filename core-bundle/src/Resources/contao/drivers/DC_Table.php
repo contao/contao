@@ -637,8 +637,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$class = (($index % 2) !== 0) ? ' class="tl_bg"' : '';
 
-                // Always encode special characters (thanks to Oliver Klee)
-                $return .= '
+				// Always encode special characters (thanks to Oliver Klee)
+				$return .= '
   <tr>
     <td'.$class.'><span class="tl_label">'.$item['label'].': </span></td>
     <td'.$class.'>'.\StringUtil::specialchars($item['value']).'</td>
