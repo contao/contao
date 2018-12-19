@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Do not parse form templates twice (see #214).
+
 ## 4.4.31 (2018-12-13)
 
  * Prevent information disclosure through incorrect access control in the back end (see CVE-2018-20028).
