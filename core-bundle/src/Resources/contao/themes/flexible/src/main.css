@@ -774,9 +774,11 @@ table.tl_listing {
 .tl_show td {
 	padding:4px 6px;
 	line-height:18px;
+	white-space:pre-line;
 }
 .tl_show td:first-child {
 	width:34%;
+	white-space:normal;
 }
 .tl_show td p:last-of-type {
 	margin-bottom:0;

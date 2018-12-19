@@ -468,7 +468,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$row[$i] = implode('<br>', $value);
+					$row[$i] = implode(', ', $value);
 				}
 				else
 				{
@@ -486,7 +486,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				if (\count($value) == 2 && isset($value['value']) && isset($value['unit']))
 				{
-					$row[$i] = trim($value['value'] . $value['unit']);
+					$row[$i] = trim($value['value'] . ' ' . $value['unit']);
 				}
 				else
 				{
@@ -499,7 +499,15 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$row[$i] = implode('<br>', $value);
+					if (array_is_assoc($value))
+					{
+						foreach ($value as $kk=>$vv)
+						{
+							$value[$kk] = $kk . ': ' . $vv;
+						}
+					}
+
+					$row[$i] = implode(', ', $value);
 				}
 			}
 			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] == 'date')
@@ -632,7 +640,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Add the table name
 			$return .= '
   <tr>
-    <td class="tl_folder_top"><span class="tl_label">'.$GLOBALS['TL_LANG']['MSC']['table'].': </span></td>
+    <td class="tl_folder_top"><span class="tl_label">'.$GLOBALS['TL_LANG']['MSC']['table'].' </span></td>
     <td class="tl_folder_top">'.$table.'</td>
   </tr>
 ';
@@ -644,7 +652,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Always encode special characters (thanks to Oliver Klee)
 				$return .= '
   <tr>
-    <td'.$class.'><span class="tl_label">'.$item['label'].': </span></td>
+    <td'.$class.'><span class="tl_label">'.$item['label'].' </span></td>
     <td'.$class.'>'.\StringUtil::specialchars($item['value']).'</td>
   </tr>';
 			}
