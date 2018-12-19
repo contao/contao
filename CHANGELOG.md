@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.32 (2018-12-19)
 
  * Correctly check the permission to move child records as non-admin user (see #247).
  * Do not parse form templates twice (see #214).
