@@ -618,20 +618,17 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$return .= '
   <tr>
-    <td colspan="2" style="height:5em"></td>
+    <td colspan="2" style="height:1em"></td>
   </tr>';
 			}
 
-			// Add the table name if there are multiple (e.g. tl_undo);
-			if (count($data) > 1)
-			{
-				$return .= '
+			// Add the table name
+			$return .= '
   <tr>
     <td class="tl_folder_top"><span class="tl_label">'.$GLOBALS['TL_LANG']['MSC']['table'].': </span></td>
     <td class="tl_folder_top">'.$table.'</td>
   </tr>
 ';
-			}
 
 			foreach (array_values($items) as $index => $item)
 			{
