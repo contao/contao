@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly check the permission to move child records as non-admin user (see #247).
  * Do not parse form templates twice (see #214).
 
 ## 4.4.31 (2018-12-13)
