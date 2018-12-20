@@ -637,19 +637,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%kernel.debug%', $definition->getArgument(2));
     }
 
-    public function testRegistersTheContaoCache(): void
-    {
-        $this->assertTrue($this->container->has('contao.cache'));
-
-        $definition = $this->container->getDefinition('contao.cache');
-
-        $this->assertSame(FilesystemCache::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('%kernel.cache_dir%/contao/cache', (string) $definition->getArgument(0));
-        $this->assertSame('', (string) $definition->getArgument(1));
-        $this->assertSame('18', (string) $definition->getArgument(2));
-    }
-
     public function testRegistersTheContaoCacheClearer(): void
     {
         $this->assertTrue($this->container->has('contao.cache.clear_internal'));
