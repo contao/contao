@@ -135,7 +135,12 @@ class RouteProvider implements RouteProviderInterface
                 return [];
             }
 
-            $pages = $this->pageAdapter->findBy('tl_page.id IN ('.implode(',', $ids).')', []);
+            $table = $this->pageAdapter->getTable();
+            $pages = $this->pageAdapter->findBy("$table.id IN (".implode(',', $ids).')', []);
+        }
+
+        if (!$pages instanceof Collection) {
+            return [];
         }
 
         $routes = [];
@@ -204,12 +209,8 @@ class RouteProvider implements RouteProviderInterface
         return $candidates;
     }
 
-    private function addRoutesForPages($pages, array &$routes): void
+    private function addRoutesForPages(iterable $pages, array &$routes): void
     {
-        if (null === $pages) {
-            return;
-        }
-
         /** @var PageModel $page */
         foreach ($pages as $page) {
             $this->addRoutesForPage($page, $routes);
@@ -250,18 +251,19 @@ class RouteProvider implements RouteProviderInterface
         $requirements = ['parameters' => '(/.+)?'];
 
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->configAdapter->get('urlSuffix'));
+        $table = $this->pageAdapter->getTable();
 
         if ($this->configAdapter->get('addLanguageToUrl')) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
         }
 
-        $routes['tl_page.'.$page->id] = new Route(
+        $routes[$table.'.'.$page->id] = new Route(
             $path,
             $defaults,
             $requirements,
             ['utf8' => true],
-            $page->domain ?: null,
+            $page->domain,
             null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
         );
 
@@ -279,18 +281,19 @@ class RouteProvider implements RouteProviderInterface
         $path = '/';
         $requirements = [];
         $defaults = $this->getRouteDefaults($page);
+        $table = $this->pageAdapter->getTable();
 
         if ($this->configAdapter->get('addLanguageToUrl')) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
         }
 
-        $routes['tl_page.'.$page->id.'.root'] = new Route(
+        $routes[$table.'.'.$page->id.'.root'] = new Route(
             $path,
             $defaults,
             $requirements,
             [],
-            $page->domain ?: null,
+            $page->domain,
             null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
         );
 
@@ -301,12 +304,12 @@ class RouteProvider implements RouteProviderInterface
                 $defaults['permanent'] = true;
             }
 
-            $routes['tl_page.'.$page->id.'.fallback'] = new Route(
+            $routes[$table.'.'.$page->id.'.fallback'] = new Route(
                 '/',
                 $defaults,
                 [],
                 [],
-                $page->domain ?: null,
+                $page->domain,
                 null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
             );
         }
@@ -326,9 +329,10 @@ class RouteProvider implements RouteProviderInterface
     private function getPageIdsFromNames(array $names)
     {
         $ids = [];
+        $table = $this->pageAdapter->getTable();
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+            if (0 !== strncmp($name, $table.'.', 8)) {
                 continue;
             }
 
@@ -350,7 +354,9 @@ class RouteProvider implements RouteProviderInterface
     private function sortRoutes(array &$routes, array $languages = null): void
     {
         // Convert languages array so key is language and value is priority
-        $languages = array_flip(array_values($languages));
+        if (null !== $languages) {
+            $languages = array_flip(array_values($languages));
+        }
 
         uasort($routes, function (Route $a, Route $b) use ($languages) {
             if ('' !== $a->getHost() && '' === $b->getHost()) {
@@ -361,9 +367,13 @@ class RouteProvider implements RouteProviderInterface
                 return 1;
             }
 
+            /** @var PageModel $pageA */
             $pageA = $a->getDefault('pageModel');
+
+            /** @var PageModel $pageB */
             $pageB = $b->getDefault('pageModel');
 
+            // TODO Check if this is really necessary, as routes are generated from pages so pageModel is always there
             if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
                 return 0;
             }
@@ -381,7 +391,7 @@ class RouteProvider implements RouteProviderInterface
                 $langB = $languages[$pageB->rootLanguage] ?? null;
 
                 if (null === $langA && null === $langB) {
-                    return $pageA->rootIsFallback ? -1 : ($pageB->rootIsFallback ? -1 : 0);
+                    return $pageA->rootIsFallback ? -1 : ($pageB->rootIsFallback ? 1 : 0);
                 }
 
                 if (null === $langA && null !== $langB) {
@@ -395,11 +405,11 @@ class RouteProvider implements RouteProviderInterface
                 return $langA < $langB ? -1 : 1;
             }
 
-            return strnatcasecmp($pageB->alias, $pageA->alias);
+            return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
         });
     }
 
-    private function findPages(array $candidates)
+    private function findPages(array $candidates): array
     {
         $ids = [];
         $aliases = [];
@@ -450,7 +460,8 @@ class RouteProvider implements RouteProviderInterface
         }
 
         // Include pages with alias "index" or "/" (see #8498, #8560 and #1210)
-        $pages = $this->pageAdapter->findBy(["tl_page.type='root' OR tl_page.alias='index' OR tl_page.alias='/'"], []);
+        $table = $this->pageAdapter->getTable();
+        $pages = $this->pageAdapter->findBy(["$table.type='root' OR $table.alias='index' OR $table.alias='/'"], []);
 
         if ($pages instanceof Collection) {
             return $pages->getModels();
