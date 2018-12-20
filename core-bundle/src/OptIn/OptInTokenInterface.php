@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\OptIn;
 
-use Contao\Model;
-
 interface OptInTokenInterface
 {
     /**
@@ -47,7 +45,7 @@ interface OptInTokenInterface
     public function hasBeenSent(): bool;
 
     /**
-     * Returns the related model.
+     * Returns the related records.
      */
-    public function getRelatedModel(): ?Model;
+    public function getRelatedRecords(): array;
 }

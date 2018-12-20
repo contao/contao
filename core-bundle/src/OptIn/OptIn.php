@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\OptIn;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Model\Collection;
+use Contao\Model;
 use Contao\OptInModel;
 
 class OptIn implements OptInInterface
@@ -31,7 +31,7 @@ class OptIn implements OptInInterface
     /**
      * {@inheritdoc}
      */
-    public function create(string $prefix, string $email, string $table, int $id): OptInTokenInterface
+    public function create(string $prefix, string $email, array $related): OptInTokenInterface
     {
         if (\strlen($prefix) > 6) {
             throw new \InvalidArgumentException('The token prefix must not be longer than 6 characters');
@@ -43,17 +43,18 @@ class OptIn implements OptInInterface
             $token = $prefix.substr($token, \strlen($prefix));
         }
 
-        /** @var OptInModel $model */
-        $model = $this->framework->createInstance(OptInModel::class);
-        $model->tstamp = time();
-        $model->token = $token;
-        $model->createdOn = time();
-        $model->email = $email;
-        $model->relatedTable = $table;
-        $model->relatedId = $id;
-        $model->save();
+        /** @var OptInModel $optIn */
+        $optIn = $this->framework->createInstance(OptInModel::class);
+        $optIn->tstamp = time();
+        $optIn->token = $token;
+        $optIn->createdOn = time();
+        $optIn->removeOn = strtotime('+7 days'); // FIXME: set to +3 years if we need to keep the log entry
+        $optIn->email = $email;
+        $optIn->save();
 
-        return new OptInToken($model, $this->framework);
+        $optIn->setRelatedRecords($related);
+
+        return new OptInToken($optIn, $this->framework);
     }
 
     /**
@@ -76,35 +77,37 @@ class OptIn implements OptInInterface
      */
     public function purgeTokens(): void
     {
-        // Remove expired tokens
-        if ($tokens = OptInModel::findExpiredTokens()) {
-            foreach ($tokens as $token) {
-                $token->delete();
-            }
+        /** @var OptInModel $adapter */
+        $adapter = $this->framework->getAdapter(OptInModel::class);
+
+        if (!$tokens = $adapter->findExpiredTokens()) {
+            return;
         }
 
-        // Flag confirmed tokens without related record for removal
-        if ($tokens = OptInModel::findConfirmedTokensWithoutRelatedRecord()) {
-            foreach ($tokens as $token) {
-                $token->removeOn = strtotime('+3 years');
-                $token->save();
-            }
-        }
-    }
+        /** @var Model $adapter */
+        $adapter = $this->framework->getAdapter(Model::class);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteWithRelatedRecord(Collection $models): void
-    {
-        foreach ($models as $model) {
-            if ($tokens = OptInModel::findByEmailAndRelatedRecord($model->email, $model->getTable(), $model->id)) {
-                foreach ($tokens as $token) {
-                    $token->delete();
+        foreach ($tokens as $token) {
+            $delete = true;
+            $related = $token->getRelatedRecords();
+
+            foreach ($related as $table => $id) {
+                /** @var Model $model */
+                $model = $this->framework->getAdapter($adapter->getClassFromTable($table));
+
+                if ($model->findByPk($id)) {
+                    $delete = false;
+                    break;
                 }
             }
 
-            $model->delete();
+            // Delete the token if there are no more related records, otherwise prolong for another 3 years
+            if ($delete) {
+                $token->delete();
+            } else {
+                $token->removeOn = strtotime('+3 years', (int) $token->removeOn);
+                $token->save();
+            }
         }
     }
 }

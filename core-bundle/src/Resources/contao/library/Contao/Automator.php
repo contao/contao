@@ -212,9 +212,10 @@ class Automator extends System
 			return;
 		}
 
-		/** @var OptIn $optIn */
-		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optIn->deleteWithRelatedRecord($objMember);
+		while ($objMember->next())
+		{
+			$objMember->delete();
+		}
 
 		// Add a log entry
 		$this->log('Purged the unactivated member registrations', __METHOD__, TL_CRON);

@@ -19,14 +19,17 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
+		'onshow_callback' => array
+		(
+			array('tl_opt_in', 'showRelatedRecords')
+		),
 		'sql' => array
 		(
 			'keys' => array
 			(
 				'id' => 'primary',
 				'token' => 'unique',
-				'relatedTable,confirmedOn,removeOn' => 'index',
-				'relatedTable,relatedId,confirmedOn,createdOn' => 'index'
+				'removeOn' => 'index'
 			)
 		)
 	),
@@ -42,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('token', 'email', 'createdOn', 'confirmedOn', 'relatedTable'),
+			'fields'                  => array('token', 'email', 'createdOn', 'confirmedOn', 'removeOn'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -101,20 +104,10 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'removeOn' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['removeOn'],
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
-		),
-		'relatedTable' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['relatedTable'],
 			'filter'                  => true,
 			'sorting'                 => true,
-			'sql'                     => "varchar(128) NOT NULL default ''"
-		),
-		'relatedId' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['relatedId'],
-			'search'                  => true,
+			'flag'                    => 6,
+			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'email' => array
@@ -147,6 +140,38 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
  */
 class tl_opt_in extends Backend
 {
+
+	/**
+	 * Show the related records
+	 *
+	 * @param array $data
+	 * @param array $arrRow
+	 */
+	public function showRelatedRecords($data, $row)
+	{
+		System::loadLanguageFile('tl_opt_in_related');
+		Controller::loadDataContainer('tl_opt_in_related');
+
+		$objRelated = $this->Database->prepare("SELECT * FROM tl_opt_in_related WHERE pid=?")
+									 ->execute($row['id']);
+
+		while ($objRelated->next())
+		{
+			$arrAdd = array();
+			$arrRow = $objRelated->row();
+
+			foreach ($arrRow as $k=>$v)
+			{
+				$label = is_array($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label']) ? $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'][0] : $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'];
+
+				$arrAdd[$label] = $v;
+			}
+
+			$data['tl_opt_in_related'][] = $arrAdd;
+		}
+
+		return $data;
+	}
 
 	/**
 	 * Resend the double opt-in token

@@ -16,8 +16,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\OptIn\OptInToken;
 use Contao\CoreBundle\OptIn\OptInTokenInterface;
 use Contao\Email;
-use Contao\MemberModel;
-use Contao\Model;
 use Contao\OptInModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -209,43 +207,6 @@ class OptInTokenTest extends ContaoTestCase
         $token->send('Subject', 'Text');
 
         $this->assertTrue($token->hasBeenSent());
-    }
-
-    public function testReturnsTheRelatedModel(): void
-    {
-        $properties = [
-            'relatedTable' => 'tl_member',
-            'relatedId' => 4,
-        ];
-
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
-
-        $adapter = $this->mockAdapter(['getClassFromTable']);
-        $adapter
-            ->expects($this->once())
-            ->method('getClassFromTable')
-            ->with('tl_member')
-            ->willReturn(MemberModel::class)
-        ;
-
-        $member = $this->mockAdapter(['findByPk']);
-        $member
-            ->expects($this->once())
-            ->method('findByPk')
-            ->with(4)
-            ->willReturn($model)
-        ;
-
-        $adapters = [
-            Model::class => $adapter,
-            MemberModel::class => $member,
-        ];
-
-        $token = $this->getToken($model, $this->mockContaoFramework($adapters));
-        $related = $token->getRelatedModel();
-
-        $this->assertSame($related, $model);
     }
 
     private function getToken(OptInModel $model, ContaoFrameworkInterface $framework = null): OptInTokenInterface

@@ -12,14 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\OptIn;
 
-use Contao\Model\Collection;
-
 interface OptInInterface
 {
     /**
      * Creates a new double opt-in token.
      */
-    public function create(string $prefix, string $email, string $table, int $id): OptInTokenInterface;
+    public function create(string $prefix, string $email, array $related): OptInTokenInterface;
 
     /**
      * Finds a double opt-in token by its identifier.
@@ -30,9 +28,4 @@ interface OptInInterface
      * Purges expired tokens.
      */
     public function purgeTokens(): void;
-
-    /**
-     * Delete a collection of related records together with their double opt-in tokens.
-     */
-    public function deleteWithRelatedRecord(Collection $models): void;
 }

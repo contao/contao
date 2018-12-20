@@ -534,9 +534,10 @@ class Comments extends Frontend
 			return;
 		}
 
-		/** @var OptIn $optIn */
-		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optIn->deleteWithRelatedRecord($objNotify);
+		while ($objNotify->next())
+		{
+			$objNotify->delete();
+		}
 
 		// Add a log entry
 		$this->log('Purged the unactivated comment subscriptions', __METHOD__, TL_CRON);
@@ -582,7 +583,7 @@ class Comments extends Frontend
 
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('com-', $objComment->email, 'tl_comments_notify', $objNotify->id);
+		$optInToken = $optIn->create('com-', $objComment->email, array('tl_comments_notify'=>$objNotify->id));
 
 		// Send the token
 		$optInToken->send
@@ -603,9 +604,10 @@ class Comments extends Frontend
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || !($objNotify = $optInToken->getRelatedModel()) instanceof CommentsNotifyModel)
+		// Find an unconfirmed token with only one related recod
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) > 1 || key($arrRelated) != 'tl_comments_notify' || (!$objNotify = \CommentsNotifyModel::findByPk(current($arrRelated))))
 		{
-			$objTemplate->confirm = 'Invalid token';
+			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 
 			return;
 		}
@@ -630,7 +632,7 @@ class Comments extends Frontend
 
 		if ($objNotify === null)
 		{
-			$objTemplate->confirm = 'Invalid token';
+			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 
 			return;
 		}

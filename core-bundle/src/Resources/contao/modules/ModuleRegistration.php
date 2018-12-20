@@ -462,7 +462,7 @@ class ModuleRegistration extends Module
 	{
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('reg-', $arrData['email'], 'tl_member', $intId);
+		$optInToken = $optIn->create('reg-', $arrData['email'], array('tl_member'=>$intId));
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
@@ -520,7 +520,8 @@ class ModuleRegistration extends Module
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || !($objMember = $optInToken->getRelatedModel()) instanceof MemberModel)
+		// Find an unconfirmed token with only one related recod
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) > 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))))
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
@@ -528,7 +529,6 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		// Enable the account
 		$objMember->disable = '';
 		$objMember->save();
 
@@ -574,7 +574,16 @@ class ModuleRegistration extends Module
 		$this->strTemplate = 'mod_message';
 		$this->Template = new \FrontendTemplate($this->strTemplate);
 
-		$this->sendActivationMail($objMember->id, $objMember->row());
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+
+		/** @var OptInModel $model */
+		if ((!$model = \OptInModel::findOneByRelatedTableAndId('tl_member', $objMember->id)) || (!$optInToken = $optIn->find($model->token)))
+		{
+			return;
+		}
+
+		$optInToken->send();
 
 		// Confirm activation
 		$this->Template->type = 'confirm';

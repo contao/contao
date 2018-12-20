@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\OptIn;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Email;
-use Contao\Model;
 use Contao\OptInModel;
 
 class OptInToken implements OptInTokenInterface
@@ -66,6 +65,7 @@ class OptInToken implements OptInTokenInterface
 
         $this->model->tstamp = time();
         $this->model->confirmedOn = time();
+        $this->model->removeOn = strtotime('+3 years'); // FIXME: remove if we need to keep all log entries for 3 years
         $this->model->save();
     }
 
@@ -118,15 +118,8 @@ class OptInToken implements OptInTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function getRelatedModel(): ?Model
+    public function getRelatedRecords(): array
     {
-        /** @var Model $adapter */
-        $adapter = $this->framework->getAdapter(Model::class);
-        $class = $adapter->getClassFromTable($this->model->relatedTable);
-
-        /** @var Model $model */
-        $model = $this->framework->getAdapter($class);
-
-        return $model->findByPk($this->model->relatedId);
+        return $this->model->getRelatedRecords();
     }
 }

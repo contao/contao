@@ -178,7 +178,8 @@ class ModulePassword extends Module
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || !($objMember = $optInToken->getRelatedModel()) instanceof MemberModel || !$objMember->login)
+		// Find an unconfirmed token with only one related recod
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) > 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))) || !$objMember->login)
 		{
 			$this->strTemplate = 'mod_message';
 
@@ -189,10 +190,8 @@ class ModulePassword extends Module
 			return;
 		}
 
-		$strTable = $objMember->getTable();
-
 		// Initialize the versioning (see #8301)
-		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions = new \Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
@@ -239,7 +238,7 @@ class ModulePassword extends Module
 				$optInToken->confirm();
 
 				// Create a new version
-				if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'])
 				{
 					$objVersions->create();
 				}
@@ -290,7 +289,7 @@ class ModulePassword extends Module
 	{
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('pw-', $objMember->email, 'tl_member', $objMember->id);
+		$optInToken = $optIn->create('pw-', $objMember->email, array('tl_member'=>$objMember->id));
 
 		// Prepare the simple token data
 		$arrData = $objMember->row();
