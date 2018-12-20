@@ -3306,11 +3306,25 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (!empty($new_records[$this->strTable]))
 			{
 				$ids = array_map('\intval', $new_records[$this->strTable]);
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
-				// Invalidate cache tags (no need to invalidate the parent)
-				// TODO: should load a $dc here for all ids, what's the best idea here?
-				// $this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
+				foreach ($ids as $id)
+				{
+					$dataContainer = static::class;
+					$dc = new $dataContainer($this->strTable);
+					$dc->id = $id;
+
+					// Get the current record
+					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+						->limit(1)
+						->execute($id);
+
+					$dc->activeRecord = $objRow;
+
+					// Invalidate cache tags (no need to invalidate the parent)
+					$this->invalidateCacheTags($dc);
+				}
+
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
 				if ($objStmt->affectedRows > 0)
 				{

@@ -162,6 +162,10 @@ abstract class DataContainer extends Backend
 				$this->blnCreateNewVersion = (bool) $varValue;
 				break;
 
+			case 'id':
+				$this->intId = (int) $varValue;
+				break;
+
 			default:
 				$this->$strKey = $varValue; // backwards compatibility
 				break;
