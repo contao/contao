@@ -31,6 +31,15 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertSame('foobar', $token->getIdentifier());
     }
 
+    public function testReturnsTheEmailAddress(): void
+    {
+        /** @var OptInModel|MockObject $model */
+        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['email' => 'foo@bar.com']);
+        $token = $this->getToken($model);
+
+        $this->assertSame('foo@bar.com', $token->getEmail());
+    }
+
     public function testConfirmsAToken(): void
     {
         $properties = [

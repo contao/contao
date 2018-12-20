@@ -897,6 +897,9 @@ class Newsletter extends Backend
 		{
 			$objModel->delete();
 		}
+
+		// Add a log entry
+		$this->log('Purged the unactivated newsletter subscriptions', __METHOD__, TL_CRON);
 	}
 
 	/**

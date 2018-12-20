@@ -48,7 +48,10 @@ class OptIn implements OptInInterface
         $optIn->tstamp = time();
         $optIn->token = $token;
         $optIn->createdOn = time();
-        $optIn->removeOn = strtotime('+7 days'); // FIXME: set to +3 years if we need to keep the log entry
+
+        // The token is required to remove unconfirmed subscriptions after 24 hours, so
+        // keep it for 3 days to make sure it is not purged before the subscription
+        $optIn->removeOn = strtotime('+3 days');
         $optIn->email = $email;
         $optIn->save();
 
@@ -101,7 +104,7 @@ class OptIn implements OptInInterface
                 }
             }
 
-            // Delete the token if there are no more related records, otherwise prolong for another 3 years
+            // Prolong the token for another 3 years if the related records still exist
             if ($delete) {
                 $token->delete();
             } else {

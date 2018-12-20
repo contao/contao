@@ -570,7 +570,7 @@ class Comments extends Frontend
 			'email'        => $objComment->email,
 			'url'          => \Environment::get('request'),
 			'addedOn'      => $time,
-			'confirmed'    => '',
+			'active'       => '',
 			'tokenRemove'  => 'cor-'.bin2hex(random_bytes(10))
 		);
 
@@ -605,14 +605,14 @@ class Comments extends Frontend
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related recod
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) > 1 || key($arrRelated) != 'tl_comments_notify' || (!$objNotify = \CommentsNotifyModel::findByPk(current($arrRelated))))
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || (!$objNotify = \CommentsNotifyModel::findByPk(current($arrRelated))))
 		{
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 
 			return;
 		}
 
-		$objNotify->confirmed = '1';
+		$objNotify->active = '1';
 		$objNotify->save();
 
 		$optInToken->confirm();

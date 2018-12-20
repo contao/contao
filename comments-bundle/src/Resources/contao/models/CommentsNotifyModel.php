@@ -21,7 +21,7 @@ namespace Contao;
  * @property string  $email
  * @property string  $url
  * @property string  $addedOn
- * @property boolean $confirmed
+ * @property boolean $active
  * @property string  $tokenRemove
  *
  * @method static CommentsNotifyModel|null findById($id, array $opt=array())
@@ -35,7 +35,7 @@ namespace Contao;
  * @method static CommentsNotifyModel|null findOneByEmail($val, array $opt=array())
  * @method static CommentsNotifyModel|null findOneByUrl($val, array $opt=array())
  * @method static CommentsNotifyModel|null findOneByAddedOn($val, array $opt=array())
- * @method static CommentsNotifyModel|null findOneByConfirmed($val, array $opt=array())
+ * @method static CommentsNotifyModel|null findOneByActive($val, array $opt=array())
  * @method static CommentsNotifyModel|null findOneByTokenRemove($val, array $opt=array())
  *
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByTstamp($val, array $opt=array())
@@ -45,7 +45,7 @@ namespace Contao;
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByEmail($val, array $opt=array())
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByUrl($val, array $opt=array())
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByAddedOn($val, array $opt=array())
- * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByConfirmed($val, array $opt=array())
+ * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByActive($val, array $opt=array())
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findByTokenRemove($val, array $opt=array())
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findMultipleByIds($val, array $opt=array())
  * @method static Model\Collection|CommentsNotifyModel[]|CommentsNotifyModel|null findBy($col, $val, array $opt=array())
@@ -59,7 +59,7 @@ namespace Contao;
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByAddedOn($val, array $opt=array())
- * @method static integer countByConfirmed($val, array $opt=array())
+ * @method static integer countByActive($val, array $opt=array())
  * @method static integer countByTokenRemove($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -103,7 +103,7 @@ class CommentsNotifyModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.source=? AND $t.parent=? AND $t.confirmed='1'"), array($strSource, $intParent), $arrOptions);
+		return static::findBy(array("$t.source=? AND $t.parent=? AND $t.active='1'"), array($strSource, $intParent), $arrOptions);
 	}
 
 	/**
@@ -118,7 +118,7 @@ class CommentsNotifyModel extends Model
 		$t = static::$strTable;
 		$objDatabase = \Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE confirmed='' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active='' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
 								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)

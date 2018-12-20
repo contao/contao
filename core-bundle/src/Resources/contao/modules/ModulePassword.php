@@ -179,7 +179,7 @@ class ModulePassword extends Module
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related recod
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) > 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))) || !$objMember->login)
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))) || !$objMember->login)
 		{
 			$this->strTemplate = 'mod_message';
 

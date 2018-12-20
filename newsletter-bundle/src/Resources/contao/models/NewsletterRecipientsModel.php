@@ -20,9 +20,6 @@ namespace Contao;
  * @property boolean $active
  * @property string  $source
  * @property string  $addedOn
- * @property string  $confirmed
- * @property string  $ip
- * @property string  $token
  *
  * @method static NewsletterRecipientsModel|null findById($id, array $opt=array())
  * @method static NewsletterRecipientsModel|null findByPk($id, array $opt=array())
@@ -34,9 +31,6 @@ namespace Contao;
  * @method static NewsletterRecipientsModel|null findOneByActive($val, array $opt=array())
  * @method static NewsletterRecipientsModel|null findOneBySource($val, array $opt=array())
  * @method static NewsletterRecipientsModel|null findOneByAddedOn($val, array $opt=array())
- * @method static NewsletterRecipientsModel|null findOneByConfirmed($val, array $opt=array())
- * @method static NewsletterRecipientsModel|null findOneByIp($val, array $opt=array())
- * @method static NewsletterRecipientsModel|null findOneByToken($val, array $opt=array())
  *
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByPid($val, array $opt=array())
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByTstamp($val, array $opt=array())
@@ -44,9 +38,6 @@ namespace Contao;
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByActive($val, array $opt=array())
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findBySource($val, array $opt=array())
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByAddedOn($val, array $opt=array())
- * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByConfirmed($val, array $opt=array())
- * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByIp($val, array $opt=array())
- * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByToken($val, array $opt=array())
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findMultipleByIds($val, array $opt=array())
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findBy($col, $val, array $opt=array())
  * @method static Model\Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findAll(array $opt=array())
@@ -58,9 +49,6 @@ namespace Contao;
  * @method static integer countByActive($val, array $opt=array())
  * @method static integer countBySource($val, array $opt=array())
  * @method static integer countByAddedOn($val, array $opt=array())
- * @method static integer countByConfirmed($val, array $opt=array())
- * @method static integer countByIp($val, array $opt=array())
- * @method static integer countByToken($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -125,8 +113,17 @@ class NewsletterRecipientsModel extends Model
 	public static function findExpiredSubscriptions(array $arrOptions=array())
 	{
 		$t = static::$strTable;
+		$objDatabase = \Database::getInstance();
 
-		return static::findBy(array("$t.active='' AND  $t.addedOn<? AND $t.token!=''"), strtotime('-1 day'), $arrOptions);
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active='' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+								 ->execute(strtotime('-24 hours'));
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
 

@@ -45,6 +45,14 @@ class OptInToken implements OptInTokenInterface
     /**
      * {@inheritdoc}
      */
+    public function getEmail(): string
+    {
+        return $this->model->email;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isValid(): bool
     {
         return $this->model->createdOn > strtotime('-24 hours');
@@ -65,7 +73,7 @@ class OptInToken implements OptInTokenInterface
 
         $this->model->tstamp = time();
         $this->model->confirmedOn = time();
-        $this->model->removeOn = strtotime('+3 years'); // FIXME: remove if we need to keep all log entries for 3 years
+        $this->model->removeOn = strtotime('+3 years');
         $this->model->save();
     }
 

@@ -20,6 +20,11 @@ interface OptInTokenInterface
     public function getIdentifier(): string;
 
     /**
+     * Returns the e-mail address.
+     */
+    public function getEmail(): string;
+
+    /**
      * Returns true if the token is valid.
      */
     public function isValid(): bool;

@@ -70,14 +70,14 @@ class Version470Update extends AbstractVersionUpdate
             ALTER TABLE
                 tl_comments_notify
             ADD
-                confirmed CHAR(1) DEFAULT '' NOT NULL
+                active CHAR(1) DEFAULT '' NOT NULL
         ");
 
         $this->connection->query("
             UPDATE
                 tl_comments_notify
             SET
-                confirmed = '1'
+                active = '1'
             WHERE
                 tokenConfirm = ''
         ");

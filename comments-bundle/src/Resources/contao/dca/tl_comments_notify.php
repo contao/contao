@@ -22,7 +22,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'source,parent,confirmed' => 'index',
+				'source,parent,active' => 'index',
 				'tokenRemove' => 'index'
 			)
 		)
@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		(
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
-		'confirmed' => array
+		'active' => array
 		(
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
