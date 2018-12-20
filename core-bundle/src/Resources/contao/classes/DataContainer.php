@@ -163,7 +163,7 @@ abstract class DataContainer extends Backend
 				break;
 
 			case 'id':
-				$this->intId = (int) $varValue;
+				$this->intId = $varValue;
 				break;
 
 			default:
