@@ -12,7 +12,7 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^2.9",
+        "doctrine/dbal": "^2.5",
         "patchwork/utf8": "^1.2",
         "psr/log": "^1.0",
         "sensiolabs/ansi-to-html": "^1.1",

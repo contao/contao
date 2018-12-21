@@ -593,7 +593,7 @@ class Comments extends Frontend
 			/** @var OptIn $optIn */
 			$optIn = \System::getContainer()->get('contao.opt-in');
 
-			// Find an unconfirmed token with only one related recod
+			// Find an unconfirmed token with only one related record
 			if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = \CommentsNotifyModel::findByPk($arrIds[0])))
 			{
 				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];

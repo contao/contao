@@ -520,7 +520,7 @@ class ModuleRegistration extends Module
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
-		// Find an unconfirmed token with only one related recod
+		// Find an unconfirmed token with only one related record
 		if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = \MemberModel::findByPk($arrIds[0])))
 		{
 			$this->Template->type = 'error';
