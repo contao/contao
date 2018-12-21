@@ -463,7 +463,8 @@ class tl_newsletter extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool {
+		$aliasExists = function (string $alias) use ($dc): bool
+		{
 			return $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 

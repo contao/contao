@@ -36,8 +36,7 @@ class Slug
     }
 
     /**
-     * @param int|iterable $options        A page ID, object or options array {@see SlugGeneratorInterface::generate()}
-     * @param callable     $duplicateCheck A callback to check if the slug is already in use
+     * @param int|iterable $options A page ID, object or options array {@see SlugGeneratorInterface::generate()}
      */
     public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
