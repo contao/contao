@@ -146,7 +146,7 @@ class OptInModel extends Model
 
 		while ($objRelated->next())
 		{
-			$arrRelated[$objRelated->relTable] = $objRelated->relId;
+			$arrRelated[$objRelated->relTable][] = $objRelated->relId;
 		}
 
 		return $arrRelated;
@@ -171,10 +171,13 @@ class OptInModel extends Model
 			throw new \LogicException(sprintf('Token "%s" already contains related records', $this->token));
 		}
 
-		foreach ($arrRelated as $strTable=>$intId)
+		foreach ($arrRelated as $strTable=>$arrIds)
 		{
-			$objDatabase->prepare("INSERT INTO tl_opt_in_related (pid, relTable, relId) VALUES (?, ?, ?)")
-						->execute($this->id, $strTable, $intId);
+			foreach ($arrIds as $intId)
+			{
+				$objDatabase->prepare("INSERT INTO tl_opt_in_related (pid, relTable, relId) VALUES (?, ?, ?)")
+							->execute($this->id, $strTable, $intId);
+			}
 		}
 	}
 }

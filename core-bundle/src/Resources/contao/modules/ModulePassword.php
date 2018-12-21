@@ -66,7 +66,7 @@ class ModulePassword extends Module
 		// Set new password
 		if (strncmp(\Input::get('token'), 'pw-', 3) === 0)
 		{
-			$this->setNewPassword(\Input::get('token'));
+			$this->setNewPassword();
 
 			return;
 		}
@@ -170,16 +170,14 @@ class ModulePassword extends Module
 
 	/**
 	 * Set the new password
-	 *
-	 * @param string $token
 	 */
-	protected function setNewPassword($token)
+	protected function setNewPassword()
 	{
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related recod
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))) || !$objMember->login)
+		if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = \MemberModel::findByPk($arrIds[0])))
 		{
 			$this->strTemplate = 'mod_message';
 
@@ -289,7 +287,7 @@ class ModulePassword extends Module
 	{
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('pw-', $objMember->email, array('tl_member'=>$objMember->id));
+		$optInToken = $optIn->create('pw-', $objMember->email, array('tl_member'=>array($objMember->id)));
 
 		// Prepare the simple token data
 		$arrData = $objMember->row();

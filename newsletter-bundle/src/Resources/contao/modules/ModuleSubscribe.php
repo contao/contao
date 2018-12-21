@@ -81,7 +81,7 @@ class ModuleSubscribe extends Module
 		// Activate e-mail address
 		if (strncmp(\Input::get('token'), 'nl-', 3) === 0)
 		{
-			$this->activateRecipient(\Input::get('token'));
+			$this->activateRecipient();
 
 			return;
 		}
@@ -160,10 +160,8 @@ class ModuleSubscribe extends Module
 
 	/**
 	 * Activate a recipient
-	 *
-	 * @param string $token
 	 */
-	protected function activateRecipient($token)
+	protected function activateRecipient()
 	{
 		$this->Template = new \FrontendTemplate('mod_newsletter');
 
@@ -171,7 +169,7 @@ class ModuleSubscribe extends Module
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1)
+		if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
@@ -184,17 +182,19 @@ class ModuleSubscribe extends Module
 		$arrCids = array();
 
 		// Update the subscriptions
-		foreach ($arrRelated as $strTable=>$intId)
+		foreach ($arrIds as $intId)
 		{
-			if ($strTable == 'tl_newsletter_recipients' && ($objRecipient = \NewsletterRecipientsModel::findByPk($intId)))
+			if (!$objRecipient = \NewsletterRecipientsModel::findByPk($intId))
 			{
-				$arrAdd[] = $objRecipient->id;
-				$arrCids[] = $objRecipient->pid;
-
-				$objRecipient->tstamp = $time;
-				$objRecipient->active = '1';
-				$objRecipient->save();
+				continue;
 			}
+
+			$arrAdd[] = $objRecipient->id;
+			$arrCids[] = $objRecipient->pid;
+
+			$objRecipient->tstamp = $time;
+			$objRecipient->active = '1';
+			$objRecipient->save();
 		}
 
 		$optInToken->confirm();
@@ -328,7 +328,7 @@ class ModuleSubscribe extends Module
 				$objBlacklist->delete();
 			}
 
-			$arrRelated['tl_newsletter_recipients'] = $objRecipient->id;
+			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
 		}
 
 		/** @var OptIn $optIn */

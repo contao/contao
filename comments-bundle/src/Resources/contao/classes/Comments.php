@@ -173,18 +173,10 @@ class Comments extends Frontend
 			return;
 		}
 
-		// Confirm a subscription
-		if (strncmp(\Input::get('token'), 'com-', 4) === 0)
+		// Confirm or remove a subscription
+		if (strncmp(\Input::get('token'), 'com-', 4) === 0 || strncmp(\Input::get('token'), 'cor-', 4) === 0)
 		{
-			static::confirmSubscription(\Input::get('token'), $objTemplate);
-
-			return;
-		}
-
-		// Remove a subscription
-		if (strncmp(\Input::get('token'), 'cor-', 4) === 0)
-		{
-			static::removeSubscription(\Input::get('token'), $objTemplate);
+			static::changeSubscriptionStatus($objTemplate);
 
 			return;
 		}
@@ -583,62 +575,53 @@ class Comments extends Frontend
 
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('com-', $objComment->email, array('tl_comments_notify'=>$objNotify->id));
+		$optInToken = $optIn->create('com-', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
-		$optInToken->send
-		(
-			sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host'))),
-			sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove)
-		);
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
 	}
 
 	/**
-	 * Confirm a subscription
+	 * Change the subscription status
 	 *
-	 * @param string           $token
 	 * @param FrontendTemplate $objTemplate
 	 */
-	public static function confirmSubscription($token, FrontendTemplate $objTemplate)
+	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
-		/** @var OptIn $optIn */
-		$optIn = \System::getContainer()->get('contao.opt-in');
-
-		// Find an unconfirmed token with only one related recod
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || (!$objNotify = \CommentsNotifyModel::findByPk(current($arrRelated))))
+		if (strncmp(\Input::get('token'), 'com-', 4) === 0)
 		{
-			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+			/** @var OptIn $optIn */
+			$optIn = \System::getContainer()->get('contao.opt-in');
 
-			return;
+			// Find an unconfirmed token with only one related recod
+			if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = \CommentsNotifyModel::findByPk($arrIds[0])))
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+
+				return;
+			}
+
+			$objNotify->active = '1';
+			$objNotify->save();
+
+			$optInToken->confirm();
+
+			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
-
-		$objNotify->active = '1';
-		$objNotify->save();
-
-		$optInToken->confirm();
-
-		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
-	}
-
-	/**
-	 * Remove a subscription
-	 *
-	 * @param string           $token
-	 * @param FrontendTemplate $objTemplate
-	 */
-	public static function removeSubscription($token, FrontendTemplate $objTemplate)
-	{
-		$objNotify = \CommentsNotifyModel::findOneByTokenRemove($token);
-
-		if ($objNotify === null)
+		elseif (strncmp(\Input::get('token'), 'cor-', 4) === 0)
 		{
-			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+			$objNotify = \CommentsNotifyModel::findOneByTokenRemove(\Input::get('token'));
 
-			return;
+			if ($objNotify === null)
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+
+				return;
+			}
+
+			$objNotify->delete();
+			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
 		}
-
-		$objNotify->delete();
-		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
 	}
 
 	/**

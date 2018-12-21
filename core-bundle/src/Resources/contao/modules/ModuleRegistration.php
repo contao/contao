@@ -90,7 +90,7 @@ class ModuleRegistration extends Module
 		// Activate account
 		if (strncmp(\Input::get('token'), 'reg-', 4) === 0)
 		{
-			$this->activateAcount(\Input::get('token'));
+			$this->activateAcount();
 
 			return;
 		}
@@ -386,10 +386,13 @@ class ModuleRegistration extends Module
 		$objNewUser->setRow($arrData);
 		$objNewUser->save();
 
+		// Store the new ID (see https://github.com/contao/contao/pull/196#discussion_r243555399)
+		$arrData['id'] = $objNewUser->id;
+
 		// Send activation e-mail
 		if ($this->reg_activate)
 		{
-			$this->sendActivationMail($objNewUser->id, $arrData);
+			$this->sendActivationMail($arrData);
 		}
 
 		// Assign home directory
@@ -455,14 +458,13 @@ class ModuleRegistration extends Module
 	/**
 	 * Send the activation mail
 	 *
-	 * @param integer     $intId
 	 * @param MemberModel $objNewUser
 	 */
-	protected function sendActivationMail($intId, $arrData)
+	protected function sendActivationMail($arrData)
 	{
 		/** @var OptIn $optIn */
 		$optIn = \System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('reg-', $arrData['email'], array('tl_member'=>$intId));
+		$optInToken = $optIn->create('reg-', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
@@ -509,10 +511,8 @@ class ModuleRegistration extends Module
 
 	/**
 	 * Activate an account
-	 *
-	 * @param string $token
 	 */
-	protected function activateAcount($token)
+	protected function activateAcount()
 	{
 		$this->strTemplate = 'mod_message';
 		$this->Template = new \FrontendTemplate($this->strTemplate);
@@ -521,7 +521,7 @@ class ModuleRegistration extends Module
 		$optIn = \System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related recod
-		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))))
+		if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = \MemberModel::findByPk($arrIds[0])))
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
