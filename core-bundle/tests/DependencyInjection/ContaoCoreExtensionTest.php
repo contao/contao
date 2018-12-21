@@ -69,6 +69,7 @@ use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Menu\BackendMenuRenderer;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
+use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
@@ -1083,6 +1084,17 @@ class ContaoCoreExtensionTest extends TestCase
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('monolog.processor', $tags);
+    }
+
+    public function testRegistersTheOptInService(): void
+    {
+        $this->assertTrue($this->container->has('contao.opt-in'));
+
+        $definition = $this->container->getDefinition('contao.opt-in');
+
+        $this->assertSame(OptIn::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
     public function testRegistersThePickerBuilder(): void

@@ -247,6 +247,12 @@ services:
         tags:
             - { name: monolog.processor }
 
+    contao.opt-in:
+        class: Contao\CoreBundle\OptIn\OptIn
+        arguments:
+            - "@contao.framework"
+        public: true
+
     contao.picker.builder:
         class: Contao\CoreBundle\Picker\PickerBuilder
         arguments:

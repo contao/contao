@@ -25,17 +25,14 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			array('tl_newsletter_recipients', 'clearOptInData')
 		),
-		'onsubmit_callback' => array
-		(
-			array('tl_newsletter_recipients', 'removeOptInToken')
-		),
 		'sql' => array
 		(
 			'keys' => array
 			(
 				'id' => 'primary',
 				'pid,email' => 'unique',
-				'email' => 'index'
+				'email' => 'index',
+				'active' => 'index'
 			)
 		)
 	),
@@ -167,30 +164,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'flag'                    => 8,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "varchar(10) NOT NULL default ''"
-		),
-		'confirmed' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirmed'],
-			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => 8,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "varchar(10) NOT NULL default ''"
-		),
-		'ip' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['ip'],
-			'search'                  => true,
-			'sorting'                 => true,
-			'flag'                    => 11,
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'token' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['token'],
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		)
 	)
 );
@@ -319,28 +292,14 @@ class tl_newsletter_recipients extends Backend
 	}
 
 	/**
-	 * Reset the double opt-in data if a recipient is moved manually
+	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
 	 * @param DataContainer $dc
 	 */
 	public function clearOptInData(DataContainer $dc)
 	{
-		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='', confirmed='', ip='', token='' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
 					   ->execute($dc->id);
-	}
-
-	/**
-	 * Remove the double opt-in token if a recipient is activated manually
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function removeOptInToken(DataContainer $dc)
-	{
-		if ($dc->activeRecord && $dc->activeRecord->active && $dc->activeRecord->token)
-		{
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET token='' WHERE id=?")
-						   ->execute($dc->id);
-		}
 	}
 
 	/**

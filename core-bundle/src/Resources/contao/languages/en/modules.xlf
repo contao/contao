@@ -65,6 +65,12 @@
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end user groups)</source>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
       </trans-unit>

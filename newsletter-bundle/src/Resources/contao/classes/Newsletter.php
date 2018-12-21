@@ -22,7 +22,7 @@ class Newsletter extends Backend
 {
 
 	/**
-	 * Return a form to choose an existing style sheet and import it
+	 * Return a form to choose an existing CSV file and import it
 	 *
 	 * @param DataContainer $dc
 	 *
@@ -161,7 +161,7 @@ class Newsletter extends Backend
 				// Update status
 				if ($intStart == 0)
 				{
-					$this->Database->prepare("UPDATE tl_newsletter SET sent=1, date=? WHERE id=?")
+					$this->Database->prepare("UPDATE tl_newsletter SET sent='1', date=? WHERE id=?")
 								   ->execute(time(), $objNewsletter->id);
 
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
@@ -320,7 +320,6 @@ class Newsletter extends Backend
 	protected function generateEmailObject(Database\Result $objNewsletter, $arrAttachments)
 	{
 		$objEmail = new \Email();
-
 		$objEmail->from = $objNewsletter->sender;
 		$objEmail->subject = $objNewsletter->subject;
 
@@ -492,7 +491,7 @@ class Newsletter extends Backend
 					// Skip invalid entries
 					if (!\Validator::isEmail($strRecipient))
 					{
-						$this->log('Recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
+						$this->log('The recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
 						++$intInvalid;
 						continue;
 					}
@@ -512,7 +511,7 @@ class Newsletter extends Backend
 
 					if ($objBlacklist->count > 0)
 					{
-						$this->log('Recipient address "' . $strRecipient . '" has been unsubscribed and was not imported', __METHOD__, TL_ERROR);
+						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . \Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
 						continue;
 					}
 
@@ -898,6 +897,9 @@ class Newsletter extends Backend
 		{
 			$objModel->delete();
 		}
+
+		// Add a log entry
+		$this->log('Purged the unactivated newsletter subscriptions', __METHOD__, TL_CRON);
 	}
 
 	/**

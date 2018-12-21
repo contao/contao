@@ -1756,7 +1756,7 @@ time[title] {
 }
 
 /* Error messages */
-label.error,legend.error {
+label.error,legend.error,.tl_checkbox_container.error legend {
 	color:#c33;
 }
 .tl_tbox .tl_error,.tl_box .tl_error {

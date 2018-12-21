@@ -2669,7 +2669,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
-  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'</legend>
+  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'<span class="mandatory">*</span></legend>
   <input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this)"> <label for="check_all" style="color:#a6a6a6"><em>'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</em></label><br>'.$options.'
 </fieldset>'.($blnIsError ? '
 <p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['all_fields'].'</p>' : ((\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
@@ -2987,7 +2987,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
-  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'</legend>
+  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'<span class="mandatory">*</span></legend>
   <input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this)"> <label for="check_all" style="color:#a6a6a6"><em>'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</em></label><br>'.$options.'
 </fieldset>'.($blnIsError ? '
 <p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['all_fields'].'</p>' : ((\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
@@ -5106,7 +5106,17 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		foreach ($searchFields as $field)
 		{
-			$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field]);
+			$option_label = $field;
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
+			{
+				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
+			}
+			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
+			{
+				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
+			}
+
 			$options_sorter[Utf8::toAscii($option_label).'_'.$field] = '  <option value="'.\StringUtil::specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
 		}
 

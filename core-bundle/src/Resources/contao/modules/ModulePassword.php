@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -63,9 +64,9 @@ class ModulePassword extends Module
 		$this->loadDataContainer('tl_member');
 
 		// Set new password
-		if (strncmp(\Input::get('token'), 'PW', 2) === 0)
+		if (strncmp(\Input::get('token'), 'pw-', 3) === 0)
 		{
-			$this->setNewPassword();
+			$this->setNewPassword(\Input::get('token'));
 
 			return;
 		}
@@ -169,12 +170,16 @@ class ModulePassword extends Module
 
 	/**
 	 * Set the new password
+	 *
+	 * @param string $token
 	 */
-	protected function setNewPassword()
+	protected function setNewPassword($token)
 	{
-		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
 
-		if ($objMember === null || $objMember->login == '')
+		// Find an unconfirmed token with only one related recod
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || (!$objMember = \MemberModel::findByPk(current($arrRelated))) || !$objMember->login)
 		{
 			$this->strTemplate = 'mod_message';
 
@@ -185,10 +190,8 @@ class ModulePassword extends Module
 			return;
 		}
 
-		$strTable = $objMember->getTable();
-
 		// Initialize the versioning (see #8301)
-		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions = new \Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
@@ -228,13 +231,14 @@ class ModulePassword extends Module
 				$objSession->set('setPasswordToken', '');
 
 				$objMember->tstamp = time();
-				$objMember->activation = '';
 				$objMember->locked = 0; // see #8545
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
+				$optInToken->confirm();
+
 				// Create a new version
-				if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'])
 				{
 					$objVersions->create();
 				}
@@ -283,26 +287,18 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$strToken = 'PW' . substr(md5(uniqid(mt_rand(), true)), 2);
-
-		// Store the token
-		$objMember = \MemberModel::findByPk($objMember->id);
-		$objMember->activation = $strToken;
-		$objMember->save();
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('pw-', $objMember->email, array('tl_member'=>$objMember->id));
 
 		// Prepare the simple token data
 		$arrData = $objMember->row();
+		$arrData['activation'] = $optInToken->getIdentifier();
 		$arrData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $strToken;
+		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
-		// Send e-mail
-		$objEmail = new \Email();
-
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_password, $arrData);
-		$objEmail->sendTo($objMember->email);
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], \Idna::decode(\Environment::get('host'))), \StringUtil::parseSimpleTokens($this->reg_password, $arrData));
 
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 

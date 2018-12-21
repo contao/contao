@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
 
 /**
@@ -78,9 +79,9 @@ class ModuleSubscribe extends Module
 		$this->Template->captcha = '';
 
 		// Activate e-mail address
-		if (\Input::get('token'))
+		if (strncmp(\Input::get('token'), 'nl-', 3) === 0)
 		{
-			$this->activateRecipient();
+			$this->activateRecipient(\Input::get('token'));
 
 			return;
 		}
@@ -111,7 +112,7 @@ class ModuleSubscribe extends Module
 
 			if ($varSubmitted !== false)
 			{
-				\call_user_func_array(array($this, 'addRecipient'), $varSubmitted);
+				$this->addRecipient(...$varSubmitted);
 			}
 		}
 
@@ -159,18 +160,21 @@ class ModuleSubscribe extends Module
 
 	/**
 	 * Activate a recipient
+	 *
+	 * @param string $token
 	 */
-	protected function activateRecipient()
+	protected function activateRecipient($token)
 	{
 		$this->Template = new \FrontendTemplate('mod_newsletter');
 
-		// Check the token
-		$objRecipient = \NewsletterRecipientsModel::findByToken(\Input::get('token'));
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
 
-		if ($objRecipient === null)
+		// Find an unconfirmed token
+		if (!($optInToken = $optIn->find($token)) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1)
 		{
-			$this->Template->mclass = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidToken'];
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
 
 			return;
 		}
@@ -180,20 +184,20 @@ class ModuleSubscribe extends Module
 		$arrCids = array();
 
 		// Update the subscriptions
-		while ($objRecipient->next())
+		foreach ($arrRelated as $strTable=>$intId)
 		{
-			/** @var NewsletterChannelModel $objChannel */
-			$objChannel = $objRecipient->getRelated('pid');
+			if ($strTable == 'tl_newsletter_recipients' && ($objRecipient = \NewsletterRecipientsModel::findByPk($intId)))
+			{
+				$arrAdd[] = $objRecipient->id;
+				$arrCids[] = $objRecipient->pid;
 
-			$arrAdd[] = $objRecipient->id;
-			$arrCids[] = $objChannel->id;
-
-			$objRecipient->active = 1;
-			$objRecipient->token = '';
-			$objRecipient->pid = $objChannel->id;
-			$objRecipient->confirmed = $time;
-			$objRecipient->save();
+				$objRecipient->tstamp = $time;
+				$objRecipient->active = '1';
+				$objRecipient->save();
+			}
 		}
+
+		$optInToken->confirm();
 
 		// HOOK: post activation callback
 		if (isset($GLOBALS['TL_HOOKS']['activateRecipient']) && \is_array($GLOBALS['TL_HOOKS']['activateRecipient']))
@@ -201,7 +205,7 @@ class ModuleSubscribe extends Module
 			foreach ($GLOBALS['TL_HOOKS']['activateRecipient'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objRecipient->email, $arrAdd, $arrCids);
+				$this->{$callback[0]}->{$callback[1]}($optInToken->getEmail(), $arrAdd, $arrCids);
 			}
 		}
 
@@ -258,14 +262,14 @@ class ModuleSubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active=1"), $varInput)) !== null)
+		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}
 
-		$arrNew = array_diff($arrChannels, $arrSubscriptions);
+		$arrChannels = array_diff($arrChannels, $arrSubscriptions);
 
-		if (empty($arrNew) || !\is_array($arrNew))
+		if (empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['subscribed'];
@@ -284,7 +288,7 @@ class ModuleSubscribe extends Module
 			}
 		}
 
-		return array($varInput, $arrNew);
+		return array($varInput, $arrChannels);
 	}
 
 	/**
@@ -305,7 +309,7 @@ class ModuleSubscribe extends Module
 		}
 
 		$time = time();
-		$strToken = md5(uniqid(mt_rand(), true));
+		$arrRelated = array();
 
 		// Add the new subscriptions
 		foreach ($arrNew as $id)
@@ -316,9 +320,6 @@ class ModuleSubscribe extends Module
 			$objRecipient->email = $strEmail;
 			$objRecipient->active = '';
 			$objRecipient->addedOn = $time;
-			$objRecipient->ip = \Environment::get('ip');
-			$objRecipient->token = $strToken;
-			$objRecipient->confirmed = '';
 			$objRecipient->save();
 
 			// Remove the blacklist entry (see #4999)
@@ -326,25 +327,26 @@ class ModuleSubscribe extends Module
 			{
 				$objBlacklist->delete();
 			}
+
+			$arrRelated['tl_newsletter_recipients'] = $objRecipient->id;
 		}
+
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('nl-', $strEmail, $arrRelated);
 
 		// Get the channels
 		$objChannel = \NewsletterChannelModel::findByIds($arrNew);
 
 		// Prepare the simple token data
 		$arrData = array();
-		$arrData['token'] = $strToken;
+		$arrData['token'] = $optInToken->getIdentifier();
 		$arrData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $strToken;
+		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
-		// Activation e-mail
-		$objEmail = new \Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = \StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData);
-		$objEmail->sendTo($strEmail);
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], \Idna::decode(\Environment::get('host'))), \StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
 
 		// Redirect to the jumpTo page
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
