@@ -1185,7 +1185,7 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Invalidates the cache tags associated with a given DC
+	 * Invalidate the cache tags associated with a given DC
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
 	 *
@@ -1208,19 +1208,24 @@ abstract class DataContainer extends Backend
 		}
 
 		// Trigger the oninvalidate_cache_tags_callback
-		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'])) {
-			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'] as $callback) {
-				if (\is_array($callback)) {
+		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
 					$this->import($callback[0]);
 					$tags = $this->{$callback[0]}->{$callback[1]}($dc, $tags);
-				} elseif (\is_callable($callback)) {
+				}
+				elseif (\is_callable($callback))
+				{
 					$tags = $callback($dc, $tags);
 				}
 			}
 		}
 
 		// Make sure tags are unique and empty ones are removed
-		return array_filter(array_unique($tags));
+		$tags = array_filter(array_unique($tags));
 
 		/** @var CacheManager $cacheManager */
 		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');

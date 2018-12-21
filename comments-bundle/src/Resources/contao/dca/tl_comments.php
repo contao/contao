@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
-			array('tl_comments', 'invalidateCacheTagOfSource')
+			array('tl_comments', 'invalidateSourceCacheTag')
 		),
 		'sql' => array
 		(
@@ -760,21 +760,19 @@ class tl_comments extends Backend
 	/**
 	 * Adds the cache invalidation tags for the source.
 	 *
-	 * @param array $ids
-	 * @param array $tags
+	 * @param DataContainer $dc
+	 * @param array         $tags
 	 *
 	 * @return array
 	 */
-	public function invalidateCacheTagOfSource(\DataContainer $dc, array $tags)
+	public function invalidateSourceCacheTag(DataContainer $dc, array $tags)
 	{
 		$commentModel = CommentsModel::findByPk($dc->id);
 
-		if (null === $commentModel)
+		if (null !== $commentModel)
 		{
-			return $tags;
+			$tags[] = sprintf('contao.comments.%s.%s', $commentModel->source, $commentModel->parent);
 		}
-
-		$tags[] = sprintf('contao.comments.%s.%s', $commentModel->source, $commentModel->parent);
 
 		return $tags;
 	}

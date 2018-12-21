@@ -3315,8 +3315,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					// Get the current record
 					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-						->limit(1)
-						->execute($id);
+											 ->limit(1)
+											 ->execute($id);
 
 					$dc->activeRecord = $objRow;
 
