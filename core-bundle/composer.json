@@ -18,7 +18,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-zlib": "*",
-        "ausi/slug-generator": "^1.0.1",
+        "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
