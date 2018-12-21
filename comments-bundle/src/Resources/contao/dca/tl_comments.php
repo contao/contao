@@ -26,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			array('tl_comments', 'notifyOfReply')
 		),
-		'oncachetags_callback' => array
+		'oninvalidate_cache_tags_callback' => array
 		(
 			array('tl_comments', 'invalidateCacheTagOfSource')
 		),

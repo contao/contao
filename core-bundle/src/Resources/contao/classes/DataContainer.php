@@ -1198,23 +1198,6 @@ abstract class DataContainer extends Backend
 			return;
 		}
 
-		$tags = $this->getCacheTags($dc);
-
-		/** @var CacheManager $cacheManager */
-		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
-		$cacheManager->invalidateTags($tags);
-	}
-
-	/**
-	 * Return an array of cache tags, optionally including the parent table
-	 * (which is useful when creating new elements or editing a certain element)
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	protected function getCacheTags(DataContainer $dc)
-	{
 		$ns = 'contao.db.';
 		$tags = array($ns . $dc->table, $ns . $dc->table . '.' . $dc->id);
 
@@ -1224,9 +1207,9 @@ abstract class DataContainer extends Backend
 			$tags[] = $ns . $dc->ptable . '.' . $dc->activeRecord->pid;
 		}
 
-		// Trigger the oncachetags_callback
-		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oncachetags_callback'])) {
-			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oncachetags_callback'] as $callback) {
+		// Trigger the oninvalidate_cache_tags_callback
+		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'])) {
+			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'] as $callback) {
 				if (\is_array($callback)) {
 					$this->import($callback[0]);
 					$tags = $this->{$callback[0]}->{$callback[1]}($dc, $tags);
@@ -1238,6 +1221,10 @@ abstract class DataContainer extends Backend
 
 		// Make sure tags are unique and empty ones are removed
 		return array_filter(array_unique($tags));
+
+		/** @var CacheManager $cacheManager */
+		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
+		$cacheManager->invalidateTags($tags);
 	}
 
 	/**
