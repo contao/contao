@@ -162,6 +162,10 @@ abstract class DataContainer extends Backend
 				$this->blnCreateNewVersion = (bool) $varValue;
 				break;
 
+			case 'id':
+				$this->intId = $varValue;
+				break;
+
 			default:
 				$this->$strKey = $varValue; // backwards compatibility
 				break;
@@ -1226,55 +1230,51 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Invalidates a list of cache tags.
+	 * Invalidate the cache tags associated with a given DC
 	 *
 	 * Call this whenever an entry is modified (added, updated, deleted).
 	 *
-	 * @param array $tags
+	 * @param DataContainer $dc
 	 */
-	protected function invalidateCacheTags(array $tags)
+	protected function invalidateCacheTags(DataContainer $dc)
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{
 			return;
 		}
 
-		// Filter empty tags
+		$ns = 'contao.db.';
+		$tags = array($ns . $dc->table, $ns . $dc->table . '.' . $dc->id);
+
+		if ($dc->ptable && $dc->activeRecord && $dc->activeRecord->pid > 0)
+		{
+			$tags[] = $ns . $dc->ptable;
+			$tags[] = $ns . $dc->ptable . '.' . $dc->activeRecord->pid;
+		}
+
+		// Trigger the oninvalidate_cache_tags_callback
+		if (\is_array($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$dc->table]['config']['oninvalidate_cache_tags_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$tags = $this->{$callback[0]}->{$callback[1]}($dc, $tags);
+				}
+				elseif (\is_callable($callback))
+				{
+					$tags = $callback($dc, $tags);
+				}
+			}
+		}
+
+		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
 		/** @var CacheManager $cacheManager */
 		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
 		$cacheManager->invalidateTags($tags);
-	}
-
-	/**
-	 * Return an array of cache tags, optionally including the parent table
-	 * (which is useful when creating new elements or editing a certain element)
-	 *
-	 * @param string $table
-	 * @param array  $ids
-	 * @param string $parentTable
-	 * @param int    $parentId
-	 *
-	 * @return array
-	 */
-	protected function getCacheTags($table, array $ids = array(), $parentTable = '', $parentId = 0)
-	{
-		$ns = 'contao.db.';
-		$tags = array($ns . $table);
-
-		foreach ($ids as $id)
-		{
-			$tags[] = $ns . $table . '.' . $id;
-		}
-
-		if ($parentTable && $parentId > 0)
-		{
-			$tags[] = $ns . $parentTable;
-			$tags[] = $ns . $parentTable . '.' . $parentId;
-		}
-
-		return array_unique($tags);
 	}
 
 	/**
