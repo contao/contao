@@ -35,7 +35,7 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
-use Contao\CoreBundle\EventListener\ClearFormDataListener;
+use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
@@ -266,13 +266,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
     }
 
-    public function testRegistersTheClearFormDataListener(): void
+    public function testRegistersTheClearSessionDataListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.clear_form_data'));
+        $this->assertTrue($this->container->has('contao.listener.clear_session_data'));
 
-        $definition = $this->container->getDefinition('contao.listener.clear_form_data');
+        $definition = $this->container->getDefinition('contao.listener.clear_session_data');
 
-        $this->assertSame(ClearFormDataListener::class, $definition->getClass());
+        $this->assertSame(ClearSessionDataListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $tags = $definition->getTags();

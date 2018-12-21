@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 class ClearSessionDataListener
 {
@@ -59,7 +59,7 @@ class ClearSessionDataListener
 
     private function clearLegacyAttributeBags(string $key)
     {
-        if (isset($_SESSION[$key]) && $_SESSION[$key] instanceof AttributeBagInterface) {
+        if (isset($_SESSION[$key]) && $_SESSION[$key] instanceof AttributeBag) {
             if (!$_SESSION[$key]->count()) {
                 unset($_SESSION[$key]);
             }
