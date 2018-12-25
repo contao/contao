@@ -58,7 +58,7 @@ loads the monorepo instead of the individual bundles:
 Again, use `dev-master` if you want to add a new feature or
 `<lts-version>.x-dev` if you want to fix a bug.
 
-Next install the dependencies:
+Next, install the dependencies:
 
 ```bash
 composer update
