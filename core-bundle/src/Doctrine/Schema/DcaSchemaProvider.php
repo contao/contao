@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
@@ -295,18 +296,14 @@ class DcaSchemaProvider
         }
 
         $columns = [];
+        $lengths = [];
         $flags = [];
 
         foreach (explode(',', $matches[3]) as $column) {
             preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
 
-            $column = $cm[1];
-
-            if (isset($cm[3])) {
-                $column .= '('.$cm[3].')';
-            }
-
-            $columns[$cm[1]] = $column;
+            $columns[] = $cm[1];
+            $lengths[] = isset($cm[3]) ? (int) $cm[3] : null;
         }
 
         if (false !== strpos($matches[1], 'unique')) {
@@ -316,7 +313,20 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            $table->addIndex($columns, $matches[2], $flags);
+            $options = [];
+
+            if (array_sum($lengths)) {
+                $options['lengths'] = $lengths;
+
+                // Backwards compatibility for doctrine/dbal < 2.9
+                if (!method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+                    $columns = array_combine($columns, array_map(function($column, $length) {
+                        return $column . '(' . $length . ')';
+                    }, $columns, $lengths));
+                }
+            }
+
+            $table->addIndex($columns, $matches[2], $flags, $options);
         }
     }
 

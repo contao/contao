@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\DoctrineTestCase;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -323,7 +324,13 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $this->assertTrue($table->hasIndex('path'));
         $this->assertFalse($table->getIndex('path')->isUnique());
-        $this->assertSame(['path(333)'], $table->getIndex('path')->getColumns());
+        $this->assertSame([333], $table->getIndex('path')->getOption('lengths'));
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->assertSame(['path'], $table->getIndex('path')->getColumns());
+        }
+        else {
+            $this->assertSame(['path(333)'], $table->getIndex('path')->getColumns());
+        }
     }
 
     /**
