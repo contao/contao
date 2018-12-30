@@ -334,6 +334,50 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
+     * Tests adding an index over multiple columns.
+     */
+    public function testHandlesIndexesOverMultipleColumns()
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_foo' => [
+                    'TABLE_FIELDS' => [
+                        'col1' => "`col1` varchar(255) NOT NULL default ''",
+                        'col2' => "`col2` varchar(255) NOT NULL default ''",
+                        'col3' => "`col3` varchar(255) NOT NULL default ''",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'col123' => 'KEY `col123` (`col1`(100), `col2`, `col3`(99))',
+                    ],
+                ],
+            ]
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_foo'));
+
+        $table = $schema->getTable('tl_foo');
+
+        for ($i = 1; $i <= 3; ++$i) {
+            $this->assertTrue($table->hasColumn('col'.$i));
+            $this->assertSame('string', $table->getColumn('col'.$i)->getType()->getName());
+            $this->assertSame(255, $table->getColumn('col'.$i)->getLength());
+        }
+
+        $this->assertTrue($table->hasIndex('col123'));
+        $this->assertFalse($table->getIndex('col123')->isUnique());
+        $this->assertSame([100, null, 99], $table->getIndex('col123')->getOption('lengths'));
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->assertSame(['col1', 'col2', 'col3'], $table->getIndex('col123')->getColumns());
+        }
+        else {
+            $this->assertSame(['col1(100)', 'col2', 'col3(99)'], $table->getIndex('col123')->getColumns());
+        }
+    }
+
+    /**
      * Tests adding a fulltext index.
      */
     public function testHandlesFulltextIndexes()

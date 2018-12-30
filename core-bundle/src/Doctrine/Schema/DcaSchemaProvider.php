@@ -321,7 +321,7 @@ class DcaSchemaProvider
                 // Backwards compatibility for doctrine/dbal < 2.9
                 if (!method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
                     $columns = array_combine($columns, array_map(function($column, $length) {
-                        return $column . '(' . $length . ')';
+                        return $column . ($length ? '(' . $length . ')' : '');
                     }, $columns, $lengths));
                 }
             }
