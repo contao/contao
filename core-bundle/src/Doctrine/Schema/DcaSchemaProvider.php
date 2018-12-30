@@ -315,7 +315,7 @@ class DcaSchemaProvider
 
             $options = [];
 
-            if (array_sum($lengths)) {
+            if (array_filter($lengths)) {
                 $options['lengths'] = $lengths;
 
                 // Backwards compatibility for doctrine/dbal < 2.9
