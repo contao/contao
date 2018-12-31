@@ -327,8 +327,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame([333], $table->getIndex('path')->getOption('lengths'));
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->assertSame(['path'], $table->getIndex('path')->getColumns());
-        }
-        else {
+        } else {
             $this->assertSame(['path(333)'], $table->getIndex('path')->getColumns());
         }
     }
@@ -371,8 +370,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame([100, null, 99], $table->getIndex('col123')->getOption('lengths'));
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->assertSame(['col1', 'col2', 'col3'], $table->getIndex('col123')->getColumns());
-        }
-        else {
+        } else {
             $this->assertSame(['col1(100)', 'col2', 'col3(99)'], $table->getIndex('col123')->getColumns());
         }
     }
