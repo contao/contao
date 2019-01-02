@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Image\ResizeConfiguration;
+
 /**
  * Provide methods to handle input field "file tree".
  *
@@ -441,14 +443,14 @@ class FileTree extends Widget
 		if (($objFile->isSvgImage || ($objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))) && $objFile->viewWidth && $objFile->viewHeight)
 		{
 			// Inline the image if no preview image will be generated (see #636)
-			if ($objFile->height !== null && $objFile->height <= 50 && $objFile->width !== null && $objFile->width <= 75)
+			if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)
 			{
 				$image = $objFile->dataUri;
 			}
 			else
 			{
 				$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
-				$image = \System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(75, 50, 'center_center'))->getUrl($rootDir);
+				$image = \System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir);
 			}
 		}
 		else

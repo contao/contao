@@ -563,12 +563,12 @@ class FileSelector extends Widget
 				if ($objFile->isImage && $objFile->viewHeight > 0 && \Config::get('thumbnails') && ($objFile->isSvgImage || ($objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))))
 				{
 					$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
-					$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(400, 50, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
+					$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
 					$importantPart = \System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 					if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
 					{
-						$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(320)->setHeight(40)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
+						$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 

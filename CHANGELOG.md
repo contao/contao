@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Increase the back end preview image dimensions (see #246).
  * Add the "contao.slug" service (see #222).
  * Add the "contao.opt-in" service (see #196).
  * Add the onshow_callback (see #235).

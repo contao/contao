@@ -1046,19 +1046,19 @@ table.tl_listing {
 .tl_left > a:first-child {
 	vertical-align:bottom;
 }
-.tl_file_manager .tl_file .tl_left > a:first-child,.tl_file_manager .tl_left > img {
-	vertical-align:text-top;
+.tl_file_manager .tl_file .tl_left > a:first-child {
+	vertical-align:1px;
 }
 .tl_file_manager .preview-image {
-	max-width:400px;
-	max-height:50px;
+	max-width:100px;
+	max-height:75px;
 	width:auto;
 	height:auto;
 	margin:0 0 2px -18px;
 }
 .tl_file_manager .preview-important {
-	max-width:320px;
-	max-height:40px;
+	max-width:80px;
+	max-height:60px;
 	width:auto;
 	height:auto;
 	margin:0 0 2px 0;
@@ -1139,8 +1139,8 @@ ul.sgallery {
 	overflow:hidden;
 }
 ul.sgallery li {
-	min-width:75px;
-	min-height:50px;
+	min-width:100px;
+	min-height:75px;
 	float:left;
 	margin:2px 4px 2px 0;
 	padding:0;
