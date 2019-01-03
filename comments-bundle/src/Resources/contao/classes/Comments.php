@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
+use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments

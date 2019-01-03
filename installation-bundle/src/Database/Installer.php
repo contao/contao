@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
@@ -163,7 +164,7 @@ class Installer
         // HOOK: allow third-party developers to modify the array (see #3281)
         if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && \is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
             foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
-                $return = \System::importStatic($callback[0])->{$callback[1]}($return);
+                $return = System::importStatic($callback[0])->{$callback[1]}($return);
             }
         }
 

@@ -1236,7 +1236,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @param DataContainer $dc
 	 */
-	protected function invalidateCacheTags(DataContainer $dc)
+	protected function invalidateCacheTags(self $dc)
 	{
 		if (!System::getContainer()->has('fos_http_cache.cache_manager'))
 		{

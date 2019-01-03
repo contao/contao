@@ -33,7 +33,7 @@ class EnvironmentTest extends TestCase
     {
         parent::setUp();
 
-        $this->rootDir = strtr(parent::getFixturesDir(), '\\', '/');
+        $this->rootDir = strtr($this->getFixturesDir(), '\\', '/');
 
         Environment::reset();
         Environment::set('path', '/core');

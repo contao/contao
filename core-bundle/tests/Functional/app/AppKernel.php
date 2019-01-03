@@ -52,6 +52,11 @@ class AppKernel extends Kernel
         return \dirname(__DIR__);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated since Symfony 4.2, use getProjectDir() instead
+     */
     public function getRootDir(): string
     {
         return __DIR__;
