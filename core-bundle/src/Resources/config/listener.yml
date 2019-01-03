@@ -79,8 +79,8 @@ services:
     contao.listener.framework_request:
         class: Contao\CoreBundle\EventListener\FrameworkRequestListener
         arguments:
-        - "@contao.framework"
-        - "@request_stack"
+            - "@contao.framework"
+            - "@request_stack"
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }

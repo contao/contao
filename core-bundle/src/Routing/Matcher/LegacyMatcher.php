@@ -136,7 +136,6 @@ class LegacyMatcher implements RequestMatcherInterface
     private function executeLegacyHook(array $fragments)
     {
         foreach ($GLOBALS['TL_HOOKS']['getPageIdFromUrl'] as $callback) {
-            /** @noinspection StaticInvocationViaThisInspection */
             $fragments = $this->systemAdapter->importStatic($callback[0])->{$callback[1]}($fragments);
         }
 

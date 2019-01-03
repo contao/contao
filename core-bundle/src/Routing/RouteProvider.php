@@ -264,7 +264,7 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             ['utf8' => true],
             $page->domain,
-            null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
+            null
         );
 
         $this->addRoutesForRootPage($page, $routes);
@@ -294,7 +294,7 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             [],
             $page->domain,
-            null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
+            null
         );
 
         if ($this->configAdapter->get('addLanguageToUrl') && $page->rootIsFallback) {
@@ -310,7 +310,7 @@ class RouteProvider implements RouteProviderInterface
                 [],
                 [],
                 $page->domain,
-                null // TODO should we match SSL only if enabled in root? => $page->rootUseSSL ? 'https' : null
+                null
             );
         }
     }
@@ -338,7 +338,11 @@ class RouteProvider implements RouteProviderInterface
 
             [, $id] = explode('.', $name);
 
-            $ids[] = $id;
+            if (!is_numeric($id)) {
+                continue;
+            }
+
+            $ids[] = (int) $id;
         }
 
         return array_unique($ids);
@@ -444,7 +448,6 @@ class RouteProvider implements RouteProviderInterface
 
     private function findRootPages(): array
     {
-        // HOOK: add custom logic
         if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])) {
             /** @var System $systemAdapter */
             $systemAdapter = $this->framework->getAdapter(System::class);

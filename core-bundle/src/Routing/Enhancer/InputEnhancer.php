@@ -64,7 +64,6 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        // TODO should we use trim() instead of substr()?
         $fragments = explode('/', substr($defaults['parameters'], 1));
 
         // Add the second fragment as auto_item if the number of fragments is even
@@ -74,13 +73,12 @@ class InputEnhancer implements RouteEnhancerInterface
 
         for ($i = 0, $c = \count($fragments); $i < $c; $i += 2) {
             // Skip key value pairs if the key is empty (see #4702)
-            // TODO why does this make sense?
             if ('' === $fragments[$i]) {
                 continue;
             }
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)
-            // TODO should we use $request->query here?
+            // Do not use the request here, as we only need to make sure not to overwrite globals with Input::setGet
             if (isset($_GET[$fragments[$i]])) {
                 throw new ResourceNotFoundException('Duplicate parameter "'.$fragments[$i].'" in path.');
             }
@@ -90,7 +88,6 @@ class InputEnhancer implements RouteEnhancerInterface
                 throw new ResourceNotFoundException('"'.$fragments[$i].'" is an auto_item keyword (duplicate content)');
             }
 
-            // TODO what if the number of parameters is uneven and there is no auto_item?
             $this->inputAdapter->setGet(urldecode($fragments[$i]), urldecode($fragments[$i + 1] ?? ''), true);
         }
 

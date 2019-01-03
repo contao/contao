@@ -56,6 +56,9 @@ abstract class Frontend extends Controller
 	 * Split the current request into fragments, strip the URL suffix, recreate the $_GET array and return the page ID
 	 *
 	 * @return mixed
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
+	 *             Use the Symfony routing instead.
 	 */
 	public static function getPageIdFromUrl()
 	{
