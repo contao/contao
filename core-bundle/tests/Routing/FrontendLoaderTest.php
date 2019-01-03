@@ -102,6 +102,18 @@ class FrontendLoaderTest extends TestCase
         );
     }
 
+    public function testAddsTheUrlSuffix(): void
+    {
+        $loader = new FrontendLoader(true, '.xhtml');
+        $collection = $loader->load('.', 'bundles');
+        $router = $this->mockRouter($collection);
+
+        $this->assertSame(
+            '/en/foobar.xhtml',
+            $router->generate('contao_frontend', ['alias' => 'foobar', '_locale' => 'en'])
+        );
+    }
+
     public function testFailsToGenerateTheFrontEndUrlIfTheLocaleIsMissing(): void
     {
         $loader = new FrontendLoader(true);
