@@ -106,6 +106,15 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
+            'Renders the page if there is an item with an empty key' => [
+                '/home//.html',
+                200,
+                'Home - Root with home page',
+                [],
+                'root-with-home.local',
+                false,
+                false,
+            ],
             'Renders the 404 page if the URL suffix does not match' => [
                 '/home.xml',
                 404,
@@ -133,11 +142,29 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the 404 page if the path contains unused arguments' => [
+            'Renders the 404 page if the path contains an unused argument' => [
                 '/home/foo/bar.html',
                 404,
                 '(404 Not Found)',
                 ['foo' => 'bar'],
+                'root-with-home.local',
+                false,
+                false,
+            ],
+            'Renders the 404 page if the path contains an unused argument without value' => [
+                '/home/foo.html',
+                404,
+                '(404 Not Found)',
+                ['foo' => ''],
+                'root-with-home.local',
+                false,
+                false,
+            ],
+            'Renders the 404 page if the path contains an unused argument with an empty value' => [
+                '/home/foo/.html',
+                404,
+                '(404 Not Found)',
+                ['foo' => ''],
                 'root-with-home.local',
                 false,
                 false,
@@ -178,7 +205,7 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the page if auto items are enabled an existing item is requested' => [
+            'Renders the page if auto items are enabled and an existing item is requested' => [
                 '/home/foobar.html',
                 200,
                 'Foobar - Root with home page',
@@ -356,7 +383,7 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the 404 page if the path contains unused arguments' => [
+            'Renders the 404 page if the path contains an unused argument' => [
                 '/en/home/foo/bar.html',
                 404,
                 '(404 Not Found)',
@@ -401,11 +428,29 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the page if auto items are enabled an existing item is requested' => [
+            'Renders the page if auto items are enabled and an existing item is requested' => [
                 '/en/home/foobar.html',
                 200,
                 'Foobar - Root with home page',
                 ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+                'root-with-home.local',
+                true,
+                false,
+            ],
+            'Renders the page if auto items are enabled and there is an item with an empty key' => [
+                '/en/home/foobar//foo.html',
+                200,
+                'Foobar - Root with home page',
+                ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+                'root-with-home.local',
+                true,
+                false,
+            ],
+            'Renders the page if there is an item with an empty value and another item with an empty key' => [
+                '/en/home/foobar///foo.html',
+                404,
+                '(404 Not Found)',
+                ['language' => 'en', 'foobar' => ''],
                 'root-with-home.local',
                 true,
                 false,
@@ -561,7 +606,7 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the 404 page if the path contains unused arguments' => [
+            'Renders the 404 page if the path contains an unused argument' => [
                 '/home/foo/bar',
                 404,
                 '(404 Not Found)',
