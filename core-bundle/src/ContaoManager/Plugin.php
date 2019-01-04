@@ -55,7 +55,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                 ->setLoadAfter(
                     [
                         FrameworkBundle::class,
-                        CmfRoutingBundle::class,
                         SecurityBundle::class,
                         TwigBundle::class,
                         MonologBundle::class,
@@ -69,6 +68,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,
                         HeaderReplayBundle::class,
+                        CmfRoutingBundle::class,
                         ContaoManagerBundle::class,
                     ]
                 ),

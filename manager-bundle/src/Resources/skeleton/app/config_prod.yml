@@ -1,6 +1,7 @@
 imports:
     - { resource: config.yml }
 
+# Contao configuration
 contao:
     pretty_error_screens: true
 

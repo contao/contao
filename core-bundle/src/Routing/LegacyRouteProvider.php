@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteProvider implements RouteProviderInterface
 {
@@ -37,7 +38,7 @@ class LegacyRouteProvider implements RouteProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollectionForRequest(Request $request)
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         return $this->routeProvider->getRouteCollectionForRequest($request);
     }
@@ -45,12 +46,10 @@ class LegacyRouteProvider implements RouteProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteByName($name)
+    public function getRouteByName($name): Route
     {
         if ('contao_frontend' === $name || 'contao_index' === $name) {
-            $routes = $this->frontendLoader->load('.', 'contao_frontend');
-
-            return $routes->get($name);
+            return $this->frontendLoader->load('.', 'contao_frontend')->get($name);
         }
 
         if ('contao_root' === $name) {
@@ -82,7 +81,7 @@ class LegacyRouteProvider implements RouteProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoutesByNames($names)
+    public function getRoutesByNames($names): array
     {
         return $this->routeProvider->getRoutesByNames($names);
     }

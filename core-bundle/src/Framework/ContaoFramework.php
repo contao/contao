@@ -41,6 +41,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
+     * @var RequestStack|null
+     */
+    private $requestStack;
+
+    /**
      * @var RouterInterface
      */
     private $router;
@@ -75,8 +80,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(?RequestStack $requestStack /* removed in Contao 4.7 */, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    /**
+     * @param RequestStack|null $requestStack Deprecated since Contao 4.7, to be removed in Contao 5.0
+     */
+    public function __construct(?RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
+        $this->requestStack = $requestStack;
         $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
@@ -120,23 +129,26 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->hookListeners = $hookListeners;
     }
 
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): void
     {
-        // Do not overwrite request from subrequests. Unfortunately, the master request might be cached,
-        // so the only request we have is a subrequest. Therefore we just hopefully assume the first one is a master.
+        // Do not overwrite the request in a sub-request. Unfortunately, the master
+        // request might be cached, so the only request we have is a sub-request.
+        // Therefore we just hopefully assume the first request is a master request.
         if (null !== $this->request) {
             return;
         }
 
         $this->request = $request;
 
-        if ($this->isInitialized()) {
-            $this->setConstants();
-            $this->initializeLegacySessionAccess();
-            $this->setDefaultLanguage();
-            $this->validateInstallation();
-            $this->handleRequestToken();
+        if (!$this->isInitialized()) {
+            return;
         }
+
+        $this->setConstants();
+        $this->initializeLegacySessionAccess();
+        $this->setDefaultLanguage();
+        $this->validateInstallation();
+        $this->handleRequestToken();
     }
 
     /**

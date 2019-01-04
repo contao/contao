@@ -320,6 +320,8 @@ class PageModel extends Model
 	 * @param array  $arrOptions  An optional options array
 	 *
 	 * @return PageModel|null The model or null if there is no matching root page
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findFirstPublishedRootByHostAndLanguage($strHost, $varLanguage, array $arrOptions=array())
 	{
@@ -516,6 +518,8 @@ class PageModel extends Model
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -560,6 +564,8 @@ class PageModel extends Model
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -714,6 +720,8 @@ class PageModel extends Model
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{

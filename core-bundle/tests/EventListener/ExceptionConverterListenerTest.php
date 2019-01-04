@@ -29,6 +29,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -232,34 +233,30 @@ class ExceptionConverterListenerTest extends TestCase
         return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 
-    private function mockConnection(int $rowCount = 1)
+    /**
+     * @return Connection|MockObject
+     */
+    private function mockConnection(int $rowCount = 1): Connection
     {
         $statement = $this->createMock(Statement::class);
-
         $statement
-            ->expects($this->any())
             ->method('fetchColumn')
             ->willReturn($rowCount)
         ;
 
         $queryBuilder = $this->createMock(QueryBuilder::class);
-
         $queryBuilder
-            ->expects($this->any())
             ->method($this->logicalNot($this->equalTo('execute')))
             ->willReturnSelf()
         ;
 
         $queryBuilder
-            ->expects($this->any())
             ->method('execute')
             ->willReturn($statement)
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
-            ->expects($this->any())
             ->method('createQueryBuilder')
             ->willReturn($queryBuilder)
         ;

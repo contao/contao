@@ -13,26 +13,28 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Enhancer;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         unset($_GET, $GLOBALS['TL_AUTO_ITEM']);
     }
 
-    public function testDoesNotInitializeFrameworkWithoutPageModel()
+    public function testDoesNotInitializeFrameworkWithoutPageModel(): void
     {
         $framework = $this->mockContaoFramework();
-
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -45,7 +47,7 @@ class InputEnhancerTest extends TestCase
     /**
      * @dataProvider localeInUrlProvider
      */
-    public function testAddsLocaleToInputIfEnabled(bool $addLanguageToUrl, string $locale)
+    public function testAddsLocaleToInputIfEnabled(bool $addLanguageToUrl, string $locale): void
     {
         $input = $this->mockAdapter(['setGet']);
         $input
@@ -65,7 +67,10 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
-    public function localeInUrlProvider()
+    /**
+     * @return (bool|string)[][]
+     */
+    public function localeInUrlProvider(): array
     {
         return [
             [false, 'en'],
@@ -75,7 +80,7 @@ class InputEnhancerTest extends TestCase
         ];
     }
 
-    public function testDoesNotAddInputLanguageIfLocaleIsMissing()
+    public function testDoesNotAddInputLanguageIfLocaleIsMissing(): void
     {
         $input = $this->mockAdapter(['setGet']);
         $input
@@ -96,16 +101,19 @@ class InputEnhancerTest extends TestCase
     /**
      * @dataProvider parameterProvider
      */
-    public function testAddsParametersToInput(string $parameters, bool $useAutoItem, array ...$setters)
+    public function testAddsParametersToInput(string $parameters, bool $useAutoItem, array ...$setters): void
     {
         // Input::setGet must always be called with $blnAddUnused=true
-        array_walk($setters, function (array &$set) {
-            $set[2] = true;
-        });
+        array_walk(
+            $setters,
+            function (array &$set): void {
+                $set[2] = true;
+            }
+        );
 
         $input = $this->mockAdapter(['setGet']);
         $input
-            ->expects($this->exactly(count($setters)))
+            ->expects($this->exactly(\count($setters)))
             ->method('setGet')
             ->withConsecutive(...$setters)
         ;
@@ -121,7 +129,10 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
-    public function parameterProvider()
+    /**
+     * @return (bool|string|string[])[][]
+     */
+    public function parameterProvider(): array
     {
         return [
             ['/foo/bar', false, ['foo', 'bar']],
@@ -134,7 +145,7 @@ class InputEnhancerTest extends TestCase
         ];
     }
 
-    public function testThrowsExceptionIfParameterIsInQuery()
+    public function testThrowsExceptionIfParameterIsInQuery(): void
     {
         $framework = $this->mockContaoFrameworkWithInputAndConfig();
 
@@ -146,13 +157,13 @@ class InputEnhancerTest extends TestCase
         $_GET = ['foo' => 'baz'];
 
         $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('Duplicate parameter "foo" in path.');
+        $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
         $enhancer = new InputEnhancer($framework);
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
-    public function testThrowsExceptionOnDuplicateAutoItem()
+    public function testThrowsExceptionOnDuplicateAutoItem(): void
     {
         $framework = $this->mockContaoFrameworkWithInputAndConfig(null, false, true);
 
@@ -170,23 +181,27 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
-    private function mockContaoFrameworkWithInputAndConfig($input = null, bool $addLanguageToUrl = false, bool $useAutoItem = false)
+    /**
+     * @return ContaoFrameworkInterface|MockObject
+     */
+    private function mockContaoFrameworkWithInputAndConfig(Adapter $input = null, bool $addLanguageToUrl = false, bool $useAutoItem = false): ContaoFrameworkInterface
     {
         $config = $this->mockAdapter(['get']);
-
         $config
             ->method('get')
-            ->willReturnCallback(function ($param) use ($addLanguageToUrl, $useAutoItem) {
-                if ('addLanguageToUrl' === $param) {
-                    return $addLanguageToUrl;
-                }
+            ->willReturnCallback(
+                function ($param) use ($addLanguageToUrl, $useAutoItem) {
+                    if ('addLanguageToUrl' === $param) {
+                        return $addLanguageToUrl;
+                    }
 
-                if ('useAutoItem' === $param) {
-                    return $useAutoItem;
-                }
+                    if ('useAutoItem' === $param) {
+                        return $useAutoItem;
+                    }
 
-                return null;
-            })
+                    return null;
+                }
+            )
         ;
 
         if (null === $input) {
@@ -194,7 +209,6 @@ class InputEnhancerTest extends TestCase
         }
 
         $framework = $this->mockContaoFramework([Input::class => $input, Config::class => $config]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')

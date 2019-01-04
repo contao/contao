@@ -16,13 +16,14 @@ use Contao\CoreBundle\Routing\Matcher\PublishingFilter;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class PublishingFilterTest extends TestCase
 {
-    public function testDoesNotFilterInPreviewMode()
+    public function testDoesNotFilterInPreviewMode(): void
     {
         $collection = $this->createMock(RouteCollection::class);
         $collection
@@ -34,7 +35,7 @@ class PublishingFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    public function testSkipsRoutesWithoutPageModel()
+    public function testSkipsRoutesWithoutPageModel(): void
     {
         $route = $this->createMock(Route::class);
         $route
@@ -55,7 +56,7 @@ class PublishingFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    public function testRemovesRouteWhenPageIsNotPublished()
+    public function testRemovesRouteWhenPageIsNotPublished(): void
     {
         $route = $this->createMock(Route::class);
         $route
@@ -66,7 +67,6 @@ class PublishingFilterTest extends TestCase
         ;
 
         $collection = $this->createMock(RouteCollection::class);
-
         $collection
             ->expects($this->once())
             ->method('all')
@@ -83,7 +83,7 @@ class PublishingFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    public function testRemovesRouteWhenPageStartDateIsInTheFuture()
+    public function testRemovesRouteWhenPageStartDateIsInTheFuture(): void
     {
         $route = $this->createMock(Route::class);
         $route
@@ -94,7 +94,6 @@ class PublishingFilterTest extends TestCase
         ;
 
         $collection = $this->createMock(RouteCollection::class);
-
         $collection
             ->expects($this->once())
             ->method('all')
@@ -111,7 +110,7 @@ class PublishingFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    public function testRemovesRouteWhenPageStopDateIsInThePast()
+    public function testRemovesRouteWhenPageStopDateIsInThePast(): void
     {
         $route = $this->createMock(Route::class);
         $route
@@ -122,7 +121,6 @@ class PublishingFilterTest extends TestCase
         ;
 
         $collection = $this->createMock(RouteCollection::class);
-
         $collection
             ->expects($this->once())
             ->method('all')
@@ -139,10 +137,12 @@ class PublishingFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    private function mockTokenChecker(bool $isPreviewMode = false)
+    /**
+     * @return TokenChecker|MockObject
+     */
+    private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn($isPreviewMode)
@@ -151,11 +151,11 @@ class PublishingFilterTest extends TestCase
         return $tokenChecker;
     }
 
-    private function mockPageModel(bool $published, string $start = '', string $stop = '')
+    /**
+     * @return PageModel|MockObject
+     */
+    private function mockPageModel(bool $published, string $start = '', string $stop = ''): PageModel
     {
-        return $this->mockClassWithProperties(
-            PageModel::class,
-            ['published' => $published, 'start' => $start, 'stop' => $stop]
-        );
+        return $this->mockClassWithProperties(PageModel::class, compact('published', 'start', 'stop'));
     }
 }

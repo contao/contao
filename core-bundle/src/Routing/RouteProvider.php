@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
@@ -38,12 +40,12 @@ class RouteProvider implements RouteProviderInterface
     private $database;
 
     /**
-     * @var PageModel
+     * @var PageModel|Adapter
      */
     private $pageAdapter;
 
     /**
-     * @var Config
+     * @var Config|Adapter
      */
     private $configAdapter;
 
@@ -51,7 +53,6 @@ class RouteProvider implements RouteProviderInterface
     {
         $this->framework = $framework;
         $this->database = $database;
-
         $this->pageAdapter = $framework->getAdapter(PageModel::class);
         $this->configAdapter = $framework->getAdapter(Config::class);
     }
@@ -59,7 +60,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollectionForRequest(Request $request)
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize();
         $pathInfo = rawurldecode($request->getPathInfo());
@@ -69,7 +70,8 @@ class RouteProvider implements RouteProviderInterface
             return new RouteCollection();
         }
 
-        if ('/' === $pathInfo
+        if (
+            '/' === $pathInfo
             || ($this->configAdapter->get('addLanguageToUrl') && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))
         ) {
             $routes = [];
@@ -97,7 +99,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteByName($name)
+    public function getRouteByName($name): Route
     {
         $this->framework->initialize();
 
@@ -111,7 +113,7 @@ class RouteProvider implements RouteProviderInterface
         $page = $this->pageAdapter->findByPk($ids[0]);
 
         if (null === $page) {
-            throw new RouteNotFoundException('Page ID '.$ids[0].' not found');
+            throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
 
         $this->addRoutesForPage($page, $routes);
@@ -122,7 +124,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoutesByNames($names)
+    public function getRoutesByNames($names): array
     {
         $this->framework->initialize();
 
@@ -151,7 +153,7 @@ class RouteProvider implements RouteProviderInterface
         return $routes;
     }
 
-    private function removeSuffixAndLanguage(string $pathInfo)
+    private function removeSuffixAndLanguage(string $pathInfo): ?string
     {
         $urlSuffix = $this->configAdapter->get('urlSuffix');
         $suffixLength = \strlen($urlSuffix);
@@ -171,23 +173,22 @@ class RouteProvider implements RouteProviderInterface
         if ($this->configAdapter->get('addLanguageToUrl')) {
             $matches = [];
 
-            if (preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
-                $pathInfo = $matches[3];
-            } else {
+            if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
                 return null;
             }
+
+            $pathInfo = $matches[3];
         }
 
         return $pathInfo;
     }
 
     /**
-     * Compile all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news).
+     * Compiles all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news).
      *
-     *
-     * @return array
+     * @return string[]
      */
-    private function getAliasCandidates(string $pathInfo)
+    private function getAliasCandidates(string $pathInfo): array
     {
         $pos = strpos($pathInfo, '/');
 
@@ -209,21 +210,25 @@ class RouteProvider implements RouteProviderInterface
         return $candidates;
     }
 
+    /**
+     * @param PageModel[] $pages
+     */
     private function addRoutesForPages(iterable $pages, array &$routes): void
     {
-        /** @var PageModel $page */
         foreach ($pages as $page) {
             $this->addRoutesForPage($page, $routes);
         }
     }
 
+    /**
+     * @param PageModel[] $pages
+     */
     private function addRoutesForRootPages(array $pages, array &$routes): void
     {
         if (null === $pages) {
             return;
         }
 
-        /** @var PageModel $page */
         foreach ($pages as $page) {
             $this->addRoutesForRootPage($page, $routes);
         }
@@ -249,7 +254,6 @@ class RouteProvider implements RouteProviderInterface
         $defaults = $this->getRouteDefaults($page);
         $defaults['parameters'] = '';
         $requirements = ['parameters' => '(/.+)?'];
-
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->configAdapter->get('urlSuffix'));
         $table = $this->pageAdapter->getTable();
 
@@ -297,7 +301,7 @@ class RouteProvider implements RouteProviderInterface
             null
         );
 
-        if ($this->configAdapter->get('addLanguageToUrl') && $page->rootIsFallback) {
+        if ($page->rootIsFallback && $this->configAdapter->get('addLanguageToUrl')) {
             if (!$this->configAdapter->get('doNotRedirectEmpty')) {
                 $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
                 $defaults['path'] = '/'.$page->language.'/';
@@ -315,6 +319,9 @@ class RouteProvider implements RouteProviderInterface
         }
     }
 
+    /**
+     * @return array<string,PageModel|bool|string>
+     */
     private function getRouteDefaults(PageModel $page): array
     {
         return [
@@ -326,7 +333,10 @@ class RouteProvider implements RouteProviderInterface
         ];
     }
 
-    private function getPageIdsFromNames(array $names)
+    /**
+     * @return int[]
+     */
+    private function getPageIdsFromNames(array $names): array
     {
         $ids = [];
         $table = $this->pageAdapter->getTable();
@@ -350,10 +360,11 @@ class RouteProvider implements RouteProviderInterface
 
     /**
      * Sorts routes so that the FinalMatcher will correctly resolve them.
-     * 1. The ones with hostname should come first so the ones with empty host are only taken if no hostname matches
-     * 2. Root pages come last so non-root page with index alias (= identical path) matches first
-     * 3. Root/Index pages must be sorted by accept language and fallback so the best language matches first
-     * 4. Pages with longer alias (folder page) must come first to match if applicable.
+     *
+     * 1. The ones with hostname should come first, so the ones with empty host are only taken if no hostname matches
+     * 2. Root pages come last, so non-root pages with index alias (= identical path) match first
+     * 3. Root/Index pages must be sorted by accept language and fallback, so the best language matches first
+     * 4. Pages with longer alias (folder page) must come first to match if applicable
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
@@ -395,7 +406,11 @@ class RouteProvider implements RouteProviderInterface
                 $langB = $languages[$pageB->rootLanguage] ?? null;
 
                 if (null === $langA && null === $langB) {
-                    return $pageA->rootIsFallback ? -1 : ($pageB->rootIsFallback ? 1 : 0);
+                    if ($pageA->rootIsFallback) {
+                        return -1;
+                    }
+
+                    return $pageB->rootIsFallback ? 1 : 0;
                 }
 
                 if (null === $langA && null !== $langB) {
@@ -413,6 +428,9 @@ class RouteProvider implements RouteProviderInterface
         });
     }
 
+    /**
+     * @return Model[]
+     */
     private function findPages(array $candidates): array
     {
         $ids = [];
@@ -446,16 +464,21 @@ class RouteProvider implements RouteProviderInterface
         return [];
     }
 
+    /**
+     * @return Model[]
+     */
     private function findRootPages(): array
     {
-        if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])) {
+        if (
+            !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
+            && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
+        ) {
             /** @var System $systemAdapter */
             $systemAdapter = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback) {
                 $page = $systemAdapter->importStatic($callback[0])->{$callback[1]}();
 
-                /** @var PageModel $page */
                 if ($page instanceof PageModel) {
                     return [$page];
                 }

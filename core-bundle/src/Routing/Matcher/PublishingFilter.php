@@ -16,7 +16,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class PublishingFilter implements RouteFilterInterface
@@ -34,13 +33,12 @@ class PublishingFilter implements RouteFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(RouteCollection $collection, Request $request)
+    public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
         if ($this->tokenChecker->isPreviewMode()) {
             return $collection;
         }
 
-        /** @var Route $route */
         foreach ($collection->all() as $name => $route) {
             if (!$route->getDefault('pageModel') instanceof PageModel) {
                 continue;
@@ -50,7 +48,8 @@ class PublishingFilter implements RouteFilterInterface
             $page = $route->getDefault('pageModel');
             $time = time();
 
-            if (!$page->published
+            if (
+                !$page->published
                 || ('' !== $page->start && $page->start > $time)
                 || ('' !== $page->stop && $page->stop < $time)
             ) {

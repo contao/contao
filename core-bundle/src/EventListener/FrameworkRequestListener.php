@@ -27,7 +27,7 @@ class FrameworkRequestListener
         $this->framework = $framework;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         $this->framework->setRequest($event->getRequest());
     }

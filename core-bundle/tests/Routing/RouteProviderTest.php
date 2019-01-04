@@ -13,22 +13,25 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\Config;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
 class RouteProviderTest extends TestCase
 {
-    public function testGetsRouteByName()
+    public function testGetsRouteByName(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
-        $pageAdapter = $this->mockPageAdapter();
 
+        $pageAdapter = $this->mockPageAdapter();
         $pageAdapter
             ->expects($this->once())
             ->method('findByPk')
@@ -37,15 +40,13 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFrameworkWithAdapters($pageAdapter);
-
         $provider = new RouteProvider($framework, $this->createMock(Connection::class));
         $route = $provider->getRouteByName('tl_page.17');
 
-        $this->assertInstanceOf(Route::class, $route);
         $this->assertSame($page, $route->getDefault('pageModel'));
     }
 
-    public function testThrowsExceptionIfRouteNameHasNoId()
+    public function testThrowsExceptionIfRouteNameHasNoId(): void
     {
         $this->expectException(RouteNotFoundException::class);
         $this->expectExceptionMessage('Route name does not match a page ID');
@@ -54,13 +55,12 @@ class RouteProviderTest extends TestCase
         $provider->getRouteByName('foobar');
     }
 
-    public function testThrowsExceptionIfPageIsNotFoundFromRouteName()
+    public function testThrowsExceptionIfPageIsNotFoundFromRouteName(): void
     {
         $this->expectException(RouteNotFoundException::class);
-        $this->expectExceptionMessage('Page ID 17 not found');
+        $this->expectExceptionMessage('Page ID "17" not found');
 
         $pageAdapter = $this->mockPageAdapter();
-
         $pageAdapter
             ->expects($this->once())
             ->method('findByPk')
@@ -73,10 +73,9 @@ class RouteProviderTest extends TestCase
         $provider->getRouteByName('tl_page.17');
     }
 
-    public function testGetsRoutesByNames()
+    public function testGetsRoutesByNames(): void
     {
         $pageAdapter = $this->mockPageAdapter();
-
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -100,10 +99,9 @@ class RouteProviderTest extends TestCase
         $this->assertCount(2, $routes);
     }
 
-    public function testFindsAllPagesForGetRoutesByNamesWithNullArgument()
+    public function testFindsAllPagesForGetRoutesByNamesWithNullArgument(): void
     {
         $pageAdapter = $this->mockPageAdapter();
-
         $pageAdapter
             ->expects($this->once())
             ->method('findAll')
@@ -115,34 +113,32 @@ class RouteProviderTest extends TestCase
         $provider->getRoutesByNames(null);
     }
 
-    public function testReturnsEmptyArrayForGetRoutesByNamesWithoutPageIds()
+    public function testReturnsEmptyArrayForGetRoutesByNamesWithoutPageIds(): void
     {
         $pageAdapter = $this->mockPageAdapter();
-
         $pageAdapter
             ->expects($this->never())
             ->method('findBy')
         ;
 
         $framework = $this->mockContaoFrameworkWithAdapters($pageAdapter);
-
         $provider = new RouteProvider($framework, $this->createMock(Connection::class));
+
         $this->assertSame([], $provider->getRoutesByNames(['foo', 'bar']));
     }
 
-
-    public function testReturnsEmptyCollectionIfPathContainsAutoItem()
+    public function testReturnsEmptyCollectionIfPathContainsAutoItem(): void
     {
         $request = $this->mockRequestWithPath('/foo/auto_item/bar.html');
-
         $provider = new RouteProvider($this->mockContaoFrameworkWithAdapters(), $this->createMock(Connection::class));
 
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
 
-    public function testReturnsEmptyCollectionIfUrlSuffixDoesNotMatch()
+    public function testReturnsEmptyCollectionIfUrlSuffixDoesNotMatch(): void
     {
         $request = $this->mockRequestWithPath('/foo.php');
+
         $framework = $this->mockContaoFrameworkWithAdapters(
             null,
             $this->mockConfigAdapter(['urlSuffix' => '.html'])
@@ -153,9 +149,10 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
 
-    public function testReturnsEmptyCollectionIfLanguageIsNotInUrl()
+    public function testReturnsEmptyCollectionIfLanguageIsNotInUrl(): void
     {
         $request = $this->mockRequestWithPath('/foo.html');
+
         $framework = $this->mockContaoFrameworkWithAdapters(
             null,
             $this->mockConfigAdapter(['urlSuffix' => '.html', 'addLanguageToUrl' => true])
@@ -169,7 +166,7 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider aliasCandidatesProvider
      */
-    public function testFindsPagesByAliasCandidates(string $path, string $urlSuffix, bool $addLanguageToUrl, bool $folderUrl, array $aliases, array $ids = [])
+    public function testFindsPagesByAliasCandidates(string $path, string $urlSuffix, bool $addLanguageToUrl, bool $folderUrl, array $aliases, array $ids = []): void
     {
         $conditions = [];
 
@@ -182,7 +179,6 @@ class RouteProviderTest extends TestCase
         }
 
         $pageAdapter = $this->mockPageAdapter();
-
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -190,14 +186,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(null)
         ;
 
-        $configAdapter = $this->mockConfigAdapter(
-            [
-                'urlSuffix' => $urlSuffix,
-                'addLanguageToUrl' => $addLanguageToUrl,
-                'folderUrl' => $folderUrl,
-            ]
-        );
-
+        $configAdapter = $this->mockConfigAdapter(compact('urlSuffix', 'addLanguageToUrl', 'folderUrl'));
         $framework = $this->mockContaoFrameworkWithAdapters($pageAdapter, $configAdapter);
 
         $connection = $this->createMock(Connection::class);
@@ -209,11 +198,10 @@ class RouteProviderTest extends TestCase
         $request = $this->mockRequestWithPath($path);
 
         $provider = new RouteProvider($framework, $connection);
-
         $provider->getRouteCollectionForRequest($request);
     }
 
-    public function aliasCandidatesProvider()
+    public function aliasCandidatesProvider(): \Generator
     {
         yield [
             '/foo.html',
@@ -310,14 +298,13 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider sortRoutesProvider
      */
-    public function testSortsRoutes(array $pages, array $languages)
+    public function testSortsRoutes(array $pages, array $languages): void
     {
         $pageAdapter = $this->mockPageAdapter();
-
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->willReturn(new Collection(array_values($pages), 'tl_page'));
+            ->willReturn(new Collection(array_values($pages), 'tl_page'))
         ;
 
         $configAdapter = $this->mockConfigAdapter(
@@ -341,7 +328,7 @@ class RouteProviderTest extends TestCase
         $provider = new RouteProvider($framework, $connection);
         $collection = $provider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(count($pages), $collection);
+        $this->assertCount(\count($pages), $collection);
         $i = 0;
 
         ksort($pages);
@@ -359,11 +346,11 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function sortRoutesProvider()
+    public function sortRoutesProvider(): \Generator
     {
         yield 'Sorts host first (1)' => [
             [
-                1 => $this->createPage('en', 'bar', true, ''),
+                1 => $this->createPage('en', 'bar'),
                 0 => $this->createPage('en', 'foo', true, 'example.com'),
             ],
             ['en'],
@@ -372,7 +359,7 @@ class RouteProviderTest extends TestCase
         yield 'Sorts host first (2)' => [
             [
                 0 => $this->createPage('fr', 'foo', true, 'example.com'),
-                1 => $this->createPage('it', 'bar', true, ''),
+                1 => $this->createPage('it', 'bar'),
             ],
             ['en'],
         ];
@@ -412,7 +399,7 @@ class RouteProviderTest extends TestCase
         yield 'Sorts by fallback without language' => [
             [
                 1 => $this->createPage('de', 'bar', false),
-                0 => $this->createPage('fr', 'foo', true),
+                0 => $this->createPage('fr', 'foo'),
             ],
             ['en', 'it'],
         ];
@@ -441,15 +428,15 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider routeForPageProvider
      */
-    public function testAddsRouteForPage(string $alias, string $language, string $domain, string $urlSuffix, bool $addLanguageToUrl)
+    public function testAddsRouteForPage(string $alias, string $language, string $domain, string $urlSuffix, bool $addLanguageToUrl): void
     {
         $page = $this->createPage($language, $alias, true, $domain);
-        $pageAdapter = $this->mockPageAdapter();
 
+        $pageAdapter = $this->mockPageAdapter();
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'));
+            ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
         $configAdapter = $this->mockConfigAdapter(
@@ -489,7 +476,7 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function routeForPageProvider()
+    public function routeForPageProvider(): \Generator
     {
         foreach (['foo', 'foo/bar'] as $alias) {
             foreach (['en', 'de'] as $language) {
@@ -510,10 +497,12 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    private function mockRequestWithPath(string $path, array $languages = ['en'])
+    /**
+     * @return Request|MockObject
+     */
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
     {
         $request = $this->createMock(Request::class);
-
         $request
             ->method('getPathInfo')
             ->willReturn($path)
@@ -527,38 +516,42 @@ class RouteProviderTest extends TestCase
         return $request;
     }
 
-    private function mockContaoFrameworkWithAdapters($pageAdapter = null, $configAdapter = null)
+    /**
+     * @return ContaoFrameworkInterface|MockObject
+     */
+    private function mockContaoFrameworkWithAdapters(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFrameworkInterface
     {
         if (null === $pageAdapter) {
             $pageAdapter = $this->mockPageAdapter();
         }
 
-        $framework = $this->mockContaoFramework([
-            PageModel::class => $pageAdapter,
-            Config::class => $configAdapter,
-        ]);
-
-        return $framework;
+        return $this->mockContaoFramework([PageModel::class => $pageAdapter, Config::class => $configAdapter]);
     }
 
-    private function mockConfigAdapter(array $config)
+    /**
+     * @return Adapter|MockObject
+     */
+    private function mockConfigAdapter(array $config): Adapter
     {
         $configAdapter = $this->mockAdapter(['get']);
-
         $configAdapter
             ->method('get')
-            ->willReturnCallback(function ($param) use ($config) {
-                return $config[$param] ?? null;
-            })
+            ->willReturnCallback(
+                function ($param) use ($config) {
+                    return $config[$param] ?? null;
+                }
+            )
         ;
 
         return $configAdapter;
     }
 
-    private function mockPageAdapter()
+    /**
+     * @return Adapter|MockObject
+     */
+    private function mockPageAdapter(): Adapter
     {
         $pageAdapter = $this->mockAdapter(['getTable', 'findAll', 'findByPk', 'findBy']);
-
         $pageAdapter
             ->method('getTable')
             ->willReturn('tl_page')
@@ -568,9 +561,9 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|PageModel
+     * @return PageModel|MockObject
      */
-    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '')
+    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = ''): PageModel
     {
         return $this->mockClassWithProperties(
             PageModel::class,

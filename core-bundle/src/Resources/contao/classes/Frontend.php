@@ -293,6 +293,9 @@ abstract class Frontend extends Controller
 	 * Try to find a root page based on language and URL
 	 *
 	 * @return PageModel
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
+	 *             Use the Symfony routing instead.
 	 */
 	public static function getRootPageFromUrl()
 	{

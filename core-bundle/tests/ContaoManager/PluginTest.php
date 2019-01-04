@@ -74,7 +74,6 @@ class PluginTest extends TestCase
         $this->assertSame(
             [
                 FrameworkBundle::class,
-                CmfRoutingBundle::class,
                 SecurityBundle::class,
                 TwigBundle::class,
                 MonologBundle::class,
@@ -88,6 +87,7 @@ class PluginTest extends TestCase
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
                 HeaderReplayBundle::class,
+                CmfRoutingBundle::class,
                 ContaoManagerBundle::class,
             ],
             $bundles[5]->getLoadAfter()
