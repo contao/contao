@@ -71,14 +71,14 @@ class LegacyMatcher implements RequestMatcherInterface
 
         @trigger_error('Using the "getPageIdFromUrl" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-        $locale = '';
+        $locale = null;
         $fragments = null;
 
         if ($this->configAdapter->get('folderUrl')) {
             try {
                 $match = $this->requestMatcher->matchRequest($request);
                 $fragments = $this->createFragmentsFromMatch($match);
-                $locale = $match['_locale'] ?? '';
+                $locale = $match['_locale'] ?? null;
             } catch (ResourceNotFoundException $e) {
                 // continue and parse fragments from path
             }
@@ -90,6 +90,10 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         if ($this->configAdapter->get('addLanguageToUrl')) {
+            if (null === $locale) {
+                throw new ResourceNotFoundException('Locale is missing');
+            }
+
             $this->inputAdapter->setGet('language', $locale);
         }
 
@@ -148,7 +152,7 @@ class LegacyMatcher implements RequestMatcherInterface
         return $fragments;
     }
 
-    private function createPathFromFragments(array $fragments, string $locale): string
+    private function createPathFromFragments(array $fragments, ?string $locale): string
     {
         if (isset($fragments[1]) && 'auto_item' === $fragments[1] && $this->configAdapter->get('useAutoItem')) {
             unset($fragments[1]);
@@ -163,7 +167,7 @@ class LegacyMatcher implements RequestMatcherInterface
         return '/'.$pathInfo;
     }
 
-    private function parseSuffixAndLanguage(string $pathInfo, string &$locale): string
+    private function parseSuffixAndLanguage(string $pathInfo, ?string &$locale): string
     {
         $urlSuffix = $this->configAdapter->get('urlSuffix');
         $suffixLength = \strlen($urlSuffix);
