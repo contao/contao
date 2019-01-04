@@ -1101,27 +1101,60 @@ class tl_page extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$autoAlias = false;
+		$objPage = PageModel::findWithDetails($dc->id);
+
+		$aliasExists = function (string $alias) use ($dc, $objPage): bool
+		{
+			$objAliasIds = $this->Database->prepare("SELECT id FROM tl_page WHERE alias=? AND id!=?")
+										  ->execute($alias, $dc->id);
+
+			if (!$objAliasIds->numRows)
+			{
+				return false;
+			}
+
+			$strCurrentDomain = $objPage->domain;
+			$strCurrentLanguage = $objPage->rootLanguage;
+
+			if ($objPage->type == 'root')
+			{
+				$strCurrentDomain = Input::post('dns');
+				$strCurrentLanguage = Input::post('language');
+			}
+
+			while ($objAliasIds->next())
+			{
+				$objAliasPage = PageModel::findWithDetails($objAliasIds->id);
+
+				if ($objAliasPage->domain != $strCurrentDomain)
+				{
+					continue;
+				}
+
+				if (Config::get('addLanguageToUrl') && $objAliasPage->rootLanguage != $strCurrentLanguage)
+				{
+					continue;
+				}
+
+				// Duplicate alias found
+				return true;
+			}
+
+			return false;
+		};
 
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$autoAlias = true;
-			$slugOptions = array();
-
-			// Read the slug options from the associated page
-			if (($objPage = PageModel::findWithDetails($dc->activeRecord->id)) !== null)
-			{
-				$slugOptions = $objPage->getSlugOptions();
-			}
-
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
-
-			// Prefix numeric aliases (see #1598)
-			if (is_numeric($varValue))
-			{
-				$varValue = 'id-' . $varValue;
-			}
+			$varValue = System::getContainer()->get('contao.slug')->generate
+			(
+				$dc->activeRecord->title,
+				$dc->activeRecord->id,
+				function ($alias) use ($objPage, $aliasExists)
+				{
+					return $aliasExists((Config::get('folderUrl') ? $objPage->folderUrl : '') . $alias);
+				}
+			);
 
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl') && $objPage->folderUrl != '')
@@ -1129,64 +1162,9 @@ class tl_page extends Backend
 				$varValue = $objPage->folderUrl . $varValue;
 			}
 		}
-
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_page WHERE id=? OR alias=?")
-								   ->execute($dc->id, $varValue);
-
-		// Check whether the page alias exists
-		if ($objAlias->numRows > ($autoAlias ? 0 : 1))
+		elseif ($aliasExists($varValue))
 		{
-			$arrPages = array();
-			$strDomain = '';
-			$strLanguage = '';
-
-			while ($objAlias->next())
-			{
-				$objCurrentPage = PageModel::findWithDetails($objAlias->id);
-				$domain = $objCurrentPage->domain ?: '*';
-				$language = (!$objCurrentPage->rootIsFallback) ? $objCurrentPage->rootLanguage : '*';
-
-				// Store the current page's data
-				if ($objCurrentPage->id == $dc->id)
-				{
-					// Get the DNS and language settings from the POST data (see #4610)
-					if ($objCurrentPage->type == 'root')
-					{
-						$strDomain = Input::post('dns');
-						$strLanguage = Input::post('language');
-					}
-					else
-					{
-						$strDomain = $domain;
-						$strLanguage = $language;
-					}
-				}
-				else
-				{
-					// Check the domain and language or the domain only
-					if (Config::get('addLanguageToUrl'))
-					{
-						$arrPages[$domain][$language][] = $objAlias->id;
-					}
-					else
-					{
-						$arrPages[$domain][] = $objAlias->id;
-					}
-				}
-			}
-
-			$arrCheck = Config::get('addLanguageToUrl') ? $arrPages[$strDomain][$strLanguage] : $arrPages[$strDomain];
-
-			// Check if there are multiple results for the current domain
-			if (!empty($arrCheck))
-			{
-				if (!$autoAlias)
-				{
-					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-				}
-
-				$varValue .= '-' . $dc->id;
-			}
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
 
 		return $varValue;

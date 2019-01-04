@@ -588,47 +588,24 @@ class tl_article extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$autoAlias = false;
+		$aliasExists = function (string $alias) use ($dc): bool
+		{
+			if (\in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true))
+			{
+				return true;
+			}
+
+			return $this->Database->prepare("SELECT id FROM tl_article WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		};
 
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$autoAlias = true;
-			$slugOptions = array();
-
-			// Read the slug options from the associated page
-			if (($objPage = PageModel::findWithDetails($dc->activeRecord->pid)) !== null)
-			{
-				$slugOptions = $objPage->getSlugOptions();
-			}
-
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
-
-			// Prefix numeric aliases (see #1598)
-			if (is_numeric($varValue))
-			{
-				$varValue = 'id-' . $varValue;
-			}
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->pid, $aliasExists);
 		}
-
-		// Add a prefix to reserved names (see #6066)
-		if (\in_array($varValue, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer')))
+		elseif ($aliasExists($varValue))
 		{
-			$varValue = 'article-' . $varValue;
-		}
-
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_article WHERE id=? OR alias=?")
-								   ->execute($dc->id, $varValue);
-
-		// Check whether the page alias exists
-		if ($objAlias->numRows > 1)
-		{
-			if (!$autoAlias)
-			{
-				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-			}
-
-			$varValue .= '-' . $dc->id;
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
 
 		return $varValue;
@@ -878,21 +855,7 @@ class tl_article extends Backend
 					continue;
 				}
 
-				$slugOptions = array();
-
-				// Read the slug options from the associated page
-				if (($objPage = PageModel::findWithDetails($objArticle->pid)) !== null)
-				{
-					$slugOptions = $objPage->getSlugOptions();
-				}
-
-				$strAlias = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($objArticle->title), $slugOptions);
-
-				// Prefix numeric aliases (see #1598)
-				if (is_numeric($strAlias))
-				{
-					$strAlias = 'id-' . $strAlias;
-				}
+				$strAlias = System::getContainer()->get('contao.slug')->generate($objArticle->title, $objArticle->pid);
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)

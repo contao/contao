@@ -466,41 +466,19 @@ class tl_newsletter extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$autoAlias = false;
+		$aliasExists = function (string $alias) use ($dc): bool
+		{
+			return $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		};
 
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$autoAlias = true;
-			$slugOptions = array();
-
-			// Read the slug options from the associated page
-			if (($objChannel = NewsletterChannelModel::findByPk($dc->activeRecord->pid)) !== null && ($objPage = PageModel::findWithDetails($objChannel->jumpTo)) !== null)
-			{
-				$slugOptions = $objPage->getSlugOptions();
-			}
-
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->subject), $slugOptions);
-
-			// Prefix numeric aliases (see #1598)
-			if (is_numeric($varValue))
-			{
-				$varValue = 'id-' . $varValue;
-			}
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo ?? array(), $aliasExists);
 		}
-
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")
-								   ->execute($varValue, $dc->id);
-
-		// Check whether the newsletter alias exists
-		if ($objAlias->numRows)
+		elseif ($aliasExists($varValue))
 		{
-			if (!$autoAlias)
-			{
-				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-			}
-
-			$varValue .= '-' . $dc->id;
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
 
 		return $varValue;

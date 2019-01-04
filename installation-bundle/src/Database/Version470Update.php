@@ -65,5 +65,21 @@ class Version470Update extends AbstractVersionUpdate
                 }
             }
         }
+
+        $this->connection->query("
+            ALTER TABLE
+                tl_comments_notify
+            ADD
+                active CHAR(1) DEFAULT '' NOT NULL
+        ");
+
+        $this->connection->query("
+            UPDATE
+                tl_comments_notify
+            SET
+                active = '1'
+            WHERE
+                tokenConfirm = ''
+        ");
     }
 }

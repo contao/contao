@@ -384,7 +384,8 @@ class PageRegular extends Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$container = \System::getContainer();
+		$rootDir = $container->getParameter('kernel.project_dir');
 
 		// jQuery scripts
 		if ($objLayout->addJQuery)
@@ -393,10 +394,16 @@ class PageRegular extends Frontend
 			{
 				try
 				{
-					$version = PackageUtil::getNormalizedVersion('contao-components/jquery');
-					$hash = 'sha256-' . base64_encode(hash('sha256', file_get_contents($rootDir . '/assets/jquery/js/jquery.min.js'), true));
+					$cache = $container->get('cache.system');
+					$hash = $cache->getItem('contao.jquery_hash');
 
-					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . $version . '.min.js', false, false, $hash) . "\n";
+					if (!$hash->isHit())
+					{
+						$hash->set('sha256-' . base64_encode(hash_file('sha256', $rootDir . '/assets/jquery/js/jquery.min.js', true)));
+						$cache->save($hash);
+					}
+
+					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get()) . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')

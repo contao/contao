@@ -34,7 +34,7 @@ class FrontendPreviewToken extends AbstractToken
 
         $this->showUnpublished = $showUnpublished;
 
-        parent::setAuthenticated(true);
+        $this->setAuthenticated(true);
     }
 
     /**

@@ -97,6 +97,16 @@ source_file = src/Resources/contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 
+[contao-core-bundle.v4_7-tl_opt_in]
+source_file = src/Resources/contao/languages/en/tl_opt_in.xlf
+source_lang = en
+file_filter = src/Resources/contao/languages/<lang>/tl_opt_in.xlf
+
+[contao-core-bundle.v4_7-tl_opt_in_related]
+source_file = src/Resources/contao/languages/en/tl_opt_in_related.xlf
+source_lang = en
+file_filter = src/Resources/contao/languages/<lang>/tl_opt_in_related.xlf
+
 [contao-core-bundle.v4_7-tl_page]
 source_file = src/Resources/contao/languages/en/tl_page.xlf
 source_lang = en

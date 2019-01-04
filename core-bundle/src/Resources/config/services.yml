@@ -26,14 +26,6 @@ services:
             - "%kernel.debug%"
         public: true
 
-    contao.cache:
-        class: Doctrine\Common\Cache\FilesystemCache
-        arguments:
-            - "%kernel.cache_dir%/contao/cache"
-            - ""
-            - 0022
-        public: true
-
     contao.cache.clear_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         arguments:
@@ -254,6 +246,12 @@ services:
             - "@contao.routing.scope_matcher"
         tags:
             - { name: monolog.processor }
+
+    contao.opt-in:
+        class: Contao\CoreBundle\OptIn\OptIn
+        arguments:
+            - "@contao.framework"
+        public: true
 
     contao.picker.builder:
         class: Contao\CoreBundle\Picker\PickerBuilder
@@ -537,6 +535,13 @@ services:
             - "_contao_fe_attributes"
         calls:
             - ["setName", ["contao_frontend"]]
+
+    contao.slug:
+        class: Contao\CoreBundle\Slug\Slug
+        arguments:
+            - "@contao.slug.generator"
+            - "@contao.framework"
+        public: true
 
     contao.slug.generator:
         class: Ausi\SlugGenerator\SlugGenerator

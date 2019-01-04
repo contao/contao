@@ -22,31 +22,12 @@ class Messages extends Backend
 	 * Check for the latest Contao version
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.
 	 */
 	public function versionCheck()
 	{
-		$cache = \System::getContainer()->get('contao.cache');
-
-		if (!$cache->contains('latest-version'))
-		{
-			return '';
-		}
-
-		$strVersion = $cache->fetch('latest-version');
-
-		if ($strVersion && version_compare(VERSION . '.' . BUILD, $strVersion, '<'))
-		{
-			$this->import('BackendUser', 'User');
-
-			if ($this->User->hasAccess('maintenance', 'modules'))
-			{
-				return '<p class="tl_new"><a href="contao/main.php?do=maintenance">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</a></p>';
-			}
-			else
-			{
-				return '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</p>';
-			}
-		}
+		@trigger_error('Using Messages::versionCheck() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 		return '';
 	}

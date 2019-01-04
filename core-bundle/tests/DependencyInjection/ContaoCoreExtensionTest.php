@@ -69,6 +69,7 @@ use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Menu\BackendMenuRenderer;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
+use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
@@ -92,6 +93,7 @@ use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Slug\ValidCharacters;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
@@ -100,7 +102,6 @@ use Contao\FrontendUser;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
-use Doctrine\Common\Cache\FilesystemCache;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\Config\FileLocator;
@@ -637,19 +638,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%kernel.debug%', $definition->getArgument(2));
     }
 
-    public function testRegistersTheContaoCache(): void
-    {
-        $this->assertTrue($this->container->has('contao.cache'));
-
-        $definition = $this->container->getDefinition('contao.cache');
-
-        $this->assertSame(FilesystemCache::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('%kernel.cache_dir%/contao/cache', (string) $definition->getArgument(0));
-        $this->assertSame('', (string) $definition->getArgument(1));
-        $this->assertSame('18', (string) $definition->getArgument(2));
-    }
-
     public function testRegistersTheContaoCacheClearer(): void
     {
         $this->assertTrue($this->container->has('contao.cache.clear_internal'));
@@ -1098,6 +1086,17 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('monolog.processor', $tags);
     }
 
+    public function testRegistersTheOptInService(): void
+    {
+        $this->assertTrue($this->container->has('contao.opt-in'));
+
+        $definition = $this->container->getDefinition('contao.opt-in');
+
+        $this->assertSame(OptIn::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+    }
+
     public function testRegistersThePickerBuilder(): void
     {
         $this->assertTrue($this->container->has('contao.picker.builder'));
@@ -1511,6 +1510,18 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame('setName', $methodCalls[0][0]);
         $this->assertSame(['contao_frontend'], $methodCalls[0][1]);
+    }
+
+    public function testRegistersTheSlugService(): void
+    {
+        $this->assertTrue($this->container->has('contao.slug'));
+
+        $definition = $this->container->getDefinition('contao.slug');
+
+        $this->assertSame(Slug::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.slug.generator', (string) $definition->getArgument(0));
+        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheSlugGenerator(): void

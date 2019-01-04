@@ -489,41 +489,19 @@ class tl_form extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$autoAlias = false;
+		$aliasExists = function (string $alias) use ($dc): bool
+		{
+			return $this->Database->prepare("SELECT id FROM tl_form WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		};
 
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$autoAlias = true;
-			$slugOptions = array();
-
-			// Read the slug options from the associated page
-			if (($objPage = PageModel::findWithDetails($dc->activeRecord->jumpTo)) !== null)
-			{
-				$slugOptions = $objPage->getSlugOptions();
-			}
-
-			$varValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($dc->activeRecord->title), $slugOptions);
-
-			// Prefix numeric aliases (see #1598)
-			if (is_numeric($varValue))
-			{
-				$varValue = 'id-' . $varValue;
-			}
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->jumpTo, $aliasExists);
 		}
-
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_form WHERE id=? OR alias=?")
-								   ->execute($dc->id, $varValue);
-
-		// Check whether the form alias exists
-		if ($objAlias->numRows > 1)
+		elseif ($aliasExists($varValue))
 		{
-			if (!$autoAlias)
-			{
-				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-			}
-
-			$varValue .= '-' . $dc->id;
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
 
 		return $varValue;

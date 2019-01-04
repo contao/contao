@@ -1727,6 +1727,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>Invalid token</source>
       </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
       </trans-unit>

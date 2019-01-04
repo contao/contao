@@ -62,12 +62,6 @@
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
       </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.0">
-        <source>Enable auto_item</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.1">
-        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.folderUrl.0">
         <source>Enable folder URLs</source>
       </trans-unit>
@@ -178,6 +172,9 @@
       </trans-unit>
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
       </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>

@@ -1550,6 +1550,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 			}
 
+			// Invalidate cache tags (no need to invalidate the parent)
+			$this->invalidateCacheTags($this);
+
 			// Delete the records
 			foreach ($delete as $table=>$fields)
 			{
@@ -1558,9 +1561,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$this->Database->prepare("DELETE FROM " . $table . " WHERE id=?")
 								   ->limit(1)
 								   ->execute($v);
-
-					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($this->getCacheTags($table, array($v)));
 				}
 			}
 
@@ -1768,7 +1768,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							   ->execute($row[1]['sorting'], $row[0]['id']);
 
 				// Invalidate cache tags
-				$this->invalidateCacheTags($this->getCacheTags($this->strTable, array($row[1]['id'], $row[0]['id']), $this->ptable, $this->activeRecord->pid));
+				$this->invalidateCacheTags($this);
 			}
 		}
 
@@ -2171,7 +2171,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Invalidate cache tags
-			$this->invalidateCacheTags($this->getCacheTags($this->table, array($this->id), $this->ptable, $this->activeRecord->pid));
+			$this->invalidateCacheTags($this);
 
 			// Redirect
 			if (isset($_POST['saveNclose']))
@@ -2669,7 +2669,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
-  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'</legend>
+  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'<span class="mandatory">*</span></legend>
   <input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this)"> <label for="check_all" style="color:#a6a6a6"><em>'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</em></label><br>'.$options.'
 </fieldset>'.($blnIsError ? '
 <p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['all_fields'].'</p>' : ((\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
@@ -2987,7 +2987,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
-  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'</legend>
+  <legend'.($blnIsError ? ' class="error"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['all_fields'][0].'<span class="mandatory">*</span></legend>
   <input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this)"> <label for="check_all" style="color:#a6a6a6"><em>'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</em></label><br>'.$options.'
 </fieldset>'.($blnIsError ? '
 <p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['all_fields'].'</p>' : ((\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
@@ -3321,10 +3321,25 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (!empty($new_records[$this->strTable]))
 			{
 				$ids = array_map('\intval', $new_records[$this->strTable]);
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
-				// Invalidate cache tags (no need to invalidate the parent)
-				$this->invalidateCacheTags($this->getCacheTags($this->strTable, $ids));
+				foreach ($ids as $id)
+				{
+					$dataContainer = static::class;
+					$dc = new $dataContainer($this->strTable);
+					$dc->id = $id;
+
+					// Get the current record
+					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+											 ->limit(1)
+											 ->execute($id);
+
+					$dc->activeRecord = $objRow;
+
+					// Invalidate cache tags (no need to invalidate the parent)
+					$this->invalidateCacheTags($dc);
+				}
+
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
 				if ($objStmt->affectedRows > 0)
 				{
@@ -5106,7 +5121,17 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		foreach ($searchFields as $field)
 		{
-			$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field]);
+			$option_label = $field;
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
+			{
+				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
+			}
+			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
+			{
+				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
+			}
+
 			$options_sorter[Utf8::toAscii($option_label).'_'.$field] = '  <option value="'.\StringUtil::specialchars($field).'"'.(($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '').'>'.$option_label.'</option>';
 		}
 

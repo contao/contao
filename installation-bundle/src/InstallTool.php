@@ -14,6 +14,7 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Psr\Log\LoggerInterface;
@@ -83,7 +84,7 @@ class InstallTool
 
     public function resetLoginCount(): void
     {
-        \File::putContent('system/tmp/login-count.txt', 0);
+        File::putContent('system/tmp/login-count.txt', 0);
     }
 
     public function setConnection(Connection $connection): void

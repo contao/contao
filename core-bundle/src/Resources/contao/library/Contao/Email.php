@@ -116,7 +116,7 @@ class Email
 	 * Log file name
 	 * @var string
 	 */
-	protected $strLogFile = TL_EMAIL;
+	protected $strLogFile = 'EMAIL';
 
 	/**
 	 * Instantiate the object and load the mailer framework

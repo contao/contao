@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\OptIn\OptIn;
+use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments
@@ -41,6 +43,14 @@ class Comments extends Frontend
 		$arrComments = array();
 
 		$objTemplate->comments = array(); // see #4064
+
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
+		}
 
 		// Pagination
 		if ($objConfig->perPage > 0)
@@ -173,7 +183,7 @@ class Comments extends Frontend
 		}
 
 		// Confirm or remove a subscription
-		if (\Input::get('token'))
+		if (strncmp(\Input::get('token'), 'com-', 4) === 0 || strncmp(\Input::get('token'), 'cor-', 4) === 0)
 		{
 			static::changeSubscriptionStatus($objTemplate);
 
@@ -525,10 +535,13 @@ class Comments extends Frontend
 			return;
 		}
 
-		foreach ($objNotify as $objModel)
+		while ($objNotify->next())
 		{
-			$objModel->delete();
+			$objNotify->delete();
 		}
+
+		// Add a log entry
+		$this->log('Purged the unactivated comment subscriptions', __METHOD__, TL_CRON);
 	}
 
 	/**
@@ -558,9 +571,8 @@ class Comments extends Frontend
 			'email'        => $objComment->email,
 			'url'          => \Environment::get('request'),
 			'addedOn'      => $time,
-			'ip'           => \Environment::get('ip'),
-			'tokenConfirm' => md5(uniqid(mt_rand(), true)),
-			'tokenRemove'  => md5(uniqid(mt_rand(), true))
+			'active'       => '',
+			'tokenRemove'  => 'cor-'.bin2hex(random_bytes(10))
 		);
 
 		// Store the subscription
@@ -570,13 +582,12 @@ class Comments extends Frontend
 		$strUrl = \Idna::decode(\Environment::get('base')) . \Environment::get('request');
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
-		// Send the activation mail
-		$objEmail = new \Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $objNotify->tokenConfirm, $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove);
-		$objEmail->sendTo($objComment->email);
+		/** @var OptIn $optIn */
+		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('com-', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
+
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
 	}
 
 	/**
@@ -586,23 +597,37 @@ class Comments extends Frontend
 	 */
 	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
-		$objNotify = \CommentsNotifyModel::findByTokens(\Input::get('token'));
-
-		if ($objNotify === null)
+		if (strncmp(\Input::get('token'), 'com-', 4) === 0)
 		{
-			$objTemplate->confirm = 'Invalid token';
+			/** @var OptIn $optIn */
+			$optIn = \System::getContainer()->get('contao.opt-in');
 
-			return;
-		}
+			// Find an unconfirmed token with only one related record
+			if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = \CommentsNotifyModel::findByPk($arrIds[0])))
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 
-		if ($objNotify->tokenConfirm != '' && $objNotify->tokenConfirm == \Input::get('token'))
-		{
-			$objNotify->tokenConfirm = '';
+				return;
+			}
+
+			$objNotify->active = '1';
 			$objNotify->save();
+
+			$optInToken->confirm();
+
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
-		elseif ($objNotify->tokenRemove != '' && $objNotify->tokenRemove == \Input::get('token'))
+		elseif (strncmp(\Input::get('token'), 'cor-', 4) === 0)
 		{
+			$objNotify = \CommentsNotifyModel::findOneByTokenRemove(\Input::get('token'));
+
+			if ($objNotify === null)
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+
+				return;
+			}
+
 			$objNotify->delete();
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
 		}
@@ -645,7 +670,7 @@ class Comments extends Frontend
 			}
 		}
 
-		$objComment->notified = 1;
+		$objComment->notified = '1';
 		$objComment->save();
 	}
 }

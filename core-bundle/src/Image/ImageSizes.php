@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -80,7 +81,7 @@ class ImageSizes
                 function ($val) {
                     return is_numeric($val) ? (int) $val : $val;
                 },
-                \StringUtil::deserialize($user->imageSizes, true)
+                StringUtil::deserialize($user->imageSizes, true)
             );
 
             $event = new ImageSizesEvent($this->filterOptions($options), $user);

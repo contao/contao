@@ -88,7 +88,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $assignDir
  * @property string  $homeDir
  * @property integer $createdOn
- * @property string  $activation
  * @property string  $loginPage
  * @property object  $objImport
  * @property object  $objAuth

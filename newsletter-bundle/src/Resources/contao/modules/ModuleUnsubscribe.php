@@ -102,7 +102,7 @@ class ModuleUnsubscribe extends Module
 
 			if ($varSubmitted !== false)
 			{
-				\call_user_func_array(array($this, 'removeRecipient'), $varSubmitted);
+				$this->removeRecipient(...$varSubmitted);
 			}
 		}
 
@@ -196,14 +196,14 @@ class ModuleUnsubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active=1"), $varInput)) !== null)
+		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}
 
-		$arrRemove = array_intersect($arrChannels, $arrSubscriptions);
+		$arrChannels = array_intersect($arrChannels, $arrSubscriptions);
 
-		if (empty($arrRemove) || !\is_array($arrRemove))
+		if (empty($arrChannels))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['unsubscribed'];
@@ -222,7 +222,7 @@ class ModuleUnsubscribe extends Module
 			}
 		}
 
-		return array($varInput, $arrRemove);
+		return array($varInput, $arrChannels);
 	}
 
 	/**

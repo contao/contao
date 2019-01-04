@@ -572,7 +572,7 @@ class PageModel extends Model
 		@trigger_error('Using PageModel::findPublishedByIdOrAlias() has been deprecated and will no longer work Contao 5.0.', E_USER_DEPRECATED);
 
 		$t = static::$strTable;
-		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
