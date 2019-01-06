@@ -366,6 +366,7 @@ services:
 
     contao.routing.nested_matcher:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        public: true
         arguments:
             - "@contao.routing.route_provider"
             - "@contao.routing.final_matcher"
