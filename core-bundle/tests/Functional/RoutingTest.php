@@ -46,6 +46,8 @@ class RoutingTest extends WebTestCase
         Input::resetUnusedGet();
         Environment::reset();
         InsertTags::reset();
+
+        Config::set('debugMode', false);
     }
 
     /**

@@ -856,7 +856,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoFramework::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame(null, $definition->getArgument(0));
+        $this->assertNull($definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));

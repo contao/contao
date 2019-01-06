@@ -47,7 +47,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsThePageIdFromTheUrl(): void
     {
@@ -77,7 +77,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsNullIfTheRequestIsEmpty(): void
     {
@@ -93,7 +93,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfTheRequestContainsAutoItem(): void
     {
@@ -123,7 +123,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfTheUrlSuffixDoesNotMatch(): void
     {
@@ -153,7 +153,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseUponDuplicateParameters(): void
     {
@@ -183,7 +183,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfTheRequestContainsAnAutoItemKeyword(): void
     {
@@ -214,7 +214,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testDecodesTheRequestString(): void
     {
@@ -244,7 +244,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testUnsetsEmptyFragments(): void
     {
@@ -278,7 +278,8 @@ class RoutingTest extends ContaoTestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     *
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testAddsTheAutoItemFragment(): void
     {
@@ -311,7 +312,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsNullIfOnlyTheLanguageIsGiven(): void
     {
@@ -342,7 +343,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfTheLanguageIsNotProvided(): void
     {
@@ -373,7 +374,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfTheAliasIsEmpty(): void
     {
@@ -405,7 +406,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfThereAreNoFragments(): void
     {
@@ -441,7 +442,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testHandlesFolderUrlsWithoutLanguage(): void
     {
@@ -502,7 +503,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testHandlesFolderUrlsWithLanguage(): void
     {
@@ -573,7 +574,7 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testReturnsFalseIfThereAreNoAliases(): void
     {
