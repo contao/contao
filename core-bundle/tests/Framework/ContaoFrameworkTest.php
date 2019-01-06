@@ -118,7 +118,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'));
         $framework->setContainer($this->mockContainer());
 
-        /** @var Config|MockObject $config */
+        /** @var MockObject $config */
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
@@ -207,29 +207,28 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testDoesNotInitializeTheFrameworkTwice(): void
     {
-        $request = new Request();
-        $request->attributes->set('_contao_referer_id', 'foobar');
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $container = $this->mockContainer();
-        $container->setParameter('contao.csrf_token_name', 'dummy_token');
-
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->method('isInitialized')
-            ->willReturnOnConsecutiveCalls(false, true)
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(false)
         ;
 
-        $framework
-            ->method('getAdapter')
-            ->with($this->equalTo(Config::class))
-            ->willReturn($this->mockConfigAdapter())
+        $scopeMatcher
+            ->expects($this->exactly(2))
+            ->method('isFrontendRequest')
+            ->willReturn(false)
         ;
 
-        $framework->setContainer($container);
+        $framework = $this->createConfiguredFramework(null, null, $scopeMatcher);
+        $framework->setContainer($this->mockContainer());
+        $framework->setRequest(new Request());
         $framework->initialize();
+
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertNull(TL_MODE);
+
         $framework->initialize();
     }
 
@@ -533,10 +532,8 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAnObjectInstance(): void
     {
-        $reflection = new \ReflectionClass(ContaoFramework::class);
-
         /** @var ContaoFramework $framework */
-        $framework = $reflection->newInstanceWithoutConstructor();
+        $framework = $this->createConfiguredFramework();
 
         $class = LegacyClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
@@ -547,10 +544,8 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreateASingeltonObjectInstance(): void
     {
-        $reflection = new \ReflectionClass(ContaoFramework::class);
-
         /** @var ContaoFramework $framework */
-        $framework = $reflection->newInstanceWithoutConstructor();
+        $framework = $this->createConfiguredFramework();
 
         $class = LegacySingletonClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
@@ -561,19 +556,15 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAdaptersForLegacyClasses(): void
     {
-        $class = LegacyClass::class;
-
-        $reflection = new \ReflectionClass(ContaoFramework::class);
-
         /** @var ContaoFramework $framework */
-        $framework = $reflection->newInstanceWithoutConstructor();
-        $adapter = $framework->getAdapter($class);
+        $framework = $this->createConfiguredFramework();
+        $adapter = $framework->getAdapter(LegacyClass::class);
 
         $ref = new \ReflectionClass($adapter);
         $prop = $ref->getProperty('class');
         $prop->setAccessible(true);
 
-        $this->assertSame($class, $prop->getValue($adapter));
+        $this->assertSame(LegacyClass::class, $prop->getValue($adapter));
     }
 
     /**
