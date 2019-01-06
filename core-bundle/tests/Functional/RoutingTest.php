@@ -187,7 +187,7 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the default page if the alias is empty' => [
+            'Renders the 404 page if the alias is empty' => [
                 '/.html',
                 404,
                 '(404 Not Found)',
@@ -410,7 +410,7 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the default page if the alias is empty' => [
+            'Renders the 404 page if the alias is empty' => [
                 '/en/.html',
                 404,
                 '(404 Not Found)',
@@ -768,7 +768,7 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
-            'Throws a "no root page found" exception if no language matches' => [
+            'Renders the 404 page if no language matches' => [
                 '/',
                 404,
                 '(404 Not Found)',
@@ -841,7 +841,7 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
-            'Throws a "no root page found" exception if none of the accept languages matches' => [
+            'Renders the 404 page if none of the accept languages matches' => [
                 '/',
                 404,
                 '(404 Not Found)',
@@ -883,7 +883,7 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
-            'Throws a "no root page found" exception if the locale does not match' => [
+            'Renders the 404 page if the locale does not exist' => [
                 '/fr/',
                 404,
                 '(404 Not Found)',
