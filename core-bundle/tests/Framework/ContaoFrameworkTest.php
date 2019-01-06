@@ -205,6 +205,54 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
+    public function testInitializesTheFrameworkAfterRequestIsSet()
+    {
+        $request = new Request();
+        $request->setLocale('de');
+
+        $routingLoader = $this->createMock(LoaderInterface::class);
+        $routingLoader
+            ->method('load')
+            ->willReturn(new RouteCollection())
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('routing.loader', $routingLoader);
+
+        $framework = $this->createConfiguredFramework(new Router($container, []));
+        $framework->setContainer($container);
+        $framework->initialize();
+
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertFalse(\defined('TL_MODE'));
+        $this->assertFalse(\defined('TL_REFERER_ID'));
+        $this->assertFalse(\defined('TL_SCRIPT'));
+        $this->assertFalse(\defined('BE_USER_LOGGED_IN'));
+        $this->assertFalse(\defined('FE_USER_LOGGED_IN'));
+        $this->assertFalse(\defined('TL_PATH'));
+        $this->assertSame($this->getTempDir(), TL_ROOT);
+
+        $framework->setRequest($request);
+
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
+        $this->assertNull(TL_MODE);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
+        $this->assertSame('', TL_REFERER_ID);
+        $this->assertNull(TL_SCRIPT);
+        $this->assertSame('', TL_PATH);
+        $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testDoesNotInitializeTheFrameworkTwice(): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
