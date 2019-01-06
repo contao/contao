@@ -13,6 +13,7 @@
         "php": "^7.1"
     },
     "require-dev": {
+        "ext-pdo": "*",
         "contao/core-bundle": "^4.5",
         "friendsofphp/php-cs-fixer": "^2.12",
         "php-http/guzzle6-adapter": "^1.1",
