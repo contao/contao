@@ -80,14 +80,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     public function __construct(?RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
+        if (null !== $requestStack) {
+            @trigger_error('Injecting the request stack in the Contao framework is no longer supported since Contao 4.7. Use ContaoFramework::setRequest() instead.', E_USER_DEPRECATED);
+        }
+
         $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
-
-        if (null !== $requestStack) {
-            @trigger_error('Passing request stack to ContaoFramework is no longer supported since Contao 4.7. Use ContaoFramework::setRequest() instead.', E_USER_DEPRECATED);
-        }
     }
 
     /**

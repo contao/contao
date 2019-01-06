@@ -306,7 +306,7 @@ abstract class Frontend extends Controller
 		// The language is set in the URL
 		if (!empty($_GET['language']) && \Config::get('addLanguageToUrl'))
 		{
-			$strUri = \Environment::get('url').'/'.$_GET['language'].'/';
+			$strUri = \Environment::get('url') . '/' . \Input::get('language') . '/';
 			$strError = 'No root page found (host "' . $host . '", language "'. \Input::get('language') .'")';
 		}
 
@@ -319,8 +319,8 @@ abstract class Frontend extends Controller
 				$accept_language = '-';
 			}
 
-			$strUri = \Environment::get('url').'/';
-			$strError = 'No root page found (host "' . \Environment::get('host') . '", languages "'.implode(', ', \Environment::get('httpAcceptLanguage')).'")';
+			$strUri = \Environment::get('url') . '/';
+			$strError = 'No root page found (host "' . \Environment::get('host') . '", languages "' . implode(', ', \Environment::get('httpAcceptLanguage')) . '")';
 		}
 
 		try
@@ -333,16 +333,12 @@ abstract class Frontend extends Controller
 
 			if (!$objRootPage instanceof PageModel)
 			{
-				throw new MissingMandatoryParametersException('Every Contao route must have a pageModel parameter');
+				throw new MissingMandatoryParametersException('Every Contao route must have a "pageModel" parameter');
 			}
 		}
 		catch (RoutingExceptionInterface $exception)
 		{
-			$logger->log(
-				LogLevel::ERROR,
-				$strError,
-				array('contao' => new ContaoContext(__METHOD__, 'ERROR'))
-			);
+			$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
 
 			throw new NoRootPageFoundException('No root page found', 0, $exception);
 		}

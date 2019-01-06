@@ -22,7 +22,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Fixtures\Exception\PageErrorResponseException;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
@@ -315,7 +314,6 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         if (null === $request) {
             $request = new Request();
-            $request->attributes->set('_scope', 'backend');
         }
 
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MASTER_REQUEST;
