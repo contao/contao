@@ -35,7 +35,7 @@ class PageRoot extends Frontend
 	{
 		if (!$blnReturn)
 		{
-			$this->redirect($this->getRedirectUrl($rootPageId));
+			$this->redirect($this->getRedirectUrl($rootPageId), 302);
 		}
 
 		$objNextPage = $this->getNextPage($rootPageId);

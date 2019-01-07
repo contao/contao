@@ -130,7 +130,7 @@ services:
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
-            - "@request_stack"
+            - ~
             - "@router"
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
@@ -315,20 +315,95 @@ services:
             - "%contao.resources_paths%"
         public: true
 
+    contao.routing.backend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - ["matchAttribute", ["_scope", "backend"]]
+
+    contao.routing.dummy_collection:
+        class: Symfony\Component\Routing\RouteCollection
+
+    contao.routing.dummy_context:
+        class: Symfony\Component\Routing\RequestContext
+
+    contao.routing.final_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher
+        arguments:
+            - "@contao.routing.dummy_collection"
+            - "@contao.routing.dummy_context"
+
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
             - "%contao.prepend_locale%"
+            - "%contao.url_suffix%"
         tags:
             - { name: routing.loader }
 
-    contao.routing.url_generator:
-        class: Contao\CoreBundle\Routing\UrlGenerator
+    contao.routing.frontend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - ["matchAttribute", ["_scope", "frontend"]]
+
+    contao.routing.input_enhancer:
+        class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
-            - "@router"
             - "@contao.framework"
-            - "%contao.prepend_locale%"
+
+    contao.routing.legacy_matcher:
+        class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
+        decorates: contao.routing.nested_matcher
+        arguments:
+            - "@contao.framework"
+            - "@contao.routing.legacy_matcher.inner"
+
+    contao.routing.legacy_route_provider:
+        class: Contao\CoreBundle\Routing\LegacyRouteProvider
+        decorates: contao.routing.route_provider
+        arguments:
+            - "@contao.routing.frontend_loader"
+            - "@contao.routing.legacy_route_provider.inner"
+
+    contao.routing.nested_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        arguments:
+            - "@contao.routing.route_provider"
+            - "@contao.routing.final_matcher"
+        calls:
+            - [addRouteFilter, ["@contao.routing.publishing_filter"]]
         public: true
+
+    contao.routing.page_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
+        arguments:
+            - "@router.request_context"
+            - "@contao.routing.nested_matcher"
+            - "@contao.routing.route_generator"
+            - ""
+            - "@event_dispatcher"
+            - "@contao.routing.route_provider"
+        calls:
+            - [addRouteEnhancer, ["@contao.routing.input_enhancer"]]
+        tags:
+            - { name: router, priority: 20 }
+
+    contao.routing.publishing_filter:
+        class: Contao\CoreBundle\Routing\Matcher\PublishingFilter
+        arguments:
+            - "@contao.security.token_checker"
+
+    contao.routing.route_generator:
+        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+        arguments:
+            - "@contao.routing.route_provider"
+            - "@logger"
+
+    contao.routing.route_provider:
+        class: Contao\CoreBundle\Routing\RouteProvider
+        arguments:
+            - "@contao.framework"
+            - "@database_connection"
+            - ~
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher
@@ -337,15 +412,13 @@ services:
             - "@contao.routing.frontend_matcher"
         public: true
 
-    contao.routing.backend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - ["matchAttribute", ["_scope", "backend"]]
-
-    contao.routing.frontend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - ["matchAttribute", ["_scope", "frontend"]]
+    contao.routing.url_generator:
+        class: Contao\CoreBundle\Routing\UrlGenerator
+        arguments:
+            - "@router"
+            - "@contao.framework"
+            - "%contao.prepend_locale%"
+        public: true
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler

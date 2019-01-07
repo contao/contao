@@ -23,6 +23,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @group legacy
+ */
 class RoutingTest extends ContaoTestCase
 {
     /**
@@ -43,6 +46,9 @@ class RoutingTest extends ContaoTestCase
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsThePageIdFromTheUrl(): void
     {
         $_SERVER['REQUEST_URI'] = 'home.html?foo=bar';
@@ -70,6 +76,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsNullIfTheRequestIsEmpty(): void
     {
         $_SERVER['REQUEST_URI'] = '/';
@@ -83,6 +92,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfTheRequestContainsAutoItem(): void
     {
         $_SERVER['REQUEST_URI'] = 'home/auto_item/foo.html';
@@ -110,6 +122,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfTheUrlSuffixDoesNotMatch(): void
     {
         $_SERVER['REQUEST_URI'] = 'home/auto_item/foo.xml';
@@ -137,6 +152,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseUponDuplicateParameters(): void
     {
         $_SERVER['REQUEST_URI'] = 'home/foo/bar1/foo/bar2.html';
@@ -164,6 +182,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['foo' => 'bar1'], $_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfTheRequestContainsAnAutoItemKeyword(): void
     {
         $_SERVER['REQUEST_URI'] = 'home/items/bar.html';
@@ -192,6 +213,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testDecodesTheRequestString(): void
     {
         $_SERVER['REQUEST_URI'] = 'h%C3%B6me.html';
@@ -219,6 +243,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testUnsetsEmptyFragments(): void
     {
         $_SERVER['REQUEST_URI'] = 'home//foo.html';
@@ -251,6 +278,8 @@ class RoutingTest extends ContaoTestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     *
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
     public function testAddsTheAutoItemFragment(): void
     {
@@ -282,6 +311,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['auto_item' => 'foo'], $_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsNullIfOnlyTheLanguageIsGiven(): void
     {
         $_SERVER['REQUEST_URI'] = 'en/';
@@ -310,6 +342,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en'], $_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfTheLanguageIsNotProvided(): void
     {
         $_SERVER['REQUEST_URI'] = 'home.html';
@@ -338,6 +373,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfTheAliasIsEmpty(): void
     {
         $_SERVER['REQUEST_URI'] = 'en//foo/bar.html';
@@ -367,6 +405,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en'], $_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfThereAreNoFragments(): void
     {
         $_SERVER['REQUEST_URI'] = '/.html';
@@ -400,6 +441,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testHandlesFolderUrlsWithoutLanguage(): void
     {
         $_SERVER['REQUEST_URI'] = 'foo/bar/home.html';
@@ -458,6 +502,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testHandlesFolderUrlsWithLanguage(): void
     {
         $_SERVER['REQUEST_URI'] = 'en/foo/bar/home/news/test.html';
@@ -526,6 +573,9 @@ class RoutingTest extends ContaoTestCase
         $this->assertSame(['language' => 'en', 'news' => 'test'], $_GET);
     }
 
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testReturnsFalseIfThereAreNoAliases(): void
     {
         $_SERVER['REQUEST_URI'] = 'foo/bar/home.html';

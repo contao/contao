@@ -469,8 +469,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('twig', (string) $definition->getArgument(1));
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
         $this->assertSame('security.token_storage', (string) $definition->getArgument(3));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(4));
-        $this->assertSame('logger', (string) $definition->getArgument(5));
+        $this->assertSame('logger', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
 
@@ -586,7 +585,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(36, $tags['kernel.event_listener'][0]['priority']);
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][1]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
     }
@@ -857,7 +856,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoFramework::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertNull($definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));

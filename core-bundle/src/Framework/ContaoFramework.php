@@ -41,11 +41,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var RouterInterface
      */
     private $router;
@@ -80,9 +75,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    /**
+     * @param RequestStack|null $requestStack Deprecated since Contao 4.7, to be removed in Contao 5.0
+     */
+    public function __construct(?RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
-        $this->requestStack = $requestStack;
+        if (null !== $requestStack) {
+            @trigger_error('Injecting the request stack in the Contao framework is no longer supported since Contao 4.7. Use ContaoFramework::setRequest() instead.', E_USER_DEPRECATED);
+        }
+
         $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
@@ -115,8 +116,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             throw new \LogicException('The service container has not been set.');
         }
 
-        // Set the current request
-        $this->request = $this->requestStack->getCurrentRequest();
+        \define('TL_ROOT', $this->rootDir);
 
         $this->setConstants();
         $this->initializeFramework();
@@ -125,6 +125,28 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function setHookListeners(array $hookListeners): void
     {
         $this->hookListeners = $hookListeners;
+    }
+
+    public function setRequest(Request $request): void
+    {
+        // Do not overwrite the request in a sub-request. Unfortunately, the master
+        // request might be cached, so the only request we have is a sub-request.
+        // Therefore we just hopefully assume the first request is a master request.
+        if (null !== $this->request) {
+            return;
+        }
+
+        $this->request = $request;
+
+        if (!$this->isInitialized()) {
+            return;
+        }
+
+        $this->setConstants();
+        $this->initializeLegacySessionAccess();
+        $this->setDefaultLanguage();
+        $this->validateInstallation();
+        $this->handleRequestToken();
     }
 
     /**
@@ -158,61 +180,40 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function setConstants(): void
     {
-        if (!\defined('TL_MODE')) {
-            \define('TL_MODE', $this->getMode());
+        if (null === $this->request) {
+            return;
         }
 
-        \define('TL_START', microtime(true));
-        \define('TL_ROOT', $this->rootDir);
-        \define('TL_REFERER_ID', $this->getRefererId());
-
-        if (!\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', $this->getRoute());
-        }
+        \define('TL_MODE', $this->getMode($this->request));
+        \define('TL_REFERER_ID', $this->request->attributes->get('_contao_referer_id', ''));
+        \define('TL_SCRIPT', $this->getRoute($this->request));
 
         // Define the login status constants in the back end (see #4099, #5279)
-        if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
+        if (!$this->scopeMatcher->isFrontendRequest($this->request)) {
             \define('BE_USER_LOGGED_IN', false);
             \define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->getPath());
+        \define('TL_PATH', $this->request->getBasePath());
     }
 
-    private function getMode(): ?string
+    private function getMode(Request $request): ?string
     {
-        if (null === $this->request) {
-            return null;
-        }
-
-        if ($this->scopeMatcher->isBackendRequest($this->request)) {
+        if ($this->scopeMatcher->isBackendRequest($request)) {
             return 'BE';
         }
 
-        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
+        if ($this->scopeMatcher->isFrontendRequest($request)) {
             return 'FE';
         }
 
         return null;
     }
 
-    private function getRefererId(): ?string
+    private function getRoute(Request $request): ?string
     {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->attributes->get('_contao_referer_id', '');
-    }
-
-    private function getRoute(): ?string
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        $attributes = $this->request->attributes;
+        $attributes = $request->attributes;
 
         if (!$attributes->has('_route')) {
             return null;
@@ -229,22 +230,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        $basePath = $this->request->getBasePath().'/';
+        $basePath = $request->getBasePath().'/';
 
         if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
             return null;
         }
 
         return substr($route, \strlen($basePath));
-    }
-
-    private function getPath(): ?string
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->getBasePath();
     }
 
     private function initializeFramework(): void

@@ -31,6 +31,7 @@ use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -45,7 +46,7 @@ class PluginTest extends TestCase
         /** @var BundleConfig[]|array $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(5, $bundles);
+        $this->assertCount(6, $bundles);
 
         $this->assertSame(KnpMenuBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -63,8 +64,12 @@ class PluginTest extends TestCase
         $this->assertSame([], $bundles[3]->getReplace());
         $this->assertSame([], $bundles[3]->getLoadAfter());
 
-        $this->assertSame(ContaoCoreBundle::class, $bundles[4]->getName());
-        $this->assertSame(['core'], $bundles[4]->getReplace());
+        $this->assertSame(CmfRoutingBundle::class, $bundles[4]->getName());
+        $this->assertSame([], $bundles[4]->getReplace());
+        $this->assertSame([], $bundles[4]->getLoadAfter());
+
+        $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
+        $this->assertSame(['core'], $bundles[5]->getReplace());
 
         $this->assertSame(
             [
@@ -82,9 +87,10 @@ class PluginTest extends TestCase
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
                 HeaderReplayBundle::class,
+                CmfRoutingBundle::class,
                 ContaoManagerBundle::class,
             ],
-            $bundles[4]->getLoadAfter()
+            $bundles[5]->getLoadAfter()
         );
     }
 

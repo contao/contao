@@ -90,7 +90,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('contao_csrf_token')
                 ->end()
                 ->booleanNode('pretty_error_screens')
-                    ->defaultValue(!$this->debug)
+                    ->defaultValue(false)
                 ->end()
                 ->integerNode('error_level')
                     ->min(-1)

@@ -17,11 +17,24 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
+use Contao\TestCase\ContaoDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 class RoutingTest extends WebTestCase
 {
+    use ContaoDatabaseTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -46,6 +59,8 @@ class RoutingTest extends WebTestCase
         Input::resetUnusedGet();
         Environment::reset();
         InsertTags::reset();
+
+        Config::set('debugMode', false);
     }
 
     /**
@@ -187,10 +202,10 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the default page if the alias is empty' => [
+            'Renders the 404 page if the alias is empty' => [
                 '/.html',
-                200,
-                'Home - Root with home page',
+                404,
+                '(404 Not Found)',
                 [],
                 'root-with-home.local',
                 false,
@@ -324,7 +339,7 @@ class RoutingTest extends WebTestCase
                 '/',
                 301,
                 'Redirecting to http://root-with-index.local/en/',
-                [],
+                ['language' => 'en'],
                 'root-with-index.local',
                 false,
                 false,
@@ -360,7 +375,7 @@ class RoutingTest extends WebTestCase
                 '/en/home.xml',
                 404,
                 '(404 Not Found)',
-                ['language' => 'en'],
+                [],
                 'root-with-home.local',
                 false,
                 false,
@@ -410,11 +425,11 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the default page if the alias is empty' => [
+            'Renders the 404 page if the alias is empty' => [
                 '/en/.html',
-                200,
-                'Home - Root with home page',
-                ['language' => 'en'],
+                404,
+                '(404 Not Found)',
+                [],
                 'root-with-home.local',
                 false,
                 false,
@@ -768,10 +783,10 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
-            'Throws a "no root page found" exception if no language matches' => [
+            'Renders the 404 page if no language matches' => [
                 '/',
-                500,
-                'No root page found (500 Internal Server Error)',
+                404,
+                '(404 Not Found)',
                 'de,fr',
                 'root-without-fallback-language.local',
             ],
@@ -841,10 +856,10 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
-            'Throws a "no root page found" exception if none of the accept languages matches' => [
+            'Renders the 404 page if none of the accept languages matches' => [
                 '/',
-                500,
-                'No root page found (500 Internal Server Error)',
+                404,
+                '(404 Not Found)',
                 'de,fr',
                 'root-without-fallback-language.local',
             ],
@@ -883,13 +898,39 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
-            'Throws a "no root page found" exception if the locale does not match' => [
+            'Renders the 404 page if the locale does not exist' => [
                 '/fr/',
-                500,
-                'No root page found (500 Internal Server Error)',
+                404,
+                '(404 Not Found)',
                 'de,fr',
                 'root-without-fallback-language.local',
             ],
         ];
+    }
+
+    /**
+     * @dataProvider getRootAliasesWithLocale
+     */
+    public function testRendersNotRootPageFoundWithoutPageEntries(): void
+    {
+        static::getConnection()->exec('TRUNCATE tl_page');
+
+        Config::set('addLanguageToUrl', true);
+
+        $_SERVER['REQUEST_URI'] = '/en/';
+        $_SERVER['HTTP_HOST'] = 'foobar.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', '/en/');
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(500, $response->getStatusCode());
+        $this->assertContains('No root page found', $title);
+
+        static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
     }
 }

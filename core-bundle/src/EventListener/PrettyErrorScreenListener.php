@@ -23,7 +23,6 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError404;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
@@ -60,11 +59,6 @@ class PrettyErrorScreenListener
     private $tokenStorage;
 
     /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -82,13 +76,12 @@ class PrettyErrorScreenListener
         NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
-    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->tokenStorage = $tokenStorage;
-        $this->scopeMatcher = $scopeMatcher;
         $this->logger = $logger;
     }
 
@@ -103,7 +96,7 @@ class PrettyErrorScreenListener
 
         $request = $event->getRequest();
 
-        if ('html' !== $request->getRequestFormat() || !$this->scopeMatcher->isContaoRequest($request)) {
+        if ('html' !== $request->getRequestFormat()) {
             return;
         }
 

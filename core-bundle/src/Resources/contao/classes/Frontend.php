@@ -13,7 +13,10 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Provide methods to manage front end controllers.
@@ -56,9 +59,14 @@ abstract class Frontend extends Controller
 	 * Split the current request into fragments, strip the URL suffix, recreate the $_GET array and return the page ID
 	 *
 	 * @return mixed
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
+	 *             Use the Symfony routing instead.
 	 */
 	public static function getPageIdFromUrl()
 	{
+		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
 		$strRequest = \Environment::get('relativeRequest');
 
 		if ($strRequest == '')
@@ -291,84 +299,67 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback)
-			{
-				/** @var PageModel $objRootPage */
-				if (\is_object($objRootPage = static::importStatic($callback[0])->{$callback[1]}()))
-				{
-					return $objRootPage;
-				}
-			}
-		}
-
 		$host = \Environment::get('host');
 		$logger = System::getContainer()->get('monolog.logger.contao');
+		$accept_language = \Environment::get('httpAcceptLanguage');
 
 		// The language is set in the URL
 		if (!empty($_GET['language']) && \Config::get('addLanguageToUrl'))
 		{
-			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, \Input::get('language'));
-
-			// No matching root page found
-			if ($objRootPage === null)
-			{
-				$logger->log(
-					LogLevel::ERROR,
-					'No root page found (host "' . $host . '", language "'. \Input::get('language') .'")',
-					array('contao' => new ContaoContext(__METHOD__, 'ERROR'))
-				);
-
-				throw new NoRootPageFoundException('No root page found');
-			}
+			$strUri = \Environment::get('url') . '/' . \Input::get('language') . '/';
+			$strError = 'No root page found (host "' . $host . '", language "'. \Input::get('language') .'")';
 		}
 
 		// No language given
 		else
 		{
-			$accept_language = \Environment::get('httpAcceptLanguage');
-
 			// Always load the language fall back root if "doNotRedirectEmpty" is enabled
 			if (\Config::get('addLanguageToUrl') && \Config::get('doNotRedirectEmpty'))
 			{
 				$accept_language = '-';
 			}
 
-			// Find the matching root pages (thanks to Andreas Schempp)
-			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, $accept_language);
+			$strUri = \Environment::get('url') . '/';
+			$strError = 'No root page found (host "' . \Environment::get('host') . '", languages "' . implode(', ', \Environment::get('httpAcceptLanguage')) . '")';
+		}
 
-			// No matching root page found
-			if ($objRootPage === null)
+		try
+		{
+			$objRequest = Request::create($strUri);
+			$objRequest->headers->set('Accept-Language', $accept_language);
+
+			$arrParameters = System::getContainer()->get('contao.routing.nested_matcher')->matchRequest($objRequest);
+			$objRootPage = $arrParameters['pageModel'] ?? null;
+
+			if (!$objRootPage instanceof PageModel)
 			{
-				$logger->log(
-					LogLevel::ERROR,
-					'No root page found (host "' . \Environment::get('host') . '", languages "'.implode(', ', \Environment::get('httpAcceptLanguage')).'")',
-					array('contao' => new ContaoContext(__METHOD__, 'ERROR'))
-				);
+				throw new MissingMandatoryParametersException('Every Contao route must have a "pageModel" parameter');
+			}
+		}
+		catch (RoutingExceptionInterface $exception)
+		{
+			$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
 
-				throw new NoRootPageFoundException('No root page found');
+			throw new NoRootPageFoundException('No root page found', 0, $exception);
+		}
+
+		// Redirect to the website root or language root (e.g. en/)
+		if (\Environment::get('relativeRequest') == '')
+		{
+			if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))
+			{
+				$arrParams = array('_locale' => $objRootPage->language);
+
+				$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
+				$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
+
+				static::redirect($strUrl, 301);
 			}
 
-			// Redirect to the website root or language root (e.g. en/)
-			if (\Environment::get('relativeRequest') == '')
+			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
+			elseif ($objRootPage->type !== 'root' && !\in_array($objRootPage->alias, array('index', '/')))
 			{
-				if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))
-				{
-					$arrParams = array('_locale' => $objRootPage->language);
-
-					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
-					$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
-
-					static::redirect($strUrl, 301);
-				}
-
-				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
-				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
-				{
-					static::redirect($objPage->getAbsoluteUrl(), 302);
-				}
+				static::redirect($objRootPage->getAbsoluteUrl(), 302);
 			}
 		}
 
